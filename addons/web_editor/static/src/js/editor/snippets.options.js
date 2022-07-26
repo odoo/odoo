@@ -6247,15 +6247,6 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         return uiFragment;
     },
     /**
-     * @override
-     */
-    async _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'shape_none_opt') {
-            return false;
-        }
-        return this._super(...arguments);
-    },
-    /**
      * Flips the shape on its x/y axis.
      *
      * @param {boolean} previewMode
