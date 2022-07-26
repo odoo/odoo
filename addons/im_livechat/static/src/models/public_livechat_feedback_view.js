@@ -12,12 +12,12 @@ registerModel({
         _created() {
             this.update({
                 widget: new Feedback(
-                    this.messaging.livechatButtonView.widget,
+                    this.messaging.publicLivechatGlobal.livechatButtonView.widget,
                     this.messaging,
-                    this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat,
+                    this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.legacyPublicLivechat,
                 ),
             });
-            this.messaging.livechatButtonView.chatWindow.legacyChatWindow.replaceContentWith(this.widget);
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.replaceContentWith(this.widget);
             this.widget.on('feedback_sent', null, this._onFeedbackSent);
             this.widget.on('send_message', null, this._onSendMessage);
         },
@@ -27,10 +27,10 @@ registerModel({
     },
     recordMethods: {
         _onFeedbackSent(...args) {
-            this.messaging.livechatButtonView.widget._closeChat(...args);
+            this.messaging.publicLivechatGlobal.livechatButtonView.widget._closeChat(...args);
         },
         _onSendMessage(...args) {
-            this.messaging.livechatButtonView.widget._sendMessage(...args);
+            this.messaging.publicLivechatGlobal.livechatButtonView.widget._sendMessage(...args);
         },
     },
     fields: {

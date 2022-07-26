@@ -74,8 +74,8 @@ const PublicLivechatWindow = Widget.extend({
             this._publicLivechatView.$el.on('scroll', this, this._debouncedOnScroll);
         });
         await Promise.all([this._super(), def]);
-        if (this.messaging.livechatButtonView.headerBackgroundColor) {
-            this.$('.o_thread_window_header').css('background-color', this.messaging.livechatButtonView.headerBackgroundColor);
+        if (this.messaging.publicLivechatGlobal.livechatButtonView.headerBackgroundColor) {
+            this.$('.o_thread_window_header').css('background-color', this.messaging.publicLivechatGlobal.livechatButtonView.headerBackgroundColor);
         }
         if (this.options.titleColor) {
             this.$('.o_thread_window_header').css('color', this.options.titleColor);
@@ -119,10 +119,10 @@ const PublicLivechatWindow = Widget.extend({
     renderHeader() {
         this.$header.html(
             qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', {
-                status: this.messaging.livechatButtonView.publicLivechat.status,
+                status: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.status,
                 thread: this._thread,
-                title: this.messaging.livechatButtonView.publicLivechat.name,
-                unreadCounter: this.messaging.livechatButtonView.publicLivechat.unreadCounter,
+                title: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.name,
+                unreadCounter: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.unreadCounter,
                 widget: this,
             })
         );
@@ -147,9 +147,9 @@ const PublicLivechatWindow = Widget.extend({
      */
     toggleFold(folded) {
         if (!_.isBoolean(folded)) {
-            folded = !this.messaging.livechatButtonView.publicLivechat.isFolded;
+            folded = !this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.isFolded;
         }
-        this.messaging.livechatButtonView.publicLivechat.update({ isFolded: folded });
+        this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.update({ isFolded: folded });
         this.trigger_up('save_chat_window');
         this.updateVisualFoldState();
     },
@@ -227,7 +227,7 @@ const PublicLivechatWindow = Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         if (
-            this.messaging.livechatButtonView.publicLivechat.unreadCounter > 0 &&
+            this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.unreadCounter > 0 &&
             !this._thread._folded
         ) {
             this._thread.markAsRead();

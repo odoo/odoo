@@ -14,7 +14,7 @@ registerModel({
                 legacyChatWindow: new PublicLivechatWindow(
                     this.livechatButtonViewOwner.widget,
                     this.messaging,
-                    this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat,
+                    this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.legacyPublicLivechat,
                     { titleColor: this.livechatButtonViewOwner.titleColor },
                 ),
             });
@@ -29,8 +29,8 @@ registerModel({
          * @returns {string}
          */
         _computeInputPlaceholder() {
-            if (this.messaging.livechatButtonView.inputPlaceholder) {
-                return this.messaging.livechatButtonView.inputPlaceholder;
+            if (this.messaging.publicLivechatGlobal.livechatButtonView.inputPlaceholder) {
+                return this.messaging.publicLivechatGlobal.livechatButtonView.inputPlaceholder;
             }
             return this.env._t("Say something");
         },

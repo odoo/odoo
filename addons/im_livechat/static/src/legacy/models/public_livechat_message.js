@@ -50,9 +50,9 @@ const PublicLivechatMessage = Class.extend({
             attachment.filename = attachment.filename || attachment.name || _t("unnamed");
         });
         this._defaultUsername = this.messaging.publicLivechatGlobal.options.default_username;
-        this._serverURL = this.messaging.livechatButtonView.serverUrl;
+        this._serverURL = this.messaging.publicLivechatGlobal.livechatButtonView.serverUrl;
 
-        if (parent.messaging.livechatButtonView.isChatbot) {
+        if (parent.messaging.publicLivechatGlobal.livechatButtonView.isChatbot) {
             this._chatbotStepId = data.chatbot_script_step_id;
             this._chatbotStepAnswers = data.chatbot_step_answers;
             this._chatbotStepAnswerId = data.chatbot_selected_answer_id;

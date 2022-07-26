@@ -21,20 +21,20 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
     init: function (parent, messaging, chatbotData) {
         this._super(...arguments);
 
-        this.messaging.livechatButtonView.update({
+        this.messaging.publicLivechatGlobal.livechatButtonView.update({
             rule: {
                 'action': 'auto_popup',
                 'auto_popup_timer': 0,
             },
         });
-        this.messaging.livechatButtonView.update({ isTestChatbot: true });
-        this.messaging.livechatButtonView.update({ testChatbotData: chatbotData.chatbot });
-        this.messaging.livechatButtonView.chatbot.update({
+        this.messaging.publicLivechatGlobal.livechatButtonView.update({ isTestChatbot: true });
+        this.messaging.publicLivechatGlobal.livechatButtonView.update({ testChatbotData: chatbotData.chatbot });
+        this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.update({
             currentStep: insertAndReplace({
-                data: this.messaging.livechatButtonView.chatbot.lastWelcomeStep,
+                data: this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.lastWelcomeStep,
             }),
         });
-        this._channelData = this.messaging.livechatButtonView.testChatbotData.channel;
+        this._channelData = this.messaging.publicLivechatGlobal.livechatButtonView.testChatbotData.channel;
     },
 
     /**
@@ -58,17 +58,17 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
      * @override
      */
     _openChat: function () {
-        this.messaging.livechatButtonView.update({
+        this.messaging.publicLivechatGlobal.livechatButtonView.update({
             publicLivechat: insertAndReplace({ data: this._channelData }),
         });
 
         return this._openChatWindow().then(() => {
             this._sendWelcomeMessage();
             this._renderMessages();
-            this.call('bus_service', 'addChannel', this.messaging.livechatButtonView.publicLivechat.uuid);
+            this.call('bus_service', 'addChannel', this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.uuid);
             this.call('bus_service', 'startPolling');
-            utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.livechatButtonView.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
-            this.messaging.livechatButtonView.update({ isOpeningChat: false });
+            utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
+            this.messaging.publicLivechatGlobal.livechatButtonView.update({ isOpeningChat: false });
         });
     },
 });

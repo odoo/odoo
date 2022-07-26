@@ -47,7 +47,7 @@ const Feedback = Widget.extend({
      */
      _sendFeedback(reason) {
         const args = {
-            uuid: this.messaging.livechatButtonView.publicLivechat.uuid,
+            uuid: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.uuid,
             rate: this.rating,
             reason,
         };
@@ -124,7 +124,7 @@ const Feedback = Widget.extend({
             this._rpc({
                 route: '/im_livechat/email_livechat_transcript',
                 params: {
-                    uuid: this.messaging.livechatButtonView.publicLivechat.uuid,
+                    uuid: this.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.uuid,
                     email: $email.val(),
                 }
             }).then(() => {

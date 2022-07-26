@@ -7,16 +7,16 @@
         <div class="o_thread_window o_in_home_menu" t-att-data-thread-id="widget._thread._id">
             <div class="o_thread_window_header">
                 <t t-call="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
-                    <t t-set="status" t-value="widget.messaging.livechatButtonView.publicLivechat.status"/>
-                    <t t-set="title" t-value="widget.messaging.livechatButtonView.publicLivechat.name"/>
-                    <t t-set="unreadCounter" t-value="widget.messaging.livechatButtonView.publicLivechat.unreadCounter"/>
+                    <t t-set="status" t-value="widget.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.status"/>
+                    <t t-set="title" t-value="widget.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.name"/>
+                    <t t-set="unreadCounter" t-value="widget.messaging.publicLivechatGlobal.livechatButtonView.publicLivechat.unreadCounter"/>
                     <t t-set="thread" t-value="widget._thread"/>
                 </t>
             </div>
             <div class="o_thread_window_content">
             </div>
             <div class="o_thread_composer o_chat_mini_composer">
-                <input class="o_composer_text_field" t-att-placeholder="widget.messaging.livechatButtonView.chatWindow.inputPlaceholder"/>
+                <input class="o_composer_text_field" t-att-placeholder="widget.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.inputPlaceholder"/>
             </div>
         </div>
     </t>

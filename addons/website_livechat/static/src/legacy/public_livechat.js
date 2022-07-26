@@ -31,8 +31,8 @@ LivechatButton.include({
         $(window).trigger('resize');
         await this._super(...arguments);
         this.el.innerHTML = "";
-        if (this.messaging.livechatButtonView.buttonText && !config.device.touch) {
-            this.el.dataset.content = this.messaging.livechatButtonView.buttonText;
+        if (this.messaging.publicLivechatGlobal.livechatButtonView.buttonText && !config.device.touch) {
+            this.el.dataset.content = this.messaging.publicLivechatGlobal.livechatButtonView.buttonText;
             this.el.dataset.toggle = "popover";
             this.el.dataset.trigger = "hover";
             this.$el.popover({
