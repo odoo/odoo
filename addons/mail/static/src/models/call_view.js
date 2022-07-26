@@ -115,8 +115,7 @@ registerModel({
                 return clear();
             }
             return insert({
-                rtcSession: replace(this.activeRtcSession),
-                channel: replace(this.channel),
+                channelMember: replace(this.activeRtcSession.channelMember),
             });
         },
         /**
@@ -128,6 +127,7 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
          */
         _computeTileParticipantCards() {
             if (!this.threadView) {
@@ -137,19 +137,12 @@ registerModel({
                 return clear();
             }
             const tileCards = [];
-            for (const rtcSession of this.channel.rtcSessions) {
-                if (this.filterVideoGrid && !rtcSession.videoStream) {
+            for (const channelMember of this.channel.channel.callParticipants) {
+                if (this.filterVideoGrid && !channelMember.isStreaming) {
                     continue;
                 }
                 tileCards.push({
-                    rtcSession: replace(rtcSession),
-                    channel: replace(this.channel),
-                });
-            }
-            for (const member of this.channel.invitedMembers) {
-                tileCards.push({
-                    invitedMember: replace(member),
-                    channel: replace(this.channel),
+                    channelMember: replace(channelMember),
                 });
             }
             return insertAndReplace(tileCards);

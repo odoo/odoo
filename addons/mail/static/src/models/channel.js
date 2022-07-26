@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one, many } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
+import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Channel',
@@ -33,6 +33,17 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeCallParticipants() {
+            const callParticipants = this.thread.invitedMembers;
+            for (const rtcSession of this.thread.rtcSessions) {
+                callParticipants.push(rtcSession.channelMember);
+            }
+            return replace(callParticipants);
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeThread() {
             return insertAndReplace({
                 id: this.id,
@@ -50,6 +61,16 @@ registerModel({
          * @private
          * @returns {Array[]}
          */
+        _sortCallParticipants() {
+            return [
+                ['truthy-first', 'rtcSession'],
+                ['smaller-first', 'rtcSession.id'],
+            ];
+        },
+        /**
+         * @private
+         * @returns {Array[]}
+         */
         _sortMembers() {
             return [
                 ['truthy-first', 'persona.name'],
@@ -60,6 +81,10 @@ registerModel({
     fields: {
         areAllMembersLoaded: attr({
             compute: '_computeAreAllMembersLoaded',
+        }),
+        callParticipants: many('ChannelMember', {
+            compute: '_computeCallParticipants',
+            sort: '_sortCallParticipants',
         }),
         channelMembers: many('ChannelMember', {
             inverse: 'channel',
