@@ -15,25 +15,27 @@ const { Component, onWillDestroy, onWillUpdateProps, useEffect, useRef, useState
  *
  *      e.g.:
  *          PageTemplate.template = xml`
-                    <h1 t-esc="props.title" />
+                    <h1 t-esc="props.heading" />
                     <p t-esc="props.text" />`;
 
  *      `pages` could be:
  *      [
  *          {
  *              Component: PageTemplate,
+ *              id: 'unique_id' // optional: can be given as defaultPage props to the notebook
+ *              index: 1 // optional: page position in the notebook
+ *              name: 'some_name' // optional
+ *              title: "Some Title 1", // title displayed on the tab pane
  *              props: {
- *                  title: "Some Title 1",
- *                  isVisible: bool,
+ *                  heading: "Page 1",
  *                  text: "Text Content 1",
  *              },
- *              name: 'some_name' // optional
  *          },
  *          {
  *              Component: PageTemplate,
+ *              title: "Some Title 2",
  *              props: {
- *                  title: "Some Title 2",
- *                  isVisible: bool,
+ *                  heading: "Page 2",
  *                  text: "Text Content 2",
  *              },
  *          },
@@ -108,14 +110,14 @@ export class Notebook extends Component {
         if (!props.slots && !props.pages) {
             return [];
         }
+        if (props.pages) {
+            for (const page of props.pages) {
+                page.isVisible = true;
+            }
+        }
         const pages = [];
         const pagesWithIndex = [];
         for (const [k, v] of Object.entries({ ...props.slots, ...props.pages })) {
-            if (v.props) {
-                v.isVisible = v.props.isVisible;
-                v.title = v.props.title;
-                v.index = v.props.index;
-            }
             const id = v.id || k;
             if (v.index) {
                 pagesWithIndex.push([id, v]);
