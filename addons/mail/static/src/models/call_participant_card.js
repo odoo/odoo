@@ -9,7 +9,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'CallParticipantCard',
-    identifyingFields: ['channelMember', ['callViewAsMainCard', 'callViewAsTile']],
+    identifyingFields: [['sidebarViewTileOwner', 'mainViewTileOwner']],
     recordMethods: {
         /**
          * @param {Event} ev
@@ -25,7 +25,7 @@ registerModel({
                 return;
             }
             if (this.rtcSession) {
-                if (this.callView.activeRtcSession === this.rtcSession && this.callViewAsMainCard) {
+                if (this.callView.activeRtcSession === this.rtcSession && this.mainViewTileOwner) {
                     this.callView.update({ activeRtcSession: clear() });
                 } else {
                     this.callView.update({ activeRtcSession: replace(this.rtcSession) });
@@ -68,16 +68,24 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.callView}
+         * @returns {FieldCommand}
          */
         _computeCallView() {
-            const callView = this.callViewAsMainCard || this.callViewAsTile;
-            if (callView) {
-                return replace(callView);
-            } else {
-                return clear();
+            if (this.sidebarViewTileOwner) {
+                return replace(this.sidebarViewTileOwner.callSidebarViewOwner.callView);
             }
+            return replace(this.mainViewTileOwner.callMainViewOwner.callView);
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+         _computeChannelMember() {
+            if (this.sidebarViewTileOwner) {
+                return replace(this.sidebarViewTileOwner.channelMember);
+            }
+            return replace(this.mainViewTileOwner.channelMember);
+         },
         /**
          * @private
          * @returns {boolean}
@@ -144,9 +152,8 @@ registerModel({
     },
     fields: {
         channelMember: one('ChannelMember', {
+            compute: '_computeChannelMember',
             inverse: 'callParticipantCards',
-            required: true,
-            readonly: true,
         }),
         /**
          * Determines whether or not we show the connection info.
@@ -159,6 +166,10 @@ registerModel({
          */
         inboundConnectionTypeText: attr({
             compute: '_computeInboundConnectionTypeText',
+        }),
+        mainViewTileOwner: one('CallMainViewTile', {
+            inverse: 'participantCard',
+            readonly: true,
         }),
         /**
          * Determines if this card has to be displayed in a minimized form.
@@ -187,23 +198,13 @@ registerModel({
             compute: '_computeCallView',
             inverse: 'participantCards',
         }),
-        /**
-         * The call view for which this card is the main card.
-         */
-        callViewAsMainCard: one('CallView', {
-            inverse: 'mainParticipantCard',
-            readonly: true,
-        }),
-        /**
-         * The call view for which this card is one of the tiles.
-         */
-        callViewAsTile: one('CallView', {
-            inverse: 'tileParticipantCards',
-            readonly: true,
-        }),
         rtcSession: one('RtcSession', {
             related: 'channelMember.rtcSession',
             inverse: 'callParticipantCards',
+        }),
+        sidebarViewTileOwner: one('CallSidebarViewTile', {
+            inverse: 'participantCard',
+            readonly: true,
         }),
         callParticipantVideoView: one('CallParticipantVideoView', {
             compute: '_computeCallParticipantVideoView',

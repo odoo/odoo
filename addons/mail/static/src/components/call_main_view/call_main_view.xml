@@ -3,36 +3,28 @@
 
 <t t-name="mail.CallMainView" owl="1">
     <t t-if="callMainView">
-        <div class="o_CallMainView d-flex flex-grow-1 flex-column align-items-center justify-content-center" t-ref="root" t-on-mouseleave="callMainView.onMouseleave">
+        <div class="o_CallMainView d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative bg-black-50" t-ref="root" t-on-mouseleave="callMainView.onMouseleave">
             <t t-set="dummy" t-value="messaging and messaging.device and messaging.device.globalWindowInnerHeight and messaging.device.globalWindowInnerWidth"/>
-
-            <div class="o_CallMainView_participantContainer d-flex justify-content-between w-100 h-100 overflow-hidden" t-on-click="callMainView.onClick" t-on-mousemove="callMainView.onMouseMove">
-                <t t-if="callMainView.callView.mainParticipantCard">
-                    <div class="o_CallMainView_mainParticipantContainer d-flex flex-grow-1 justify-content-center position-relative mw-100 mh-100">
-                        <CallParticipantCard className="'o_CallMainView_participantCard'" record="callMainView.callView.mainParticipantCard"/>
-                        <t t-if="callMainView.showOverlay and !callMainView.callView.threadView.compact">
-                            <i t-if="callMainView.callView.hasSidebar" class="o_CallMainView_sidebarButton o_cursor_pointer position-absolute fa fa-arrow-right" title="Hide sidebar" t-on-click="callMainView.onClickHideSidebar"/>
-                            <i t-else="" class="o_CallMainView_sidebarButton o_cursor_pointer position-absolute fa fa-arrow-left" title="Show sidebar" t-on-click="callMainView.onClickShowSidebar"/>
-                        </t>
-                    </div>
-                </t>
-                <t t-elif="callMainView.callView.tileParticipantCards.length > 0">
-                    <div
-                        class="o_CallMainView_grid d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
-                        t-ref="tileContainer"
-                        t-attf-style="--height:{{callMainView.tileHeight}}px; --width:{{callMainView.tileWidth}}px;"
-                    >
-                        <t t-foreach="callMainView.callView.tileParticipantCards" t-as="participantCard" t-key="'grid_tile_'+participantCard.localId">
-                            <CallParticipantCard
-                                className="'o_CallMainView_gridParticipantCard'"
-                                record="participantCard"
-                            />
-                        </t>
-                    </div>
+            <div
+                class="o_CallMainView_grid d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
+                t-attf-style="--height:{{callMainView.tileHeight}}px; --width:{{callMainView.tileWidth}}px;"
+                t-on-click="callMainView.onClick"
+                t-on-mousemove="callMainView.onMouseMove"
+                t-ref="tileContainer"
+            >
+                <t t-foreach="callMainView.mainTiles" t-as="tile" t-key="'grid_tile_'+tile.localId">
+                    <CallParticipantCard
+                        className="'o_CallMainView_gridParticipantCard'"
+                        record="tile.participantCard"
+                    />
                 </t>
             </div>
 
             <!-- Buttons -->
+            <t t-if="callMainView.hasSidebarButton">
+                <i t-if="callMainView.callView.isSidebarOpen" class="o_CallMainView_sidebarButton o_cursor_pointer position-absolute fa fa-arrow-right" title="Hide sidebar" t-on-click="callMainView.onClickHideSidebar"/>
+                <i t-else="" class="o_CallMainView_sidebarButton o_cursor_pointer position-absolute fa fa-arrow-left" title="Show sidebar" t-on-click="callMainView.onClickShowSidebar"/>
+            </t>
             <t t-if="callMainView.showOverlay or !callMainView.isControllerFloating">
                 <div class="o_CallMainView_controls d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute bottom-0 pb-3': callMainView.isControllerFloating }">
                     <div class="o_CallMainView_controlsOverlayContainer" t-on-mousemove="callMainView.onMouseMoveOverlay">
