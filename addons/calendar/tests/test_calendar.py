@@ -151,6 +151,32 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(test_event.res_id, test_record.id)
         self.assertEqual(len(test_record.activity_ids), 1)
 
+    def test_event_activity_user_sync(self):
+        # ensure phonecall activity type exists
+        activty_type = self.env['mail.activity.type'].create({
+            'name': 'Call',
+            'category': 'phonecall'
+        })
+        activity = self.env['mail.activity'].create({
+            'summary': 'Call with Demo',
+            'activity_type_id': activty_type.id,
+            'note': 'Schedule call with Admin',
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'user_id': self.user_demo.id,
+        })
+        action_context = activity.action_create_calendar_event().get('context', {})
+        event_from_activity = self.env['calendar.event'].with_context(action_context).create({
+            'start': '2022-07-27 14:30:00',
+            'stop': '2022-07-27 16:30:00',
+        })
+        # Check that assignation of the activity hasn't changed, and event is having
+        # correct values set in attendee and organizer related fields
+        self.assertEqual(activity.user_id, self.user_demo)
+        self.assertEqual(event_from_activity.partner_ids, activity.user_id.partner_id)
+        self.assertEqual(event_from_activity.attendee_ids.partner_id, activity.user_id.partner_id)
+        self.assertEqual(event_from_activity.user_id, activity.user_id)
+
     def test_event_allday(self):
         self.env.user.tz = 'Pacific/Honolulu'
 
