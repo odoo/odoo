@@ -595,6 +595,11 @@ class AccountPaymentRegister(models.TransientModel):
         else:
             partner_bank_id = batch_result['payment_values']['partner_bank_id']
 
+        payment_method_line = self.payment_method_line_id
+
+        if batch_values['payment_type'] != payment_method_line.payment_type:
+            payment_method_line = self.journal_id._get_available_payment_method_lines(batch_values['payment_type'])[:1]
+
         return {
             'date': self.payment_date,
             'amount': batch_values['source_amount_currency'],
@@ -605,7 +610,7 @@ class AccountPaymentRegister(models.TransientModel):
             'currency_id': batch_values['source_currency_id'],
             'partner_id': batch_values['partner_id'],
             'partner_bank_id': partner_bank_id,
-            'payment_method_line_id': self.payment_method_line_id.id,
+            'payment_method_line_id': payment_method_line.id,
             'destination_account_id': batch_result['lines'][0].account_id.id
         }
 
