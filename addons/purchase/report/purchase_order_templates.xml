@@ -81,6 +81,9 @@
                                 <td class="text-end">
                                     <span t-field="line.product_qty"/>
                                     <span t-field="line.product_uom.name" groups="uom.group_uom"/>
+                                    <span t-if="line.product_packaging_id">
+                                        (<span t-field="line.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="line.product_packaging_id"/>)
+                                    </span>
                                 </td>
                                 <td class="text-end">
                                     <span t-field="line.price_unit"/>

@@ -118,6 +118,14 @@
                                             <span t-if="o.state != 'done'" t-field="ml.reserved_uom_qty">3.00</span>
                                             <span t-else="" t-field="ml.qty_done">3.00</span>
                                             <span t-field="ml.product_uom_id" groups="uom.group_uom">units</span>
+                                            <span t-if="ml.move_id.product_packaging_id">
+                                                <span t-if="o.state != 'done'">
+                                                    (<span t-field="ml.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="ml.move_id.product_packaging_id.name"/>)
+                                                </span>
+                                                <span t-if="o.state == 'done'">
+                                                    (<span t-field="ml.product_packaging_qty_done" t-options='{"widget": "integer"}'/> <span t-field="ml.move_id.product_packaging_id.name"/>)
+                                                </span>
+                                            </span>
                                         </td>
                                         <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
                                             <span t-esc="ml.location_id.display_name">WH/Stock</span>

@@ -104,6 +104,9 @@
                                 <td name="td_quantity" class="text-end">
                                     <span t-field="line.product_uom_qty">3</span>
                                     <span t-field="line.product_uom">units</span>
+                                    <span t-if="line.product_packaging_id">
+                                        (<span t-field="line.product_packaging_qty" t-options='{"widget": "integer"}'/> <span t-field="line.product_packaging_id"/>)
+                                    </span>
                                 </td>
                                 <td name="td_priceunit" class="text-end">
                                     <span t-field="line.price_unit">3</span>
