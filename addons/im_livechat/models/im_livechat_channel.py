@@ -199,7 +199,13 @@ class ImLivechatChannel(models.Model):
         mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create(mail_channel_vals)
         if user_operator:
             mail_channel._broadcast([user_operator.partner_id.id])
-        return mail_channel.sudo().channel_info()[0]
+        return {
+            'id': mail_channel.id,
+            'message_unread_counter': self.env['mail.channel.member'].sudo().search([('channel_id', '=', mail_channel.id), ('partner_id', '=', self.env.user.partner_id.id)]).message_unread_counter,
+            'name': mail_channel.name,
+            'operator_pid': (mail_channel.livechat_operator_id.id, (mail_channel.livechat_operator_id.user_livechat_username or mail_channel.livechat_operator_id.display_name).replace(',', '')),
+            'uuid': mail_channel.uuid,
+        }
 
     def _get_random_operator(self):
         """ Return a random operator from the available users of the channel that have the lowest number of active livechats.

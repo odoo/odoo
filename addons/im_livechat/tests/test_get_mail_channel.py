@@ -60,7 +60,9 @@ class TestGetMailChannel(TransactionCase):
 
         # ensure visitor info are correct with anonymous
         operator = self.operators[0]
-        channel_info = self.livechat_channel.with_user(public_user)._open_livechat_mail_channel(anonymous_name='Visitor 22', previous_operator_id=operator.partner_id.id, country_id=belgium.id)
+        res = self.livechat_channel.with_user(public_user)._open_livechat_mail_channel(anonymous_name='Visitor 22', previous_operator_id=operator.partner_id.id, country_id=belgium.id)
+        channel = self.env['mail.channel'].browse(res['id']).exists()
+        channel_info = channel.channel_info()[0]
         visitor_info = channel_info['livechat_visitor']
         self.assertFalse(visitor_info['id'])
         self.assertEqual(visitor_info['name'], "Visitor 22")
@@ -84,7 +86,9 @@ class TestGetMailChannel(TransactionCase):
         }], key=lambda m: m['id']))
 
         # ensure visitor info are correct with real user
-        channel_info = self.livechat_channel.with_user(test_user)._open_livechat_mail_channel(anonymous_name='whatever', user_id=test_user.id)
+        res = self.livechat_channel.with_user(test_user)._open_livechat_mail_channel(anonymous_name='whatever', user_id=test_user.id)
+        channel = self.env['mail.channel'].browse(res['id']).exists()
+        channel_info = channel.channel_info()[0]
         visitor_info = channel_info['livechat_visitor']
         self.assertEqual(visitor_info['id'], test_user.partner_id.id)
         self.assertEqual(visitor_info['name'], "Roger")
@@ -92,7 +96,9 @@ class TestGetMailChannel(TransactionCase):
 
         # ensure visitor info are correct when operator is testing themselves
         operator = self.operators[0]
-        channel_info = self.livechat_channel.with_user(operator)._open_livechat_mail_channel(anonymous_name='whatever', previous_operator_id=operator.partner_id.id, user_id=operator.id)
+        res = self.livechat_channel.with_user(operator)._open_livechat_mail_channel(anonymous_name='whatever', previous_operator_id=operator.partner_id.id, user_id=operator.id)
+        channel = self.env['mail.channel'].browse(res['id']).exists()
+        channel_info = channel.channel_info()[0]
         self.assertEqual(channel_info['operator_pid'], (operator.partner_id.id, "Michel Operator"))
         visitor_info = channel_info['livechat_visitor']
         self.assertEqual(visitor_info['id'], operator.partner_id.id)
