@@ -67,7 +67,7 @@ QUnit.test('mark as read', async function (assert) {
 });
 
 QUnit.test('click on preview should mark as read and open the thread', async function (assert) {
-    assert.expect(6);
+    assert.expect(4);
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
@@ -83,21 +83,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click } = await start({
-        async mockRPC(route, args) {
-            if (route.includes('mark_all_as_read')) {
-                assert.step('mark_all_as_read');
-                assert.deepEqual(
-                    args.kwargs.domain,
-                    [
-                        ['model', '=', 'res.partner'],
-                        ['res_id', '=', resPartnerId1],
-                    ],
-                    "should mark all as read the correct thread"
-                );
-            }
-        },
-    });
+    const { afterEvent, click } = await start();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
@@ -118,14 +104,16 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
     );
 
     await click('.o_ThreadNeedactionPreview');
-    assert.verifySteps(
-        ['mark_all_as_read'],
-        "should have marked the message as read on clicking on the preview"
-    );
     assert.containsOnce(
         document.body,
         '.o_ChatWindow',
         "should have opened the thread on clicking on the preview"
+    );
+    await click('.o_MessagingMenu_toggler');
+    assert.containsNone(
+        document.body,
+        '.o_ThreadNeedactionPreview',
+        "should have no preview because the message should be marked as read after opening its thread"
     );
 });
 

@@ -898,13 +898,13 @@ class Message(models.Model):
             :param min_id: messages must be more recent than this id
             :param max_id: message must be less recent than this id
             :param limit: the maximum amount of messages to get;
-            :returns list(dict).
+            :returns: record set of mail.message
         """
         if max_id:
             domain = expression.AND([domain, [('id', '<', max_id)]])
         if min_id:
             domain = expression.AND([domain, [('id', '>', min_id)]])
-        return self.search(domain, limit=limit).message_format()
+        return self.search(domain, limit=limit)
 
     def message_format(self, format_reply=True):
         """ Get the message values in the format for web client. Since message values can be broadcasted,

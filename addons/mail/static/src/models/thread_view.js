@@ -237,7 +237,6 @@ registerModel({
             if (this.threadCache) {
                 this.threadCache.update({
                     isCacheRefreshRequested: true,
-                    isMarkAllAsReadRequested: true,
                 });
             }
             this.update({ lastVisibleMessage: clear() });
