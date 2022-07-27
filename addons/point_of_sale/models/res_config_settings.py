@@ -111,6 +111,13 @@ class ResConfigSettings(models.TransientModel):
             pos_config_id = vals.get('pos_config_id')
             if pos_config_id:
                 pos_fields_vals = {}
+
+                if vals.get('pos_cash_rounding'):
+                    vals['group_cash_rounding'] = True
+
+                if vals.get('pos_use_pricelist'):
+                    vals['group_product_pricelist'] = True
+
                 for field in self._fields.values():
                     if field.name == 'pos_config_id':
                         continue
@@ -128,12 +135,6 @@ class ResConfigSettings(models.TransientModel):
                         else:
                             pos_fields_vals[pos_config_field_name] = val
                             del vals[field.name]
-
-                if vals.get('pos_cash_rounding'):
-                    vals['group_cash_rounding'] = True
-
-                if vals.get('pos_use_pricelist'):
-                    vals['group_product_pricelist'] = True
 
                 pos_config_id_to_fields_vals_map[pos_config_id] = pos_fields_vals
 
