@@ -926,7 +926,7 @@ function _getMatchedCSSRules(node, cssRules) {
     }
 
     for (const [key, value] of Object.entries(processedStyle)) {
-        if (value.endsWith('important')) {
+        if (value && value.endsWith('important')) {
             processedStyle[key] = value.replace(/\s*!important\s*$/, '');
         }
     };
