@@ -31,12 +31,12 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickStartAMeetingButton(ev) {
-            const meetingChannel = await this.messaging.models['Thread'].createGroupChat({
+            const meetingChannel = await this.messaging.models['Channel'].createGroupChat({
                 default_display_mode: 'video_full_screen',
                 partners_to: [this.messaging.currentPartner.id],
             });
-            meetingChannel.toggleCall({ startWithVideo: true });
-            await meetingChannel.open({ focus: false });
+            meetingChannel.thread.toggleCall({ startWithVideo: true });
+            await meetingChannel.thread.open({ focus: false });
             if (!meetingChannel.exists() || !this.discuss.threadView) {
                 return;
             }

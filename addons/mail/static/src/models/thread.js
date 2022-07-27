@@ -154,28 +154,6 @@ registerModel({
             return data2;
         },
         /**
-         * Creates a new group chat with the provided partners.
-         *
-         * @param {Object} param0
-         * @param {number[]} param0.partners_to Ids of the partners to add as channel
-         * members.
-         * @param {boolean|string} param0.default_display_mode
-         * @returns {Thread} The newly created group chat.
-         */
-        async createGroupChat({ default_display_mode, partners_to }) {
-            const channelData = await this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'create_group',
-                kwargs: {
-                    default_display_mode,
-                    partners_to,
-                },
-            });
-            return this.messaging.models['Thread'].insert(
-                this.messaging.models['Thread'].convertData(channelData)
-            );
-        },
-        /**
          * Fetches threads matching the given composer search state to extend
          * the JS knowledge and to update the suggestion list accordingly.
          * More specifically only thread of model 'mail.channel' are fetched.

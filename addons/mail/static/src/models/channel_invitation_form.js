@@ -35,20 +35,20 @@ registerModel({
                     ...this.thread.members.map(member => member.id),
                     ...this.selectedPartners.map(partner => partner.id),
                 ])];
-                const channel = await this.messaging.models['Thread'].createGroupChat({ partners_to });
+                const channel = await this.messaging.models['Channel'].createGroupChat({ partners_to });
                 if (this.thread.rtc) {
                     /**
                      * if we were in a RTC call on the current thread, we move to the new group chat.
                      * A smoother transfer would be moving the RTC sessions from one channel to
                      * the other (server-side too), but it would be considerably more complex.
                      */
-                    await channel.toggleCall({
+                    await channel.thread.toggleCall({
                         startWithVideo: !!this.thread.rtc.videoTrack,
                         videoType: this.thread.rtc.sendUserVideo ? 'user-video' : 'display',
                     });
                 }
                 if (channel.exists()) {
-                    channel.open();
+                    channel.thread.open();
                 }
             } else {
                 await this.messaging.rpc(({

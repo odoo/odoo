@@ -10,6 +10,29 @@ registerModel({
     identifyingFields: ['id'],
     modelMethods: {
         /**
+         * Creates a new group chat with the provided partners.
+         *
+         * @param {Object} param0
+         * @param {number[]} param0.partners_to Ids of the partners to add as channel
+         * members.
+         * @param {boolean|string} param0.default_display_mode
+         * @returns {Channel} The newly created group chat.
+         */
+        async createGroupChat({ default_display_mode, partners_to }) {
+            const threadData = await this.messaging.rpc({
+                model: 'mail.channel',
+                method: 'create_group',
+                kwargs: {
+                    default_display_mode,
+                    partners_to,
+                },
+            });
+            const thread = this.messaging.models['Thread'].insert(
+                this.messaging.models['Thread'].convertData(threadData)
+            );
+            return thread.channel;
+        },
+        /**
          * Performs the `channel_pin` RPC on `mail.channel`.
          *
          * @param {Object} param0
