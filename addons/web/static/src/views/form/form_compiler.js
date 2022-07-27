@@ -144,7 +144,11 @@ export class FormCompiler extends ViewCompiler {
                         ? `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`
                         : true,
             });
-            append(mainSlot, this.compileNode(child, params, false));
+            const button = this.compileNode(child, params, false);
+            if (button.tagName === "ViewButton") {
+                button.setAttribute("defaultRank", "'oe_stat_button'");
+            }
+            append(mainSlot, button);
             append(buttonBox, mainSlot);
         }
 
