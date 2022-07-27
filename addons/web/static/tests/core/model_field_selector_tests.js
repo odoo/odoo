@@ -6,19 +6,25 @@ import { ormService } from "@web/core/orm_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
+import { viewService } from "@web/views/view_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, triggerEvent, mount } from "../helpers/utils";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 
 const { Component, xml } = owl;
 
-let env;
 let target;
-let fieldSelector;
+let serverData;
+
+async function mountComponent(Component, params = {}) {
+    const env = await makeTestEnv({ serverData, mockRPC: params.mockRPC });
+    await mount(MainComponentsContainer, target, { env });
+    return mount(Component, target, { env, props: params.props || {} });
+}
 
 QUnit.module("Components", (hooks) => {
     hooks.beforeEach(async () => {
-        const serverData = {
+        serverData = {
             models: {
                 partner: {
                     fields: {
@@ -54,11 +60,9 @@ QUnit.module("Components", (hooks) => {
         registry.category("services").add("orm", ormService);
         registry.category("services").add("localization", makeFakeLocalizationService());
         registry.category("services").add("ui", uiService);
+        registry.category("services").add("view", viewService);
 
-        env = await makeTestEnv({ serverData });
         target = getFixture();
-
-        await mount(MainComponentsContainer, target, { env });
     });
 
     QUnit.module("ModelFieldSelector");
@@ -93,7 +97,7 @@ QUnit.module("Components", (hooks) => {
         `;
 
         // Create the field selector and its mock environment
-        fieldSelector = await mount(Parent, target, { env, props: {} });
+        const fieldSelector = await mountComponent(Parent);
 
         // Focusing the field selector input should open a field selector popover
         await click(target, ".o_field_selector");
@@ -209,8 +213,7 @@ QUnit.module("Components", (hooks) => {
 
         // Create the field selector and its mock environment
         // passing 'product_id' as a prefilled field-chain
-        await mount(ModelFieldSelector, target, {
-            env,
+        await mountComponent(ModelFieldSelector, {
             props: {
                 readonly: false,
                 fieldName: "product_id",
@@ -245,8 +248,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(2);
 
         // Create the field selector and its mock environment
-        await mount(ModelFieldSelector, target, {
-            env,
+        await mountComponent(ModelFieldSelector, {
             props: {
                 readonly: false,
                 fieldName: "",
@@ -272,8 +274,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(6);
 
         // Create the field selector and its mock environment
-        await mount(ModelFieldSelector, target, {
-            env,
+        await mountComponent(ModelFieldSelector, {
             props: {
                 readonly: false,
                 fieldName: "",
@@ -330,8 +331,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(1);
 
         // Create the field selector and its mock environment
-        await mount(ModelFieldSelector, target, {
-            env,
+        await mountComponent(ModelFieldSelector, {
             props: {
                 readonly: false,
                 showSearchInput: false,
@@ -352,8 +352,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(1);
 
         //create the field selector with domain value ["1"]
-        await mount(ModelFieldSelector, target, {
-            env,
+        await mountComponent(ModelFieldSelector, {
             props: {
                 readonly: false,
                 showSearchInput: false,
@@ -373,8 +372,7 @@ QUnit.module("Components", (hooks) => {
         assert.expect(1);
 
         //create the field selector with domain value ["0"]
-        await mount(ModelFieldSelector, target, {
-            env,
+        await mountComponent(ModelFieldSelector, {
             props: {
                 readonly: false,
                 showSearchInput: false,
@@ -388,5 +386,29 @@ QUnit.module("Components", (hooks) => {
             "0",
             "field name value should be 0."
         );
+    });
+
+    QUnit.test("cache fields_get", async (assert) => {
+        serverData.models.partner.fields.partner_id = {
+            string: "Partner",
+            type: "many2one",
+            relation: "partner",
+            searchable: true,
+        };
+
+        await mountComponent(ModelFieldSelector, {
+            mockRPC(route, { method }) {
+                if (method === "fields_get") {
+                    assert.step("fields_get");
+                }
+            },
+            props: {
+                readonly: false,
+                fieldName: "partner_id.partner_id.partner_id.foo",
+                resModel: "partner",
+            },
+        });
+
+        assert.verifySteps(["fields_get"]);
     });
 });
