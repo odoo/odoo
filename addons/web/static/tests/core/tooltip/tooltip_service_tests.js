@@ -26,6 +26,7 @@ const mainComponents = registry.category("main_components");
  * @param {function} [options.mockClearTimeout] the mocked clearTimeout to use (by default, does nothing)
  * @param {function} [options.mockClearInterval] the mocked clearInterval to use (by default, does nothing)
  * @param {function} [options.onPopoverAdded] use this callback to check what is being passed to the popover service
+ * @param {Object} [options.extraEnv] an object whose keys should be added to the env
  * @param {{[templateName:string]: string}} [options.templates] additional templates
  * @returns {Promise<Component>}
  */
@@ -47,7 +48,10 @@ export async function makeParent(Child, options = {}) {
     registry.category("services").add("popover", popoverService);
     registry.category("services").add("tooltip", tooltipService);
     registry.category("services").add("localization", makeFakeLocalizationService());
-    const env = await makeTestEnv();
+    let env = await makeTestEnv();
+    if (options.extraEnv) {
+        env = Object.create(env, Object.getOwnPropertyDescriptors(options.extraEnv));
+    }
 
     patchWithCleanup(env.services.popover, {
         add(...args) {
@@ -300,9 +304,9 @@ QUnit.module("Tooltip service", (hooks) => {
         `;
 
         const templates = {
-            my_tooltip_template: "<i>tooltip</i>",
+            my_tooltip_template: "<i t-esc='env.tooltip_text'/>",
         };
-        await makeParent(MyComponent, { templates });
+        await makeParent(MyComponent, { templates, extraEnv: { tooltip_text: "tooltip" } });
 
         assert.containsNone(target, ".o_popover_container .o-tooltip");
         target.querySelector("button").dispatchEvent(new Event("mouseenter"));
