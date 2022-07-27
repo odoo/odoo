@@ -2340,6 +2340,26 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, "div.o_horizontal_separator");
     });
 
+    QUnit.test("form views in dialogs do not have a control panel", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `<form><field name="foo"/></form>`,
+        };
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                target: "new",
+            },
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
+        assert.containsOnce(target, ".o_dialog .o_form_view");
+        assert.containsNone(target, ".o_dialog .o_form_view .o_control_panel");
+    });
+
     QUnit.test("buttons in form view", async function (assert) {
         assert.expect(11);
 

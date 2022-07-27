@@ -50,7 +50,7 @@ export class ControlPanel extends Component {
                 "bottom-left-buttons": true,
                 "bottom-right": true,
             },
-            this.props.display || this.env.searchModel.display.controlPanel
+            this.props.display
         );
         display.top = display["top-left"] || display["top-right"];
         display.bottom = display["bottom-left"] || display["bottom-right"];

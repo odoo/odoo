@@ -5,7 +5,6 @@
 // breadcrumbs: { type: Array, optional: true },
 // __getLocalState__: { type: CallbackRecorder, optional: true },
 // __getContext__: { type: CallbackRecorder, optional: true },
-// display: { type: Object, optional: true },
 // displayName: { type: String, optional: true },
 // noContentHelp: { type: String, optional: true },
 // searchViewId: { type: [Number, false], optional: true },
@@ -25,6 +24,7 @@ export const standardViewProps = {
     // Issue OWL: https://github.com/odoo/owl/issues/910
     context: { type: Object },
     createRecord: { type: Function, optional: true },
+    display: { type: Object, optional: true },
     domain: { type: Array },
     fields: { type: Object, elements: Object },
     globalState: { type: Object, optional: true },
