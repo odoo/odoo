@@ -1,3 +1,8 @@
 .o_field_cursor_disabled {
     cursor: not-allowed;
 }
+
+// TODO: remove legacy selector when there are no remaining legacy fields in codebase
+div.o_field_widget:not(.o_legacy_field_widget) {
+    display: contents;
+}
