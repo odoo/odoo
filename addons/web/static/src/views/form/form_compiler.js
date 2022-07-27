@@ -421,7 +421,7 @@ export class FormCompiler extends ViewCompiler {
         const noteBookAnchors = {};
 
         if (el.hasAttribute("class")) {
-            noteBook.setAttribute("className", `"${el.getAttribute("class")}"`);
+            noteBook.setAttribute("className", toStringExpression(el.getAttribute("class")));
             el.removeAttribute("class");
         }
 
@@ -436,11 +436,6 @@ export class FormCompiler extends ViewCompiler {
 
             const pageSlot = createElement("t");
             append(noteBook, pageSlot);
-
-            if (el.hasAttribute("name")) {
-                noteBook.setAttribute("name", `"${el.getAttribute("name")}"`);
-                el.removeAttribute("name");
-            }
 
             const pageId = `page_${this.id++}`;
             const pageTitle = toStringExpression(
