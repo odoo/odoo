@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 from odoo.tests import common
 
 
@@ -95,3 +96,8 @@ class TestStockCommon(common.TransactionCase):
         cls.UnitA = cls.ProductObj.create({'name': 'Unit-A', 'type': 'product'})
         cls.kgB = cls.ProductObj.create({'name': 'kg-B', 'type': 'product', 'uom_id': cls.uom_kg.id, 'uom_po_id': cls.uom_kg.id})
         cls.gB = cls.ProductObj.create({'name': 'g-B', 'type': 'product', 'uom_id': cls.uom_gm.id, 'uom_po_id': cls.uom_gm.id})
+
+    def url_extract_rec_id_and_model(self, url):
+        rec_id = re.findall(r'[?&]id=([^&]+).*', url)
+        model_name = re.findall(r'[?&]model=([^&]+).*', url)
+        return rec_id, model_name
