@@ -1337,7 +1337,7 @@ export class RelationalModel extends Model {
             if (payload.service === "ajax" && payload.method === "rpc") {
                 // ajax service uses an extra 'target' argument for rpc
                 args = args.concat(ev.target);
-                return payload.callback(owl.Component.env.session.rpc(...args));
+                return payload.callback(owl.Component.env.services.rpc(...args));
             } else if (payload.service === "notification") {
                 return this.notificationService.add(payload.message, {
                     className: payload.className,
