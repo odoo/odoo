@@ -3,14 +3,20 @@
 import { useService } from "@web/core/utils/hooks";
 
 export function useModelField() {
-    const orm = useService("orm");
+    const view = useService("view");
 
     const loadModelFields = (resModel) => {
-        // should be cached
-        return orm.call(resModel, "fields_get", [
-            false,
-            ["store", "searchable", "type", "string", "relation", "selection", "related"],
-        ]);
+        return view.loadFields(resModel, {
+            attributes: [
+                "store",
+                "searchable",
+                "type",
+                "string",
+                "relation",
+                "selection",
+                "related",
+            ],
+        });
     };
 
     const loadChain = async (resModel, fieldName) => {
