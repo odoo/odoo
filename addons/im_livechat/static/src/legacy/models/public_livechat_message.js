@@ -302,15 +302,6 @@ const PublicLivechatMessage = Class.extend({
         );
     },
     /**
-     * State whether this message originates from a channel.
-     * By default, messages do not originate from a channel.
-     *
-     * @return {boolean}
-     */
-    originatesFromChannel() {
-        return false;
-    },
-    /**
      * State whether this message has a subject
      * By default, messages do not have any subject.
      *
