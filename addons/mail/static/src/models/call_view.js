@@ -5,7 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
-import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallView',
@@ -80,10 +80,20 @@ registerModel({
          * @private
          */
         _computeCallSideBarView() {
-            if (this.mainParticipantCard && this.hasSidebar && !this.threadView.compact) {
+            if (this.activeRtcSession && this.isSidebarOpen && !this.threadView.compact) {
                 return insertAndReplace();
             }
             return clear();
+        },
+        _computeFilteredChannelMembers() {
+            const channelMembers = [];
+            for (const channelMember of this.channel.channel.callParticipants) {
+                if (this.filterVideoGrid && !channelMember.isStreaming) {
+                    continue;
+                }
+                channelMembers.push(channelMember);
+            }
+            return replace(channelMembers);
         },
         /**
          * @private
@@ -95,7 +105,7 @@ registerModel({
             if (this.isFullScreen || this.threadView.compact) {
                 return false;
             }
-            if (this.mainParticipantCard) {
+            if (this.activeRtcSession) {
                 return false;
             }
             return !this.channel.rtc || this.channel.videoCount === 0;
@@ -109,43 +119,10 @@ registerModel({
         },
         /**
          * @private
-         */
-        _computeMainParticipantCard() {
-            if (!this.messaging || !this.activeRtcSession || !this.threadView || !this.activeRtcSession) {
-                return clear();
-            }
-            return insert({
-                channelMember: replace(this.activeRtcSession.channelMember),
-            });
-        },
-        /**
-         * @private
          * @returns {string}
          */
         _computeSettingsTitle() {
             return this.env._t("Settings");
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeTileParticipantCards() {
-            if (!this.threadView) {
-                return clear();
-            }
-            if (this.activeRtcSession && !this.hasSidebar) {
-                return clear();
-            }
-            const tileCards = [];
-            for (const channelMember of this.channel.channel.callParticipants) {
-                if (this.filterVideoGrid && !channelMember.isStreaming) {
-                    continue;
-                }
-                tileCards.push({
-                    channelMember: replace(channelMember),
-                });
-            }
-            return insertAndReplace(tileCards);
         },
         /**
          * @private
@@ -202,17 +179,14 @@ registerModel({
             related: 'threadView.thread',
             required: true,
         }),
+        filteredChannelMembers: many('ChannelMember', {
+            compute: '_computeFilteredChannelMembers',
+        }),
         /**
          * Determines whether we only display the videos or all the participants
          */
         filterVideoGrid: attr({
             default: false,
-        }),
-        /**
-         * Determines if the viewer should have a sidebar.
-         */
-        hasSidebar: attr({
-            default: true,
         }),
         /**
          * Determines if the viewer should be displayed fullScreen.
@@ -228,19 +202,14 @@ registerModel({
             default: false,
             compute: '_computeIsMinimized',
         }),
+        isSidebarOpen: attr({
+            default: true,
+        }),
         /**
          * Text content that is displayed on title of the layout settings dialog.
          */
         layoutSettingsTitle: attr({
             compute: '_computeLayoutSettingsTitle',
-        }),
-        /**
-         * If set, the card to be displayed as the main card.
-         */
-        mainParticipantCard: one('CallParticipantCard', {
-            compute: '_computeMainParticipantCard',
-            inverse: 'callViewAsMainCard',
-            isCausal: true,
         }),
         /**
          * All the participant cards of the call viewer (main card and tile cards).
@@ -263,14 +232,6 @@ registerModel({
             inverse: 'callView',
             readonly: true,
             required: true,
-        }),
-        /**
-         * List of all participant cards (can either be invitations or rtcSessions).
-         */
-        tileParticipantCards: many('CallParticipantCard', {
-            compute: '_computeTileParticipantCards',
-            inverse: 'callViewAsTile',
-            isCausal: true,
         }),
     },
     onChanges: [
