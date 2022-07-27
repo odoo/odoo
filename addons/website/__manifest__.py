@@ -160,10 +160,7 @@
             'website/static/src/scss/website.backend.scss',
             'website/static/src/scss/website_visitor_views.scss',
             'website/static/src/scss/website.theme_install.scss',
-            'website/static/src/js/backend/button.js',
-            'website/static/src/js/backend/dashboard.js',
-            'website/static/src/js/backend/res_config_settings.js',
-            'website/static/src/js/backend/view_hierarchy.js',
+            'website/static/src/js/backend/**/*',
             'website/static/src/js/widget_iframe.js',
             'website/static/src/js/theme_preview_kanban.js',
             'website/static/src/js/theme_preview_form.js',
@@ -184,6 +181,7 @@
         'web.qunit_suite_tests': [
             'website/static/tests/dashboard_tests.js',
             'website/static/tests/website_tests.js',
+            'website/static/tests/redirect_field_tests.js',
         ],
         'web.tests_assets': [
             'website/static/tests/website_service_mock.js',
@@ -266,6 +264,7 @@
             'website/static/src/xml/website.backend.xml',
             'website/static/src/xml/website_widget.xml',
             'website/static/src/xml/theme_preview.xml',
+            'website/static/src/js/backend/**/*',
         ],
         'website.test_bundle': [
             '/web/static/lib/qweb/qweb2.js',
