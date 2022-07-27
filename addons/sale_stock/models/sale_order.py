@@ -117,13 +117,16 @@ class SaleOrder(models.Model):
 
         res = super(SaleOrder, self).write(values)
         if values.get('order_line') and self.state == 'sale':
+            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             for order in self:
                 to_log = {}
                 for order_line in order.order_line:
-                    if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), order_line.product_uom.rounding) < 0:
+                    if order_line.display_type:
+                        continue
+                    if float_compare(order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0), precision_rounding=order_line.product_uom.rounding or rounding) < 0:
                         to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty.get(order_line, 0.0))
                 if to_log:
-                    documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
+                    documents = self.env['stock.picking'].sudo()._log_activity_get_documents(to_log, 'move_ids', 'UP')
                     documents = {k:v for k, v in documents.items() if k[0].state != 'cancel'}
                     order._log_decrease_ordered_quantity(documents)
         return res
@@ -160,7 +163,8 @@ class SaleOrder(models.Model):
     @api.onchange('user_id')
     def onchange_user_id(self):
         super().onchange_user_id()
-        self.warehouse_id = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
+        if self.state in ['draft','sent']:
+            self.warehouse_id = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
 
     @api.onchange('partner_shipping_id')
     def _onchange_partner_shipping_id(self):
@@ -180,15 +184,12 @@ class SaleOrder(models.Model):
     def action_view_delivery(self):
         return self._get_action_view_picking(self.picking_ids)
 
-    def action_cancel(self):
-        res = super(SaleOrder, self).action_cancel()
-        if(isinstance(res, dict)):
-            return res
+    def _action_cancel(self):
         documents = None
         for sale_order in self:
             if sale_order.state == 'sale' and sale_order.order_line:
                 sale_order_lines_quantities = {order_line: (order_line.product_uom_qty, 0) for order_line in sale_order.order_line}
-                documents = self.env['stock.picking']._log_activity_get_documents(sale_order_lines_quantities, 'move_ids', 'UP')
+                documents = self.env['stock.picking'].with_context(include_draft_documents=True)._log_activity_get_documents(sale_order_lines_quantities, 'move_ids', 'UP')
         self.picking_ids.filtered(lambda p: p.state != 'done').action_cancel()
         if documents:
             filtered_documents = {}
@@ -198,7 +199,7 @@ class SaleOrder(models.Model):
                         continue
                 filtered_documents[(parent, responsible)] = rendering_context
             self._log_decrease_ordered_quantity(filtered_documents, cancel=True)
-        return res
+        return super()._action_cancel()
 
     def _get_action_view_picking(self, pickings):
         '''
@@ -425,9 +426,8 @@ class SaleOrderLine(models.Model):
     def write(self, values):
         lines = self.env['sale.order.line']
         if 'product_uom_qty' in values:
-            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            lines = self.filtered(
-                lambda r: r.state == 'sale' and not r.is_expense and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+            lines = self.filtered(lambda r: r.state == 'sale' and not r.is_expense)
+
         previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
         res = super(SaleOrderLine, self).write(values)
         if lines:
@@ -473,27 +473,6 @@ class SaleOrderLine(models.Model):
     def _onchange_product_id_set_customer_lead(self):
         self.customer_lead = self.product_id.sale_delay
 
-    @api.onchange('product_uom_qty')
-    def _onchange_product_uom_qty(self):
-        # When modifying a one2many, _origin doesn't guarantee that its values will be the ones
-        # in database. Hence, we need to explicitly read them from there.
-        if self._origin:
-            product_uom_qty_origin = self._origin.read(["product_uom_qty"])[0]["product_uom_qty"]
-        else:
-            product_uom_qty_origin = 0
-
-        if self.state == 'sale' and self.product_id.type in ['product', 'consu'] and self.product_uom_qty < product_uom_qty_origin:
-            # Do not display this warning if the new quantity is below the delivered
-            # one; the `write` will raise an `UserError` anyway.
-            if self.product_uom_qty < self.qty_delivered:
-                return {}
-            warning_mess = {
-                'title': _('Ordered quantity decreased!'),
-                'message' : _('You are decreasing the ordered quantity! Do not forget to manually update the delivery order if needed.'),
-            }
-            return {'warning': warning_mess}
-        return {}
-
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
         comming from a sale order line. This method could be override in order to add other custom key that could
@@ -515,6 +494,7 @@ class SaleOrderLine(models.Model):
             'product_description_variants': self._get_sale_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
             'product_packaging_id': self.product_packaging_id,
+            'sequence': self.sequence,
         })
         return values
 
@@ -562,6 +542,8 @@ class SaleOrderLine(models.Model):
         sale order line. procurement group will launch '_run_pull', '_run_buy' or '_run_manufacture'
         depending on the sale order line product rule.
         """
+        if self._context.get("skip_procurement"):
+            return True
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         procurements = []
         for line in self:
@@ -569,7 +551,7 @@ class SaleOrderLine(models.Model):
             if line.state != 'sale' or not line.product_id.type in ('consu','product'):
                 continue
             qty = line._get_qty_procurement(previous_product_uom_qty)
-            if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
+            if float_compare(qty, line.product_uom_qty, precision_digits=precision) == 0:
                 continue
 
             group_id = line._get_procurement_group()

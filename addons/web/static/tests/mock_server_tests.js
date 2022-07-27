@@ -87,8 +87,7 @@ QUnit.test("performRPC: search with active_test=false", async function (assert) 
             context: { active_test: false },
         },
     });
-    const ids = result.map((record) => record.id);
-    assert.deepEqual(ids, [1, 2]);
+    assert.deepEqual(result, [1, 2]);
 });
 
 QUnit.test("performRPC: search with active_test=true", async function (assert) {
@@ -102,8 +101,7 @@ QUnit.test("performRPC: search with active_test=true", async function (assert) {
             context: { active_test: true },
         },
     });
-    const ids = result.map((record) => record.id);
-    assert.deepEqual(ids, [1]);
+    assert.deepEqual(result, [1]);
 });
 
 QUnit.test("performRPC: search_read with active_test=false", async function (assert) {

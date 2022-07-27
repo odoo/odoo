@@ -112,10 +112,11 @@ function factory(dependencies) {
         }),
         userSetting: one2one('mail.user_setting', {
             inverse: 'rtcConfigurationMenu',
+            readonly: true,
             required: true,
         }),
     };
-
+    RtcConfigurationMenu.identifyingFields = ['userSetting'];
     RtcConfigurationMenu.modelName = 'mail.rtc_configuration_menu';
 
     return RtcConfigurationMenu;

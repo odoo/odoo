@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.auth_totp_mail_enforce</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="40"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='allow_import']" position="before">
+                    <div class="col-12 col-lg-6 o_setting_box" id="auth_totp_policy">
+                        <div class="o_setting_left_pane">
+                            <field name="auth_totp_enforce" />
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="auth_totp_policy"/>
+                            <div class="text-muted">
+                                Enforce the two-factor authentication by email for employees or for all users
+                                (including portal users) if they didn't enable any other two-factor authentication
+                                method.
+                            </div>
+                            <div class="mt16" attrs="{'invisible': [('auth_totp_enforce', '=', False)]}">
+                                <field name="auth_totp_policy" class="o_light_label" widget="radio"/>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

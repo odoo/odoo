@@ -76,7 +76,7 @@ class TestMassMailingServer(TestMassMailCommon, MockSmtplibCase):
         self.assertEqual(self.find_mail_server_mocked.call_count, 1)
         self.assert_email_sent_smtp(
             smtp_from='notifications@test.com',
-            message_from='"Testing (unknow_email@unknow_domain.com)" <notifications@test.com>',
+            message_from='"Testing" <notifications@test.com>',
             from_filter=self.server_notification.from_filter,
             emails_count=8,
         )

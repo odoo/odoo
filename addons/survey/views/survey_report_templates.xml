@@ -78,6 +78,7 @@
                                 <t t-elif="len(certified_name) > 20">
                                     <t t-set="certif_style" t-value="certif_style + 'font-size: 30px; line-height: 4;'"/>
                                 </t>
+                                <br/>
                                 <span t-att-style="certif_style" class="user-name" t-esc="certified_name"/>
 
                                 <br/>by <span class="certification-company" t-field="user_input.env.company.display_name"/>

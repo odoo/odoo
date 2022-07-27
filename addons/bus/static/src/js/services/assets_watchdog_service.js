@@ -2,26 +2,19 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 
 export const assetsWatchdogService = {
     dependencies: ["notification"],
 
     start(env, { notification }) {
-        const assets = {};
         let isNotificationDisplayed = false;
         let bundleNotifTimerID = null;
 
         env.bus.on("WEB_CLIENT_READY", null, async () => {
             const legacyEnv = owl.Component.env;
-
-            document.querySelectorAll("*[data-asset-bundle]").forEach((el) => {
-                assets[el.getAttribute("data-asset-bundle")] = el.getAttribute(
-                    "data-asset-version"
-                );
-            });
-
             legacyEnv.services.bus_service.onNotification(this, onNotification);
-            legacyEnv.services.bus_service.addChannel("bundle_changed");
+            legacyEnv.services.bus_service.startPolling();
         });
 
         /**
@@ -76,11 +69,9 @@ export const assetsWatchdogService = {
          * @param {Array} notifications: list of received notifications
          */
         function onNotification(notifications) {
-            for (const notif of notifications) {
-                if (notif[0][1] === "bundle_changed") {
-                    const bundleXmlId = notif[1][0];
-                    const bundleVersion = notif[1][1];
-                    if (bundleXmlId in assets && bundleVersion !== assets[bundleXmlId]) {
+            for (const { payload, type } of notifications) {
+                if (type === 'bundle_changed') {
+                    if (payload.server_version !== session.server_version) {
                         displayBundleChangedNotification();
                         break;
                     }

@@ -17,7 +17,8 @@ class Category(models.Model):
     name = fields.Char(required=True)
     color = fields.Integer('Color Index')
     parent = fields.Many2one('test_new_api.category', ondelete='cascade')
-    parent_path = fields.Char(index=True, unaccent=False)
+    parent_path = fields.Char(index=True)
+    depth = fields.Integer(compute="_compute_depth")
     root_categ = fields.Many2one(_name, compute='_compute_root_categ')
     display_name = fields.Char(compute='_compute_display_name', recursive=True,
                                inverse='_inverse_display_name')
@@ -44,6 +45,11 @@ class Category(models.Model):
             while current.parent:
                 current = current.parent
             cat.root_categ = current
+
+    @api.depends('parent_path')
+    def _compute_depth(self):
+        for cat in self:
+            cat.depth = cat.parent_path.count('/') - 1
 
     def _inverse_display_name(self):
         for cat in self:
@@ -347,6 +353,7 @@ class Foo(models.Model):
     name = fields.Char()
     value1 = fields.Integer(change_default=True)
     value2 = fields.Integer()
+    text = fields.Char(trim=False)
 
 
 class Bar(models.Model):
@@ -357,6 +364,8 @@ class Bar(models.Model):
     foo = fields.Many2one('test_new_api.foo', compute='_compute_foo', search='_search_foo')
     value1 = fields.Integer(related='foo.value1', readonly=False)
     value2 = fields.Integer(related='foo.value2', readonly=False)
+    text1 = fields.Char('Text1', related='foo.text', readonly=False)
+    text2 = fields.Char('Text2', related='foo.text', readonly=False, trim=True)
 
     @api.depends('name')
     def _compute_foo(self):
@@ -496,6 +505,32 @@ class Payment(models.Model):
     move_id = fields.Many2one('test_new_api.move', required=True, ondelete='cascade')
 
 
+class Order(models.Model):
+    _name = _description = 'test_new_api.order'
+
+    line_ids = fields.One2many('test_new_api.order.line', 'order_id')
+
+
+class OrderLine(models.Model):
+    _name = _description = 'test_new_api.order.line'
+
+    order_id = fields.Many2one('test_new_api.order', required=True, ondelete='cascade')
+    product = fields.Char()
+    reward = fields.Boolean()
+
+    def unlink(self):
+        # also delete associated reward lines
+        reward_lines = [
+            other_line
+            for line in self
+            if not line.reward
+            for other_line in line.order_id.line_ids
+            if other_line.reward and other_line.product == line.product
+        ]
+        self = self.union(*reward_lines)
+        return super().unlink()
+
+
 class CompanyDependent(models.Model):
     _name = 'test_new_api.company'
     _description = 'Test New API Company'
@@ -504,6 +539,9 @@ class CompanyDependent(models.Model):
     date = fields.Date(company_dependent=True)
     moment = fields.Datetime(company_dependent=True)
     tag_id = fields.Many2one('test_new_api.multi.tag', company_dependent=True)
+    truth = fields.Boolean(company_dependent=True)
+    count = fields.Integer(company_dependent=True)
+    phi = fields.Float(company_dependent=True, digits=(2, 5))
 
 
 class CompanyDependentAttribute(models.Model):
@@ -1179,7 +1217,7 @@ class SelectionRequiredLiteral(models.Model):
 
     my_selection = fields.Selection(selection_add=[
         ('bacon', "Bacon"),
-    ], ondelete={'bacon': lambda r: r.write({'my_selection': 'bar'})})
+    ], ondelete={'bacon': 'set bar'})
 
 
 class SelectionRequiredMultiple(models.Model):
@@ -1361,3 +1399,40 @@ class TriggerRight(models.Model):
     def _compute_left_size(self):
         for record in self:
             record.left_size = len(record.left_ids)
+
+
+class Crew(models.Model):
+    _name = 'test_new_api.crew'
+    _description = 'All yaaaaaarrrrr by ship'
+    _table = 'test_new_api_crew'
+
+    # this actually represents the union of two relations pirate/ship and
+    # prisoner/ship, where some of the many2one fields can be NULL
+    pirate_id = fields.Many2one('test_new_api.pirate')
+    prisoner_id = fields.Many2one('test_new_api.prisoner')
+    ship_id = fields.Many2one('test_new_api.ship')
+
+
+class Ship(models.Model):
+    _name = 'test_new_api.ship'
+    _description = 'Yaaaarrr machine'
+
+    name = fields.Char('Name')
+    pirate_ids = fields.Many2many('test_new_api.pirate', 'test_new_api_crew', 'ship_id', 'pirate_id')
+    prisoner_ids = fields.Many2many('test_new_api.prisoner', 'test_new_api_crew', 'ship_id', 'prisoner_id')
+
+
+class Pirate(models.Model):
+    _name = 'test_new_api.pirate'
+    _description = 'Yaaarrr'
+
+    name = fields.Char('Name')
+    ship_ids = fields.Many2many('test_new_api.ship', 'test_new_api_crew', 'pirate_id', 'ship_id')
+
+
+class Prisoner(models.Model):
+    _name = 'test_new_api.prisoner'
+    _description = 'Yaaarrr minions'
+
+    name = fields.Char('Name')
+    ship_ids = fields.Many2many('test_new_api.ship', 'test_new_api_crew', 'prisoner_id', 'ship_id')

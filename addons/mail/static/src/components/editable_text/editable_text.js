@@ -57,6 +57,9 @@ export class EditableText extends Component {
      * @param {KeyboardEvent} ev
      */
     _onKeydownEnter(ev) {
+        if (!this.el) {
+            return;
+        }
         const value = this.el.value;
         const newName = value || this.props.placeholder;
         if (this.props.value !== newName) {

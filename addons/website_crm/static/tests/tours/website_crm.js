@@ -8,10 +8,12 @@ odoo.define('website_crm.tour', function(require) {
         url: '/contactus?enable_editor=1',
     }, [{
         content: "Select contact form",
-        trigger: "section.s_website_form",
+        trigger: "#wrap.o_editable section.s_website_form",
+        extra_trigger: "body.editor_enable",
     }, {
         content: "Open action select",
         trigger: "we-select:has(we-button:contains('Create an Opportunity')) we-toggler",
+        extra_trigger: "#oe_snippets .o_we_customize_snippet_btn.active",
     }, {
         content: "Select 'Create an Opportunity' as form action",
         trigger: "we-select we-button:contains('Create an Opportunity')",

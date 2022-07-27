@@ -19,10 +19,10 @@ export class DeleteMessageConfirmDialog extends Component {
     }
 
     /**
-     * @returns {mail.message}
+     * @returns {mail.message_action_list}
      */
-    get actionList() {
-        return this.messaging && this.messaging.models['mail.message_action_list'].get(this.props.actionListLocalId);
+    get messageActionList() {
+        return this.messaging && this.messaging.models['mail.message_action_list'].get(this.props.messageActionListLocalId);
     }
 }
 
@@ -31,7 +31,7 @@ Object.assign(DeleteMessageConfirmDialog, {
         Dialog,
     },
     props: {
-        actionListLocalId: String,
+        messageActionListLocalId: String,
     },
     template: 'mail.DeleteMessageConfirmDialog',
 });

@@ -54,6 +54,7 @@ const _DialogLinkWidget = Link.extend({
         }
         this.data.isNewWindow = data.isNewWindow;
         this.final_data = this.data;
+        return Promise.resolve();
     },
 
     //--------------------------------------------------------------------------
@@ -73,7 +74,10 @@ const _DialogLinkWidget = Link.extend({
             href: data.url && data.url.length ? data.url : '#',
             class: `${data.classes.replace(/float-\w+/, '')} o_btn_preview`,
         };
-        this.$("#link-preview").attr(attrs).html((data.content && data.content.length) ? data.content : data.url);
+
+        const $linkPreview = this.$("#link-preview");
+        $linkPreview.attr(attrs);
+        this._updateLinkContent($linkPreview, data, { force: true });
     },
     /**
      * @override
@@ -196,9 +200,12 @@ const LinkDialog = Dialog.extend({
      * @override
      */
     save: function () {
-        this.linkWidget.save();
-        this.final_data = this.linkWidget.final_data;
-        return this._super(...arguments);
+        const _super = this._super.bind(this);
+        const saveArguments = arguments;
+        return this.linkWidget.save().then(() => {
+            this.final_data = this.linkWidget.final_data;
+            return _super(...saveArguments);
+        });
     },
 });
 

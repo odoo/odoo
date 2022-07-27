@@ -388,3 +388,73 @@ class TestSaleToInvoice(TestSaleCommon):
         qty_invoiced_field = sol_prod_deliver._fields.get('qty_invoiced')
         sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
         self.assertEqual(sol_prod_deliver.qty_invoiced, expected_qty)
+
+    def test_invoice_analytic_account_default(self):
+        """ Tests whether, when an analytic account rule is set and the so has no analytic account,
+        the default analytic acount is correctly computed in the invoice.
+        """
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
+
+        self.env['account.analytic.default'].create({
+            'analytic_id': analytic_account_default.id,
+            'product_id': self.product_a.id,
+        })
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+
+        with so_form.order_line.new() as sol:
+            sol.product_id = self.product_a
+            sol.product_uom_qty = 1
+
+        so = so_form.save()
+        so.action_confirm()
+        so._force_lines_to_invoice_policy_order()
+
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [so.id],
+            'active_id': so.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        down_payment = self.env['sale.advance.payment.inv'].with_context(so_context).create({})
+        down_payment.create_invoices()
+
+        aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
+        self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_default.id}])
+
+    def test_invoice_analytic_account_so_not_default(self):
+        """ Tests whether, when an analytic account rule is set and the so has an analytic account,
+        the default analytic acount doesn't replace the one from the so in the invoice.
+        """
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default'})
+        analytic_account_so = self.env['account.analytic.account'].create({'name': 'so'})
+
+        self.env['account.analytic.default'].create({
+            'analytic_id': analytic_account_default.id,
+            'product_id': self.product_a.id,
+        })
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+        so_form.analytic_account_id = analytic_account_so
+
+        with so_form.order_line.new() as sol:
+            sol.product_id = self.product_a
+            sol.product_uom_qty = 1
+
+        so = so_form.save()
+        so.action_confirm()
+        so._force_lines_to_invoice_policy_order()
+
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [so.id],
+            'active_id': so.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        down_payment = self.env['sale.advance.payment.inv'].with_context(so_context).create({})
+        down_payment.create_invoices()
+
+        aml = self.env['account.move.line'].search([('move_id', 'in', so.invoice_ids.ids)])[0]
+        self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_so.id}])

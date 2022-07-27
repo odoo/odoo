@@ -14,9 +14,6 @@ var EventCreateDialog = Dialog.extend({
         'change select[name="event_location"]': '_onLocationChanged',
         'click .input-group-append': '_onDatetimeClicked',
     }),
-    cssLibs: [
-        '/web/static/lib/daterangepicker/daterangepicker.css',
-    ],
     jsLibs: [
         '/web/static/lib/daterangepicker/daterangepicker.js',
         '/web/static/src/legacy/js/libs/daterangepicker.js',
@@ -168,7 +165,6 @@ var EventCreateDialog = Dialog.extend({
             locale: {
                 direction: textDirection,
                 format: time.getLangDatetimeFormat().replace(':ss', ''),
-                separator: ' 🠖 ',
                 applyLabel: _t('Apply'),
                 cancelLabel: _t('Cancel'),
                 weekLabel: 'W',

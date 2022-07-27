@@ -43,7 +43,7 @@ var ReportWidget = Widget.extend({
             context: {
                 active_id : $el.data('lot_id'),
                 active_model : 'stock.production.lot',
-                url: '/stock/output_format/stock/active_id'
+                url: '/stock/output_format/stock?active_id=:active_id&active_model=:active_model',
             },
         });
     },

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import unittest
-from unittest.mock import patch
 
 import psycopg2
 
@@ -486,8 +484,14 @@ class TestExpression(SavepointCaseWithUserDemo):
 
         # test many2many operator with False
         partners = self._search(Partner, [('category_id', '=', False)])
+        self.assertTrue(partners)
         for partner in partners:
             self.assertFalse(partner.category_id)
+
+        partners = self._search(Partner, [('category_id', '!=', False)])
+        self.assertTrue(partners)
+        for partner in partners:
+            self.assertTrue(partner.category_id)
 
         # filtering on nonexistent value across x2many should return nothing
         partners = self._search(Partner, [('child_ids.city', '=', 'foo')])
@@ -674,29 +678,13 @@ class TestExpression(SavepointCaseWithUserDemo):
 
     def test_accent(self):
         if not self.registry.has_unaccent:
-            raise unittest.SkipTest("unaccent not enabled")
-
-        Model = self.env['res.partner.category']
-        helen = Model.create({'name': 'Hélène'})
-        self.assertEqual(helen, Model.search([('name', 'ilike', 'Helene')]))
-        self.assertEqual(helen, Model.search([('name', 'ilike', 'hélène')]))
-        self.assertNotIn(helen, Model.search([('name', 'not ilike', 'Helene')]))
-        self.assertNotIn(helen, Model.search([('name', 'not ilike', 'hélène')]))
-
-        hermione, nicostratus = Model.create([
-            {'name': 'Hermione', 'parent_id': helen.id},
-            {'name': 'Nicostratus', 'parent_id': helen.id}
-        ])
-        self.assertEqual(nicostratus.parent_path, f'{helen.id}/{nicostratus.id}/')
-
-        with patch('odoo.osv.expression.get_unaccent_wrapper') as w:
-            w().side_effect = lambda x: x
-            rs = Model.search([('parent_path', 'like', f'{helen.id}/%')], order='id asc')
-            self.assertEqual(rs, helen | hermione | nicostratus)
-            # the result of `get_unaccent_wrapper()` is the wrapper and that's
-            # what should not be called
-            w().assert_not_called()
-
+            return
+        Company = self.env['res.company']
+        helene = Company.create({'name': u'Hélène'})
+        self.assertEqual(helene, Company.search([('name','ilike','Helene')]))
+        self.assertEqual(helene, Company.search([('name','ilike','hélène')]))
+        self.assertNotIn(helene, Company.search([('name','not ilike','Helene')]))
+        self.assertNotIn(helene, Company.search([('name','not ilike','hélène')]))
 
     def test_pure_function(self):
         orig_false = expression.FALSE_DOMAIN.copy()
@@ -1469,7 +1457,7 @@ class TestOne2many(TransactionCase):
                     SELECT "res_partner_bank"."partner_id"
                     FROM "res_partner_bank"
                     WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
-                ))
+                )) AND "res_partner"."parent_id" IS NOT NULL
             ))
             ORDER BY "res_partner"."display_name"
         ''']):
@@ -1610,6 +1598,30 @@ class TestOne2many(TransactionCase):
         ''']):
             self.Partner.search([('bank_ids', 'like', '12')])
 
+    def test_empty(self):
+        self.Partner.search([('bank_ids', '!=', False)], order='id')
+        self.Partner.search([('bank_ids', '=', False)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."id" IN (
+                SELECT "partner_id" FROM "res_partner_bank" WHERE "partner_id" IS NOT NULL
+            ))
+            ORDER BY "res_partner"."id"
+        ''']):
+            self.Partner.search([('bank_ids', '!=', False)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE ("res_partner"."id" NOT IN (
+                SELECT "partner_id" FROM "res_partner_bank" WHERE "partner_id" IS NOT NULL
+            ))
+            ORDER BY "res_partner"."id"
+        ''']):
+            self.Partner.search([('bank_ids', '=', False)], order='id')
+
 
 class TestMany2many(TransactionCase):
     def setUp(self):
@@ -1628,9 +1640,11 @@ class TestMany2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users".id
             FROM "res_users"
-            WHERE ("res_users"."id" IN (
-                SELECT "uid" FROM "res_groups_users_rel" WHERE "gid" IN %s
-            ))
+            WHERE EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users".id
+                AND "res_users__groups_id"."gid" IN %s
+            )
             ORDER BY "res_users"."id"
         ''']):
             self.User.search([('groups_id', 'in', group.ids)], order='id')
@@ -1638,13 +1652,27 @@ class TestMany2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users".id
             FROM "res_users"
-            WHERE ("res_users"."id" IN (
-                SELECT "uid" FROM "res_groups_users_rel" WHERE "gid" IN (
+            WHERE NOT EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users".id
+                AND "res_users__groups_id"."gid" IN %s
+            )
+            ORDER BY "res_users"."id"
+        ''']):
+            self.User.search([('groups_id', 'not in', group.ids)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_users".id
+            FROM "res_users"
+            WHERE EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users".id
+                AND "res_users__groups_id"."gid" IN (
                     SELECT "res_groups".id
                     FROM "res_groups"
                     WHERE ("res_groups"."color" = %s)
                 )
-            ))
+            )
             ORDER BY "res_users"."id"
         ''']):
             self.User.search([('groups_id.color', '=', group.color)], order='id')
@@ -1652,19 +1680,23 @@ class TestMany2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users".id
             FROM "res_users"
-            WHERE ("res_users"."id" IN (
-                SELECT "uid" FROM "res_groups_users_rel" WHERE "gid" IN (
+            WHERE EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users".id
+                AND "res_users__groups_id"."gid" IN (
                     SELECT "res_groups".id
                     FROM "res_groups"
-                    WHERE ("res_groups"."id" IN (
-                        SELECT "group_id" FROM "rule_group_rel" WHERE "rule_group_id" IN (
+                    WHERE EXISTS (
+                        SELECT 1 FROM "rule_group_rel" AS "res_groups__rule_groups"
+                        WHERE "res_groups__rule_groups"."group_id" = "res_groups".id
+                        AND "res_groups__rule_groups"."rule_group_id" IN (
                             SELECT "ir_rule".id
                             FROM "ir_rule"
                             WHERE ("ir_rule"."name"::text LIKE %s)
                         )
-                    ))
+                    )
                 )
-            ))
+            )
             ORDER BY "res_users"."id"
         ''']):
             self.User.search([('groups_id.rule_groups.name', 'like', rule.name)], order='id')
@@ -1680,13 +1712,41 @@ class TestMany2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users".id
             FROM "res_users"
-            WHERE ("res_users"."id" IN (
-                SELECT "user_id" FROM "res_company_users_rel" WHERE "cid" IN (
+            WHERE EXISTS (
+                SELECT 1 FROM "res_company_users_rel" AS "res_users__company_ids"
+                WHERE "res_users__company_ids"."user_id" = "res_users".id
+                AND "res_users__company_ids"."cid" IN (
                     SELECT "res_company".id
                     FROM "res_company"
                     WHERE ("res_company"."name"::text LIKE %s)
                 )
-            ))
+            )
             ORDER BY "res_users"."id"
         ''']):
             self.User.search([('company_ids', 'like', self.company.name)], order='id')
+
+    def test_empty(self):
+        self.User.search([('groups_id', '!=', False)], order='id')
+        self.User.search([('groups_id', '=', False)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_users".id
+            FROM "res_users"
+            WHERE EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users".id
+            )
+            ORDER BY "res_users"."id"
+        ''']):
+            self.User.search([('groups_id', '!=', False)], order='id')
+
+        with self.assertQueries(['''
+            SELECT "res_users".id
+            FROM "res_users"
+            WHERE NOT EXISTS (
+                SELECT 1 FROM "res_groups_users_rel" AS "res_users__groups_id"
+                WHERE "res_users__groups_id"."uid" = "res_users".id
+            )
+            ORDER BY "res_users"."id"
+        ''']):
+            self.User.search([('groups_id', '=', False)], order='id')

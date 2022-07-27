@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
 const { Component } = owl;
@@ -14,6 +15,7 @@ export class DiscussSidebar extends Component {
     constructor(...args) {
         super(...args);
         useUpdate({ func: () => this._update() });
+        useRefToModel({ fieldName: 'startAMeetingButtonRef', modelName: 'mail.discuss', propNameAsRecordLocalId: 'localId', refName: 'startAMeetingButton' });
         /**
          * Reference of the quick search input. Useful to filter channels and
          * chats based on this input content.
@@ -29,7 +31,7 @@ export class DiscussSidebar extends Component {
      * @returns {mail.discuss}
      */
     get discuss() {
-        return this.messaging && this.messaging.discuss;
+        return this.messaging && this.messaging.models['mail.discuss'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
@@ -64,7 +66,9 @@ export class DiscussSidebar extends Component {
 }
 
 Object.assign(DiscussSidebar, {
-    props: {},
+    props: {
+        localId: String
+    },
     template: 'mail.DiscussSidebar',
 });
 

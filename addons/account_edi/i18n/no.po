@@ -1,0 +1,440 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_edi
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"PO-Revision-Date: 2021-09-14 12:19+0000\n"
+"Language-Team: Norwegian (https://www.transifex.com/odoo/teams/41243/no/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: no\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_move.py:0
+#, python-format
+msgid " Electronic invoicing error(s)"
+msgstr ""
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_move.py:0
+#, python-format
+msgid " Electronic invoicing info(s)"
+msgstr ""
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_move.py:0
+#, python-format
+msgid " Electronic invoicing warning(s)"
+msgstr ""
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_move.py:0
+#, python-format
+msgid "A cancellation of the EDI has been requested."
+msgstr ""
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_move.py:0
+#, python-format
+msgid "A request for cancellation of the EDI has been called off."
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_ir_attachment
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__attachment_id
+msgid "Attachment"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__blocking_level
+msgid "Blocking Level"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
+msgid ""
+"Blocks the current operation of the document depending on the error severity:\n"
+"  * Info: the document is not blocked and everything is working as it should.\n"
+"  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
+"  * Error: there is an error that blocks the current Electronic Invoicing operation."
+msgstr ""
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Call off EDI Cancellation"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__cancelled
+msgid "Cancelled"
+msgstr ""
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_journal.py:0
+#, python-format
+msgid ""
+"Cannot deactivate (%s) on this journal because not all documents are "
+"synchronized"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
+msgid "Code"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_journal__compatible_edi_ids
+msgid "Compatible Edi"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_date
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
+#: model:ir.cron,cron_name:account_edi.ir_cron_edi_network
+#: model:ir.cron,name:account_edi.ir_cron_edi_network
+msgid "EDI : Perform web services operations"
+msgstr ""
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
+msgid "EDI Documents"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_edi_format
+msgid "EDI format"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
+msgid "EDI format that support moves in this journal"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
+#: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_blocking_level
+msgid "Edi Blocking Level"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_document_ids
+#: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_document_ids
+msgid "Edi Document"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_count
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
+#: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_count
+msgid "Edi Error Count"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
+#: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_message
+msgid "Edi Error Message"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
+msgid "Edi Format"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_abandon_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_abandon_cancel_button
+msgid "Edi Show Abandon Cancel Button"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_show_cancel_button
+msgid "Edi Show Cancel Button"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
+#: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_web_services_to_process
+msgid "Edi Web Services To Process"
+msgstr ""
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_account_journal_form_inherited
+msgid "Electronic Data Interchange"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_edi_document
+msgid "Electronic Document for an account.move"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.actions.act_window,name:account_edi.action_open_edi_documents
+#: model:ir.actions.act_window,name:account_edi.action_open_payment_edi_documents
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_state
+#: model:ir.model.fields,field_description:account_edi.field_account_journal__edi_format_ids
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_state
+#: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_state
+msgid "Electronic invoicing"
+msgstr ""
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
+msgid "Electronic invoicing state"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_mail_template
+msgid "Email Templates"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__error
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__error
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__error
+msgid "Error"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
+msgid "Format Name"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_error_count
+#: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
+#: model:ir.model.fields,help:account_edi.field_account_payment__edi_error_count
+msgid "How many EDIs are in error for this move ?"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__id
+msgid "ID"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__info
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__info
+msgid "Info"
+msgstr ""
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"Invalid invoice configuration:\n"
+"\n"
+"%s"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document____last_update
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_uid
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_date
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__move_id
+msgid "Move"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__name
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__name
+msgid "Name"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
+msgid "Only one edi document by move by format"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_payment
+msgid "Payments"
+msgstr ""
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
+msgid "Process now"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_ir_actions_report
+msgid "Report Action"
+msgstr ""
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Request EDI Cancellation"
+msgstr ""
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
+msgid "Retry"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_journal__edi_format_ids
+msgid "Send XML/EDI invoices"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__sent
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__sent
+msgid "Sent"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__state
+msgid "State"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_web_services_to_process
+#: model:ir.model.fields,help:account_edi.field_account_move__edi_web_services_to_process
+#: model:ir.model.fields,help:account_edi.field_account_payment__edi_web_services_to_process
+msgid ""
+"Technical field to display the documents that will be processed by the CRON"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_state
+#: model:ir.model.fields,help:account_edi.field_account_move__edi_state
+#: model:ir.model.fields,help:account_edi.field_account_payment__edi_state
+msgid "The aggregated state of all the EDIs with web-service of this move"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
+msgid ""
+"The file generated by edi_format_id when the invoice is posted (and this "
+"document is processed)."
+msgstr ""
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid ""
+"The invoice will be processed asynchronously by the following E-invoicing "
+"service :"
+msgstr ""
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
+msgid ""
+"The payment will be processed asynchronously by the following E-invoicing "
+"service :"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_edi_document__error
+msgid ""
+"The text of the last error that happened during Electronic Invoice "
+"operation."
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
+msgid "This code already exists"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_cancel
+msgid "To Cancel"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_send
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_send
+msgid "To Send"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__warning
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__warning
+msgid "Warning"
+msgstr ""
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_move.py:0
+#, python-format
+msgid ""
+"You can't edit the following journal entry %s because an electronic document"
+" has already been sent. Please use the 'Request EDI Cancellation' button "
+"instead."
+msgstr ""
+
+#. module: account_edi
+#: code:addons/account_edi/models/ir_attachment.py:0
+#, python-format
+msgid ""
+"You can't unlink an attachment being an EDI document sent to the government."
+msgstr ""
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
+msgid "⇒ See errors"
+msgstr ""

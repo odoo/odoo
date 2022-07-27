@@ -40,6 +40,12 @@ models.load_models([{
 
 var posmodel_super = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
+    after_load_server_data: function() {
+        return posmodel_super.after_load_server_data.apply(this, arguments).then(() => {
+            // Value starts at false when module_pos_hr is true.
+            this.hasLoggedIn = !this.config.module_pos_hr;
+        });
+    },
     load_server_data: function () {
         var self = this;
         return posmodel_super.load_server_data.apply(this, arguments).then(function () {
@@ -81,7 +87,7 @@ models.Order = models.Order.extend({
     },
     init_from_JSON: function (json) {
         super_order_model.init_from_JSON.apply(this, arguments);
-        if (this.pos.config.module_pos_hr) {
+        if (this.pos.config.module_pos_hr && json.employee_id) {
             this.employee = this.pos.employee_by_id[json.employee_id];
         }
     },

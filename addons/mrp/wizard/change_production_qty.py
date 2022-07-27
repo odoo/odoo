@@ -36,9 +36,19 @@ class ChangeProductionQty(models.TransientModel):
         for move in production.move_finished_ids:
             if move.state in ('done', 'cancel'):
                 continue
-            qty = (new_qty - old_qty) * move.unit_factor
+            done_qty = sum(production.move_finished_ids.filtered(
+                lambda r:
+                    r.product_id == move.product_id and
+                    r.state == 'done'
+                ).mapped('product_uom_qty')
+            )
+            qty = (new_qty - old_qty) * move.unit_factor + done_qty
             modification[move] = (move.product_uom_qty + qty, move.product_uom_qty)
-            move.write({'product_uom_qty': move.product_uom_qty + qty})
+            if (move.product_uom_qty + qty) > 0:
+                move.write({'product_uom_qty': move.product_uom_qty + qty})
+            else:
+                move._action_cancel()
+
         return modification
 
     def change_prod_qty(self):
@@ -100,4 +110,8 @@ class ChangeProductionQty(models.TransientModel):
                 moves_finished = production.move_finished_ids.filtered(lambda move: move.operation_id == operation) #TODO: code does nothing, unless maybe by_products?
                 moves_raw.mapped('move_line_ids').write({'workorder_id': wo.id})
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
+
+        # run scheduler for moves forecasted to not have enough in stock
+        self.mo_id.filtered(lambda mo: mo.state in ['confirmed', 'progress']).move_raw_ids._trigger_scheduler()
+
         return {}

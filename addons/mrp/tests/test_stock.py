@@ -179,7 +179,7 @@ class TestKitPicking(common.TestMrpCommon):
         def create_product(name):
             p = Form(self.env['product.product'])
             p.name = name
-            p.type = 'product'
+            p.detailed_type = 'product'
             return p.save()
 
         # Create a kit 'kit_parent' :

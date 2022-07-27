@@ -18,7 +18,7 @@ class PaymentTransaction(models.Model):
                 field_name = tx._fields[field].string
                 value = tx[field]
                 if value:
-                    if 'name' in value:
+                    if hasattr(value, 'name'):
                         value = value.name
                     msg.append('<br/>- %s: %s' % (field_name, value))
             tx.payment_id._message_log(body=''.join(msg))

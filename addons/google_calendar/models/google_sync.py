@@ -31,6 +31,9 @@ def after_commit(func):
         context = self.env.context
         uid = self.env.uid
 
+        if self.env.context.get('no_calendar_sync'):
+            return
+
         @self.env.cr.postcommit.add
         def called_after():
             db_registry = registry(dbname)
@@ -170,6 +173,12 @@ class GoogleSync(models.AbstractModel):
         # We only handle the most problematic errors of sync events.
         if http_error.response.status_code in (403, 400):
             response = http_error.response.json()
+            if not self.exists():
+                reason = "Google gave the following explanation: %s" % response['error'].get('message')
+                error_log = "Error while syncing record. It does not exists anymore in the database. %s" % reason
+                _logger.error(error_log)
+                return 
+
             if self._name == 'calendar.event':
                 start = self.start and self.start.strftime('%Y-%m-%d at %H:%M') or _("undefined time")
                 event_ids = self.id
@@ -228,7 +237,7 @@ class GoogleSync(models.AbstractModel):
                 except HTTPError as e:
                     if e.response.status_code in (400, 403):
                         self._google_error_handling(e)
-                self.need_sync = False
+                self.exists().with_context(dont_notify=True).need_sync = False
 
     @after_commit
     def _google_insert(self, google_service: GoogleCalendarService, values, timeout=TIMEOUT):
@@ -237,7 +246,8 @@ class GoogleSync(models.AbstractModel):
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
                 try:
-                    google_id = google_service.insert(values, token=token, timeout=timeout)
+                    send_updates = self._context.get('send_updates', True)
+                    google_id = google_service.with_context(send_updates=send_updates).insert(values, token=token, timeout=timeout)
                     # Everything went smoothly
                     self.with_context(dont_notify=True).write({
                         'google_id': google_id,
@@ -246,7 +256,7 @@ class GoogleSync(models.AbstractModel):
                 except HTTPError as e:
                     if e.response.status_code in (400, 403):
                         self._google_error_handling(e)
-                        self.need_sync = False
+                        self.with_context(dont_notify=True).need_sync = False
 
     def _get_records_to_sync(self, full_sync=False):
         """Return records that should be synced from Odoo to Google

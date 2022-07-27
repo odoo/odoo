@@ -60,7 +60,7 @@ odoo.define('payment_authorize.payment_form', require => {
             } else {
                 return {
                     bankData: {
-                        nameOnAccount: inputs.accountName.value,
+                        nameOnAccount: inputs.accountName.value.substring(0, 22), // Max allowed by acceptjs
                         accountNumber: inputs.accountNumber.value,
                         routingNumber: inputs.abaNumber.value,
                         accountType: inputs.accountType.value,
@@ -130,6 +130,7 @@ odoo.define('payment_authorize.payment_form', require => {
 
             if (!this._validateFormInputs(paymentOptionId)) {
                 this._enableButton(); // The submit button is disabled at this point, enable it
+                $('body').unblock(); // The page is blocked at this point, unblock it
                 return Promise.resolve();
             }
 

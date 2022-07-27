@@ -55,6 +55,7 @@
 <!--        </xpath>-->
 
         <xpath expr="//div[@class='pos-receipt-contact']" position="replace">
+
                 <div class="pos-receipt-contact" style="font-size: 75%;">
 <!--                    THE GOOD MEAT-->
 <!--Pilmico Animal Nutrition Corporation Suite 1-B PARC Plaza Bldg Libis QC-->
@@ -92,7 +93,10 @@
 <!--                        </div>-->
 <!--                    </t>-->
                 </div>
-
+                <t t-if="receipt.x_receipt_printed">
+                    <br/>
+                    <div style="text-align:center"><b>* * *  REPRINT  * * *</b></div>
+                </t>
                 <div class="date_and_time" style="font-size: 75%;">
                     <div style="margin-top: 2%;overflow: hidden;">========================================================</div>
                     <div style="width:100%;">
@@ -217,11 +221,18 @@
                     </div>
                     <div>
                         <span class="pos-receipt-left-align"><b>VATable (V)</b></span>
-                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_product_v)"/></span>
+<!--                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_product_v)"/></span>-->
+
+                        <t t-set="new_total_without_tax" t-value="receipt.total_without_tax - total_product_e - total_product_z"/>
+                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(new_total_without_tax)"/></span>
+
                     </div>
                     <div>
                         <span class="pos-receipt-left-align"><b>VAT</b></span>
-                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_vat)"/></span>
+<!--                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_vat)"/></span>-->
+
+                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(receipt.total_tax)"/></span>
+
                     </div>
                 </div>
 

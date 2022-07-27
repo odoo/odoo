@@ -366,6 +366,7 @@ class EventTrackController(http.Controller):
             'is_html_empty': is_html_empty,
             'hostname': request.httprequest.host.split(':')[0],
             'is_event_user': request.env.user.has_group('event.group_event_user'),
+            'user_event_manager': request.env.user.has_group('event.group_event_manager'),
         }
 
     @http.route("/event/track/toggle_reminder", type="json", auth="public", website=True)

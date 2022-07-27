@@ -97,6 +97,15 @@ export const errorService = {
 
         browser.addEventListener("error", async (ev) => {
             const { colno, error: originalError, filename, lineno, message } = ev;
+            const errorsToIgnore = [
+                // Ignore some unnecessary "ResizeObserver loop limit exceeded" error in Firefox.
+                "ResizeObserver loop completed with undelivered notifications.",
+                // ignore Chrome video internal error: https://crbug.com/809574
+                "ResizeObserver loop limit exceeded"
+            ]
+            if (!originalError && errorsToIgnore.includes(message)) {
+                return;
+            }
             let uncaughtError;
             if (!filename && !lineno && !colno) {
                 uncaughtError = new UncaughtCorsError();
@@ -107,10 +116,6 @@ export const errorService = {
                         `(Opening your browser console might give you a hint on the error.)`
                 );
             } else {
-                // ignore Chrome video internal error: https://crbug.com/809574
-                if (!originalError && message === "ResizeObserver loop limit exceeded") {
-                    return;
-                }
                 uncaughtError = new UncaughtClientError();
                 await completeUncaughtError(env, uncaughtError, originalError);
             }

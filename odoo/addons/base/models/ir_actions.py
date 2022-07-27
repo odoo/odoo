@@ -66,6 +66,10 @@ class IrActions(models.Model):
         self.clear_caches()
         return res
 
+    @api.ondelete(at_uninstall=True)
+    def _unlink_check_home_action(self):
+        self.env['res.users'].with_context(active_test=False).search([('action_id', 'in', self.ids)]).sudo().write({'action_id': None})
+
     @api.model
     def _get_eval_context(self, action=None):
         """ evaluation context to pass to safe_eval """
@@ -700,6 +704,11 @@ class IrServerObjectLines(models.Model):
                 line.resource_ref = '%s,%s' % (line.col1.relation, value)
             else:
                 line.resource_ref = False
+
+    @api.constrains('col1', 'evaluation_type')
+    def _raise_many2many_error(self):
+        if self.filtered(lambda line: line.col1.ttype == 'many2many' and line.evaluation_type == 'reference'):
+            raise ValidationError(_('many2many fields cannot be evaluated by reference'))
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):

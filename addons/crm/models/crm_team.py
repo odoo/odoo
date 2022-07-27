@@ -317,8 +317,8 @@ class Team(models.Model):
         plaintext or html message at caller's will
         """
         # extract some statistics
-        assigned = sum(len(teams_data[team]['assigned']) + len(teams_data[team]['merged']) for team in self)
-        duplicates = sum(len(teams_data[team]['duplicates']) for team in self)
+        assigned = sum(len(teams_data[team]['assigned']) + len(teams_data[team]['merged']) for team in teams_data)
+        duplicates = sum(len(teams_data[team]['duplicates']) for team in teams_data)
         members = len(members_data)
         members_assigned = sum(len(member_data['assigned']) for member_data in members_data.values())
 
@@ -445,10 +445,10 @@ class Team(models.Model):
 
         BUNDLE_HOURS_DELAY = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.delay', default=0))
         BUNDLE_COMMIT_SIZE = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.commit.bundle', 100))
-        auto_commit = not getattr(threading.currentThread(), 'testing', False)
+        auto_commit = not getattr(threading.current_thread(), 'testing', False)
 
         # leads
-        max_create_dt = fields.Datetime.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
+        max_create_dt = self.env.cr.now() - datetime.timedelta(hours=BUNDLE_HOURS_DELAY)
         duplicates_lead_cache = dict()
 
         # teams data
@@ -459,7 +459,7 @@ class Team(models.Model):
 
             lead_domain = expression.AND([
                 literal_eval(team.assignment_domain or '[]'),
-                [('create_date', '<', max_create_dt)],
+                [('create_date', '<=', max_create_dt)],
                 ['&', ('team_id', '=', False), ('user_id', '=', False)],
                 ['|', ('stage_id', '=', False), ('stage_id.is_won', '=', False)]
             ])

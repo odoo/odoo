@@ -520,6 +520,7 @@
           // * Rinse & repeat.
           for ( ; i <= keys_last; i++ ) {
             key = keys[i] === '' ? cur.length : keys[i];
+            if ( key === "__proto__" || key === "prototype" || key === "constructor" ) break;
             cur = cur[key] = i < keys_last
               ? cur[key] || ( keys[i+1] && isNaN( keys[i+1] ) ? {} : [] )
               : val;

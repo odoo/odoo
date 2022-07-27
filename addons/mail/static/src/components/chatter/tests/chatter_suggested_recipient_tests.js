@@ -51,6 +51,7 @@ QUnit.test("suggest recipient on 'Send message' composer", async function (asser
     });
     await this.start ();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -80,6 +81,7 @@ QUnit.test("with 3 or less suggested recipients: no 'show more' button", async f
     });
     await this.start ();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -108,6 +110,7 @@ QUnit.test("display reason for suggested recipient on mouse over", async functio
     });
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -132,6 +135,7 @@ QUnit.test("suggested recipient without partner are unchecked by default", async
     });
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -160,6 +164,7 @@ QUnit.test("suggested recipient with partner are checked by default", async func
     });
     await this.start();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -203,6 +208,7 @@ QUnit.test("more than 3 suggested recipients: display only 3 and 'show more' but
     });
     await this.start ();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -247,6 +253,7 @@ QUnit.test("more than 3 suggested recipients: show all of them on click 'show mo
     });
     await this.start ();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -295,6 +302,7 @@ QUnit.test("more than 3 suggested recipients -> click 'show more' -> 'show less'
     });
     await this.start ();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -342,6 +350,7 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
     });
     await this.start ();
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 10,
         threadModel: 'res.fake',
     });
@@ -394,6 +403,7 @@ QUnit.test("suggested recipients should not be notified when posting an internal
         },
     });
     const chatter = this.messaging.models['mail.chatter'].create({
+        id: 11,
         threadId: 10,
         threadModel: 'res.fake',
     });

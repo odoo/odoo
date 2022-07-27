@@ -1,0 +1,416 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mrp_subcontracting
+# 
+# Translators:
+# Cécile Collart <cco@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Martin Trigaux, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-01-24 08:20+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
+msgid "BOM Structure Report"
+msgstr "Reporte de estructura de lista de materiales"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Lista de materiales"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__type
+msgid "BoM Type"
+msgstr "Tipo de LdM"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_product_template_search_view
+msgid "Can be Subcontracted"
+msgstr "Puede ser subcontratado"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
+msgid ""
+"Choose a vendor of type subcontractor if you want to subcontract the product"
+msgstr ""
+"Elija un proveedor del tipo subcontratista si desea subcontratar el "
+"producto."
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
+msgid "Consumed"
+msgstr "Consumido"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
+msgid "Continue"
+msgstr "Continuar"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__move_line_raw_ids
+msgid "Detail Component"
+msgstr "Detalles de componente"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
+msgid "Discard"
+msgstr "Descartar"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_action_record_components
+msgid "Display Action Record Components"
+msgstr "Mostrar componentes del registro de actividad"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__facultative
+msgid "Facultative"
+msgstr "Facultativo"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
+msgid "Has been recorded?"
+msgstr "¿Ha sido registrado?"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__hide
+msgid "Hide"
+msgstr "Ocultar"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
+msgid "Is Subcontract"
+msgstr "Es un subcontrato"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#, python-format
+msgid "Make To Order"
+msgstr "Fabricación sobre pedido"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Make sure you validate or adapt the related resupply picking to your "
+"subcontractor in order to avoid inconsistencies in your stock."
+msgstr ""
+"Asegúrese de validar o adaptar la recolección de reabastecimiento "
+"relacionada a su subcontratista para evitar inconsistencias en sus "
+"existencias."
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
+msgid "Mandatory"
+msgstr "Obligatorio"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "Nothing to record"
+msgstr "Nada por registrar"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_quant.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Operación no permitida"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_product_product
+msgid "Product"
+msgstr "Producto"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr "Movimientos de producto (línea de movimiento de existencias)"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_mrp_production
+msgid "Production Order"
+msgstr "Orden de producción"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_quant
+msgid "Quants"
+msgstr "Quants"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_move.py:0
+#, python-format
+msgid "Raw Materials for %s"
+msgstr "Materia prima para %s"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
+msgid "Record Production"
+msgstr "Registrar producción"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
+msgid "Record components"
+msgstr "Registrar componentes"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
+msgid "Register components for subcontracted product"
+msgstr "Registrar componentes para el producto subcontratado"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
+msgid "Reserved"
+msgstr "Reservado"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
+#, python-format
+msgid "Resupply Subcontractor"
+msgstr "Subcontratista de reabastecimiento"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#: model:stock.location.route,name:mrp_subcontracting.route_resupply_subcontractor_mto
+#, python-format
+msgid "Resupply Subcontractor on Order"
+msgstr "Subcontratista de reabastecimiento en la orden"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
+msgid "Resupply Subcontractors"
+msgstr "Subcontratistas de reabastecimiento"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,help:mrp_subcontracting.field_stock_warehouse__subcontracting_to_resupply
+msgid "Resupply subcontractors with components"
+msgstr "Reabastecer subcontratistas con componentes"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
+msgid "Return Picking"
+msgstr "Recolección de devolución"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#, python-format
+msgid "Sequence Resupply Subcontractor"
+msgstr "Secuencia de subcontratista de reabastecimiento"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#, python-format
+msgid "Sequence subcontracting"
+msgstr "Secuencia de subcontratación"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__show_subcontracting_details_visible
+msgid "Show Subcontracting Details Visible"
+msgstr "Mostrar detalles de subcontratación "
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_move
+msgid "Stock Move"
+msgstr "Movimiento de existencias"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_rule
+msgid "Stock Rule"
+msgstr "Regla de existencias"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_move.py:0
+#, python-format
+msgid "Subcontract"
+msgstr "Subcontrato"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__subcontract_location_id
+msgid "Subcontract Location"
+msgstr "Ubicación del subcontrato"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
+msgid "Subcontracted"
+msgstr "Subcontratado"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__mrp_bom__type__subcontract
+#, python-format
+msgid "Subcontracting"
+msgstr "Subcontratación"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/res_company.py:0
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
+#, python-format
+msgid "Subcontracting Location"
+msgstr "Ubicación de subcontratación"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
+msgid "Subcontracting Locations"
+msgstr "Ubicaciones de subcontratación"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
+msgid "Subcontracting MTO Rule"
+msgstr "Regla de subcontratación MTO"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_pull_id
+msgid "Subcontracting MTS Rule"
+msgstr "Regla de subcontratación MTS"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_type_id
+msgid "Subcontracting Operation Type"
+msgstr "Tipo de operación de subcontratación"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
+msgid "Subcontracting Resupply Operation Type"
+msgstr "Tipo de operación de subcontratación de reabastecimiento"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom_line_inherit_mrp_subcontracting
+msgid "Subcontracting:"
+msgstr "Subcontratación:"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
+#, python-format
+msgid "Subcontracting: "
+msgstr "Subcontratación:"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__is_subcontractor
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__is_subcontractor
+msgid "Subcontractor"
+msgstr "Subcontratista"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__property_stock_subcontractor
+msgid "Subcontractor Location"
+msgstr "Ubicación del subcontratista"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.view_partner_mrp_subcontracting_filter
+msgid "Subcontractors"
+msgstr "Subcontratistas"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_product_supplierinfo
+msgid "Supplier Pricelist"
+msgstr "Lista de precios de proveedor"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__is_subcontract
+msgid "The move is a subcontract receipt"
+msgstr "El movimiento es un recibo del subcontrato"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,help:mrp_subcontracting.field_res_partner__property_stock_subcontractor
+#: model:ir.model.fields,help:mrp_subcontracting.field_res_users__property_stock_subcontractor
+msgid ""
+"The stock location used as source and destination when sending        goods "
+"to this contact during a subcontracting process."
+msgstr ""
+"La ubicación de existencias utilizada como origen y destino al enviar"
+"        mercancía a este contacto durante el proceso de subcontratación."
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "This MO isn't related to a subcontracted move"
+msgstr ""
+"Esta orden de fabricación no está relacionada a un movimiento subcontratado"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_move.py:0
+#, python-format
+msgid "To subcontract, use a planned transfer."
+msgstr "Para subcontratar, use una transferencia planeada."
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
+msgid "Total Consumed"
+msgstr "Total consumido"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_picking
+msgid "Transfer"
+msgstr "Traslado"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_warehouse
+msgid "Warehouse"
+msgstr "Almacén"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_mrp_consumption_warning
+msgid ""
+"Wizard in case of consumption in warning/strict and more component has been "
+"used for a MO (related to the bom)"
+msgstr ""
+"Asistente en caso de consumo en advertencia/estricto y más componente se ha "
+"utilizado para una orden de fabricación (relacionado con la lista de "
+"materiales)"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"You can not set a Bill of Material with operations or by-product line as "
+"subcontracting."
+msgstr ""
+"No puede establecer una lista de materiales con operaciones o subproductos "
+"como subcontratación."
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "You must enter a serial number for %s"
+msgstr "Debe ingresar un número de serie para %s"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "You must enter a serial number for each line of %s"
+msgstr "Debe ingresar un número de serie para cada línea de %s"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid ""
+"You must indicate a non-zero amount consumed for at least one of your "
+"components"
+msgstr ""
+"Debe indicar una cantidad consumida diferente de cero para al menos uno de "
+"sus componentes"

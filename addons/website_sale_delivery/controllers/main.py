@@ -117,5 +117,6 @@ class WebsiteSaleDelivery(WebsiteSale):
                 'new_amount_untaxed': Monetary.value_to_html(order.amount_untaxed, {'display_currency': currency}),
                 'new_amount_tax': Monetary.value_to_html(order.amount_tax, {'display_currency': currency}),
                 'new_amount_total': Monetary.value_to_html(order.amount_total, {'display_currency': currency}),
+                'new_amount_total_raw': order.amount_total,
             }
         return {}

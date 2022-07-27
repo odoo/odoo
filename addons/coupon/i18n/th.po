@@ -1,0 +1,1139 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* coupon
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Seksan Poltree <seksan.poltree@gmail.com>, 2021
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021
+# monchai7 <montchye@gmail.com>, 2021
+# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2021
+# Wichanon Jamwutthipreecha, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:21+0000\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "%(amount)s %(currency)s discount on total amount"
+msgstr "%(amount)s %(currency)s ส่วนลดสำหรับยอดรวม"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "%(percentage)s%% discount on %(product_name)s"
+msgstr "%(percentage)s%% ส่วนลดบน %(product_name)s"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "%s%% discount on cheapest product"
+msgstr "%s%% ส่วนลดสำหรับสินค้าที่ถูกที่สุด"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "%s%% discount on products"
+msgstr "%s%% ส่วนลดสินค้า"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "%s%% discount on total amount"
+msgstr "%s%% ส่วนลดยอดรวม"
+
+#. module: coupon
+#: code:addons/coupon/wizard/coupon_generate.py:0
+#, python-format
+msgid "%s, a coupon has been generated for you"
+msgstr "%s มีการสร้างคูปองสำหรับคุณ"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "*Valid for following products:"
+msgstr "*ใช้ได้กับสินค้าดังต่อไปนี้:"
+
+#. module: coupon
+#: model:coupon.program,name:coupon.10_percent_coupon
+msgid "10% Discount"
+msgstr "ส่วนลด 10%"
+
+#. module: coupon
+#: model:product.product,name:coupon.product_product_10_percent_discount
+#: model:product.template,name:coupon.product_product_10_percent_discount_product_template
+msgid "10.0% discount on total amount"
+msgstr "ส่วนลด 10.0% ยอดรวม"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid ""
+"<span attrs=\"{'invisible': [('discount_type', '!=', "
+"'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
+"class=\"oe_inline\">%</span>"
+msgstr ""
+"<span attrs=\"{'invisible': [('discount_type', '!=', "
+"'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
+"class=\"oe_inline\">%</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
+msgid ""
+"<span class=\"o_form_label oe_inline\"> Days</span> <span "
+"class=\"oe_grey\">if 0, infinite use</span>"
+msgstr ""
+"<span class=\"o_form_label oe_inline\"> วัน</span> <span "
+"class=\"oe_grey\">ถ้า 0 การใช้งานที่ไม่มีที่สิ้นสุด</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "<span class=\"oe_grey\"> if 0, no limit</span>"
+msgstr "<span class=\"oe_grey\">ถ้า 0 จะไม่มีขีดจำกัด</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid ""
+"<span> Days</span>\n"
+"                    <span class=\"oe_grey\"> if 0, coupon doesn't expire</span>"
+msgstr ""
+"<span>วัน</span>\n"
+"                    <span class=\"oe_grey\"> ถ้า 0 คูปองจะไม่หมดอายุ</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid ""
+"<span> Orders</span>\n"
+"                    <span class=\"oe_grey\"> if 0, infinite use</span>"
+msgstr ""
+"<span> คำสั่ง</span>\n"
+"                    <span class=\"oe_grey\"> ถ้า 0 การใช้งานที่ไม่มีที่สิ้นสุด</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "<span>Minimum purchase of</span>"
+msgstr "<span>การซื้อขั้นต่ำของ</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "<span>Valid for purchase above</span>"
+msgstr "<span>ใช้ได้สำหรับการซื้อเหนือ</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "<span>products</span>"
+msgstr "<span>สินค้า</span>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid ""
+"<strong style=\"font-size: 55px; color: #875A7B\">get free shipping</strong>"
+msgstr "<strong style=\"font-size: 55px; color: #875A7B\">จัดส่งฟรี</strong>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
+msgid "<strong>Active</strong>"
+msgstr "<strong>เปิดใช้งาน</strong>"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
+msgid "<strong>Coupons</strong>"
+msgstr "<strong>คูปอง</strong>"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__active
+msgid "A program is available for the customers when active"
+msgstr "มีโปรแกรมสำหรับลูกค้าเมื่อใช้งาน"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__promo_code
+msgid ""
+"A promotion code is a code that is associated with a marketing discount. For"
+" example, a retailer might tell frequent customers to enter the promotion "
+"code 'THX001' to receive a 10%% discount on their whole order."
+msgstr ""
+"รหัสโปรโมชั่นการขายคือรหัสที่เกี่ยวข้องกับส่วนลดทางการตลาด ตัวอย่าง เช่น "
+"ผู้ค้าปลีกอาจบอกลูกค้าประจำให้ป้อนโค้ดโปรโมชั่น 'THX001' เพื่อรับส่วนลด 10%%"
+" สำหรับคำสั่งทั้งหมด"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__program_type
+msgid ""
+"A promotional program can be either a limited promotional offer without code (applied automatically)\n"
+"                or with a code (displayed on a magazine for example) that may generate a discount on the current\n"
+"                order or create a coupon for a next order.\n"
+"\n"
+"                A coupon program generates coupons with a code that can be used to generate a discount on the current\n"
+"                order or create a coupon for a next order."
+msgstr ""
+"โปรแกรมโปรโมชั่นสามารถเป็นข้อเสนอส่งเสริมการขายแบบจำกัดโดยไม่มีรหัส (ใช้โดยอัตโนมัติ)\n"
+"                หรือมีรหัส (เช่น แสดงในนิตยสาร) ที่อาจให้ส่วนลดปัจจุบัน\n"
+"                กับคำสั่งหรือสร้างคูปองสำหรับการสั่งครั้งต่อไป\n"
+"\n"
+"                โปรแกรมคูปองสร้างคูปองด้วยโค้ดที่สามารถใช้เพื่อสร้างส่วนลดในปัจจุบันให้กับ\n"
+"                คำสั่งซื้อหรือสร้างคูปองสำหรับการสั่งครั้งต่อไป"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__active
+msgid "Active"
+msgstr "เปิดใช้งาน"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_applicability
+msgid "Applicability"
+msgstr "การบังคับใช้"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Apply Discount"
+msgstr "ใช้ส่วนลด"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_current_order
+msgid "Apply On Current Order"
+msgstr "ใช้บนคำสั่งปัจจุบัน"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid "Apply on First"
+msgstr "ใช้ครั้งแรก"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_search
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_search
+msgid "Archived"
+msgstr "เก็บถาวร"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__no_code_needed
+msgid "Automatically Applied"
+msgstr "ใช้โดยอัตโนมัติ"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__promo_code_usage
+msgid ""
+"Automatically Applied - No code is required, if the program rules are met, the reward is applied (Except the global discount or the free shipping rewards which are not cumulative)\n"
+"Use a code - If the program rules are met, a valid code is mandatory for the reward to be applied\n"
+msgstr ""
+"ใช้โดยอัตโนมัติ - ไม่ต้องใช้โค้ด หากเป็นไปตามกฎของโปรแกรม ระบบจะใช้รางวัล (ยกเว้นส่วนลดทั่วโลกหรือรางวัลการจัดส่งฟรีที่ไม่สะสม)\n"
+"ใช้โค้ด - หากเป็นไปตามกฎของโปรแกรม จำเป็นต้องใช้โค้ดที่ถูกต้องสำหรับรางวัลที่จะนำไปใช้\n"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_partners_domain
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_partners_domain
+msgid "Based on Customers"
+msgstr "ขึ้นอยู่กับลูกค้า"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_products_domain
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_products_domain
+msgid "Based on Products"
+msgstr "อิงตามสินค้า"
+
+#. module: coupon
+#: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
+msgid ""
+"Build up promotion programs to attract more customers with discounts, free products, free delivery, etc.\n"
+"                You can share promotion codes or grant the promotions automatically if some conditions are met."
+msgstr ""
+"สร้างโปรแกรมโปรโมชั่นเพื่อดึงดูดลูกค้ามากขึ้นด้วยส่วนลด สินค้าฟรี ส่งฟรี และอื่น ๆ \n"
+"                คุณสามารถแชร์รหัสโปรโมชั่นหรือมอบโปรโมชั่นโดยอัตโนมัติหากตรงตามเงื่อนไขบางประการ"
+
+#. module: coupon
+#: model:coupon.program,name:coupon.3_cabinets_plus_1_free
+msgid "Buy 3 large cabinets, get one for free"
+msgstr "ซื้อ 3 ตู้ใหญ่ รับฟรีหนึ่ง"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__cancel
+msgid "Cancelled"
+msgstr "ยกเลิกแล้ว"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__code
+msgid "Code"
+msgstr "โค้ด"
+
+#. module: coupon
+#: model:coupon.program,name:coupon.10_percent_auto_applied
+msgid "Code for 10% on orders"
+msgstr "โค้ด 10% สำหรับคำสั่ง"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "Compose Email"
+msgstr "เขียนอีเมล"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Conditions"
+msgstr "เงื่อนไข"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "Congratulations"
+msgstr "ยินดีด้วย"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_coupon_coupon
+msgid "Coupon"
+msgstr "คูปอง"
+
+#. module: coupon
+#: model:ir.actions.report,name:coupon.report_coupon_code
+msgid "Coupon Code"
+msgstr "โค้ดคูปอง"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_count
+msgid "Coupon Count"
+msgstr "จำนวนคูปอง"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_coupon_program
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__coupon_program
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Coupon Program"
+msgstr "โปรแกรมคูปอง"
+
+#. module: coupon
+#: model:ir.actions.act_window,name:coupon.coupon_program_action_coupon_program
+msgid "Coupon Programs"
+msgstr "โปรแกรมคูปอง"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_coupon_reward
+msgid "Coupon Reward"
+msgstr "คูปองรางวัล"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_coupon_rule
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_id
+msgid "Coupon Rule"
+msgstr "กฎคูปอง"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid "Coupon Validity"
+msgstr "อายุการใช้งานของคูปอง"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_to
+#: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_to
+msgid "Coupon program end date"
+msgstr "วันสิ้นสุดโปรแกรมคูปอง"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_from
+#: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_from
+msgid "Coupon program start date"
+msgstr "วันเริ่มต้นโปรแกรมคูปอง"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__sequence
+msgid ""
+"Coupon program will be applied based on given sequence if multiple programs "
+"are defined on same condition(For minimum amount)"
+msgstr ""
+"โปรแกรมคูปองจะใช้ตามลำดับที่กำหนด หากกำหนดหลายโปรแกรมไว้ในเงื่อนไขเดียวกัน "
+"(สำหรับจำนวนขั้นต่ำ)"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__rule_partners_domain
+#: model:ir.model.fields,help:coupon.field_coupon_rule__rule_partners_domain
+msgid "Coupon program will work for selected customers only"
+msgstr "โปรแกรมคูปองใช้ได้เฉพาะลูกค้าที่เลือกเท่านั้น"
+
+#. module: coupon
+#: model:ir.actions.server,name:coupon.expire_coupon_cron_ir_actions_server
+#: model:ir.cron,cron_name:coupon.expire_coupon_cron
+#: model:ir.cron,name:coupon.expire_coupon_cron
+msgid "Coupon: expire coupon based on date"
+msgstr "คูปอง: คูปองหมดอายุตามวันที่"
+
+#. module: coupon
+#: model:ir.actions.act_window,name:coupon.coupon_action
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
+msgid "Coupons"
+msgstr "คูปอง"
+
+#. module: coupon
+#: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
+msgid "Create a new coupon program"
+msgstr "สร้างโปรแกรมคูปองใหม่"
+
+#. module: coupon
+#: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
+msgid "Create a new promotion program"
+msgstr "สร้างโปรแกรมคูปองใหม่"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__create_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__create_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__create_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__create_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__create_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__create_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__currency_id
+msgid "Currency"
+msgstr "สกุลเงิน"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__partners_domain
+msgid "Customer"
+msgstr "ลูกค้า"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_uom_id
+#: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_uom_id
+msgid "Default unit of measure used for all stock operations."
+msgstr "หน่วยวัดเริ่มต้นที่ใช้สำหรับการดำเนินการสต๊อกทั้งหมด"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_percentage
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_percentage
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__reward_type__discount
+msgid "Discount"
+msgstr "ส่วนลด"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__reward_type
+#: model:ir.model.fields,help:coupon.field_coupon_reward__reward_type
+msgid ""
+"Discount - Reward will be provided as discount.\n"
+"Free Product - Free product will be provide as reward \n"
+"Free Shipping - Free shipping will be provided as reward (Need delivery module)"
+msgstr ""
+"ส่วนลด - ของรางวัลจะถูกจัดให้เป็นส่วนลด\n"
+"สินค้าฟรี - สินค้าฟรีจะถูกให้เป็นรางวัล \n"
+"จัดส่งฟรี - จะมีการจัดส่งฟรีเป็นรางวัล (ต้องการโมดูลการจัดส่ง)"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_apply_on
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_apply_on
+msgid "Discount Apply On"
+msgstr "การลดถูกใช้เมื่อ"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_max_amount
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_max_amount
+msgid "Discount Max Amount"
+msgstr "จำนวนส่วนลดสูงสุด"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_type
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_type
+msgid "Discount Type"
+msgstr "ประเภทการลด"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "Discount percentage should be between 1-100"
+msgstr "เปอร์เซ็นต์ส่วนลดควรอยู่ระหว่าง 1-100"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__display_name
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__display_name
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__display_name
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__display_name
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "ตัวช่วยการเขียนอีเมล"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_to
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_date_to
+msgid "End Date"
+msgstr "วันสิ้นสุด"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__expiration_date
+msgid "Expiration Date"
+msgstr "วันหมดอายุ"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__expired
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_search
+msgid "Expired"
+msgstr "หมดอายุ"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_search
+msgid "Expired Programs"
+msgstr "โปรแกรมหมดอายุ"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_fixed_amount
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_fixed_amount
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_type__fixed_amount
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Fixed Amount"
+msgstr "ยอดเงินคงที่"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__partner_id
+msgid "For Customer"
+msgstr "สำหรับลูกค้า"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_id
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_id
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__reward_type__product
+msgid "Free Product"
+msgstr "สินค้าฟรี"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_reward.py:0
+#, python-format
+msgid "Free Product - %s"
+msgstr "สินค้าฟรี - %s"
+
+#. module: coupon
+#: model:product.product,name:coupon.product_product_free_large_cabinet
+#: model:product.template,name:coupon.product_product_free_large_cabinet_product_template
+msgid "Free Product - Large Cabinet"
+msgstr "สินค้าฟรี - ตู้ขนาดใหญ่"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
+msgid "Generate"
+msgstr "สร้าง"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_coupon_generate_wizard
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
+msgid "Generate Coupon"
+msgstr "สร้างคูปอง"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
+msgid "Generate Coupons"
+msgstr "สร้างคูปอง"
+
+#. module: coupon
+#: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
+msgid ""
+"Generate and share coupon codes with your customers to get discounts or free"
+" products."
+msgstr "สร้างและแชร์โค้ดคูปองกับลูกค้าของคุณเพื่อรับส่วนลดหรือสินค้าฟรี"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_ids
+msgid "Generated Coupons"
+msgstr "สร้างคูปอง"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__generation_type
+msgid "Generation Type"
+msgstr "ประเภทการสร้าง"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__has_partner_email
+msgid "Has Partner Email"
+msgstr "มีอีเมลพาร์ทเนอร์"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "Here is your reward from"
+msgstr "นี้คือรางวัลจาก"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__id
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__id
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__id
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__id
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "Invalid partner."
+msgstr "พาร์ทเนอร์ไม่ถูกต้อง"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon____last_update
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard____last_update
+#: model:ir.model.fields,field_description:coupon.field_coupon_program____last_update
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward____last_update
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule____last_update
+msgid "Last Modified on"
+msgstr "แก้ไขครั้งล่าสุดเมื่อ"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__write_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__write_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__write_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__write_uid
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__write_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__write_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__write_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__write_date
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "Logo"
+msgstr "โลโก้"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Max Discount Amount"
+msgstr "จำนวนส่วนลดสูงสุด"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__maximum_use_number
+msgid "Maximum Use Number"
+msgstr "จำนวนการใช้งานสูงสุด"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_max_amount
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_max_amount
+msgid "Maximum amount of discount that can be provided"
+msgstr "จำนวนส่วนลดสูงสุดที่สามารถให้ได้"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__maximum_use_number
+msgid "Maximum number of sales orders in which reward can be provided"
+msgstr "จำนวนคำสั่งสูงสุดที่สามารถให้รางวัลได้"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Minimum Purchase Of"
+msgstr "การซื้อขั้นต่ำของ"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_min_quantity
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_min_quantity
+msgid "Minimum Quantity"
+msgstr "ปริมาณขั้นต่ำ"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_rules.py:0
+#, python-format
+msgid "Minimum purchased amount should be greater than 0"
+msgstr "จำนวนการซื้อขั้นต่ำควรมากกว่า 0"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_rules.py:0
+#, python-format
+msgid "Minimum quantity should be greater than 0"
+msgstr "ปริมาณขั้นต่ำควรมากกว่า 0"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__rule_minimum_amount
+#: model:ir.model.fields,help:coupon.field_coupon_rule__rule_minimum_amount
+msgid "Minimum required amount to get the reward"
+msgstr "จำนวนที่ต้องการขั้นต่ำเพื่อรับรางวัล"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__rule_min_quantity
+#: model:ir.model.fields,help:coupon.field_coupon_rule__rule_min_quantity
+msgid "Minimum required product quantity to get the reward"
+msgstr "จำนวนสินค้าขั้นต่ำที่ต้องการเพื่อรับรางวัล"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__nbr_coupons
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_generate_wizard__generation_type__nbr_coupon
+msgid "Number of Coupons"
+msgstr "จำนวนของคูปอง"
+
+#. module: coupon
+#: model:ir.actions.act_window,name:coupon.coupon_generate_action
+msgid "Number of Coupons To Generate"
+msgstr "จำนวนของคูปองที่จะสร้าง"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_generate_wizard__generation_type__nbr_customer
+msgid "Number of Selected Customers"
+msgstr "จำนวนลูกค้าที่ได้รับเลือก"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_generate_wizard__nbr_coupons
+msgid "Number of coupons"
+msgstr "จำนวนของคูปอง"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__cheapest_product
+msgid "On Cheapest Product"
+msgstr "บนสินค้าราคาถูกที่สุด"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__on_order
+msgid "On Order"
+msgstr "บนคำสั่ง"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_apply_on
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_apply_on
+msgid ""
+"On Order - Discount on whole order\n"
+"Cheapest product - Discount on cheapest product of the order\n"
+"Specific products - Discount on selected specific products"
+msgstr ""
+"บนคำสั่ง - ลดราคาบนคำสั่งทั้งหมด\n"
+"สินค้าถูกที่สุด - ลดราคาสินค้าที่ถูกที่สุดในคำสั่ง\n"
+"สินค้าเฉพาะ - ลดราคาบนสินค้าที่ถูกเลือกเฉพาะ"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__rule_products_domain
+#: model:ir.model.fields,help:coupon.field_coupon_rule__rule_products_domain
+msgid "On Purchase of selected product, reward will be given"
+msgstr "เมื่อซื้อสินค้าที่เลือกจะได้รับรางวัล"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__specific_products
+msgid "On Specific Products"
+msgstr "บนสินค้าเฉพาะ"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__reserved
+msgid "Pending"
+msgstr "รอดำเนินการ"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_type__percentage
+msgid "Percentage"
+msgstr "เปอร์เซ็นต์"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_type
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_type
+msgid ""
+"Percentage - Entered percentage discount will be provided\n"
+"Amount - Entered fixed amount discount will be provided"
+msgstr ""
+"เปอร์เซ็นต์ - จะมีการให้ส่วนลดเป็นเปอร์เซ็นต์ที่ป้อน\n"
+"จำนวนเงิน - จะมีการให้ส่วนลดตามจำนวนคงที่ที่ป้อน"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_coupon__discount_line_product_id
+msgid "Product used in the sales order to apply the discount."
+msgstr "สินค้าที่ใช้ในคำสั่งขายเพื่อใช้ส่วนลด"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_line_product_id
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_line_product_id
+msgid ""
+"Product used in the sales order to apply the discount. Each coupon program "
+"has its own reward product for reporting purpose"
+msgstr ""
+"สินค้าที่ใช้ในคำสั่งขายเพื่อใช้ส่วนลด "
+"แต่ละโปรแกรมคูปองมีสินค้าสมนาคุณของตัวเองสำหรับการรายงาน"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_specific_product_ids
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_specific_product_ids
+msgid "Products"
+msgstr "สินค้า"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_specific_product_ids
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_specific_product_ids
+msgid ""
+"Products that will be discounted if the discount is applied on specific "
+"products"
+msgstr "สินค้าจะลดราคาถ้าใช้ส่วนลดเฉพาะสินค้า"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__program_id
+msgid "Program"
+msgstr "โปรแกรม"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid "Program Name"
+msgstr "ชื่อโปรแกรม"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__program_type
+msgid "Program Type"
+msgstr "ประเภทโปรแกรม"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code_usage
+msgid "Promo Code Usage"
+msgstr "การใช้โค้ดโปรโมชั่น"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__promo_code
+msgid "Promotion Code"
+msgstr "โค้ดโปรโมชั่น"
+
+#. module: coupon
+#: model:ir.actions.act_window,name:coupon.coupon_program_action_promo_program
+msgid "Promotion Programs"
+msgstr "โปรแกรมโปรโมชั่น"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_program__program_type__promotion_program
+msgid "Promotional Program"
+msgstr "โปรแกรมโปรโมชัน"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_quantity
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_quantity
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Quantity"
+msgstr "จำนวน"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_id
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Reward"
+msgstr "รางวัล"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_description
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_description
+msgid "Reward Description"
+msgstr "คำอธิบายรางวัล"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__discount_line_product_id
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__discount_line_product_id
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__discount_line_product_id
+msgid "Reward Line Product"
+msgstr "ไลน์รางวัลสินค้า"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_id
+#: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_id
+msgid "Reward Product"
+msgstr "สินค้ารางวัล"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_type
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_type
+msgid "Reward Type"
+msgstr "ประเภทรางวัล"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__reward_product_quantity
+#: model:ir.model.fields,help:coupon.field_coupon_reward__reward_product_quantity
+msgid "Reward product quantity"
+msgstr "จำนวนสินค้ารางวัล"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Rewards"
+msgstr "รางวัล"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_minimum_amount
+msgid "Rule Minimum Amount"
+msgstr "จำนวนกฎขั้นต่ำ"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_minimum_amount_tax_inclusion
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_minimum_amount_tax_inclusion
+msgid "Rule Minimum Amount Tax Inclusion"
+msgstr "กฎจำนวนรวมภาษีขั้นต่ำ"
+
+#. module: coupon
+#: model:ir.model,name:coupon.model_report_coupon_report_coupon
+msgid "Sales Coupon Report"
+msgstr "รายงานคูปองการขาย"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Select company"
+msgstr "เลือกบริษัท"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid "Select customer"
+msgstr "เลือกลูกค้า"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Select product"
+msgstr "เลือกสินค้า"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Select products"
+msgstr "เลือกสินค้า"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Select reward product"
+msgstr "เลือกรางวัลสินค้า"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
+msgid "Send"
+msgstr "ส่ง"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
+msgid "Send a Coupon"
+msgstr "ส่งคูปอง"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
+msgid "Send by Email"
+msgstr "ส่งทางอีเมล"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__sent
+msgid "Sent"
+msgstr "ส่งแล้ว"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__sequence
+msgid "Sequence"
+msgstr "ลำดับ"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
+msgid ""
+"Some selected customers do not have an email address and will not receive "
+"the coupon."
+msgstr "ลูกค้าที่เลือกบางรายไม่มีที่อยู่อีเมลและจะไม่ได้รับคูปอง"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
+msgid "Specify a mail template to send the generated coupons as email."
+msgstr "ระบุเทมเพลตอีเมลเพื่อส่งคูปองที่สร้างขึ้นเป็นอีเมล"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
+#: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_date_from
+msgid "Start Date"
+msgstr "วันที่เริ่ม"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_coupon__state
+msgid "State"
+msgstr "สถานะ"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_excluded
+msgid "Tax Excluded"
+msgstr "ไม่รวมภาษี"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_included
+msgid "Tax Included"
+msgstr "รวมภาษี"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "Thank you,"
+msgstr "ขอบคุณ"
+
+#. module: coupon
+#: model:ir.model.constraint,message:coupon.constraint_coupon_coupon_unique_coupon_code
+msgid "The coupon code must be unique!"
+msgstr "โค้ดคูปองต้องไม่ซ้ำกัน!"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "The coupon program for %s is in draft or closed state"
+msgstr "โปรแกรมคูปองสำหรับ %s อยู่ในร่างหรือสถานะปิด"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_fixed_amount
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_fixed_amount
+msgid "The discount in fixed amount"
+msgstr "ส่วนลดเป็นจำนวนคงที่"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__discount_percentage
+#: model:ir.model.fields,help:coupon.field_coupon_reward__discount_percentage
+msgid "The discount in percentage, between 1 and 100"
+msgstr "ส่วนลดเป็นเปอร์เซ็นต์ระหว่าง 1 ถึง 100"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_program.py:0
+#, python-format
+msgid "The program code must be unique!"
+msgstr "โค้ดโปรแกรมต้องไม่ซ้ำกัน!"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_rules.py:0
+#, python-format
+msgid "The start date must be before the end date"
+msgstr "วันที่เริ่มต้นต้องมาก่อนวันที่สิ้นสุด"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon %s exists but the origin sales order is not validated yet."
+msgstr "คูปองนี้ %s มีอยู่แต่คำสั่งขายต้นทางยังไม่ได้ตรวจสอบความถูกต้อง"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has already been used (%s)."
+msgstr "คูปองนี้ถูกใช้ไปแล้ว (%s)"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has been cancelled (%s)."
+msgstr "คูปองนี้ถูกยกเลิก (%s)"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon is expired (%s)."
+msgstr "คูปองนี้หมดอายุ (%s)"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__total_order_count
+msgid "Total Order Count"
+msgstr "จำนวนคำสั่งทั้งหมด"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_uom_id
+#: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_uom_id
+msgid "Unit of Measure"
+msgstr "หน่วยวัด"
+
+#. module: coupon
+#: model:product.product,uom_name:coupon.product_product_10_percent_discount
+#: model:product.product,uom_name:coupon.product_product_free_large_cabinet
+#: model:product.template,uom_name:coupon.product_product_10_percent_discount_product_template
+#: model:product.template,uom_name:coupon.product_product_free_large_cabinet_product_template
+msgid "Units"
+msgstr "หน่วย"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__code_needed
+msgid "Use a code"
+msgstr "ใช้โค้ด"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__template_id
+msgid "Use template"
+msgstr "ใช้เทมเพลต"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "Use this promo code before"
+msgstr "ใช้โค้ดโปรโมนี้ก่อน"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__used
+msgid "Used"
+msgstr "ใช้แล้ว"
+
+#. module: coupon
+#: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__new
+msgid "Valid"
+msgstr "ถูกต้อง"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
+msgid "Validity"
+msgstr "อายุการใช้งาน"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__validity_duration
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
+msgid "Validity Duration"
+msgstr "ระยะเวลาที่ใช้ได้"
+
+#. module: coupon
+#: model:ir.model.fields,help:coupon.field_coupon_program__validity_duration
+msgid "Validity duration for a coupon after its generation"
+msgstr "ระยะเวลาที่ใช้ได้สำหรับคูปองหลังจากสร้าง"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon_program.py:0
+#, python-format
+msgid "You can not delete a program in active state"
+msgstr "คุณไม่สามารถลบโปรแกรมในสถานะใช้งาน"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid "e.g. 10% Discount"
+msgstr "เช่น ลดราคา 10%"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "off %s"
+msgstr "ลด %s"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "off on %s"
+msgstr "ลดบน %s"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "off on some products*"
+msgstr "ลดราคาสินค้าบางรายการ*"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "off on the cheapest product"
+msgstr "ลดราคาสินค้าที่ถูกที่สุด"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.report_coupon
+msgid "on your next order"
+msgstr "บนคำสั่งครั้งต่อไปของคุณ"

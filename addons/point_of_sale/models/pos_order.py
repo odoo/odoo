@@ -3,6 +3,7 @@
 import logging
 from datetime import timedelta
 from functools import partial
+from itertools import groupby
 
 import psycopg2
 import pytz
@@ -103,6 +104,9 @@ class PosOrder(models.Model):
 
         return new_session
 
+    def _get_fields_for_draft_order(self):
+        """This method is here to be overridden in order to add fields that are required for draft orders."""
+        return []
 
     @api.model
     def _process_order(self, order, draft, existing_order):
@@ -145,7 +149,7 @@ class PosOrder(models.Model):
             pos_order._compute_total_cost_in_real_time()
 
         if pos_order.to_invoice and pos_order.state == 'paid':
-            pos_order.action_pos_order_invoice()
+            pos_order._generate_pos_order_invoice()
 
         return pos_order.id
 
@@ -193,7 +197,7 @@ class PosOrder(models.Model):
             'quantity': order_line.qty if self.amount_total >= 0 else -order_line.qty,
             'discount': order_line.discount,
             'price_unit': order_line.price_unit,
-            'name': order_line.product_id.display_name,
+            'name': order_line.full_product_name or order_line.product_id.display_name,
             'tax_ids': [(6, 0, order_line.tax_ids_after_fiscal_position.ids)],
             'product_uom_id': order_line.product_uom_id.id,
         }
@@ -223,7 +227,7 @@ class PosOrder(models.Model):
             .mapped('picking_ids.move_lines')\
             ._filter_anglo_saxon_moves(product)\
             .sorted(lambda x: x.date)
-        price_unit = product._compute_average_price(0, quantity, moves)
+        price_unit = product.with_company(self.company_id)._compute_average_price(0, quantity, moves)
         return price_unit
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
@@ -282,7 +286,7 @@ class PosOrder(models.Model):
     )
     payment_ids = fields.One2many('pos.payment', 'pos_order_id', string='Payments', readonly=True)
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
-    to_invoice = fields.Boolean('To invoice')
+    to_invoice = fields.Boolean('To invoice', copy=False)
     to_ship = fields.Boolean('To ship')
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
     is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
@@ -478,6 +482,16 @@ class PosOrder(models.Model):
         currency = self.currency_id
         return currency.round(amount) if currency else amount
 
+    def _get_partner_bank_id(self):
+        bank_partner_id = False
+        has_pay_later = any(not pm.journal_id for pm in self.payment_ids.mapped('payment_method_id'))
+        if has_pay_later:
+            if self.amount_total <= 0 and self.partner_id.bank_ids:
+                bank_partner_id = self.partner_id.bank_ids[0].id
+            elif self.amount_total >= 0 and self.company_id.partner_id.bank_ids:
+                bank_partner_id = self.company_id.partner_id.bank_ids[0].id
+        return bank_partner_id
+
     def _create_invoice(self, move_vals):
         self.ensure_one()
         new_move = self.env['account.move'].sudo().with_company(self.company_id).with_context(default_move_type=move_vals['move_type']).create(move_vals)
@@ -568,7 +582,7 @@ class PosOrder(models.Model):
                 maxDiff = currency.round(self.config_id.rounding_method.rounding)
 
             diff = currency.round(self.amount_total - self.amount_paid)
-            if not abs(diff) < maxDiff:
+            if not abs(diff) <= maxDiff:
                 raise UserError(_("Order %s is not fully paid.", self.name))
 
         self.write({'state': 'paid'})
@@ -584,6 +598,7 @@ class PosOrder(models.Model):
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'ref': self.name,
             'partner_id': self.partner_id.id,
+            'partner_bank_id': self._get_partner_bank_id(),
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
             'invoice_user_id': self.user_id.id,
@@ -597,8 +612,14 @@ class PosOrder(models.Model):
         if self.note:
             vals.update({'narration': self.note})
         return vals
-
     def action_pos_order_invoice(self):
+        self.write({'to_invoice': True})
+        res = self._generate_pos_order_invoice()
+        if self.company_id.anglo_saxon_accounting and self.session_id.update_stock_at_closing:
+            self._create_order_picking()
+        return res
+
+    def _generate_pos_order_invoice(self):
         moves = self.env['account.move']
 
         for order in self:
@@ -749,7 +770,6 @@ class PosOrder(models.Model):
             'datas': ticket,
             'res_model': 'pos.order',
             'res_id': self.ids[0],
-            'store_fname': filename,
             'mimetype': 'image/jpeg',
         })
         attachment = [(4, receipt.id)]
@@ -761,7 +781,6 @@ class PosOrder(models.Model):
                 'name': filename,
                 'type': 'binary',
                 'datas': base64.b64encode(report[0]),
-                'store_fname': filename,
                 'res_model': 'pos.order',
                 'res_id': self.ids[0],
                 'mimetype': 'application/x-pdf'
@@ -843,6 +862,10 @@ class PosOrder(models.Model):
             'tip_amount': order.tip_amount,
         }
 
+    def _get_fields_for_order_line(self):
+        """This function is here to be overriden"""
+        return []
+
     def export_for_ui(self):
         """ Returns a list of dict with each item having similar signature as the return of
             `export_as_JSON` of models.Order. This is useful for back-and-forth communication
@@ -890,7 +913,7 @@ class PosOrderLine(models.Model):
     total_cost = fields.Float(string='Total cost', digits='Product Price', readonly=True)
     is_total_cost_computed = fields.Boolean(help="Allows to know if the total cost has already been computed or not")
     discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
-    order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True)
+    order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True, index=True)
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
@@ -1080,6 +1103,14 @@ class PosOrderLine(models.Model):
             if pickings_to_confirm:
                 # Trigger the Scheduler for Pickings
                 pickings_to_confirm.action_confirm()
+                tracked_lines = order.lines.filtered(lambda l: l.product_id.tracking != 'none')
+                lines_by_tracked_product = groupby(sorted(tracked_lines, key=lambda l: l.product_id.id), key=lambda l: l.product_id.id)
+                for product, lines in lines_by_tracked_product:
+                    lines = self.env['pos.order.line'].concat(*lines)
+                    moves = pickings_to_confirm.move_lines.filtered(lambda m: m.product_id.id == product)
+                    moves.move_line_ids.unlink()
+                    moves._add_mls_related_to_order(lines, are_qties_done=False)
+                    moves._recompute_state()
         return True
 
     def _is_product_storable_fifo_avco(self):

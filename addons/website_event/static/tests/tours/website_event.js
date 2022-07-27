@@ -11,7 +11,8 @@ odoo.define("website_event.tour", function (require) {
         url: "/",
     }, [{
         content: _t("Click here to add new content to your website."),
-        trigger: '#new-content-menu > a',
+        trigger: "body:has(#o_new_content_menu_choices.o_hidden) #new-content-menu > a",
+        consumeVisibleOnly: true,
         position: 'bottom',
     }, {
         trigger: "a[data-action=new_event]",

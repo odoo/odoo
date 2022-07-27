@@ -345,7 +345,7 @@
                                         <field name="iface_tax_included" class="o_light_label" widget="radio"/>
                                     </div>
                                     <a attrs="{'invisible': [('iface_tax_included', '!=', 'total')]}"
-                                        href="https://www.odoo.com/documentation/14.0/applications/finance/accounting/taxation/taxes/B2B_B2C.html"
+                                        href="https://www.odoo.com/documentation/15.0/applications/finance/accounting/taxation/taxes/B2B_B2C.html"
                                         target="_blank" class="oe-link"><i class="fa fa-fw fa-arrow-right"/>How to manage tax-included prices</a>
                                 </div>
                             </div>
@@ -442,7 +442,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('cash_control', '=', False)]}">
+                        <div class="col-12 col-lg-6 o_setting_box">
                             <field name="cash_control" invisible="1" />
                             <div class="o_setting_left_pane">
                                 <field name="set_maximum_difference" />
@@ -450,7 +450,7 @@
                             <div class="o_setting_right_pane">
                                 <label for="set_maximum_difference" />
                                 <div class="text-muted">
-                                    Set a maximum difference allowed between the expected and counted cash during the closing of the session
+                                    Set a maximum difference allowed between the expected and counted money during the closing of the session
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('set_maximum_difference', '=', False)]}">
                                     <label for="amount_authorized_diff" string="Authorized Difference" class="font-weight-normal"/>
@@ -633,7 +633,7 @@
                                 <div class="content-group">
                                     <div class="row mt16" title="Whenever you close a session, one entry is generated in the following accounting journal for all the orders not invoiced. Invoices are recorded in accounting separately.">
                                         <label string="Sales Journal" for="journal_id" class="col-lg-3 o_light_label" options="{'no_open': True, 'no_create': True}"/>
-                                        <field name="journal_id" required="1" domain="[('company_id', '=', company_id), ('type', '=', 'sale')]" context="{'default_company_id': company_id, 'default_type': 'sale'}"/>
+                                        <field name="journal_id" required="1" domain="[('company_id', '=', company_id), ('type', 'in', ('general', 'sale'))]" context="{'default_company_id': company_id, 'default_type': 'general'}"/>
                                     </div>
                                 </div>
                             </div>

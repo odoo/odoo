@@ -82,15 +82,21 @@
             'project/static/src/scss/project_rightpanel.scss',
             'project/static/src/scss/project_widgets.scss',
         ],
+        "web.assets_backend_legacy_lazy": [
+            'project/static/src/js/*_legacy.js',
+        ],
         'web.assets_frontend': [
             'project/static/src/scss/portal_rating.scss',
             'project/static/src/js/portal_rating.js',
         ],
         'web.assets_qweb': [
-            'project/static/src/**/*.xml',
+            'project/static/src/xml/**/*',
+            'project/static/src/burndown_chart/**/*.xml',
+            'project/static/src/project_control_panel/**/*.xml',
         ],
         'web.qunit_suite_tests': [
             'project/static/tests/burndown_chart_tests.js',
+            'project/static/tests/project_form_tests.js',
         ],
         'web.assets_tests': [
             'project/static/tests/tours/**/*',
@@ -101,7 +107,6 @@
         ],
         'project.webclient': [
             ('include', 'web.assets_backend'),
-            ('remove', 'web/static/src/webclient/menus/*.js'),
 
             # Remove Longpolling bus and packages needed this bus
             ('remove', 'bus/static/src/js/services/assets_watchdog_service.js'),
@@ -115,6 +120,7 @@
             'web/static/src/legacy/js/public/public_widget.js',
             'portal/static/src/js/portal_chatter.js',
             'portal/static/src/js/portal_composer.js',
+            'project/static/src/project_sharing/search/favorite_menu/custom_favorite_item.xml',
             'project/static/src/project_sharing/**/*.js',
             'project/static/src/scss/project_sharing/*',
             'web/static/src/start.js',

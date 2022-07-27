@@ -2,6 +2,19 @@ odoo.define("website.tour.edit_megamenu", function (require) {
 "use strict";
 
 const tour = require('web_tour.tour');
+const wTourUtils = require('website.tour_utils');
+
+const toggleMegaMenu = (stepOptions) => Object.assign({}, {
+    content: "Toggles the mega menu.",
+    trigger: '#top_menu .nav-item a.o_mega_menu_toggle',
+    run: function () {
+        // If the mega menu is displayed inside the extra menu items, it should
+        // already be displayed.
+        if (!this.$anchor[0].closest('.o_extra_menu_items')) {
+            this.$anchor.click();
+        }
+    },
+}, stepOptions);
 
 tour.register('edit_megamenu', {
     test: true,
@@ -37,9 +50,32 @@ tour.register('edit_megamenu', {
         trigger: '.modal-dialog .btn-primary span:contains("Save")',
         run: 'click',
     },
+    // Edit a menu item
+    wTourUtils.clickOnEdit(),
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}),
+    toggleMegaMenu({extra_trigger: '#top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")'}),
     {
-        content: "Menu should have a new megamenu item",
-        trigger: '#top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
+        content: "Clicks on the first title item.",
+        trigger: '.o_mega_menu h4',
+    },
+    {
+        content: "Press enter.",
+        trigger: '.o_mega_menu h4',
+        run: function (actions) {
+            this.$anchor[0].dispatchEvent(new window.InputEvent('input', {bubbles: true, inputType: 'insertParagraph'}));
+        },
+    },
+    {
+        content: "The menu should still be visible. Edit a menu item.",
+        trigger: '.o_mega_menu h4',
+        run: 'text New Menu Item',
+    },
+    ...wTourUtils.clickOnSave(),
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'a[data-action=edit]'}),
+    toggleMegaMenu(),
+    {
+        content: "The menu item should have been renamed.",
+        trigger: '.o_mega_menu h4:contains("New Menu Item")',
         run: function () {}, // it's a check
     },
 ]);

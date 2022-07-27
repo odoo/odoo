@@ -51,43 +51,11 @@ Wysiwyg.include({
     start: function () {
         this.options.toolbarHandler = $('#web_editor-top-edit');
 
-        $(document.body).on('mousedown', (ev) => {
-            const $target = $(ev.target);
-
-            // Keep popover open if clicked inside it, but not on a button
-            if ($target.parents('.o_edit_menu_popover').length && !$target.parent('a').addBack('a').length) {
-                ev.preventDefault();
-            }
-
-            if ($target.is('a') && !$target.attr('data-oe-model') && !$target.find('> [data-oe-model]').length && $target.closest('#wrapwrap').length) {
-                if (!$target.data('popover-widget-initialized')) {
-                    // TODO this code is ugly maybe the mutex should be in the
-                    // editor root widget / the popover should not depend on
-                    // editor panel (like originally intended but...) / ...
-                    (async () => {
-                        if (this.snippetsMenu) {
-                            // Await for the editor panel to be fully updated
-                            // as some buttons of the link popover we create
-                            // here relies on clicking in that editor panel...
-                            await this.snippetsMenu._mutex.exec(() => null);
-                        }
-                        weWidgets.LinkPopoverWidget.createFor(this, ev.target);
-                        $target.data('popover-widget-initialized', true);
-                    })();
-                }
-                $target.focus();
-                $('#wrapwrap').data('wysiwyg').toggleLinkTools({
-                    forceOpen: true,
-                    link: $target[0],
-                    noFocusUrl: true,
-                });
-            }
-        });
-
         // Dropdown menu initialization: handle dropdown openings by hand
         var $dropdownMenuToggles = this.$('.o_mega_menu_toggle, #top_menu_container .dropdown-toggle');
         $dropdownMenuToggles.removeAttr('data-toggle').dropdown('dispose');
         $dropdownMenuToggles.on('click.wysiwyg_megamenu', ev => {
+            this.odooEditor.observerUnactive();
             var $toggle = $(ev.currentTarget);
 
             // Each time we toggle a dropdown, we will destroy the dropdown
@@ -100,7 +68,12 @@ Wysiwyg.include({
             // Then toggle the clicked one
             toggleDropdown($toggle)
                 .then(dispose)
-                .then(() => this._toggleMegaMenu($toggle[0]));
+                .then(() => {
+                    if (!this.options.enableTranslation) {
+                        this._toggleMegaMenu($toggle[0]);
+                    }
+                })
+                .then(() => this.odooEditor.observerActive());
         });
 
         // Ensure :blank oe_structure elements are in fact empty as ':blank'
@@ -149,6 +122,13 @@ Wysiwyg.include({
         var resID = parseInt(el.dataset.resId);
         if (!resModel || !resID) {
             throw new Error('There should be a model and id associated to the cover');
+        }
+
+        // The cover might be dirty for another reason than cover properties
+        // values only (like an editable text inside). In that case, do not
+        // update the cover properties values.
+        if (!('coverClass' in el.dataset)) {
+            return;
         }
 
         this.__savedCovers = this.__savedCovers || {};
