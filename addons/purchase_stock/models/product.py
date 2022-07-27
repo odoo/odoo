@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.osv import expression
 
 
@@ -120,3 +120,16 @@ class SupplierInfo(models.Model):
         orderpoint.supplier_id = self
         if orderpoint.qty_to_order < self.min_qty:
             orderpoint.qty_to_order = self.min_qty
+
+        if self.env.context.get("is_come_from_product"):
+            self = self.with_context(default_route_id=self.env.context.get('route_id'),
+                                     default_product_id=self.env.context.get('product_id'),
+                                     default_warehouse_id=self.env.context.get('warehouse_id'))
+            return {
+                "name": _("Replenish"),
+                "type": "ir.actions.act_window",
+                "res_model": "product.replenish",
+                "views": [[self.env.ref('stock.view_product_replenish').id, "form"]],
+                "target": "new",
+                "context": self.env.context,
+            }

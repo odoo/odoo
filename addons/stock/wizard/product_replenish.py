@@ -17,20 +17,23 @@ class ProductReplenish(models.TransientModel):
     product_has_variants = fields.Boolean('Has variants', default=False, required=True)
     product_uom_category_id = fields.Many2one('uom.category', related='product_id.uom_id.category_id', readonly=True, required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Unity of measure', required=True)
+    forcast_uom_id = fields.Many2one(related='product_id.uom_id')
     quantity = fields.Float('Quantity', default=1, required=True)
     date_planned = fields.Datetime('Scheduled Date', required=True, help="Date at which the replenishment should take place.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse', required=True,
         domain="[('company_id', '=', company_id)]")
-    route_ids = fields.Many2many(
-        'stock.route', string='Preferred Routes',
-        help="Apply specific route(s) for the replenishment instead of product's default routes.",
+    route_id = fields.Many2one(
+        'stock.route', string='Preferred Route',
+        help="Apply specific route for the replenishment instead of product's default routes.",
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     company_id = fields.Many2one('res.company')
+    forecasted_quantity = fields.Float(string="Forecasted Quantity", compute="_compute_forecasted_quantity")
+    allowed_route_ids = fields.Many2many("stock.route", compute="_compute_allowed_route_ids")
 
-    @api.onchange('product_id')
+    @api.onchange('product_id', 'warehouse_id')
     def _onchange_product_id(self):
-        self.quantity = abs(self.product_id.virtual_available) if self.product_id.virtual_available < 0 else 1
+        self.quantity = abs(self.forecasted_quantity) if self.forecasted_quantity < 0 else 1
 
     @api.model
     def default_get(self, fields):
@@ -85,8 +88,23 @@ class ProductReplenish(models.TransientModel):
 
         values = {
             'warehouse_id': self.warehouse_id,
-            'route_ids': self.route_ids,
+            'route_ids': self.route_id,
             'date_planned': self.date_planned,
             'group_id': replenishment,
         }
         return values
+
+    @api.depends('warehouse_id', 'product_id')
+    def _compute_forecasted_quantity(self):
+        for rec in self:
+            rec.forecasted_quantity = rec.product_id.with_context(warehouse=rec.warehouse_id.id).virtual_available
+
+    # OVERWRITE in 'Drop Shipping', 'Dropship and Subcontracting Management' and 'Dropship and Subcontracting Management' to hide it
+    def _get_allowed_route_domain(self):
+        return [('product_selectable', '=', True)]
+
+    @api.depends('product_id', 'product_tmpl_id')
+    def _compute_allowed_route_ids(self):
+        domain = self._get_allowed_route_domain()
+        route_ids = self.env['stock.route'].search(domain)
+        self.allowed_route_ids = route_ids
