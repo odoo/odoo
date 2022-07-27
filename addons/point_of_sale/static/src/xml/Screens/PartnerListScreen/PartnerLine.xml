@@ -23,6 +23,9 @@
                 <div t-if="props.partner.phone">
                     <i class="fa fa-phone"/><t t-esc="props.partner.phone"/>
                 </div>
+                <div t-if="props.partner.mobile">
+                    <i class="fa fa-mobile fa-lg"/><t t-esc="props.partner.mobile"/>
+                </div>
                 <div t-if="props.partner.email" class="email-field">
                     <i class="fa fa-paper-plane-o"/><t t-esc="props.partner.email" />
                 </div>
