@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import io
+import textwrap
 from collections import OrderedDict
 
 from odoo import models, _
@@ -30,7 +31,13 @@ class IrActionsReport(models.Model):
                 stream = io.BytesIO(attachment.raw)
                 if attachment.mimetype == 'application/pdf':
                     record = self.env[attachment.res_model].browse(attachment.res_id)
-                    stream = pdf.add_banner(stream, record.name, logo=True)
+                    try:
+                        stream = pdf.add_banner(stream, record.name, logo=True)
+                    except ValueError:
+                        raise UserError(_(
+                            "Error when reading the original PDF for: %r.\nPlease make sure the file is valid.",
+                            textwrap.shorten(record.name, width=100)
+                        ))
                 collected_streams[invoice.id] = {
                     'stream': stream,
                     'attachment': attachment,
