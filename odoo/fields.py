@@ -5,6 +5,7 @@
 
 from collections import defaultdict
 from datetime import date, datetime, time
+from lxml import etree, html
 from operator import attrgetter
 from xmlrpc.client import MAXINT
 import base64
@@ -1817,6 +1818,8 @@ class Html(_String):
     """ Encapsulates an html code content.
 
     :param bool sanitize: whether value must be sanitized (default: ``True``)
+    :param bool sanitize_overridable: whether the sanitation can be bypassed by
+        the users part of the `base.group_sanitize_override` group (default: ``False``)
     :param bool sanitize_tags: whether to sanitize tags
         (only a white list of attributes is accepted, default: ``True``)
     :param bool sanitize_attributes: whether to sanitize attributes
@@ -1831,6 +1834,7 @@ class Html(_String):
     column_cast_from = ('varchar',)
 
     sanitize = True                     # whether value must be sanitized
+    sanitize_overridable = False        # whether the sanitation can be bypassed by the users part of the `base.group_sanitize_override` group
     sanitize_tags = True                # whether to sanitize tags (only a white list of attributes is accepted)
     sanitize_attributes = True          # whether to sanitize attributes (only a white list of attributes is accepted)
     sanitize_style = False              # whether to sanitize style attributes
@@ -1861,32 +1865,51 @@ class Html(_String):
     _description_strip_classes = property(attrgetter('strip_classes'))
 
     def convert_to_column(self, value, record, values=None, validate=True):
-        if value is None or value is False:
-            return None
-        if self.sanitize:
-            return html_sanitize(
-                value, silent=True,
-                sanitize_tags=self.sanitize_tags,
-                sanitize_attributes=self.sanitize_attributes,
-                sanitize_style=self.sanitize_style,
-                sanitize_form=self.sanitize_form,
-                strip_style=self.strip_style,
-                strip_classes=self.strip_classes)
-        return value
+        return self._convert(value, record, True)
 
     def convert_to_cache(self, value, record, validate=True):
+        return self._convert(value, record, validate)
+
+    def _convert(self, value, record, validate):
         if value is None or value is False:
             return None
-        if validate and self.sanitize:
-            return html_sanitize(
-                value, silent=True,
-                sanitize_tags=self.sanitize_tags,
-                sanitize_attributes=self.sanitize_attributes,
-                sanitize_style=self.sanitize_style,
-                sanitize_form=self.sanitize_form,
-                strip_style=self.strip_style,
-                strip_classes=self.strip_classes)
-        return value
+
+        if not validate or not self.sanitize:
+            return value
+
+        sanitize_vals = {
+            'silent': True,
+            'sanitize_tags': self.sanitize_tags,
+            'sanitize_attributes': self.sanitize_attributes,
+            'sanitize_style': self.sanitize_style,
+            'sanitize_form': self.sanitize_form,
+            'strip_style': self.strip_style,
+            'strip_classes': self.strip_classes
+        }
+
+        if self.sanitize_overridable:
+            if record.user_has_groups('base.group_sanitize_override'):
+                return value
+
+            original_value = record[self.name]
+            if original_value:
+                initial_value_sanitized = html_sanitize(original_value, **sanitize_vals)
+
+                def get_parsed(val):
+                    return etree.tostring(html.fromstring(val))
+
+                # could have been emptied by the sanitizer
+                if (
+                    not initial_value_sanitized
+                    or get_parsed(original_value) != get_parsed(initial_value_sanitized)
+                ):
+                    # The field contains element(s) that would be removed if
+                    # sanitized. It means that someone who was part of a group
+                    # allowing to bypass the sanitation saved that field
+                    # previously.
+                    raise UserError(_("Someone with escalated rights previously modified this field (%s %s), you are therefore not able to modify it yourself.", record._description, self.string))
+
+        return html_sanitize(value, **sanitize_vals)
 
     def convert_to_record(self, value, record):
         r = super().convert_to_record(value, record)

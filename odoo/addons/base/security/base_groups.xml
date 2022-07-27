@@ -12,9 +12,13 @@
             <field name="implied_ids" eval="[Command.link(ref('group_user'))]"/>
         </record>
 
+        <record id="group_sanitize_override" model="res.groups">
+            <field name="name">Bypass HTML Field Sanitize</field>
+        </record>
+
         <record model="res.groups" id="group_system">
             <field name="name">Settings</field>
-            <field name="implied_ids" eval="[Command.link(ref('group_erp_manager'))]"/>
+            <field name="implied_ids" eval="[Command.link(ref('group_erp_manager')), Command.link(ref('group_sanitize_override'))]"/>
             <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
         </record>
 
