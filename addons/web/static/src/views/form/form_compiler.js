@@ -190,12 +190,12 @@ export class FormCompiler extends ViewCompiler {
      * @returns {Element}
      */
     compileForm(el, params) {
+        const sheetNode = el.querySelector("sheet");
+        const displayClasses = sheetNode ? `d-flex {{ uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}` : "d-block";
         const form = createElement("div", {
             "t-att-class": "props.class",
-            "t-attf-class": `{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size < ${SIZES.XXL} ? "flex-column" : "flex-nowrap h-100" }}`,
+            "t-attf-class": `{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} ${displayClasses}`,
         });
-
-        const sheetNode = el.querySelector("sheet");
         if (!sheetNode) {
             for (const child of el.childNodes) {
                 append(form, this.compileNode(child, params));

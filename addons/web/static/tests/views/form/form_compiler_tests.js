@@ -32,7 +32,7 @@ QUnit.module("Form Compiler", () => {
         const arch = /*xml*/ `<form><div>lol</div></form>`;
         const expected = /*xml*/ `
             <t>
-                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }}" class="o_form_nosheet" t-ref="compiled_view_root">
+                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div>lol</div>
                 </div>
             </t>`;
@@ -44,7 +44,7 @@ QUnit.module("Form Compiler", () => {
         const arch = /*xml*/ `<form><div class="someClass">lol<field name="display_name"/></div></form>`;
         const expected = /*xml*/ `
             <t>
-                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }}" class="o_form_nosheet" t-ref="compiled_view_root">
+                <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div class="someClass">
                         lol
                         <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
@@ -128,7 +128,7 @@ QUnit.module("Form Compiler", () => {
 
         const expected = /*xml*/ `
             <t>
-            <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }}" class="o_form_nosheet" t-ref="compiled_view_root">
+            <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
                 <div class="o_form_statusbar"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
                 <div>someDiv</div>
             </div>
