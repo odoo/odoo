@@ -156,16 +156,16 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
 });
 });
 
-odoo.define('website_sale.website_sale_category', function (require) {
+odoo.define('website_sale.website_sale_offcanvas', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
 
-publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
-    selector: '#o_shop_collapse_category',
+publicWidget.registry.websiteSaleOffcanvas = publicWidget.Widget.extend({
+    selector: '#o_wsale_offcanvas',
     events: {
-        'click .o_shop_collapse_button_closed': '_onOpenClick',
-        'click .o_shop_collapse_button_open': '_onCloseClick',
+        'show.bs.offcanvas': '_toggleFilters',
+        'hidden.bs.offcanvas': '_toggleFilters',
     },
 
     //--------------------------------------------------------------------------
@@ -173,25 +173,17 @@ publicWidget.registry.websiteSaleCategory = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Unfold active filters, fold inactive ones
+     *
      * @private
      * @param {Event} ev
      */
-    _onOpenClick: function (ev) {
-        var $btn = $(ev.currentTarget);
-        $btn.parent().siblings().find('.o_shop_collapse_button_open:first').click();
-        $btn.parents('li').find('ul:first').show();
-        $btn.toggleClass('o_shop_collapse_button_closed o_shop_collapse_button_open');
-        $btn.find('.fa').toggleClass('fa-angle-down fa-angle-right');
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onCloseClick: function (ev) {
-        var $btn = $(ev.currentTarget);
-        $btn.parent().find('ul:first').hide();
-        $btn.toggleClass('o_shop_collapse_button_closed o_shop_collapse_button_open');
-        $btn.find('.fa').toggleClass('fa-angle-down fa-angle-right');
+    _toggleFilters: function (ev) {
+        for (const btn of this.el.querySelectorAll('button[data-status]')) {
+            if(btn.classList.contains('collapsed') && btn.dataset.status == "active" || ! btn.classList.contains('collapsed') && btn.dataset.status == "inactive" ) {
+                btn.click();
+            }
+        }
     },
 });
 });
@@ -960,6 +952,12 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
                 },
             });
         }
+
+        const activeClasses = ev.target.parentElement.dataset.activeClasses.split(' ');
+        ev.target.parentElement.querySelectorAll('.btn').forEach((btn) => {
+            activeClasses.map(c => btn.classList.toggle(c));
+        });
+
         var $grid = this.$('#products_grid');
         // Disable transition on all list elements, then switch to the new
         // layout then reenable all transitions after having forced a redraw
