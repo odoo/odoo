@@ -1075,19 +1075,24 @@ class Channel(models.Model):
         self.add_members(self.env.user.partner_id.ids)
 
     @api.model
-    def channel_create(self, name, privacy='groups'):
+    def channel_create(self, name, privacy='groups', group_id=None):
         """ Create a channel and add the current partner, broadcast it (to make the user directly
             listen to it when polling)
             :param name : the name of the channel to create
-            :param privacy : privacy of the channel. Should be 'public' or 'private'.
+            :param privacy : privacy of the channel. Should be 'public', 'private' or 'groups'.
+            :param group_id : the group allowed to join the channel.
             :return dict : channel header
         """
         # create the channel
-        new_channel = self.create({
+        group = self.env['res.groups'].search([('id', '=', group_id)]) if group_id else None
+        vals = {
             'channel_type': 'channel',
             'name': name,
             'public': privacy,
-        })
+        }
+        if group:
+            vals['group_public_id'] = group.id
+        new_channel = self.create(vals)
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>', new_channel.id, new_channel.name)
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
         channel_info = new_channel.channel_info()[0]
