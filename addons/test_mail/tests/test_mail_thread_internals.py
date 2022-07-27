@@ -228,7 +228,7 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         message1.with_user(user1).set_message_done()
         messages = self.env['mail.message'].with_user(user1)._message_fetch(domain=[['needaction', '=', True]])
         self.assertEqual(len(messages), 1)
-        self.assertEqual(messages[0].get('id'), message2.id)
+        self.assertEqual(messages[0].id, message2.id)
         messages = self.env['mail.message'].with_user(user2)._message_fetch(domain=[['needaction', '=', True]])
         self.assertEqual(len(messages), 2)
 
