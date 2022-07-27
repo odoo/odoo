@@ -2969,6 +2969,55 @@ class TestHtmlField(common.TransactionCase):
 
         self.assertNotIn('<tr style="', record.comment4, 'Style attr should have been stripped')
 
+    def test_01_sanitize_groups(self):
+        self.assertEqual(self.model._fields['comment5'].sanitize, True)
+        self.assertEqual(self.model._fields['comment5'].sanitize_overridable, True)
+
+        internal_user = self.env['res.users'].create({
+            'name': 'test internal user',
+            'login': 'test_sanitize',
+            'groups_id': [(6, 0, [self.ref('base.group_user')])],
+        })
+        bypass_user = self.env['res.users'].create({
+            'name': 'test bypass user',
+            'login': 'test_sanitize2',
+            'groups_id': [(6, 0, [self.ref('base.group_user'), self.ref('base.group_sanitize_override')])],
+        })
+        record = self.env['test_new_api.mixed'].create({})
+
+        # 1. Test main use case: prevent restricted user to wipe non restricted
+        #    user previous change
+        val = '<script></script>'
+        write_vals = {'comment5': val}
+
+        record.with_user(internal_user).write(write_vals)
+        self.assertEqual(record.comment5, '',
+                         "should be sanitized (not in groups)")
+        record.with_user(bypass_user).write(write_vals)
+        self.assertEqual(record.comment5, val,
+                         "should not be sanitized (has group)")
+        with self.assertRaises(UserError):
+            # should crash (not in groups and sanitize would break content of
+            # other user that bypassed the sanitize)
+            record.with_user(internal_user).write(write_vals)
+
+        # 2. Make sure field compare in `_convert` is working as expected with
+        #    special content / format
+        val = '<span  attr1 ="att1"   attr2=\'attr2\'>é@&nbsp;</span><p><span/></p>'
+        write_vals = {'comment5': val}
+        # Once sent through `html_sanitize()` this is becoming:
+        # `<span attr1="att1" attr2="attr2">é@\xa0</span><p><span></span></p>`
+        # Notice those change:
+        # -     `attr1 =` -> `attr1=`    (space before `=`)
+        # -    `   attr2` -> ` attr2`    (multi space -> single space)
+        # -  `=\'attr2\'` -> `="attr2"`  (escaped single quote -> double quote)
+        # -      `&nbsp;` -> `\xa0`
+        # Still, those 2 archs should be considered equals and not raise
+
+        record.with_user(bypass_user).write(write_vals)
+        # Next write shouldn't raise a sanitize right error
+        record.with_user(internal_user).write(write_vals)
+
 
 class TestMagicFields(common.TransactionCase):
 

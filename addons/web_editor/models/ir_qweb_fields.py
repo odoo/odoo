@@ -380,7 +380,7 @@ class HTML(models.AbstractModel):
         attrs = super().attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
             field = record._fields[field_name]
-            if field.sanitize:
+            if field.sanitize and not (field.sanitize_overridable and record.user_has_groups('base.group_sanitize_override')):
                 attrs['data-oe-sanitize'] = 1 if field.sanitize_form else 'allow_form'
         return attrs
 
