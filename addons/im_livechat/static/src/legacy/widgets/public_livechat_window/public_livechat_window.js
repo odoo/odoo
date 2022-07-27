@@ -112,15 +112,7 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      */
     renderHeader() {
-        this.$header.html(
-            qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', {
-                status: this.messaging.publicLivechatGlobal.publicLivechat.status,
-                thread: this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
-                title: this.messaging.publicLivechatGlobal.publicLivechat.name,
-                unreadCounter: this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter,
-                widget: this,
-            })
-        );
+        this.$header.html(qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', { widget: this }));
     },
     /**
      * Replace the thread content with provided new content
