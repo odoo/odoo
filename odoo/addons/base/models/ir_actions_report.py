@@ -686,7 +686,7 @@ class IrActionsReport(models.Model):
 
             html = self_sudo.with_context(**additional_context)._render_qweb_html(res_ids_wo_stream, data=data)[0]
 
-            # TODO JUVR add watermark
+            # TODO JUVR add watermark (bodies = html)
             bodies, html_ids, header, footer, specific_paperformat_args = self._prepare_html(html, report_model=self_sudo.model)
 
             if self_sudo.attachment and set(res_ids_wo_stream) != set(html_ids):

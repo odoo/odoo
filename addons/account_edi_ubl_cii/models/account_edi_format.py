@@ -140,9 +140,10 @@ class AccountEdiFormat(models.Model):
         if self.code != 'facturx_1_0_05':
             return super()._prepare_invoice_report(pdf_writer, edi_document)
 
-        # regenerate Facturx everytime a pdf is created
-        edi_document.filtered(lambda doc: doc.edi_format_id.code == 'facturx_1_0_05').state = 'to_send'
-        edi_document.filtered(lambda doc: doc.edi_format_id.code == 'facturx_1_0_05')._process_documents_no_web_services()
+        # regenerate Factur-X everytime a pdf is created
+        edi_document.state = 'to_send'
+        edi_document._process_documents_no_web_services()
+
         if not edi_document.attachment_id:
             return
 
