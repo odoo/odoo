@@ -164,6 +164,18 @@ registerModel({
          * @private
          * @returns {boolean}
          */
+        _computeHasCallFeature() {
+            const typesOfChannelWithCallFeature = new Set([
+                'channel',
+                'chat',
+                'group',
+            ]);
+            return typesOfChannelWithCallFeature.has(this.channel_type);
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeHasMemberListFeature() {
             const typesOfChannelWithMemberListFeature = new Set([
                 'channel',
@@ -341,6 +353,12 @@ registerModel({
             inverse: 'channel',
             isCausal: true,
             readonly: true,
+        }),
+        /**
+         * Determines whether the RTC call feature should be displayed.
+         */
+        hasCallFeature: attr({
+            compute: '_computeHasCallFeature',
         }),
         /**
          * Determines whether it makes sense for this channel to have a member
