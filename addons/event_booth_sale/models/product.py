@@ -2,6 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons.product.models.product_template import DETAILED_TYPE_MODELS
+
+DETAILED_TYPE_MODELS['event_booth'] = 'event.booth.category'
 
 
 class ProductTemplate(models.Model):
