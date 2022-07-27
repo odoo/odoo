@@ -20,7 +20,6 @@ const PublicLivechatMessage = Class.extend({
      * @param {@im_livechat/legacy/widgets/livechat_button} parent
      * @param {Messaging} messaging
      * @param {Object} data
-     * @param {Array} [data.attachment_ids=[]]
      * @param {Array} [data.author_id]
      * @param {string} [data.body = ""]
      * @param {string} [data.date] the server-format date time of the message.
@@ -32,10 +31,6 @@ const PublicLivechatMessage = Class.extend({
      */
     init(parent, messaging, data) {
         this.messaging = messaging;
-        // Attachments are not supported in (public) livechat.
-        // We ignore data from server, otherwise field commands
-        // will be wrongly considered as unamed attachments.
-        this._attachmentIDs = [];
         this._body = data.body || "";
         // by default: current datetime
         this._date = data.date ? moment(time.str_to_datetime(data.date)) : moment();
@@ -59,15 +54,6 @@ const PublicLivechatMessage = Class.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * Get the list of files attached to this message.
-     * Note that attachments are stored with server-format
-     *
-     * @return {Object[]}
-     */
-    getAttachments() {
-        return this._attachmentIDs;
-    },
     /**
      * Get the server ID (number) of the author of this message
      * If there are no author, return -1;

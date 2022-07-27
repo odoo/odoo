@@ -591,7 +591,6 @@ const _t = core._t;
             this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
                 id: '_welcome_' + stepIndex,
                 is_discussion: true,  // important for css style -> we only want white background for chatbot
-                attachment_ids: [],
                 author_id: (
                     this.messaging.publicLivechatGlobal.publicLivechat.operator
                     ? [

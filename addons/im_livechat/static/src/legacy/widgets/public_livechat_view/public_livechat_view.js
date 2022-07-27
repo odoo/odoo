@@ -30,8 +30,6 @@ const PublicLivechatView = Widget.extend({
         'click img': '_onClickRedirect',
         'click strong': '_onClickRedirect',
         'click .o_thread_show_more': '_onClickShowMore',
-        'click .o_attachment_download': '_onAttachmentDownload',
-        'click .o_attachment_delete_cross': '_onDeleteAttachment',
         'click .o_thread_message_needaction': '_onClickMessageNeedaction',
         'click .o_thread_message_star': '_onClickMessageStar',
         'click .o_thread_message_reply': '_onClickMessageReply',
@@ -62,7 +60,6 @@ const PublicLivechatView = Widget.extend({
             displayAvatars: true,
             squashCloseMessages: true,
             loadMoreOnScroll: false,
-            hasMessageAttachmentDeletable: false,
         });
         // options when the thread is disabled
         this._disabledOptions = {
@@ -73,7 +70,6 @@ const PublicLivechatView = Widget.extend({
             displayAvatars: this._enabledOptions.displayAvatars,
             squashCloseMessages: false,
             loadMoreOnScroll: this._enabledOptions.loadMoreOnScroll,
-            hasMessageAttachmentDeletable: false,
         };
         this._selectedMessageID = null;
         this._currentThreadID = null;
@@ -365,18 +361,6 @@ const PublicLivechatView = Widget.extend({
         }
     },
     /**
-    * @private
-    * @param {MouseEvent} ev
-    */
-    _onDeleteAttachment(ev) {
-        ev.stopPropagation();
-        const $target = $(ev.currentTarget);
-        this.trigger_up('delete_attachment', {
-            attachmentId: $target.data('id'),
-            attachmentName: $target.data('name')
-        });
-        },
-    /**
      * @private
      * @param {Object} options
      * @param {integer} [options.channelID]
@@ -440,13 +424,6 @@ const PublicLivechatView = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onAttachmentDownload(event) {
-        event.stopPropagation();
-    },
     /**
      * @private
      * @param {MouseEvent} ev

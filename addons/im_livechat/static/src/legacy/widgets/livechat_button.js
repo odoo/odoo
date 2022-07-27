@@ -175,7 +175,6 @@ const LivechatButton = Widget.extend({
         if (this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage) {
             this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
                 id: '_welcome',
-                attachment_ids: [],
                 author_id: [
                     this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
                     this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
