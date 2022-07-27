@@ -64,3 +64,17 @@ class ProductPackaging(models.Model):
             if new_qty == product_qty:
                 return packaging
         return self.env['product.packaging']
+
+    def _compute_qty(self, qty, qty_uom=False):
+        """Returns the qty of this packaging that qty converts to.
+        A float is returned because there are edge cases where some users use
+        "part" of a packaging
+
+        :param qty: float of product quantity (given in product UoM if no qty_uom provided)
+        :param qty_uom: Optional uom of quantity
+        :returns: float of packaging qty
+        """
+        self.ensure_one()
+        if qty_uom:
+            qty = qty_uom._compute_quantity(qty, self.product_uom_id)
+        return float_round(qty / self.qty, precision_rounding=self.product_uom_id.rounding)

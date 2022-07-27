@@ -182,6 +182,12 @@ class StockMove(models.Model):
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True,
         help="Computes when a move should be reserved")
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
+    product_packaging_qty = fields.Float(
+            string="Reserved Packaging Quantity",
+            compute='_compute_product_packaging_qty')
+    product_packaging_qty_done = fields.Float(
+            string="Done Packaging Quantity",
+            compute='_compute_product_packaging_qty_done')
     from_immediate_transfer = fields.Boolean(related="picking_id.immediate_transfer")
     show_reserved = fields.Boolean(compute='_compute_show_reserved')
     show_quant = fields.Boolean("Show Quant", compute="_compute_show_info")
@@ -292,6 +298,22 @@ class StockMove(models.Model):
     def _compute_partner_id(self):
         for move in self.filtered(lambda m: m.picking_id):
             move.partner_id = move.picking_id.partner_id
+
+    @api.depends('product_packaging_id', 'product_uom', 'product_qty')
+    def _compute_product_packaging_qty(self):
+        self.product_packaging_qty = False
+        for move in self:
+            if not move.product_packaging_id:
+                continue
+            move.product_packaging_qty = move.product_packaging_id._compute_qty(move.product_qty)
+
+    @api.depends('product_packaging_id', 'product_uom', 'quantity_done')
+    def _compute_product_packaging_qty_done(self):
+        self.product_packaging_qty_done = False
+        for move in self:
+            if not move.product_packaging_id:
+                continue
+            move.product_packaging_qty_done = move.product_packaging_id._compute_qty(move.quantity_done, move.product_uom)
 
     def _get_move_lines(self):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move.
