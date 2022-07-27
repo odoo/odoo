@@ -132,6 +132,8 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         # Validate picking
         return_pick.move_line_ids.write({'qty_done': 2})
+        # price is propagated on the return move
+        self.assertEqual(return_pick.move_lines[0].price_unit, 500)
 
         return_pick.button_validate()
 

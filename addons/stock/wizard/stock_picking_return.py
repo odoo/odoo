@@ -96,6 +96,7 @@ class ReturnPicking(models.TransientModel):
     def _prepare_move_default_values(self, return_line, new_picking):
         vals = {
             'product_id': return_line.product_id.id,
+            'price_unit': return_line.move_id.price_unit,
             'product_uom_qty': return_line.quantity,
             'product_uom': return_line.product_id.uom_id.id,
             'picking_id': new_picking.id,
