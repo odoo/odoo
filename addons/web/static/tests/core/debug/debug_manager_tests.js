@@ -12,6 +12,7 @@ import { ActionDialog } from "@web/webclient/actions/action_dialog";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { makeTestEnv, utils } from "../../helpers/mock_env";
 import {
+    fakeCompanyService,
     fakeCommandService,
     makeFakeDialogService,
     makeFakeLocalizationService,
@@ -296,6 +297,7 @@ QUnit.module("DebugMenu", (hooks) => {
             }
         };
         prepareRegistriesWithCleanup();
+        registry.category("services").add("company", fakeCompanyService);
 
         patchWithCleanup(odoo, {
             debug: true,
@@ -387,6 +389,7 @@ QUnit.module("DebugMenu", (hooks) => {
             }
         };
         prepareRegistriesWithCleanup();
+        registry.category("services").add("company", fakeCompanyService);
 
         patchWithCleanup(odoo, {
             debug: true,

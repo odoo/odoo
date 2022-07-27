@@ -11,6 +11,7 @@ import {
 } from "../search/helpers";
 import { addLegacyMockEnvironment } from "../webclient/helpers";
 import {
+    fakeCompanyService,
     makeFakeLocalizationService,
     makeFakeRouterService,
     makeFakeUserService,
@@ -105,4 +106,5 @@ export function setupViewRegistries() {
     serviceRegistry.add("localization", makeFakeLocalizationService()), { force: true };
     serviceRegistry.add("dialog", dialogService), { force: true };
     serviceRegistry.add("popover", popoverService), { force: true };
+    serviceRegistry.add("company", fakeCompanyService);
 }

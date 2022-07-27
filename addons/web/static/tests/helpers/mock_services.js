@@ -10,7 +10,6 @@ import { effectService } from "@web/core/effects/effect_service";
 import { objectToUrlEncodedString } from "@web/core/utils/urls";
 import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
-import { companyService } from "@web/webclient/company_service";
 import { uiService } from "@web/core/ui/ui_service";
 import { ConnectionAbortedError } from "../../src/core/network/rpc_service";
 
@@ -70,7 +69,8 @@ export function makeFakeRPCService(mockRPC) {
                         .then(resolve)
                         .catch(reject);
                 });
-                rpcProm.abort = () => rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+                rpcProm.abort = () =>
+                    rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
                 return rpcProm;
             };
         },
@@ -79,7 +79,7 @@ export function makeFakeRPCService(mockRPC) {
 }
 
 export function makeMockXHR(response, sendCb, def) {
-    let MockXHR = function () {
+    const MockXHR = function () {
         return {
             _loadListener: null,
             url: "",
@@ -269,6 +269,17 @@ export function makeFakeUserService(hasGroup = () => false) {
     };
 }
 
+export const fakeCompanyService = {
+    start() {
+        return {
+            availableCompanies: {},
+            allowedCompanyIds: [],
+            currentCompany: {},
+            setCompanies: () => {},
+        };
+    },
+};
+
 export function makeFakeHTTPService(getResponse, postResponse) {
     getResponse =
         getResponse ||
@@ -295,7 +306,7 @@ export function makeFakeHTTPService(getResponse, postResponse) {
 }
 
 export const mocks = {
-    company: () => companyService,
+    company: () => fakeCompanyService,
     command: () => fakeCommandService,
     cookie: () => fakeCookieService,
     effect: () => effectService, // BOI The real service ? Is this what we want ?
