@@ -22,7 +22,7 @@
                         <t t-if="!env.isMobile"> Discard</t>
                     </div>
                     <div class="top-right-buttons">
-                    <div t-if="state.detailIsShown" class="button more-info">
+                    <div t-if="state.detailIsShown &amp;&amp; state.editModeProps.partner.id" class="button more-info">
                         <a t-att-href="partnerLink" target="_blank"> More info</a>
                     </div>
                     <div class="search-bar-container sb-partner" t-if="!state.detailIsShown">
