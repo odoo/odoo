@@ -403,7 +403,7 @@
                 <field name="working_state"/>
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
-                <field name="qty_production"/>
+                <field name="qty_remaining"/>
                 <field name="date_planned_start"/>
                 <field name="production_date"/>
                 <field name="product_uom_id" force_save="1"/>
@@ -417,7 +417,7 @@
                                     </h4>
                                     <div class="o_kanban_record_bottom">
                                         <h5 class="o_kanban_bottom_left">
-                                            <span><t t-esc="record.product_id.value"/>, </span> <span><t t-esc="record.qty_production.value"/> <t t-esc="record.product_uom_id.value"/></span>
+                                            <span><t t-esc="record.product_id.value"/>, </span> <span><t t-esc="record.qty_remaining.value"/> <t t-esc="record.product_uom_id.value"/></span>
                                         </h5>
                                     </div>
                                 </div>
