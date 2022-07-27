@@ -23,9 +23,6 @@ const PublicLivechatWindow = Widget.extend({
         'keypress .o_composer_text_field': '_onKeypress',
         'input .o_composer_text_field': '_onInput',
     },
-    custom_events: {
-        document_viewer_closed: '_onDocumentViewerClose',
-    },
     /**
      * @param {Widget} parent
      * @param {Messaging} messaging
@@ -103,15 +100,7 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      */
     renderHeader() {
-        this.$header.html(
-            qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', {
-                status: this.messaging.publicLivechatGlobal.publicLivechat.status,
-                thread: this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
-                title: this.messaging.publicLivechatGlobal.publicLivechat.name,
-                unreadCounter: this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter,
-                widget: this,
-            })
-        );
+        this.$header.html(qweb.render('im_livechat.legacy.PublicLivechatWindow.HeaderContent', { widget: this }));
     },
     /**
      * Replace the thread content with provided new content
@@ -242,12 +231,6 @@ const PublicLivechatWindow = Widget.extend({
         if ($(ev.target).closest('a, button').length) {
             return;
         }
-        this._focusInput();
-    },
-    /**
-     * @private
-     */
-    _onDocumentViewerClose() {
         this._focusInput();
     },
     /**

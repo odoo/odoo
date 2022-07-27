@@ -3,11 +3,11 @@
 import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
-import { get_cookie, set_cookie, unaccent } from 'web.utils';
+import { get_cookie, Markup, set_cookie, unaccent } from 'web.utils';
 
 registerModel({
     name: 'LivechatButtonView',
@@ -20,7 +20,7 @@ registerModel({
         addMessage(data, options) {
             const legacyMessage = new PublicLivechatMessage(this, this.messaging, data);
 
-            const hasAlreadyMessage = _.some(this.messages, function (msg) {
+            const hasAlreadyMessage = _.some(this.messaging.publicLivechatGlobal.messages, function (msg) {
                 return legacyMessage.getID() === msg.id;
             });
             if (hasAlreadyMessage) {
@@ -37,12 +37,12 @@ registerModel({
             }
 
             if (options && options.prepend) {
-                this.update({
-                    messages: replace([message, ...this.messages]),
+                this.messaging.publicLivechatGlobal.update({
+                    messages: replace([message, ...this.messaging.publicLivechatGlobal.messages]),
                 });
             } else {
-                this.update({
-                    messages: replace([...this.messages, message]),
+                this.messaging.publicLivechatGlobal.update({
+                    messages: replace([...this.messaging.publicLivechatGlobal.messages, message]),
                 });
             }
         },
@@ -59,7 +59,7 @@ registerModel({
                 this.chatbot.currentStep.data
             ) {
                 this.chatbot.currentStep.data.conversation_closed = true;
-                this.widget._chatbotSaveSession();
+                this.chatbotSaveSession();
             }
             this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
             this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
@@ -83,11 +83,60 @@ registerModel({
             }
             this.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
             this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click',
-                this.widget._onChatbotRestartScript.bind(this.widget));
+            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click', this.onChatbotRestartScript);
         },
         /**
-         * See '_chatbotSaveSession'.
+         * Register current chatbot step state into localStorage to be able to resume if the visitor
+         * goes to another website page or if he refreshes his page.
+         *
+         * (Will not work if the visitor switches browser but his livechat session will not be restored
+         *  anyway in that case, since it's stored into a cookie).
+         */
+        chatbotSaveSession() {
+            localStorage.setItem('im_livechat.chatbot.state.uuid_' + this.messaging.publicLivechatGlobal.publicLivechat.uuid, JSON.stringify({
+                '_chatbot': this.chatbot.data,
+                '_chatbotCurrentStep': this.chatbot.currentStep.data,
+            }));
+        },
+        /**
+         * Restart the script and then trigger the "next step" (which will be the first of the script
+         * in this case).
+         */
+        async onChatbotRestartScript(ev) {
+            this.chatWindow.legacyChatWindow.$('.o_composer_text_field').removeClass('d-none');
+            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
+
+            if (this.chatbotNextStepTimeout) {
+                clearTimeout(this.chatbotNextStepTimeout);
+            }
+
+            if (this.chatbotWelcomeMessageTimeout) {
+                clearTimeout(this.chatbotWelcomeMessageTimeout);
+            }
+
+            const postedMessage = await this.messaging.rpc({
+                route: '/chatbot/restart',
+                params: {
+                    channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+                    chatbot_script_id: this.chatbot.scriptId,
+                },
+            });
+
+            if (postedMessage) {
+                this.widget._chatbotAddMessage(postedMessage);
+            }
+
+            this.chatbot.update({ currentStep: clear() });
+            this.chatbotSetIsTyping();
+            this.update({
+                chatbotNextStepTimeout: setTimeout(
+                    this.widget._chatbotTriggerNextStep.bind(this.widget),
+                    this.chatbot.messageDelay,
+                ),
+            });
+        },
+        /**
+         * See 'chatbotSaveSession'.
          *
          * We retrieve the livechat uuid from the session cookie since the livechat Widget is not yet
          * initialized when we restore the chatbot state.
@@ -134,6 +183,15 @@ registerModel({
                 this._openChat();
             }
         },
+        async openChatWindow() {
+            this.update({ chatWindow: insertAndReplace() });
+            await this.chatWindow.legacyChatWindow.appendTo($('body'));
+            const cssProps = { bottom: 0 };
+            cssProps[this.messaging.locale.textDirection === 'rtl' ? 'left' : 'right'] = 0;
+            this.chatWindow.legacyChatWindow.$el.css(cssProps);
+            this.widget.$el.hide();
+            this._openChatWindowChatbot();
+        },
         /**
          * Adds a small "is typing" animation into the chat window.
          *
@@ -161,6 +219,21 @@ registerModel({
                     this.chatbot.messageDelay / 3,
                 ),
             });
+        },
+        /**
+         * @param {Object} message
+         */
+        async sendMessage(message) {
+            await this._sendMessageChatbotBefore();
+            await this._sendMessage(message);
+            this._sendMessageChatbotAfter();
+        },
+        async willStart() {
+            try {
+                await this._willStart();
+            } finally {
+                await this._willStartChatbot();
+            }
         },
         /**
          * @private
@@ -376,7 +449,7 @@ registerModel({
                 def = Promise.resolve(JSON.parse(cookie));
             } else {
                 // re-initialize messages cache
-                this.update({ messages: clear() });
+                this.messaging.publicLivechatGlobal.update({ messages: clear() });
                 def = this.messaging.rpc({
                     route: '/im_livechat/get_session',
                     params: this.widget._prepareGetSessionParameters(),
@@ -403,7 +476,7 @@ registerModel({
                     this.messaging.publicLivechatGlobal.update({
                         publicLivechat: insertAndReplace({ data: livechatData }),
                     });
-                    return this.widget._openChatWindow().then(() => {
+                    return this.openChatWindow().then(() => {
                         if (!this.history) {
                             this.widget._sendWelcomeMessage();
                         }
@@ -424,6 +497,213 @@ registerModel({
             }).guardedCatch(() => {
                 this.update({ isOpeningChat: false });
             });
+        },
+        /**
+         * Resuming the chatbot script if we are currently running one.
+         *
+         * In addition, we register a resize event on the window object to scroll messages to bottom.
+         * This is done especially for mobile (Android) where the keyboard opens upon focusing the input
+         * field and shrinks the whole window size.
+         * Scrolling to the bottom allows the user to see the last messages properly when that happens.
+         *
+         * @private
+         * @override
+         */
+        _openChatWindowChatbot() {
+            window.addEventListener('resize', () => {
+                if (this.chatWindow) {
+                    this.chatWindow.publicLivechatView.widget.scrollToBottom();
+                }
+            });
+
+            if (
+                this.chatbot &&
+                this.chatbot.currentStep &&
+                this.chatbot.currentStep.data &&
+                this.messaging.publicLivechatGlobal.messages &&
+                this.messaging.publicLivechatGlobal.messages.length !== 0
+            ) {
+                this.widget._chatbotProcessStep();
+            }
+        },
+        /**
+         * @private
+         * @param {Object} message
+         */
+        async _sendMessage(message) {
+            this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._notifyMyselfTyping({ typing: false });
+            const messageId = await this.messaging.rpc({
+                route: '/mail/chat_post',
+                params: { uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid, message_content: message.content },
+            });
+            if (!messageId) {
+                try {
+                    this.widget.displayNotification({
+                        message: this.env._t("Session expired... Please refresh and try again."),
+                        sticky: true,
+                    });
+                } catch (_err) {
+                    /**
+                     * Failure in displaying notification happens when
+                     * notification service doesn't exist, which is the case
+                     * in external lib. We don't want notifications in
+                     * external lib at the moment because they use bootstrap
+                     * toast and we don't want to include boostrap in
+                     * external lib.
+                     */
+                    console.warn(this.env._t("Session expired... Please refresh and try again."));
+                }
+                this.closeChat();
+            }
+            this.chatWindow.publicLivechatView.widget.scrollToBottom();
+        },
+        /**
+         * @private
+         */
+        _sendMessageChatbotAfter() {
+            if (this.isChatbotRedirecting) {
+                return;
+            }
+            if (
+                this.isChatbot &&
+                this.chatbot.currentStep &&
+                this.chatbot.currentStep.data
+            ) {
+                if (
+                    this.chatbot.currentStep.data.chatbot_step_type === 'forward_operator' &&
+                    this.chatbot.currentStep.data.chatbot_operator_found
+                ) {
+                    return; // operator has taken over the conversation, let them speak
+                } else if (this.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
+                    this.widget._debouncedChatbotAwaitUserInput();
+                } else if (!this.chatbot.shouldEndScript) {
+                    this.chatbotSetIsTyping();
+                    this.update({
+                        chatbotNextStepTimeout: setTimeout(
+                            this.widget._chatbotTriggerNextStep.bind(this.widget),
+                            this.chatbot.messageDelay,
+                        ),
+                    });
+                } else {
+                    this.chatbotEndScript();
+                }
+                this.chatbotSaveSession();
+            }
+        },
+        /**
+         * When the Customer sends a message, we need to act depending on our current state:
+         * - If the conversation has been forwarded to an operator
+         *   Then there is nothing to do, we let them speak
+         * - If we are currently on a 'free_input_multi' step
+         *   Await more user input (see #_chatbotAwaitUserInput() for details)
+         * - Otherwise we continue the script or end it if it's the last step
+         *
+         * We also save the current session state.
+         * Important as this may be the very first interaction with the bot, we need to save right away
+         * to correctly handle any page redirection / page refresh.
+         *
+         * Special side case: if we are currently redirecting to another page (see '_onChatbotOptionClicked')
+         * we shortcut the process as we are currently moving to a different URL.
+         * The script will be resumed on the new page (if in the same website domain).
+         *
+         * @private
+         */
+        async _sendMessageChatbotBefore() {
+            if (
+                this.isChatbot &&
+                this.chatbot.currentStep &&
+                this.chatbot.currentStep.data
+            ) {
+                await this.widget._chatbotPostWelcomeMessages();
+            }
+        },
+        async _willStart() {
+            const cookie = get_cookie('im_livechat_session');
+            if (cookie) {
+                const channel = JSON.parse(cookie);
+                const history = await this.messaging.rpc({
+                    route: '/mail/chat_history',
+                    params: { uuid: channel.uuid, limit: 100 },
+                });
+                history.reverse();
+                this.update({ history });
+                for (const message of this.history) {
+                    message.body = Markup(message.body);
+                }
+            } else {
+                const result = await this.messaging.rpc({
+                    route: '/im_livechat/init',
+                    params: { channel_id: this.channelId },
+                });
+                if (!result.available_for_me) {
+                    return Promise.reject();
+                }
+                this.update({ rule: result.rule });
+            }
+            return this.messaging.publicLivechatGlobal.loadQWebTemplate();
+        },
+        /**
+         * This override handles the following use cases:
+         *
+         * - If the chat is started for the first time (first visit of a visitor)
+         *   We register the chatbot configuration and the rest of the behavior is triggered by various
+         *   method overrides ('sendWelcomeMessage', 'sendMessage', ...)
+         *
+         * - If the chat has been started before, but the user did not interact with the bot
+         *   The default behavior is to open an empty chat window, without any messages.
+         *   In addition, we fetch the configuration (with a '/init' call), to see if we have a bot
+         *   configured.
+         *   Indeed we want to trigger the bot script on every page where the associated rule is matched.
+         *
+         * - If we have a non-empty chat history, resume the chat script where the end-user left it by
+         *   fetching the necessary information from the local storage.
+         *
+         * @override
+         */
+        async _willStartChatbot() {
+            if (this.rule && !!this.chatbot) {
+                // noop
+            } else if (this.history !== null && this.history.length === 0) {
+                this.update({
+                    livechatInit: await this.messaging.rpc({
+                        route: '/im_livechat/init',
+                        params: { channel_id: this.channelId },
+                    }),
+                });
+            } else if (this.history !== null && this.history.length !== 0) {
+                const sessionCookie = get_cookie('im_livechat_session');
+                if (sessionCookie) {
+                    this.update({ sessionCookie });
+                    if (localStorage.getItem(this.chatbotSessionCookieKey)) {
+                        this.update({ chatbotState: 'restore_session' });
+                    }
+                }
+            }
+
+            if (this.chatbotState === 'init') {
+                // we landed on a website page where a channel rule is configured to run a chatbot.script
+                // -> initialize necessary state
+                if (this.rule.chatbot_welcome_steps && this.rule.chatbot_welcome_steps.length !== 0) {
+                    this.chatbot.update({
+                        currentStep: insertAndReplace({
+                            data: this.chatbot.lastWelcomeStep,
+                        }),
+                    });
+                }
+            } else if (this.chatbotState === 'welcome') {
+                // we landed on a website page and a chatbot script was initialized on a previous one
+                // however the end-user did not interact with the bot ( :( )
+                // -> remove cookie to force opening the popup again
+                // -> initialize necessary state
+                // -> batch welcome message (see '_sendWelcomeChatbotMessage')
+                set_cookie('im_livechat_auto_popup', '', -1);
+                this.update({ history: clear() });
+                this.update({ rule: this.livechatInit.rule });
+            } else if (this.chatbotState === 'restore_session') {
+                // we landed on a website page and a chatbot script is currently running
+                // -> restore the user's session (see 'chatbotRestoreSession')
+                this.chatbotRestoreSession();
+            }
         },
     },
     fields: {
@@ -501,7 +781,6 @@ registerModel({
         localStorageChatbotState: attr({
             compute: '_computeLocalStorageChatbotState',
         }),
-        messages: many('PublicLivechatMessage'),
         openChatDebounced: attr({
             compute: '_computeOpenChatDebounced',
         }),

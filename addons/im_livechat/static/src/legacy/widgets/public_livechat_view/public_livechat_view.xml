@@ -10,7 +10,7 @@
         @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
     -->
     <t t-name="im_livechat.legacy.mail.widget.Thread">
-        <t t-if="thread.hasMessages()">
+        <t t-if="thread.legacyPublicLivechat.hasMessages()">
             <t t-call="im_livechat.legacy.mail.widget.Thread.Content"/>
         </t>
     </t>
@@ -43,7 +43,7 @@
 
     -->
     <t t-name="im_livechat.legacy.mail.widget.Thread.Content">
-        <t t-set="messages" t-value="thread.getMessages({ 'domain': options.domain || [] })"/>
+        <t t-set="messages" t-value="thread.legacyPublicLivechat.getMessages({ 'domain': options.domain || [] })"/>
         <t t-if="options.displayOrder === ORDER.ASC" t-call="im_livechat.legacy.mail.widget.Thread.Content.ASC"/>
         <t t-else="" t-call="im_livechat.legacy.mail.widget.Thread.Content.DESC"/>
     </t>
@@ -131,7 +131,6 @@
         @param {boolean} [options.displayModerationCommands] when set, display the moderation commands on
           the message. This includes the moderation checkboxes (needs a control panel such as in Discuss app).
         @param {boolean} [options.displaySubjectsOnMessages]
-        @param {boolean} options.hasMessageAttachmentDeletable
         @param {string|integer} [options.messagesSeparatorPosition] 'top' or
             message ID, the separator is placed just after this message.
         @param {integer} [options.selectedMessageID]
@@ -200,22 +199,6 @@
                             <p><t t-esc="message.getSubtypeDescription()"/></p>
                         </t>
                         <t t-call="im_livechat.legacy.mail.widget.Thread.MessageTracking"/>
-                    </t>
-                    <t t-if="message.hasAttachments()">
-                        <div t-if="message.hasImageAttachments()" class="o_attachments_previews">
-                            <t t-foreach="message.getImageAttachments()" t-as="attachment">
-                                <t t-call="im_livechat.legacy.mail.AttachmentPreview">
-                                    <t t-set="isDeletable" t-value="options.hasMessageAttachmentDeletable"/>
-                                </t>
-                            </t>
-                        </div>
-                        <div t-if="message.hasNonImageAttachments()" class="o_attachments_list">
-                            <t t-foreach="message.getNonImageAttachments()" t-as="attachment">
-                                <t t-call="im_livechat.legacy.mail.Attachment">
-                                    <t t-set="isDeletable" t-value="options.hasMessageAttachmentDeletable"/>
-                                </t>
-                            </t>
-                        </div>
                     </t>
                 </div>
             </div>
@@ -293,83 +276,6 @@
     <t t-name="im_livechat.legacy.mail.MessagesSeparator">
         <div class="o_thread_new_messages_separator">
             <span class="o_thread_separator_label">New messages</span>
-        </div>
-    </t>
-    
-    <!--
-        @param {Object} attachment
-        @param {string} attachment.filename
-        @param {integer} attachment.id
-        @param {string} [attachment.mimetype]
-        @param {string} attachment.name
-        @param {boolean} attachment.upload
-        @param {string} attachment.url
-        @param {boolean} [editable=false] if set, it means the attachment is rendered in the composer.
-          Some changes are required in that case, such as "delete" button is not visible (pretty unlink is used instead).
-        @param {boolean} [isDeletable=false]
-    -->
-    <t t-name="im_livechat.legacy.mail.Attachment">
-        <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
-        <div t-attf-class="o_attachment #{ editable ? 'o_attachment_editable' : '' } #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
-            <div class="o_attachment_wrap">
-                <span t-if="!editable and isDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
-                <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf'"/>
-                <t t-set="ext" t-value="attachment.filename.split('.').pop()"/>
-
-                <div t-attf-class="o_image_box float-start #{has_preview ? 'o_attachment_view' : ''}" t-att-data-id="attachment.id">
-                    <div t-if="has_preview"
-                         class="o_image o_hover"
-                         t-att-style="type == 'image' ? 'background-image:url(/web/image/' + attachment.id + '/38x38/?crop=true' : '' "
-                         t-att-data-mimetype="attachment.mimetype">
-                    </div>
-                    <a t-elif="!editable" t-att-href='attachment.url' t-att-title="'Download ' + attachment.name" aria-label="Download">
-                        <span class="o_image o_hover" t-att-data-mimetype="attachment.mimetype" t-att-data-ext="ext"/>
-                    </a>
-                    <span t-else="" class="o_image" t-att-data-mimetype="attachment.mimetype" t-att-data-ext="ext" role="img" aria-label="Document not downloadable"/>
-                </div>
-
-                <div class="caption">
-                    <span t-if="has_preview or editable" t-attf-class="ml4 #{has_preview? 'o_attachment_view' : ''}" t-att-data-id="attachment.id"><t t-esc='attachment.name'/></span>
-                    <a t-else="" class="ml4" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><t t-esc='attachment.name'/></a>
-                </div>
-                <div t-if="editable" class="caption small">
-                    <b t-attf-class="ml4 small text-uppercase #{has_preview? 'o_attachment_view' : ''}" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
-                    <div class="progress o_attachment_progress_bar">
-                        <div class="progress-bar progress-bar-striped active" style="width: 100%">Uploading</div>
-                    </div>
-                </div>
-                <div t-if="!editable" class="caption small">
-                    <b t-if="has_preview" class="ml4 small text-uppercase o_attachment_view" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
-                    <a t-else="" class="ml4 small text-uppercase" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><b><t t-esc='ext'/></b></a>
-                    <a class="ml4 o_attachment_download float-end" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download" role="img" aria-label="Download"/></a>
-                </div>
-                <div t-if="editable" class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
-                <div t-if="editable" class="o_attachment_delete" t-att-data-id="attachment.id"><span class="text-white" role="img" aria-label="Delete" title="Delete">×</span></div>
-            </div>
-        </div>
-    </t>
-    
-    <!--
-        @param {Object} attachment
-        @param {integer} attachment.id
-        @param {string} attachment.name
-        @param {string} attachment.url
-        @param {boolean} [isDeletable=false]
-    -->
-    <t t-name="im_livechat.legacy.mail.AttachmentPreview">
-        <div class="o_attachment" t-att-title="attachment.name">
-            <div class="o_attachment_wrap">
-                <div class="o_image_box">
-                    <div class="o_attachment_image" t-attf-style="background-image:url('/web/image/#{attachment.id}/160x160/?crop=true')"/>
-                    <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
-                        <span t-if="isDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
-                        <span class="o_attachment_title text-white"><t t-esc="attachment.name"/></span>
-                        <a class="o_attachment_download" t-att-href='attachment.url'>
-                            <i t-attf-class="fa fa-download text-white" t-att-title="'Download ' + attachment.name" role="img" aria-label="Download"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </t>
 </templates>

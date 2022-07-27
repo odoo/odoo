@@ -108,10 +108,9 @@ registerModel({
                 } else if (
                     (this.isExpectingUserInput ||
                     this.currentStep.data.chatbot_step_type === 'question_selection') &&
-                    this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0
+                    this.messaging.publicLivechatGlobal.messages.length !== 0
                 ) {
-                    const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1];
-                    if (lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id) {
+                    if (this.messaging.publicLivechatGlobal.lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id) {
                         // we are on the last step of the script, expect a user input and the user has
                         // already answered
                         // -> end the script

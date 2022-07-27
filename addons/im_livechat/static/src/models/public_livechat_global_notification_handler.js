@@ -61,7 +61,7 @@ registerModel({
                     }
                     const notificationData = payload.message;
                     // If message from notif is already in chatter messages, stop handling
-                    if (this.messaging.publicLivechatGlobal.livechatButtonView.messages.some(message => message.id === notificationData.id)) {
+                    if (this.messaging.publicLivechatGlobal.messages.some(message => message.id === notificationData.id)) {
                         return;
                     }
                     notificationData.body = utils.Markup(notificationData.body);
@@ -73,7 +73,7 @@ registerModel({
                     return;
                 }
                 case 'mail.message/insert': {
-                    const message = this.messaging.publicLivechatGlobal.livechatButtonView.messages.find(message => message.id === payload.id);
+                    const message = this.messaging.publicLivechatGlobal.messages.find(message => message.id === payload.id);
                     if (!message) {
                         return;
                     }

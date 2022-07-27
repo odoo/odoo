@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import DocumentViewer from '@im_livechat/legacy/widgets/document_viewer/document_viewer';
 import * as mailUtils from '@mail/js/utils';
 
 import core from 'web.core';
@@ -31,9 +30,6 @@ const PublicLivechatView = Widget.extend({
         'click img': '_onClickRedirect',
         'click strong': '_onClickRedirect',
         'click .o_thread_show_more': '_onClickShowMore',
-        'click .o_attachment_download': '_onAttachmentDownload',
-        'click .o_attachment_view': '_onAttachmentView',
-        'click .o_attachment_delete_cross': '_onDeleteAttachment',
         'click .o_thread_message_needaction': '_onClickMessageNeedaction',
         'click .o_thread_message_star': '_onClickMessageStar',
         'click .o_thread_message_reply': '_onClickMessageReply',
@@ -54,7 +50,6 @@ const PublicLivechatView = Widget.extend({
     init(parent, messaging, options) {
         this._super(...arguments);
         this.messaging = messaging;
-        this.attachments = [];
         // options when the thread is enabled (e.g. can send message,
         // interact on messages, etc.)
         this._enabledOptions = _.defaults(options || {}, {
@@ -65,7 +60,6 @@ const PublicLivechatView = Widget.extend({
             displayAvatars: true,
             squashCloseMessages: true,
             loadMoreOnScroll: false,
-            hasMessageAttachmentDeletable: false,
         });
         // options when the thread is disabled
         this._disabledOptions = {
@@ -76,7 +70,6 @@ const PublicLivechatView = Widget.extend({
             displayAvatars: this._enabledOptions.displayAvatars,
             squashCloseMessages: false,
             loadMoreOnScroll: this._enabledOptions.loadMoreOnScroll,
-            hasMessageAttachmentDeletable: false,
         };
         this._selectedMessageID = null;
         this._currentThreadID = null;
@@ -120,12 +113,6 @@ const PublicLivechatView = Widget.extend({
 
         const modeOptions = options.isCreateMode ? this._disabledOptions :
                                                     this._enabledOptions;
-
-        // attachments ordered by messages order (increasing ID)
-        // [ ...newSet() ]
-        this.attachments = [...new Set(_.flatten(messages.map(function (message) {
-            return message.getAttachments();
-        })))];
 
         options = Object.assign({}, modeOptions, options, {
             selectedMessageID: this._selectedMessageID,
@@ -175,7 +162,7 @@ const PublicLivechatView = Widget.extend({
         }
 
         this.$el.html(QWeb.render('im_livechat.legacy.mail.widget.Thread', {
-            thread: this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
+            thread: this.messaging.publicLivechatGlobal.publicLivechat,
             displayAuthorMessages,
             options,
             ORDER,
@@ -374,18 +361,6 @@ const PublicLivechatView = Widget.extend({
         }
     },
     /**
-    * @private
-    * @param {MouseEvent} ev
-    */
-    _onDeleteAttachment(ev) {
-        ev.stopPropagation();
-        const $target = $(ev.currentTarget);
-        this.trigger_up('delete_attachment', {
-            attachmentId: $target.data('id'),
-            attachmentName: $target.data('name')
-        });
-        },
-    /**
      * @private
      * @param {Object} options
      * @param {integer} [options.channelID]
@@ -449,25 +424,6 @@ const PublicLivechatView = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onAttachmentDownload(event) {
-        event.stopPropagation();
-    },
-    /**
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onAttachmentView(event) {
-        event.stopPropagation();
-        const activeAttachmentID = $(event.currentTarget).data('id');
-        if (activeAttachmentID) {
-            const attachmentViewer = new DocumentViewer(this, this.attachments, activeAttachmentID);
-            attachmentViewer.appendTo($('body'));
-        }
-    },
     /**
      * @private
      * @param {MouseEvent} ev

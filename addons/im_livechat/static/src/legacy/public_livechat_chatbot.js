@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
 import core from 'web.core';
-import localStorage from 'web.local_storage';
 import session from 'web.session';
 import time from 'web.time';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-import { clear, increment, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { increment, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 const _t = core._t;
 
@@ -27,69 +26,6 @@ const _t = core._t;
         this._debouncedChatbotAwaitUserInput = _.debounce(
             this._chatbotAwaitUserInput.bind(this),
             10000);
-    },
-
-    /**
-     * This override handles the following use cases:
-     *
-     * - If the chat is started for the first time (first visit of a visitor)
-     *   We register the chatbot configuration and the rest of the behavior is triggered by various
-     *   method overrides ('sendWelcomeMessage', 'sendMessage', ...)
-     *
-     * - If the chat has been started before, but the user did not interact with the bot
-     *   The default behavior is to open an empty chat window, without any messages.
-     *   In addition, we fetch the configuration (with a '/init' call), to see if we have a bot
-     *   configured.
-     *   Indeed we want to trigger the bot script on every page where the associated rule is matched.
-     *
-     * - If we have a non-empty chat history, resume the chat script where the end-user left it by
-     *   fetching the necessary information from the local storage.
-     *
-     * @override
-     */
-    async willStart() {
-        const superResult = await this._super(...arguments);
-
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.rule && !!this.messaging.publicLivechatGlobal.livechatButtonView.rule.chatbot) {
-            // noop
-        } else if (this.messaging.publicLivechatGlobal.livechatButtonView.history !== null && this.messaging.publicLivechatGlobal.livechatButtonView.history.length === 0) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ livechatInit: await session.rpc('/im_livechat/init', {channel_id: this.messaging.publicLivechatGlobal.livechatButtonView.channelId}) });
-        } else if (this.messaging.publicLivechatGlobal.livechatButtonView.history !== null && this.messaging.publicLivechatGlobal.livechatButtonView.history.length !== 0) {
-            const sessionCookie = utils.get_cookie('im_livechat_session');
-            if (sessionCookie) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.update({ sessionCookie });
-                if (localStorage.getItem(this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSessionCookieKey)) {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.update({ chatbotState: 'restore_session' });
-                }
-            }
-        }
-
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotState === 'init') {
-            // we landed on a website page where a channel rule is configured to run a chatbot.script
-            // -> initialize necessary state
-            if (this.messaging.publicLivechatGlobal.livechatButtonView.rule.chatbot_welcome_steps && this.messaging.publicLivechatGlobal.livechatButtonView.rule.chatbot_welcome_steps.length !== 0) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.update({
-                    currentStep: insertAndReplace({
-                        data: this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.lastWelcomeStep,
-                    }),
-                });
-            }
-        } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotState === 'welcome') {
-            // we landed on a website page and a chatbot script was initialized on a previous one
-            // however the end-user did not interact with the bot ( :( )
-            // -> remove cookie to force opening the popup again
-            // -> initialize necessary state
-            // -> batch welcome message (see '_sendWelcomeChatbotMessage')
-            utils.set_cookie('im_livechat_auto_popup', '', -1);
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ history: clear() });
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ rule: this.messaging.publicLivechatGlobal.livechatButtonView.livechatInit.rule });
-        } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotState === 'restore_session') {
-            // we landed on a website page and a chatbot script is currently running
-            // -> restore the user's session (see 'chatbotRestoreSession')
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotRestoreSession();
-        }
-
-        return superResult;
     },
 
     //--------------------------------------------------------------------------
@@ -171,9 +107,9 @@ const _t = core._t;
         });
 
         const welcomeMessagesIds = welcomeMessages.map(welcomeMessage => welcomeMessage.id);
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({
+        this.messaging.publicLivechatGlobal.update({
             messages: replace(
-                this.messaging.publicLivechatGlobal.livechatButtonView.messages.filter((message) => {
+                this.messaging.publicLivechatGlobal.messages.filter((message) => {
                     !welcomeMessagesIds.includes(message.id);
                 }),
             ),
@@ -305,21 +241,6 @@ const _t = core._t;
         }
      },
     /**
-     * Register current chatbot step state into localStorage to be able to resume if the visitor
-     * goes to another website page or if he refreshes his page.
-     *
-     * (Will not work if the visitor switches browser but his livechat session will not be restored
-     *  anyway in that case, since it's stored into a cookie).
-     *
-     * @private
-     */
-    _chatbotSaveSession() {
-        localStorage.setItem('im_livechat.chatbot.state.uuid_' + this.messaging.publicLivechatGlobal.publicLivechat.uuid, JSON.stringify({
-            '_chatbot': this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.data,
-            '_chatbotCurrentStep': this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data,
-        }));
-    },
-    /**
      * A special case is handled for email steps, where we first validate the email (server side)
      * and we allow the user to try again in case the format is incorrect.
      *
@@ -337,7 +258,7 @@ const _t = core._t;
 
         if (emailValidResult.success) {
             this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.is_email_valid = true;
-            this._chatbotSaveSession();
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
 
             return true;
         } else {
@@ -390,18 +311,18 @@ const _t = core._t;
             this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
         }
 
-        this._chatbotSaveSession();
+        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
 
         return nextStep;
     },
     /**
-     * Returns the 'this.messaging.publicLivechatGlobal.livechatButtonView.messages' filtered on our special 'welcome' ones.
+     * Returns the 'this.messaging.publicLivechatGlobal.messages' filtered on our special 'welcome' ones.
      * See '_sendWelcomeChatbotMessage'.
      *
      * @private
      */
     _getWelcomeMessages() {
-        return this.messaging.publicLivechatGlobal.livechatButtonView.messages.filter((message) => {
+        return this.messaging.publicLivechatGlobal.messages.filter((message) => {
             return message.id && typeof message.id === 'string' && message.id.startsWith('_welcome_');
         });
     },
@@ -411,7 +332,7 @@ const _t = core._t;
      * @private
      */
     _isLastMessageFromCustomer() {
-        const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0 ? this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1] : null;
+        const lastMessage = this.messaging.publicLivechatGlobal.lastMessage;
         return lastMessage && lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
     },
 
@@ -419,36 +340,6 @@ const _t = core._t;
      // Private - LiveChat Overrides
      //--------------------------------------------------------------------------
 
-    /**
-     * Resuming the chatbot script if we are currently running one.
-     *
-     * In addition, we register a resize event on the window object to scroll messages to bottom.
-     * This is done especially for mobile (Android) where the keyboard opens upon focusing the input
-     * field and shrinks the whole window size.
-     * Scrolling to the bottom allows the user to see the last messages properly when that happens.
-     *
-     * @private
-     * @override
-     */
-    _openChatWindow() {
-        return this._super(...arguments).then(() => {
-            window.addEventListener('resize', () => {
-                if (this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow) {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
-                }
-            });
-
-            if (
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.messages &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0
-            ) {
-                this._chatbotProcessStep();
-            }
-        });
-    },
     /**
      * @private
      * @override
@@ -475,78 +366,16 @@ const _t = core._t;
         });
 
         this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').on('click',
-            this._onChatbotRestartScript.bind(this));
+            this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript
+        );
 
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0) {
-            const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1];
+        if (this.messaging.publicLivechatGlobal.messages.length !== 0) {
+            const lastMessage = this.messaging.publicLivechatGlobal.lastMessage;
             const stepAnswers = lastMessage.legacyPublicLivechatMessage.getChatbotStepAnswers();
             if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.legacyPublicLivechatMessage.getChatbotStepAnswerId()) {
                 this._chatbotDisableInput(_t('Select an option above'));
             }
         }
-    },
-    /**
-     * When the Customer sends a message, we need to act depending on our current state:
-     * - If the conversation has been forwarded to an operator
-     *   Then there is nothing to do, we let them speak
-     * - If we are currently on a 'free_input_multi' step
-     *   Await more user input (see #_chatbotAwaitUserInput() for details)
-     * - Otherwise we continue the script or end it if it's the last step
-     *
-     * We also save the current session state.
-     * Important as this may be the very first interaction with the bot, we need to save right away
-     * to correctly handle any page redirection / page refresh.
-     *
-     * Special side case: if we are currently redirecting to another page (see '_onChatbotOptionClicked')
-     * we shortcut the process as we are currently moving to a different URL.
-     * The script will be resumed on the new page (if in the same website domain).
-     *
-     * @private
-     */
-    async _sendMessage(message) {
-        const superArguments = arguments;
-        const superMethod = this._super;
-
-        if (
-            this.messaging.publicLivechatGlobal.livechatButtonView.isChatbot &&
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep &&
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data
-        ) {
-            await this._chatbotPostWelcomeMessages();
-        }
-
-        return superMethod.apply(this, superArguments).then(() => {
-            if (this.messaging.publicLivechatGlobal.livechatButtonView.isChatbotRedirecting) {
-                return;
-            }
-
-            if (
-                this.messaging.publicLivechatGlobal.livechatButtonView.isChatbot &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data
-            ) {
-                if (
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'forward_operator' &&
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found
-                ) {
-                    return;  // operator has taken over the conversation, let them speak
-                } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
-                    this._debouncedChatbotAwaitUserInput();
-                } else if (!this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.shouldEndScript) {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
-                    this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                        chatbotNextStepTimeout: setTimeout(
-                            this._chatbotTriggerNextStep.bind(this),
-                            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay,
-                        ),
-                    });
-                } else {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
-                }
-
-                this._chatbotSaveSession();
-            }
-        });
     },
     /**
      * Small override to handle chatbot welcome message(s).
@@ -591,7 +420,6 @@ const _t = core._t;
             this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
                 id: '_welcome_' + stepIndex,
                 is_discussion: true,  // important for css style -> we only want white background for chatbot
-                attachment_ids: [],
                 author_id: (
                     this.messaging.publicLivechatGlobal.publicLivechat.operator
                     ? [
@@ -640,43 +468,6 @@ const _t = core._t;
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * Restart the script and then trigger the "next step" (which will be the first of the script
-     * in this case).
-     *
-     * @private
-     */
-    async _onChatbotRestartScript(ev) {
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_composer_text_field').removeClass('d-none');
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
-
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotNextStepTimeout) {
-            clearTimeout(this.messaging.publicLivechatGlobal.livechatButtonView.chatbotNextStepTimeout);
-        }
-
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotWelcomeMessageTimeout) {
-            clearTimeout(this.messaging.publicLivechatGlobal.livechatButtonView.chatbotWelcomeMessageTimeout);
-        }
-
-        const postedMessage = await session.rpc('/chatbot/restart', {
-            channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
-            chatbot_script_id: this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.scriptId,
-        });
-
-        if (postedMessage) {
-            this._chatbotAddMessage(postedMessage);
-        }
-
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.update({ currentStep: clear() });
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({
-            chatbotNextStepTimeout: setTimeout(
-                this._chatbotTriggerNextStep.bind(this),
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay,
-            ),
-        });
-    },
-
     _onChatbotInputKeyDown() {
         if (
             this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep &&
@@ -689,7 +480,7 @@ const _t = core._t;
 
     /**
      * Saves the selected chatbot.script.answer onto our chatbot.message.
-     * Will update the state of the related message (in this.messaging.publicLivechatGlobal.livechatButtonView.messages) to set the selected option
+     * Will update the state of the related message (in this.messaging.publicLivechatGlobal.messages) to set the selected option
      * as well which will in turn adapt the display to not show options anymore.
      *
      * This method also handles an optional redirection link placed on the chatbot.script.answer and
@@ -708,12 +499,12 @@ const _t = core._t;
         const redirectLink = $target.data('chatbotStepRedirectLink');
         this.messaging.publicLivechatGlobal.livechatButtonView.update({ isChatbotRedirecting: !!redirectLink });
 
-        await this._sendMessage({
+        await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage({
             content: $target.text().trim(),
         });
 
         let stepMessage = null;
-        for (const message of this.messaging.publicLivechatGlobal.livechatButtonView.messages) {
+        for (const message of this.messaging.publicLivechatGlobal.messages) {
             // we do NOT want to use a 'find' here because we want the LAST message that respects
             // this condition.
             // indeed, if you restart the script, you can have multiple messages with the same step id,
@@ -728,7 +519,7 @@ const _t = core._t;
         stepMessage.legacyPublicLivechatMessage.setChatbotStepAnswerId(selectedAnswer);
         this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_selected_answer_id = selectedAnswer;
         this._renderMessages();
-        this._chatbotSaveSession();
+        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
 
         const saveAnswerPromise = session.rpc('/chatbot/answer/save', {
             channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
