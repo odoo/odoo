@@ -141,6 +141,20 @@ class StockReplenishmentOption(models.TransientModel):
                 "target": "new",
                 "name": _("Quantity available too low")
             }
+
+        if self.env.context.get("is_come_from_product"):
+            self = self.with_context(default_route_id=self.route_id.id,
+                                     default_product_id=self.product_id.id,
+                                     default_warehouse_id=self.env.context.get('warehouse_id'))
+
+            return {
+                "name": _("Replenish"),
+                "type": "ir.actions.act_window",
+                "res_model": "product.replenish",
+                "views": [[self.env.ref('stock.view_product_replenish').id, "form"]],
+                "target": "new",
+                "context": self.env.context,
+            }
         return self.order_all()
 
     def order_avbl(self):
