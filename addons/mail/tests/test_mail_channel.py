@@ -22,25 +22,17 @@ class TestChannelAccessRights(MailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestChannelAccessRights, cls).setUpClass()
-        Channel = cls.env['mail.channel'].with_context(cls._test_context)
 
+        cls.user_employee_1 = mail_new_test_user(cls.env, login='user_employee_1', groups='base.group_user', name='Tao Lee')
         cls.user_public = mail_new_test_user(cls.env, login='user_public', groups='base.group_public', name='Bert Tartignole')
         cls.user_portal = mail_new_test_user(cls.env, login='user_portal', groups='base.group_portal', name='Chell Gladys')
 
         # Channel for certain group
-        cls.group_restricted_channel = Channel.create({
-            'name': 'Channel for Group',
-            'public': 'groups',
-            'group_public_id': cls.env.ref('base.group_user').id})
+        cls.group_restricted_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Channel for Groups', privacy='groups', group_id=cls.env.ref('base.group_user').id)['id'])
         # Public Channel
-        cls.public_channel = Channel.create({
-            'name': 'Public Channel',
-            'description': 'NotFalse',
-            'public': 'public'})
+        cls.public_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Public Channel', privacy='public')['id'])
         # Group
-        cls.private_group = Channel.create({
-            'name': 'Group',
-            'public': 'private'})
+        cls.private_group = cls.env['mail.channel'].browse(cls.env['mail.channel'].create_group(partners_to=cls.user_employee.partner_id.ids, name="Group")['id'])
 
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.addons.base.models.ir_model', 'odoo.models')
     @users('user_portal')
@@ -155,9 +147,8 @@ class TestChannelInternals(MailCommon):
     def setUpClass(cls):
         super(TestChannelInternals, cls).setUpClass()
         cls.test_channel = cls.env['mail.channel'].with_context(cls._test_context).create({
-            'name': 'Channel',
             'channel_type': 'channel',
-            'description': 'Description',
+            'name': 'Channel',
             'public': 'public',
         })
         cls.test_partner = cls.env['res.partner'].with_context(cls._test_context).create({
@@ -272,10 +263,7 @@ class TestChannelInternals(MailCommon):
             'description': 'Channel to travel through time',
             'public': 'private',
         })
-        group_restricted_channel = self.env['mail.channel'].with_context(self._test_context).create({
-            'name': 'Sic Mundus',
-            'public': 'groups',
-            'group_public_id': self.env.ref('base.group_user').id})
+        group_restricted_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Sic Mundus', privacy='groups', group_id=self.env.ref('base.group_user').id)['id'])
 
         self.test_channel.add_members((self.partner_employee | self.partner_employee_nomail).ids)
         test_channel_private.add_members((self.partner_employee | self.partner_employee_nomail).ids)
@@ -409,10 +397,7 @@ class TestChannelInternals(MailCommon):
     @users('employee')
     def test_channel_private_unfollow(self):
         """ Test that a partner can leave (unfollow) a private channel. """
-        group_restricted_channel = self.env['mail.channel'].create({
-            'name': 'Winden caves',
-            'public': 'private',
-        })
+        group_restricted_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Channel for Groups', privacy='groups', group_id=self.env.ref('base.group_user').id)['id'])
         group_restricted_channel.action_unfollow()
         self.assertEqual(group_restricted_channel.channel_partner_ids, self.env['res.partner'])
 

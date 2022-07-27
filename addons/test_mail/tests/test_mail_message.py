@@ -258,21 +258,13 @@ class TestMessageAccess(TestMailCommon):
     def setUpClass(cls):
         super(TestMessageAccess, cls).setUpClass()
 
+        cls.user_employee_1 = mail_new_test_user(cls.env, login='tao', groups='base.group_user', name='Tao Lee')
         cls.user_public = mail_new_test_user(cls.env, login='bert', groups='base.group_public', name='Bert Tartignole')
         cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
-        Channel = cls.env['mail.channel'].with_context(cls._test_context)
-        cls.group_restricted_channel = Channel.create({
-            'name': 'Channel for Groups',
-            'public': 'groups',
-            'group_public_id': cls.env.ref('base.group_user').id})
-        cls.public_channel = Channel.create({
-            'name': 'Public Channel',
-            'description': 'NotFalse',
-            'public': 'public'})
-        cls.private_group = Channel.create({
-            'name': 'Group',
-            'public': 'private'})
+        cls.group_restricted_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Channel for Groups', privacy='groups', group_id=cls.env.ref('base.group_user').id)['id'])
+        cls.public_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Public Channel', privacy='public')['id'])
+        cls.private_group = cls.env['mail.channel'].browse(cls.env['mail.channel'].create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")['id'])
         cls.message = cls.env['mail.message'].create({
             'body': 'My Body',
             'model': 'mail.channel',
