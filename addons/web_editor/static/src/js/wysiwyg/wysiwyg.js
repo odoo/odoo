@@ -1732,9 +1732,9 @@ const Wysiwyg = Widget.extend({
                 // Tooltips need to be cleared before leaving the editor.
                 this.saving_mutex.exec(() => {
                     $target.tooltip({title: _t('Double-click to edit'), trigger: 'manual', container: 'body'}).tooltip('show');
+                    this.tooltipTimeouts.push(setTimeout(() => $target.tooltip('dispose'), 800));
                 });
                 this.odooEditor.observerActive();
-                this.tooltipTimeouts.push(setTimeout(() => $target.tooltip('dispose'), 800));
             }, 400));
         }
         // Update color of already opened colorpickers.
