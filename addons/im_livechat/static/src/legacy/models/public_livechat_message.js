@@ -46,9 +46,6 @@ const PublicLivechatMessage = Class.extend({
         this._type = data.message_type || undefined;
 
         this._processAttachmentURL();
-        this._attachmentIDs.forEach(function (attachment) {
-            attachment.filename = attachment.filename || attachment.name || _t("unnamed");
-        });
         this._defaultUsername = this.messaging.publicLivechatGlobal.options.default_username;
         this._serverURL = this.messaging.publicLivechatGlobal.livechatButtonView.serverUrl;
 
