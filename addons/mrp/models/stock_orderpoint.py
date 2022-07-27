@@ -20,7 +20,7 @@ class StockWarehouseOrderpoint(models.Model):
         self.ensure_one()
         domain = [('orderpoint_id', 'in', self.ids)]
         if self.env.context.get('written_after'):
-            domain = AND([domain, [('write_date', '>', self.env.context.get('written_after'))]])
+            domain = AND([domain, [('write_date', '>=', self.env.context.get('written_after'))]])
         production = self.env['mrp.production'].search(domain, limit=1)
         if production:
             action = self.env.ref('mrp.action_mrp_production_form')

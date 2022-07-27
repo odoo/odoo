@@ -11,12 +11,14 @@ from odoo.tests import Form
 from odoo.tests.common import TransactionCase, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.addons.stock.tests.common import TestStockCommon
 
 
 class TestStockValuation(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.url_extract_rec_id_and_model = TestStockCommon.url_extract_rec_id_and_model
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.partner_id = cls.env['res.partner'].create({
@@ -107,12 +109,14 @@ class TestStockValuation(TransactionCase):
             'quantity': replenishment_uom_qty,
             'warehouse_id': self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1).id,
         })
-        replenish_wizard.launch_replenishment()
+        genrated_picking = replenish_wizard.launch_replenishment()
+        links = genrated_picking.get("params", {}).get("links")
+        url = links and links[0].get("url", "") or ""
+        purchase_order_id, model_name = self.url_extract_rec_id_and_model(url)
+        last_po_id = False
+        if purchase_order_id and model_name:
+            last_po_id = self.env[model_name[0]].browse(int(purchase_order_id[0]))
 
-        last_po_id = self.env['purchase.order'].search([
-            ('origin', 'ilike', '%Manual Replenishment%'),
-            ('partner_id', '=', vendor.id)
-        ])[-1]
         order_line = last_po_id.order_line.search([('product_id', '=', self.product1.id)])
         self.assertEqual(order_line.product_qty,
             ap._compute_quantity(replenishment_uom_qty, kgm, rounding_method='HALF-UP'),
