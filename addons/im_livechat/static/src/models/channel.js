@@ -24,6 +24,12 @@ patchRecordMethods('Channel', {
     /**
      * @override
      */
+    _computeHasSeenIndicators() {
+        return this.channel_type === 'livechat' || this._super();
+    },
+    /**
+     * @override
+     */
     _computeIsChat() {
         return this.channel_type === 'livechat' || this._super();
     },

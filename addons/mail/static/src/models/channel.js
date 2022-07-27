@@ -185,6 +185,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeHasSeenIndicators() {
+            return this.channel_type === 'chat';
+        },
+        /**
+         * @private
          * @returns {string|FieldCommand}
          */
         _computeInvitationLink() {
@@ -366,6 +373,13 @@ registerModel({
          */
         hasMemberListFeature: attr({
             compute: '_computeHasMemberListFeature',
+        }),
+        /**
+         * Determine whether this channel has the seen indicators (V and VV)
+         * enabled.
+         */
+        hasSeenIndicators: attr({
+            compute: '_computeHasSeenIndicators',
         }),
         id: attr({
             readonly: true,

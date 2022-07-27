@@ -405,7 +405,8 @@ registerModel({
                 this.message.isCurrentUserOrGuestAuthor &&
                 this.messageListViewMessageViewItemOwner &&
                 this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
-                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.hasSeenIndicators
+                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel &&
+                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel.hasSeenIndicators
             ) {
                 return insertAndReplace();
             }

@@ -1041,16 +1041,6 @@ registerModel({
          * @private
          * @returns {boolean}
          */
-        _computeHasSeenIndicators() {
-            if (!this.channel) {
-                return clear();
-            }
-            return ['chat', 'livechat'].includes(this.channel.channel_type);
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
         _computeIsCurrentPartnerFollowing() {
             return this.followers.some(follower =>
                 follower.partner && follower.partner === this.messaging.currentPartner
@@ -1649,14 +1639,6 @@ registerModel({
          * TODO Should maybe be on messaging (after messaging env rebase) to lock the rpc across all threads.
          */
         hasPendingRtcRequest: attr({
-            default: false,
-        }),
-        /**
-         * Determine whether this thread has the seen indicators (V and VV)
-         * enabled or not.
-         */
-        hasSeenIndicators: attr({
-            compute: '_computeHasSeenIndicators',
             default: false,
         }),
         /**
