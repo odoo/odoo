@@ -289,7 +289,7 @@ class IrAttachment(models.Model):
 
     def _postprocess_contents(self, values):
         ICP = self.env['ir.config_parameter'].sudo().get_param
-        supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,gif,bmp,tif').split(',')
+        supported_subtype = ICP('base.image_autoresize_extensions', 'png,jpeg,bmp,tiff').split(',')
 
         mimetype = values['mimetype'] = self._compute_mimetype(values)
         _type, _subtype = mimetype.split('/')
@@ -306,16 +306,15 @@ class IrAttachment(models.Model):
                         img = ImageProcess(False, verify_resolution=False)
                         img.image = Image.open(io.BytesIO(values['raw']))
                         img.original_format = (img.image.format or '').upper()
-                        fn_quality = img.image_quality
                     else:  # datas
                         img = ImageProcess(values['datas'], verify_resolution=False)
-                        fn_quality = img.image_base64
 
                     w, h = img.image.size
                     nw, nh = map(int, max_resolution.split('x'))
                     if w > nw or h > nh:
-                        img.resize(nw, nh)
+                        img = img.resize(nw, nh)
                         quality = int(ICP('base.image_autoresize_quality', 80))
+                        fn_quality = img.image_quality if is_raw else img.image_base64
                         values[is_raw and 'raw' or 'datas'] = fn_quality(quality=quality)
                 except UserError as e:
                     # Catch error during test where we provide fake image
