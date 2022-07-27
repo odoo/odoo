@@ -234,14 +234,6 @@ const PublicLivechatMessage = Class.extend({
         return this._type;
     },
     /**
-     * State whether this message contains some attachments.
-     *
-     * @return {boolean}
-     */
-    hasAttachments() {
-        return this.getAttachments().length > 0;
-    },
-    /**
      * State whether this message has an author
      *
      * @return {boolean}
@@ -313,7 +305,6 @@ const PublicLivechatMessage = Class.extend({
      */
     isEmpty() {
         return !this.hasTrackingValues() &&
-        !this.hasAttachments() &&
         !this.getBody();
     },
     /**

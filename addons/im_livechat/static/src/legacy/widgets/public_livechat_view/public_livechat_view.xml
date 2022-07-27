@@ -201,22 +201,6 @@
                         </t>
                         <t t-call="im_livechat.legacy.mail.widget.Thread.MessageTracking"/>
                     </t>
-                    <t t-if="message.hasAttachments()">
-                        <div t-if="message.hasImageAttachments()" class="o_attachments_previews">
-                            <t t-foreach="message.getImageAttachments()" t-as="attachment">
-                                <t t-call="im_livechat.legacy.mail.AttachmentPreview">
-                                    <t t-set="isDeletable" t-value="options.hasMessageAttachmentDeletable"/>
-                                </t>
-                            </t>
-                        </div>
-                        <div t-if="message.hasNonImageAttachments()" class="o_attachments_list">
-                            <t t-foreach="message.getNonImageAttachments()" t-as="attachment">
-                                <t t-call="im_livechat.legacy.mail.Attachment">
-                                    <t t-set="isDeletable" t-value="options.hasMessageAttachmentDeletable"/>
-                                </t>
-                            </t>
-                        </div>
-                    </t>
                 </div>
             </div>
         </div>
