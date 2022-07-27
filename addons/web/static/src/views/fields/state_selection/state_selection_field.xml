@@ -4,23 +4,23 @@
     <t t-name="web.StateSelectionField" owl="1">
         <t t-if="isReadonly">
             <button class="d-flex align-items-center btn btn-link disabled">
-                <span t-attf-class="{{ 'mx-2 o_status ' + statusColor(currentValue) }} "/>
-                <span t-if="showLabel" class="o_status_label" t-esc="label"/>
+                <span t-attf-class="o_status {{ statusColor(currentValue) }} "/>
+                <span t-if="showLabel" class="o_status_label ms-1" t-esc="label"/>
             </button>
         </t>
         <t t-else="">
-            <Dropdown title="currentValue" togglerClass="'btn btn-link d-flex'">
+            <Dropdown title="currentValue" togglerClass="'btn btn-link d-flex px-0'">
                 <t t-set-slot="toggler">
                     <div class="d-flex align-items-center">
-                        <span t-attf-class="{{ 'mx-2 o_status ' + statusColor(currentValue) }} "/>
-                        <span t-if="showLabel" class="o_status_label" t-esc="label"/>
+                        <span t-attf-class="o_status {{ statusColor(currentValue) }} "/>
+                        <span t-if="showLabel" class="o_status_label ms-1" t-esc="label"/>
                     </div>
                 </t>
                 <t t-foreach="availableOptions" t-as="option" t-key="option[0]">
                     <DropdownItem t-if="option[0] != currentValue" onSelected="() => props.update(option[0])">
                         <div class="d-flex align-items-center">
-                            <span t-attf-class="{{ 'mx-2 o_status ' + statusColor(option[0]) }} "/>
-                            <span t-esc="option[1]"/>
+                            <span t-attf-class="o_status {{ statusColor(option[0]) }} "/>
+                            <span class="ms-2" t-esc="option[1]"/>
                         </div>
                     </DropdownItem>
                 </t>
