@@ -148,7 +148,8 @@ class Task(models.Model):
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_remaining_hours(self):
         for task in self:
-            task.remaining_hours = task.planned_hours - task.effective_hours - task.subtask_effective_hours
+            #do not set remaining hours to negative value
+            task.remaining_hours = max(task.planned_hours - task.effective_hours - task.subtask_effective_hours, 0)
 
     @api.depends('effective_hours', 'subtask_effective_hours')
     def _compute_total_hours_spent(self):
