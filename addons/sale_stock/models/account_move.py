@@ -110,6 +110,5 @@ class AccountMoveLine(models.Model):
 
             product = self.product_id.with_company(self.company_id)
             average_price_unit = product._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids, is_returned=is_line_reversing)
-            if average_price_unit:
-                price_unit = self.product_id.uom_id.with_company(self.company_id)._compute_price(average_price_unit, self.product_uom_id)
+            price_unit = self.product_id.uom_id.with_company(self.company_id)._compute_price(average_price_unit, self.product_uom_id)
         return price_unit
