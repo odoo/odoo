@@ -89,6 +89,12 @@
                                t-att-value="props.partner.phone || ''" />
                     </div>
                     <div class="partner-detail">
+                        <span class="label">Mobile</span>
+                        <input class="detail" name="mobile" type="tel"
+                               t-on-change="captureChange"
+                               t-att-value="props.partner.mobile || ''" />
+                    </div>
+                    <div class="partner-detail">
                         <span class="label">Barcode</span>
                         <input class="detail barcode" name="barcode" t-on-change="captureChange"
                                t-att-value="props.partner.barcode || ''" />
