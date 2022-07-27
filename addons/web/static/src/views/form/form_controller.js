@@ -127,6 +127,11 @@ export class FormController extends Component {
 
         this.cpButtonsRef = useRef("cpButtons");
 
+        this.display = { ...this.props.display };
+        if (this.env.inDialog) {
+            this.display.controlPanel = false;
+        }
+
         useEffect(() => {
             if (!this.env.inDialog) {
                 this.updateURL();

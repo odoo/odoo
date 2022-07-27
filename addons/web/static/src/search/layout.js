@@ -14,11 +14,13 @@ export function extractLayoutComponents(params) {
 
 export class Layout extends Component {
     setup() {
-        const { display = {} } = this.env.searchModel || {};
         this.components = extractLayoutComponents(this.env.config);
+        const display = this.props.display;
         if (display.controlPanel && this.env.inDialog) {
-            display.controlPanel["top-left"] = false;
-            display.controlPanel["bottom-left-buttons"] = false;
+            display.controlPanel = Object.assign({}, display.controlPanel, {
+                "top-left": false,
+                "bottom-left-buttons": false,
+            });
         }
         this.display = display;
     }
@@ -34,5 +36,9 @@ export class Layout extends Component {
 Layout.template = "web.Layout";
 Layout.props = {
     className: { type: String, optional: true },
+    display: { type: Object, optional: true },
     slots: { type: Object, optional: true },
+};
+Layout.defaultProps = {
+    display: {},
 };
