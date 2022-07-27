@@ -169,26 +169,6 @@ const PublicLivechatMessage = Class.extend({
         return this._id;
     },
     /**
-     * Get the list of images attached to this message.
-     * Note that attachments are stored with server-format
-     *
-     * @return {Object[]}
-     */
-    getImageAttachments() {
-        return _.filter(this.getAttachments(), function (attachment) {
-            return attachment.mimetype && attachment.mimetype.split('/')[0] === 'image';
-        });
-    },
-    /**
-     * Get the list of non-images attached to this message.
-     * Note that attachments are stored with server-format
-     *
-     * @return {Object[]}
-     */
-    getNonImageAttachments() {
-        return _.difference(this.getAttachments(), this.getImageAttachments());
-    },
-    /**
      * Gets the class to use as the notification icon.
      *
      * @returns {string}
@@ -249,26 +229,6 @@ const PublicLivechatMessage = Class.extend({
      */
     hasEmailFrom() {
         return false;
-    },
-    /**
-     * State whether this image contains images attachments
-     *
-     * @return {boolean}
-     */
-    hasImageAttachments() {
-        return _.some(this.getAttachments(), function (attachment) {
-            return attachment.mimetype && attachment.mimetype.split('/')[0] === 'image';
-        });
-    },
-    /**
-     * State whether this image contains non-images attachments
-     *
-     * @return {boolean}
-     */
-    hasNonImageAttachments() {
-        return _.some(this.getAttachments(), function (attachment) {
-            return !(attachment.mimetype && attachment.mimetype.split('/')[0] === 'image');
-        });
     },
     /**
      * States whether this message has some notifications.
