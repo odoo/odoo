@@ -6,9 +6,11 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.tests.common import TestWebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install', 'product_attribute')
+<<<<<<< HEAD
 class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, TestSaleProductAttributeValueCommon):
 
     @classmethod
@@ -17,6 +19,11 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 
         # Use the testing environment.
         cls.computer = cls.computer.with_env(cls.env)
+||||||| parent of 343f480ba24 (temp)
+class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
+=======
+class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon, TestWebsiteSaleCommon):
+>>>>>>> 343f480ba24 (temp)
 
     def test_get_combination_info(self):
         # Setup pricelist: make sure the pricelist has a 10% discount
@@ -168,7 +175,13 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 
 
 @tagged('post_install', '-at_install', 'product_pricelist')
+<<<<<<< HEAD
 class TestWebsiteSaleProductPricelist(AccountTestInvoicingCommon, TestSaleProductAttributeValueCommon):
+||||||| parent of 343f480ba24 (temp)
+class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
+=======
+class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon, TestWebsiteSaleCommon):
+>>>>>>> 343f480ba24 (temp)
     def test_cart_update_with_fpos(self):
         # We will test that the mapping of an 10% included tax by a 6% by a fiscal position is taken into account when updating the cart
         self.env.user.partner_id.country_id = False

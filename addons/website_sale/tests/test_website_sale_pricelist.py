@@ -4,8 +4,9 @@ from unittest.mock import patch
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website.tools import MockRequest
+from odoo.addons.website_sale.tests.common import TestWebsiteSaleCommon
 from odoo.tests import tagged
-from odoo.tests.common import HttpCase, TransactionCase
+from odoo.tests.common import TransactionCase
 from odoo.tools import DotDict
 
 ''' /!\/!\
@@ -28,7 +29,7 @@ Try to keep one call to `get_pricelist_available` by test method.
 
 
 @tagged('post_install', '-at_install')
-class TestWebsitePriceList(TransactionCase):
+class TestWebsitePriceList(TestWebsiteSaleCommon):
 
     def setUp(self):
         super(TestWebsitePriceList, self).setUp()

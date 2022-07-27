@@ -5,11 +5,12 @@ import io
 
 from PIL import Image
 
+from odoo.addons.website_sale.tests.common import TestWebsiteSaleCommon
 import odoo.tests
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
-class TestWebsiteSaleImage(odoo.tests.HttpCase):
+class TestWebsiteSaleImage(TestWebsiteSaleCommon):
 
     # registry_test_mode = False  # uncomment to save the product to test in browser
 
