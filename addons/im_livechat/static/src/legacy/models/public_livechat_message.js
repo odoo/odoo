@@ -45,7 +45,6 @@ const PublicLivechatMessage = Class.extend({
         this._serverAuthorID = data.author_id;
         this._type = data.message_type || undefined;
 
-        this._processAttachmentURL();
         this._defaultUsername = this.messaging.publicLivechatGlobal.options.default_username;
         this._serverURL = this.messaging.publicLivechatGlobal.livechatButtonView.serverUrl;
 
@@ -451,16 +450,6 @@ const PublicLivechatMessage = Class.extend({
      */
     _isMyselfAuthor() {
         return this.hasAuthor() && (this.getAuthorID() === session.partner_id);
-    },
-    /**
-     * Compute url of attachments of this message
-     *
-     * @private
-     */
-    _processAttachmentURL() {
-        for (let attachment of this.getAttachments()) {
-            attachment.url = '/web/content/' + attachment.id + '?download=true';
-        }
     },
 
 });
