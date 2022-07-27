@@ -37,14 +37,7 @@ class PosConfig(models.Model):
         ])
 
     def _default_pricelist(self):
-        """ Should only default to the pricelist that is compatible to this config's company and currency.
-        """
-        return self.env['product.pricelist'].search([
-            ('company_id', 'in', (False, self.env.company.id)),
-            # We are using self.currency_id because this method is also used in compute methods
-            # which served as on change.
-            ('currency_id', 'in', (False, self.currency_id.id or self.env.company.currency_id.id))
-        ], limit=1)
+        return self.env['product.pricelist'].search([('company_id', 'in', (False, self.env.company.id)), ('currency_id', '=', self.env.company.currency_id.id)], limit=1)
 
     def _get_group_pos_manager(self):
         return self.env.ref('point_of_sale.group_pos_manager')
