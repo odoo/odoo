@@ -734,6 +734,9 @@ odoo.define('pos_coupon.pos', function (require) {
                     return program.promo_applicability === 'on_next_order';
                 });
         }
+        _convertToDate(stringDate) {
+            return new Date(stringDate.replace(/ /g, 'T').concat('Z'))
+        }
         /**
          * @param {coupon.program} program
          * @returns {{ successful: boolean, reason: string | undefined }}
@@ -787,8 +790,8 @@ odoo.define('pos_coupon.pos', function (require) {
             }
 
             // Check rule date
-            const ruleFrom = program.rule_date_from ? new Date(program.rule_date_from) : new Date(-8640000000000000);
-            const ruleTo = program.rule_date_to ? new Date(program.rule_date_to) : new Date(8640000000000000);
+            const ruleFrom = program.rule_date_from ? this._convertToDate(program.rule_date_from) : new Date(-8640000000000000);
+            const ruleTo = program.rule_date_to ? this._convertToDate(program.rule_date_to) : new Date(8640000000000000);
             const orderDate = new Date();
             if (!(orderDate >= ruleFrom && orderDate <= ruleTo)) {
                 return {
