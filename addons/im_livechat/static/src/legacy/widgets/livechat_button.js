@@ -1,15 +1,9 @@
 /** @odoo-module **/
 
 import config from 'web.config';
-import core from 'web.core';
-import session from 'web.session';
 import time from 'web.time';
 import utils from 'web.utils';
 import Widget from 'web.Widget';
-
-import { insertAndReplace } from '@mail/model/model_field_command';
-
-const _t = core._t;
 
 const LivechatButton = Widget.extend({
     className: 'openerp o_livechat_button d-print-none',
@@ -29,23 +23,7 @@ const LivechatButton = Widget.extend({
     },
     async willStart() {
         this.messaging.publicLivechatGlobal.livechatButtonView.update({ widget: this });
-        const cookie = utils.get_cookie('im_livechat_session');
-        if (cookie) {
-            const channel = JSON.parse(cookie);
-            const history = await session.rpc('/mail/chat_history', {uuid: channel.uuid, limit: 100});
-            history.reverse();
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ history });
-            for (const message of this.messaging.publicLivechatGlobal.livechatButtonView.history) {
-                message.body = utils.Markup(message.body);
-            }
-        } else {
-            const result = await session.rpc('/im_livechat/init', {channel_id: this.messaging.publicLivechatGlobal.livechatButtonView.channelId});
-            if (!result.available_for_me) {
-                return Promise.reject();
-            }
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ rule: result.rule });
-        }
-        return this.messaging.publicLivechatGlobal.loadQWebTemplate();
+        return this.messaging.publicLivechatGlobal.livechatButtonView.willStart();
     },
     start() {
         this.$el.text(this.messaging.publicLivechatGlobal.livechatButtonView.buttonText);
@@ -105,19 +83,6 @@ const LivechatButton = Widget.extend({
     },
     /**
      * @private
-     * @return {Promise}
-     */
-     _openChatWindow() {
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({ chatWindow: insertAndReplace() });
-        return this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.appendTo($('body')).then(() => {
-            const cssProps = { bottom: 0 };
-            cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = 0;
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$el.css(cssProps);
-            this.$el.hide();
-        });
-    },
-    /**
-     * @private
      */
     _prepareGetSessionParameters() {
         return {
@@ -138,44 +103,11 @@ const LivechatButton = Widget.extend({
     },
     /**
      * @private
-     * @param {Object} message
-     * @return {Promise}
-     */
-     _sendMessage(message) {
-        this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._notifyMyselfTyping({ typing: false });
-        return session
-            .rpc('/mail/chat_post', { uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid, message_content: message.content })
-            .then((messageId) => {
-                if (!messageId) {
-                    try {
-                        this.displayNotification({
-                            message: _t("Session expired... Please refresh and try again."),
-                            sticky: true,
-                        });
-                    } catch (_err) {
-                        /**
-                         * Failure in displaying notification happens when
-                         * notification service doesn't exist, which is the case
-                         * in external lib. We don't want notifications in
-                         * external lib at the moment because they use bootstrap
-                         * toast and we don't want to include boostrap in
-                         * external lib.
-                         */
-                        console.warn(_t("Session expired... Please refresh and try again."));
-                    }
-                    this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
-                }
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
-            });
-    },
-    /**
-     * @private
      */
     _sendWelcomeMessage() {
         if (this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage) {
             this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
                 id: '_welcome',
-                attachment_ids: [],
                 author_id: [
                     this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
                     this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
@@ -205,7 +137,7 @@ const LivechatButton = Widget.extend({
     _onCloseChatWindow(ev) {
         ev.stopPropagation();
         const isComposerDisabled = this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled');
-        const shouldAskFeedback = !isComposerDisabled && this.messaging.publicLivechatGlobal.livechatButtonView.messages.find(function (message) {
+        const shouldAskFeedback = !isComposerDisabled && this.messaging.publicLivechatGlobal.messages.find(function (message) {
             return message.id !== '_welcome';
         });
         if (shouldAskFeedback) {
@@ -221,13 +153,15 @@ const LivechatButton = Widget.extend({
      * @param {OdooEvent} ev
      * @param {Object} ev.data.messageData
      */
-    _onPostMessageChatWindow(ev) {
+    async _onPostMessageChatWindow(ev) {
         ev.stopPropagation();
         const messageData = ev.data.messageData;
-        this._sendMessage(messageData).guardedCatch((reason) => {
+        try {
+            await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData);
+        } catch (reason) {
             reason.event.preventDefault();
-            return this._sendMessage(messageData); // try again just in case
-        });
+            return this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData); // try again just in case
+        }
     },
     /**
      * @private

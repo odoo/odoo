@@ -30,7 +30,7 @@ registerModel({
             this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
         },
         _onSendMessage(...args) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.widget._sendMessage(...args);
+            this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(...args);
         },
     },
     fields: {
