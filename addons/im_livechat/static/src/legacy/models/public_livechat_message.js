@@ -414,14 +414,6 @@ const PublicLivechatMessage = Class.extend({
     needsModeration() {
         return false;
     },
-    /**
-     * @params {integer[]} attachmentIDs
-     */
-    removeAttachments(attachmentIDs) {
-        this._attachmentIDs = _.reject(this._attachmentIDs, function (attachment) {
-            return _.contains(attachmentIDs, attachment.id);
-        });
-    },
     setChatbotStepAnswerId(chatbotStepAnswerId) {
         this._chatbotStepAnswerId = chatbotStepAnswerId;
     },
