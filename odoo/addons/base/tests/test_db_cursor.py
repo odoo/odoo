@@ -214,3 +214,27 @@ class TestCursorHooks(common.TransactionCase):
         self.prepare_hooks(cr)
         cr.close()
         self.assertEqual(self.log, ['preR', 'postR'])
+
+class TestCursorHooksTransactionCaseCleanup(common.TransactionCase):
+    """Check savepoint cases handle commit hooks properly."""
+    def test_isolation_first(self):
+        def mutate_second_test_ref():
+            for name in ['precommit', 'postcommit', 'prerollback', 'postrollback']:
+                del self.env.cr.precommit.data.get(f'test_cursor_hooks_savepoint_case_cleanup_test_second_{name}', [''])[0]
+        self.env.cr.precommit.add(mutate_second_test_ref)
+
+    def test_isolation_second(self):
+        references = [['not_empty']] * 4
+        cr = self.env.cr
+        commit_callbacks = [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]
+        callback_names = ['precommit', 'postcommit', 'prerollback', 'postrollback']
+
+        for callback_name, callbacks, reference in zip(callback_names, commit_callbacks, references):
+            callbacks.data.setdefault(f"test_cursor_hooks_savepoint_case_cleanup_test_second_{callback_name}", reference)
+
+        for callback in commit_callbacks:
+            callback.run()
+
+        for callback_name, reference in zip(callback_names, references):
+            self.assertTrue(bool(reference), f"{callback_name} failed to clean up between transaction tests")
+            self.assertTrue(reference[0] == 'not_empty', f"{callback_name} failed to clean up between transaction tests")
