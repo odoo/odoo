@@ -916,7 +916,7 @@ QUnit.module("Views", (hooks) => {
                     <form>
                         <sheet>
                             <field name="int_field"/>
-                            <notebook class="new_class" attrs='{"invisible": [["int_field", "=", 10]]}'>
+                            <notebook name="test_name" class="new_class" attrs='{"invisible": [["int_field", "=", 10]]}'>
                                 <page string="Foo">
                                     <field name="foo"/>
                                 </page>
