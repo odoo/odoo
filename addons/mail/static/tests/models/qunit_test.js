@@ -11,10 +11,6 @@ registerModel({
             inverse: 'qunitTestOwner',
             isCausal: true,
         }),
-        notificationListView: one('NotificationListView', {
-            inverse: 'qunitTestOwner',
-            isCausal: true,
-        }),
         throttle1: one('Throttle', {
             inverse: 'qunitTestOwner1',
             isCausal: true,
