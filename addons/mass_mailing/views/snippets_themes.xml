@@ -108,7 +108,7 @@
             <div class="row">
                 <div class="col-lg-8 pt16 pb16">
                     <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;">
-                         <img border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:200px;max-height:48px;" />
+                         <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:200px;max-height:48px;" />
                     </a>
                 </div>
                 <div class="col-lg-4 text-right o_mail_no_resize">
@@ -149,7 +149,7 @@
                 <div class="col-lg-4"/>
                 <div class="col-lg-4 text-center pt16 pb16">
                     <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;">
-                        <img border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:200px;max-height:48px;width:auto"/>
+                        <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:200px;max-height:48px;width:auto"/>
                     </a>
                 </div>
                 <div class="col-lg-4 text-right"/>
