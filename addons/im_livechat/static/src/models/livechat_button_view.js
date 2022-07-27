@@ -3,7 +3,7 @@
 import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
@@ -20,7 +20,7 @@ registerModel({
         addMessage(data, options) {
             const legacyMessage = new PublicLivechatMessage(this, this.messaging, data);
 
-            const hasAlreadyMessage = _.some(this.messages, function (msg) {
+            const hasAlreadyMessage = _.some(this.messaging.publicLivechatGlobal.messages, function (msg) {
                 return legacyMessage.getID() === msg.id;
             });
             if (hasAlreadyMessage) {
@@ -37,12 +37,12 @@ registerModel({
             }
 
             if (options && options.prepend) {
-                this.update({
-                    messages: replace([message, ...this.messages]),
+                this.messaging.publicLivechatGlobal.update({
+                    messages: replace([message, ...this.messaging.publicLivechatGlobal.messages]),
                 });
             } else {
-                this.update({
-                    messages: replace([...this.messages, message]),
+                this.messaging.publicLivechatGlobal.update({
+                    messages: replace([...this.messaging.publicLivechatGlobal.messages, message]),
                 });
             }
         },
@@ -376,7 +376,7 @@ registerModel({
                 def = Promise.resolve(JSON.parse(cookie));
             } else {
                 // re-initialize messages cache
-                this.update({ messages: clear() });
+                this.messaging.publicLivechatGlobal.update({ messages: clear() });
                 def = this.messaging.rpc({
                     route: '/im_livechat/get_session',
                     params: this.widget._prepareGetSessionParameters(),
@@ -501,7 +501,6 @@ registerModel({
         localStorageChatbotState: attr({
             compute: '_computeLocalStorageChatbotState',
         }),
-        messages: many('PublicLivechatMessage'),
         openChatDebounced: attr({
             compute: '_computeOpenChatDebounced',
         }),

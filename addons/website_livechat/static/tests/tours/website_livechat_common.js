@@ -32,7 +32,7 @@ LivechatButton.include({
                             payload: {
                                 id: self.messaging.publicLivechatGlobal.publicLivechat.id,
                                 message: {
-                                    id: self.messaging.publicLivechatGlobal.livechatButtonView.messages.length + 1,
+                                    id: self.messaging.publicLivechatGlobal.messages.length + 1,
                                     author_id: [0, 'Website Visitor Test'],
                                     email_from: 'Website Visitor Test',
                                     body: utils.Markup('<p>' + message.content + '</p>'),

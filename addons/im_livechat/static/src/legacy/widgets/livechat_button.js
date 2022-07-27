@@ -205,7 +205,7 @@ const LivechatButton = Widget.extend({
     _onCloseChatWindow(ev) {
         ev.stopPropagation();
         const isComposerDisabled = this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled');
-        const shouldAskFeedback = !isComposerDisabled && this.messaging.publicLivechatGlobal.livechatButtonView.messages.find(function (message) {
+        const shouldAskFeedback = !isComposerDisabled && this.messaging.publicLivechatGlobal.messages.find(function (message) {
             return message.id !== '_welcome';
         });
         if (shouldAskFeedback) {

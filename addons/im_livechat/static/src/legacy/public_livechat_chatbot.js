@@ -171,9 +171,9 @@ const _t = core._t;
         });
 
         const welcomeMessagesIds = welcomeMessages.map(welcomeMessage => welcomeMessage.id);
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({
+        this.messaging.publicLivechatGlobal.update({
             messages: replace(
-                this.messaging.publicLivechatGlobal.livechatButtonView.messages.filter((message) => {
+                this.messaging.publicLivechatGlobal.messages.filter((message) => {
                     !welcomeMessagesIds.includes(message.id);
                 }),
             ),
@@ -395,13 +395,13 @@ const _t = core._t;
         return nextStep;
     },
     /**
-     * Returns the 'this.messaging.publicLivechatGlobal.livechatButtonView.messages' filtered on our special 'welcome' ones.
+     * Returns the 'this.messaging.publicLivechatGlobal.messages' filtered on our special 'welcome' ones.
      * See '_sendWelcomeChatbotMessage'.
      *
      * @private
      */
     _getWelcomeMessages() {
-        return this.messaging.publicLivechatGlobal.livechatButtonView.messages.filter((message) => {
+        return this.messaging.publicLivechatGlobal.messages.filter((message) => {
             return message.id && typeof message.id === 'string' && message.id.startsWith('_welcome_');
         });
     },
@@ -411,7 +411,7 @@ const _t = core._t;
      * @private
      */
     _isLastMessageFromCustomer() {
-        const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0 ? this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1] : null;
+        const lastMessage = this.messaging.publicLivechatGlobal.messages.length !== 0 ? this.messaging.publicLivechatGlobal.messages[this.messaging.publicLivechatGlobal.messages.length - 1] : null;
         return lastMessage && lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
     },
 
@@ -442,8 +442,8 @@ const _t = core._t;
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbot &&
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep &&
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.messages &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0
+                this.messaging.publicLivechatGlobal.messages &&
+                this.messaging.publicLivechatGlobal.messages.length !== 0
             ) {
                 this._chatbotProcessStep();
             }
@@ -477,8 +477,8 @@ const _t = core._t;
         this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').on('click',
             this._onChatbotRestartScript.bind(this));
 
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0) {
-            const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1];
+        if (this.messaging.publicLivechatGlobal.messages.length !== 0) {
+            const lastMessage = this.messaging.publicLivechatGlobal.messages[this.messaging.publicLivechatGlobal.messages.length - 1];
             const stepAnswers = lastMessage.legacyPublicLivechatMessage.getChatbotStepAnswers();
             if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.legacyPublicLivechatMessage.getChatbotStepAnswerId()) {
                 this._chatbotDisableInput(_t('Select an option above'));
@@ -689,7 +689,7 @@ const _t = core._t;
 
     /**
      * Saves the selected chatbot.script.answer onto our chatbot.message.
-     * Will update the state of the related message (in this.messaging.publicLivechatGlobal.livechatButtonView.messages) to set the selected option
+     * Will update the state of the related message (in this.messaging.publicLivechatGlobal.messages) to set the selected option
      * as well which will in turn adapt the display to not show options anymore.
      *
      * This method also handles an optional redirection link placed on the chatbot.script.answer and
@@ -713,7 +713,7 @@ const _t = core._t;
         });
 
         let stepMessage = null;
-        for (const message of this.messaging.publicLivechatGlobal.livechatButtonView.messages) {
+        for (const message of this.messaging.publicLivechatGlobal.messages) {
             // we do NOT want to use a 'find' here because we want the LAST message that respects
             // this condition.
             // indeed, if you restart the script, you can have multiple messages with the same step id,

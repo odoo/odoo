@@ -25,7 +25,7 @@ LivechatButton.include({
      * the thread and making it hard to write proper jQuery selectors in the tour.
      */
     _onChatbotRestartScript: function () {
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({ messages: clear() });
+        this.messaging.publicLivechatGlobal.update({ messages: clear() });
         this._renderMessages();
 
         this._super(...arguments);
