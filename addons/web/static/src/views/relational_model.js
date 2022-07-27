@@ -457,6 +457,10 @@ export class Record extends DataPoint {
         return {
             // ...
             ...this.dataContext,
+            active_id: this.resId || false,
+            active_ids: this.resId ? [this.resId] : [],
+            active_model: this.resModel,
+            current_company_id: this.model.company.currentCompany.id,
         };
     }
 
@@ -3199,12 +3203,13 @@ export class StaticList extends DataPoint {
 StaticList.DEFAULT_LIMIT = 40;
 
 export class RelationalModel extends Model {
-    setup(params, { action, dialog, notification, rpc, user, view }) {
+    setup(params, { action, dialog, notification, rpc, user, view, company }) {
         this.action = action;
         this.dialogService = dialog;
         this.notificationService = notification;
         this.rpc = rpc;
         this.user = user;
+        this.company = company;
         this.viewService = view;
         this.orm = new RequestBatcherORM(rpc, user);
         this.keepLast = new KeepLast();
@@ -3342,7 +3347,7 @@ export class RelationalModel extends Model {
     }
 }
 
-RelationalModel.services = ["action", "dialog", "notification", "rpc", "user", "view"];
+RelationalModel.services = ["action", "dialog", "notification", "rpc", "user", "view", "company"];
 RelationalModel.Record = Record;
 RelationalModel.Group = Group;
 RelationalModel.DynamicRecordList = DynamicRecordList;

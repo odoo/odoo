@@ -16,6 +16,9 @@ import {
 import { editSearch, validateSearch } from "@web/../tests/search/helpers";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { session } from "@web/session";
+import { companyService } from "@web/webclient/company_service";
+import { registry } from "@web/core/registry";
 
 let target;
 let serverData;
@@ -1869,4 +1872,184 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".modal");
         assert.strictEqual(target.querySelector(".modal-title").textContent, "Search: pokemon");
     });
+
+    QUnit.test("many2many basic keys in field evalcontext -- in list", async (assert) => {
+        assert.expect(6);
+        serverData.models.partner_type.fields.partner_id = {
+            string: "Partners",
+            type: "many2one",
+            relation: "partner",
+        };
+        serverData.views = {
+            "partner_type,false,form": `<form><field name="partner_id" /></form>`,
+        };
+
+        patchWithCleanup(session, {
+            user_companies: {
+                allowed_companies: {
+                    3: { id: 3, name: "Hermit", sequence: 1 },
+                    2: { id: 2, name: "Herman's", sequence: 2 },
+                    1: { id: 1, name: "Heroes TM", sequence: 3 },
+                },
+                current_company: 3,
+            },
+        });
+
+        registry.category("services").add("company", companyService, { force: true });
+
+        patchWithCleanup(AutoComplete, {
+            timeout: 0,
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': active_id, 'ids': active_ids, 'model': active_model, 'company_id': current_company_id}"/>
+                </tree>`,
+            mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    assert.strictEqual(args.kwargs.context.default_partner_id, 1);
+                    assert.strictEqual(args.kwargs.context.model, "partner");
+                    assert.deepEqual(args.kwargs.context.ids, [1]);
+                    assert.strictEqual(args.kwargs.context.company_id, 3);
+                }
+            },
+        });
+
+        await click(target.querySelector(".o_data_cell"));
+        await editInput(target, ".o_field_many2many_selection input", "indianapolis");
+        await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
+        assert.containsOnce(target, ".modal .o_field_many2one");
+        assert.strictEqual(
+            target.querySelector(".modal .o_field_many2one input").value,
+            "first record"
+        );
+    });
+
+    QUnit.test("many2many basic keys in field evalcontext -- in form", async (assert) => {
+        assert.expect(6);
+        serverData.models.partner_type.fields.partner_id = {
+            string: "Partners",
+            type: "many2one",
+            relation: "partner",
+        };
+        serverData.views = {
+            "partner_type,false,form": `<form><field name="partner_id" /></form>`,
+        };
+
+        patchWithCleanup(session, {
+            user_companies: {
+                allowed_companies: {
+                    3: { id: 3, name: "Hermit", sequence: 1 },
+                    2: { id: 2, name: "Herman's", sequence: 2 },
+                    1: { id: 1, name: "Heroes TM", sequence: 3 },
+                },
+                current_company: 3,
+            },
+        });
+
+        registry.category("services").add("company", companyService, { force: true });
+
+        patchWithCleanup(AutoComplete, {
+            timeout: 0,
+        });
+
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': active_id, 'ids': active_ids, 'model': active_model, 'company_id': current_company_id}"/>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    assert.strictEqual(args.kwargs.context.default_partner_id, 1);
+                    assert.strictEqual(args.kwargs.context.model, "partner");
+                    assert.deepEqual(args.kwargs.context.ids, [1]);
+                    assert.strictEqual(args.kwargs.context.company_id, 3);
+                }
+            },
+        });
+
+        await clickEdit(target);
+        await editInput(target, ".o_field_many2many_selection input", "indianapolis");
+        await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
+        assert.containsOnce(target, ".modal .o_field_many2one");
+        assert.strictEqual(
+            target.querySelector(".modal .o_field_many2one input").value,
+            "first record"
+        );
+    });
+
+    QUnit.test(
+        "many2many basic keys in field evalcontext -- in a x2many in form",
+        async (assert) => {
+            assert.expect(6);
+            serverData.models.partner_type.fields.partner_id = {
+                string: "Partners",
+                type: "many2one",
+                relation: "partner",
+            };
+            serverData.views = {
+                "partner_type,false,form": `<form><field name="partner_id" /></form>`,
+            };
+
+            const rec = serverData.models.partner.records.find(({ id }) => id === 2);
+            rec.p = [1];
+
+            patchWithCleanup(session, {
+                user_companies: {
+                    allowed_companies: {
+                        3: { id: 3, name: "Hermit", sequence: 1 },
+                        2: { id: 2, name: "Herman's", sequence: 2 },
+                        1: { id: 1, name: "Heroes TM", sequence: 3 },
+                    },
+                    current_company: 3,
+                },
+            });
+            registry.category("services").add("company", companyService, { force: true });
+
+            patchWithCleanup(AutoComplete, {
+                timeout: 0,
+            });
+
+            await makeView({
+                type: "form",
+                resId: 2,
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                    <field name="p">
+                        <tree editable="top">
+                            <field name="timmy" widget="many2many_tags" context="{ 'default_partner_id': active_id, 'ids': active_ids, 'model': active_model, 'company_id': current_company_id}"/>
+                        </tree>
+                    </field>
+                    </form>`,
+                mockRPC(route, args) {
+                    if (args.method === "onchange") {
+                        assert.strictEqual(args.kwargs.context.default_partner_id, 1);
+                        assert.strictEqual(args.kwargs.context.model, "partner");
+                        assert.deepEqual(args.kwargs.context.ids, [1]);
+                        assert.strictEqual(args.kwargs.context.company_id, 3);
+                    }
+                },
+            });
+
+            await clickEdit(target);
+            await click(target, ".o_data_cell");
+            await editInput(target, ".o_field_many2many_selection input", "indianapolis");
+            await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
+            assert.containsOnce(target, ".modal .o_field_many2one");
+            assert.strictEqual(
+                target.querySelector(".modal .o_field_many2one input").value,
+                "first record"
+            );
+        }
+    );
 });

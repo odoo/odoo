@@ -36,7 +36,7 @@ QUnit.module('Views', function (hooks) {
             }
         }
         setupControlPanelServiceRegistry();
-        serviceRegistry.add("company", companyService);
+        serviceRegistry.add("company", companyService, { force: true });
         serviceRegistry.add("dialog", dialogService);
     });
 

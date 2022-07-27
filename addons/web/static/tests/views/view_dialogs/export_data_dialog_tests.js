@@ -12,10 +12,8 @@ import {
     triggerEvent,
     mockTimeout,
 } from "@web/../tests/helpers/utils";
-import { makeView } from "@web/../tests/views/helpers";
-import { dialogService } from "@web/core/dialog/dialog_service";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
-import { setupControlPanelServiceRegistry } from "@web/../tests/search/helpers";
 import { makeFakeUserService } from "../../helpers/mock_services";
 
 const serviceRegistry = registry.category("services");
@@ -97,13 +95,12 @@ QUnit.module("ViewDialogs", (hooks) => {
             },
         };
         target = getFixture();
-        setupControlPanelServiceRegistry();
+        setupViewRegistries();
 
         function hasGroup(group) {
             return group === "base.group_allow_export";
         }
         serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
-        serviceRegistry.add("dialog", dialogService);
 
         fetchedFields = {
             root: [
@@ -595,7 +592,7 @@ QUnit.module("ViewDialogs", (hooks) => {
 
     QUnit.test("Export dialog: display on small screen after resize", async function (assert) {
         const { execRegisteredTimeouts } = mockTimeout();
-        let ui = {
+        const ui = {
             activateElement: () => {},
             deactivateElement: () => {},
             size: 4,
