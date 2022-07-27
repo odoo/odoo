@@ -43,6 +43,12 @@ import { generateLegacyLoadViewsResult } from "@web/legacy/legacy_load_views";
  * @property {boolean} loadIrFilters
  */
 
+/**
+ * @typedef {Object} LoadFieldsOptions
+ * @property {string[] | false} [fieldNames]
+ * @property {string[]} [attributes]
+ */
+
 export const viewService = {
     dependencies: ["orm"],
     start(env, { orm }) {
@@ -54,6 +60,31 @@ export const viewService = {
             processedArchs.content = {};
             processedArchs.trigger("UPDATE");
         });
+
+        /**
+         * Loads fields information
+         *
+         * @param {string} resModel
+         * @param {LoadFieldsOptions} [options]
+         * @returns {Promise<object>}
+         */
+        async function loadFields(resModel, options = {}) {
+            const key = JSON.stringify([
+                "fields",
+                resModel,
+                options.fieldNames,
+                options.attributes,
+            ]);
+            if (!cache[key]) {
+                cache[key] = orm
+                    .call(resModel, "fields_get", [options.fieldNames, options.attributes])
+                    .catch((error) => {
+                        delete cache[key];
+                        return Promise.reject(error);
+                    });
+            }
+            return cache[key];
+        }
 
         /**
          * Loads various information concerning views: fields_view for each view,
@@ -89,6 +120,10 @@ export const viewService = {
                             relatedModels: models,
                             views: {},
                         };
+                        for (const [resModel, fields] of Object.entries(modelsCopy)) {
+                            const key = JSON.stringify(["fields", resModel, undefined, undefined]);
+                            cache[key] = Promise.resolve(fields);
+                        }
                         for (const viewType in views) {
                             const { arch, toolbar, id, filters, custom_view_id } = views[viewType];
                             const viewDescription = { arch, id, custom_view_id };
@@ -109,7 +144,7 @@ export const viewService = {
             }
             return cache[key];
         }
-        return { loadViews };
+        return { loadViews, loadFields };
     },
 };
 
