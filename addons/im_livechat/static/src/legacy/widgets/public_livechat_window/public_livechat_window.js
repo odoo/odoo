@@ -23,9 +23,6 @@ const PublicLivechatWindow = Widget.extend({
         'keypress .o_composer_text_field': '_onKeypress',
         'input .o_composer_text_field': '_onInput',
     },
-    custom_events: {
-        document_viewer_closed: '_onDocumentViewerClose',
-    },
     /**
      * @param {Widget} parent
      * @param {Messaging} messaging
@@ -242,12 +239,6 @@ const PublicLivechatWindow = Widget.extend({
         if ($(ev.target).closest('a, button').length) {
             return;
         }
-        this._focusInput();
-    },
-    /**
-     * @private
-     */
-    _onDocumentViewerClose() {
         this._focusInput();
     },
     /**
