@@ -3,6 +3,7 @@ from odoo import api, fields, models, _, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 from bisect import bisect_left
+from collections import defaultdict
 import re
 
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*)\s)?(.*)')
@@ -374,14 +375,23 @@ class AccountAccount(models.Model):
     def _compute_account_type(self):
         """ Compute the account type based on the account code.
         Search for the closest parent account code and sets the account type according to the parent.
+        If there is no parent (e.g. the account code is lower than any other existing account code),
+        the account type will be set to 'asset_current'.
         """
         accounts_to_process = self.filtered(lambda r: r.code and not r.account_type)
-        accounts_with_codes = {r['code']: r['account_type'] for r in self.search_read(domain=[(
-            'code', '!=', False), ('company_id', '=', self.company_id.id)], fields=['code', 'account_type'])}
-        codes_list = list(accounts_with_codes.keys())
+        all_accounts = self.search_read(
+            domain=[('company_id', 'in', accounts_to_process.company_id.ids)],
+            fields=['code', 'account_type', 'company_id'],
+            order='code',
+        )
+        accounts_with_codes = defaultdict(dict)
+        # We want to group accounts by company to only search for account codes of the current company
+        for account in all_accounts:
+            accounts_with_codes[account['company_id'][0]][account['code']] = account['account_type']
         for account in accounts_to_process:
+            codes_list = list(accounts_with_codes[account.company_id.id].keys())
             closest_index = bisect_left(codes_list, account.code) - 1
-            account.account_type = accounts_with_codes[codes_list[closest_index]]
+            account.account_type = accounts_with_codes[account.company_id.id][codes_list[closest_index]] if closest_index != -1 else 'asset_current'
 
     @api.depends('internal_group')
     def _compute_is_off_balance(self):
