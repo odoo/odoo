@@ -164,7 +164,7 @@ class AccountEdiDocument(models.Model):
                         # can be safely cancelled.
                         invoice_ids_to_cancel.add(move.id)
 
-                    if not old_attachment.res_model or not old_attachment.res_id:
+                    if not old_attachment.sudo().res_model or not old_attachment.sudo().res_id:
                         attachments_to_unlink |= old_attachment
 
                 else:

@@ -444,10 +444,11 @@ class IrAttachment(models.Model):
             for res_model, res_id, create_uid, public, res_field in self._cr.fetchall():
                 if public and mode == 'read':
                     continue
-                if not self.env.is_system() and (res_field or (not res_id and create_uid != self.env.uid)):
-                    raise AccessError(_("Sorry, you are not allowed to access this document."))
                 if not (res_model and res_id):
                     continue
+                if not self.env.is_system() and (res_field or (not res_id and create_uid != self.env.uid)):
+                    raise AccessError(_("Sorry, you are not allowed to access this document."))
+
                 model_ids[res_model].add(res_id)
         if values and values.get('res_model') and values.get('res_id'):
             model_ids[values['res_model']].add(values['res_id'])
