@@ -286,9 +286,8 @@ export class Record extends DataPoint {
     }
 
     get dirtyFields() {
-        return Object.keys(this.model.__bm__.localData[this.__bm_handle__]._changes).map(
-            (change) => this.activeFields[change]
-        );
+        const changes = this.model.__bm__.localData[this.__bm_handle__]._changes || {};
+        return Object.keys(changes).map((change) => this.activeFields[change]);
     }
 
     get translatableFields() {
