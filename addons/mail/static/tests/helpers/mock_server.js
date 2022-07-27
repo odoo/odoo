@@ -371,7 +371,9 @@ patch(MockServer.prototype, 'mail', {
             ['model', '=', 'mail.channel'],
             ['message_type', '!=', 'user_notification'],
         ];
-        return this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+        const messages = this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+        this._mockMailMessageSetMessageDone(messages.map(message => message.id));
+        return this._mockMailMessageMessageFormat(messages.map(message => message.id));
     },
 
     /**
@@ -449,7 +451,8 @@ patch(MockServer.prototype, 'mail', {
      */
     _mockRouteMailMessageHistory(min_id = false, max_id = false, limit = 30) {
         const domain = [['needaction', '=', false]];
-        return this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+        const messages = this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+        return this._mockMailMessageMessageFormat(messages.map(message => message.id));
     },
     /**
      * Simulates the `/mail/inbox/messages` route.
@@ -459,7 +462,8 @@ patch(MockServer.prototype, 'mail', {
      */
     _mockRouteMailMessageInbox(min_id = false, max_id = false, limit = 30) {
         const domain = [['needaction', '=', true]];
-        return this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+        const messages = this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+        return this._mockMailMessageMessageFormat(messages.map(message => message.id));
     },
     /**
      * Simulates the `/mail/starred/messages` route.
@@ -469,7 +473,8 @@ patch(MockServer.prototype, 'mail', {
      */
     _mockRouteMailMessageStarredMessages(min_id = false, max_id = false, limit = 30) {
         const domain = [['starred_partner_ids', 'in', [this.currentPartnerId]]];
-        return this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+        const messages = this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+        return this._mockMailMessageMessageFormat(messages.map(message => message.id));
     },
     /**
      * Simulates the `/mail/read_subscription_data` route.
@@ -563,7 +568,9 @@ patch(MockServer.prototype, 'mail', {
             ['model', '=', res_model],
             ['message_type', '!=', 'user_notification'],
         ];
-        return this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+        const messages = this._mockMailMessage_MessageFetch(domain, max_id, min_id, limit);
+        this._mockMailMessageSetMessageDone(messages.map(message => message.id));
+        return this._mockMailMessageMessageFormat(messages.map(message => message.id));
     },
 
     //--------------------------------------------------------------------------
@@ -1463,10 +1470,12 @@ patch(MockServer.prototype, 'mail', {
      *
      * @private
      * @param {Array[]} domain
-     * @param {string} [limit=20]
+     * @param {integer} [max_id]
+     * @param {integer} [min_id]
+     * @param {integer} [limit=30]
      * @returns {Object[]}
      */
-    async _mockMailMessage_MessageFetch(domain, max_id, min_id, limit = 30) {
+    _mockMailMessage_MessageFetch(domain, max_id, min_id, limit = 30) {
         if (max_id) {
             domain.push(['id', '<', max_id]);
         }
@@ -1480,7 +1489,7 @@ patch(MockServer.prototype, 'mail', {
         });
         // pick at most 'limit' messages
         messages.length = Math.min(messages.length, limit);
-        return this._mockMailMessageMessageFormat(messages.map(message => message.id));
+        return messages;
     },
     /**
      * Simulates `message_format` on `mail.message`.
@@ -1619,7 +1628,7 @@ patch(MockServer.prototype, 'mail', {
                     ),
                 },
             );
-            this.pyEnv['bus.bus']._sendone( this.currentPartner, 'mail.message/mark_as_read', {
+            this.pyEnv['bus.bus']._sendone(this.currentPartner, 'mail.message/mark_as_read', {
                 'message_ids': [message.id],
                 'needaction_inbox_counter': this._mockResPartner_GetNeedactionCount(this.currentPartnerId),
             });

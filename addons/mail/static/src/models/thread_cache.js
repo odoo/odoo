@@ -245,43 +245,6 @@ registerModel({
             this.update(this._computeHasToLoadMessages());
         },
         /**
-         * Calls "mark all as read" when this thread becomes displayed in a
-         * view (which is notified by `isMarkAllAsReadRequested` being `true`),
-         * but delays the call until some other conditions are met, such as the
-         * messages being loaded.
-         * The reason to wait until messages are loaded is to avoid a race
-         * condition because "mark all as read" will change the state of the
-         * messages in parallel to fetch reading them.
-         *
-         * @private
-         */
-        _onChangeMarkAllAsRead() {
-            if (this.messaging.currentGuest) {
-                return;
-            }
-            if (
-                !this.isMarkAllAsReadRequested ||
-                !this.isLoaded ||
-                this.isLoading
-            ) {
-                // wait for change of state before deciding what to do
-                return;
-            }
-            this.update({ isMarkAllAsReadRequested: false });
-            if (
-                this.thread.isTemporary ||
-                this.thread.model === 'mail.box' ||
-                this.threadViews.length === 0
-            ) {
-                // ignore the request
-                return;
-            }
-            this.messaging.models['Message'].markAllAsRead([
-                ['model', '=', this.thread.model],
-                ['res_id', '=', this.thread.id],
-            ]);
-        },
-        /**
          * Loads this thread cache, by fetching the most recent messages in this
          * conversation.
          *
@@ -355,16 +318,6 @@ registerModel({
             default: false,
         }),
         /**
-         * Determines whether this cache should consider calling "mark all as
-         * read" on this thread.
-         *
-         * This field is a hint that may or may not lead to an actual call.
-         * @see `_onChangeMarkAllAsRead`
-         */
-        isMarkAllAsReadRequested: attr({
-            default: false,
-        }),
-        /**
          * Last message that has been fetched by this thread cache.
          *
          * This DOES NOT necessarily mean the last message linked to this thread
@@ -421,10 +374,6 @@ registerModel({
         new OnChange({
             dependencies: ['hasLoadingFailed', 'isCacheRefreshRequested', 'isLoaded', 'isLoading', 'thread.isTemporary', 'threadViews'],
             methodName: '_onChangeForHasToLoadMessages',
-        }),
-        new OnChange({
-            dependencies: ['isLoaded', 'isLoading', 'isMarkAllAsReadRequested', 'thread.isTemporary', 'thread.model', 'threadViews'],
-            methodName: '_onChangeMarkAllAsRead',
         }),
         new OnChange({
             dependencies: ['hasToLoadMessages'],

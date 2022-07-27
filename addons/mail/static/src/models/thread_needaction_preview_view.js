@@ -21,9 +21,10 @@ registerModel({
                 // handled in `_onClickMarkAsRead`
                 return;
             }
+            const messaging = this.messaging;
             this.thread.open();
-            if (!this.messaging.device.isSmall) {
-                this.messaging.messagingMenu.close();
+            if (!messaging.device.isSmall) {
+                messaging.messagingMenu.close();
             }
         },
         /**
