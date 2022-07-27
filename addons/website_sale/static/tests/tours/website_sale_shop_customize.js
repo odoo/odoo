@@ -9,16 +9,6 @@ wTourUtils.registerEditionTour('shop_customize', {
     test: true,
 },
     [
-        {
-            content: "open customize tab",
-            extra_trigger: '#oe_snippets.o_loaded',
-            trigger: '.o_we_customize_snippet_btn',
-        },
-        {
-            content: "click on 'Attributes'",
-            extra_trigger: '#oe_snippets .o_we_customize_panel',
-            trigger: 'we-button[data-name="attributes_opt"]',
-        },
         ...wTourUtils.clickOnSave(),
         {
             content: "select product attribute Steel",

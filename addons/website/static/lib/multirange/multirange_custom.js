@@ -105,7 +105,7 @@ class Multirange {
         if (this.rangeWithInput) {
             this.leftInput = document.createElement("input");
             this.leftInput.type = "number";
-            this.leftInput.classList.add("invisible", "form-control", "form-control-sm", "w-auto", "mb-2", "mb-lg-1");
+            this.leftInput.classList.add("invisible", "form-control", "form-control-sm", "mb-2", "mb-lg-1");
             this.leftInput.min = this.min;
             this.leftInput.max = this.max;
             this.leftInput.step = this.step;
