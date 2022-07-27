@@ -2722,8 +2722,14 @@ class TestRoutes(TestStockCommon):
             'warehouse_id': self.wh.id,
         })
 
-        replenish_wizard.launch_replenishment()
-        last_picking_id = self.env['stock.picking'].search([('origin', '=', 'Manual Replenishment')])[-1]
+        genrated_picking = replenish_wizard.launch_replenishment()
+        links = genrated_picking.get("params", {}).get("links")
+        url = links and links[0].get("url", "") or ""
+        picking_id, model_name = self.url_extract_rec_id_and_model(url)
+
+        last_picking_id = False
+        if picking_id and model_name:
+            last_picking_id = self.env[model_name[0]].browse(int(picking_id[0]))
         self.assertTrue(last_picking_id, 'Picking not found')
         move_line = last_picking_id.move_ids.search([('product_id', '=', self.product1.id)])
         self.assertTrue(move_line,'The product is not in the picking')
