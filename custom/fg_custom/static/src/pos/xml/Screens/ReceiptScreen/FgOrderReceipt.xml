@@ -221,11 +221,18 @@
                     </div>
                     <div>
                         <span class="pos-receipt-left-align"><b>VATable (V)</b></span>
-                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_product_v)"/></span>
+<!--                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_product_v)"/></span>-->
+
+                        <t t-set="new_total_without_tax" t-value="receipt.total_without_tax - total_product_e - total_product_z"/>
+                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(new_total_without_tax)"/></span>
+
                     </div>
                     <div>
                         <span class="pos-receipt-left-align"><b>VAT</b></span>
-                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_vat)"/></span>
+<!--                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_vat)"/></span>-->
+
+                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(receipt.total_tax)"/></span>
+
                     </div>
                 </div>
 
