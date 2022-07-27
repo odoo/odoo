@@ -1477,6 +1477,34 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".oe_stat_button")); // should not call doActionButton
     });
 
+    QUnit.test("rendering stat buttons without class", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button>
+                                <field name="int_field"/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="foo"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(
+            target,
+            "button.oe_stat_button",
+            "button should have oe_stat_button class"
+        );
+    });
+
     QUnit.test("rendering stat buttons without action", async function (assert) {
         await makeView({
             type: "form",
