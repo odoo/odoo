@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { attr, many, one } from '@mail/model/model_field';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -63,13 +63,13 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickHideSidebar(ev) {
-            this.callView.update({ hasSidebar: false });
+            this.callView.update({ isSidebarOpen: false });
         },
         /**
          * @param {MouseEvent} ev
          */
         onClickShowSidebar(ev) {
-            this.callView.update({ hasSidebar: true });
+            this.callView.update({ isSidebarOpen: true });
         },
         /**
          * @param {MouseEvent} ev
@@ -119,9 +119,26 @@ registerModel({
 
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeHasSidebarButton() {
+            return Boolean(this.callView.activeRtcSession && this.showOverlay && !this.callView.threadView.compact);
+        },
+        /**
+         * @private
          */
         _computeIsControllerFloating() {
             return Boolean(this.callView.isFullScreen || this.callView.activeRtcSession && !this.callView.threadView.compact);
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeMainTiles() {
+            if (this.callView.activeRtcSession) {
+                return insertAndReplace([{ channelMember: replace(this.callView.activeRtcSession.channelMember) }]);
+            }
+            return insertAndReplace(this.callView.filteredChannelMembers.map(channelMember => ({ channelMember: replace(channelMember) })));
         },
         /**
          * Shows the overlay (buttons) for a set a mount of time.
@@ -154,12 +171,20 @@ registerModel({
             related: 'callView.channel',
             required: true,
         }),
+        hasSidebarButton: attr({
+            compute: '_computeHasSidebarButton',
+        }),
         /**
          * Determines if the controller is an overlay or a bottom bar.
          */
         isControllerFloating: attr({
             default: false,
             compute: '_computeIsControllerFloating',
+        }),
+        mainTiles: many('CallMainViewTile', {
+            compute: '_computeMainTiles',
+            inverse: 'callMainViewOwner',
+            isCausal: true,
         }),
         /**
          * Determines if we show the overlay with the control buttons.
