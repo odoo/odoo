@@ -2431,3 +2431,123 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         cogs_aml = amls.filtered(lambda aml: aml.account_id == categ.property_account_expense_categ_id)
         self.assertEqual(cogs_aml.debit, 10)
         self.assertEqual(cogs_aml.credit, 0)
+
+    def test_kit_avco_fully_owned_and_delivered_invoice_post_delivery(self):
+        self.stock_account_product_categ.property_cost_method = 'average'
+
+        compo01, compo02, kit = self.env['product.product'].create([{
+            'name': name,
+            'type': 'product',
+            'standard_price': price,
+            'categ_id': self.stock_account_product_categ.id,
+            'invoice_policy': 'delivery',
+        } for name, price in [
+            ('Compo 01', 10),
+            ('Compo 02', 20),
+            ('Kit', 0),
+        ]])
+
+        self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(compo02, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
+
+        self.env['mrp.bom'].create({
+            'product_id': kit.id,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_uom_id': kit.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo01.id, 'product_qty': 1.0}),
+                (0, 0, {'product_id': compo02.id, 'product_qty': 1.0}),
+            ],
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': kit.name,
+                    'product_id': kit.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': kit.uom_id.id,
+                    'price_unit': 5,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+        so.picking_ids.move_lines.quantity_done = 1
+        so.picking_ids.button_validate()
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        # COGS should not exist because the products are owned by an external partner
+        amls = invoice.line_ids
+        self.assertRecordValues(amls, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 5},
+            {'account_id': self.company_data['default_account_receivable'].id,  'debit': 5,     'credit': 0},
+            {'account_id': self.company_data['default_account_stock_out'].id,   'debit': 0,     'credit': 0},
+            {'account_id': self.company_data['default_account_expense'].id,     'debit': 0,     'credit': 0},
+        ])
+
+    def test_kit_avco_partially_owned_and_delivered_invoice_post_delivery(self):
+        self.stock_account_product_categ.property_cost_method = 'average'
+
+        compo01, compo02, kit = self.env['product.product'].create([{
+            'name': name,
+            'type': 'product',
+            'standard_price': price,
+            'categ_id': self.stock_account_product_categ.id,
+            'invoice_policy': 'delivery',
+        } for name, price in [
+            ('Compo 01', 10),
+            ('Compo 02', 20),
+            ('Kit', 0),
+        ]])
+
+        self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1)
+        self.env['stock.quant']._update_available_quantity(compo02, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
+        self.env['stock.quant']._update_available_quantity(compo02, self.company_data['default_warehouse'].lot_stock_id, 1)
+
+        self.env['mrp.bom'].create({
+            'product_id': kit.id,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_uom_id': kit.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo01.id, 'product_qty': 1.0}),
+                (0, 0, {'product_id': compo02.id, 'product_qty': 1.0}),
+            ],
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': kit.name,
+                    'product_id': kit.id,
+                    'product_uom_qty': 2.0,
+                    'product_uom': kit.uom_id.id,
+                    'price_unit': 5,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+        so.picking_ids.move_line_ids.qty_done = 1
+        so.picking_ids.button_validate()
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        # COGS should not exist because the products are owned by an external partner
+        amls = invoice.line_ids
+        self.assertRecordValues(amls, [
+            # pylint: disable=bad-whitespace
+            {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 10},
+            {'account_id': self.company_data['default_account_receivable'].id,  'debit': 10,    'credit': 0},
+            {'account_id': self.company_data['default_account_stock_out'].id,   'debit': 0,     'credit': 30},
+            {'account_id': self.company_data['default_account_expense'].id,     'debit': 30,    'credit': 0},
+        ])
