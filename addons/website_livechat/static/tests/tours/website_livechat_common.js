@@ -1,53 +1,56 @@
 odoo.define('website_livechat.tour_common', function (require) {
 'use strict';
 
-var LivechatButton = require('@im_livechat/legacy/widgets/livechat_button')[Symbol.for("default")];
-var session = require('web.session');
-var utils = require('web.utils');
+const { patchRecordMethods } = require('@mail/model/model_core');
+// ensure that the model definition is loaded before the patch
+require('@im_livechat/models/livechat_button_view');
 
-/**
- * Alter this method for test purposes.
- *
- * Fake the notification after sending message
- * As bus is not available, it's necessary to add the message in the chatter + in livechat.messages
- *
- * Add a class to the chatter window after sendFeedback is done
- * to force the test to wait until feedback is really done
- * (to check afterwards if the livechat session is set to inactive)
- *
- * Note : this asset is loaded for tests only (rpc call done only during tests)
- */
-LivechatButton.include({
-    _sendMessage: function (message) {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            if (message.isFeedback) {
-                $('div.o_thread_window_header').addClass('feedback_sent');
-            }
-            else {
-                session.rpc('/bus/test_mode_activated', {}).then(function (in_test_mode) {
-                    if (in_test_mode) {
-                        self.messaging.publicLivechatGlobal.notificationHandler._handleNotification({
-                            type: 'mail.channel/new_message',
-                            payload: {
-                                id: self.messaging.publicLivechatGlobal.publicLivechat.id,
-                                message: {
-                                    id: self.messaging.publicLivechatGlobal.livechatButtonView.messages.length + 1,
-                                    author_id: [0, 'Website Visitor Test'],
-                                    email_from: 'Website Visitor Test',
-                                    body: utils.Markup('<p>' + message.content + '</p>'),
-                                    is_discussion: true,
-                                    subtype_id: [1, "Discussions"],
-                                    date: moment().format('YYYY-MM-DD HH:mm:ss'),
-                                },
-                            },
-                        });
-                    }
+const { Markup } = require('web.utils');
+
+patchRecordMethods('LivechatButtonView', {
+    /**
+     * Alter this method for test purposes.
+     *
+     * Fake the notification after sending message
+     * As bus is not available, it's necessary to add the message in the chatter + in livechat.messages
+     *
+     * Add a class to the chatter window after sendFeedback is done
+     * to force the test to wait until feedback is really done
+     * (to check afterwards if the livechat session is set to inactive)
+     *
+     * Note : this asset is loaded for tests only (rpc call done only during tests)
+     *
+     * @override
+     */
+    async sendMessage(message) {
+        await this._super(message);
+        if (message.isFeedback) {
+            $('div.o_thread_window_header').addClass('feedback_sent');
+        } else {
+            this.messaging.rpc({ route: '/bus/test_mode_activated' }).then(in_test_mode => {
+                if (!in_test_mode) {
+                    return;
+                }
+                this.messaging.publicLivechatGlobal.notificationHandler._handleNotification({
+                    type: 'mail.channel/new_message',
+                    payload: {
+                        id: this.messaging.publicLivechatGlobal.publicLivechat.id,
+                        message: {
+                            id: this.messaging.publicLivechatGlobal.messages.length + 1,
+                            author_id: [0, 'Website Visitor Test'],
+                            email_from: 'Website Visitor Test',
+                            body: Markup('<p>' + message.content + '</p>'),
+                            is_discussion: true,
+                            subtype_id: [1, "Discussions"],
+                            date: moment().format('YYYY-MM-DD HH:mm:ss'),
+                        },
+                    },
                 });
-            }
-        });
+            });
+        }
     },
 });
+
 
 /*******************************
 *         Common Steps

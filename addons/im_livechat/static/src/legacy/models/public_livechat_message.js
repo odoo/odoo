@@ -20,7 +20,6 @@ const PublicLivechatMessage = Class.extend({
      * @param {@im_livechat/legacy/widgets/livechat_button} parent
      * @param {Messaging} messaging
      * @param {Object} data
-     * @param {Array} [data.attachment_ids=[]]
      * @param {Array} [data.author_id]
      * @param {string} [data.body = ""]
      * @param {string} [data.date] the server-format date time of the message.
@@ -32,10 +31,6 @@ const PublicLivechatMessage = Class.extend({
      */
     init(parent, messaging, data) {
         this.messaging = messaging;
-        // Attachments are not supported in (public) livechat.
-        // We ignore data from server, otherwise field commands
-        // will be wrongly considered as unamed attachments.
-        this._attachmentIDs = [];
         this._body = data.body || "";
         // by default: current datetime
         this._date = data.date ? moment(time.str_to_datetime(data.date)) : moment();
@@ -45,10 +40,6 @@ const PublicLivechatMessage = Class.extend({
         this._serverAuthorID = data.author_id;
         this._type = data.message_type || undefined;
 
-        this._processAttachmentURL();
-        this._attachmentIDs.forEach(function (attachment) {
-            attachment.filename = attachment.filename || attachment.name || _t("unnamed");
-        });
         this._defaultUsername = this.messaging.publicLivechatGlobal.options.default_username;
         this._serverURL = this.messaging.publicLivechatGlobal.livechatButtonView.serverUrl;
 
@@ -63,15 +54,6 @@ const PublicLivechatMessage = Class.extend({
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * Get the list of files attached to this message.
-     * Note that attachments are stored with server-format
-     *
-     * @return {Object[]}
-     */
-    getAttachments() {
-        return this._attachmentIDs;
-    },
     /**
      * Get the server ID (number) of the author of this message
      * If there are no author, return -1;
@@ -173,26 +155,6 @@ const PublicLivechatMessage = Class.extend({
         return this._id;
     },
     /**
-     * Get the list of images attached to this message.
-     * Note that attachments are stored with server-format
-     *
-     * @return {Object[]}
-     */
-    getImageAttachments() {
-        return _.filter(this.getAttachments(), function (attachment) {
-            return attachment.mimetype && attachment.mimetype.split('/')[0] === 'image';
-        });
-    },
-    /**
-     * Get the list of non-images attached to this message.
-     * Note that attachments are stored with server-format
-     *
-     * @return {Object[]}
-     */
-    getNonImageAttachments() {
-        return _.difference(this.getAttachments(), this.getImageAttachments());
-    },
-    /**
      * Gets the class to use as the notification icon.
      *
      * @returns {string}
@@ -238,14 +200,6 @@ const PublicLivechatMessage = Class.extend({
         return this._type;
     },
     /**
-     * State whether this message contains some attachments.
-     *
-     * @return {boolean}
-     */
-    hasAttachments() {
-        return this.getAttachments().length > 0;
-    },
-    /**
      * State whether this message has an author
      *
      * @return {boolean}
@@ -261,26 +215,6 @@ const PublicLivechatMessage = Class.extend({
      */
     hasEmailFrom() {
         return false;
-    },
-    /**
-     * State whether this image contains images attachments
-     *
-     * @return {boolean}
-     */
-    hasImageAttachments() {
-        return _.some(this.getAttachments(), function (attachment) {
-            return attachment.mimetype && attachment.mimetype.split('/')[0] === 'image';
-        });
-    },
-    /**
-     * State whether this image contains non-images attachments
-     *
-     * @return {boolean}
-     */
-    hasNonImageAttachments() {
-        return _.some(this.getAttachments(), function (attachment) {
-            return !(attachment.mimetype && attachment.mimetype.split('/')[0] === 'image');
-        });
     },
     /**
      * States whether this message has some notifications.
@@ -317,7 +251,6 @@ const PublicLivechatMessage = Class.extend({
      */
     isEmpty() {
         return !this.hasTrackingValues() &&
-        !this.hasAttachments() &&
         !this.getBody();
     },
     /**
@@ -414,14 +347,6 @@ const PublicLivechatMessage = Class.extend({
     needsModeration() {
         return false;
     },
-    /**
-     * @params {integer[]} attachmentIDs
-     */
-    removeAttachments(attachmentIDs) {
-        this._attachmentIDs = _.reject(this._attachmentIDs, function (attachment) {
-            return _.contains(attachmentIDs, attachment.id);
-        });
-    },
     setChatbotStepAnswerId(chatbotStepAnswerId) {
         this._chatbotStepAnswerId = chatbotStepAnswerId;
     },
@@ -462,16 +387,6 @@ const PublicLivechatMessage = Class.extend({
      */
     _isMyselfAuthor() {
         return this.hasAuthor() && (this.getAuthorID() === session.partner_id);
-    },
-    /**
-     * Compute url of attachments of this message
-     *
-     * @private
-     */
-    _processAttachmentURL() {
-        for (let attachment of this.getAttachments()) {
-            attachment.url = '/web/content/' + attachment.id + '?download=true';
-        }
     },
 
 });

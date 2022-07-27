@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { attr, many, one } from '@mail/model/model_field';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
 import utils from 'web.utils';
@@ -34,6 +34,16 @@ registerModel({
             for (const template of templates) {
                 qweb.add_template(template);
             }
+        },
+        /**
+          * @private
+          * @returns {FieldCommand}
+          */
+         _computeLastMessage() {
+            if (this.messages.length === 0) {
+                return clear();
+            }
+            return replace(this.messages[this.messages.length - 1]);
         },
         /**
          * @private
@@ -68,11 +78,15 @@ registerModel({
         isAvailable: attr({
             default: false,
         }),
+        lastMessage: one('PublicLivechatMessage', {
+            compute: '_computeLastMessage',
+        }),
         livechatButtonView: one('LivechatButtonView', {
             compute: '_computeLivechatButtonView',
             inverse: 'publicLivechatGlobalOwner',
             isCausal: true,
         }),
+        messages: many('PublicLivechatMessage'),
         notificationHandler: one('PublicLivechatGlobalNotificationHandler', {
             inverse: 'publicLivechatGlobalOwner',
             isCausal: true,
