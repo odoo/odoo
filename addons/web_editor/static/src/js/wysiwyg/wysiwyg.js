@@ -1352,19 +1352,29 @@ const Wysiwyg = Widget.extend({
         }
 
         if (params.node) {
-            params.node.replaceWith(element);
+            const changedImage = params.node.tagName === element.tagName && element.tagName === 'IMG';
+            if (changedImage) {
+                // Instead of replacing an image with another one and
+                // recreating its snippet editor, its attributes are
+                // changed, and the snippet editor is kept.
+                for (const attribute of params.node.attributes) {
+                    params.node.removeAttribute(attribute.nodeName);
+                }
+                for (const attribute of element.attributes) {
+                    params.node.setAttribute(attribute.nodeName, attribute.nodeValue);
+                }
+                $(params.node).trigger('image_changed');
+            } else {
+                params.node.replaceWith(element);
+            }
             this.odooEditor.unbreakableStepUnactive();
             this.odooEditor.historyStep();
         } else {
-            return this.odooEditor.execCommand('insert', element);
+            this.odooEditor.execCommand('insert', element);
         }
 
         if (this.snippetsMenu) {
-            this.snippetsMenu.activateSnippet($(element)).then(() => {
-                if (element.tagName === 'IMG') {
-                    $(element).trigger('image_changed');
-                }
-            });
+            this.snippetsMenu.activateSnippet($(element));
         }
     },
     getInSelection(selector) {

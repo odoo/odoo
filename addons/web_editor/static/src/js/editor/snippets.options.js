@@ -6227,7 +6227,9 @@ registry.ImageTools = ImageHandlerOption.extend({
     async _onImageChanged(ev) {
         this.trigger_up('snippet_edition_request', {exec: async () => {
             await this._autoOptimizeImage();
-            this.trigger_up('cover_update');
+            this.trigger_up('cover_update', {
+                overlayVisible: true,
+            });
         }});
     },
     /**
