@@ -9145,7 +9145,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
 
-        await click(target.querySelector(".o_field_image"));
+        await click(target.querySelector(".o_field_image"), null, { skipVisibilityCheck: true });
     });
 
     QUnit.test("kanban view with boolean field", async (assert) => {

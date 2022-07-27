@@ -292,11 +292,12 @@ QUnit.module("Fields", (hooks) => {
 
             // switch to edit mode to ensure that autoresize is correctly done
             await click(target.querySelector(".o_form_button_edit"));
-            let height = target.querySelector(".o_field_widget[name=text_field]").offsetHeight;
+            let height = target.querySelector(".o_field_widget[name=text_field] textarea")
+                .offsetHeight;
             // focus the field to manually trigger autoresize
             await triggerEvent(target, ".o_field_widget[name=text_field] textarea", "focus");
             assert.strictEqual(
-                target.querySelector(".o_field_widget[name=text_field]").offsetHeight,
+                target.querySelector(".o_field_widget[name=text_field] textarea").offsetHeight,
                 height,
                 "autoresize should have been done automatically at rendering"
             );
@@ -307,11 +308,11 @@ QUnit.module("Fields", (hooks) => {
             // save and create a new record to ensure that autoresize is correctly done
             await click(target.querySelector(".o_form_button_save"));
             await click(target.querySelector(".o_form_button_create"));
-            height = target.querySelector(".o_field_widget[name=text_field]").offsetHeight;
+            height = target.querySelector(".o_field_widget[name=text_field] textarea").offsetHeight;
             // focus the field to manually trigger autoresize
             await triggerEvent(target, ".o_field_widget[name=text_field] textarea", "focus");
             assert.strictEqual(
-                target.querySelector(".o_field_widget[name=text_field]").offsetHeight,
+                target.querySelector(".o_field_widget[name=text_field] textarea").offsetHeight,
                 height,
                 "autoresize should have been done automatically at rendering"
             );
@@ -357,13 +358,13 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelectorAll(".o_notebook .nav .nav-link")[1]);
         assert.hasClass(target.querySelectorAll(".o_notebook .nav .nav-link")[1], "active");
 
-        let height = target.querySelector(".o_field_widget[name=text_field]").offsetHeight;
+        let height = target.querySelector(".o_field_widget[name=text_field] textarea").offsetHeight;
         assert.ok(height > 80, "textarea should have an height of at least 80px");
 
         await click(target.querySelectorAll(".o_notebook .nav .nav-link")[2]);
         assert.hasClass(target.querySelectorAll(".o_notebook .nav .nav-link")[2], "active");
 
-        height = target.querySelector(".o_field_widget[name=text_field_empty]").offsetHeight;
+        height = target.querySelector(".o_field_widget[name=text_field_empty] textarea").offsetHeight;
         assert.strictEqual(height, 50, "empty textarea should have height of 50px");
     });
 
