@@ -212,4 +212,30 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_kanban_record"));
         assert.verifySteps(["open record"]);
     });
+
+    QUnit.test("image fields with empty value", async function (assert) {
+        serverData.models.partner.records[0].foo = false;
+
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="foo" widget="image_url" options="{'size': [90, 90]}"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.hasClass(
+            target.querySelector('div[name="foo"].o_field_empty'),
+            "o_field_image_url",
+            "the widget should have the correct class"
+        );
+        assert.containsNone(
+            target,
+            'div[name="foo"] > img',
+            "the widget should not contain an image"
+        );
+    });
 });
