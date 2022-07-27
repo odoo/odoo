@@ -186,7 +186,7 @@ class AccountEdiDocument(models.Model):
                 move = document.move_id
                 move_result = edi_result.get(move, {})
                 if move_result.get('success') is True:
-                    old_attachment = document.attachment_id
+                    old_attachment = document.sudo().attachment_id
                     document.write({
                         'state': 'cancelled',
                         'error': False,
@@ -215,7 +215,7 @@ class AccountEdiDocument(models.Model):
 
             # Attachments that are not explicitly linked to a business model could be removed because they are not
             # supposed to have any traceability from the user.
-            attachments_to_unlink.unlink()
+            attachments_to_unlink.sudo().unlink()
 
         test_mode = self._context.get('edi_test_mode', False)
 
