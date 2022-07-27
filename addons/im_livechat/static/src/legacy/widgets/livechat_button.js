@@ -206,11 +206,11 @@ const LivechatButton = Widget.extend({
      * @private
      */
      _renderMessages() {
-        const shouldScroll = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded && this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom();
+        const shouldScroll = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded && this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.isAtBottom();
         this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._messages = this.messaging.publicLivechatGlobal.livechatButtonView.messages.map(message => message.legacyPublicLivechatMessage);
         this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.render();
         if (shouldScroll) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
         }
     },
     /**
@@ -242,7 +242,7 @@ const LivechatButton = Widget.extend({
                     }
                     this._closeChat();
                 }
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
             });
     },
     /**

@@ -107,7 +107,7 @@ const QWeb = core.qweb;
     _chatbotAddMessage(message, options) {
         message.body = utils.Markup(message.body);
         this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(message, options);
-        if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom()) {
+        if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.isAtBottom()) {
             this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: increment() });
         }
 
@@ -392,7 +392,7 @@ const QWeb = core.qweb;
                     }))
                 );
 
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
             }, this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay / 3),
         });
     },
@@ -583,7 +583,7 @@ const QWeb = core.qweb;
         return this._super(...arguments).then(() => {
             window.addEventListener('resize', () => {
                 if (this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow) {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
+                    this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
                 }
             });
 
