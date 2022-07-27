@@ -33,6 +33,7 @@ import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import {
     fakeTitleService,
+    fakeCompanyService,
     makeFakeLocalizationService,
     makeFakeRouterService,
     makeFakeHTTPService,
@@ -74,7 +75,7 @@ export function setupWebClientRegistries() {
             options: { sequence: 0 },
         },
     };
-    for (let [key, { value, options }] of Object.entries(favoriveMenuItems)) {
+    for (const [key, { value, options }] of Object.entries(favoriveMenuItems)) {
         if (!favoriteMenuRegistry.contains(key)) {
             favoriteMenuRegistry.add(key, value, options);
         }
@@ -97,8 +98,9 @@ export function setupWebClientRegistries() {
         ui: () => uiService,
         user: () => makeFakeUserService(),
         view: () => viewService,
+        company: () => fakeCompanyService,
     };
-    for (let serviceName in services) {
+    for (const serviceName in services) {
         if (!serviceRegistry.contains(serviceName)) {
             serviceRegistry.add(serviceName, services[serviceName]());
         }
@@ -195,7 +197,7 @@ export async function addLegacyMockEnvironment(env, legacyParams = {}) {
     serviceRegistry.add("legacy_action_manager", legacyActionManagerService);
     serviceRegistry.add("legacy_notification", makeLegacyNotificationService(legacyEnv));
     // deploy wowl services into the legacy env.
-    const wowlToLegacyServiceMappers = registry.category('wowlToLegacyServiceMappers').getEntries();
+    const wowlToLegacyServiceMappers = registry.category("wowlToLegacyServiceMappers").getEntries();
     for (const [legacyServiceName, wowlToLegacyServiceMapper] of wowlToLegacyServiceMappers) {
         serviceRegistry.add(legacyServiceName, wowlToLegacyServiceMapper(legacyEnv));
     }
