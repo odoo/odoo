@@ -2601,9 +2601,9 @@ class TestMrpOrder(TestMrpCommon):
 
         # setup test
 
-        work_center_1 = self.env['mrp.workcenter'].create({"name": "WorkCenter 1"})
-        work_center_2 = self.env['mrp.workcenter'].create({"name": "WorkCenter2"})
-        work_center_3 = self.env['mrp.workcenter'].create({"name": "WorkCenter3"})
+        work_center_1 = self.env['mrp.workcenter'].create({"name": "WorkCenter 1", "time_start": 11})
+        work_center_2 = self.env['mrp.workcenter'].create({"name": "WorkCenter 2", "time_start": 12})
+        work_center_3 = self.env['mrp.workcenter'].create({"name": "WorkCenter 3", "time_start": 13})
 
         product = self.env['product.template'].create({"name": "Finished Product"})
         component_1 = self.env['product.template'].create({"name": "Component 1", "type": "product"})
@@ -2655,7 +2655,7 @@ class TestMrpOrder(TestMrpCommon):
         wo_1, wo_2, wo_3 = mo.workorder_ids
         self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(wo_1.state, 'ready')
-        self.assertEqual(wo_1.duration_expected, 20 * 60)
+        self.assertEqual(wo_1.duration_expected, 11 + 20 * 60)
 
         # produce 20 / 10 / 5 on workorders, create backorder
 
@@ -2688,7 +2688,7 @@ class TestMrpOrder(TestMrpCommon):
         wo_4, wo_5, wo_6 = mo_2.workorder_ids
 
         self.assertEqual(wo_4.state, 'cancel')
-        self.assertEqual(wo_5.duration_expected, 15 * 60)
+        self.assertEqual(wo_5.duration_expected, 12 + 15 * 60)
 
         # produce 10 / 5, create backorder
 
@@ -2718,7 +2718,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(wo_7.state, 'cancel')
         self.assertEqual(wo_8.state, 'cancel')
-        self.assertEqual(wo_9.duration_expected, 10 * 60)
+        self.assertEqual(wo_9.duration_expected, 13 + 10 * 60)
 
         # produce 10 and finish work
 
