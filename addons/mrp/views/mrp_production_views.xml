@@ -7,17 +7,14 @@
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
                 <tree string="Manufacturing Orders" default_order="priority desc, date_planned_start desc" multi_edit="1" sample="1" decoration-info="state == 'draft'">
-                    <header>
-                        <button name="button_plan" type="object" string="Plan"/>
-                        <button name="do_unreserve" type="object" string="Unreserve"/>
-                        <button name="action_cancel" type="object" string="Cancel"/>
-                    </header>
+                    <header/>
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" decoration-bf="1"/>
-                    <field name="date_planned_start" readonly="1" optional="show" widget="remaining_days"/>
+                    <field name="date_planned_start" optional="show" widget="remaining_days"/>
                     <field name="date_deadline" widget="remaining_days" attrs="{'invisible': [('state', 'in', ['done', 'cancel'])]}" optional="hide"/>
                     <field name="product_id" readonly="1" optional="show"/>
+                    <field name="product_category_id" optional="hide"/>
                     <field name="lot_producing_id" optional="hide"/>
                     <field name="bom_id" readonly="1" optional="hide"/>
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
@@ -29,10 +26,10 @@
                         optional="show"
                         decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
                         decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
-                        decoration-danger="reservation_state != 'assigned' and components_availability_state == 'late'"/>
+                        decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late','not_available')"/>
                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
-                    <field name="product_uom_id" string="UoM" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
+                    <field name="product_uom_id" string="UoM" readonly="1" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
                     <field name="production_duration_expected" attrs="{'invisible': [('production_duration_expected', '=', 0)]}" groups="mrp.group_mrp_routings" widget="float_time" sum="Total expected duration" optional="show"/>
                     <field name="production_real_duration" attrs="{'invisible': [('production_real_duration', '=', 0)]}" groups="mrp.group_mrp_routings" widget="float_time" sum="Total real duration" optional="show"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
@@ -49,6 +46,21 @@
                 </tree>
             </field>
         </record>
+
+        <record id="mrp_production_tree_view_inherit_with_button" model="ir.ui.view">
+        <field name="name">mrp.production.tree.view.inherit</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="button_plan" type="object" string="Plan"/>
+                <button name="do_unreserve" type="object" string="Unreserve"/>
+                <button name="action_cancel" type="object" string="Cancel"/>
+            </xpath>
+        </field>
+    </record>
 
         <record id="action_production_order_split" model="ir.actions.server">
             <field name="name">Split</field>
@@ -243,7 +255,7 @@
                             <field name="components_availability" attrs="{'invisible': [('state', 'not in', ['confirmed', 'progress'])]}"
                                 decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
                                 decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
-                                decoration-danger="reservation_state != 'assigned' and components_availability_state == 'late'"/>
+                                decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late','not_available')"/>
                             <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <field name="show_final_lots" invisible="1"/>
@@ -556,6 +568,11 @@
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter name="filter_date_planned_start" string="Scheduled Date" date="date_planned_start"/>
                     <separator/>
+                    <filter string="Components Available" name="components_available" domain="[('components_availability_state', '=', 'available')]"/>
+                    <filter string="Components Scheduled" name="components_expected" domain="[('components_availability_state', '=', 'expected')]"/>
+                    <filter string="Components Late" name="components_late" domain="[('components_availability_state', '=', 'late')]"/>
+                    <filter string="Components Unavailable" name="components_not_available" domain="[('components_availability_state', '=', 'not_available')]"/>
+                    <separator/>
                     <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By...">
@@ -574,7 +591,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
-            <field name="view_id" eval="False"/>
+            <field name="view_id" ref="mrp_production_tree_view_inherit_with_button"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="context">{'search_default_todo': True, 'default_company_id': allowed_company_ids[0]}</field>
             <field name="domain">[('picking_type_id.active', '=', True)]</field>

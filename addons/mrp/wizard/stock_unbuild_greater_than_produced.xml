@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_unbuild_greater_than_produced_form_view" model="ir.ui.view">
+        <field name="name">stock.unbuild.greater.than.produced</field>
+        <field name="model">stock.unbuild.greater.than.produced</field>
+        <field name="arch" type="xml">
+            <form>
+                <div string="description">
+                    <div>
+                        Note that the total unbuild quantity for this MO is greater than the produced quantity.
+                    </div>
+                    <footer>
+                        <button name="cancel_button" string="Discard" class="btn-primary" special="cancel" data-hotkey="z"/>
+                        <button string="Confirm" name="action_done" type="object" class="btn-secondary" data-hotkey="q"/>
+                    </footer>
+                </div>
+            </form>
+        </field>
+    </record>
+</odoo>

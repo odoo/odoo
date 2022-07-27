@@ -53,8 +53,7 @@ class MrpUnbuild(models.Model):
     mo_bom_id = fields.Many2one('mrp.bom', 'Bill of Material used on the Production Order', related='mo_id.bom_id')
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial Number',
-        domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True,
-        states={'done': [('readonly', True)]})
+        domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True)
     has_tracking=fields.Selection(related='product_id.tracking', readonly=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location',
@@ -104,21 +103,10 @@ class MrpUnbuild(models.Model):
             self.product_uom_id = self.mo_id.product_uom_id
             if self.has_tracking == 'serial':
                 self.product_qty = 1
+                self.lot_id = self.mo_id.lot_producing_id
             else:
                 self.product_qty = self.mo_id.product_qty
-            if self.lot_id and self.lot_id not in self.mo_id.move_finished_ids.move_line_ids.lot_id:
-                return {'warning': {
-                    'title': _("Warning"),
-                    'message': _("The selected serial number does not correspond to the one used in the manufacturing order, please select another one.")
-                }}
 
-    @api.onchange('lot_id')
-    def _onchange_lot_id(self):
-        if self.mo_id and self.lot_id and self.lot_id not in self.mo_id.move_finished_ids.move_line_ids.lot_id:
-            return {'warning': {
-                'title': _("Warning"),
-                'message': _("The selected serial number does not correspond to the one used in the manufacturing order, please select another one.")
-            }}
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -146,6 +134,12 @@ class MrpUnbuild(models.Model):
 
     def action_unbuild(self):
         self.ensure_one()
+        context = dict(self._context)
+        more_then_produced = self.check_unbuild_more_then_produced()
+        if more_then_produced and not context.get('skip_more_then_produced_check'):
+            return more_then_produced
+        'default_lot_id' in context and context.pop('default_lot_id')
+        self = self.with_context(context)
         self._check_company()
         if self.product_id.tracking != 'none' and not self.lot_id.id:
             raise UserError(_('You should provide a lot number for the final product.'))
@@ -316,6 +310,34 @@ class MrpUnbuild(models.Model):
                     'default_unbuild_id': self.id,
                     'default_quantity': unbuild_qty,
                     'default_product_uom_name': self.product_id.uom_name
+                },
+                'target': 'new'
+            }
+
+    def check_unbuild_more_then_produced(self):
+        if not self.mo_id:
+            return False
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        unbuild_qty = self.product_uom_id._compute_quantity(self.product_qty, self.product_id.uom_id)
+        produced_qty = self.mo_id.product_uom_id._compute_quantity(self.mo_id.qty_producing, self.product_id.uom_id)
+        old_unbuild_qty = sum(old_unbuild.product_uom_id._compute_quantity(
+            old_unbuild.product_qty, self.product_id.uom_id) for old_unbuild in self.mo_id.unbuild_ids if
+                              old_unbuild.state == 'done')
+        if float_compare(produced_qty - old_unbuild_qty, unbuild_qty, precision_digits=precision) < 0:
+            return {
+                'name': self.product_id.display_name + _(': Unbuild Greater Than The Produced'),
+                'view_mode': 'form',
+                'res_model': 'stock.unbuild.greater.than.produced',
+                'view_id': self.env.ref('mrp.stock_unbuild_greater_than_produced_form_view').id,
+                'type': 'ir.actions.act_window',
+                'context': {
+                    'default_product_id': self.product_id.id,
+                    'default_location_id': self.location_id.id,
+                    'default_unbuild_id': self.id,
+                    'default_produced_quantity': produced_qty,
+                    'default_old_unbuild_quantity': old_unbuild_qty,
+                    'default_unbuild_quantity': unbuild_qty,
+                    'default_product_uom_name': self.product_id.uom_name,
                 },
                 'target': 'new'
             }

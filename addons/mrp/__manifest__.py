@@ -19,6 +19,7 @@
         'wizard/change_production_qty_views.xml',
         'wizard/mrp_workcenter_block_view.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',
+        'wizard/stock_unbuild_greater_than_produced.xml',
         'wizard/mrp_production_backorder.xml',
         'wizard/mrp_consumption_warning_views.xml',
         'wizard/mrp_immediate_production_views.xml',

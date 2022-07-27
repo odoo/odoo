@@ -60,6 +60,7 @@ class MrpProduction(models.Model):
         compute='_compute_product_id', store=True, copy=True, precompute=True,
         readonly=True, required=True, check_company=True,
         states={'draft': [('readonly', False)]})
+    product_category_id = fields.Many2one(related='product_id.product_tmpl_id.categ_id')
     product_variant_attributes = fields.Many2many('product.template.attribute.value', related='product_id.product_template_attribute_value_ids')
     product_tracking = fields.Selection(related='product_id.tracking')
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id')
@@ -233,7 +234,9 @@ class MrpProduction(models.Model):
     components_availability_state = fields.Selection([
         ('available', 'Available'),
         ('expected', 'Expected'),
-        ('late', 'Late')], compute='_compute_components_availability')
+        ('late', 'Late'),
+        ('not_available', 'Not Available'),
+        ], compute='_compute_components_availability', search="_search_components_availability")
     production_capacity = fields.Float(compute='_compute_production_capacity', help="Quantity that can be produced with the current stock of components")
     show_lot_ids = fields.Boolean('Display the serial number shortcut on the moves', compute='_compute_show_lot_ids')
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
@@ -315,13 +318,21 @@ class MrpProduction(models.Model):
         for production in productions:
             if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, precision_rounding=move.product_id.uom_id.rounding) == -1 for move in production.move_raw_ids):
                 production.components_availability = _('Not Available')
-                production.components_availability_state = 'late'
+                production.components_availability_state = 'not_available'
             else:
                 forecast_date = max(production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
                 if forecast_date:
                     production.components_availability = _('Exp %s', format_date(self.env, forecast_date))
                     if production.date_planned_start:
                         production.components_availability_state = 'late' if forecast_date > production.date_planned_start else 'expected'
+
+    def _search_components_availability(self, operator, value):
+        if value not in ('available', 'not_available', 'late', 'expected'):
+            raise UserError("Value is not valid")
+        if operator not in ('=', '!='):
+            raise UserError("Operation is not supported")
+        productions = self.search_read([('state', 'not in', ('cancel', 'done', 'draft'))], fields=['id', 'components_availability_state'], load='')
+        return [('id', operator == '=' and 'in' or 'not in', list(p['id'] for p in productions if p['components_availability_state'] == value))]
 
     @api.depends('bom_id')
     def _compute_product_id(self):
@@ -1774,8 +1785,11 @@ class MrpProduction(models.Model):
             'state': 'done',
             'product_uom_qty': 0.0,
         })
-
+        diff_per_production = {}
         for production in self:
+            diff_per_production[production] = 1
+            if production.qty_produced != production.product_qty:
+                diff_per_production[production] = production.qty_produced/production.product_qty
             production.write({
                 'date_finished': fields.Datetime.now(),
                 'product_qty': production.qty_produced,
@@ -1786,6 +1800,8 @@ class MrpProduction(models.Model):
 
         for workorder in self.workorder_ids.filtered(lambda w: w.state not in ('done', 'cancel')):
             workorder.duration_expected = workorder._get_duration_expected()
+        for workorder in self.workorder_ids.filtered(lambda w: w.duration == 0.0):
+            workorder.duration = workorder.duration_expected * diff_per_production[workorder.production_id]
 
         if not backorders:
             if self.env.context.get('from_workorder'):
@@ -1951,6 +1967,7 @@ class MrpProduction(models.Model):
             'view_id': self.env.ref('mrp.mrp_unbuild_form_view_simplified').id,
             'type': 'ir.actions.act_window',
             'context': {'default_product_id': self.product_id.id,
+                        'default_lot_id': self.lot_producing_id.id,
                         'default_mo_id': self.id,
                         'default_company_id': self.company_id.id,
                         'default_location_id': self.location_dest_id.id,
