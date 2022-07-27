@@ -4,6 +4,11 @@ import { ProjectControlPanel } from "@project/project_control_panel/project_cont
 import { registry } from "@web/core/registry";
 import { pivotView } from "@web/views/pivot/pivot_view";
 
-const projectPivotView = {...pivotView, ControlPanel: ProjectControlPanel};
+export const projectPivotView = pivotView.extend({
+    config: {
+        ...pivotView.prototype.config,
+        ControlPanel: ProjectControlPanel,
+    },
+});
 
 registry.category("views").add("project_pivot", projectPivotView);
