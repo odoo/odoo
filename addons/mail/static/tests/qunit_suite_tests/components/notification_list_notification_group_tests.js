@@ -31,8 +31,8 @@ QUnit.test('notification group basic layout', async function (assert) {
             notification_type: 'email',
         },
     ]);
-    const { createNotificationListComponent } = await start();
-    await createNotificationListComponent();
+    const { click } = await start();
+    await click('.o_MessagingMenu_toggler');
     assert.containsOnce(
         document.body,
         '.o_NotificationGroup',
@@ -102,8 +102,8 @@ QUnit.test('mark as read', async function (assert) {
         notification_status: 'exception', // necessary value to have a failure
         notification_type: 'email',
     });
-    const { createNotificationListComponent } = await start();
-    await createNotificationListComponent();
+    const { click } = await start();
+    await click('.o_MessagingMenu_toggler');
     assert.containsOnce(
         document.body,
         '.o_NotificationGroup_markAsRead',
@@ -156,8 +156,8 @@ QUnit.test('grouped notifications by document', async function (assert) {
             notification_type: 'email', // expected failure type for email message
         }
     ]);
-    const { click, createNotificationListComponent } = await start();
-    await createNotificationListComponent();
+    const { click } = await start();
+    await click('.o_MessagingMenu_toggler');
 
     assert.containsOnce(
         document.body,
@@ -226,7 +226,7 @@ QUnit.test('grouped notifications by document model', async function (assert) {
         },
     ]);
 
-    const { createNotificationListComponent, env } = await start();
+    const { click, env } = await start();
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.step('do_action');
@@ -267,7 +267,7 @@ QUnit.test('grouped notifications by document model', async function (assert) {
             );
         },
     });
-    await createNotificationListComponent();
+    await click('.o_MessagingMenu_toggler');
 
     assert.containsOnce(
         document.body,
@@ -337,8 +337,8 @@ QUnit.test('different mail.channel are not grouped', async function (assert) {
             notification_type: 'email',
         },
     ]);
-    const { createNotificationListComponent } = await start();
-    await createNotificationListComponent();
+    const { click } = await start();
+    await click('.o_MessagingMenu_toggler');
     assert.containsN(
         document.body,
         '.o_NotificationGroup',
@@ -417,8 +417,8 @@ QUnit.test('multiple grouped notifications by document model, sorted by the most
             notification_type: 'email',
         },
     ]);
-    const { createNotificationListComponent } = await start();
-    await createNotificationListComponent();
+    const { click } = await start();
+    await click('.o_MessagingMenu_toggler');
     assert.containsN(
         document.body,
         '.o_NotificationGroup',
@@ -483,8 +483,8 @@ QUnit.test('non-failure notifications are ignored', async function (assert) {
             notification_status: 'ready', // non-failure status
             notification_type: 'email', // expected notification type for email message
     });
-    const { createNotificationListComponent } = await start();
-    await createNotificationListComponent();
+    const { click } = await start();
+    await click('.o_MessagingMenu_toggler');
     assert.containsNone(
         document.body,
         '.o_NotificationGroup',

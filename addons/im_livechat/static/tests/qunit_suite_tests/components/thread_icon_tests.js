@@ -23,15 +23,15 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { createRootMessagingComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
+    const { messaging, openDiscuss } = await start({
+        discuss: {
+            context: { active_id: mailChannelId1 },
+        },
     });
-    await createRootMessagingComponent('ThreadIcon', { thread });
+    await openDiscuss();
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon',
+        '.o_ThreadViewTopbar .o_ThreadIcon',
         "should have thread icon"
     );
     assert.containsOnce(

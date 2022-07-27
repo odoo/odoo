@@ -25,17 +25,13 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
         ],
         channel_type: 'chat',
     });
-    const { createRootMessagingComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    await createRootMessagingComponent('ThreadIcon', { thread });
+    const { openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsOnce(
-        document.body,
+        document.body.querySelector('.o_DiscussSidebarCategoryItem'),
         '.o_ThreadIcon',
-        "should have thread icon"
+        "should have thread icon in the sidebar"
     );
     assert.containsOnce(
         document.body,

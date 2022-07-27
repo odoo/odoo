@@ -17,19 +17,15 @@ QUnit.test('thread icon of a chat when correspondent is on leave & online', asyn
         im_status: 'leave_online',
         name: 'Demo',
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create({
+    pyEnv['mail.channel'].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'chat',
     });
-    const { createRootMessagingComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    await createRootMessagingComponent('ThreadIcon', { thread });
+    const { openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsOnce(
         document.body,
@@ -51,19 +47,15 @@ QUnit.test('thread icon of a chat when correspondent is on leave & away', async 
         im_status: 'leave_away',
         name: 'Demo',
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create({
+    pyEnv['mail.channel'].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'chat',
     });
-    const { createRootMessagingComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    await createRootMessagingComponent('ThreadIcon', { thread });
+    const { openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsOnce(
         document.body,
@@ -85,19 +77,15 @@ QUnit.test('thread icon of a chat when correspondent is on leave & offline', asy
         im_status: 'leave_offline',
         name: 'Demo',
     });
-    const mailChannelId1 = pyEnv['mail.channel'].create({
+    pyEnv['mail.channel'].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
         channel_type: 'chat',
     });
-    const { createRootMessagingComponent, messaging } = await start();
-    const thread = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    await createRootMessagingComponent('ThreadIcon', { thread });
+    const { openDiscuss } = await start();
+    await openDiscuss();
 
     assert.containsOnce(
         document.body,

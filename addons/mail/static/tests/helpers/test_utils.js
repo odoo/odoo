@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { insertAndReplace } from '@mail/model/model_field_command';
-import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
 import { getAdvanceTime } from '@mail/../tests/helpers/time_control';
 import { getWebClientReady } from '@mail/../tests/helpers/webclient_setup';
@@ -317,71 +315,9 @@ function getAfterEvent({ messagingBus }) {
     };
 }
 
-/**
- * Creates a new root Component, with the given props, and mounts it on target.
- * Assumes that self.env is set to the correct value.
- * Components created this way are automatically registered for clean up after
- * the test.
- *
- * @param {Object} env the current environment
- * @param {Object} Component the class of the component to create
- * @param {Object} param2
- * @param {Object} [param2.props={}] forwarded to component constructor
- * @param {DOM.Element} param2.target mount target for the component
- * @returns {Component}
- */
-async function createRootComponent(env, Component, { props = {}, target }) {
-    const app = new App(Component, {
-        props,
-        templates: window.__OWL_TEMPLATES__,
-        env,
-        test: true,
-    });
-    // The components must be destroyed before the widget, because the
-    // widget might destroy the models before destroying the components,
-    // and the components might still rely on messaging (or other) record(s).
-    registerCleanup(() => app.destroy());
-    let component;
-    await afterNextRender(() => {
-        component = app.mount(target);
-    });
-    return component;
-}
-
-/**
- * Creates and returns a new root messaging component, based on the given
- * componentName and with the given props, and mounts it on target.
- * Assumes that self.env is set to the correct value.
- * Components created this way are automatically registered for clean up after
- * the test.
- *
- * @param {Object} env the current environment
- * @param {string} componentName the class name of the component to create
- * @param {Object} param2
- * @param {Object} [param2.props={}] forwarded to component constructor
- * @param {DOM.Element} param2.target mount target for the component
- * @returns {Component}
- */
-async function createRootMessagingComponent(env, componentName, { props = {}, target }) {
-    return await createRootComponent(env, getMessagingComponent(componentName), { props, target });
-}
-
 function getClick({ afterNextRender }) {
     return async function click(selector) {
         await afterNextRender(() => document.querySelector(selector).click());
-    };
-}
-
-function getCreateNotificationListComponent({ env, target }) {
-    return async function createNotificationListComponent({ filter = 'all' } = {}) {
-        const notificationListView = env.services.messaging.modelManager.messaging.models['NotificationListView'].create({
-            filter,
-            qunitTestOwner: insertAndReplace(),
-        });
-        await createRootMessagingComponent(env, "NotificationList", {
-            props: { record: notificationListView },
-            target,
-        });
     };
 }
 
@@ -558,8 +494,6 @@ async function start(param0 = {}) {
         afterEvent,
         afterNextRender,
         click: getClick({ afterNextRender }),
-        createNotificationListComponent: getCreateNotificationListComponent({ env: webClient.env, target }),
-        createRootMessagingComponent: (componentName, props) => createRootMessagingComponent(webClient.env, componentName, { props, target }),
         env: webClient.env,
         insertText,
         messaging: webClient.env.services.messaging.modelManager.messaging,

@@ -30,8 +30,8 @@ QUnit.test('mark as read', async function (assert) {
         notification_status: 'exception', // necessary value to have a failure
         notification_type: 'snail',
     });
-    const { afterNextRender, createNotificationListComponent } = await start();
-    await createNotificationListComponent();
+    const { afterNextRender, click } = await start();
+    await click('.o_MessagingMenu_toggler');
     assert.containsOnce(
         document.body,
         '.o_NotificationGroup_markAsRead',
@@ -91,8 +91,8 @@ QUnit.test('notifications grouped by notification_type', async function (assert)
             notification_type: 'email',
         },
     ]);
-    const { createNotificationListComponent } = await start();
-    await createNotificationListComponent();
+    const { click } = await start();
+    await click('.o_MessagingMenu_toggler');
 
     assert.containsN(
         document.body,
@@ -189,7 +189,7 @@ QUnit.test('grouped notifications by document model', async function (assert) {
             notification_type: 'snail', // expected failure type for snailmail message
         },
     ]);
-    const { createNotificationListComponent, env } = await start();
+    const { click, env } = await start();
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.step('do_action');
@@ -230,7 +230,7 @@ QUnit.test('grouped notifications by document model', async function (assert) {
             );
         },
     });
-    await createNotificationListComponent();
+    await click('.o_MessagingMenu_toggler');
 
     assert.containsOnce(
         document.body,

@@ -26,8 +26,8 @@ QUnit.test('marked as read thread notifications are ordered by last message date
             res_id: mailChannelId2,
         },
     ]);
-    const { createNotificationListComponent } = await start();
-    await createNotificationListComponent({ filter: 'all' });
+    const { click } = await start();
+    await click('.o_MessagingMenu_toggler');
     assert.containsN(
         document.body,
         '.o_ThreadPreview',
@@ -67,8 +67,8 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
             res_id: mailChannelId2,
         },
     ]);
-    const { createNotificationListComponent } = await start();
-    await createNotificationListComponent({ filter: 'all' });
+    const { click } = await start();
+    await click('.o_MessagingMenu_toggler');
     assert.containsN(
         document.body,
         '.o_ThreadPreview',
