@@ -1298,13 +1298,11 @@ class PurchaseOrderLine(models.Model):
 
     @api.depends('product_packaging_id', 'product_uom', 'product_qty')
     def _compute_product_packaging_qty(self):
+        self.product_packaging_qty = 0
         for line in self:
             if not line.product_packaging_id:
-                line.product_packaging_qty = 0
-            else:
-                packaging_uom = line.product_packaging_id.product_uom_id
-                packaging_uom_qty = line.product_uom._compute_quantity(line.product_qty, packaging_uom)
-                line.product_packaging_qty = float_round(packaging_uom_qty / line.product_packaging_id.qty, precision_rounding=packaging_uom.rounding)
+                continue
+            line.product_packaging_qty = line.product_packaging_id._compute_qty(line.product_qty, line.product_uom)
 
     @api.depends('product_packaging_qty')
     def _compute_product_qty(self):

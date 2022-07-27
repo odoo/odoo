@@ -85,6 +85,12 @@ class StockMoveLine(models.Model):
     origin = fields.Char(related='move_id.origin', string='Source')
     description_picking = fields.Text(string="Description picking")
     quant_id = fields.Many2one('stock.quant', "Pick From", store=False)  # Dummy field for the detailed operation view
+    product_packaging_qty = fields.Float(
+            string="Reserved Packaging Quantity",
+            compute='_compute_product_packaging_qty')
+    product_packaging_qty_done = fields.Float(
+            string="Done Packaging Quantity",
+            compute='_compute_product_packaging_qty_done')
 
     @api.depends('product_uom_id.category_id', 'product_id.uom_id.category_id', 'move_id.product_uom', 'product_id.uom_id')
     def _compute_product_uom_id(self):
@@ -118,6 +124,22 @@ class StockMoveLine(models.Model):
                 line.location_id = line.move_id.location_id or line.picking_id.location_id
             if not line.location_dest_id:
                 line.location_dest_id = line.move_id.location_dest_id or line.picking_id.location_dest_id
+
+    @api.depends('move_id.product_packaging_id', 'product_uom_id', 'reserved_qty')
+    def _compute_product_packaging_qty(self):
+        self.product_packaging_qty = 0
+        for line in self:
+            if not line.move_id.product_packaging_id:
+                continue
+            line.product_packaging_qty = line.move_id.product_packaging_id._compute_qty(line.reserved_qty)
+
+    @api.depends('move_id.product_packaging_id', 'product_uom_id', 'qty_done')
+    def _compute_product_packaging_qty_done(self):
+        self.product_packaging_qty_done = 0
+        for line in self:
+            if not line.move_id.product_packaging_id:
+                continue
+            line.product_packaging_qty_done = line.move_id.product_packaging_id._compute_qty(line.qty_done, line.product_uom_id)
 
     def _search_picking_type_id(self, operator, value):
         return [('picking_id.picking_type_id', operator, value)]
@@ -799,14 +821,14 @@ class StockMoveLine(models.Model):
             move_to_recompute_state._recompute_state()
 
     def _get_aggregated_product_quantities(self, **kwargs):
-        """ Returns a dictionary of products (key = id+name+description+uom) and corresponding values of interest.
+        """ Returns a dictionary of products (key = id+name+description+uom+packaging) and corresponding values of interest.
 
         Allows aggregation of data across separate move lines for the same product. This is expected to be useful
         in things such as delivery reports. Dict key is made as a combination of values we expect to want to group
         the products by (i.e. so data is not lost). This function purposely ignores lots/SNs because these are
         expected to already be properly grouped by line.
 
-        returns: dictionary {product_id+name+description+uom: {product, name, description, qty_done, product_uom}, ...}
+        returns: dictionary {product_id+name+description+uom+packaging: {product, name, description, qty_done, product_uom, packaging}, ...}
         """
         aggregated_move_lines = {}
 
@@ -818,8 +840,16 @@ class StockMoveLine(models.Model):
             if description == name or description == move.product_id.name:
                 description = False
             product = move.product_id
-            line_key = f'{product.id}_{product.display_name}_{description or ""}_{uom.id}'
-            return (line_key, name, description, uom)
+            line_key = f'{product.id}_{product.display_name}_{description or ""}_{uom.id}_{move.product_packaging_id or ""}'
+            return (line_key, name, description, uom, move.product_packaging_id)
+
+        def _compute_packaging_qtys(aggregated_move_lines):
+            # Needs to be computed after aggregation of line qtys
+            for line in aggregated_move_lines.values():
+                if line['packaging']:
+                    line['packaging_qty'] = line['packaging']._compute_qty(line['qty_ordered'], line['product_uom'])
+                    line['packaging_qty_done'] = line['packaging']._compute_qty(line['qty_done'], line['product_uom'])
+            return aggregated_move_lines
 
         # Loops to get backorders, backorders' backorders, and so and so...
         backorders = self.env['stock.picking']
@@ -831,8 +861,7 @@ class StockMoveLine(models.Model):
         for move_line in self:
             if kwargs.get('except_package') and move_line.result_package_id:
                 continue
-            line_key, name, description, uom = get_aggregated_properties(move_line=move_line)
-
+            line_key, name, description, uom, packaging = get_aggregated_properties(move_line=move_line)
             qty_done = move_line.product_uom_id._compute_quantity(move_line.qty_done, uom)
             if line_key not in aggregated_move_lines:
                 qty_ordered = None
@@ -849,12 +878,15 @@ class StockMoveLine(models.Model):
                         lambda ml: get_aggregated_properties(move=ml.move_id)[0] == line_key and ml.id != move_line.id
                     )
                     qty_ordered -= sum(map(lambda m: m.product_uom_id._compute_quantity(m.qty_done, uom), previous_move_lines))
-                aggregated_move_lines[line_key] = {'name': name,
-                                                   'description': description,
-                                                   'qty_done': qty_done,
-                                                   'qty_ordered': qty_ordered or qty_done,
-                                                   'product_uom': uom,
-                                                   'product': move_line.product_id}
+                aggregated_move_lines[line_key] = {
+                    'name': name,
+                    'description': description,
+                    'qty_done': qty_done,
+                    'qty_ordered': qty_ordered or qty_done,
+                    'product_uom': uom,
+                    'product': move_line.product_id,
+                    'packaging': packaging,
+                }
             else:
                 aggregated_move_lines[line_key]['qty_ordered'] += qty_done
                 aggregated_move_lines[line_key]['qty_done'] += qty_done
@@ -862,13 +894,13 @@ class StockMoveLine(models.Model):
         # Does the same for empty move line to retrieve the ordered qty. for partially done moves
         # (as they are splitted when the transfer is done and empty moves don't have move lines).
         if kwargs.get('strict'):
-            return aggregated_move_lines
+            return _compute_packaging_qtys(aggregated_move_lines)
         pickings = (self.picking_id | backorders)
         for empty_move in pickings.move_ids:
             if not (empty_move.state == "cancel" and empty_move.product_uom_qty
                     and float_is_zero(empty_move.quantity_done, precision_rounding=empty_move.product_uom.rounding)):
                 continue
-            line_key, name, description, uom = get_aggregated_properties(move=empty_move)
+            line_key, name, description, uom, packaging = get_aggregated_properties(move=empty_move)
 
             if line_key not in aggregated_move_lines:
                 qty_ordered = empty_move.product_uom_qty
@@ -879,11 +911,12 @@ class StockMoveLine(models.Model):
                     'qty_ordered': qty_ordered,
                     'product_uom': uom,
                     'product': empty_move.product_id,
+                    'packaging': packaging,
                 }
             else:
                 aggregated_move_lines[line_key]['qty_ordered'] += empty_move.product_uom_qty
 
-        return aggregated_move_lines
+        return _compute_packaging_qtys(aggregated_move_lines)
 
     def _compute_sale_price(self):
         # To Override

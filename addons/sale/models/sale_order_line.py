@@ -649,15 +649,11 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_packaging_id', 'product_uom', 'product_uom_qty')
     def _compute_product_packaging_qty(self):
+        self.product_packaging_qty = 0
         for line in self:
             if not line.product_packaging_id:
-                line.product_packaging_qty = False
-            else:
-                packaging_uom = line.product_packaging_id.product_uom_id
-                packaging_uom_qty = line.product_uom._compute_quantity(line.product_uom_qty, packaging_uom)
-                line.product_packaging_qty = float_round(
-                    packaging_uom_qty / line.product_packaging_id.qty,
-                    precision_rounding=packaging_uom.rounding)
+                continue
+            line.product_packaging_qty = line.product_packaging_id._compute_qty(line.product_uom_qty, line.product_uom)
 
     # This computed default is necessary to have a clean computation inheritance
     # (cf sale_stock) instead of simply removing the default and specifying
