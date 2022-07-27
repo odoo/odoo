@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import textwrap
 
 from odoo import models, _
 from odoo.exceptions import UserError
@@ -54,5 +55,11 @@ class IrActionsReport(models.Model):
         vendor_bill_export = self.env.ref('account.action_account_original_vendor_bill')
         if self == vendor_bill_export and attachment.mimetype == 'application/pdf':
             record = self.env[attachment.res_model].browse(attachment.res_id)
-            return pdf.add_banner(stream, record.name, logo=True)
+            try:
+                return pdf.add_banner(stream, record.name, logo=True)
+            except ValueError:
+                raise UserError(_(
+                    "Error when reading the original PDF for: %r.\nPlease make sure the file is valid.",
+                    textwrap.shorten(record.name, width=100)
+                ))
         return stream
