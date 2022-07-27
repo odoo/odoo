@@ -33,7 +33,7 @@ class PosConfig(models.Model):
             ('company_id', '=', self.env.company.id),
             '|',
                 ('journal_id', '=', False),
-                ('journal_id.currency_id', 'in', (False, self.currency_id.id or self.env.company.currency_id.id)),
+                ('journal_id.currency_id', 'in', (False, self.env.company.currency_id.id)),
         ])
 
     def _default_pricelist(self):
@@ -41,6 +41,8 @@ class PosConfig(models.Model):
         """
         return self.env['product.pricelist'].search([
             ('company_id', 'in', (False, self.env.company.id)),
+            # We are using self.currency_id because this method is also used in compute methods
+            # which served as on change.
             ('currency_id', 'in', (False, self.currency_id.id or self.env.company.currency_id.id))
         ], limit=1)
 
