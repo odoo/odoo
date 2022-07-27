@@ -153,14 +153,16 @@ class AccountFrFec(models.TransientModel):
             unaffected_earnings_results = self._do_query_unaffected_earnings()
             unaffected_earnings_line = False
 
-        sql_query = '''
+        aa_name = f"""COALESCE(NULLIF(aa.name->>'{self.env.lang or "en_US"}', ''), aa.name->>'en_US')""" if \
+            self.env['account.account']._fields['name'].translate else 'aa.name'
+        sql_query = f'''
         SELECT
             'OUV' AS JournalCode,
             'Balance initiale' AS JournalLib,
             'OUVERTURE/' || %s AS EcritureNum,
             %s AS EcritureDate,
             MIN(aa.code) AS CompteNum,
-            replace(replace(MIN(aa.name->>'en_US'), '|', '/'), '\t', '') AS CompteLib,
+            replace(replace(MIN({aa_name}), '|', '/'), '\t', '') AS CompteLib,
             '' AS CompAuxNum,
             '' AS CompAuxLib,
             '-' AS PieceRef,
@@ -236,14 +238,14 @@ class AccountFrFec(models.TransientModel):
             rows_to_write.append(unaffected_earnings_results)
 
         # INITIAL BALANCE - receivable/payable
-        sql_query = '''
+        sql_query = f'''
         SELECT
             'OUV' AS JournalCode,
             'Balance initiale' AS JournalLib,
             'OUVERTURE/' || %s AS EcritureNum,
             %s AS EcritureDate,
             MIN(aa.code) AS CompteNum,
-            replace(MIN(aa.name->>'en_US'), '|', '/') AS CompteLib,
+            replace(MIN({aa_name}), '|', '/') AS CompteLib,
             CASE WHEN MIN(aa.account_type) IN ('asset_receivable', 'liability_payable')
             THEN
                 CASE WHEN rp.ref IS null OR rp.ref = ''
@@ -298,14 +300,16 @@ class AccountFrFec(models.TransientModel):
             rows_to_write.append(listrow)
 
         # LINES
-        sql_query = '''
+        aj_name = f"""COALESCE(NULLIF(aj.name->>'{self.env.lang or "en_US"}', ''), aj.name->>'en_US')""" if \
+            self.env['account.journal']._fields['name'].translate else 'aj.name'
+        sql_query = f'''
         SELECT
             REGEXP_REPLACE(replace(aj.code, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalCode,
-            REGEXP_REPLACE(replace(COALESCE(aj.name->>%s, aj.name->>'en_US'), '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalLib,
+            REGEXP_REPLACE(replace({aj_name}, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalLib,
             REGEXP_REPLACE(replace(am.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS EcritureNum,
             TO_CHAR(am.date, 'YYYYMMDD') AS EcritureDate,
             aa.code AS CompteNum,
-            REGEXP_REPLACE(replace(aa.name->>'en_US', '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
+            REGEXP_REPLACE(replace({aa_name}, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
             CASE WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
             THEN
                 CASE WHEN rp.ref IS null OR rp.ref = ''
@@ -364,9 +368,8 @@ class AccountFrFec(models.TransientModel):
             am.name,
             aml.id
         '''
-        lang = self.env.user.lang or get_lang(self.env).code
         self._cr.execute(
-            sql_query, (lang, self.date_from, self.date_to, company.id))
+            sql_query, (self.date_from, self.date_to, company.id))
 
         for row in self._cr.fetchall():
             rows_to_write.append(list(row))

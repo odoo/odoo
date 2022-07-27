@@ -138,9 +138,9 @@ class L10nInAccountInvoiceReport(models.Model):
                     ELSE NULL
                     END)  AS is_reverse_charge,
                 (CASE WHEN ps.l10n_in_tin IS NOT NULL
-                    THEN concat(ps.l10n_in_tin,'-',ps.name->>'en_US')
+                    THEN concat(ps.l10n_in_tin,'-',ps.name)
                     WHEN ps.id IS NULL and cps.l10n_in_tin IS NOT NULL
-                    THEN concat(cps.l10n_in_tin,'-',cps.name->>'en_US')
+                    THEN concat(cps.l10n_in_tin,'-',cps.name)
                     ELSE ''
                     END) AS place_of_supply,
                 (CASE WHEN am.move_type in ('out_refund', 'in_refund') and refund_am.date <= to_date('2017-07-01', 'YYYY-MM-DD')
