@@ -13,10 +13,13 @@ class WebsiteSaleDelivery(WebsiteSale):
     def shop_payment(self, **post):
         order = request.website.sale_get_order()
         carrier_id = post.get('carrier_id')
+        keep_carrier = post.get('keep_carrier', False)
+        if keep_carrier:
+            keep_carrier = bool(int(keep_carrier))
         if carrier_id:
             carrier_id = int(carrier_id)
         if order:
-            order._check_carrier_quotation(force_carrier_id=carrier_id)
+            order._check_carrier_quotation(force_carrier_id=carrier_id, keep_carrier=keep_carrier)
             if carrier_id:
                 return request.redirect("/shop/payment")
 
