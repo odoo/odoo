@@ -242,12 +242,12 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getElementOptions() {
-        const { mode } = this.model.metaData;
+        const { mode, stacked } = this.model.metaData;
         const elementOptions = {};
         if (mode === "bar") {
             elementOptions.rectangle = { borderWidth: 1 };
         } else if (mode === "line") {
-            elementOptions.line = { fill: false, tension: 0 };
+            elementOptions.line = { fill: stacked, tension: 0 };
         }
         return elementOptions;
     }
@@ -318,7 +318,7 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getLineChartData() {
-        const { groupBy, domains } = this.model.metaData;
+        const { groupBy, domains, stacked } = this.model.metaData;
         const data = this.model.data;
         for (let index = 0; index < data.datasets.length; ++index) {
             const dataset = data.datasets[index];
@@ -345,6 +345,9 @@ export class GraphRenderer extends Component {
             }
             dataset.pointBackgroundColor = dataset.borderColor;
             dataset.pointBorderColor = "rgba(0,0,0,0.2)";
+            if (stacked) {
+                dataset.backgroundColor = hexToRGBA(dataset.borderColor, 0.4);
+            }
         }
         if (data.datasets.length === 1 && data.datasets[0].originIndex === 0) {
             const dataset = data.datasets[0];
@@ -413,6 +416,7 @@ export class GraphRenderer extends Component {
             measure,
             measures,
             mode,
+            stacked,
         } = this.model.metaData;
         if (mode === "pie") {
             return {};
@@ -435,6 +439,7 @@ export class GraphRenderer extends Component {
                 suggestedMax: 0,
                 suggestedMin: 0,
             },
+            stacked: mode === "line" && stacked,
         };
         return { xAxes: [xAxe], yAxes: [yAxe] };
     }
