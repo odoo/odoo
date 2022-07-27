@@ -386,19 +386,6 @@ function getCreateComposerComponent({ env, target }) {
     };
 }
 
-function getCreateNotificationListComponent({ env, target }) {
-    return async function createNotificationListComponent({ filter = 'all' } = {}) {
-        const notificationListView = env.services.messaging.modelManager.messaging.models['NotificationListView'].create({
-            filter,
-            qunitTestOwner: insertAndReplace(),
-        });
-        await createRootMessagingComponent(env, "NotificationList", {
-            props: { record: notificationListView },
-            target,
-        });
-    };
-}
-
 function getOpenDiscuss(afterEvent, webClient, { context = {}, params, ...props } = {}) {
     return async function openDiscuss({ waitUntilMessagesLoaded = true } = {}) {
         const actionOpenDiscuss = {
@@ -573,7 +560,6 @@ async function start(param0 = {}) {
         afterNextRender,
         click: getClick({ afterNextRender }),
         createComposerComponent: getCreateComposerComponent({ env: webClient.env, target }),
-        createNotificationListComponent: getCreateNotificationListComponent({ env: webClient.env, target }),
         createRootMessagingComponent: (componentName, props) => createRootMessagingComponent(webClient.env, componentName, { props, target }),
         env: webClient.env,
         insertText,
