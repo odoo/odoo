@@ -30,10 +30,10 @@ class PosConfig(models.Model):
         """
         return self.env['pos.payment.method'].search([
             ('split_transactions', '=', False),
-            ('company_id', 'in', (False, self.env.company.id)),
+            ('company_id', '=', self.env.company.id),
             '|',
                 ('journal_id', '=', False),
-                ('journal_id.currency_id', '=', False),
+                ('journal_id.currency_id', 'in', (False, self.currency_id.id or self.env.company.currency_id.id)),
         ])
 
     def _default_pricelist(self):
