@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
 import utils from 'web.utils';
@@ -36,6 +36,16 @@ registerModel({
             }
         },
         /**
+          * @private
+          * @returns {FieldCommand}
+          */
+         _computeLastMessage() {
+            if (this.messages.length === 0) {
+                return clear();
+            }
+            return replace(this.messages[this.messages.length - 1]);
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */
@@ -67,6 +77,9 @@ registerModel({
         }),
         isAvailable: attr({
             default: false,
+        }),
+        lastMessage: one('PublicLivechatMessage', {
+            compute: '_computeLastMessage',
         }),
         livechatButtonView: one('LivechatButtonView', {
             compute: '_computeLivechatButtonView',

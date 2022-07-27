@@ -411,7 +411,7 @@ const _t = core._t;
      * @private
      */
     _isLastMessageFromCustomer() {
-        const lastMessage = this.messaging.publicLivechatGlobal.messages.length !== 0 ? this.messaging.publicLivechatGlobal.messages[this.messaging.publicLivechatGlobal.messages.length - 1] : null;
+        const lastMessage = this.messaging.publicLivechatGlobal.lastMessage;
         return lastMessage && lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
     },
 
@@ -478,7 +478,7 @@ const _t = core._t;
             this._onChatbotRestartScript.bind(this));
 
         if (this.messaging.publicLivechatGlobal.messages.length !== 0) {
-            const lastMessage = this.messaging.publicLivechatGlobal.messages[this.messaging.publicLivechatGlobal.messages.length - 1];
+            const lastMessage = this.messaging.publicLivechatGlobal.lastMessage;
             const stepAnswers = lastMessage.legacyPublicLivechatMessage.getChatbotStepAnswers();
             if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.legacyPublicLivechatMessage.getChatbotStepAnswerId()) {
                 this._chatbotDisableInput(_t('Select an option above'));
