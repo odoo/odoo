@@ -11,17 +11,6 @@ registerModel({
             inverse: 'qunitTestOwner',
             isCausal: true,
         }),
-        composer: one('Composer', {
-            isCausal: true,
-        }),
-        composerView: one('ComposerView', {
-            inverse: 'qunitTest',
-            isCausal: true,
-        }),
-        followerListMenuView: one('FollowerListMenuView', {
-            inverse: 'qunitTest',
-            isCausal: true,
-        }),
         notificationListView: one('NotificationListView', {
             inverse: 'qunitTestOwner',
             isCausal: true,

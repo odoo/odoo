@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insertAndReplace, replace } from '@mail/model/model_field_command';
+import { insertAndReplace } from '@mail/model/model_field_command';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 import { nextTick } from '@mail/utils/utils';
 import { getAdvanceTime } from '@mail/../tests/helpers/time_control';
@@ -372,20 +372,6 @@ function getClick({ afterNextRender }) {
     };
 }
 
-function getCreateComposerComponent({ env, target }) {
-    return async function createComposerComponent(composer, props) {
-        const composerView = env.services.messaging.modelManager.messaging.models['ComposerView'].create({
-            qunitTest: insertAndReplace({
-                composer: replace(composer),
-            }),
-        });
-        return await createRootMessagingComponent(env, "Composer", {
-            props: { record: composerView, ...props },
-            target,
-        });
-    };
-}
-
 function getCreateNotificationListComponent({ env, target }) {
     return async function createNotificationListComponent({ filter = 'all' } = {}) {
         const notificationListView = env.services.messaging.modelManager.messaging.models['NotificationListView'].create({
@@ -572,7 +558,6 @@ async function start(param0 = {}) {
         afterEvent,
         afterNextRender,
         click: getClick({ afterNextRender }),
-        createComposerComponent: getCreateComposerComponent({ env: webClient.env, target }),
         createNotificationListComponent: getCreateNotificationListComponent({ env: webClient.env, target }),
         createRootMessagingComponent: (componentName, props) => createRootMessagingComponent(webClient.env, componentName, { props, target }),
         env: webClient.env,
