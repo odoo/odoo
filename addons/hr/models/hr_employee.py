@@ -186,7 +186,7 @@ class HrEmployeePrivate(models.Model):
         # cache, and interpreted as an access error
         self.flush_recordset(fields)
         public = self.env['hr.employee.public'].browse(self._ids)
-        public._read(fields)
+        public.read(fields)
         for fname in fields:
             values = self.env.cache.get_values(public, public._fields[fname])
             self.env.cache.update(self, self._fields[fname], values)
