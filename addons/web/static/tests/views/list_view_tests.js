@@ -14342,6 +14342,30 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("grouped list return to page 1 with pager", async (assert) => {
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: `<list limit="1"><field name="display_name" /></list>`,
+            serverData,
+            groupBy: ["bar"],
+            mockRPC(route, args) {
+                if (args.method === "web_read_group") {
+                    assert.step(
+                        `${args.method} limit: ${args.kwargs.limit}; offset: ${args.kwargs.offset}`
+                    );
+                }
+            },
+        });
+        assert.verifySteps(["web_read_group limit: 80; offset: 0"]);
+        await editPager(target, "1-1");
+        assert.verifySteps(["web_read_group limit: 1; offset: 0"]);
+        await pagerNext(target);
+        assert.verifySteps(["web_read_group limit: 1; offset: 1"]);
+        await pagerPrevious(target);
+        assert.verifySteps(["web_read_group limit: 1; offset: 0"]);
+    });
+
     QUnit.test("renders banner_route", async (assert) => {
         await makeView({
             type: "list",
