@@ -180,6 +180,13 @@ class AccountPaymentRegister(models.TransientModel):
             return batch_result['lines'].partner_id.bank_ids.filtered(lambda x: x.company_id.id in (False, company.id))._origin
 
     @api.model
+    def _get_batch_available_payment_methods(self, journal, payment_type):
+        if payment_type == 'inbound':
+            return journal.inbound_payment_method_ids._origin
+        else:
+            return journal.outbound_payment_method_ids._origin
+
+    @api.model
     def _get_line_batch_key(self, line):
         ''' Turn the line passed as parameter to a dictionary defining on which way the lines
         will be grouped together.
@@ -353,26 +360,21 @@ class AccountPaymentRegister(models.TransientModel):
                  'journal_id.outbound_payment_method_ids')
     def _compute_payment_method_fields(self):
         for wizard in self:
-            if wizard.payment_type == 'inbound':
-                wizard.available_payment_method_ids = wizard.journal_id.inbound_payment_method_ids
+            if wizard.can_edit_wizard:
+                wizard.available_payment_method_ids = wizard._get_batch_available_payment_methods(wizard.journal_id, wizard.payment_type)
+                wizard.hide_payment_method = len(wizard.available_payment_method_ids) == 1 and wizard.available_payment_method_ids.code == 'manual'
             else:
-                wizard.available_payment_method_ids = wizard.journal_id.outbound_payment_method_ids
-
-            wizard.hide_payment_method = len(wizard.available_payment_method_ids) == 1 and wizard.available_payment_method_ids.code == 'manual'
+                wizard.available_payment_method_ids = None
+                wizard.hide_payment_method = False
 
     @api.depends('payment_type',
                  'journal_id.inbound_payment_method_ids',
                  'journal_id.outbound_payment_method_ids')
     def _compute_payment_method_id(self):
         for wizard in self:
-            if wizard.payment_type == 'inbound':
-                available_payment_methods = wizard.journal_id.inbound_payment_method_ids
-            else:
-                available_payment_methods = wizard.journal_id.outbound_payment_method_ids
-
-            # Select the first available one by default.
-            if available_payment_methods:
-                wizard.payment_method_id = available_payment_methods[0]._origin
+            available_payment_methods = wizard._get_batch_available_payment_methods(wizard.journal_id, wizard.payment_type)
+            if wizard.can_edit_wizard and available_payment_methods:
+                wizard.payment_method_id = available_payment_methods[:1]
             else:
                 wizard.payment_method_id = False
 
@@ -523,6 +525,11 @@ class AccountPaymentRegister(models.TransientModel):
         else:
             partner_bank_id = batch_result['key_values']['partner_bank_id']
 
+        payment_method = self.payment_method_id
+
+        if batch_values['payment_type'] != payment_method.payment_type:
+            payment_method = self._get_batch_available_payment_methods(self.journal_id, batch_values['payment_type'])[:1]
+
         return {
             'date': self.payment_date,
             'amount': batch_values['source_amount_currency'],
@@ -533,7 +540,7 @@ class AccountPaymentRegister(models.TransientModel):
             'currency_id': batch_values['source_currency_id'],
             'partner_id': batch_values['partner_id'],
             'partner_bank_id': partner_bank_id,
-            'payment_method_id': self.payment_method_id.id,
+            'payment_method_id': payment_method.id,
             'destination_account_id': batch_result['lines'][0].account_id.id
         }
 
