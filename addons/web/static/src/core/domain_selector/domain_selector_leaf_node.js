@@ -24,24 +24,12 @@ export class DomainSelectorLeafNode extends Component {
     }
 
     get displayedOperator() {
-        let op = this.getOperatorInfo(this.props.node.operator);
-        if (op) {
-            return op.label;
-        }
-        op = registry
-            .category("domain_selector/operator")
-            .getAll()
-            .find((op) =>
-                op.matches({
-                    field: this.fieldInfo,
-                    operator: this.props.node.operator,
-                    value: this.props.node.operands[1],
-                })
-            );
+        const op = this.getOperatorInfo(this.props.node.operator);
         return op ? op.label : "?";
     }
     get isValueHidden() {
-        return this.getOperatorInfo(this.props.node.operator).hideValue;
+        const op = this.getOperatorInfo(this.props.node.operator);
+        return op ? op.hideValue : false;
     }
 
     async loadField(resModel, fieldName) {
@@ -61,12 +49,25 @@ export class DomainSelectorLeafNode extends Component {
         return registry.category("domain_selector/fields").get(type, null);
     }
     getOperatorInfo(operator) {
-        return this.getFieldComponent(this.fieldInfo.type)
+        let op = this.getFieldComponent(this.fieldInfo.type)
             .getOperators()
             .find((op) =>
                 op.matches({
                     field: this.fieldInfo,
                     operator,
+                    value: this.props.node.operands[1],
+                })
+            );
+        if (op) {
+            return op;
+        }
+        return registry
+            .category("domain_selector/operator")
+            .getAll()
+            .find((op) =>
+                op.matches({
+                    field: this.fieldInfo,
+                    operator: this.props.node.operator,
                     value: this.props.node.operands[1],
                 })
             );

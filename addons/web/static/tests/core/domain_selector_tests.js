@@ -351,4 +351,28 @@ QUnit.module("Components", (hooks) => {
 
         assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo like "kikou"`);
     });
+
+    QUnit.test("operator fallback in edit mode", async (assert) => {
+        registry.category("domain_selector/operator").add("test", {
+            category: "test",
+            label: "test",
+            value: "test",
+            onDidChange: () => null,
+            matches: ({ operator }) => operator === "test",
+            hideValue: true,
+        });
+
+        await mount(DomainSelector, target, {
+            env,
+            props: {
+                readonly: false,
+                resModel: "partner",
+                value: "[['foo', 'test', 'kikou']]",
+            },
+        });
+
+        // check that the DomainSelector does not crash
+        assert.containsOnce(target, ".o_domain_selector");
+        assert.containsN(target, ".o_domain_leaf_edition > div", 2, "value should be hidden");
+    });
 });
