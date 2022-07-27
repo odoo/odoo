@@ -26,7 +26,7 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { BORDER_WHITE, DEFAULT_BG } from "@web/views/graph/colors";
+import { BORDER_WHITE, DEFAULT_BG, COLORS, hexToRGBA } from "@web/views/graph/colors";
 import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
 import { patchWithCleanup } from "../helpers/utils";
 
@@ -129,6 +129,10 @@ function checkModeIs(assert, graph, mode) {
     assert.strictEqual(getGraphModelMetaData(graph).mode, mode);
     assert.strictEqual(getChart(graph).config.type, mode);
     assert.hasClass(getModeButton(target, mode), "active");
+}
+
+function getScaleY(graph) {
+    return getChart(graph).config.options.scales.yAxes;
 }
 
 function getXAxeLabel(graph) {
@@ -831,7 +835,7 @@ QUnit.module("Views", (hooks) => {
             type: "graph",
             resModel: "foo",
             arch: `
-                <graph type="line">
+                <graph type="line" stacked="0">
                     <field name="bar"/>
                     <field name="product_id"/>
                 </graph>
@@ -883,6 +887,143 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("Stacked button visible in the line chart", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph type="line">
+                    <field name="bar"/>
+                    <field name="product_id"/>
+                </graph>
+            `,
+        });
+        await selectMode(target, "line");
+        checkModeIs(assert, graph, "line");
+        assert.strictEqual(graph.model.metaData.stacked, true, "graph should be stacked.");
+        assert.strictEqual(
+            getScaleY(graph).every((y) => y.stacked),
+            true,
+            "The y axes should have stacked property set to true"
+        );
+        assert.containsOnce(target, `button.o_graph_button[data-tooltip="Stacked"]`);
+        const stackButton = target.querySelector(`button.o_graph_button[data-tooltip="Stacked"]`);
+        await click(stackButton);
+        assert.strictEqual(
+            graph.model.metaData.stacked,
+            false,
+            "graph should be a classic line chart."
+        );
+        assert.strictEqual(
+            getScaleY(graph).every((y) => y.stacked),
+            false,
+            "The y axes should have stacked property set to false"
+        );
+    });
+
+    QUnit.test("Stacked line prop click false", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph type="line">
+                    <field name="bar"/>
+                    <field name="product_id"/>
+                </graph>
+            `,
+        });
+
+        const stackButton = target.querySelector(`button.o_graph_button[data-tooltip="Stacked"]`);
+        await click(stackButton);
+        assert.strictEqual(
+            graph.model.metaData.stacked,
+            false,
+            "graph should be a classic line chart."
+        );
+        assert.strictEqual(
+            getScaleY(graph).every((y) => y.stacked),
+            false,
+            "the y axes should have a stacked property set to false since the stacked property in line chart is false."
+        );
+        assert.strictEqual(
+            getGraphRenderer(graph).getElementOptions().line.fill,
+            false,
+            "The fill property should be false since the stacked property is false."
+        );
+
+        const expectedDatasets = [
+            {
+                backgroundColor: undefined,
+                borderColor: "#1f77b4",
+                originIndex: 0,
+                pointBackgroundColor: "#1f77b4",
+            },
+            {
+                backgroundColor: undefined,
+                borderColor: "#ff7f0e",
+                originIndex: 0,
+                pointBackgroundColor: "#ff7f0e",
+            },
+        ];
+        const keysToEvaluate = [
+            "backgroundColor",
+            "borderColor",
+            "originIndex",
+            "pointBackgroundColor",
+        ];
+        checkDatasets(assert, graph, keysToEvaluate, expectedDatasets);
+    });
+
+    QUnit.test("Stacked prop and default line chart", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph type="line">
+                    <field name="bar"/>
+                    <field name="product_id"/>
+                </graph>
+            `,
+        });
+
+        assert.strictEqual(graph.model.metaData.mode, "line", "should be in line chart mode.");
+        assert.strictEqual(graph.model.metaData.stacked, true, "should be stacked by default.");
+
+        assert.strictEqual(
+            getScaleY(graph).every((y) => y.stacked),
+            true,
+            "the stacked property in y axes should be true when the stacked is enabled in line chart"
+        );
+        assert.strictEqual(
+            getGraphRenderer(graph).getElementOptions().line.fill,
+            true,
+            "The fill property should be true to add backgroundColor in line chart."
+        );
+
+        const expectedDatasets = [];
+        const keysToEvaluate = [
+            "backgroundColor",
+            "borderColor",
+            "originIndex",
+            "pointBackgroundColor",
+        ];
+        const datasets = getChart(graph).data.datasets;
+
+        for (let i = 0; i < datasets.length; i++) {
+            const expectedColor = COLORS[i];
+            expectedDatasets.push({
+                backgroundColor: hexToRGBA(expectedColor, 0.4),
+                borderColor: expectedColor,
+                originIndex: 0,
+                pointBackgroundColor: expectedColor,
+            });
+        }
+        checkDatasets(assert, graph, keysToEvaluate, expectedDatasets);
+    });
+
     QUnit.test("line chart rendering (no groupBy, several domains)", async function (assert) {
         assert.expect(7);
         const graph = await makeView({
@@ -890,7 +1031,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             type: "graph",
             arch: `
-                <graph type="line">
+                <graph type="line" stacked="0">
                     <field name="revenue" type="measure"/>
                 </graph>
             `,
@@ -951,7 +1092,7 @@ QUnit.module("Views", (hooks) => {
             type: "graph",
             resModel: "foo",
             arch: `
-                <graph type="line">
+                <graph type="line" stacked="0">
                     <field name="revenue" type="measure"/>
                     <field name="foo"/>
                 </graph>
@@ -1052,7 +1193,7 @@ QUnit.module("Views", (hooks) => {
                 type: "graph",
                 resModel: "foo",
                 arch: `
-                    <graph type="line">
+                    <graph type="line" stacked="0">
                         <field name="revenue" type="measure"/>
                         <field name="date" interval="week"/>
                     </graph>
@@ -1159,7 +1300,7 @@ QUnit.module("Views", (hooks) => {
                 type: "graph",
                 resModel: "foo",
                 arch: `
-                    <graph type="line">
+                    <graph type="line" stacked="0">
                         <field name="revenue" type="measure"/>
                         <field name="bar"/>
                         <field name="date" interval="week"/>
@@ -1263,7 +1404,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             type: "graph",
             resModel: "foo",
-            arch: `<graph type="line"/>`,
+            arch: `<graph type="line" stacked="0"/>`,
         });
         assert.containsOnce(target, "canvas", "should have a canvas");
     });
@@ -3640,7 +3781,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             context: { search_default_date_filter: 1 },
             arch: `
-                <graph type="line">
+                <graph type="line" stacked="0">
                     <field name="product_id"/>
                 </graph>
             `,

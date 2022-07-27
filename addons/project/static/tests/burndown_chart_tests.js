@@ -3,9 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { setupControlPanelServiceRegistry, toggleGroupByMenu, toggleMenuItem, toggleMenuItemOption } from "@web/../tests/search/helpers";
-import { COLORS, hexToRGBA } from "@web/views/graph/colors";
 import { dialogService } from "@web/core/dialog/dialog_service";
-import { getGraphRenderer } from "@web/../tests/views/graph_view_tests";
 import { makeView } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
@@ -79,91 +77,6 @@ QUnit.module("Project", {}, () => {
         });
 
         QUnit.module("BurndownChart");
-
-        QUnit.test("check if default mode is line chart and line chart is stacked for burndown chart", async function (assert) {
-            assert.expect(5);
-
-            const burndownChart = await makeView(makeViewParams);
-
-            assert.strictEqual(burndownChart.model.metaData.mode, "line", "should be in line chart mode.");
-            assert.ok(burndownChart.model.metaData.stacked, "should be stacked by default.");
-
-            assert.ok(getGraphRenderer(burndownChart).getScaleOptions().yAxes.every(y => y.stacked), "the stacked property in y axes should be true when the stacked is enabled in line chart");
-            assert.ok(getGraphRenderer(burndownChart).getElementOptions().line.fill, "The fill property should be true to add backgroundColor in line chart.");
-
-            const actualDatasets = [];
-            const expectedDatasets = [];
-            const keysToEvaluate = ["backgroundColor", "borderColor", "originIndex", "pointBackgroundColor"];
-            const datasets = getGraphRenderer(burndownChart).chart.data.datasets;
-
-            for (let i = 0; i < datasets.length; i++) {
-                const dataset = datasets[i];
-                const actualDataset = {};
-                keysToEvaluate.forEach(key => {
-                    if (dataset.hasOwnProperty(key)) {
-                        actualDataset[key] = dataset[key];
-                    }
-                });
-                actualDatasets.push(actualDataset);
-
-                const expectedColor = COLORS[i];
-                expectedDatasets.push({
-                    backgroundColor: hexToRGBA(expectedColor, 0.4),
-                    borderColor: expectedColor,
-                    originIndex: 0,
-                    pointBackgroundColor: expectedColor,
-                });
-            }
-            assert.deepEqual(actualDatasets, expectedDatasets);
-        });
-
-        QUnit.test("check if the stacked button is visible in the line chart", async function (assert) {
-            assert.expect(3);
-            const burndownChart = await makeView(makeViewParams);
-            assert.ok(burndownChart.model.metaData.stacked, "graph should be a burndown chart.");
-            assert.containsOnce(target, `button.o_graph_button[data-tooltip="Stacked"]`);
-            const stackButton = target.querySelector(`button.o_graph_button[data-tooltip="Stacked"]`);
-            await click(stackButton);
-            assert.notOk(burndownChart.model.metaData.stacked, "graph should be a classic line chart.");
-        });
-
-        QUnit.test("check if it is classic line chart when stacked prop is false in line chart", async function (assert) {
-            assert.expect(4);
-
-            const burndownChart = await makeView(makeViewParams);
-
-            const stackButton = target.querySelector(`button.o_graph_button[data-tooltip="Stacked"]`);
-            await click(stackButton);
-            assert.notOk(burndownChart.model.metaData.stacked, "graph should be a classic line chart.");
-
-            assert.notOk(getGraphRenderer(burndownChart).getScaleOptions().yAxes.every(y => y.stacked), "the y axes should have a stacked property set to false since the stacked property in line chart is false.");
-            assert.notOk(getGraphRenderer(burndownChart).getElementOptions().line.fill, "The fill property should be false since the stacked property is false.");
-
-            const actualDatasets = [];
-            const expectedDatasets = [];
-            const keysToEvaluate = ["backgroundColor", "borderColor", "originIndex", "pointBackgroundColor"];
-            const datasets = getGraphRenderer(burndownChart).chart.data.datasets;
-
-            for (let i = 0; i < datasets.length; i++) {
-                const dataset = datasets[i];
-                const actualDataset = {};
-                keysToEvaluate.forEach(key => {
-                    if (dataset.hasOwnProperty(key)) {
-                        actualDataset[key] = dataset[key];
-                    }
-                });
-                actualDatasets.push(actualDataset);
-
-                const expectedColor = COLORS[i];
-                expectedDatasets.push({
-                    borderColor: expectedColor,
-                    originIndex: 0,
-                    pointBackgroundColor: expectedColor,
-                });
-            }
-
-            assert.deepEqual(actualDatasets, expectedDatasets);
-        });
 
         QUnit.test("check that the sort buttons are invisible", async function (assert) {
             await makeView(makeViewParams);
