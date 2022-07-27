@@ -34,7 +34,7 @@ class PublishSystray extends Component {
     }
 }
 PublishSystray.template = xml`
-<div t-on-click="publishContent" class="o_menu_systray_item d-md-flex ms-auto">
+<div t-on-click="publishContent" class="o_menu_systray_item d-md-flex ms-auto" data-hotkey="p">
     <a href="#">
         <Switch value="state.published" extraClasses="'mb-0 o_switch_danger_success'"/>
         <t t-esc="this.label"/>
