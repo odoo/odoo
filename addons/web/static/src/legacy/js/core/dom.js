@@ -355,9 +355,9 @@ var dom = {
             // or at least for the duration of the click debounce. This makes
             // a 'real' debounce creation useless. Also, during the debouncing
             // part, the button is disabled without any visual effect.
-            $button.addClass('o_debounce_disabled');
+            $button.addClass('pe-none');
             Promise.resolve(dom.DEBOUNCE && concurrency.delay(dom.DEBOUNCE)).then(function () {
-                $button.removeClass('o_debounce_disabled');
+                $button.removeClass('pe-none');
                 const restore = dom.addButtonLoadingEffect($button[0]);
                 return Promise.resolve(result).then(restore).guardedCatch(restore);
             });

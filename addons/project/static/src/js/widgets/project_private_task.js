@@ -17,7 +17,7 @@ const ProjectPrivateTask = FieldMany2One.extend({
         if (!this.m2o_value) {
             this.$el.empty();
             this.$el.append(QWeb.render('project.task.PrivateProjectName'));
-            this.$el.addClass('o_debounce_disabled');
+            this.$el.addClass('pe-none');
         }
     },
 });
