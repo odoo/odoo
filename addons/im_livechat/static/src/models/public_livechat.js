@@ -3,7 +3,7 @@
 import PublicLivechat from '@im_livechat/legacy/models/public_livechat';
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many, one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -97,7 +97,6 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        messages: many('PublicLivechatMessage'),
         name: attr({
             compute: '_computeName',
         }),

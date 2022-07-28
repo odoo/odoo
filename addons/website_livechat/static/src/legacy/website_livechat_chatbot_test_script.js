@@ -44,7 +44,7 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
      * @override
      */
     willStart: function () {
-        return this._loadQWebTemplate();
+        return this.messaging.publicLivechatGlobal.loadQWebTemplate();
     },
 
     /**

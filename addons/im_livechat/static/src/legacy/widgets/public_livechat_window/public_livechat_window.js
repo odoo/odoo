@@ -32,13 +32,10 @@ const PublicLivechatWindow = Widget.extend({
      * @param {Widget} parent
      * @param {Messaging} messaging
      * @param {@im_livechat/legacy/models/public_livechat} thread
-     * @param {Object} options
-     * @param {string} options.titleColor
      */
-    init(parent, messaging, thread, options) {
+    init(parent, messaging, thread) {
         this._super(parent);
         this.messaging = messaging;
-        this.options = options;
 
         this._debouncedOnScroll = _.debounce(this._onScroll.bind(this), 100);
     },
@@ -75,8 +72,8 @@ const PublicLivechatWindow = Widget.extend({
         if (this.messaging.publicLivechatGlobal.livechatButtonView.headerBackgroundColor) {
             this.$('.o_thread_window_header').css('background-color', this.messaging.publicLivechatGlobal.livechatButtonView.headerBackgroundColor);
         }
-        if (this.options.titleColor) {
-            this.$('.o_thread_window_header').css('color', this.options.titleColor);
+        if (this.messaging.publicLivechatGlobal.livechatButtonView.titleColor) {
+            this.$('.o_thread_window_header').css('color', this.messaging.publicLivechatGlobal.livechatButtonView.titleColor);
         }
     },
 

@@ -15,7 +15,6 @@ registerModel({
                     this.livechatButtonViewOwner.widget,
                     this.messaging,
                     this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
-                    { titleColor: this.livechatButtonViewOwner.titleColor },
                 ),
             });
         },
