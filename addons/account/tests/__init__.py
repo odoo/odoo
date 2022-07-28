@@ -7,6 +7,7 @@ from . import test_account_move_out_refund
 from . import test_account_move_in_invoice
 from . import test_account_move_in_refund
 from . import test_account_move_entry
+from . import test_account_move_date_algorithm
 from . import test_invoice_tax_totals
 from . import test_account_journal
 from . import test_account_account
