@@ -10,7 +10,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_round
 
 
 _logger = logging.getLogger(__name__)
@@ -57,7 +57,7 @@ class PaymentAcquirerPayulatam(models.Model):
             accountId=self.payulatam_account_id,
             description=values.get('reference'),
             referenceCode=tx.reference,
-            amount=values['amount'],
+            amount=float_round(values['amount'], 2),
             tax='0',  # This is the transaction VAT. If VAT zero is sent the system, 19% will be applied automatically. It can contain two decimals. Eg 19000.00. In the where you do not charge VAT, it should should be set as 0.
             taxReturnBase='0',
             currency=values['currency'].name,
