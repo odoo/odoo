@@ -346,7 +346,7 @@ class MicrosoftSync(models.AbstractModel):
         cancelled_events = self.browse([
             e.odoo_id(self.env)
             for e in cancelled
-            if e.id not in [r.ms_organizer_event_id for r in cancelled_recurrences]
+            if e.active and e.id not in [r.ms_organizer_event_id for r in cancelled_recurrences]
         ])
         cancelled_recurrences._cancel_microsoft()
         cancelled_events = cancelled_events.exists()
