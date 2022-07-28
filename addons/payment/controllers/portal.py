@@ -443,7 +443,10 @@ class PaymentPortal(portal.CustomerPortal):
         :return: None
         :raise UserError: If the companies don't match.
         """
-        if partner.company_id and partner.company_id != document_company:
+        allowed_companies = partner.company_id
+        if partner.user_ids:
+            allowed_companies |= partner.user_ids.mapped('company_ids')
+        if document_company not in allowed_companies:
             raise UserError(
                 _("Please switch to company '%s' to make this payment.", document_company.name)
             )
