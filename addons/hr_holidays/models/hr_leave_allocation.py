@@ -350,7 +350,7 @@ class HolidaysAllocation(models.Model):
         current_level = False
         current_level_idx = -1
         for idx, level in enumerate(level_ids):
-            if date >= self.date_from + get_timedelta(level.start_count, level.start_type):
+            if date > self.date_from + get_timedelta(level.start_count, level.start_type):
                 current_level = level
                 current_level_idx = idx
         # If transition_mode is set to `immediately` or we are currently on the first level
@@ -413,7 +413,7 @@ class HolidaysAllocation(models.Model):
                 allocation.nextcall = first_level._get_next_date(allocation.lastcall)
                 if len(level_ids) > 1:
                     second_level_start_date = allocation.date_from + get_timedelta(level_ids[1].start_count, level_ids[1].start_type)
-                    allocation.nextcall = min(second_level_start_date - relativedelta(days=1), allocation.nextcall)
+                    allocation.nextcall = min(second_level_start_date, allocation.nextcall)
                 allocation._message_log(body=first_allocation)
             days_added_per_level = defaultdict(lambda: 0)
             while allocation.nextcall <= today:
@@ -436,7 +436,7 @@ class HolidaysAllocation(models.Model):
                 # Also prorate this accrual in the event that we are passing from one level to another
                 if current_level_idx < (len(level_ids) - 1) and allocation.accrual_plan_id.transition_mode == 'immediately':
                     next_level = level_ids[current_level_idx + 1]
-                    current_level_last_date = allocation.date_from + get_timedelta(next_level.start_count, next_level.start_type) - relativedelta(days=1)
+                    current_level_last_date = allocation.date_from + get_timedelta(next_level.start_count, next_level.start_type)
                     if allocation.nextcall != current_level_last_date:
                         nextcall = min(nextcall, current_level_last_date)
                 days_added_per_level[current_level] += allocation._process_accrual_plan_level(

@@ -5528,7 +5528,7 @@ class AccountMoveLine(models.Model):
             'ref': self.ref,
             'move_id': self.id,
             'user_id': self.move_id.invoice_user_id.id or self._uid,
-            'company_id': distribution.account_id.company_id.id or self.env.company.id,
+            'company_id': distribution.account_id.company_id.id or self.company_id.id or self.env.company.id,
         }
 
     @api.model

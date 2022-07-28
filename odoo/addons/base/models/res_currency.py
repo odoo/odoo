@@ -356,7 +356,7 @@ class CurrencyRate(models.Model):
         return super().create([self._sanitize_vals(vals) for vals in vals_list])
 
     def _get_latest_rate(self):
-        return self.currency_id.rate_ids.filtered(lambda x: (
+        return self.currency_id.rate_ids.sudo().filtered(lambda x: (
             x.rate
             and x.company_id == (self.company_id or self.env.company)
             and x.name < (self.name or fields.Date.today())
@@ -364,7 +364,7 @@ class CurrencyRate(models.Model):
 
     def _get_last_rates_for_companies(self, companies):
         return {
-            company: company.currency_id.rate_ids.filtered(lambda x: (
+            company: company.currency_id.rate_ids.sudo().filtered(lambda x: (
                 x.rate
                 and x.company_id == company or not x.company_id
             )).sorted('name')[-1:].rate or 1
