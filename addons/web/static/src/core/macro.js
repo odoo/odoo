@@ -1,12 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-
-// rough approximation of a visible element. not perfect (does not take into
-// account opacity = 0 for example), but good enough for our purpose
-function isVisible(e) {
-    return e.offsetWidth > 0 || e.offsetHeight > 0;
-}
+import { isVisible } from "@web/core/utils/ui";
 
 export const ACTION_HELPERS = {
     click(el, _step) {
