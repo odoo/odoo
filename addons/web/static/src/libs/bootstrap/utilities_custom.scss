@@ -14,20 +14,26 @@ $rounded-sizes: map-merge(
     )
 );
 
+$utilities-opacity: () !default;
+$utilities-opacity: map-merge(
+    $utilities-opacity,
+    (
+        0: 0,
+        25: .25,
+        50: .5,
+        75: .75,
+        100: 1,
+        disabled: $o-opacity-disabled,
+    )
+);
 $utilities: () !default;
 $utilities: map-merge(
     $utilities,
     (
-        "opacity": (
-            property: opacity,
-            class: opacity,
-            state: hover,
-            values: (
-                0: 0,
-                25: .25,
-                50: .5,
-                75: .75,
-                100: 1,
+        "opacity": map-merge(
+            map-get($utilities, "opacity"),
+            (
+                values: $utilities-opacity,
             ),
         ),
         "rounded-top": (
@@ -90,3 +96,14 @@ $utilities: map-merge(
         ),
     )
 );
+
+// Define opacity:hover classes while defining the triggerer behavior.
+// Use'.opacity-trigger-hover' class to allow hovered parents to
+// trigger their children ':hover' opacity state.
+@each $-opacity-key, $-opacity-level in $utilities-opacity {
+    .opacity-#{$-opacity-key}-hover {
+        &:hover, .opacity-trigger-hover:hover & {
+            opacity: $-opacity-level!important;
+        }
+    }
+}
