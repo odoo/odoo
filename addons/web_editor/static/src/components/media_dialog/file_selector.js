@@ -124,6 +124,7 @@ export class FileSelectorControlPanel extends Component {
             return;
         }
         await this.props.uploadFiles(inputFiles);
+        this.fileInput.el.value = '';
     }
 }
 FileSelectorControlPanel.template = 'web_editor.FileSelectorControlPanel';

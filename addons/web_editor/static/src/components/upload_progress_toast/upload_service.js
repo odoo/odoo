@@ -12,31 +12,42 @@ export const uploadService = {
     dependencies: ['rpc'],
     start(env, { rpc }) {
         let fileId = 0;
-        const filesToUpload = reactive({});
+        const progressToast = reactive({
+            files: {},
+            isVisible: false,
+        });
 
         registry.category('main_components').add('UploadProgressToast', {
             Component: UploadProgressToast,
-            props: { files: filesToUpload },
+            props: {
+                close: () => progressToast.isVisible = false,
+            }
         });
 
+        const addFile = (file) => {
+            progressToast.files[file.id] = file;
+            progressToast.isVisible = true;
+            return progressToast.files[file.id];
+        };
+
+        const deleteFile = (fileId) => {
+            delete progressToast.files[fileId];
+            if (!Object.keys(progressToast.files).length) {
+                progressToast.isVisible = false;
+            }
+        };
         return {
+            get progressToast() {
+                return progressToast;
+            },
             get fileId() {
                 return fileId;
             },
-
-            addFile(file) {
-                filesToUpload[file.id] = file;
-                return filesToUpload[file.id];
-            },
-
-            deleteFile(fileId) {
-                delete filesToUpload[fileId];
-            },
-
+            addFile,
+            deleteFile,
             incrementId() {
                 fileId++;
             },
-
             uploadUrl: async (url, { resModel, resId }, onUploaded) => {
                 const attachment = await rpc('/web_editor/attachment/add_url', {
                     url,
@@ -45,7 +56,6 @@ export const uploadService = {
                 });
                 await onUploaded(attachment);
             },
-
             /**
              * This takes an array of files (from an input HTMLElement), and
              * uploads them while managing the UploadProgressToast.
@@ -57,7 +67,7 @@ export const uploadService = {
             uploadFiles: async (files, {resModel, resId, isImage}, onUploaded) => {
                 // Upload the smallest file first to block the user the least possible.
                 const sortedFiles = Array.from(files).sort((a, b) => a.size - b.size);
-                for (const [index, file] of sortedFiles.entries()) {
+                for (const file of sortedFiles) {
                     let fileSize = file.size;
                     if (!fileSize) {
                         fileSize = null;
@@ -70,25 +80,25 @@ export const uploadService = {
                     }
 
                     const id = ++fileId;
+                    file.progressToastId = id;
                     // This reactive object, built based on the files array,
                     // is given as a prop to the UploadProgressToast.
-                    filesToUpload[id] = {
+                    addFile({
                         id,
-                        index,
                         name: file.name,
                         size: fileSize,
                         progress: 0,
                         hasError: false,
                         uploaded: false,
                         errorMessage: '',
-                    };
+                    });
                 }
 
                 // Upload one file at a time: no need to parallel as upload is
                 // limited by bandwidth.
-                for (const fileId of Object.keys(filesToUpload)) {
-                    const file = filesToUpload[fileId];
-                    const dataURL = await getDataURLFromFile(sortedFiles[file.index]);
+                for (const sortedFile of sortedFiles) {
+                    const file = progressToast.files[sortedFile.progressToastId];
+                    const dataURL = await getDataURLFromFile(sortedFile);
                     try {
                         const xhr = new XMLHttpRequest();
                         xhr.upload.addEventListener('progress', ev => {
@@ -115,10 +125,10 @@ export const uploadService = {
                             file.uploaded = true;
                             await onUploaded(attachment);
                         }
-                        setTimeout(() => delete filesToUpload[file.id], AUTOCLOSE_DELAY);
+                        setTimeout(() => deleteFile(file.id), AUTOCLOSE_DELAY);
                     } catch (error) {
                         file.hasError = true;
-                        setTimeout(() => delete filesToUpload[file.id], AUTOCLOSE_DELAY);
+                        setTimeout(() => deleteFile(file.id), AUTOCLOSE_DELAY);
                         throw error;
                     }
                 }
