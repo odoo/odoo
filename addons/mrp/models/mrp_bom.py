@@ -414,6 +414,7 @@ class MrpBomLine(models.Model):
     @api.depends('product_id', 'tracking')
     def _compute_manual_consumption(self):
         self.filtered(lambda m: m.tracking != 'none').manual_consumption = True
+        self.filtered(lambda m: m.operation_id.name).manual_consumption = True
 
     @api.depends('product_id', 'bom_id')
     def _compute_child_bom_id(self):
@@ -452,6 +453,11 @@ class MrpBomLine(models.Model):
     def onchange_product_id(self):
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id.id
+
+    @api.onchange('operation_id')
+    def onchange_operation_id(self):
+        if self.operation_id.name:
+            self.manual_consumption = True
 
     @api.model_create_multi
     def create(self, vals_list):
