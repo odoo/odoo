@@ -9908,14 +9908,14 @@ QUnit.module('Legacy fields', {}, function () {
             });
 
             assert.containsN(form, '.o_data_row', 2);
-            assert.hasClass(form.$('.o_data_row:nth(1) .o_field_badge'), 'bg-warning-light');
+            assert.hasClass(form.$('.o_data_row:nth(1) .o_field_badge'), 'bg-warning');
 
             await testUtils.dom.click(form.$('.o_data_row .o_data_cell:first'));
             await testUtils.owlCompatibilityExtraNextTick();
             await testUtils.fields.editInput(form.$('.o_selected_row .o_field_integer'), '44');
             await testUtils.owlCompatibilityExtraNextTick();
 
-            assert.hasClass(form.$('.o_data_row:nth(1) .o_field_badge'), 'bg-warning-light');
+            assert.hasClass(form.$('.o_data_row:nth(1) .o_field_badge'), 'bg-warning');
 
             form.destroy();
         });

@@ -9275,14 +9275,14 @@ QUnit.module('Legacy basic_fields', {
         });
 
         assert.containsN(list, '.o_field_badge[name="foo"]', 5);
-        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger-light');
-        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning-light');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger.bg-opacity-50');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning.bg-opacity-50');
 
         await list.reload();
 
         assert.containsN(list, '.o_field_badge[name="foo"]', 5);
-        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger-light');
-        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning-light');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger.bg-opacity-50');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning.bg-opacity-50');
 
         list.destroy();
     });
