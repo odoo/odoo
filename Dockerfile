@@ -64,11 +64,11 @@ RUN npm install -g rtlcss
 #    && rm -rf /var/lib/apt/lists/* odoo.deb
 COPY ./odoo /usr/lib/python3/dist-packages/
 
-RUN mkdir /var/lib/odoo && \
-    groupadd -g %(group_id)s odoo && \
-    useradd -u %(user_id)s -g odoo odoo -d /var/lib/odoo && \
-    mkdir /data && \
-    chown odoo:odoo /var/lib/odoo /data
+RUN mkdir /var/lib/odoo \
+    && groupadd -g 101 odoo  \
+    && useradd -u 101 -g odoo odoo -d /var/lib/odoo \
+    && mkdir /data \
+    && chown odoo:odoo /var/lib/odoo /data
 
 #RUN cd /usr/lib/python3/dist-packages/ \
 #    && pip3 install setuptools wheel \
