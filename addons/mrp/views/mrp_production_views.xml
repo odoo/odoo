@@ -346,9 +346,12 @@
                                     <field name="manual_consumption" invisible="1" force_save="1"/>
                                     <field name="show_details_visible" invisible="1"/>
                                     <field name="lot_ids" widget="many2many_tags"
-                                        groups="stock.group_production_lot" optional="hide"
-                                        attrs="{'invisible': ['|', '|', ('show_details_visible', '=', False), ('has_tracking', '!=', 'serial'), ('parent.state', '=', 'draft')],
-                                                'readonly': ['|', '|', ('show_details_visible', '=', False), ('has_tracking', '!=', 'serial'), ('parent.state', '=', 'draft')],
+                                        optional="hide" 
+                                        readonly="1"
+                                        string="Lot/Serial Numbers"
+                                        help="Displays the consumed Lot/Serial Numbers."
+                                        groups="stock.group_production_lot" 
+                                        attrs="{'invisible': ['|', ('show_details_visible', '=', False), ('parent.state', '=', 'draft')],
                                                 'column_invisible': [('parent.show_lot_ids', '=',  False)]}"
                                         options="{'create': [('parent.use_create_components_lots', '!=', False)]}"
                                         context="{'default_company_id': company_id, 'default_product_id': product_id}"
