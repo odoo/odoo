@@ -5,6 +5,7 @@ import re
 from collections import defaultdict
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.product.models.product_template import DETAILED_TYPE_MODELS
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare
@@ -656,11 +657,11 @@ class ProductProduct(models.Model):
 
         prices = dict.fromkeys(self.ids, 0.0)
         for product in self:
-            price = product[price_type] or 0.0
+            price, is_price_overridden = product._get_base_or_overridden_price(price_type)
             price_currency = product.currency_id
             if price_type == 'standard_price':
                 price_currency = product.cost_currency_id
-            elif price_type == 'list_price':
+            elif price_type == 'list_price' and not is_price_overridden:
                 price += product._get_attributes_extra_price()
 
             if uom:
@@ -674,6 +675,17 @@ class ProductProduct(models.Model):
             prices[product.id] = price
 
         return prices
+
+    def _get_base_or_overridden_price(self, price_type):
+        """See `product.template._get_base_or_overridden_price`"""
+        self.ensure_one()
+        if price_type == 'list_price' and self._context.get('record_being_sold'):
+            model_name = DETAILED_TYPE_MODELS.get(self.detailed_type)
+            if not model_name:
+                raise ValueError(_('Unable to gather all the information about the "%(detailed_type)s" product.',
+                                   detailed_type=self.detailed_type))
+            return self.env[model_name].browse(self._context['record_being_sold']).price, True
+        return self[price_type] or 0.0, False
 
     @api.model
     def get_empty_list_help(self, help_message):
@@ -725,3 +737,7 @@ class ProductProduct(models.Model):
     def _get_contextual_price(self):
         self.ensure_one()
         return self.product_tmpl_id._get_contextual_price(self)
+
+    def _get_contextual_pricelist(self):
+        self.ensure_one()
+        return self.product_tmpl_id._get_contextual_pricelist()
