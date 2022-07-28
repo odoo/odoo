@@ -1032,7 +1032,7 @@ export class ModelManager {
         const records = [];
         for (const data of dataList) {
             const localId = this._getRecordIndex(model, data);
-            let record = model.get(localId);
+            let record = this.get(model, localId);
             if (!record) {
                 record = this._create(model, localId);
                 this._update(record, this._addDefaultData(model, data), { ...options, allowWriteReadonly: true });

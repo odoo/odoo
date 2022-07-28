@@ -491,7 +491,7 @@ registerModel({
                 return clear();
             }
             const visible = this.manager.visual.visible;
-            const index = visible.findIndex(visible => visible.chatWindowLocalId === this.localId);
+            const index = visible.findIndex(visible => visible.chatWindow === this);
             if (index === -1) {
                 return clear();
             }
@@ -506,7 +506,7 @@ registerModel({
                 return 0;
             }
             const visible = this.manager.visual.visible;
-            const index = visible.findIndex(visible => visible.chatWindowLocalId === this.localId);
+            const index = visible.findIndex(visible => visible.chatWindow === this);
             if (index === -1) {
                 return 0;
             }
