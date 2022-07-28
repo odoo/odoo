@@ -358,7 +358,10 @@ QUnit.module("ActionManager", (hooks) => {
                 }
             }
         }
-        ClientAction.template = xml`<div class="my_action" t-on-click="onClick" />`;
+        ClientAction.template = xml`
+            <div class="my_action" t-on-click="onClick">
+                My Action
+            </div>`;
         registry.category("actions").add("clientAction", ClientAction);
 
         const errorDialogOpened = makeDeferred();

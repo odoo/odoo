@@ -5,6 +5,7 @@ import { isMacOS } from "@web/core/browser/feature_detection";
 import { download } from "@web/core/network/download";
 import { Deferred } from "@web/core/utils/concurrency";
 import { patch, unpatch } from "@web/core/utils/patch";
+import { isVisible } from "@web/core/utils/ui";
 import { registerCleanup } from "./cleanup";
 
 const { App, onMounted, onPatched, useComponent } = owl;
@@ -285,12 +286,7 @@ export function triggerEvent(el, selector, eventType, eventAttrs = {}, options =
         throw new Error(`Can't find a target to trigger ${eventType} event`);
     }
     if (!options.skipVisibilityCheck) {
-        const isVisible =
-            target === document ||
-            target === window ||
-            target.offsetWidth > 0 ||
-            target.offsetHeight > 0;
-        if (!isVisible) {
+        if (!isVisible(target)) {
             throw new Error(`Called triggerEvent ${eventType} on invisible target`);
         }
     }

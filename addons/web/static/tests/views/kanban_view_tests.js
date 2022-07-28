@@ -9204,7 +9204,7 @@ QUnit.module("Views", (hooks) => {
         assert.ok(getCard(0).querySelector("[name='bar'] input").checked);
         assert.ok(getCard(1).querySelector("[name='bar'] input").checked);
 
-        await click(getCard(1), "[name='bar'] label");
+        await click(getCard(1), "[name='bar'] input");
         assert.ok(getCard(0).querySelector("[name='bar'] input").checked);
         assert.notOk(getCard(1).querySelector("[name='bar'] input").checked);
     });

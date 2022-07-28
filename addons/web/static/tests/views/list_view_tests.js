@@ -3129,7 +3129,7 @@ QUnit.module("Views", (hooks) => {
                     </form>`,
             });
 
-            assert.isNotVisible(target.querySelector(".o_field_one2many"));
+            assert.containsNone(target, ".o_field_one2many");
 
             await click(target.querySelector(".nav-item:last-child .nav-link"));
 
@@ -5079,7 +5079,7 @@ QUnit.module("Views", (hooks) => {
             await toggleMenuItem(target, "Empty List");
             assert.containsOnce(target, ".o_view_nocontent");
 
-            await click(target, ".o_view_nocontent");
+            await click(target, ".o_nocontent_help");
             assert.hasClass(target.querySelector(".o_list_button_add"), "o_catch_attention");
         }
     );
@@ -8649,7 +8649,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[0]);
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[1]);
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[2]);
-        await click(target.querySelector(".o_data_row .o_field_boolean label"));
+        await click(target.querySelector(".o_data_row .o_field_boolean input"));
         assert.containsOnce(target, ".modal");
 
         await click(target, ".modal .modal-footer .btn-primary");
@@ -9471,7 +9471,7 @@ QUnit.module("Views", (hooks) => {
             const rows = target.querySelectorAll(".o_data_row");
             await click(rows[0], ".o_list_record_selector input");
             await click(rows[2], ".o_list_record_selector input");
-            await click(rows[0].querySelector(".o_boolean_toggle label"));
+            await click(rows[0].querySelector(".o_boolean_toggle input"));
 
             assert.ok(
                 $(".modal").text().includes("Confirmation"),

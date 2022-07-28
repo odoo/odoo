@@ -1,6 +1,74 @@
 /** @odoo-module **/
 
 /**
+ * rough approximation of a visible element. not perfect (does not take into
+ * account opacity = 0 for example), but good enough for our purpose
+ *
+ * @param {Element} el
+ * @returns {boolean}
+ */
+export function isVisible(el) {
+    if (el === document || el === window) {
+        return true;
+    }
+    if (!el) {
+        return false;
+    }
+    let _isVisible = false;
+    if ("offsetWidth" in el && "offsetHeight" in el) {
+        _isVisible = el.offsetWidth > 0 && el.offsetHeight > 0;
+    } else if ("getBoundingClientRect" in el) {
+        // for example, svgelements
+        const rect = el.getBoundingClientRect();
+        _isVisible = rect.width > 0 && rect.height > 0;
+    }
+    if (!_isVisible && getComputedStyle(el).display === "contents") {
+        for (const child of el.children) {
+            if (isVisible(child)) {
+                return true;
+            }
+        }
+    }
+    return _isVisible;
+}
+
+/**
+ * This function only exists because some tours currently rely on the fact that
+ * we can click on elements with a non null width *xor* height (not both). However,
+ * if one of these is 0, the element is not visible. We thus keep this function
+ * to ease the transition to the more robust "isVisible" helper, which requires
+ * both a non null width *and* height.
+ *
+ * @deprecated use isVisible instead
+ * @param {Element} el
+ * @returns {boolean}
+ */
+export function _legacyIsVisible(el) {
+    if (el === document || el === window) {
+        return true;
+    }
+    if (!el) {
+        return false;
+    }
+    let _isVisible = false;
+    if ("offsetWidth" in el && "offsetHeight" in el) {
+        _isVisible = el.offsetWidth > 0 || el.offsetHeight > 0;
+    } else if ("getBoundingClientRect" in el) {
+        // for example, svgelements
+        const rect = el.getBoundingClientRect();
+        _isVisible = rect.width > 0 || rect.height > 0;
+    }
+    if (!_isVisible && getComputedStyle(el).display === "contents") {
+        for (const child of el.children) {
+            if (isVisible(child)) {
+                return true;
+            }
+        }
+    }
+    return _isVisible;
+}
+
+/**
  * @param {Element} activeElement
  * @param {String} selector
  * @returns all selected and visible elements present in the activeElement
@@ -10,8 +78,7 @@ export function getVisibleElements(activeElement, selector) {
     /** @type {NodeListOf<HTMLElement>} */
     const elements = activeElement.querySelectorAll(selector);
     for (const el of elements) {
-        const isVisible = el.offsetWidth > 0 && el.offsetHeight > 0;
-        if (isVisible) {
+        if (isVisible(el)) {
             visibleElements.push(el);
         }
     }
