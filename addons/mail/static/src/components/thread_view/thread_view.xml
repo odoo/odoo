@@ -54,6 +54,9 @@
                     <t t-if="threadView.channelMemberListView">
                         <ChannelMemberList className="'o_ThreadView_channelMemberList flex-shrink-0 border-start'" record="threadView.channelMemberListView"/>
                     </t>
+                    <t t-if="threadView.isCallSettingsMenuOpen">
+                        <CallSettingsMenu className="'o_ThreadView_callSettingsMenu flex-shrink-0 border-start'" record="threadView.callSettingsMenu"/>
+                    </t>
                 </div>
             </div>
         </t>

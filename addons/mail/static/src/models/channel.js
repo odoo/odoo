@@ -104,6 +104,12 @@ registerModel({
             inverse: 'channelAsOnlineMember',
             sort: '_sortMembers',
         }),
+        /**
+         * Determines whether we only display the participants who broadcast a video or all of them.
+         */
+        showOnlyVideo: attr({
+            default: false,
+        }),
         thread: one('Thread', {
             compute: '_computeThread',
             inverse: 'channel',

@@ -3,10 +3,12 @@
 import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
+import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'CallSettingsMenu',
+    identifyingMode: 'xor',
     lifecycleHooks: {
         _created() {
             browser.addEventListener('keydown', this._onKeyDown);
@@ -26,7 +28,7 @@ registerModel({
         },
         onChangePushToTalk() {
             if (this.userSetting.usePushToTalk) {
-                this.update({
+                this.userSetting.update({
                     isRegisteringKey: false,
                 });
             }
@@ -44,16 +46,45 @@ registerModel({
         onChangeThreshold(ev) {
             this.userSetting.setThresholdValue(parseFloat(ev.target.value));
         },
+        /**
+         * @param {Event} ev
+         */
+        onChangeVideoFilterCheckbox(ev) {
+            const showOnlyVideo = ev.target.checked;
+            this.thread.channel.update({ showOnlyVideo });
+            if (!this.callView) {
+                return;
+            }
+            const activeRtcSession = this.callView.activeRtcSession;
+            if (showOnlyVideo && activeRtcSession && !activeRtcSession.videoStream) {
+                this.callView.update({ activeRtcSession: clear() });
+            }
+        },
         onClickRegisterKeyButton() {
-            this.update({
+            this.userSetting.update({
                 isRegisteringKey: !this.isRegisteringKey,
             });
         },
-        toggle() {
-            this.update({ isOpen: !this.isOpen });
+        _computeCallView() {
+            if (this.threadViewOwner) {
+                return this.threadViewOwner.callView;
+            }
+            if (this.chatWindowOwner && this.chatWindowOwner.threadView) {
+                return this.chatWindowOwner.threadView.callView;
+            }
+            return clear();
+        },
+        _computeThread() {
+            if (this.threadViewOwner) {
+                return this.threadViewOwner.thread;
+            }
+            if (this.chatWindowOwner) {
+                return this.chatWindowOwner.thread;
+            }
+            return clear();
         },
         _onKeyDown(ev) {
-            if (!this.isRegisteringKey) {
+            if (!this.userSetting.isRegisteringKey) {
                 return;
             }
             ev.stopPropagation();
@@ -61,29 +92,33 @@ registerModel({
             this.userSetting.setPushToTalkKey(ev);
         },
         _onKeyUp(ev) {
-            if (!this.isRegisteringKey) {
+            if (!this.userSetting.isRegisteringKey) {
                 return;
             }
             ev.stopPropagation();
             ev.preventDefault();
-            this.update({
+            this.userSetting.update({
                 isRegisteringKey: false,
             });
         },
     },
     fields: {
-        isOpen: attr({
-            default: false,
+        callView: one('CallView', {
+            compute: '_computeCallView',
         }),
-        /**
-         * true if listening to keyboard input to register the push to talk key.
-         */
-        isRegisteringKey: attr({
-            default: false,
-        }),
-        userSetting: one('UserSetting', {
+        chatWindowOwner: one('ChatWindow', {
             identifying: true,
             inverse: 'callSettingsMenu',
+        }),
+        thread: one('Thread', {
+            compute: '_computeThread',
+        }),
+        threadViewOwner: one('ThreadView', {
+            identifying: true,
+            inverse: 'callSettingsMenu',
+        }),
+        userSetting: one('UserSetting', {
+            related: 'messaging.userSetting',
         }),
     },
 });

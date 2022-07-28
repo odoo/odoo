@@ -5,7 +5,7 @@
         <t t-if="callActionListView">
             <div class="o_CallActionList d-flex justify-content-between" t-attf-class="{{ className }}" t-ref="root">
                 <div class="o_CallActionList_buttons d-flex align-items-center flex-wrap">
-                    <t t-if="callActionListView.channel.rtc and messaging.rtc.currentRtcSession">
+                    <t t-if="callActionListView.thread.rtc and messaging.rtc.currentRtcSession">
                         <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
                             t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isMute, 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall }"
                             t-att-aria-label="callActionListView.microphoneButtonTitle"
@@ -62,11 +62,36 @@
                                 </div>
                             </button>
                         </t>
-                        <Popover position="'top'" popoverClass="'o_CallActionList_popover'">
+                        <t t-if="!callActionListView.callView.isFullScreen">
                             <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
-                                aria-label="More"
-                                title="More"
+                                aria-label="Activate Full Screen"
+                                title="Activate Full Screen"
                                 t-att-class="{ 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall }"
+                                t-on-click="callActionListView.callView.activateFullScreen"
+                            >
+                                <div class="o_CallActionList_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': callActionListView.isSmall }">
+                                    <i class="fa fa-arrows-alt fa-stack-1x" t-att-class="{ 'fa-lg': !callActionListView.isSmall }"/>
+                                </div>
+                            </button>
+                        </t>
+                        <t t-if="callActionListView.callView.isFullScreen">
+                            <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
+                                aria-label="Deactivate Full Screen"
+                                title="Deactivate Full Screen"
+                                t-att-class="{ 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall }"
+                                t-on-click="callActionListView.callView.deactivateFullScreen"
+                            >
+                                <div class="o_CallActionList_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': callActionListView.isSmall }">
+                                    <i class="fa fa-compress fa-stack-1x" t-att-class="{ 'fa-lg': !callActionListView.isSmall }"/>
+                                </div>
+                            </button>
+                        </t>
+                        <t t-if="messaging.modelManager.isDebug">
+                            <Popover position="'top'" popoverClass="'o_CallActionList_popover'">
+                            <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
+                                    aria-label="More"
+                                    title="More"
+                                    t-att-class="{ 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall }"
                             >
                                 <div class="o_CallActionList_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': callActionListView.isSmall }">
                                     <i class="fa fa-ellipsis-h fa-stack-1x" t-att-class="{ 'fa-lg': !callActionListView.isSmall }"/>
@@ -76,26 +101,27 @@
                                 <CallOptionMenu record="callActionListView.callOptionMenu"/>
                             </t>
                         </Popover>
+                        </t>
                     </t>
-                    <t t-if="!callActionListView.channel">
+                    <t t-if="!callActionListView.thread">
                         <button class="o_CallActionList_button o_CallActionList_callToggle btn btn-success d-flex m-1 border-0 rounded-circle shadow-none"
                             t-att-class="{ 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall }"
                             aria-label="Join Video Call"
                             title="Join Video Call"
-                            t-att-disabled="callActionListView.channel.hasPendingRtcRequest"
+                            t-att-disabled="callActionListView.thread.hasPendingRtcRequest"
                             t-on-click="callActionListView.onClickToggleVideoCall">
                             <div class="o_CallActionList_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': callActionListView.isSmall }">
                                 <i class="fa fa-video-camera fa-stack-1x" t-att-class="{ 'fa-lg': !callActionListView.isSmall }"/>
                             </div>
                         </button>
                     </t>
-                    <t t-if="callActionListView.channel">
-                        <t t-if="callActionListView.channel.rtcInvitingSession and !callActionListView.channel.rtc">
+                    <t t-if="callActionListView.thread">
+                        <t t-if="callActionListView.thread.rtcInvitingSession and !callActionListView.thread.rtc">
                             <button class="o_CallActionList_button o_CallActionList_callToggle o-isActive btn btn-danger d-flex m-1 border-0 rounded-circle shadow-none"
                                 t-att-class="{ 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall }"
                                 aria-label="Reject"
                                 title="Reject"
-                                t-att-disabled="callActionListView.channel.hasPendingRtcRequest"
+                                t-att-disabled="callActionListView.thread.hasPendingRtcRequest"
                                 t-on-click="callActionListView.onClickRejectCall">
                                 <div class="o_CallActionList_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': callActionListView.isSmall }">
                                     <i class="fa fa-phone fa-stack-1x" t-att-class="{ 'fa-lg': !callActionListView.isSmall }"/>
@@ -104,8 +130,8 @@
                         </t>
                         <button class="o_CallActionList_button o_CallActionList_callToggle btn d-flex m-1 border-0 rounded-circle shadow-none"
                             t-att-aria-label="callActionListView.callButtonTitle"
-                            t-att-class="{ 'o-isActive btn-danger': !!callActionListView.channel.rtc, 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall, 'btn-success': !callActionListView.channel.rtc }"
-                            t-att-disabled="callActionListView.channel.hasPendingRtcRequest"
+                            t-att-class="{ 'o-isActive btn-danger': !!callActionListView.thread.rtc, 'o-isSmall p-2': callActionListView.isSmall, 'p-3': !callActionListView.isSmall, 'btn-success': !callActionListView.thread.rtc }"
+                            t-att-disabled="callActionListView.thread.hasPendingRtcRequest"
                             t-att-title="callActionListView.callButtonTitle"
                             t-on-click="callActionListView.onClickToggleAudioCall">
                             <div class="o_CallActionList_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': callActionListView.isSmall }">

@@ -82,6 +82,12 @@ registerModel({
                 messageListViewMessageViewItem.messageView.startEditing();
             }
         },
+        _computeCallSettingsMenu() {
+            if (this.isCallSettingsMenuOpen) {
+                return {};
+            }
+            return clear();
+        },
         /**
          * @private
          */
@@ -322,6 +328,14 @@ registerModel({
         },
     },
     fields: {
+        /**
+         * Model for the component with the controls for RTC related settings.
+         */
+        callSettingsMenu: one('CallSettingsMenu', {
+            compute: '_computeCallSettingsMenu',
+            inverse: 'threadViewOwner',
+            isCausal: true,
+        }),
         channelMemberListView: one('ChannelMemberListView', {
             compute: '_computeChannelMemberListView',
             inverse: 'threadViewOwner',
@@ -382,6 +396,9 @@ registerModel({
          */
         hasTopbar: attr({
             related: 'threadViewer.hasTopbar',
+        }),
+        isCallSettingsMenuOpen: attr({
+            default: false,
         }),
         isComposerFocused: attr({
             related: 'composerView.isFocused',

@@ -9,15 +9,6 @@
             <CallMainView record="callView.callMainView"/>
             <CallSidebarView t-if="callView.callSidebarView" record="callView.callSidebarView"/>
 
-            <!-- Dialogs -->
-            <t t-if="messaging.userSetting.callSettingsMenu.isOpen">
-                <Dialog size="'small'" title="callView.settingsTitle" onClosed="callView.onRtcSettingsDialogClosed">
-                    <CallSettingsMenu record="messaging.userSetting.callSettingsMenu"/>
-                    <t t-set-slot="buttons">
-                        <!-- Explicit No buttons -->
-                    </t>
-                </Dialog>
-            </t>
         </div>
     </t>
 </t>
