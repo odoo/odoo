@@ -449,7 +449,7 @@ const Wysiwyg = Widget.extend({
                                 model: "res.users",
                                 method: "search_read",
                                 args: [
-                                    [['id', '=', this.getSession().user_id]],
+                                    [['id', '=', this.getSession().uid]],
                                     ['name']
                                 ],
                             }))[0].name;
@@ -1835,36 +1835,36 @@ const Wysiwyg = Widget.extend({
         const options = this._editorOptions();
         const commands = [
             {
-                groupName: 'Basic blocks',
-                title: 'Quote',
-                description: 'Add a blockquote section.',
+                groupName: _t('Basic blocks'),
+                title: _t('Quote'),
+                description: _t('Add a blockquote section.'),
                 fontawesome: 'fa-quote-right',
                 callback: () => {
                     this.odooEditor.execCommand('setTag', 'blockquote');
                 },
             },
             {
-                groupName: 'Basic blocks',
-                title: 'Code',
-                description: 'Add a code section.',
+                groupName: _t('Basic blocks'),
+                title: _t('Code'),
+                description: _t('Add a code section.'),
                 fontawesome: 'fa-code',
                 callback: () => {
                     this.odooEditor.execCommand('setTag', 'pre');
                 },
             },
             {
-                groupName: 'Navigation',
-                title: 'Link',
-                description: 'Add a link.',
+                groupName: _t('Navigation'),
+                title: _t('Link'),
+                description: _t('Add a link.'),
                 fontawesome: 'fa-link',
                 callback: () => {
                     this.toggleLinkTools({forceDialog: true});
                 },
             },
             {
-                groupName: 'Navigation',
-                title: 'Button',
-                description: 'Add a button.',
+                groupName: _t('Navigation'),
+                title: _t('Button'),
+                description: _t('Add a button.'),
                 fontawesome: 'fa-link',
                 callback: () => {
                     this.toggleLinkTools({forceDialog: true});
@@ -1877,9 +1877,9 @@ const Wysiwyg = Widget.extend({
         ];
         if (options.isInternalUser) {
             commands.push({
-                groupName: 'Medias',
-                title: 'Image',
-                description: 'Insert an image.',
+                groupName: _t('Medias'),
+                title: _t('Image'),
+                description: _t('Insert an image.'),
                 fontawesome: 'fa-file-image-o',
                 callback: () => {
                     this.openMediaDialog();
@@ -1888,9 +1888,9 @@ const Wysiwyg = Widget.extend({
         }
         if (options.allowCommandVideo) {
             commands.push({
-                groupName: 'Medias',
-                title: 'Video',
-                description: 'Insert a video.',
+                groupName: _t('Medias'),
+                title: _t('Video'),
+                description: _t('Insert a video.'),
                 fontawesome: 'fa-file-video-o',
                 callback: () => {
                     this.openMediaDialog({noVideos: false, noImages: true, noIcons: true, noDocuments: true});

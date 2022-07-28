@@ -2778,18 +2778,6 @@ options.registry.ScrollButton = options.Class.extend({
         await this._super(...arguments);
         this.$button = this.$('.o_scroll_button');
     },
-    /**
-     * Removes button if the option is not displayed (for example in "fit
-     * content" height).
-     *
-     * @override
-     */
-    updateUIVisibility: async function () {
-        await this._super(...arguments);
-        if (this.$button.length && this.el.offsetParent === null) {
-            this.$button.detach();
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Options

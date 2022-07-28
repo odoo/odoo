@@ -860,6 +860,7 @@ exports.PosModel = Backbone.Model.extend({
     load_orders: async function(){
         var jsons = this.db.get_unpaid_orders();
         await this._loadMissingProducts(jsons);
+        await this._loadMissingPartners(jsons);
         var orders = [];
 
         for (var i = 0; i < jsons.length; i++) {
@@ -912,6 +913,23 @@ exports.PosModel = Backbone.Model.extend({
         });
         productModel.loaded(this, products);
     },
+
+    // load the partners based on the ids
+    async _loadPartners(partnerIds) {
+        if (partnerIds.length > 0) {
+            var fields = _.find(this.models, function(model){ return model.label === 'load_partners'; }).fields;
+            var domain = [['id','in', partnerIds]];
+            const fetchedPartners = await this.env.services.rpc({
+                model: 'res.partner',
+                method: 'search_read',
+                args: [domain, fields],
+            }, {
+                timeout: 3000,
+                shadow: true,
+            });
+            this.env.pos.db.add_partners(fetchedPartners);
+        }
+    },
     async _loadMissingPartners(orders) {
         const missingPartnerIds = new Set([]);
         for (const order of orders) {
@@ -921,17 +939,7 @@ exports.PosModel = Backbone.Model.extend({
                 missingPartnerIds.add(partnerId);
             }
         }
-        const partnerModel = _.find(this.models, function(model){return model.model === 'res.partner';});
-        const fields = partnerModel.fields;
-        if(missingPartnerIds) {
-            const partners = await this.rpc({
-                model: 'res.partner',
-                method: 'read',
-                args: [[...missingPartnerIds], fields],
-                context: Object.assign(this.session.user_context, { display_default_code: false }),
-            });
-            partnerModel.loaded(this, partners);
-        }
+        await this._loadPartners([...missingPartnerIds]);
     },
     // Load the products following specific rules into the `db`
     loadLimitedProducts: async function() {
@@ -3146,6 +3154,9 @@ exports.Order = Backbone.Model.extend({
             receipt.footer_html = render_html(this.pos.config.receipt_footer);
         } else {
             receipt.footer = this.pos.config.receipt_footer || '';
+        }
+        if (!receipt.date.localestring && (!this.state || this.state == 'draft')){
+            receipt.date.localestring = field_utils.format.datetime(moment(new Date()), {}, {timezone: false});
         }
 
         return receipt;
