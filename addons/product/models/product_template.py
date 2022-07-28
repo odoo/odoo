@@ -224,23 +224,18 @@ class ProductTemplate(models.Model):
     @api.depends('product_variant_ids.barcode')
     def _compute_barcode(self):
         self.barcode = False
-        for template in self:
-            # TODO master: update product_variant_count depends and use it instead
-            variant_count = len(template.product_variant_ids)
-            if variant_count == 1:
+        for template in self.with_context(active_test=False):
+            if len(template.product_variant_ids) == 1:
                 template.barcode = template.product_variant_ids.barcode
-            elif variant_count == 0:
-                archived_variants = template.with_context(active_test=False).product_variant_ids
-                if len(archived_variants) == 1:
-                    template.barcode = archived_variants.barcode
 
     def _search_barcode(self, operator, value):
         templates = self.with_context(active_test=False).search([('product_variant_ids.barcode', operator, value)])
         return [('id', 'in', templates.ids)]
 
     def _set_barcode(self):
-        if len(self.product_variant_ids) == 1:
-            self.product_variant_ids.barcode = self.barcode
+        product = self.with_context(active_test=False).product_variant_ids
+        if len(product) == 1:
+            product.barcode = self.barcode
 
     @api.model
     def _get_weight_uom_id_from_ir_config_parameter(self):

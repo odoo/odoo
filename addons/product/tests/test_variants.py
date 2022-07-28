@@ -286,7 +286,8 @@ class TestVariants(common.TestProductCommon):
                 ],
             })]
         })
-        self.assertFalse(template.barcode)  # 2 active variants --> no barcode on template
+        # no barcode is set when there are more than 1 variant
+        self.assertFalse(template.barcode)
 
         variant_1 = template.product_variant_ids[0]
         variant_2 = template.product_variant_ids[1]
@@ -296,11 +297,11 @@ class TestVariants(common.TestProductCommon):
 
         variant_1.action_archive()
         template.invalidate_model(['barcode'])
-        self.assertEqual(template.barcode, variant_2.barcode)  # 1 active variant --> barcode on template
+        self.assertFalse(template.barcode)
 
         variant_1.action_unarchive()
         template.invalidate_model(['barcode'])
-        self.assertFalse(template.barcode)  # 2 active variants --> no barcode on template
+        self.assertFalse(template.barcode)
 
     def test_archive_all_variants(self):
         template = self.env['product.template'].create({
