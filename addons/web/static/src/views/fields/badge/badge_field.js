@@ -18,7 +18,7 @@ export class BadgeField extends Component {
     get classFromDecoration() {
         for (const decorationName in this.props.decorations) {
             if (this.props.decorations[decorationName]) {
-                return `bg-${decorationName}-light`;
+                return `bg-${decorationName}`;
             }
         }
         return "";

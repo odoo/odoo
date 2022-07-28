@@ -19,7 +19,7 @@ odoo.define('web.basic_fields_owl', function (require) {
      */
     class FieldBadge extends AbstractField {
         _getClassFromDecoration(decoration) {
-            return `bg-${decoration.split('-')[1]}-light`;
+            return `bg-${decoration.split('-')[1]}`;
         }
     }
     FieldBadge.description = _lt("Badge");

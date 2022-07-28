@@ -50,7 +50,7 @@
                                 <a href="#" t-att-res-model="doc_model" view-type="form" t-att-res-id="doc.id">
                                     <t t-esc="doc.display_name"/>
                                 </a>
-                                <span t-field="doc.state" t-attf-class="badge rounded-pill #{'bg-success-light' if doc.state == 'done' else 'bg-info-light'}"/>
+                                <span t-field="doc.state" t-attf-class="badge rounded-pill bg-opacity-50 #{'bg-success' if doc.state == 'done' else 'bg-info'}"/>
                             </div>
                         </t>
                     </t>
