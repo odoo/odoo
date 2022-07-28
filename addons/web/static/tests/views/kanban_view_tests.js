@@ -7668,30 +7668,30 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-muted",
+            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200",
             "should have false kanban color"
         );
         assert.hasClass(
             target.querySelector(
-                ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-muted"
+                ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
             ),
-            "bg-muted"
+            "bg-200"
         );
 
         await click(
             target,
-            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-muted"
+            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
         );
 
         assert.hasClass(
             target.querySelector(
-                ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-muted"
+                ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
             ),
             "progress-bar-animated"
         );
         assert.hasClass(
             target.querySelector(".o_kanban_group:last-child"),
-            "o_kanban_group_show_muted"
+            "o_kanban_group_show_200"
         );
         assert.deepEqual(getCounters(), ["1", "1"]);
     });
@@ -7729,12 +7729,12 @@ QUnit.module("Views", (hooks) => {
 
         await click(
             target,
-            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-muted"
+            ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
         );
 
         assert.hasClass(
             target.querySelector(
-                ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-muted"
+                ".o_kanban_group:last-child .o_kanban_counter_progress .progress-bar.bg-200"
             ),
             "progress-bar-animated"
         );

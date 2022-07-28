@@ -6393,12 +6393,12 @@ QUnit.module('LegacyViews', {
         assert.containsN(kanban, '.o_kanban_counter_progress:last .progress-bar', 4);
         assert.containsOnce(kanban, '.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]',
             "should have false kanban color");
-        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'bg-muted');
+        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'bg-200');
 
         await testUtils.dom.click(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'));
 
         assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
-        assert.hasClass(kanban.$('.o_kanban_group:last'), 'o_kanban_group_show_muted');
+        assert.hasClass(kanban.$('.o_kanban_group:last'), 'o_kanban_group_show_200');
         assert.strictEqual(kanban.$('.o_legacy_kanban_counter:last .o_kanban_counter_side').text(), "1");
 
         kanban.destroy();
