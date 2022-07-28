@@ -64,6 +64,17 @@ RUN npm install -g rtlcss
 #    && rm -rf /var/lib/apt/lists/* odoo.deb
 COPY ./odoo /usr/lib/python3/dist-packages/
 
+RUN mkdir /var/lib/odoo && \
+    groupadd -g %(group_id)s odoo && \
+    useradd -u %(user_id)s -g odoo odoo -d /var/lib/odoo && \
+    mkdir /data && \
+    chown odoo:odoo /var/lib/odoo /data \
+
+#RUN cd /usr/lib/python3/dist-packages/ \
+#    && pip3 install setuptools wheel \
+#    && pip3 install -r requirements.txt \
+#    && python3 odoo-bin --addons-path=addons -d wd-erp
+
 # Copy entrypoint script and Odoo configuration file
 COPY ./entrypoint.sh /
 COPY ./odoo.conf /etc/odoo/
