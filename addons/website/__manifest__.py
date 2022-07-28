@@ -169,6 +169,7 @@
             ('remove', 'website/static/src/client_actions/website_preview/website_preview_test_mode.js'),
             'website/static/src/client_actions/*/*.scss',
             'website/static/src/components/fields/fields.js',
+            'website/static/src/components/fields/fields.scss',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.js',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.scss',
             'website/static/src/components/website_loader/website_loader.js',
