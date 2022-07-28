@@ -290,7 +290,8 @@ export class MockServer {
                     const v = evaluateExpr(mod, context) ? true : false;
                     if (inTreeView && !inListHeader && attr === "invisible") {
                         modifiers.column_invisible = v;
-                    } else if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {
+                    }
+                    if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {
                         modifiers[attr] = v;
                     }
                 }

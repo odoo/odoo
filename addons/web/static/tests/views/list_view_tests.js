@@ -485,29 +485,45 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target.querySelector(".o_data_row:first-child"), "td.o_list_button", 2);
     });
 
-    QUnit.test("list view with adjacent buttons and invisible field", async function (assert) {
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: `
+    QUnit.test(
+        "list view with adjacent buttons and invisible field and button",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
                 <tree>
                     <button name="a" type="object" icon="fa-car"/>
                     <field name="foo" invisible="1"/>
+                    <!--Here the invisible=1 is used to simulate a group on the case that the user
+                        don't have the rights to see the button.-->
+                    <button name="b" type="object" icon="fa-car" invisible="1"/>
                     <button name="x" type="object" icon="fa-star"/>
                     <button name="y" type="object" icon="fa-refresh"/>
                     <button name="z" type="object" icon="fa-exclamation"/>
                 </tree>`,
-        });
+            });
 
-        assert.containsN(
-            target,
-            "th",
-            3,
-            "adjacent buttons in the arch must be grouped in a single column"
-        );
-        assert.containsN(target.querySelector(".o_data_row:first-child"), "td.o_list_button", 2);
-    });
+            assert.containsN(
+                target,
+                "th",
+                3,
+                "adjacent buttons in the arch must be grouped in a single column"
+            );
+            assert.containsN(
+                target,
+                "tr:first-child button",
+                4,
+                "Only 4 buttons should be visible"
+            );
+            assert.containsN(
+                target.querySelector(".o_data_row:first-child"),
+                "td.o_list_button",
+                2
+            );
+        }
+    );
 
     QUnit.test(
         "list view with adjacent buttons and invisible field (modifier)",

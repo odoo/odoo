@@ -59,22 +59,25 @@ export class ListArchParser extends XMLParser {
                 buttonGroup = undefined;
             }
             if (node.tagName === "button") {
-                const button = {
-                    ...processButton(node),
-                    defaultRank: "btn-link",
-                    type: "button",
-                    id: buttonId++,
-                };
-                if (buttonGroup) {
-                    buttonGroup.buttons.push(button);
-                } else {
-                    buttonGroup = {
-                        id: `column_${nextId++}`,
-                        type: "button_group",
-                        buttons: [button],
-                        hasLabel: false,
+                const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
+                if (modifiers.column_invisible !== true) {
+                    const button = {
+                        ...processButton(node),
+                        defaultRank: "btn-link",
+                        type: "button",
+                        id: buttonId++,
                     };
-                    columns.push(buttonGroup);
+                    if (buttonGroup) {
+                        buttonGroup.buttons.push(button);
+                    } else {
+                        buttonGroup = {
+                            id: `column_${nextId++}`,
+                            type: "button_group",
+                            buttons: [button],
+                            hasLabel: false,
+                        };
+                        columns.push(buttonGroup);
+                    }
                 }
             } else if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "list");
