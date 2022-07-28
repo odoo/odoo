@@ -42,7 +42,7 @@
                         </t>
                         <!-- Remove button -->
                         <t t-if="attachmentCard.attachment.isDeletable">
-                            <button class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUnlink btn top-0 justify-content-center align-items-center d-flex w-100 h-100 rounded-0" t-attf-class="{{ attachmentCard.attachmentList.composerViewOwner ? 'o-pretty position-absolute btn-primary' : 'bg-200' }}" t-on-click="attachmentCard.onClickUnlink" title="Remove">
+                            <button class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUnlink btn top-0 justify-content-center align-items-center d-flex w-100 h-100 rounded-0" t-attf-class="{{ attachmentCard.attachmentList.composerViewOwner ? 'o-pretty position-absolute btn-primary transition-base' : 'bg-200' }}" t-on-click="attachmentCard.onClickUnlink" title="Remove">
                                 <i class="fa fa-trash" role="img" aria-label="Remove"/>
                             </button>
                         </t>
