@@ -57,7 +57,7 @@ RUN mkdir /var/lib/odoo \
     && groupadd -g 101 odoo  \
     && useradd -u 101 -g odoo odoo -d /var/lib/odoo \
     && mkdir /data \
-    && chown odoo:odoo /var/lib/odoo /data \
+    && chown odoo:odoo /var/lib/odoo /data
 
 # Install Odoo
 #ENV ODOO_VERSION 15.0
