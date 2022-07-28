@@ -165,7 +165,7 @@ var MockServer = Class.extend({
         }, function (result) {
             var message = result && result.message;
             var event = result && result.event;
-            var errorString = JSON.stringify(message || false);
+            var errorString = typeof message !== "string" ? JSON.stringify(message || false) : message;
             if (debug) {
                 console.warn(
                     '%c[rpc] response (error) %s%s, during test %s',
