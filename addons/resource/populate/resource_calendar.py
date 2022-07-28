@@ -4,6 +4,7 @@ import random
 
 from odoo import models
 from odoo.tools import populate
+from datetime import datetime, timedelta
 
 
 class ResourceCalendar(models.Model):
@@ -42,3 +43,34 @@ class ResourceCalendar(models.Model):
                 'attendance_ids': [(3, record.attendance_ids[idx].id) for idx in to_pop],
             })
         return records
+
+class ResourceCalendarLeaves(models.Model):
+    _inherit = 'resource.calendar.leaves'
+
+    _populate_dependencies = ['resource.calendar']
+
+    _populate_sizes = {
+        "small": 30,
+        "medium": 50,
+        "large": 300
+    }
+
+    def _populate_factories(self):
+        def get_calendar_id(values, counter, random):
+            return random.choice(self.env['resource.calendar'].search([])).id
+
+        def _compute_dates(iterator, field_name, model_name):
+            i = 0
+            while values := next(iterator, False):
+                length = random.randint(1, 10)
+                values['date_from'] = datetime.now() + timedelta(days=i)
+                values['date_to'] = datetime.now() + timedelta(days=i+length)
+                i += random.randint(length, length+10)
+                yield values
+
+        return [
+            ('name', populate.constant("Leave {counter}")),
+            ('_compute_dates', _compute_dates),
+            ('calendar_id', populate.compute(get_calendar_id)),
+            ('time_type', populate.iterate(['leave', 'other'], [0.8, 0.2]))
+        ]

@@ -3,6 +3,7 @@
 
 import logging
 import math
+import string
 from datetime import datetime, timedelta
 from itertools import product as cartesian_product
 from collections import defaultdict
@@ -612,4 +613,44 @@ class StockMove(models.Model):
             ('sequence', populate.randint(1, 1000)),
             ('_attach_to_record', _attach_to_record),
             ('_compute_picking_values', _compute_picking_values),
+        ]
+
+class StockLot(models.Model):
+    _inherit = 'stock.lot'
+
+    _populate_dependencies = ['product.product']
+
+    def _populate_factories(self):
+        def get_product_id(values, counter, random):
+            return random.choice(self.env['product.product'].search([('tracking', '!=', 'none'), ('type', '=', 'product')])).id
+
+        def get_note(values, counter, random):
+            return "<p>" + ''.join(random.choice(string.ascii_letters) for _ in range(100)) + "</p>"
+
+        def get_company_id(values, counter, random):
+            product_company = self.env['product.product'].browse(values['product_id']).company_id
+            if product_company:
+                return product_company
+            return random.choice(self.env.registry.populated_models['res.company'][:COMPANY_NB_WITH_STOCK])
+
+        return [
+            ('ref', populate.constant("Lot {counter}")),
+            ('product_id', populate.compute(get_product_id)),
+            ('note', populate.compute(get_note)),
+            ('company_id', populate.compute(get_company_id))
+        ]
+
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    _populate_dependencies = ['res.partner']
+
+    def _populate_factories(self):
+        def get_partner_id(values, counter, random):
+            return random.choice(self.env['res.partner'].search([])).id
+
+        return [
+            ('partner_id', populate.compute(get_partner_id)),
+            ('move_type', populate.iterate(['direct', 'one']))
         ]
