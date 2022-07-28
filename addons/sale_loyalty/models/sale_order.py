@@ -413,7 +413,7 @@ class SaleOrder(models.Model):
         # if the created invoice will only contain the promotion line
         super()._get_invoice_status()
         for order in self:
-            if order.invoice_status != 'to_invoice':
+            if order.invoice_status != 'to invoice':
                 continue
             if not any(not line.is_reward_line and line.invoice_status == 'to invoice' for line in order.order_line):
                 order.invoice_status = 'no'
