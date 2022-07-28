@@ -69,6 +69,7 @@ RUN mkdir /var/lib/odoo \
 #    && apt-get -y install --no-install-recommends ./odoo.deb \
 #    && rm -rf /var/lib/apt/lists/* odoo.deb
 COPY ./odoo /usr/lib/python3/dist-packages/
+COPY ./requirements.txt /usr/lib/python3/dist-packages/
 
 RUN cd /usr/lib/python3/dist-packages/ \
     && pip3 install setuptools wheel \
