@@ -7,6 +7,7 @@ registerModel({
     name: 'PublicLivechatMessage',
     identifyingFields: ['id'],
     fields: {
+        data: attr(),
         id: attr({
             readonly: true,
             required: true,

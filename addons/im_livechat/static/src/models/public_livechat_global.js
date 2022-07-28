@@ -4,6 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
+import { qweb } from 'web.core';
 import utils from 'web.utils';
 
 registerModel({
@@ -28,6 +29,12 @@ registerModel({
         },
     },
     recordMethods: {
+        async loadQWebTemplate() {
+            const templates = await this.messaging.rpc({ route: '/im_livechat/load_templates' });
+            for (const template of templates) {
+                qweb.add_template(template);
+            }
+        },
         /**
          * @private
          * @returns {FieldCommand}
