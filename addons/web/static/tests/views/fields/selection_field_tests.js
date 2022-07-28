@@ -396,6 +396,57 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "required selection widget should have only one blank option",
+        async function (assert) {
+            serverData.models.partner.fields.feedback_value = {
+                type: "selection",
+                required: true,
+                selection: [
+                    ["good", "Good"],
+                    ["bad", "Bad"],
+                ],
+                default: "good",
+                string: "Good",
+            };
+            serverData.models.partner.fields.color.selection = [
+                [false, ""],
+                ...serverData.models.partner.fields.color.selection,
+            ];
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                <form>
+                    <field name="feedback_value" />
+                    <field name="color" attrs="{'required': [('feedback_value', '=', 'bad')]}" />
+                </form>`,
+            });
+
+            await click(target, ".o_form_button_edit");
+
+            assert.containsN(
+                target.querySelector(".o_field_widget[name='color']"),
+                "option",
+                3,
+                "Three options in non required field (one blank option)"
+            );
+
+            // change value to update widget modifier values
+            await editSelect(target, ".o_field_widget[name='feedback_value'] select", '"bad"');
+
+            assert.containsN(
+                target.querySelector(".o_field_widget[name='color']"),
+                "option",
+                2,
+                "Still three options in required selection (one blank option)"
+            );
+        }
+    );
+
     QUnit.test("selection field with placeholder", async function (assert) {
         await makeView({
             type: "form",
