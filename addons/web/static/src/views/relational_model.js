@@ -101,8 +101,9 @@ async function toggleArchive(model, resModel, resIds, doArchive, context) {
 
 async function unselectRecord(editedRecord, abandonRecord) {
     if (editedRecord) {
+        const isValid = await editedRecord.checkValidity();
         const canBeAbandoned = editedRecord.canBeAbandoned;
-        if (!canBeAbandoned && editedRecord.checkValidity()) {
+        if (isValid && !canBeAbandoned) {
             return editedRecord.switchMode("readonly");
         } else if (canBeAbandoned) {
             return abandonRecord(editedRecord.id);
@@ -552,7 +553,16 @@ export class Record extends DataPoint {
         this.invalidateCache();
     }
 
-    checkValidity() {
+    async checkValidity() {
+        if (!this._urgentSave) {
+            const proms = [];
+            this.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
+            await Promise.all([...proms, this.model.mutex.getUnlockedDef()]);
+        }
+        return this._checkValidity();
+    }
+
+    _checkValidity() {
         for (const fieldName in this._requiredFields) {
             const fieldType = this.fields[fieldName].type;
             if (!evalDomain(this._requiredFields[fieldName], this.evalContext)) {
@@ -737,7 +747,7 @@ export class Record extends DataPoint {
 
     isX2ManyValid(fieldName) {
         const value = this.data[fieldName];
-        return value.records.every((r) => r.checkValidity());
+        return value.records.every(async (r) => await r.checkValidity());
     }
 
     async load(params = {}) {
@@ -1214,7 +1224,7 @@ export class Record extends DataPoint {
      */
     async _save(options = { stayInEdition: false, noReload: false }) {
         this.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES");
-        if (!this.checkValidity()) {
+        if (!(await this._checkValidity())) {
             const invalidFields = [...this._invalidFields].map((fieldName) => {
                 return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
             }, this);
@@ -2580,7 +2590,7 @@ export class StaticList extends DataPoint {
         this.onRecordWillSwitchMode = async (record, mode) => {
             const editedRecord = this.editedRecord;
             if (editedRecord && editedRecord.id === record.id && mode === "readonly") {
-                const valid = record.checkValidity();
+                const valid = await record.checkValidity();
                 if (valid) {
                     this.editedRecord = null;
                 }

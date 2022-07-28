@@ -9559,6 +9559,63 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["onchange"]);
     });
 
+    QUnit.test("edit a field with a slow onchange in one2many", async function (assert) {
+        serverData.models.turtle.onchanges = {
+            turtle_foo: function () {},
+        };
+
+        let def;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree editable="bottom">
+                            <field name="turtle_foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            async mockRPC(route, args) {
+                assert.step(args.method);
+                if (args.method === "onchange") {
+                    await Promise.resolve(def);
+                }
+            },
+        });
+
+        assert.verifySteps(["get_views", "onchange"]);
+
+        const value = "hello";
+
+        // add a new line
+        await addRow(target);
+
+        assert.verifySteps(["onchange"]);
+
+        // we want to add a delay to simulate an onchange
+        def = makeDeferred();
+
+        // write something in the field
+        await editInput(target, "[name=turtle_foo] input", value);
+        assert.strictEqual(target.querySelector("[name=turtle_foo] input").value, value);
+
+        await click(target, ".o_form_view");
+
+        // check that nothing changed before the onchange finished
+        assert.strictEqual(target.querySelector("[name=turtle_foo] input").value, value);
+
+        assert.verifySteps(["onchange"]);
+
+        // unlock onchange
+        def.resolve();
+        await nextTick();
+
+        // check the current line is added with the correct content
+        assert.strictEqual(target.querySelector(".o_data_row [name=turtle_foo]").innerText, value);
+    });
+
     QUnit.test(
         "no deadlock when leaving a one2many line with uncommitted changes",
         async function (assert) {
