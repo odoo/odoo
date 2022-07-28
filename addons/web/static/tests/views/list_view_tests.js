@@ -14250,4 +14250,57 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps(["write"]);
     });
+
+    QUnit.test("edit a field with a slow onchange in a new row", async function (assert) {
+        serverData.models.foo.onchanges = {
+            int_field: function () {},
+        };
+        serverData.models.foo.records = [];
+
+        let def;
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="int_field"/>
+                </tree>`,
+            async mockRPC(route, args) {
+                assert.step(args.method);
+                if (args.method === "onchange") {
+                    await Promise.resolve(def);
+                }
+            },
+        });
+
+        assert.verifySteps(["get_views", "web_search_read"]);
+
+        const value = "14";
+        // add a new line
+        await click(target.querySelector(".o_list_button_add"));
+
+        assert.verifySteps(["onchange"]);
+
+        // we want to add a delay to simulate an onchange
+        def = makeDeferred();
+
+        // write something in the field
+        await editInput(target, "[name=int_field] input", value);
+        assert.strictEqual(target.querySelector("[name=int_field] input").value, value);
+
+        await click(target, ".o_list_view");
+
+        // check that nothing changed before the onchange finished
+        assert.strictEqual(target.querySelector("[name=int_field] input").value, value);
+        assert.verifySteps(["onchange"]);
+
+        // unlock onchange
+        def.resolve();
+        await nextTick();
+
+        // check the current line is added with the correct content
+        assert.strictEqual(target.querySelector(".o_data_row [name=int_field]").innerText, value);
+        assert.verifySteps(["create", "read"]);
+    });
 });

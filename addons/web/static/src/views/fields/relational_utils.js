@@ -477,7 +477,7 @@ class X2ManyFieldDialog extends owl.Component {
     }
 
     async save({ saveAndNew }) {
-        if (this.record.checkValidity()) {
+        if (await this.record.checkValidity()) {
             this.record = (await this.props.save(this.record, { saveAndNew })) || this.record;
         } else {
             return false;
