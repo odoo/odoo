@@ -35,7 +35,7 @@ class Note(models.Model):
     _name = 'note.note'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Note"
-    _order = 'sequence'
+    _order = 'sequence, id desc'
 
     def _get_default_stage_id(self):
         return self.env['note.stage'].search([('user_id', '=', self.env.uid)], limit=1)
@@ -45,7 +45,7 @@ class Note(models.Model):
     company_id = fields.Many2one('res.company')
     user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.uid)
     memo = fields.Html('Note Content')
-    sequence = fields.Integer('Sequence')
+    sequence = fields.Integer('Sequence', default=0)
     stage_id = fields.Many2one('note.stage', compute='_compute_stage_id',
         inverse='_inverse_stage_id', string='Stage', default=_get_default_stage_id)
     stage_ids = fields.Many2many('note.stage', 'note_stage_rel', 'note_id', 'stage_id',
