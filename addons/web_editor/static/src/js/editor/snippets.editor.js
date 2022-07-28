@@ -3467,19 +3467,18 @@ var SnippetsMenu = Widget.extend({
     _checkEditorToolbarVisibility: function (e) {
         const $toolbarContainer = this.$('#o_we_editor_toolbar_container');
         const $toolbarTableContainer = this.$('#o-we-editor-table-container');
-        const docSelection = document.getSelection();
-        const $currentSelectionTarget = docSelection && docSelection.rangeCount > 0 ? $(docSelection.getRangeAt(0).commonAncestorContainer) : $();
-        // Do not  toggle visibility if the target is inside the toolbar ( eg. during link edition).
+        const selection = this.options.wysiwyg.odooEditor.document.getSelection();
+        const range = selection && selection.rangeCount && selection.getRangeAt(0);
+        const $currentSelectionTarget = $(range && range.commonAncestorContainer);
+        // Do not  toggle visibility if the target is inside the toolbar ( eg.
+        // during link edition).
         if ($currentSelectionTarget.closest('#o_we_editor_toolbar_container').length ||
             (e && $(e.target).closest('#o_we_editor_toolbar_container').length)
         ) {
             return;
         }
-
-        const selection = this.options.wysiwyg.odooEditor.document.getSelection();
-        const range = selection && selection.rangeCount && selection.getRangeAt(0);
         if (!range ||
-            !$(range.commonAncestorContainer).parents('#wrapwrap, .iframe-editor-wrapper .o_editable').length ||
+            !$currentSelectionTarget.parents('#wrapwrap, .iframe-editor-wrapper .o_editable').length ||
             $(selection.anchorNode).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-id])').length ||
             $(selection.focusNode).parent('[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-id])').length ||
             (e && $(e.target).closest('.fa, img').length ||
