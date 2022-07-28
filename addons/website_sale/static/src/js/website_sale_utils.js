@@ -56,6 +56,7 @@ function animateClone($cart, $elem, offsetTop, offsetLeft) {
         $(this).removeClass("o_red_highlight").dequeue();
     });
     return new Promise(function (resolve, reject) {
+        if(!$elem) resolve();
         var $imgtodrag = $elem.find('img').eq(0);
         if ($imgtodrag.length) {
             var $imgclone = $imgtodrag.clone()

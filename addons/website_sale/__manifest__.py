@@ -25,6 +25,7 @@
         'views/crm_team_views.xml',
         'views/templates.xml',
         'views/snippets/snippets.xml',
+        'views/snippets/s_add_to_cart.xml',
         'views/snippets/s_dynamic_snippet_products.xml',
         'views/res_config_settings_views.xml',
         'views/digest_views.xml',
@@ -72,6 +73,7 @@
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/options.js',
+            'website_sale/static/src/snippets/s_add_to_cart/options.js',
             'website_sale/static/src/js/website_sale.editor.js',
         ],
         'website.assets_editor': [

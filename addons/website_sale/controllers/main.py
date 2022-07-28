@@ -593,6 +593,11 @@ class WebsiteSale(http.Controller):
         if hasattr(image_to_resequence, 'video_url'):
             image_to_resequence._onchange_video_url()
 
+    @http.route(['/shop/product/is_add_to_cart_allowed'], type='json', auth="public", website=True)
+    def is_add_to_cart_allowed(self, product_id, **kwargs):
+        product = request.env['product.product'].browse(product_id)
+        return product._is_add_to_cart_allowed()
+
     def _prepare_product_values(self, product, category, search, **kwargs):
         ProductCategory = request.env['product.public.category']
 
