@@ -74,21 +74,6 @@ registerModel({
             return this.modelManager.findFromIdentifyingData(this, data);
         },
         /**
-         * This method returns the record of this model that matches provided
-         * local id. Useful to convert a local id to a record. Note that even
-         * if there's a record in the system having provided local id, if the
-         * resulting record is not an instance of this model, this getter
-         * assumes the record does not exist.
-         *
-         * @param {string} localId
-         * @param {Object} param1
-         * @param {boolean} [param1.isCheckingInheritance]
-         * @returns {Record|undefined}
-         */
-        get(localId, { isCheckingInheritance } = {}) {
-            return this.modelManager.get(this, localId, { isCheckingInheritance });
-        },
-        /**
          * This method creates a record or updates one, depending on provided
          * data. This is the only way to create a record: instantiation must
          * never been done with keyword `new` outside of this function,

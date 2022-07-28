@@ -14,7 +14,7 @@ const BASE_VISUAL = {
      * List of hidden docked chat windows. Useful to compute counter.
      * Chat windows are ordered by their `chatWindows` order.
      */
-    hiddenChatWindowLocalIds: [],
+    hiddenChatWindows: [],
     /**
      * Whether hidden menu is visible or not
      */
@@ -31,7 +31,7 @@ const BASE_VISUAL = {
      * Value:
      *
      *  {
-     *      chatWindowLocalId,
+     *      chatWindow,
      *      offset,
      *  }
      *
@@ -169,18 +169,14 @@ registerModel({
          * @returns {ChatWindow[]}
          */
         _computeAllOrderedHidden() {
-            return replace(this.visual.hiddenChatWindowLocalIds.map(chatWindowLocalId =>
-                this.messaging.models['ChatWindow'].get(chatWindowLocalId)
-            ));
+            return replace(this.visual.hiddenChatWindows);
         },
         /**
          * @private
          * @returns {ChatWindow[]}
          */
         _computeAllOrderedVisible() {
-            return replace(this.visual.visible.map(({ chatWindowLocalId }) =>
-                this.messaging.models['ChatWindow'].get(chatWindowLocalId)
-            ));
+            return replace(this.visual.visible.map(({ chatWindow }) => chatWindow));
         },
         /**
          * @private
@@ -281,17 +277,17 @@ registerModel({
             if (this.allOrdered.length <= maxAmountWithoutHidden) {
                 // all visible
                 for (let i = 0; i < this.allOrdered.length; i++) {
-                    const chatWindowLocalId = this.allOrdered[i].localId;
+                    const chatWindow = this.allOrdered[i];
                     const offset = this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
-                    visual.visible.push({ chatWindowLocalId, offset });
+                    visual.visible.push({ chatWindow, offset });
                 }
                 visual.availableVisibleSlots = maxAmountWithoutHidden;
             } else if (maxAmountWithHidden > 0) {
                 // some visible, some hidden
                 for (let i = 0; i < maxAmountWithHidden; i++) {
-                    const chatWindowLocalId = this.allOrdered[i].localId;
+                    const chatWindow = this.allOrdered[i];
                     const offset = this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
-                    visual.visible.push({ chatWindowLocalId, offset });
+                    visual.visible.push({ chatWindow, offset });
                 }
                 if (this.allOrdered.length > maxAmountWithHidden) {
                     visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
@@ -299,14 +295,14 @@ registerModel({
                         + this.chatWindowWidth + this.betweenGapWidth;
                 }
                 for (let j = maxAmountWithHidden; j < this.allOrdered.length; j++) {
-                    visual.hiddenChatWindowLocalIds.push(this.allOrdered[j].localId);
+                    visual.hiddenChatWindows.push(this.allOrdered[j]);
                 }
                 visual.availableVisibleSlots = maxAmountWithHidden;
             } else {
                 // all hidden
                 visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
                 visual.hiddenMenuOffset = this.startGapWidth;
-                visual.hiddenChatWindowLocalIds.concat(this.allOrdered.map(chatWindow => chatWindow.localId));
+                visual.hiddenChatWindows.push(...this.allOrdered);
                 console.warn('cannot display any visible chat windows (screen is too small)');
                 visual.availableVisibleSlots = 0;
             }
