@@ -14,6 +14,13 @@ odoo.define("website_sale.tour_utils", function (require) {
         };
     }
 
+    function assertCartContains(productName, backend = false) {
+        return {
+                content: `Checking if ${productName} is in the cart`,
+                trigger: `${backend ? "iframe" : ""} a:contains(${productName})`,
+            };
+    }
+
     /**
      * Used to select a pricelist on the /shop view
      */
@@ -27,7 +34,7 @@ odoo.define("website_sale.tour_utils", function (require) {
                 content: "Click on pricelist",
                 trigger: `span:contains(${pricelist})`,
             },
-        ]
+        ];
     }
 
     /**
@@ -36,15 +43,16 @@ odoo.define("website_sale.tour_utils", function (require) {
     function assertProductPrice(attribute, value, productName) {
         return {
             content: `The ${attribute} of the ${productName} is ${value}`,
-            trigger: `div:contains("${productName}") [data-oe-expression="template_price_vals[\'${attribute}\']"] .oe_currency_value:contains("${value}")`,
+            trigger: `div:contains("${productName}") [data-oe-expression="template_price_vals['${attribute}']"] .oe_currency_value:contains("${value}")`,
             run: () => {
             }
-        }
+        };
     }
 
     return {
+        assertCartContains,
+        assertProductPrice,
         goToCart,
         selectPriceList,
-        assertProductPrice
     };
 });
