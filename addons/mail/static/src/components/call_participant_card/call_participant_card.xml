@@ -3,7 +3,7 @@
 
     <t t-name="mail.CallParticipantCard" owl="1">
         <t t-if="callParticipantCard">
-            <div class="o_CallParticipantCard position-relative o_cursor_pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100 p-1 rounded-1"
+            <div class="o_CallParticipantCard position-relative cursor-pointer d-flex flex-column align-items-center justify-content-center mh-100 mw-100 p-1 rounded-1"
                 t-att-class="{
                     'o-isTalking': !callParticipantCard.isMinimized and callParticipantCard.isTalking,
                     'o-isInvitation opacity-50': !callParticipantCard.rtcSession,

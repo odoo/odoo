@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
 
   <t t-name="web.DefaultCommandItem" owl="1">
-    <div class="o_command_default d-flex align-items-center justify-content-between px-4 py-2 o_cursor_pointer">
+    <div class="o_command_default d-flex align-items-center justify-content-between px-4 py-2 cursor-pointer">
       <t t-slot="name"/>
     </div>
   </t>
 
   <t t-name="web.HotkeyCommandItem" owl="1">
-    <div class="o_command_hotkey d-flex align-items-center justify-content-between px-4 py-2 o_cursor_pointer">
+    <div class="o_command_hotkey d-flex align-items-center justify-content-between px-4 py-2 cursor-pointer">
       <t t-slot="name"/>
       <span>
         <t t-foreach="getKeysToPress(props)" t-as="key" t-key="key_index">

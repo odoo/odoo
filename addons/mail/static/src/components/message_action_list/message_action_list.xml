@@ -3,25 +3,25 @@
     <t t-name="mail.MessageActionList" owl="1">
         <t t-if="messageActionList">
             <div class="o_MessageActionList d-flex rounded-1 bg-white shadow-sm" t-att-class="{ 'o-isDeviceSmall': messaging.device.isSmall }" t-attf-class="{{ className }}" t-on-click="messageActionList.onClick" t-ref="root">
-                <i t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction fa fa-lg fa-smile-o o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'ps-3 py-3 pe-2' : 'ps-2 py-2 pe-1' }}"  t-att-title="messageActionList.addReactionText" t-on-click="messageActionList.onClickActionReaction" t-ref="actionReaction"/>
+                <i t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction fa fa-lg fa-smile-o cursor-pointer" t-attf-class="{{ messaging.device.isSmall ? 'ps-3 py-3 pe-2' : 'ps-2 py-2 pe-1' }}"  t-att-title="messageActionList.addReactionText" t-on-click="messageActionList.onClickActionReaction" t-ref="actionReaction"/>
                 <t t-if="!messageActionList.isCompact || !messageActionList.hasCompactIcon">
-                    <span t-if="messageActionList.message.canStarBeToggled" class="o_MessageActionList_action o_MessageActionList_actionStar o_cursor_pointer"  t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" t-att-class="{
+                    <span t-if="messageActionList.message.canStarBeToggled" class="o_MessageActionList_action o_MessageActionList_actionStar cursor-pointer"  t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" t-att-class="{
                             'o_MessageActionList_actionStar_active': messageActionList.message.isStarred,
                             'fa fa-lg fa-star': messageActionList.message.isStarred,
                             'fa fa-lg fa-star-o': !messageActionList.message.isStarred,
                         }" role="button" tabindex="0" aria-label="Mark as Todo" t-att-aria-pressed="messageActionList.message.isStarred ? 'true' : 'false'" title="Mark as Todo" t-on-click="messageActionList.onClickToggleStar"/>
-                    <span t-if="messageActionList.hasReplyIcon" class="o_MessageActionList_action o_MessageActionList_actionReply fa fa-lg fa-reply o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" title="Reply" role="button" tabindex="0" aria-label="Reply" t-on-click="messageActionList.onClickReplyTo"/>
-                    <span t-if="messageActionList.hasMarkAsReadIcon" class="o_MessageActionList_action o_MessageActionList_actionMarkRead fa fa-lg fa-check o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" title="Mark as Read" role="button" tabindex="0" aria-label="Mark as Read" t-on-click="messageActionList.onClickMarkAsRead"/>
-                    <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionEdit fa fa-lg fa-pencil o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" title="Edit" role="button" tabindex="0" aria-label="Edit" t-on-click="messageActionList.onClickEdit"/>
+                    <span t-if="messageActionList.hasReplyIcon" class="o_MessageActionList_action o_MessageActionList_actionReply fa fa-lg fa-reply cursor-pointer" t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" title="Reply" role="button" tabindex="0" aria-label="Reply" t-on-click="messageActionList.onClickReplyTo"/>
+                    <span t-if="messageActionList.hasMarkAsReadIcon" class="o_MessageActionList_action o_MessageActionList_actionMarkRead fa fa-lg fa-check cursor-pointer" t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" title="Mark as Read" role="button" tabindex="0" aria-label="Mark as Read" t-on-click="messageActionList.onClickMarkAsRead"/>
+                    <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionEdit fa fa-lg fa-pencil cursor-pointer" t-attf-class="{{ messaging.device.isSmall ? 'px-2 py-3' : 'px-1 py-2' }}" title="Edit" role="button" tabindex="0" aria-label="Edit" t-on-click="messageActionList.onClickEdit"/>
                     <!-- If there is no compact icon, delete will be the last button of the action list, a different styling will be applied. -->
-                    <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionDelete fa fa-lg fa-trash o_cursor_pointer" t-att-class="{
+                    <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionDelete fa fa-lg fa-trash cursor-pointer" t-att-class="{
                             'px-2 py-3': messageActionList.hasCompactIcon and messaging.device.isSmall,
                             'px-1 py-2': messageActionList.hasCompactIcon and !messaging.device.isSmall,
                             'ps-2 py-3 pe-3': !messageActionList.hasCompactIcon and messaging.device.isSmall,
                             'ps-1 py-2 pe-2': !messageActionList.hasCompactIcon and !messaging.device.isSmall,
                         }" title="Delete" role="button" tabindex="0" aria-label="Delete" t-on-click="messageActionList.onClickDelete"/>
                 </t>
-                <span t-if="messageActionList.hasCompactIcon" class="o_MessageActionList_action o_MessageActionList_actionToggleCompact fa fa-lg fa-ellipsis-h o_cursor_pointer" t-attf-class="{{ messaging.device.isSmall ? 'ps-2 py-3 pe-3' : 'ps-1 py-2 pe-2' }}" t-att-title="messageActionList.isCompact ? 'Expend' : 'Compact'" role="button" tabindex="0" t-att-aria-label="messageActionList.isCompact ? 'Expend' : 'Compact'" t-on-click="messageActionList.onClickToggleCompact"/>
+                <span t-if="messageActionList.hasCompactIcon" class="o_MessageActionList_action o_MessageActionList_actionToggleCompact fa fa-lg fa-ellipsis-h cursor-pointer" t-attf-class="{{ messaging.device.isSmall ? 'ps-2 py-3 pe-3' : 'ps-1 py-2 pe-2' }}" t-att-title="messageActionList.isCompact ? 'Expend' : 'Compact'" role="button" tabindex="0" t-att-aria-label="messageActionList.isCompact ? 'Expend' : 'Compact'" t-on-click="messageActionList.onClickToggleCompact"/>
             </div>
         </t>
     </t>
