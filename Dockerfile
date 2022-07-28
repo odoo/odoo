@@ -68,7 +68,7 @@ RUN mkdir /var/lib/odoo && \
     groupadd -g %(group_id)s odoo && \
     useradd -u %(user_id)s -g odoo odoo -d /var/lib/odoo && \
     mkdir /data && \
-    chown odoo:odoo /var/lib/odoo /data \
+    chown odoo:odoo /var/lib/odoo /data
 
 #RUN cd /usr/lib/python3/dist-packages/ \
 #    && pip3 install setuptools wheel \
