@@ -6,7 +6,7 @@ from odoo import fields, models, api
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    pos_loyalty_program_id = fields.Many2one('loyalty.program', compute='_compute_pos_loyalty_id', store=True, readonly=False, pos='loyalty_program_id')
+    pos_loyalty_program_id = fields.Many2one('loyalty.program', compute='_compute_pos_loyalty_id', store=True, readonly=False)
 
     pos_use_coupon_programs = fields.Boolean(related='pos_config_id.use_coupon_programs', readonly=False)
     pos_coupon_program_ids = fields.Many2many(related='pos_config_id.coupon_program_ids', readonly=False)

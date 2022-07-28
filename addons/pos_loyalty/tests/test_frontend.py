@@ -110,9 +110,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'tax_regime_selection': False,
             'use_pricelist': False,
-            'pricelist_id': self.env["product.pricelist"].create(
-                {"name": "PoS Default Pricelist",}
-            ),
             'use_coupon_programs': True,
             'coupon_program_ids': [Command.link(self.coupon_program.id)],
             'promo_program_ids': [Command.link(prog.id) for prog in self.promo_programs],

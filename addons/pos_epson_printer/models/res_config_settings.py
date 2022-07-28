@@ -7,7 +7,7 @@ from odoo import fields, models, api
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    pos_epson_printer_ip = fields.Char(compute='_compute_pos_epson_printer_ip', store=True, readonly=False, pos='epson_printer_ip')
+    pos_epson_printer_ip = fields.Char(compute='_compute_pos_epson_printer_ip', store=True, readonly=False)
 
     @api.depends('pos_epson_printer_ip', 'pos_other_devices')
     def _compute_pos_iface_cashdrawer(self):
