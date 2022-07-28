@@ -21,11 +21,11 @@ wTourUtils.registerEditionTour('course_publisher_standard', {
     trigger: '#o_new_content_menu_choices a:contains("Course")'
 }, {
     content: 'eLearning: set name',
-    trigger: 'input[name="name"]',
+    trigger: 'div[name="name"] input',
     run: 'text How to Déboulonnate',
 }, {
     content: 'eLearning: click on tags',
-    trigger: '.o_field_many2manytags input',
+    trigger: '.o_field_many2many_tags input',
     run: 'text Gard',
 }, {
     content: 'eLearning: select gardener tag',

@@ -17,7 +17,7 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Select this menu item to create a new blog post."),
         position: "bottom",
     }, {
-        trigger: 'input[name="name"]',
+        trigger: 'div[name="name"] input',
         content: _t("Enter your post's title"),
         position: "bottom",
     }, {
