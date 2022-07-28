@@ -7,12 +7,9 @@ import time from 'web.time';
 import utils from 'web.utils';
 import Widget from 'web.Widget';
 
-import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
-
-import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 const _t = core._t;
-const QWeb = core.qweb;
 
 const LivechatButton = Widget.extend({
     className: 'openerp o_livechat_button d-print-none',
@@ -48,13 +45,13 @@ const LivechatButton = Widget.extend({
             }
             this.messaging.publicLivechatGlobal.livechatButtonView.update({ rule: result.rule });
         }
-        return this._loadQWebTemplate();
+        return this.messaging.publicLivechatGlobal.loadQWebTemplate();
     },
     start() {
         this.$el.text(this.messaging.publicLivechatGlobal.livechatButtonView.buttonText);
         if (this.messaging.publicLivechatGlobal.livechatButtonView.history) {
             for (const m of this.messaging.publicLivechatGlobal.livechatButtonView.history) {
-                this._addMessage(m);
+                this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(m);
             }
             this._openChat();
         } else if (!config.device.isMobile && this.messaging.publicLivechatGlobal.livechatButtonView.rule.action === 'auto_popup') {
@@ -85,45 +82,6 @@ const LivechatButton = Widget.extend({
     // Private
     //--------------------------------------------------------------------------
 
-
-    /**
-     * @private
-     * @param {Object} data
-     * @param {Object} [options={}]
-     */
-    _addMessage(data, options) {
-        const legacyMessage = new PublicLivechatMessage(this, this.messaging, data);
-
-        const hasAlreadyMessage = _.some(this.messaging.publicLivechatGlobal.livechatButtonView.messages, function (msg) {
-            return legacyMessage.getID() === msg.id;
-        });
-        if (hasAlreadyMessage) {
-            return;
-        }
-        const message = this.messaging.models['PublicLivechatMessage'].insert({
-            id: data.id,
-            legacyPublicLivechatMessage: legacyMessage,
-        });
-        if (this.messaging.publicLivechatGlobal.publicLivechat) {
-            this.messaging.publicLivechatGlobal.publicLivechat.update({
-                messages: link(message),
-            });
-        }
-
-        if (this.messaging.publicLivechatGlobal.publicLivechat && this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat) {
-            this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.addMessage(legacyMessage);
-        }
-
-        if (options && options.prepend) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                messages: replace([message, ...this.messaging.publicLivechatGlobal.livechatButtonView.messages]),
-            });
-        } else {
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                messages: replace([...this.messaging.publicLivechatGlobal.livechatButtonView.messages, message]),
-            });
-        }
-    },
     /**
      * @private
      */
@@ -137,16 +95,6 @@ const LivechatButton = Widget.extend({
     _closeChat() {
         this.messaging.publicLivechatGlobal.livechatButtonView.update({ chatWindow: clear() });
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
-    },
-    /**
-     * @private
-     */
-    _loadQWebTemplate() {
-        return session.rpc('/im_livechat/load_templates').then(function (templates) {
-            for (let template of templates) {
-                QWeb.add_template(template);
-            }
-        });
     },
     /**
      * @private
@@ -302,7 +250,7 @@ const LivechatButton = Widget.extend({
      */
     _sendWelcomeMessage() {
         if (this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage) {
-            this._addMessage({
+            this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
                 id: '_welcome',
                 attachment_ids: [],
                 author_id: [

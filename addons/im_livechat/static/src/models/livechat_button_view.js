@@ -1,13 +1,73 @@
 /** @odoo-module **/
 
+import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
+
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'LivechatButtonView',
     identifyingFields: ['publicLivechatGlobalOwner'],
     recordMethods: {
+        /**
+         * @param {Object} data
+         * @param {Object} [options={}]
+         */
+        addMessage(data, options) {
+            const legacyMessage = new PublicLivechatMessage(this, this.messaging, data);
+
+            const hasAlreadyMessage = _.some(this.messages, function (msg) {
+                return legacyMessage.getID() === msg.id;
+            });
+            if (hasAlreadyMessage) {
+                return;
+            }
+            const message = this.messaging.models['PublicLivechatMessage'].insert({
+                data,
+                id: data.id,
+                legacyPublicLivechatMessage: legacyMessage,
+            });
+
+            if (this.messaging.publicLivechatGlobal.publicLivechat && this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat) {
+                this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.addMessage(legacyMessage);
+            }
+
+            if (options && options.prepend) {
+                this.update({
+                    messages: replace([message, ...this.messages]),
+                });
+            } else {
+                this.update({
+                    messages: replace([...this.messages, message]),
+                });
+            }
+        },
+        /**
+         * See '_chatbotSaveSession'.
+         *
+         * We retrieve the livechat uuid from the session cookie since the livechat Widget is not yet
+         * initialized when we restore the chatbot state.
+         *
+         * We also clear any older keys that store a previously saved chatbot session.
+         * (In that case we clear the actual browser's local storage, we don't use the localStorage
+         * object as it does not allow browsing existing keys, see 'local_storage.js'.)
+         */
+        chatbotRestoreSession() {
+            const browserLocalStorage = window.localStorage;
+            if (browserLocalStorage && browserLocalStorage.length) {
+                for (let i = 0; i < browserLocalStorage.length; i++) {
+                    const key = browserLocalStorage.key(i);
+                    if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.chatbotSessionCookieKey) {
+                        browserLocalStorage.removeItem(key);
+                    }
+                }
+            }
+            const chatbotState = localStorage.getItem(this.chatbotSessionCookieKey);
+            if (chatbotState) {
+                this.chatbot.update({ currentStep: insertAndReplace({ data: this.localStorageChatbotState._chatbotCurrentStep }) });
+            }
+        },
         /**
          * @private
          * @returns {string}
@@ -213,12 +273,14 @@ registerModel({
             inverse: 'livechatButtonViewOwner',
             isCausal: true,
         }),
+        chatbotNextStepTimeout: attr(),
         chatbotSessionCookieKey: attr({
             compute: '_computeChatbotSessionCookieKey',
         }),
         chatbotState: attr({
             compute: '_computeChatbotState',
         }),
+        chatbotWelcomeMessageTimeout: attr(),
         chatWindow: one('PublicLivechatWindow', {
             inverse: 'livechatButtonViewOwner',
             isCausal: true,
