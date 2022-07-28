@@ -78,7 +78,7 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
             }
             var accesskeyElements = $(document).find('[accesskey]').filter(':visible');
             _.each(accesskeyElements, function (elem) {
-                var overlay = $(_.str.sprintf("<div class='o_web_accesskey_overlay'>%s</div>", $(elem).attr('accesskey').toUpperCase()));
+                var overlay = $(_.str.sprintf("<div class='o_web_accesskey_overlay font-sans-serif'>%s</div>", $(elem).attr('accesskey').toUpperCase()));
 
                 var $overlayParent;
                 if (elem.tagName.toUpperCase() === "INPUT") {
