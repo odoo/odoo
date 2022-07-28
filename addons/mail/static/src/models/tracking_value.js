@@ -13,7 +13,7 @@ registerModel({
          * @returns {string}
          */
         _computeFormattedChangedField() {
-            return sprintf(this.env._t("%s:"), this.changedField);
+            return sprintf(this.env._t("%s"), this.changedField);
         },
     },
     fields: {
