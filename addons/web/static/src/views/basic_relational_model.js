@@ -335,7 +335,12 @@ export class Record extends DataPoint {
     // Getters
     // -------------------------------------------------------------------------
 
-    checkValidity() {
+    async checkValidity(urgent) {
+        if (!urgent) {
+            const proms = [];
+            this.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
+            await Promise.all([...proms, this._updatePromise]);
+        }
         for (const fieldName in this.activeFields) {
             const fieldType = this.fields[fieldName].type;
             if (fieldName in this._requiredFields) {
@@ -352,7 +357,7 @@ export class Record extends DataPoint {
                     continue;
                 case "one2many":
                 case "many2many":
-                    if (!this.checkX2ManyValidity(fieldName)) {
+                    if (!(await this.checkX2ManyValidity(fieldName))) {
                         this.setInvalidField(fieldName);
                     }
                     break;
@@ -414,10 +419,10 @@ export class Record extends DataPoint {
         return evalDomain(required, this.evalContext);
     }
 
-    checkX2ManyValidity(fieldName) {
+    async checkX2ManyValidity(fieldName) {
         const list = this.data[fieldName];
         const record = list.editedRecord;
-        if (record && record.isNew && !record.checkValidity()) {
+        if (record && record.isNew && !(await record.checkValidity())) {
             if (record.canBeAbandoned) {
                 list.abandonRecord(record.id);
             } else {
@@ -603,7 +608,9 @@ export class Record extends DataPoint {
                 throw new Error("couldn't find x2many field name");
             }
             const operation = { operation: "UPDATE", id: this.__bm_handle__, data };
-            await this.__syncParent(operation);
+            const prom = this.__syncParent(operation);
+            prom.catch(resolveUpdatePromise);
+            await prom;
         } else {
             const prom = this.model.__bm__.notifyChanges(this.__bm_handle__, data, {
                 viewType: this.__viewType,
@@ -631,11 +638,8 @@ export class Record extends DataPoint {
         this._savePromise = new Promise((r) => {
             resolveSavePromise = r;
         });
-        const proms = [];
-        this.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
-        await Promise.all([...proms, this._updatePromise]);
         this._closeInvalidFieldsNotification();
-        if (!this.checkValidity()) {
+        if (!(await this.checkValidity())) {
             const invalidFields = [...this._invalidFields].map((fieldName) => {
                 return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
             }, this);
@@ -702,7 +706,7 @@ export class Record extends DataPoint {
         this.model.env.bus.trigger("RELATIONAL_MODEL:WILL_SAVE_URGENTLY");
         await Promise.resolve();
         this.__syncData();
-        if (this.isDirty && this.checkValidity()) {
+        if (this.isDirty && (await this.checkValidity(true))) {
             this.model.__bm__.save(this.__bm_handle__, { reload: false });
         }
         this.model.__bm__.bypassMutex = false;
@@ -782,14 +786,14 @@ export class StaticList extends DataPoint {
 
             const editedRecord = this.editedRecord;
             if (editedRecord && editedRecord.id === record.id && mode === "readonly") {
-                const valid = record.checkValidity();
+                const valid = await record.checkValidity();
                 if (valid) {
                     this.editedRecord = null;
                 }
                 return valid;
             }
             if (editedRecord) {
-                const isValid = editedRecord.checkValidity();
+                const isValid = await editedRecord.checkValidity();
                 if (!isValid) {
                     if (editedRecord.canBeAbandoned) {
                         this.abandonRecord(editedRecord.id);
@@ -1091,7 +1095,7 @@ export class StaticList extends DataPoint {
                 this.__syncData();
                 this.editedRecord = null;
                 await editedRecord.switchMode("readonly");
-            } else if (editedRecord.checkValidity()) {
+            } else if (await editedRecord.checkValidity()) {
                 await editedRecord.switchMode("readonly");
             } else {
                 if (!editedRecord.isDirty) {
