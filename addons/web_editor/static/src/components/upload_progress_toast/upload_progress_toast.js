@@ -1,6 +1,7 @@
 /** @odoo-module */
+import { useService } from '@web/core/utils/hooks';
 
-const { Component, useEffect, useState } = owl;
+const { Component, useState } = owl;
 
 export class ProgressBar extends Component {
     get progress() {
@@ -11,25 +12,11 @@ ProgressBar.template = 'web_editor.ProgressBar';
 
 export class UploadProgressToast extends Component {
     setup() {
-        this.state = useState({
-            isVisible: false,
-            numberOfFiles: 0,
-        });
+        this.uploadService = useService('upload');
 
-        useEffect((numberOfFiles) => {
-            if (numberOfFiles === 0) {
-                this.state.isVisible = false;
-            }
-            if (numberOfFiles > this.state.numberOfFiles) {
-                this.state.isVisible = true;
-            }
-            this.state.numberOfFiles = numberOfFiles;
-        }, () => [Object.keys(this.props.files).length]);
+        this.state = useState(this.uploadService.progressToast);
     }
 }
-UploadProgressToast.defaultProps = {
-    files: {},
-};
 UploadProgressToast.template = 'web_editor.UploadProgressToast';
 UploadProgressToast.components = {
     ProgressBar

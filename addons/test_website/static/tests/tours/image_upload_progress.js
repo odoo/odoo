@@ -136,7 +136,7 @@ wTourUtils.registerEditionTour('test_image_upload_progress', {
         },
     }, {
         content: "check upload progress bar is correctly shown",
-        trigger: ".o_we_progressbar:contains('image.png'):contains('File has been uploaded')",
+        trigger: ".o_we_progressbar:contains('image.png')",
         in_modal: false,
         run: function () {}, // it's a check
     }, {
@@ -150,8 +150,13 @@ wTourUtils.registerEditionTour('test_image_upload_progress', {
             }
         }
     }, {
-        content: "close media dialog",
-        trigger: 'button.btn.btn-secondary[type="button"]',
+        content: "media dialog has closed after the upload",
+        trigger: 'body:not(:has(.o_select_media_dialog))',
+        run: () => {}, // It's a check.
+    }, {
+        content: "the upload progress toast was updated",
+        trigger: ".o_we_progressbar:contains('image.png'):contains('File has been uploaded')",
+        run: () => {}, // It's a check.
     }, {
         content: "toaster should disappear after a few seconds if the uploaded image is successful",
         trigger: "body:not(:has(.o_we_progressbar))",
