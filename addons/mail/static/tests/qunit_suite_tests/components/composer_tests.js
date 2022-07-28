@@ -1292,7 +1292,7 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { click, messaging, openDiscuss } = await start({
+    const { afterEvent, messaging, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },
         },
@@ -1317,7 +1317,18 @@ QUnit.test('remove an attachment from composer does not need any confirmation', 
         "should have only one attachment"
     );
 
-    await click('.o_AttachmentCard_asideItemUnlink');
+    const attachmentLocalId = document.querySelector('.o_AttachmentCard').dataset.id;
+    await afterNextRender(() => afterEvent({
+        eventName: 'o-attachment-deleted',
+        func() {
+            document.querySelector('.o_AttachmentCard_asideItemUnlink').click();
+        },
+        message: "should wait until attachment is deleted",
+        predicate: ({ attachment }) => {
+            return attachment.localId === attachmentLocalId;
+        },
+    }));
+
     assert.containsNone(
         document.body,
         '.o_Composer .o_AttachmentCard',
