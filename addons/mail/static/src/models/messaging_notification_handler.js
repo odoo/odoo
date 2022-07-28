@@ -148,6 +148,7 @@ registerModel({
         _handleNotificationAttachmentDelete(payload) {
             const attachment = this.messaging.models['Attachment'].findFromIdentifyingData(payload);
             if (attachment) {
+                this.messaging.messagingBus.trigger('o-attachment-deleted', { attachment });
                 attachment.delete();
             }
         },

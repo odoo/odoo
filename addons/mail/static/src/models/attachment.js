@@ -92,6 +92,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
+            this.messaging.messagingBus.trigger('o-attachment-deleted', { attachment: this });
             this.delete();
         },
         /**
