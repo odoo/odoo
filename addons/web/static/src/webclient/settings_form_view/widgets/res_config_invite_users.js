@@ -30,7 +30,7 @@ class ResConfigInviteUsers extends Component {
      * @returns {boolean} true if the given email address is valid
      */
     validateEmail(email) {
-        const re = /^([a-z0-9][-a-z0-9_\+\.]*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
+        const re = /^([a-z0-9][-a-z0-9_+.]*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,63}(?:\.[a-z]{2})?)$/i;
         return re.test(email);
     }
 
@@ -54,7 +54,11 @@ class ResConfigInviteUsers extends Component {
             }
         }
         if (invalidEmails.length) {
-            throw new Error(`${_t("Invalid email address")}${ invalidEmails.length > 1 ? "es" : "" }: ${invalidEmails.join(", ")}`);
+            throw new Error(
+                `${_t("Invalid email address")}${
+                    invalidEmails.length > 1 ? "es" : ""
+                }: ${invalidEmails.join(", ")}`
+            );
         }
     }
 
