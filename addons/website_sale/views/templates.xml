@@ -1347,7 +1347,7 @@
                                 </t>
                                 <form action="/shop/address" method="post" class="checkout_autoformat">
                                     <div class="form-row">
-                                        <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
+                                        <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name" id="div_name">
                                             <label class="col-form-label" for="name">Name</label>
                                             <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="'name' in checkout and checkout['name']" />
                                         </div>
@@ -1363,11 +1363,11 @@
                                             <input type="tel" name="phone" t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}" t-att-value="'phone' in checkout and checkout['phone']" />
                                         </div>
                                         <div class="w-100"/>
-                                        <div t-attf-class="form-group #{error.get('street') and 'o_has_error' or ''} col-lg-12 div_street">
+                                        <div t-attf-class="form-group #{error.get('street') and 'o_has_error' or ''} col-lg-12 div_street" id="div_street">
                                             <label class="col-form-label" for="street">Street <span class="d-none d-md-inline"> and Number</span></label>
                                             <input type="text" name="street" t-attf-class="form-control #{error.get('street') and 'is-invalid' or ''}" t-att-value="'street' in checkout and checkout['street']" />
                                         </div>
-                                        <div t-attf-class="form-group #{error.get('street2') and 'o_has_error' or ''} col-lg-12 div_street2">
+                                        <div t-attf-class="form-group #{error.get('street2') and 'o_has_error' or ''} col-lg-12 div_street2"  id="div_street2">
                                             <label class="col-form-label label-optional" for="street2">Street 2</label>
                                             <input type="text" name="street2" t-attf-class="form-control #{error.get('street2') and 'is-invalid' or ''}" t-att-value="'street2' in checkout and checkout['street2']" />
                                         </div>
@@ -1379,7 +1379,7 @@
                                                 <input type="text" name="zip" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" t-att-value="'zip' in checkout and checkout['zip']" />
                                             </div>
                                         </t>
-                                        <div t-attf-class="form-group #{error.get('city') and 'o_has_error' or ''} col-md-8 div_city">
+                                        <div t-attf-class="form-group #{error.get('city') and 'o_has_error' or ''} col-md-8 div_city" id="div_city">
                                             <label class="col-form-label" for="city">City</label>
                                             <input type="text" name="city" t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" t-att-value="'city' in checkout and checkout['city']" />
                                         </div>
@@ -1390,7 +1390,7 @@
                                             </div>
                                         </t>
                                         <div class="w-100"/>
-                                        <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
+                                        <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country" id="div_country">
                                             <label class="col-form-label" for="country_id">Country</label>
                                             <select id="country_id" name="country_id" t-attf-class="form-control #{error.get('country_id') and 'is-invalid' or ''}" t-att-mode="mode[1]">
                                                 <option value="">Country...</option>
@@ -1401,7 +1401,7 @@
                                                 </t>
                                             </select>
                                         </div>
-                                        <div t-attf-class="form-group #{error.get('state_id') and 'o_has_error' or ''} col-lg-6 div_state" t-att-style="(not country or not country.state_ids) and 'display: none'">
+                                        <div t-attf-class="form-group #{error.get('state_id') and 'o_has_error' or ''} col-lg-6 div_state" id="div_state" t-att-style="(not country or not country.state_ids) and 'display: none'">
                                             <label class="col-form-label" for="state_id">State / Province</label>
                                             <select name="state_id" t-attf-class="form-control #{error.get('state_id') and 'is-invalid' or ''}" data-init="1">
                                                 <option value="">State / Province...</option>
