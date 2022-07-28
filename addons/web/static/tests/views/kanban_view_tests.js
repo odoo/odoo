@@ -2038,6 +2038,101 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test(
+        "save a quick create record and create a new record at the same time",
+        async (assert) => {
+            const prom = makeDeferred();
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <kanban on_create="quick_create">
+                        <field name="bar"/>
+                        <templates>
+                            <t t-name="kanban-box">
+                                <div>
+                                    <field name="display_name"/>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>`,
+                groupBy: ["bar"],
+                async mockRPC(route, { method }) {
+                    if (method === "name_create") {
+                        assert.step("name_create");
+                        await prom;
+                    }
+                },
+            });
+
+            assert.containsN(
+                target,
+                ".o_kanban_record",
+                4,
+                "should have 4 records at the beginning"
+            );
+
+            // Create and save a record
+            await quickCreateRecord();
+            await editQuickCreateInput("display_name", "new partner");
+            await validateRecord();
+            assert.containsN(
+                target,
+                ".o_kanban_record",
+                4,
+                "should not have created the record yet"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_kanban_quick_create [name=display_name] input").value,
+                "new partner",
+                "quick create should not be empty yet"
+            );
+            assert.hasClass(
+                target.querySelector(".o_kanban_quick_create"),
+                "o_disabled",
+                "quick create should be disabled"
+            );
+
+            // Create a new record during the save of the first one
+            await createRecord();
+            assert.containsN(
+                target,
+                ".o_kanban_record",
+                4,
+                "should not have created the record yet"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_kanban_quick_create [name=display_name] input").value,
+                "new partner",
+                "quick create should not be empty yet"
+            );
+            assert.hasClass(
+                target.querySelector(".o_kanban_quick_create"),
+                "o_disabled",
+                "quick create should be disabled"
+            );
+
+            prom.resolve();
+            await nextTick();
+            assert.containsN(target, ".o_kanban_record", 5, "should have created a new record");
+            assert.strictEqual(
+                target.querySelector(
+                    ".o_kanban_quick_create .o_field_widget[name=display_name] input"
+                ).value,
+                "",
+                "quick create should now be empty"
+            );
+            assert.doesNotHaveClass(
+                target.querySelector(".o_kanban_quick_create"),
+                "o_disabled",
+                "quick create should be enabled"
+            );
+
+            assert.verifySteps(["name_create"]);
+        }
+    );
+
+    QUnit.test(
         "quick create record: prevent multiple adds with ENTER, with onchange",
         async (assert) => {
             assert.expect(14);
