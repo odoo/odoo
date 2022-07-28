@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="web.NavBar" t-inherit-mode="extension" owl="1">
+        <xpath expr="//nav[hasclass('o_main_navbar')]" position="replace">
+            <nav class="o_main_navbar"
+                 t-on-dropdown-item-selected="onNavBarDropdownItemSelection"
+                 data-command-category="navbar">
+                <div class="top_heading">
+                    <!-- Apps Menu -->
+                    <t t-call="web.NavBar.AppsMenu">
+                        <t t-set="apps" t-value="menuService.getApps()"/>
+                    </t>
+                    <!-- App Brand -->
+                    <MenuItem t-if="currentApp"
+                              href="getMenuItemHref(currentApp)"
+                              payload="currentApp"
+                              t-esc="currentApp.name"
+                              class="o_menu_brand"
+                              t-ref="menuBrand"
+                    />
+                    <!-- Current App Sections -->
+                    <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
+                        <t t-set="sections" t-value="currentAppSections" />
+                    </t>
+                </div>
+
+                <!-- Systray -->
+                <div class="o_menu_systray" role="menu">
+                    <t t-foreach="systrayItems" t-as="item" t-key="item_index">
+                        <NotUpdatable>
+                            <ErrorHandler onError="error => handleItemError(error, item)">
+                                <t t-component="item.Component" t-props="item.props" />
+                            </ErrorHandler>
+                        </NotUpdatable>
+                    </t>
+                </div>
+            </nav>
+            <div class="sidebar_panel" id="sidebar_panel">
+                <div class="sidebar">
+                    <div class="sidebar_close">
+                        <a id="closeSidebar" style="cursor: pointer;">
+                            <img src="/code_backend_theme/static/src/img/icons/close.png"/>
+                        </a>
+                    </div>
+                    <div class="sidebar_logo">
+                        <img src="/web/binary/company_logo" class="logo_img"/>
+                    </div>
+                    <h6 class="sidebar_head">MENU</h6>
+                    <ul class="sidebar_menu">
+                        <t t-foreach="menuService.getApps()" t-as="app">
+                            <li>
+                                <a role="menuitem"
+                                   t-attf-href="#menu_id={{app.id}}"
+                                   class="nav-link">
+                                    <img class="sidebar_img"
+                                         t-attf-src="data:image/png;base64,{{app.webIconData}}"/>
+                                    <span class="sidebar_app_name">
+                                        <t t-esc="app.name"/>
+                                    </span>
+                                 </a>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.NavBar.AppsMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//Dropdown[hasclass('o_navbar_apps_menu')]" position="replace">
+            <li class="dropdown">
+                <a id="openSidebar" style="display: block; cursor: pointer;">
+                    <i class="fa fa-bars fa-lg"/>
+                </a>
+                <a id="closeSidebar" style="display: none; cursor: pointer;">
+                    <i class="fa fa-bars fa-lg"/>
+                </a>
+            </li>
+        </xpath>
+    </t>
+
+    <t t-inherit="web.UserMenu" t-inherit-mode="extension" owl="1">
+        <xpath expr="//span[hasclass('oe_topbar_name')]" position="replace">
+            <div class="oe_topbar_name"/>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,97 @@
+#sidebar_panel {
+    height: calc(100% - 0%);
+	position: fixed;
+    top: 0px;
+    background-color: #2a3042;
+    display: none;
+    width: 200px;
+    overflow-y: scroll;
+    -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+    scrollbar-width: none;  /* Hide scrollbar for Firefox */
+    z-index: 999;
+}
+#sidebar_panel::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+}
+.sidebar_panel .sidebar {
+    padding: 0;
+    white-space: nowrap;
+    padding-bottom: 20px;
+    padding-top: 5px;
+}
+.sidebar_panel .sidebar_close {
+    text-align: end;
+    display: none;
+    position: sticky;
+    height: 35px;
+    padding-top: 5px;
+    top: 0;
+    background: #2a3042;
+    z-index: 1;
+}
+.sidebar_panel .sidebar_close a#closeSidebar {
+    font-size: 18px;
+    margin-right: 10px;
+    color: #ffffff;
+    opacity: .3;
+}
+.sidebar_panel .sidebar_close a#closeSidebar img {
+    width: 15px;
+}
+.sidebar_panel .sidebar .sidebar_logo {
+    padding-top: 20px;
+    text-align: center;
+    padding-bottom: 20px;
+}
+.sidebar_panel .sidebar .sidebar_logo img {
+    max-width: 150px;
+}
+
+.sidebar_panel .sidebar .sidebar_head {
+    padding-top: 20px;
+    padding-left: 15px;
+    color: #6a7187;
+    font-size: 14px;
+}
+
+.sidebar_panel .sidebar .sidebar_menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar_panel .sidebar .sidebar_menu li {
+    margin: 0;
+    padding: 0;
+    border: 0px;
+    display: block;
+}
+
+.sidebar_panel .sidebar .sidebar_menu li a {
+    margin: 0;
+    border: 0px;
+    display: block;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 8px 10px 8px 25px;
+    color: #ffffff;
+    font-size: 13px;
+    transition:.3s all;
+}
+.sidebar_panel .sidebar .sidebar_menu li:hover  a {
+    background: #1e2230;
+    color: #fff;
+}
+.sidebar_panel .nav-link {
+	opacity: .5;
+    transition:.3s all;
+}
+.sidebar_panel .sidebar a.nav-link.active {
+    color: #fff !important;
+	opacity: 1;
+}
+
+.sidebar_panel .sidebar .sidebar_menu li a .sidebar_img {
+    width: 20px;
+    margin-right: 8px;
+}
