@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from unittest.mock import MagicMock, patch
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import User
 from odoo.addons.google_calendar.models.google_sync import GoogleSync
 from odoo.modules.registry import Registry
@@ -398,3 +399,31 @@ class TestSyncOdoo2Google(TestSyncGoogle):
                 'reminders': {'overrides': [], 'useDefault': False},
                 'visibility': 'public',
             })
+
+    @patch.object(GoogleService, '_do_request')
+    def test_send_update_do_request(self, mock_do_request):
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'allday': True,
+            'start': datetime(2020, 1, 15),
+            'stop': datetime(2020, 1, 15),
+            'need_sync': False,
+        })
+
+        event.with_context(send_updates=True)._sync_odoo2google(self.google_service)
+        self.call_post_commit_hooks()
+        self.assertGoogleEventSendUpdates('all')
+
+    @patch.object(GoogleService, '_do_request')
+    def test_not_send_update_do_request(self, mock_do_request):
+        event = self.env['calendar.event'].create({
+            'name': "Event",
+            'allday': True,
+            'start': datetime(2020, 1, 15),
+            'stop': datetime(2020, 1, 15),
+            'need_sync': False,
+        })
+
+        event.with_context(send_updates=False)._sync_odoo2google(self.google_service)
+        self.call_post_commit_hooks()
+        self.assertGoogleEventSendUpdates('none')
