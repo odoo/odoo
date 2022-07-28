@@ -193,7 +193,7 @@ export function formatDateTime(value, options = {}) {
     }
     const format = options.format || localization.dateTimeFormat;
     const numberingSystem = options.numberingSystem || Settings.defaultNumberingSystem || "latn";
-    const zone = options.timezone ? "system" : "utc";
+    const zone = options.timezone ? "default" : "utc";
     value = value.setZone(zone, { keepLocaltime: options.timezone });
     return value.toFormat(format, { numberingSystem });
 }
@@ -267,7 +267,7 @@ export function parseDateTime(value, options = {}) {
     const fmt = options.format || localization.dateTimeFormat;
     const parseOpts = {
         setZone: true,
-        zone: options.timezone ? "system" : "utc",
+        zone: options.timezone ? "default" : "utc",
         locale: options.locale,
         numberingSystem: options.numberingSystem || Settings.defaultNumberingSystem || "latn",
     };
