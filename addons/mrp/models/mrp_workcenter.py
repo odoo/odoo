@@ -292,6 +292,15 @@ class MrpWorkcenter(models.Model):
         product_capacity = self.capacity_ids.filtered(lambda capacity: capacity.product_id == product)
         return product_capacity.capacity if product_capacity else self.default_capacity
 
+    def _get_expected_duration(self, product_id):
+        """Compute the expected duration when using this work-center
+        Always include workcenter startup time and clean-up time.
+        In case there are specific capacities defined in the workcenter
+        that matches the product we are producing. Add the extra-time.
+        """
+        capacity = self.capacity_ids.filtered(lambda p: p.product_id == product_id)
+        return self.time_start + self.time_stop + (capacity.time_start + capacity.time_stop if capacity else 0.0)
+
 
 class WorkcenterTag(models.Model):
     _name = 'mrp.workcenter.tag'
@@ -421,6 +430,8 @@ class MrpWorkCenterCapacity(models.Model):
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     capacity = fields.Float('Capacity', default=1.0, help="Number of pieces that can be produced in parallel for this product.")
+    time_start = fields.Float('Setup Time (minutes)', help="Time in minutes for the setup.")
+    time_stop = fields.Float('Cleanup Time (minutes)', help="Time in minutes for the cleaning.")
 
     _sql_constraints = [
         ('positive_capacity', 'CHECK(capacity > 0)', 'Capacity should be a positive number.'),
