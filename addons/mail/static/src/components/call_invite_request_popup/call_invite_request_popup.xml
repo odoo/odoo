@@ -6,7 +6,7 @@
             <div class="o_CallInviteRequestPopup d-flex flex-column m-2 p-5 border border-dark rounded-1 bg-900" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="callInviteRequestPopup.thread.rtcInvitingSession">
                     <div class="o_CallInviteRequestPopup_partnerInfo d-flex flex-column justify-content-around align-items-center text-nowrap">
-                        <img class="o_CallInviteRequestPopup_partnerInfoImage mb-2 rounded-circle o_cursor_pointer"
+                        <img class="o_CallInviteRequestPopup_partnerInfoImage mb-2 rounded-circle cursor-pointer"
                             t-att-src="callInviteRequestPopup.thread.rtcInvitingSession.channelMember.avatarUrl"
                             t-on-click="callInviteRequestPopup.onClickAvatar"
                             alt="Avatar"/>

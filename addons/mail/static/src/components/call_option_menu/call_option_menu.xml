@@ -6,7 +6,7 @@
             <div class="o_CallOptionMenu d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
                 <t t-if="callOptionMenu.callActionListView.channel.videoCount > 0">
                     <div class="o_CallOptionMenu_button btn d-flex align-items-center border-0 rounded">
-                        <label class="o_CallOptionMenu_checkBoxLabel o_cursor_pointer d-flex align-items-center mb-0 text-800 fw-normal">
+                        <label class="o_CallOptionMenu_checkBoxLabel cursor-pointer d-flex align-items-center mb-0 text-800 fw-normal">
                             <input class="o_CallOptionMenu_checkBox mx-2 p-1" type="checkbox" t-on-change="callOptionMenu.onChangeVideoFilterCheckbox" t-att-checked="callOptionMenu.callView.filterVideoGrid"/>
                             <span class="o_CallOptionMenu_buttonText py-1 ps-1 text-truncate">Video only</span>
                         </label>

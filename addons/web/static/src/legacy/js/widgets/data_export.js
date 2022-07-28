@@ -144,7 +144,7 @@ var DataExport = Dialog.extend({
                 $('<li>', {'class': 'o_export_field', 'data-field_id': fieldID}).append(
                     $('<span>', {'class': "fa fa-sort o_short_field mx-1"}),
                     label.trim(),
-                    $('<span>', {'class': 'o_remove_field o_cursor_pointer fa fa-trash m-1 float-end ', 'title': _t("Remove field")})
+                    $('<span>', {'class': 'o_remove_field cursor-pointer fa fa-trash m-1 float-end ', 'title': _t("Remove field")})
                 )
             );
         }

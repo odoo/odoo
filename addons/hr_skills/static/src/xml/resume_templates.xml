@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="hr_resume_data_row">
-    <tr class="o_data_row o_cursor_default" t-attf-class="o_data_row #{is_last? 'o_data_row_last' : ''}" t-att-data-id="id">
+    <tr class="o_data_row cursor-default" t-attf-class="o_data_row #{is_last? 'o_data_row_last' : ''}" t-att-data-id="id">
         <t t-if="data.display_type === 'classic'">
             <td class="o_resume_timeline_cell position-relative pe-lg-2">
                 <div class="rounded-circle bg-info position-relative"/>

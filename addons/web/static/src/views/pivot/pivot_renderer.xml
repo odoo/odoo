@@ -32,7 +32,7 @@
                         <t t-foreach="row.subGroupMeasurements" t-as="cell" t-key="'row_cell_' + cell_index">
                             <td class="o_pivot_cell_value text-end" t-att-class="{
                                     o_empty: cell.value === undefined,
-                                    o_cursor_pointer: cell.value !== undefined,
+                                    'cursor-pointer': cell.value !== undefined,
                                     'fw-bold': cell.isBold,
                                 }" t-on-click="() => this.onCellClicked(cell)"
                                    t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">
@@ -57,7 +57,7 @@
 
     <t t-name="web.PivotHeader" owl="1">
         <th
-            class="text-nowrap o_cursor_pointer fw-normal bg-100"
+            class="text-nowrap cursor-pointer fw-normal bg-100"
             t-att-colspan="isXAxis ? cell.width : undefined"
             t-att-rowspan="isXAxis ? cell.height : undefined"
             t-att-class="{
@@ -94,8 +94,8 @@
 
     <t t-name="web.PivotMeasure" owl="1">
         <th class="text-muted text-center text-nowrap fw-normal bg-100" t-att-colspan="cell.width" t-att-rowspan="cell.height" t-att-class="{
-                'o_pivot_origin_row o_cursor_pointer': cell.originIndexes,
-                'o_pivot_measure_row o_cursor_pointer': !cell.originIndexes,
+                'o_pivot_origin_row cursor-pointer': cell.originIndexes,
+                'o_pivot_measure_row cursor-pointer': !cell.originIndexes,
                 o_pivot_sort_order_asc: cell.order === 'asc',
                 o_pivot_sort_order_desc: cell.order === 'desc',
             }" t-on-click.prevent="() => this.onMeasureClick(cell)" t-on-mouseover="onMouseEnter" t-on-mouseout="onMouseLeave">

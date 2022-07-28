@@ -68,6 +68,17 @@ $utilities: map-merge(
                 responsive: true,
             ),
         ),
+    ),
+);
+
+// Odoo Custom Utility Classes
+$utilities: map-merge(
+    $utilities,
+    (
+        "cursor": (
+            property: cursor,
+            values: default pointer,
+        ),
     )
 );
 

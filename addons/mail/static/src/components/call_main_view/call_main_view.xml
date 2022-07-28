@@ -22,8 +22,8 @@
 
             <!-- Buttons -->
             <t t-if="callMainView.hasSidebarButton">
-                <i t-if="callMainView.callView.isSidebarOpen" class="o_CallMainView_sidebarButton o_cursor_pointer position-absolute fa fa-arrow-right" title="Hide sidebar" t-on-click="callMainView.onClickHideSidebar"/>
-                <i t-else="" class="o_CallMainView_sidebarButton o_cursor_pointer position-absolute fa fa-arrow-left" title="Show sidebar" t-on-click="callMainView.onClickShowSidebar"/>
+                <i t-if="callMainView.callView.isSidebarOpen" class="o_CallMainView_sidebarButton cursor-pointer position-absolute fa fa-arrow-right" title="Hide sidebar" t-on-click="callMainView.onClickHideSidebar"/>
+                <i t-else="" class="o_CallMainView_sidebarButton cursor-pointer position-absolute fa fa-arrow-left" title="Show sidebar" t-on-click="callMainView.onClickShowSidebar"/>
             </t>
             <t t-if="callMainView.showOverlay or !callMainView.isControllerFloating">
                 <div class="o_CallMainView_controls d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute bottom-0 pb-3': callMainView.isControllerFloating }">

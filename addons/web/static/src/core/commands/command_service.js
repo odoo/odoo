@@ -51,7 +51,7 @@ DefaultFooter.template = xml`
     <t t-foreach="elements" t-as="element" t-key="element.namespace">
         <t t-if="!(element_first || element_last)">, </t>
         <t t-if="element_last and !element_first"> and </t>
-        <span class="o_namespace btn-link text-primary o_cursor_pointer" t-on-click="() => this.onClick(element.namespace)">
+        <span class="o_namespace btn-link text-primary cursor-pointer" t-on-click="() => this.onClick(element.namespace)">
             <span t-out="element.namespace" class="fw-bolder text-primary"/><t t-out="element.name"/>
         </span>
     </t>

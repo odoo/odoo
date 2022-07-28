@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatWindowHiddenMenu" owl="1">
-        <div class="o_ChatWindowHiddenMenu dropup position-fixed bottom-0 align-items-stretch d-flex px-2 py-1 rounded-top-3 bg-900 o_cursor_pointer" t-attf-class="{{ className }}" t-ref="root">
+        <div class="o_ChatWindowHiddenMenu dropup position-fixed bottom-0 align-items-stretch d-flex px-2 py-1 rounded-top-3 bg-900 cursor-pointer" t-attf-class="{{ className }}" t-ref="root">
             <div class="o_ChatWindowHiddenMenu_dropdownToggle dropdown-toggle justify-content-center align-items-center flex-grow-1 d-flex mw-100" t-att-class="{ 'show opacity-50': messaging.chatWindowManager.isHiddenMenuOpen }" t-on-click="messaging.chatWindowManager.onClickHiddenMenuToggler">
                 <div class="o_ChatWindowHiddenMenu_dropdownToggleIcon o_ChatWindowHiddenMenu_dropdownToggleItem me-1 fa fa-comments-o"/>
                 <div class="o_ChatWindowHiddenMenu_dropdownToggleItem o_ChatWindowHiddenMenu_windowCounter mx-1 text-truncate">

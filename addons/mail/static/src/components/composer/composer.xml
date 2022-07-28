@@ -30,10 +30,10 @@
                 <t t-if="composerView.hasHeader">
                     <div class="o_Composer_coreHeader text-truncate" t-att-class="{ 'small p-2': composerView.isInChatWindow or composerView.isInDiscuss }">
                         <t t-if="composerView.threadView and composerView.threadView.replyingToMessageView">
-                            <span class="o_cursor_pointer" t-on-click="composerView.onClickReplyingToMessage">
+                            <span class="cursor-pointer" t-on-click="composerView.onClickReplyingToMessage">
                                 Replying to <b t-esc="composerView.threadView.replyingToMessageView.message.authorName"/>
                             </span>
-                            <i t-if="composerView.threadView.thread !== messaging.inbox" class="o_Composer_cancelReply fa fa-lg fa-times-circle rounded-circle p-0 ms-1 o_cursor_pointer" title="Stop replying" t-on-click="composerView.onClickStopReplying"/>
+                            <i t-if="composerView.threadView.thread !== messaging.inbox" class="o_Composer_cancelReply fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="composerView.onClickStopReplying"/>
                         </t>
                         <t t-if="composerView.hasThreadName">
                             <span class="o_Composer_threadName">
