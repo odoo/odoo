@@ -78,7 +78,7 @@ QUnit.test('basic rendering of tracking value (float type)', async function (ass
     );
     assert.strictEqual(
         document.querySelector('.o_TrackingValue_fieldName').textContent,
-        "Float:",
+        "(Float)",
         "should display the correct tracked field name (Float)",
     );
     assert.containsOnce(
@@ -119,8 +119,8 @@ QUnit.test('rendering of tracked field of type float: from non-0 to 0', async fu
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Float:1.000.00",
-        "should display the correct content of tracked field of type float: from non-0 to 0 (Float: 1.00 -> 0.00)"
+        "1.000.00(Float)",
+        "should display the correct content of tracked field of type float: from non-0 to 0 (1.00 -> 0.00 (Float))"
     );
 });
 
@@ -135,8 +135,8 @@ QUnit.test('rendering of tracked field of type float: from 0 to non-0', async fu
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Float:0.001.00",
-        "should display the correct content of tracked field of type float: from 0 to non-0 (Float: 0.00 -> 1.00)"
+        "0.001.00(Float)",
+        "should display the correct content of tracked field of type float: from 0 to non-0 (0.00 -> 1.00 (Float))"
     );
 });
 
@@ -151,8 +151,8 @@ QUnit.test('rendering of tracked field of type integer: from non-0 to 0', async 
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Integer:10",
-        "should display the correct content of tracked field of type integer: from non-0 to 0 (Integer: 1 -> 0)"
+        "10(Integer)",
+        "should display the correct content of tracked field of type integer: from non-0 to 0 (1 -> 0 (Integer))"
     );
 });
 
@@ -167,8 +167,8 @@ QUnit.test('rendering of tracked field of type integer: from 0 to non-0', async 
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Integer:01",
-        "should display the correct content of tracked field of type integer: from 0 to non-0 (Integer: 0 -> 1)"
+        "01(Integer)",
+        "should display the correct content of tracked field of type integer: from 0 to non-0 (0 -> 1 (Integer))"
     );
 });
 
@@ -183,8 +183,8 @@ QUnit.test('rendering of tracked field of type monetary: from non-0 to 0', async
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Monetary:1.000.00",
-        "should display the correct content of tracked field of type monetary: from non-0 to 0 (Monetary: 1.00 -> 0.00)"
+        "1.000.00(Monetary)",
+        "should display the correct content of tracked field of type monetary: from non-0 to 0 (1.00 -> 0.00 (Monetary))"
     );
 });
 
@@ -199,8 +199,8 @@ QUnit.test('rendering of tracked field of type monetary: from 0 to non-0', async
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Monetary:0.001.00",
-        "should display the correct content of tracked field of type monetary: from 0 to non-0 (Monetary: 0.00 -> 1.00)"
+        "0.001.00(Monetary)",
+        "should display the correct content of tracked field of type monetary: from 0 to non-0 (0.00 -> 1.00 (Monetary))"
     );
 });
 
@@ -215,8 +215,8 @@ QUnit.test('rendering of tracked field of type boolean: from true to false', asy
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Boolean:YesNo",
-        "should display the correct content of tracked field of type boolean: from true to false (Boolean: True -> False)"
+        "YesNo(Boolean)",
+        "should display the correct content of tracked field of type boolean: from true to false (True -> False (Boolean))"
     );
 });
 
@@ -231,8 +231,8 @@ QUnit.test('rendering of tracked field of type boolean: from false to true', asy
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Boolean:NoYes",
-        "should display the correct content of tracked field of type boolean: from false to true (Boolean: False -> True)"
+        "NoYes(Boolean)",
+        "should display the correct content of tracked field of type boolean: from false to true (False -> True (Boolean))"
     );
 });
 
@@ -247,8 +247,8 @@ QUnit.test('rendering of tracked field of type char: from a string to empty stri
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Char:MarcNone",
-        "should display the correct content of tracked field of type char: from a string to empty string (Char: Marc -> None)"
+        "MarcNone(Char)",
+        "should display the correct content of tracked field of type char: from a string to empty string (Marc -> None (Char))"
     );
 });
 
@@ -263,8 +263,8 @@ QUnit.test('rendering of tracked field of type char: from empty string to a stri
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Char:NoneMarc",
-        "should display the correct content of tracked field of type char: from empty string to a string (Char: None -> Marc)"
+        "NoneMarc(Char)",
+        "should display the correct content of tracked field of type char: from empty string to a string (None -> Marc (Char))"
     );
 });
 
@@ -279,8 +279,8 @@ QUnit.test('rendering of tracked field of type date: from no date to a set date'
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Date:None12/14/2018",
-        "should display the correct content of tracked field of type date: from no date to a set date (Date: None -> 12/14/2018)"
+        "None12/14/2018(Date)",
+        "should display the correct content of tracked field of type date: from no date to a set date (None -> 12/14/2018 (Date))"
     );
 });
 
@@ -295,8 +295,8 @@ QUnit.test('rendering of tracked field of type date: from a set date to no date'
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Date:12/14/2018None",
-        "should display the correct content of tracked field of type date: from a set date to no date (Date: 12/14/2018 -> None)"
+        "12/14/2018None(Date)",
+        "should display the correct content of tracked field of type date: from a set date to no date (12/14/2018 -> None (Date))"
     );
 });
 
@@ -315,8 +315,8 @@ QUnit.test('rendering of tracked field of type datetime: from no date and time t
     assert.strictEqual(savedRecord.datetime_field, '2018-12-14 10:42:28');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Datetime:None12/14/2018 13:42:28",
-        "should display the correct content of tracked field of type datetime: from no date and time to a set date and time (Datetime: None -> 12/14/2018 13:42:28)"
+        "None12/14/2018 13:42:28(Datetime)",
+        "should display the correct content of tracked field of type datetime: from no date and time to a set date and time (None -> 12/14/2018 13:42:28 (Datetime))"
     );
 });
 
@@ -333,8 +333,8 @@ QUnit.test('rendering of tracked field of type datetime: from a set date and tim
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Datetime:12/14/2018 16:42:28None",
-        "should display the correct content of tracked field of type datetime: from a set date and time to no date and time (Datetime: 12/14/2018 13:42:28 -> None)"
+        "12/14/2018 16:42:28None(Datetime)",
+        "should display the correct content of tracked field of type datetime: from a set date and time to no date and time (12/14/2018 13:42:28 -> None (Datetime))"
     );
 });
 
@@ -349,8 +349,8 @@ QUnit.test('rendering of tracked field of type text: from some text to empty', a
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Text:MarcNone",
-        "should display the correct content of tracked field of type text: from some text to empty (Text: Marc -> None)"
+        "MarcNone(Text)",
+        "should display the correct content of tracked field of type text: from some text to empty (Marc -> None (Text))"
     );
 });
 
@@ -365,8 +365,8 @@ QUnit.test('rendering of tracked field of type text: from empty to some text', a
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Text:NoneMarc",
-        "should display the correct content of tracked field of type text: from empty to some text (Text: None -> Marc)"
+        "NoneMarc(Text)",
+        "should display the correct content of tracked field of type text: from empty to some text (None -> Marc (Text))"
     );
 });
 
@@ -381,8 +381,8 @@ QUnit.test('rendering of tracked field of type selection: from a selection to no
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Selection:firstNone",
-        "should display the correct content of tracked field of type selection: from a selection to no selection (Selection: first -> None)"
+        "firstNone(Selection)",
+        "should display the correct content of tracked field of type selection: from a selection to no selection (first -> None (Selection))"
     );
 });
 
@@ -397,8 +397,8 @@ QUnit.test('rendering of tracked field of type selection: from no selection to a
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Selection:Nonefirst",
-        "should display the correct content of tracked field of type selection: from no selection to a selection (Selection: None -> first)"
+        "Nonefirst(Selection)",
+        "should display the correct content of tracked field of type selection: from no selection to a selection (None -> first (Selection))"
     );
 });
 
@@ -414,8 +414,8 @@ QUnit.test('rendering of tracked field of type many2one: from having a related r
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Many2one:MarcNone",
-        "should display the correct content of tracked field of type many2one: from having a related record to no related record (Many2one: Marc -> None)"
+        "MarcNone(Many2one)",
+        "should display the correct content of tracked field of type many2one: from having a related record to no related record (Marc -> None (Many2one))"
     );
 });
 
@@ -431,8 +431,8 @@ QUnit.test('rendering of tracked field of type many2one: from no related record 
     await click('.o_form_button_save');
     assert.strictEqual(
         document.querySelector('.o_TrackingValue').textContent,
-        "Many2one:NoneMarc",
-        "should display the correct content of tracked field of type many2one: from no related record to having a related record (Many2one: None -> Marc)"
+        "NoneMarc(Many2one)",
+        "should display the correct content of tracked field of type many2one: from no related record to having a related record (None -> Marc (Many2one))"
     );
 });
 });
