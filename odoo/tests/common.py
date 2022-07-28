@@ -1704,7 +1704,8 @@ class HttpCase(TransactionCase):
 
         self.start_browser()
         if watch and self.browser.dev_tools_frontend_url:
-            _logger.warning('watch mode is only suitable for local testing')
+            _logger.warning('watch mode is only suitable for local testing - increasing tour timeout to 3600')
+            timeout = max(timeout*10, 3600)
             debug_front_end = f'http://127.0.0.1:{self.browser.devtools_port}{self.browser.dev_tools_frontend_url}'
             self.browser._chrome_without_limit([self.browser.executable, debug_front_end])
             time.sleep(3)
@@ -1716,6 +1717,11 @@ class HttpCase(TransactionCase):
             self.cr.flush()
             self.cr.clear()
             url = werkzeug.urls.url_join(self.base_url(), url_path)
+            if watch:
+                parsed = werkzeug.urls.url_parse(url)
+                qs = parsed.decode_query()
+                qs['watch'] = '1'
+                url = parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
             self._logger.info('Open "%s" in browser', url)
 
             if self.browser.screencasts_dir:
