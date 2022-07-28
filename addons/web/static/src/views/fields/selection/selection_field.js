@@ -8,14 +8,21 @@ const { Component } = owl;
 
 export class SelectionField extends Component {
     get options() {
+        let options;
         switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
-                return this.props.record.preloadedData[this.props.name];
+                options = [...this.props.record.preloadedData[this.props.name]];
+                break;
             case "selection":
-                return this.props.record.fields[this.props.name].selection;
-            default:
-                return [];
+                options = this.props.record.fields[this.props.name].selection.filter(
+                    (option) => option[0] !== false && option[1] !== ""
+                );
+                break;
         }
+        if (!this.isRequired) {
+            options.unshift([false, this.props.placeholder || ""]);
+        }
+        return options;
     }
     get string() {
         switch (this.props.type) {
