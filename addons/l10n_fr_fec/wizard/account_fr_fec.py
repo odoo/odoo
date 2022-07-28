@@ -153,7 +153,7 @@ class AccountFrFec(models.TransientModel):
             unaffected_earnings_results = self._do_query_unaffected_earnings()
             unaffected_earnings_line = False
 
-        aa_name = f"""COALESCE(NULLIF(aa.name->>'{self.env.lang or "en_US"}', ''), aa.name->>'en_US')""" if \
+        aa_name = f"""COALESCE(NULLIF(aa.name->>'{self.env.user.lang or get_lang(self.env).code}', ''), aa.name->>'en_US')""" if \
             self.env['account.account']._fields['name'].translate else 'aa.name'
         sql_query = f'''
         SELECT
@@ -300,7 +300,7 @@ class AccountFrFec(models.TransientModel):
             rows_to_write.append(listrow)
 
         # LINES
-        aj_name = f"""COALESCE(NULLIF(aj.name->>'{self.env.lang or "en_US"}', ''), aj.name->>'en_US')""" if \
+        aj_name = f"""COALESCE(NULLIF(aj.name->>'{self.env.user.lang or get_lang(self.env).code}', ''), aj.name->>'en_US')""" if \
             self.env['account.journal']._fields['name'].translate else 'aj.name'
         sql_query = f'''
         SELECT
