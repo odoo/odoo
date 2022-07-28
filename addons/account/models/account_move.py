@@ -2008,13 +2008,14 @@ class AccountMove(models.Model):
 
     def copy_data(self, default=None):
         data_list = super().copy_data(default)
-        for data in data_list:
-            data['line_ids'] = [
-                (command, _id, line_vals)
-                for command, _id, line_vals in data['line_ids']
-                if command == 0
-                and line_vals.get('display_type') not in ('payment_term', 'tax', 'rounding')
-            ]
+        for move, data in zip(self, data_list):
+            if move.move_type in ('out_invoice', 'in_invoice'):
+                data['line_ids'] = [
+                    (command, _id, line_vals)
+                    for command, _id, line_vals in data['line_ids']
+                    if command == Command.CREATE
+                    and line_vals.get('display_type') not in ('payment_term', 'tax', 'rounding')
+                ]
         if not self.journal_id.active and 'journal_id' in data_list:
             del default['journal_id']
         return data_list
@@ -3112,10 +3113,12 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
-        if self.payment_id:
-            self.payment_id.action_post()
-        else:
-            self._post(soft=False)
+        moves_with_payments = self.filtered('payment_id')
+        other_moves = self - moves_with_payments
+        if moves_with_payments:
+            moves_with_payments.payment_id.action_post()
+        if other_moves:
+            other_moves._post(soft=False)
         return False
 
     def js_assign_outstanding_line(self, line_id):
