@@ -170,7 +170,7 @@
                     <ul class="nav o_survey_results_topbar_answer_filters mt-2">
                         <t t-if="search_filters">
                             <li t-foreach="search_filters" t-as="filter_data" class="nav-item me-2 my-1">
-                                <span t-attf-class="btn btn-light filter-remove-answer o_cursor_default">
+                                <span t-attf-class="btn btn-light filter-remove-answer cursor-default">
                                     <span t-esc="filter_data['question']"/> | <span t-esc="filter_data['answers']"></span>
                                     <i class="fa fa-times filter-remove-answer text-primary"
                                        t-att-data-row-id="filter_data['row_id']" t-att-data-answer-id="filter_data['answer_id']"></i>

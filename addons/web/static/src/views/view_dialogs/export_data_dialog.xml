@@ -12,7 +12,7 @@
     </t>
 
     <t t-name="web.ExportDataItem" owl="1">
-        <div t-att-data-field_id="props.field.name" t-attf-class="o_export_tree_item o_cursor_pointer position-relative ps-4 {{ state.isExpanded ? 'o_expanded mb-2' : '' }}" role="treeitem" t-on-click.stop="onClick" t-on-dblclick="(ev) => !props.isFieldExpandable(props.field) and !this.isFieldSelected(props.field.name) and this.props.onAdd(ev)">
+        <div t-att-data-field_id="props.field.name" t-attf-class="o_export_tree_item cursor-pointer position-relative ps-4 {{ state.isExpanded ? 'o_expanded mb-2' : '' }}" role="treeitem" t-on-click.stop="onClick" t-on-dblclick="(ev) => !props.isFieldExpandable(props.field) and !this.isFieldSelected(props.field.name) and this.props.onAdd(ev)">
             <span t-if="props.isFieldExpandable(props.field)" t-attf-class="o_expand_parent d-inline-block position-absolute small fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="expandText" />
             <div t-attf-class="o_tree_column d-flex justify-content-between align-items-center {{ props.field.required ? 'font-weight-bolder' : ''}}">
                 <span t-if="props.isDebug and props.field.id" class="overflow-hidden" t-esc="`${props.field.string} (${props.field.id})`" />
@@ -111,7 +111,7 @@
                                 <li t-attf-class="o_export_field {{ state.isSmall ? '' : 'o_export_field_sortable' }}" t-att-data-field_id="field.name">
                                     <span t-if="!state.isSmall" class="fa fa-sort o_sort_field mx-1" t-attf-style="opacity:{{ state.exportList.length === 1 ? 0 : 1 }}" />
                                     <span t-esc="isDebug and field.id ? `${field.string or field.label} (${field.id})` : field.string or field.label" />
-                                    <span class="fa fa-trash m-1 float-end o_remove_field o_cursor_pointer" t-att-title="removeFieldText" t-on-click.stop="onRemoveItemExportList" />
+                                    <span class="fa fa-trash m-1 float-end o_remove_field cursor-pointer" t-att-title="removeFieldText" t-on-click.stop="onRemoveItemExportList" />
                                 </li>
                             </t>
                         </ul>

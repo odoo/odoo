@@ -4,7 +4,7 @@
     <t t-name="mail.FollowerSubtype" owl="1">
         <t t-if="followerSubtypeView">
             <div class="o_FollowerSubtype" t-attf-class="{{ className }}" t-att-data-local-id="followerSubtypeView.localId" t-ref="root">
-                <label class="o_FollowerSubtype_label flex-grow-1 align-items-center d-flex mb-0 p-2 o_cursor_pointer">
+                <label class="o_FollowerSubtype_label flex-grow-1 align-items-center d-flex mb-0 p-2 cursor-pointer">
                     <input class="o_FollowerSubtype_checkbox me-2" type="checkbox" t-att-checked="followerSubtypeView.follower.selectedSubtypes.includes(followerSubtypeView.subtype) ? 'checked': ''" t-on-change="followerSubtypeView.onChangeCheckbox"/>
                     <t t-esc="followerSubtypeView.subtype.name"/>
                 </label>

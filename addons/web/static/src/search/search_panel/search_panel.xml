@@ -6,7 +6,7 @@
         <section t-foreach="sections" t-as="section" t-key="section.id"
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >
-            <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default">
+            <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase cursor-default">
                 <i t-attf-class="fa {{ section.icon }} o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-odoo': ''}} me-2"
                     t-att-style="section.color and ('color: ' + section.color)"
                 />

@@ -6,7 +6,7 @@
                 t-att-class="{
                     'o-away': personaImStatusIconView.persona.im_status === 'away',
                     'o-bot': messaging.partnerRoot.persona === personaImStatusIconView.persona,
-                    'o-has-open-chat o_cursor_pointer': props.hasOpenChat,
+                    'o-has-open-chat cursor-pointer': props.hasOpenChat,
                     'o-offline': personaImStatusIconView.persona.im_status === 'offline',
                     'o-online': personaImStatusIconView.persona.im_status === 'online',
                 }"

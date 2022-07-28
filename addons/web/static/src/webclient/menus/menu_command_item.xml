@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
   <t t-name="web.AppIconCommand" owl="1">
-    <div class="o_command_default position-relative d-flex align-items-center justify-content-between px-4 py-2 o_cursor_pointer">
+    <div class="o_command_default position-relative d-flex align-items-center justify-content-between px-4 py-2 cursor-pointer">
       <t t-slot="name"/>
       <img t-if="props.webIconData" class="o_app_icon position-relative rounded-1" t-attf-src="{{props.webIconData}}"/>
       <div t-else="" class="o_app_icon d-flex align-items-center justify-content-center" t-attf-style="background-color:{{props.webIcon.backgroundColor}}" >
