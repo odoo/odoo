@@ -1235,6 +1235,27 @@ describe('Utils', () => {
                     .expect([anchorNode, anchorOffset, focusNode, focusOffset])
                     .to.eql([p1.firstChild, 0, p1.firstChild, 11]);
             });
+            it('should not correct a triple click on collapse', () => {
+                const [p1, div] = insertTestHtml('<p>abc def ghi</p><div><p>jkl mno pqr</p></div>');
+                const p2 = div.firstChild;
+                const range = document.createRange();
+                range.setStart(p2, 0);
+                range.setEnd(p2, 0);
+                const result = getDeepRange(p1.parentElement, {
+                    range,
+                    select: true,
+                    correctTripleClick: true,
+                });
+                const { startContainer, startOffset, endContainer, endOffset } = result;
+                window.chai
+                    .expect([startContainer, startOffset, endContainer, endOffset])
+                    .to.eql([p2.firstChild, 0, p2.firstChild, 0]);
+                const { anchorNode, anchorOffset, focusNode, focusOffset } =
+                    document.getSelection();
+                window.chai
+                    .expect([anchorNode, anchorOffset, focusNode, focusOffset])
+                    .to.eql([p2.firstChild, 0, p2.firstChild, 0]);
+            });
             it('should limit the selection to the title text (nested)', () => {
                 const [p] = insertTestHtml(
                     `<p>
