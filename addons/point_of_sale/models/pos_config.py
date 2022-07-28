@@ -626,7 +626,7 @@ class PosConfig(models.Model):
                 )    OR p.id=%(tip_product_id)s
              ORDER BY t.priority DESC,
                       t.detailed_type DESC,
-                      COALESCE(pm.date,p.write_date) DESC 
+                      COALESCE(pm.date,p.write_date) DESC
                 LIMIT %(limit)s
         """
         params = {
