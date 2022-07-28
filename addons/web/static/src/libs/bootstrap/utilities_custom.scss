@@ -26,10 +26,31 @@ $utilities-opacity: map-merge(
         disabled: $o-opacity-disabled,
     )
 );
+
+$utilities-sizes: () !default;
+$utilities-sizes: map-merge(
+    $utilities-sizes,
+    (
+        0: 0,
+        25: 25%,
+        50: 50%,
+        75: 75%,
+        100: 100%,
+        auto: auto,
+    )
+);
+
+
 $utilities: () !default;
 $utilities: map-merge(
     $utilities,
     (
+        "position": map-merge(
+            map-get($utilities, "position"),
+            (
+                responsive: true,
+            ),
+        ),
         "opacity": map-merge(
             map-get($utilities, "opacity"),
             (
@@ -68,6 +89,20 @@ $utilities: map-merge(
                 responsive: true,
             ),
         ),
+        "max-width": map-merge(
+            map-get($utilities, "max-width"),
+            (
+                responsive: true,
+                values: $utilities-sizes,
+            ),
+        ),
+        "max-height": map-merge(
+            map-get($utilities, "max-height"),
+            (
+                responsive: true,
+                values: $utilities-sizes,
+            ),
+        ),
     ),
 );
 
@@ -78,6 +113,28 @@ $utilities: map-merge(
         "cursor": (
             property: cursor,
             values: default pointer,
+        ),
+        "flex-basis": (
+            responsive: true,
+            property: flex-basis,
+            values: $utilities-sizes,
+        ),
+        "z-index": (
+            property: z-index,
+            values: 0 1,
+        ),
+        "overflow-x": (
+            property: overflow-x,
+            values: auto hidden visible scroll,
+        ),
+        "overflow-y": (
+            property: overflow-y,
+            values: auto hidden visible scroll,
+        ),
+        "min-width": (
+            class: min-w,
+            property: min-width,
+            values: 0,
         ),
     )
 );
