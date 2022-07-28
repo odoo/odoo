@@ -75,7 +75,7 @@ RUN cd /usr/lib/python3/dist-packages/ \
     && pip3 install setuptools wheel \
     && pip3 install -r requirements.txt
 
-COPY ../odoo /usr/lib/python3/dist-packages/
+COPY ./odoo /usr/lib/python3/dist-packages/
 
 #RUN cd /usr/lib/python3/dist-packages/ \
 #    && pip3 install setuptools wheel \
