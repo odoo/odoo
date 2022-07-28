@@ -23,7 +23,7 @@ async function mountComponent(Picker, props) {
     class Parent extends Component {}
     Parent.template = xml/* xml */ `
         <t t-component="props.Picker" t-props="props.props"/>
-        <div class="outsideDiv"/>
+        <div class="outsideDiv">Outside div</div>
     `;
 
     const env = await makeTestEnv();
@@ -38,8 +38,6 @@ QUnit.module("Components", () => {
     QUnit.module("ColorList");
 
     QUnit.test("basic rendering", async function (assert) {
-        assert.expect(4);
-
         await mountComponent(ColorList, {
             colors: [0, 9],
         });
@@ -60,8 +58,6 @@ QUnit.module("Components", () => {
     });
 
     QUnit.test("toggler is available if togglerColor props is given", async function (assert) {
-        assert.expect(9);
-
         const togglerColorId = 0;
         await mountComponent(ColorList, {
             colors: [4, 5, 6],
@@ -88,10 +84,10 @@ QUnit.module("Components", () => {
             "button.o_colorlist_toggler",
             "toggler button is no longer visible"
         );
-        assert.containsN(target, "button", 3, "three buttons are available");
+        assert.containsN(target, ".o_colorlist button", 3, "three buttons are available");
 
         await click(target.querySelector(".outsideDiv"));
-        assert.containsN(target, "button", 1, "only one button is available");
+        assert.containsOnce(target, ".o_colorlist button", "only one button is available");
         assert.containsOnce(
             target,
             "button.o_colorlist_toggler",

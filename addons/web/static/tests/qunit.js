@@ -1,14 +1,37 @@
 /** @odoo-module */
 
-(function () {
-    "use strict";
+import { isVisible as isElemVisible } from "@web/core/utils/ui";
 
+function setQUnitDebugMode() {
+    owl.whenReady(() => document.body.classList.add("debug")); // make the test visible to the naked eye
+    QUnit.config.debug = true; // allows for helper functions to behave differently (logging, the HTML element in which the test occurs etc...)
+    QUnit.config.testTimeout = 60 * 60 * 1000;
+    // Allows for interacting with the test when it is over
+    // In fact, this will pause QUnit.
+    // Also, logs useful info in the console.
+    QUnit.testDone(async (...args) => {
+        console.groupCollapsed("Debug Test output");
+        console.log(...args);
+        console.groupEnd();
+        await new Promise(() => {});
+    });
+}
+
+// need to do this outside of the setup function so the QUnit.debug is defined when we need it
+QUnit.debug = (name, cb) => {
+    setQUnitDebugMode();
+    QUnit.only(name, cb);
+};
+
+// need to do this outside of the setup function so it is executed quickly
+QUnit.config.autostart = false;
+
+export function setupQUnit() {
     const { Component } = owl;
 
     // -----------------------------------------------------------------------------
     // QUnit config
     // -----------------------------------------------------------------------------
-    QUnit.config.autostart = false;
     QUnit.config.testTimeout = 1 * 60 * 1000;
     QUnit.config.hidepassed = window.location.href.match(/[?&]testId=/) === null;
 
@@ -166,14 +189,8 @@
             }
         }
         msg = msg || `target should ${shouldBeVisible ? "" : "not"} be visible`;
-        let isVisible = el && el.offsetWidth && el.offsetHeight;
-        if (isVisible) {
-            // This computation is a little more heavy and we only want to perform it
-            // if the above assertion has failed.
-            const rect = el.getBoundingClientRect();
-            isVisible = rect.width + rect.height;
-        }
-        const condition = shouldBeVisible ? isVisible : !isVisible;
+        const _isVisible = isElemVisible(el);
+        const condition = shouldBeVisible ? _isVisible : !_isVisible;
         QUnit.assert.ok(condition, msg);
     }
     function isVisible(el, msg) {
@@ -329,26 +346,6 @@
 
         reRun.parentElement.insertBefore(reRunDebug, reRun.nextSibling);
     });
-
-    function setQUnitDebugMode() {
-        owl.whenReady(() => document.body.classList.add("debug")); // make the test visible to the naked eye
-        QUnit.config.debug = true; // allows for helper functions to behave differently (logging, the HTML element in which the test occurs etc...)
-        QUnit.config.testTimeout = 60 * 60 * 1000;
-        // Allows for interacting with the test when it is over
-        // In fact, this will pause QUnit.
-        // Also, logs useful info in the console.
-        QUnit.testDone(async (...args) => {
-            console.groupCollapsed("Debug Test output");
-            console.log(...args);
-            console.groupEnd();
-            await new Promise(() => {});
-        });
-    }
-
-    QUnit.debug = (name, cb) => {
-        setQUnitDebugMode();
-        QUnit.only(name, cb);
-    };
 
     const debugTestId = new URLSearchParams(location.search).get("debugTestId");
     if (debugTestId) {
@@ -513,4 +510,4 @@
         el.innerText = "details:not([open]) > :not(summary) { display: none; }";
         document.head.appendChild(el);
     });
-})();
+}

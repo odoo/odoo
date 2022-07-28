@@ -1,6 +1,8 @@
 odoo.define('web_tour.utils', function(require) {
 "use strict";
 
+const { _legacyIsVisible } = require("@web/core/utils/ui");
+
 function get_step_key(name) {
     return 'tour_' + name + '_step';
 }
@@ -20,7 +22,7 @@ function get_running_delay_key() {
 function get_first_visible_element($elements) {
     for (var i = 0 ; i < $elements.length ; i++) {
         var $i = $elements.eq(i);
-        if ($i.is(':visible:hasVisibility')) {
+        if (_legacyIsVisible($i[0])) {
             return $i;
         }
     }
