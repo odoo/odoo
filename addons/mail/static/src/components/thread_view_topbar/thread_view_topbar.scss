@@ -19,8 +19,17 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_ThreadViewTopbar_button:hover {
-    background-color: $gray-300;
+.o_ThreadViewTopbar_button {
+
+    &:not(.o-isActive):hover {
+        background-color: $gray-300;
+    }
+    &.o-isActive {
+        background-color: $gray-300;
+    }
+    &.o-isActive:hover {
+        background-color: $gray-400;
+    }
 }
 
 // use selector specificity to override bootstrap style

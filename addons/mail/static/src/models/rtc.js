@@ -311,6 +311,9 @@ registerModel({
             if (this.disconnectAudioMonitor) {
                 this.disconnectAudioMonitor();
             }
+            if (!this.currentRtcSession) {
+                return;
+            }
             if (this.messaging.userSetting.usePushToTalk || !this.channel || !this.audioTrack) {
                 this.currentRtcSession.update({ isTalking: false });
                 await this._updateLocalAudioTrackEnabledState();
@@ -1023,7 +1026,7 @@ registerModel({
             if (this.currentRtcSession.isMute) {
                 return;
             }
-            if (this.messaging.userSetting.callSettingsMenu.isRegisteringKey) {
+            if (this.messaging.userSetting.isRegisteringKey) {
                 return;
             }
             this.messaging.browser.clearTimeout(this.pushToTalkTimeout);

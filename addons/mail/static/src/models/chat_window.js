@@ -195,6 +195,13 @@ registerModel({
             }
         },
         /**
+         * @param {MouseEvent} ev
+         */
+        onClickHideCallSettingsMenu(ev) {
+            markEventHandled(ev, 'ChatWindow.onClickCommand');
+            this.update({ isCallSettingsMenuOpen: false });
+        },
+        /**
          * Handles click on the "stop adding users" button.
          *
          * @param {MouseEvent} ev
@@ -243,10 +250,21 @@ registerModel({
         /**
          * @param {MouseEvent} ev
          */
+        onClickShowCallSettingsMenu(ev) {
+            markEventHandled(ev, 'ChatWindow.onClickCommand');
+            this.update({
+                isCallSettingsMenuOpen: true,
+                isMemberListOpened: false,
+            });
+        },
+        /**
+         * @param {MouseEvent} ev
+         */
         onClickShowMemberList(ev) {
             markEventHandled(ev, 'ChatWindow.onClickShowMemberList');
             this.update({
                 channelInvitationForm: clear(),
+                isCallSettingsMenuOpen: false,
                 isMemberListOpened: true,
             });
         },
@@ -346,6 +364,16 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeCallSettingsMenu() {
+            if (this.isCallSettingsMenuOpen) {
+                return {};
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeChannelMemberListView() {
             if (this.thread && this.thread.hasMemberListFeature && this.isMemberListOpened) {
                 return {};
@@ -404,7 +432,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasThreadView() {
-            return this.isVisible && !this.isFolded && !!this.thread && !this.isMemberListOpened && !this.channelInvitationForm;
+            return this.isVisible && !this.isFolded && !!this.thread && !this.isMemberListOpened && !this.channelInvitationForm && !this.isCallSettingsMenuOpen;
         },
         /**
          * @private
@@ -560,6 +588,14 @@ registerModel({
     },
     fields: {
         /**
+         * Model for the component with the controls for RTC related settings.
+         */
+        callSettingsMenu: one('CallSettingsMenu', {
+            compute: '_computeCallSettingsMenu',
+            inverse: 'chatWindowOwner',
+            isCausal: true,
+        }),
+        /**
          * Determines the channel invitation form displayed by this chat window
          * (if any). Only makes sense if hasInviteFeature is true.
          */
@@ -608,6 +644,9 @@ registerModel({
          */
         hasThreadView: attr({
             compute: '_computeHasThreadView',
+        }),
+        isCallSettingsMenuOpen: attr({
+            default: false,
         }),
         /**
          * Determine whether the chat window should be programmatically

@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 /**
@@ -282,15 +282,13 @@ registerModel({
         audioInputDeviceId: attr({
             default: '',
         }),
-        /**
-         * Model for the component with the controls for RTC related settings.
-         */
-        callSettingsMenu: one('CallSettingsMenu', {
-            default: {},
-            inverse: 'userSetting',
-            isCausal: true,
-        }),
         globalSettingsTimeout: attr(),
+        /**
+         * true if listening to keyboard input to register the push to talk key.
+         */
+        isRegisteringKey: attr({
+            default: false,
+        }),
         /**
          * String that encodes the push-to-talk key with its modifiers.
          */

@@ -84,9 +84,12 @@ registerModel({
             return clear();
         },
         _computeFilteredChannelMembers() {
+            if (!this.channel) {
+                return clear();
+            }
             const channelMembers = [];
-            for (const channelMember of this.channel.channel.callParticipants) {
-                if (this.filterVideoGrid && !channelMember.isStreaming) {
+            for (const channelMember of this.channel.callParticipants) {
+                if (this.channel.showOnlyVideo && this.thread.videoCount > 0 && !channelMember.isStreaming) {
                     continue;
                 }
                 channelMembers.push(channelMember);
@@ -97,7 +100,7 @@ registerModel({
          * @private
          */
         _computeIsMinimized() {
-            if (!this.threadView) {
+            if (!this.threadView || !this.thread) {
                 return true;
             }
             if (this.isFullScreen || this.threadView.compact) {
@@ -106,7 +109,7 @@ registerModel({
             if (this.activeRtcSession) {
                 return false;
             }
-            return !this.channel.rtc || this.channel.videoCount === 0;
+            return !this.thread.rtc || this.thread.videoCount === 0;
         },
         /**
          * @private
@@ -127,14 +130,16 @@ registerModel({
          */
         _onChangeRtcChannel() {
             this.deactivateFullScreen();
-            this.update({ filterVideoGrid: false });
+            if (!this.thread && !this.thread.rtc) {
+                this.channel.update({ showOnlyVideo: false });
+            }
         },
         /**
          * @private
          */
         _onChangeVideoCount() {
-            if (this.channel.videoCount === 0) {
-                this.update({ filterVideoGrid: false });
+            if (this.thread.videoCount === 0) {
+                this.channel.update({ showOnlyVideo: false });
             }
         },
         /**
@@ -172,18 +177,11 @@ registerModel({
             inverse: 'callView',
             isCausal: true,
         }),
-        channel: one('Thread', {
-            related: 'threadView.thread',
-            required: true,
+        channel: one('Channel', {
+            related: 'thread.channel',
         }),
         filteredChannelMembers: many('ChannelMember', {
             compute: '_computeFilteredChannelMembers',
-        }),
-        /**
-         * Determines whether we only display the videos or all the participants
-         */
-        filterVideoGrid: attr({
-            default: false,
         }),
         /**
          * Determines if the viewer should be displayed fullScreen.
@@ -222,6 +220,10 @@ registerModel({
         settingsTitle: attr({
             compute: '_computeSettingsTitle',
         }),
+        thread: one('Thread', {
+            related: 'threadView.thread',
+            required: true,
+        }),
         /**
          * ThreadView on which the call view is attached.
          */
@@ -232,11 +234,11 @@ registerModel({
     },
     onChanges: [
         {
-            dependencies: ['channel.rtc'],
+            dependencies: ['thread.rtc'],
             methodName: '_onChangeRtcChannel',
         },
         {
-            dependencies: ['channel.videoCount'],
+            dependencies: ['thread.videoCount'],
             methodName: '_onChangeVideoCount',
         },
     ],

@@ -22,6 +22,9 @@
                 <t t-if="chatWindow.channelMemberListView">
                     <ChannelMemberList record="chatWindow.channelMemberListView" className="'bg-white'"/>
                 </t>
+                <t t-if="chatWindow.callSettingsMenu">
+                    <CallSettingsMenu record="chatWindow.callSettingsMenu" className="'bg-white'"/>
+                </t>
                 <t t-if="chatWindow.channelInvitationForm">
                     <ChannelInvitationForm className="'o_ChatWindow_channelInvitationForm'" record="chatWindow.channelInvitationForm"/>
                 </t>

@@ -4,37 +4,10 @@
     <t t-name="mail.CallOptionMenu" owl="1">
         <t t-if="callOptionMenu">
             <div class="o_CallOptionMenu d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
-                <t t-if="callOptionMenu.callActionListView.channel.videoCount > 0">
-                    <div class="o_CallOptionMenu_button btn d-flex align-items-center border-0 rounded">
-                        <label class="o_CallOptionMenu_checkBoxLabel cursor-pointer d-flex align-items-center mb-0 text-800 fw-normal">
-                            <input class="o_CallOptionMenu_checkBox mx-2 p-1" type="checkbox" t-on-change="callOptionMenu.onChangeVideoFilterCheckbox" t-att-checked="callOptionMenu.callView.filterVideoGrid"/>
-                            <span class="o_CallOptionMenu_buttonText py-1 ps-1 text-truncate">Video only</span>
-                        </label>
-                    </div>
-                    <hr class="o_CallOptionMenu_separator w-100 my-1 bg-300"/>
-                </t>
-                <t t-if="callOptionMenu.callView.isFullScreen">
-                    <button class="o_CallOptionMenu_button btn d-flex align-items-center border-0 rounded text-800 fw-normal" t-on-click="callOptionMenu.onClickDeactivateFullScreen">
-                        <i class="o_CallOptionMenu_buttonIcon fa fa-lg fa-compress m-1 p-1"/>
-                        <span class="o_CallOptionMenu_buttonText text-truncate">Exit full screen</span>
-                    </button>
-                </t>
-                <t t-else="">
-                    <button class="o_CallOptionMenu_button btn d-flex align-items-center border-0 rounded text-800 fw-normal" t-on-click="callOptionMenu.onClickActivateFullScreen">
-                        <i class="o_CallOptionMenu_buttonIcon fa fa-lg fa-arrows-alt m-1 p-1"/>
-                        <span class="o_CallOptionMenu_buttonText text-truncate">Full screen</span>
-                    </button>
-                </t>
-                <button class="o_CallOptionMenu_button btn d-flex align-items-center border-0 rounded text-800 fw-normal" t-on-click="callOptionMenu.onClickOptions">
-                    <i class="o_CallOptionMenu_buttonIcon fa fa-lg fa-cog m-1 p-1"/>
-                    <span class="o_CallOptionMenu_buttonText text-truncate">Settings</span>
+                <button class="o_CallOptionMenu_button btn d-flex align-items-center border-0 rounded text-800 fw-normal" t-on-click="callOptionMenu.onClickDownloadLogs">
+                    <i class="o_CallOptionMenu_buttonIcon fa fa-lg fa-file-text-o m-1 p-1"/>
+                    <span class="o_CallOptionMenu_buttonText text-truncate">Download logs</span>
                 </button>
-                <t t-if="messaging.modelManager.isDebug">
-                    <button class="o_CallOptionMenu_button btn d-flex align-items-center border-0 rounded text-800 fw-normal" t-on-click="callOptionMenu.onClickDownloadLogs">
-                        <i class="o_CallOptionMenu_buttonIcon fa fa-lg fa-file-text-o m-1 p-1"/>
-                        <span class="o_CallOptionMenu_buttonText text-truncate">Download logs</span>
-                    </button>
-                </t>
             </div>
         </t>
     </t>

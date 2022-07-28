@@ -2,68 +2,78 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.CallSettingsMenu" owl="1">
-        <div class="o_CallSettingsMenu d-flex flex-column ms-2 overflow-auto" t-attf-class="{{ className }}" t-ref="root">
-            <div class="o_CallSettingsMenu_option d-flex align-items-center flex-wrap m-2 p-1">
-                <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Input device" aria-label="Input device">
-                    <span class="o_CallSettingsMenuoptionName me-2 text-truncate fw-bolder">Input device</span>
-                    <div>
-                        <select name="inputDevice" class="o_CallSettingsMenu_optionDeviceSelect form-select" t-att-value="messaging.userSetting.audioInputDeviceId" t-on-change="callSettingsMenu.onChangeSelectAudioInput">
-                            <option value="">Browser default</option>
-                            <t t-if="state.userDevices" t-foreach="state.userDevices" t-as="device" t-key="device_index">
-                                <CallSettingsMenuDevice device="device"/>
-                            </t>
-                        </select>
-                    </div>
-                </label>
-            </div>
-            <div class="o_CallSettingsMenu_option d-flex align-items-center flex-wrap m-2 p-1">
-                <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Use Push-to-talk" aria-label="Use Push-to-talk">
-                    <span class="o_CallSettingsMenu_optionName me-2 text-truncate fw-bolder">Use Push-to-talk</span>
-                    <input type="checkbox" aria-label="toggle push-to-talk" title="toggle push-to-talk" t-on-change="callSettingsMenu.onChangePushToTalk" t-att-checked="messaging.userSetting.usePushToTalk ? 'checked' : ''"/>
-                </label>
-            </div>
-            <t t-if="messaging.userSetting.usePushToTalk">
-                <div class="o_CallSettingsMenu_option d-flex align-items-center flex-wrap m-2 p-1">
-                    <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Push-to-talk key" aria-label="Push-to-talk key">
-                        <span class="o_CallSettingsMenu_optionName me-2 text-truncate fw-bolder">Push-to-talk key</span>
-                        <span class="o_CallSettingsMenu_optionPushToTalkGroup d-flex">
-                            <t t-if="messaging.userSetting.pushToTalkKey">
-                                <span class="o_CallSettingsMenu_optionPushToTalkGroupKey ms-1 px-3 border border-2 rounded fs-3 fw-bolder" t-attf-class="{{ callSettingsMenu.isRegisteringKey ? 'o-isRegistering border-danger' : 'border-primary' }}" t-esc="messaging.userSetting.pushToTalkKeyToString()"/>
-                            </t>
-                            <button class="o_CallSettingsMenu_button btn btn-link px-2 py-0 text-black" t-on-click="callSettingsMenu.onClickRegisterKeyButton">
-                                <t t-if="callSettingsMenu.isRegisteringKey">
-                                    <i title="Cancel" aria-label="Cancel" class="fa fa-2x fa-times-circle"/>
+        <div class="o_CallSettingsMenu" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_CallSettingsMenu_category d-flex flex-column overflow-auto">
+                <div class="o_CallSettingsMenu_categoryTitle fw-bolder text-700 text-truncate text-uppercase">Voice Settings</div>
+                <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
+                    <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Input device" aria-label="Input device">
+                        <span class="o_CallSettingsMenuoptionName me-2 text-truncate">Input device</span>
+                        <div>
+                            <select name="inputDevice" class="o_CallSettingsMenu_optionDeviceSelect form-select" t-att-value="messaging.userSetting.audioInputDeviceId" t-on-change="callSettingsMenu.onChangeSelectAudioInput">
+                                <option value="">Browser default</option>
+                                <t t-if="state.userDevices" t-foreach="state.userDevices" t-as="device" t-key="device_index">
+                                    <CallSettingsMenuDevice device="device"/>
                                 </t>
-                                <t t-else="">
-                                    <i title="Register new key" aria-label="Register new key" class="fa fa-2x fa-keyboard-o"/>
-                                </t>
-                            </button>
-                        </span>
+                            </select>
+                        </div>
                     </label>
+                </div>
+                <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
+                    <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Enable Push-to-talk" aria-label="Enable Push-to-talk">
+                        <input type="checkbox" aria-label="toggle push-to-talk" title="toggle push-to-talk" t-on-change="callSettingsMenu.onChangePushToTalk" t-att-checked="messaging.userSetting.usePushToTalk ? 'checked' : ''"/>
+                        <span class="o_CallSettingsMenu_optionName ms-2 text-truncate">Enable Push-to-talk</span>
+                    </label>
+                </div>
+                <t t-if="messaging.userSetting.usePushToTalk">
+                    <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
+                        <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Push-to-talk key" aria-label="Push-to-talk key">
+                            <span class="o_CallSettingsMenu_optionName me-2 text-truncate">Push-to-talk key</span>
+                            <span class="o_CallSettingsMenu_optionPushToTalkGroup d-flex">
+                                <t t-if="messaging.userSetting.pushToTalkKey">
+                                    <span class="o_CallSettingsMenu_optionPushToTalkGroupKey ms-1 px-3 border border-2 rounded fs-3" t-attf-class="{{ callSettingsMenu.userSetting.isRegisteringKey ? 'o-isRegistering border-danger' : 'border-primary' }}" t-esc="messaging.userSetting.pushToTalkKeyToString()"/>
+                                </t>
+                                <button class="o_CallSettingsMenu_button btn btn-link px-2 py-0 text-black" t-on-click="callSettingsMenu.onClickRegisterKeyButton">
+                                    <t t-if="callSettingsMenu.userSetting.isRegisteringKey">
+                                        <i title="Cancel" aria-label="Cancel" class="fa fa-2x fa-times-circle"/>
+                                    </t>
+                                    <t t-else="">
+                                        <i title="Register new key" aria-label="Register new key" class="fa fa-2x fa-keyboard-o"/>
+                                    </t>
+                                </button>
+                            </span>
+                        </label>
 
-                </div>
-                <div t-if="callSettingsMenu.isRegisteringKey">Press a key to register it as the push-to-talk shortcut</div>
-                <div class="o_CallSettingsMenu_option d-flex align-items-center flex-wrap m-2 p-1">
-                    <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Delay after releasing push-to-talk" aria-label="Delay after releasing push-to-talk">
-                        <span class="o_CallSettingsMenu_optionName me-2 text-truncate fw-bolder">Delay after releasing push-to-talk</span>
-                        <div class="o_CallSettingsMenu_optionInputGroup d-flex w-100">
-                        <input class="o_CallSettingsMenu_optionInputGroupInput" type="range" min="1" max="2000" step="1" t-att-value="messaging.userSetting.voiceActiveDuration" t-on-change="callSettingsMenu.onChangeDelay"/>
-                        <span class="o_CallSettingsMenu_optionInputGroupValue p-1"><t t-esc="messaging.userSetting.voiceActiveDuration"/>ms</span>
-                        </div>
+                    </div>
+                    <div t-if="callSettingsMenu.userSetting.isRegisteringKey">Press a key to register it as the push-to-talk shortcut</div>
+                    <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
+                        <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Delay after releasing push-to-talk" aria-label="Delay after releasing push-to-talk">
+                            <span class="o_CallSettingsMenu_optionName me-2 text-truncate">Delay after releasing push-to-talk</span>
+                            <div class="o_CallSettingsMenu_optionInputGroup d-flex w-100">
+                            <input class="o_CallSettingsMenu_optionInputGroupInput" type="range" min="1" max="2000" step="1" t-att-value="messaging.userSetting.voiceActiveDuration" t-on-change="callSettingsMenu.onChangeDelay"/>
+                            </div>
+                        </label>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
+                        <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Voice detection threshold" aria-label="Voice detection threshold">
+                            <span class="o_CallSettingsMenu_optionName me-2 text-truncate">Voice detection threshold</span>
+                            <div class="o_CallSettingsMenu_optionInputGroup d-flex w-100">
+                                <input class="o_CallSettingsMenu_optionInputGroupInput" type="range" min="0.001" max="1" step="0.001" t-att-value="messaging.userSetting.voiceActivationThreshold" t-on-change="callSettingsMenu.onChangeThreshold"/>
+                            </div>
+                        </label>
+                    </div>
+                </t>
+            </div>
+            <div class="o_CallSettingsMenu_category d-flex flex-column overflow-auto">
+                <div class="o_CallSettingsMenu_categoryTitle fw-bolder text-700 text-truncate text-uppercase">Video Settings</div>
+                <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
+                    <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Show video participants only" aria-label="Show video participants only">
+                        <input type="checkbox" aria-label="toggle push-to-talk" title="Show video participants only" t-on-change="callSettingsMenu.onChangeVideoFilterCheckbox" t-att-checked="callSettingsMenu.thread.channel.showOnlyVideo ? 'checked' : ''"/>
+                        <span class="o_CallSettingsMenu_optionName ms-2 text-truncate">Show video participants only</span>
                     </label>
                 </div>
-            </t>
-            <t t-else="">
-                <div class="o_CallSettingsMenu_option d-flex align-items-center flex-wrap m-2 p-1">
-                    <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Minimum activity for voice detection" aria-label="Minimum activity for voice detection">
-                        <span class="o_CallSettingsMenu_optionName me-2 text-truncate fw-bolder">Minimum activity for voice detection</span>
-                        <div class="o_CallSettingsMenu_optionInputGroup d-flex w-100">
-                            <input class="o_CallSettingsMenu_optionInputGroupInput" type="range" min="0.001" max="1" step="0.001" t-att-value="messaging.userSetting.voiceActivationThreshold" t-on-change="callSettingsMenu.onChangeThreshold"/>
-                            <span class="o_CallSettingsMenu_optionInputGroupValue p-1"><t t-esc="messaging.userSetting.voiceActivationThreshold"/></span>
-                        </div>
-                    </label>
-                </div>
-            </t>
+            </div>
         </div>
     </t>
 
