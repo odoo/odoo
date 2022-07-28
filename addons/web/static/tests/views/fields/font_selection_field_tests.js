@@ -71,4 +71,21 @@ QUnit.module("Fields", (hooks) => {
             "Widget font should be updated (Oswald)"
         );
     });
+
+    QUnit.test(
+        "FontSelectionField displays one blank option (not required)",
+        async function (assert) {
+            serverData.models.partner.fields.fonts.selection = [
+                [false, ""],
+                ...serverData.models.partner.fields.fonts.selection,
+            ];
+            await makeView({
+                serverData,
+                type: "form",
+                resModel: "partner",
+                arch: '<form><field name="fonts" widget="font"/></form>',
+            });
+            assert.containsN(target.querySelector(".o_field_widget[name='fonts']"), "option", 3);
+        }
+    );
 });
