@@ -45,7 +45,7 @@ class ResConfigSettings(models.TransientModel):
 
     pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
     pos_amount_authorized_diff = fields.Float(related='pos_config_id.amount_authorized_diff', readonly=False)
-    pos_available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', compute='_compute_pos_available_pricelist_ids', readonly=False, store=True)
+    pos_available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', compute='_compute_pos_pricelist_id', readonly=False, store=True)
     pos_cash_control = fields.Boolean(related='pos_config_id.cash_control')
     pos_cash_rounding = fields.Boolean(related='pos_config_id.cash_rounding', readonly=False, string="Cash Rounding (PoS)")
     pos_company_has_template = fields.Boolean(related='pos_config_id.company_has_template')
@@ -241,22 +241,24 @@ class ResConfigSettings(models.TransientModel):
             else:
                 res_config.pos_tip_product_id = False
 
-    @api.depends('pos_use_pricelist', 'pos_available_pricelist_ids', 'pos_config_id')
+    @api.depends('pos_use_pricelist', 'pos_config_id', 'pos_journal_id')
     def _compute_pos_pricelist_id(self):
         for res_config in self:
-            res_config.is_default_pricelist_displayed = len(res_config.pos_available_pricelist_ids) != 1
-
+            currency_id = res_config.pos_journal_id.currency_id.id if res_config.pos_journal_id.currency_id else res_config.pos_config_id.company_id.currency_id.id
+            pricelists_in_current_currency = self.env['product.pricelist'].search([('company_id', 'in', (False, res_config.pos_config_id.company_id.id)), ('currency_id', '=', currency_id)])
             if not res_config.pos_use_pricelist:
-                res_config.pos_pricelist_id = self.pos_config_id._default_pricelist()
-                continue
-
-            if res_config.is_default_pricelist_displayed:
-                res_config.pos_pricelist_id = res_config.pos_config_id.pricelist_id
+                res_config.pos_available_pricelist_ids = pricelists_in_current_currency[:1]
+                res_config.pos_pricelist_id = pricelists_in_current_currency[:1]
             else:
-                if len(res_config.pos_available_pricelist_ids) == 1:
-                    res_config.pos_pricelist_id = res_config.pos_available_pricelist_ids._origin
+                if any([p.currency_id.id != currency_id for p in res_config.pos_available_pricelist_ids]):
+                    res_config.pos_available_pricelist_ids = pricelists_in_current_currency
+                    res_config.pos_pricelist_id = pricelists_in_current_currency[:1]
                 else:
-                    res_config.pos_pricelist_id = self.pos_config_id._default_pricelist()
+                    res_config.pos_available_pricelist_ids = res_config.pos_config_id.available_pricelist_ids
+                    res_config.pos_pricelist_id = res_config.pos_config_id.pricelist_id
+
+            # TODO: Remove this field in master because it's always True.
+            res_config.is_default_pricelist_displayed = True
 
     @api.depends('pos_available_pricelist_ids', 'pos_use_pricelist')
     def _compute_pos_allowed_pricelist_ids(self):
@@ -265,14 +267,6 @@ class ResConfigSettings(models.TransientModel):
                 res_config.pos_allowed_pricelist_ids = res_config.pos_available_pricelist_ids.ids
             else:
                 res_config.pos_allowed_pricelist_ids = self.env['product.pricelist'].search([]).ids
-
-    @api.depends('pos_use_pricelist', 'pos_config_id')
-    def _compute_pos_available_pricelist_ids(self):
-        for res_config in self:
-            if not res_config.pos_use_pricelist:
-                res_config.pos_available_pricelist_ids = res_config.pos_config_id._default_pricelist()
-            else:
-                res_config.pos_available_pricelist_ids = res_config.pos_config_id.available_pricelist_ids
 
     @api.depends('pos_is_posbox', 'pos_config_id')
     def _compute_pos_proxy_ip(self):
