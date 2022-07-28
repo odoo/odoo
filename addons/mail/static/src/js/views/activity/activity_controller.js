@@ -68,7 +68,7 @@ var ActivityController = BasicController.extend({
             disable_multiple_selection: true,
             context: state.context,
             on_selected: function (record) {
-                var fakeRecord = state.getKanbanActivityData({}, record[0]);
+                var fakeRecord = state.getKanbanActivityData({}, record[0].id);
                 var widget = new KanbanActivity(self, 'activity_ids', fakeRecord, {});
                 widget.scheduleActivity();
             },
