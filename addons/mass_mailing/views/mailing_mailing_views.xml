@@ -277,8 +277,8 @@
                                         <label for="ab_testing_enabled"/>
                                         <span class="d-flex">
                                             <field name="ab_testing_enabled" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
-                                            <span class="col" attrs="{'invisible': [('ab_testing_enabled', '=', False)]}">
-                                                on <field name="ab_testing_pc" class="col-6 text-center"
+                                            <span class="d-flex" attrs="{'invisible': [('ab_testing_enabled', '=', False)]}">
+                                                on <field name="ab_testing_pc" class="mx-1 text-center"
                                                     attrs="{'readonly': [('state', '!=', 'draft')]}"/> %
                                             </span>
                                         </span>
@@ -452,6 +452,9 @@
                 </xpath>
                 <xpath expr="//notebook/page[@name='chat']" position="inside">
                     <xpath expr="//div[hasclass('oe_chatter')]" position="move"/>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_chatter')]" position="attributes">
+                    <attribute name="class" remove="o-aside"/>
                 </xpath>
                 <xpath expr="//notebook/page[@name='mail_body']" position="after">
                     <page string="Mail Debug" name="mail_debug" groups="base.group_no_one">
