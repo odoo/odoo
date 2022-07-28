@@ -103,6 +103,15 @@ $utilities: map-merge(
                 values: $utilities-sizes,
             ),
         ),
+        "font-family":  map-merge(
+            map-get($utilities, "font-family"),
+            (
+                values: map-merge(
+                    map-get(map-get($utilities, "font-family"), "values"),
+                    (sans-serif: var(--#{$variable-prefix}font-sans-serif)),
+                ),
+            ),
+        ),
     ),
 );
 
