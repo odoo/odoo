@@ -19,10 +19,10 @@
 <t t-name="web_editor.UploadProgressToast" owl="1">
     <div class="o_notification_manager o_upload_progress_toast">
         <div t-if="state.isVisible" class="o_notification position-relative show fade mb-2 border border-info bg-white" role="alert" aria-live="assertive" aria-atomic="true">
-            <button type="button" class="btn btn-close o_notification_close p-2" aria-label="Close" t-on-click="() => state.isVisible = false"/>
+            <button type="button" class="btn btn-close o_notification_close p-2" aria-label="Close" t-on-click="props.close"/>
             <div class="o_notification_body ps-2 pe-4 py-2">
                 <div class="me-auto o_notification_content">
-                    <div t-foreach="props.files" t-as="file" t-key="file" class="o_we_progressbar">
+                    <div t-foreach="state.files" t-as="file" t-key="file" class="o_we_progressbar">
                         <ProgressBar progress="file_value.progress"
                             errorMessage="file_value.errorMessage"
                             hasError="file_value.hasError"
