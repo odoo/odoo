@@ -32,7 +32,7 @@ var KanbanColumnProgressBar = Widget.extend({
         // <progressbar/> attributes
         this.fieldName = columnState.progressBarValues.field;
         this.colors = _.extend({}, columnState.progressBarValues.colors, {
-            __false: 'muted', // color to use for false value
+            __false: '200', // color to use for false value
         });
         this.sumField = columnState.progressBarValues.sum_field;
         this.sumFieldLabel = this.sumField ? columnState.fields[this.sumField].string : false;

@@ -439,7 +439,7 @@
                                         <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <span t-attf-class="badge #{['cancel'].indexOf(record.state.raw_value) > -1 ? 'bg-danger' : ['draft'].indexOf(record.state.raw_value) > -1 ? 'bg-muted' : ['progress'].indexOf(record.state.raw_value) > -1 ? 'bg-warning text-dark' : ['done', 'to_close'].indexOf(record.state.raw_value) > -1 ? 'bg-success' : 'bg-primary'}"><t t-esc="record.state.value"/></span>
+                                        <span t-attf-class="badge #{['cancel'].indexOf(record.state.raw_value) > -1 ? 'bg-danger' : ['draft'].indexOf(record.state.raw_value) > -1 ? 'bg-200' : ['progress'].indexOf(record.state.raw_value) > -1 ? 'bg-warning text-dark' : ['done', 'to_close'].indexOf(record.state.raw_value) > -1 ? 'bg-success' : 'bg-primary'}"><t t-esc="record.state.value"/></span>
                                     </div>
                                 </div>
                             </div>
