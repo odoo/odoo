@@ -99,7 +99,7 @@
                                     <field name="allowed_operation_ids" invisible="1"/>
                                     <field name="operation_id" groups="mrp.group_mrp_routings" optional="hidden" attrs="{'column_invisible': [('parent.type','not in', ('normal', 'phantom'))]}" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                     <field name="tracking" invisible="1"/>
-                                    <field name="manual_consumption" optional="hide" width="1.0" attrs="{'readonly': [('tracking', '!=', 'none')]}"/>
+                                    <field name="manual_consumption" groups="mrp.group_mrp_routings" optional="hide" width="1.0" attrs="{'readonly': ['|', ('tracking', '!=', 'none'), ('operation_id', '!=', False)]}"/>
                                 </tree>
                             </field>
                         </page>
