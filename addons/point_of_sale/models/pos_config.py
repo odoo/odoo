@@ -26,7 +26,15 @@ class PosConfig(models.Model):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
 
     def _default_payment_methods(self):
-        return self.env['pos.payment.method'].search([('split_transactions', '=', False), ('company_id', '=', self.env.company.id)])
+        """ Should only default to payment methods that are compatible to this config's company and currency.
+        """
+        return self.env['pos.payment.method'].search([
+            ('split_transactions', '=', False),
+            ('company_id', '=', self.env.company.id),
+            '|',
+                ('journal_id', '=', False),
+                ('journal_id.currency_id', 'in', (False, self.env.company.currency_id.id)),
+        ])
 
     def _default_pricelist(self):
         return self.env['product.pricelist'].search([('company_id', 'in', (False, self.env.company.id)), ('currency_id', '=', self.env.company.currency_id.id)], limit=1)
@@ -294,18 +302,18 @@ class PosConfig(models.Model):
         for config in self:
             if config.use_pricelist and config.pricelist_id not in config.available_pricelist_ids:
                 raise ValidationError(_("The default pricelist must be included in the available pricelists."))
+
+            # Check if the config's payment methods are compatible with its currency
+            for pm in config.payment_method_ids:
+                if pm.journal_id and pm.journal_id.currency_id and pm.journal_id.currency_id != config.currency_id:
+                    raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
+
         if any(self.available_pricelist_ids.mapped(lambda pricelist: pricelist.currency_id != self.currency_id)):
             raise ValidationError(_("All available pricelists must be in the same currency as the company or"
                                     " as the Sales Journal set on this point of sale if you use"
                                     " the Accounting application."))
         if self.invoice_journal_id.currency_id and self.invoice_journal_id.currency_id != self.currency_id:
             raise ValidationError(_("The invoice journal must be in the same currency as the Sales Journal or the company currency if that is not set."))
-        if any(
-            self.payment_method_ids\
-                .filtered(lambda pm: pm.is_cash_count)\
-                .mapped(lambda pm: self.currency_id not in (self.company_id.currency_id | pm.journal_id.currency_id))
-        ):
-            raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
     @api.constrains('iface_start_categ_id', 'iface_available_categ_ids')
     def _check_start_categ(self):
