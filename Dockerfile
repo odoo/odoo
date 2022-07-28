@@ -53,6 +53,12 @@ RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ bullseye-pgdg main' > /et
 # Install rtlcss (on Debian buster)
 RUN npm install -g rtlcss
 
+RUN mkdir /var/lib/odoo \
+    && groupadd -g 101 odoo  \
+    && useradd -u 101 -g odoo odoo -d /var/lib/odoo \
+    && mkdir /data \
+    && chown odoo:odoo /var/lib/odoo /data \
+
 # Install Odoo
 #ENV ODOO_VERSION 15.0
 #ARG ODOO_RELEASE=20220727
@@ -64,11 +70,9 @@ RUN npm install -g rtlcss
 #    && rm -rf /var/lib/apt/lists/* odoo.deb
 COPY ./odoo /usr/lib/python3/dist-packages/
 
-RUN mkdir /var/lib/odoo \
-    && groupadd -g 101 odoo  \
-    && useradd -u 101 -g odoo odoo -d /var/lib/odoo \
-    && mkdir /data \
-    && chown odoo:odoo /var/lib/odoo /data
+RUN cd /usr/lib/python3/dist-packages/ \
+    && pip3 install setuptools wheel \
+    && pip3 install -r requirements.txt
 
 #RUN cd /usr/lib/python3/dist-packages/ \
 #    && pip3 install setuptools wheel \
