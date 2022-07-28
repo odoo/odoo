@@ -135,3 +135,40 @@ FieldFaPrefix.supportedFieldTypes = ['char'];
 FieldFaPrefix.template = 'website.FieldFaPrefix';
 
 fieldRegistry.add('fa_prefix', FieldFaPrefix);
+
+/**
+ * Displays 'Selection' field's values as images to select.
+ * Image src for each value can be added using the option 'images' on field XML.
+ */
+export class ImageRadioField extends Component {
+    setup() {
+        const selection = this.props.record.fields[this.props.name].selection;
+        // Check if value / label exists for each selection item and add the
+        // corresponding image from field options.
+        this.values = selection.filter(item => {
+            return item[0] || item[1];
+        }).map((value, index) => {
+            return [...value, this.props.images && this.props.images[index] || ''];
+        });
+    }
+
+    /**
+     * @param {String} value
+     */
+    onSelectValue(value) {
+        this.props.update(value);
+    }
+}
+ImageRadioField.supportedTypes = ['selection'];
+ImageRadioField.template = 'website.FieldImageRadio';
+ImageRadioField.props = {
+    ...standardFieldProps,
+    images: {type: Array, element: String},
+};
+ImageRadioField.extractProps = ({attrs}) => {
+    return {
+        images: attrs.options.images,
+    };
+};
+
+registry.category("fields").add("image_radio", ImageRadioField);

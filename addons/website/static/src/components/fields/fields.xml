@@ -66,4 +66,14 @@
     <span><i t-attf-class="fa fa-fw {{prefix.class}} {{prefix.visible ? '': 'invisible'}}" t-att-title="prefix.help"/><t t-esc="_formatValue(value)"/></span>
 </t>
 
+<t t-name="website.FieldImageRadio" owl="1">
+    <div class="d-flex">
+        <t t-foreach="values" t-as="option" t-key="option">
+            <div class="flex-fill text-center">
+                <img t-attf-class="o_image_radio_option w-50 {{option[0] === props.value ? 'active' : ''}}" t-att-src="option[2]" t-on-click="() => this.onSelectValue(option[0])"/>
+            </div>
+        </t>
+    </div>
+</t>
+
 </templates>
