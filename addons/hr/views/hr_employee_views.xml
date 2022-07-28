@@ -229,7 +229,7 @@
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <tree string="Employees" multi_edit="1" sample="1" js_class="hr_employee_list">
+                <tree string="Employees" expand="context.get('expand', False)" multi_edit="1" sample="1" js_class="hr_employee_list">
                     <header>
                         <button name="%(plan_wizard_action)d" type="action" string="Launch Plan" context="{'action_plan': True}"/>
                     </header>
@@ -432,11 +432,13 @@
         <record id="act_employee_from_department" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
-            <field name="view_mode">kanban,form,tree</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="context">{
                 "searchpanel_default_department_id": active_id,
-                "default_department_id": active_id}
+                "default_department_id": active_id,
+                "search_default_group_department": 1,
+                "expand": 1}
             </field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
