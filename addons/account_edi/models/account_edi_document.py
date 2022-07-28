@@ -257,7 +257,7 @@ class AccountEdiDocument(models.Model):
 
         :param job_count: Limit explicitely the number of web service calls. If not provided, process all.
         '''
-        edi_documents = self.search([('state', 'in', ('to_send', 'to_cancel'))])
+        edi_documents = self.search([('state', 'in', ('to_send', 'to_cancel')), ('move_id.state', '=', 'posted')])
         nb_remaining_jobs = edi_documents._process_documents_web_services(job_count=job_count)
 
         # Mark the CRON to be triggered again asap since there is some remaining jobs to process.
