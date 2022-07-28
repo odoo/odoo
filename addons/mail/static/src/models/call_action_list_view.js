@@ -42,10 +42,10 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickRejectCall(ev) {
-            if (this.channel.hasPendingRtcRequest) {
+            if (this.thread.hasPendingRtcRequest) {
                 return;
             }
-            await this.channel.leaveCall();
+            await this.thread.leaveCall();
         },
         /**
          * @param {MouseEvent} ev
@@ -57,19 +57,19 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickToggleAudioCall(ev) {
-            if (this.channel.hasPendingRtcRequest) {
+            if (this.thread.hasPendingRtcRequest) {
                 return;
             }
-            await this.channel.toggleCall();
+            await this.thread.toggleCall();
         },
         /**
          * @param {MouseEvent} ev
          */
         async onClickToggleVideoCall(ev) {
-            if (this.channel.hasPendingRtcRequest) {
+            if (this.thread.hasPendingRtcRequest) {
                 return;
             }
-            await this.channel.toggleCall({
+            await this.thread.toggleCall({
                 startWithVideo: true,
             });
         },
@@ -78,10 +78,10 @@ registerModel({
          * @returns {string|FieldCommand}
          */
         _computeCallButtonTitle() {
-            if (!this.channel) {
+            if (!this.thread) {
                 return clear();
             }
-            if (this.channel.rtc) {
+            if (this.thread.rtc) {
                 return this.env._t("Disconnect");
             } else {
                 return this.env._t("Join Call");
@@ -160,10 +160,6 @@ registerModel({
             compute: '_computeCameraButtonTitle',
             default: '',
         }),
-        channel: one('Thread', {
-            related: 'callMainView.channel',
-            required: true,
-        }),
         headphoneButtonTitle: attr({
             compute: '_computeHeadphoneButtonTitle',
             default: '',
@@ -182,6 +178,10 @@ registerModel({
         screenSharingButtonTitle: attr({
             compute: '_computeScreenSharingButtonTitle',
             default: '',
+        }),
+        thread: one('Thread', {
+            related: 'callMainView.thread',
+            required: true,
         }),
     },
 });

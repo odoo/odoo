@@ -58,8 +58,8 @@
                         </button>
                     </t>
                     <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasInviteFeature">
-                        <button class="o_ThreadViewTopbar_inviteButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none"  t-attf-class="{{ threadViewTopbar.invitePopoverView ? '' : '' }}" title="Add users" t-on-click="threadViewTopbar.onClickInviteButton" t-ref="inviteButton">
-                            <i class="fa fa-lg fa-user-plus" t-attf-class="{{ threadViewTopbar.invitePopoverView ? 'text-500' : 'text-700' }}"/>
+                        <button class="o_ThreadViewTopbar_inviteButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none"  t-attf-class="{{ threadViewTopbar.invitePopoverView ? 'o-isActive' : '' }}" title="Add users" t-on-click="threadViewTopbar.onClickInviteButton" t-ref="inviteButton">
+                            <i class="fa fa-lg fa-user-plus text-700"/>
                         </button>
                     </t>
                     <!-- FIXME: guests should be able to see members but there currently is no route for it, so hide it for now -->
@@ -69,8 +69,18 @@
                         </button>
                     </t>
                     <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasMemberListFeature and threadViewTopbar.threadView.hasMemberList and threadViewTopbar.threadView.isMemberListOpened">
-                        <button class="o_ThreadViewTopbar_hideMemberListButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" title="Hide Member List" t-on-click="threadViewTopbar.onClickHideMemberList">
-                            <i class="fa fa-lg fa-users text-500"/>
+                        <button class="o_ThreadViewTopbar_hideMemberListButton o_ThreadViewTopbar_button o-isActive btn px-2 border-none rounded shadow-none" title="Hide Member List" t-on-click="threadViewTopbar.onClickHideMemberList">
+                            <i class="fa fa-lg fa-users text-700"/>
+                        </button>
+                    </t>
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasCallFeature and !threadViewTopbar.threadView.isCallSettingsMenuOpen">
+                        <button class="o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" title="Show Call Settings" t-on-click="threadViewTopbar.onClickShowCallSettingsMenu">
+                            <i class="fa fa-lg fa-gear text-700"/>
+                        </button>
+                    </t>
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasCallFeature and threadViewTopbar.threadView.isCallSettingsMenuOpen">
+                        <button class="o_ThreadViewTopbar_button o-isActive btn px-2 border-none rounded shadow-none" title="Hide Call Settings" t-on-click="threadViewTopbar.onClickHideCallSettingsMenu">
+                            <i class="fa fa-lg fa-gear text-700"/>
                         </button>
                     </t>
                 </div>

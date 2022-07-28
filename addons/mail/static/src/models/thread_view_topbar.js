@@ -27,6 +27,12 @@ registerModel({
             });
         },
         /**
+         * @param {Event} ev
+         */
+        onClickHideCallSettingsMenu(ev) {
+            this.threadView.update({ isCallSettingsMenuOpen: false });
+        },
+        /**
          * Handles click on the "hide member list" button.
          *
          * @param {Event} ev
@@ -65,12 +71,25 @@ registerModel({
             await this.thread.toggleCall();
         },
         /**
+         * @param {Event} ev
+         */
+        onClickShowCallSettingsMenu(ev) {
+            // FIXME maybe find another way to prevent both being open at the same time?
+            this.threadView.update({
+                isCallSettingsMenuOpen: true,
+                isMemberListOpened: false,
+            });
+        },
+        /**
          * Handles click on the "show member list" button.
          *
          * @param {Event} ev
          */
         onClickShowMemberList(ev) {
-            this.threadView.update({ isMemberListOpened: true });
+            this.threadView.update({
+                isCallSettingsMenuOpen: false,
+                isMemberListOpened: true,
+            });
         },
         /**
          * Handles click on the "thread name" of this top bar.

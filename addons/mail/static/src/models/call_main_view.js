@@ -168,10 +168,6 @@ registerModel({
             identifying: true,
             inverse: 'callMainView',
         }),
-        channel: one('Thread', {
-            related: 'callView.channel',
-            required: true,
-        }),
         hasSidebarButton: attr({
             compute: '_computeHasSidebarButton',
         }),
@@ -196,6 +192,10 @@ registerModel({
         showOverlayTimer: one('Timer', {
             inverse: 'callMainViewAsShowOverlay',
             isCausal: true,
+        }),
+        thread: one('Thread', {
+            related: 'callView.thread',
+            required: true,
         }),
         tileContainerRef: attr(),
         tileHeight: attr({

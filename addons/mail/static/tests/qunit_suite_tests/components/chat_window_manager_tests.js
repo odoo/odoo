@@ -414,7 +414,7 @@ QUnit.test('new message autocomplete should automatically select first result', 
 });
 
 QUnit.test('chat window: basic rendering', async function (assert) {
-    assert.expect(14);
+    assert.expect(15);
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ name: "General" });
@@ -459,8 +459,8 @@ QUnit.test('chat window: basic rendering', async function (assert) {
     );
     assert.strictEqual(
         chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_command`).length,
-        5,
-        "should have 5 commands in header part"
+        6,
+        "should have 6 commands in header part"
     );
     assert.strictEqual(
         chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_commandPhone`).length,
@@ -476,6 +476,11 @@ QUnit.test('chat window: basic rendering', async function (assert) {
         chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_commandShowMemberList`).length,
         1,
         "should have command to show the member list"
+    );
+    assert.strictEqual(
+        chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_commandShowCallSettingsMenu`).length,
+        1,
+        "should have command to show the call settings menu"
     );
     assert.strictEqual(
         chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_commandExpand`).length,
