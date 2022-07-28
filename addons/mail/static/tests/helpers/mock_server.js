@@ -352,6 +352,7 @@ patch(MockServer.prototype, 'mail', {
      * @param {integer} attachment_id
      */
     async _mockRouteMailAttachmentRemove(attachment_id) {
+        this.pyEnv['bus.bus']._sendone(this.currentPartnerId, 'ir.attachment/delete', { id: attachment_id });
         return this.pyEnv['ir.attachment'].unlink([attachment_id]);
     },
 

@@ -37,6 +37,9 @@ registerModel({
          */
         async uploadFiles(files) {
             await this._performUpload({ files });
+            if (!this.exists()) {
+                return;
+            }
             if (this.fileInput && this.fileInput.el) {
                 this.fileInput.el.value = '';
             }
