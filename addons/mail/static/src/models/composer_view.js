@@ -592,12 +592,16 @@ registerModel({
                 const chatter = this.chatter;
                 const { thread: chatterThread } = this.chatter || {};
                 const { thread: threadViewThread } = threadView;
+                // Keep a reference to messaging: composer could be
+                // unmounted while awaiting the prc promise. In this
+                // case, this would be undefined.
+                const messaging = this.messaging;
                 const messageData = await this.messaging.rpc({ route: `/mail/message/post`, params });
-                if (!this.messaging) {
+                if (!messaging.exists()) {
                     return;
                 }
-                const message = this.messaging.models['Message'].insert(
-                    this.messaging.models['Message'].convertData(messageData)
+                const message = messaging.models['Message'].insert(
+                    messaging.models['Message'].convertData(messageData)
                 );
                 for (const threadView of message.originThread.threadViews) {
                     // Reset auto scroll to be able to see the newly posted message.
@@ -617,9 +621,9 @@ registerModel({
                     }
                 }
                 if (threadViewThread) {
-                    if (threadViewThread === this.messaging.inbox) {
-                        this.messaging.notify({
-                            message: sprintf(this.env._t(`Message posted on "%s"`), message.originThread.displayName),
+                    if (threadViewThread === messaging.inbox) {
+                        messaging.notify({
+                            message: sprintf(messaging.env._t(`Message posted on "%s"`), message.originThread.displayName),
                             type: 'info',
                         });
                         if (this.exists()) {
