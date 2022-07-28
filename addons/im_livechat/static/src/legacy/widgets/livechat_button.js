@@ -101,6 +101,7 @@ const LivechatButton = Widget.extend({
             return;
         }
         const message = this.messaging.models['PublicLivechatMessage'].insert({
+            data,
             id: data.id,
             legacyPublicLivechatMessage: legacyMessage,
         });
