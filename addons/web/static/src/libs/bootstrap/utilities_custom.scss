@@ -145,6 +145,14 @@ $utilities: map-merge(
             property: overflow-y,
             values: auto hidden visible scroll,
         ),
+        "transition": (
+            property: transition,
+            values: (
+                none: none,
+                base: $transition-base,
+                fade: $transition-fade,
+            ),
+        ),
         "min-width": (
             class: min-w,
             property: min-width,
