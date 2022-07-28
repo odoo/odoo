@@ -591,7 +591,11 @@ export class ListRenderer extends Component {
                 classNames.push("o_list_button");
             } else if (column.type === "field") {
                 classNames.push("o_field_cell");
-                if (column.rawAttrs && column.rawAttrs.class) {
+                if (
+                    column.rawAttrs &&
+                    column.rawAttrs.class &&
+                    this.canUseFormatter(column, record)
+                ) {
                     classNames.push(column.rawAttrs.class);
                 }
                 const typeClass = FIELD_CLASSES[this.fields[column.name].type];
@@ -637,6 +641,10 @@ export class ListRenderer extends Component {
         if (!(fieldType in FIXED_FIELD_COLUMN_WIDTHS)) {
             return this.getFormattedValue(column, record);
         }
+    }
+
+    getFieldClass(column) {
+        return column.rawAttrs && column.rawAttrs.class;
     }
 
     getFormattedValue(column, record) {

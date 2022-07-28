@@ -14478,4 +14478,39 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps(["create"]);
     });
+    QUnit.test(
+        "classNames given to a field are set on the right field directly",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                <tree editable="bottom">
+                    <field class="d-flex align-items-center" name="int_field" widget="progressbar" options="{'editable': true}" />
+                    <field class="d-none" name="bar" />
+                </tree>`,
+            });
+            assert.doesNotHaveClass(
+                target.querySelector(".o_field_cell:nth-child(2)"),
+                "d-flex align-items-center",
+                "classnames are not set on the first cell"
+            );
+            assert.hasClass(
+                target.querySelector(".o_field_progressbar"),
+                "d-flex align-items-center",
+                "classnames are set on the corresponding field div directly"
+            );
+            assert.doesNotHaveClass(
+                target.querySelector(".o_field_cell:nth-child(3)"),
+                "d-none",
+                "classnames are not set on the second cell"
+            );
+            assert.hasClass(
+                target.querySelector(".o_field_boolean"),
+                "d-none",
+                "classnames are set on the second field div directly"
+            );
+        }
+    );
 });
