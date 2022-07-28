@@ -1714,19 +1714,15 @@ class MrpProduction(models.Model):
         self.env['stock.move.line'].browse(move_lines_to_unlink).write({'move_id': False})
         self.env['stock.move.line'].browse(move_lines_to_unlink).unlink()
         self.env['stock.move.line'].create(move_lines_vals)
-
-        # We need to adapt `duration_expected` on both the original workorders and their
-        # backordered workorders. To do that, we use the original `duration_expected` and the
-        # ratio of the quantity produced and the quantity to produce.
         workorders_to_cancel = self.env['mrp.workorder']
         for production in self:
             initial_qty = initial_qty_by_production[production]
             initial_workorder_remaining_qty = []
             bo = production_to_backorders[production]
 
-            # Adapt duration
+            # Adapt duration by triggering the computation function for the duration_expected
             for workorder in bo.workorder_ids:
-                workorder.duration_expected = workorder.duration_expected * workorder.production_id.product_qty / initial_qty
+                workorder.duration_expected = workorder._get_duration_expected()
 
             # Adapt quantities produced
             for workorder in production.workorder_ids:
