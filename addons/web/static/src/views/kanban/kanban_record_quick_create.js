@@ -59,6 +59,9 @@ export class KanbanRecordQuickCreate extends Component {
 
     /** @param {boolean} force */
     cancel(force) {
+        if (this.state.disabled) {
+            return;
+        }
         this.props.onCancel(force);
     }
 

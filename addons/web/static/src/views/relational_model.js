@@ -1831,6 +1831,7 @@ export class DynamicRecordList extends DynamicList {
     }
 
     async quickCreate(activeFields, context) {
+        await this.model.mutex.getUnlockedDef();
         const record = this.quickCreateRecord;
         if (record) {
             this.removeRecord(record);
