@@ -19,14 +19,5 @@ Shows you a list of applications features to install from.
         ],
     'installable': True,
 
-    'assets': {
-        'web.assets_backend': [
-            'base_setup/static/src/scss/settings.scss',
-            'base_setup/static/src/js/**/*.js',
-        ],
-        'web.assets_qweb': [
-            'base_setup/static/src/xml/**/*',
-        ],
-    },
     'license': 'LGPL-3',
 }
