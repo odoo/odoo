@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { listView } from '@web/views/list/list_view';
-import { ProjectControlPanel } from "../project_control_panel/project_control_panel";
+import { ProjectControlPanel } from "../../components/project_control_panel/project_control_panel";
 import { ProjectTaskListController } from './project_task_list_controller';
 
 export const projectTaskListView = {

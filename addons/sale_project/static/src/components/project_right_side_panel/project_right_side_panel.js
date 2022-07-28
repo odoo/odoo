@@ -2,9 +2,9 @@
 
 import { patch } from '@web/core/utils/patch';
 import { formatFloatTime, formatFloat } from "@web/views/fields/formatters";
-import { ProjectRightSidePanel } from '@project/project_right_side_panel/project_right_side_panel';
+import { ProjectRightSidePanel } from '@project/components/project_right_side_panel/project_right_side_panel';
 
-patch(ProjectRightSidePanel.prototype, '@sale_project/project_right_side_panel/project_right_side_panel', {
+patch(ProjectRightSidePanel.prototype, '@sale_project/components/project_right_side_panel/project_right_side_panel', {
     async _loadAdditionalSalesOrderItems() {
         const offset = this.state.data.sale_items.data.length;
         const totalRecords = this.state.data.sale_items.total;

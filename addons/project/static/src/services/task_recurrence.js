@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 
-import { StopRecurrenceConfirmationDialog } from '../stop_recurrence_confirmation_dialog/stop_recurrence_confirmation_dialog';
+import { StopRecurrenceConfirmationDialog } from '../components/stop_recurrence_confirmation_dialog/stop_recurrence_confirmation_dialog';
 
 class TaskRecurrence {
     constructor(env, dialog, orm) {
