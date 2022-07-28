@@ -108,6 +108,20 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(mail_message.author_id, mail_message.partner_ids, 'Sale: author should be in composer recipients thanks to "partner_to" field set on template')
         self.assertEqual(mail_message.partner_ids, mail_message.sudo().mail_ids.recipient_ids, 'Sale: author should receive mail due to presence in composer recipients')
 
+    def test_invoice_state_when_ordered_quantity_is_negative(self):
+        """When you invoice a SO line with a product that is invoiced on ordered quantities and has negative ordered quantity,
+        this test ensures that the  invoicing status of the SO line is 'invoiced' (and not 'upselling')."""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product.id,
+                'product_uom_qty': -1,
+            })]
+        })
+        sale_order.action_confirm()
+        sale_order._create_invoices(final=True)
+        self.assertTrue(sale_order.invoice_status == 'invoiced', 'Sale: The invoicing status of the SO should be "invoiced"')
+
     def test_sale_sequence(self):
         self.env['ir.sequence'].search([
             ('code', '=', 'sale.order'),
