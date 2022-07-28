@@ -2810,7 +2810,8 @@ class AccountMove(models.Model):
             lock_dates = move._get_violated_lock_dates(move.date, affects_tax_report)
             if lock_dates:
                 move.date = move._get_accounting_date(move.invoice_date or move.date, affects_tax_report)
-                move.with_context(check_move_validity=False)._onchange_currency()
+                if move.move_type and move.move_type != 'entry':
+                    move.with_context(check_move_validity=False)._onchange_currency()
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         to_post.mapped('line_ids').create_analytic_lines()
@@ -2889,10 +2890,12 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
-        if self.payment_id:
-            self.payment_id.action_post()
-        else:
-            self._post(soft=False)
+        moves_with_payments = self.filtered('payment_id')
+        other_moves = self - moves_with_payments
+        if moves_with_payments:
+            moves_with_payments.payment_id.action_post()
+        if other_moves:
+            other_moves._post(soft=False)
         return False
 
     def js_assign_outstanding_line(self, line_id):
@@ -5054,7 +5057,7 @@ class AccountMoveLine(models.Model):
 
         move_vals = {
             'move_type': 'entry',
-            'date': max(exchange_date or date.min, company._get_user_fiscal_lock_date()),
+            'date': max(exchange_date or date.min, company._get_user_fiscal_lock_date() + timedelta(days=1)),
             'journal_id': journal.id,
             'line_ids': [],
         }
