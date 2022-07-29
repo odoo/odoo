@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { isAndroid, isIOS } from "@web/core/browser/feature_detection";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 const { Component } = owl;
 
@@ -26,13 +27,13 @@ const configs = {
 class AppStoreWidget extends Component {
     setup() {
         this.dialog = useService("dialog");
-        this.config = configs[this.props.node.attrs.type];
+        this.config = configs[this.props.type];
     }
 
     openQRDialog() {
         if (
-            (this.props.node.attrs.type === "apple" && isIOS()) ||
-            (this.props.node.attrs.type === "google" && isAndroid())
+            (this.props.type === "apple" && isIOS()) ||
+            (this.props.type === "google" && isAndroid())
         ) {
             this.env.services.action.doAction({
                 type: "ir.actions.act_url",
@@ -57,5 +58,13 @@ class AppStoreQRDialog extends Component {
 }
 AppStoreQRDialog.components = { Dialog };
 AppStoreQRDialog.template = "hr_timesheet.AppStoreQRDialog";
-
+AppStoreQRDialog.props = {
+    ...standardWidgetProps,
+    type: { type: String },
+};
+AppStoreQRDialog.extractProps = ({ attrs }) => {
+    return {
+        type: attrs.type,
+    };
+};
 registry.category("view_widgets").add("hr_timesheet.app_store_widget", AppStoreWidget);

@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { decodeObjectForTemplate } from "@web/views/view_compiler";
 
@@ -31,9 +32,20 @@ export class Widget extends Component {
         };
     }
     get widgetProps() {
-        const { record, node: rawNode, options, readonly } = this.props;
+        const { record, node: rawNode, readonly } = this.props;
         const node = rawNode ? decodeObjectForTemplate(rawNode) : {};
-        return { record, node, options: options || {}, readonly };
+        let propsFromAttrs = {};
+        if (node.attrs) {
+            const extractProps = this.Widget.extractProps || (() => ({}));
+            propsFromAttrs = extractProps({
+                attrs: {
+                    ...node.attrs,
+                    options: evaluateExpr(node.attrs.options || "{}"),
+                },
+            });
+        }
+        // TODO WOWL remove "node" once there are no more legacy widgets.
+        return { readonly, node, ...propsFromAttrs, record };
     }
 }
 Widget.template = xml/*xml*/ `
