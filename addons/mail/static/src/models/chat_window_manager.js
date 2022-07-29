@@ -113,7 +113,7 @@ registerModel({
             }
             let chatWindow = thread.chatWindow;
             if (!chatWindow) {
-                chatWindow = this.messaging.models['ChatWindow'].create({
+                chatWindow = this.messaging.models['ChatWindow'].insert({
                     isFolded,
                     manager: replace(this),
                     thread: replace(thread),

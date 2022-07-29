@@ -11,7 +11,7 @@ QUnit.test('unlinkAll: should set x2one field undefined', async function (assert
     assert.expect(2);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         id: 10,
         address: insertAndReplace({ id: 20 }),
     });
@@ -33,7 +33,7 @@ QUnit.test('unlinkAll: should set x2many field an empty array', async function (
     assert.expect(2);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         id: 10,
         tasks: insertAndReplace({
             id: 20,

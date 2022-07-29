@@ -15,7 +15,7 @@ QUnit.test('decrement: should decrease attribute field value', async function (a
     assert.expect(1);
     const { messaging } = await start();
 
-    const task = messaging.models['TestTask'].create({
+    const task = messaging.models['TestTask'].insert({
         id: 10,
         difficulty: 5,
     });
@@ -31,7 +31,7 @@ QUnit.test('increment: should increase attribute field value', async function (a
     assert.expect(1);
     const { messaging } = await start();
 
-    const task = messaging.models['TestTask'].create({
+    const task = messaging.models['TestTask'].insert({
         id: 10,
         difficulty: 5,
     });
@@ -47,7 +47,7 @@ QUnit.test('set: should set a value for attribute field', async function (assert
     assert.expect(1);
     const { messaging } = await start();
 
-    const task = messaging.models['TestTask'].create({
+    const task = messaging.models['TestTask'].insert({
         id: 10,
         difficulty: 5,
     });
@@ -63,7 +63,7 @@ QUnit.test('multiple attribute commands combination', async function (assert) {
     assert.expect(1);
     const { messaging } = await start();
 
-    const task = messaging.models['TestTask'].create({
+    const task = messaging.models['TestTask'].insert({
         id: 10,
         difficulty: 5,
     });

@@ -195,7 +195,7 @@ QUnit.test('click on edit follower', async function (assert) {
         res_model: 'res.partner',
         views: [[false, 'form']],
     });
-    const thread = messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].insert({
         id: threadId,
         model: 'res.partner',
     });
