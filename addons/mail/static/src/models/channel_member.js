@@ -30,7 +30,7 @@ registerModel({
                 return !this.persona.partner.isOnline ? replace(this.channel) : clear();
             }
             if (this.persona.guest) {
-                return replace(this.channel);
+                return !this.persona.guest.isOnline ? replace(this.channel) : clear();
             }
             return clear();
         },
@@ -43,7 +43,7 @@ registerModel({
                 return this.persona.partner.isOnline ? replace(this.channel) : clear();
             }
             if (this.persona.guest) {
-                return clear();
+                return this.persona.guest.isOnline ? replace(this.channel) : clear();
             }
             return clear();
         },
