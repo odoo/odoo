@@ -135,8 +135,12 @@ const QWeb = core.qweb;
                 this._chatbotEndScript();
             } else {
                 this._chatbotSetIsTyping();
-                this.nextStepTimeout = setTimeout(
-                    this._chatbotTriggerNextStep.bind(this), this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay);
+                this.messaging.publicLivechatGlobal.livechatButtonView.update({
+                    chatbotNextStepTimeout: setTimeout(
+                        this._chatbotTriggerNextStep.bind(this),
+                        this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay,
+                    )
+                });
             }
         }
     },
@@ -305,8 +309,12 @@ const QWeb = core.qweb;
             if (this._isLastMessageFromCustomer()) {
                 // user has already typed a message in -> trigger next step
                 this._chatbotSetIsTyping();
-                this.nextStepTimeout = setTimeout(
-                    this._chatbotTriggerNextStep.bind(this), this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay);
+                this.messaging.publicLivechatGlobal.livechatButtonView.update({
+                    chatbotNextStepTimeout: setTimeout(
+                        this._chatbotTriggerNextStep.bind(this),
+                        this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay,
+                    ),
+                });
             } else {
                 this._chatbotEnableInput();
             }
@@ -332,8 +340,12 @@ const QWeb = core.qweb;
                     this._chatbotSetIsTyping();
                 }
 
-                this.nextStepTimeout = setTimeout(
-                    this._chatbotTriggerNextStep.bind(this), nextStepDelay);
+                this.messaging.publicLivechatGlobal.livechatButtonView.update({
+                    chatbotNextStepTimeout: setTimeout(
+                        this._chatbotTriggerNextStep.bind(this),
+                        nextStepDelay,
+                    ),
+                });
             }
         }
 
@@ -700,8 +712,12 @@ const QWeb = core.qweb;
                     this._debouncedChatbotAwaitUserInput();
                 } else if (!this._chatbotShouldEndScript()) {
                     this._chatbotSetIsTyping();
-                    this.nextStepTimeout = setTimeout(
-                        this._chatbotTriggerNextStep.bind(this), this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay);
+                    this.messaging.publicLivechatGlobal.livechatButtonView.update({
+                        chatbotNextStepTimeout: setTimeout(
+                            this._chatbotTriggerNextStep.bind(this),
+                            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay,
+                        ),
+                    });
                 } else {
                     this._chatbotEndScript();
                 }
@@ -810,8 +826,8 @@ const QWeb = core.qweb;
         this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_composer_text_field').removeClass('d-none');
         this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
 
-        if (this.nextStepTimeout) {
-            clearTimeout(this.nextStepTimeout);
+        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotNextStepTimeout) {
+            clearTimeout(this.messaging.publicLivechatGlobal.livechatButtonView.chatbotNextStepTimeout);
         }
 
         if (this.welcomeMessageTimeout) {
@@ -829,8 +845,12 @@ const QWeb = core.qweb;
 
         this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.update({ currentStep: clear() });
         this._chatbotSetIsTyping();
-        this.nextStepTimeout = setTimeout(
-            this._chatbotTriggerNextStep.bind(this), this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay);
+        this.messaging.publicLivechatGlobal.livechatButtonView.update({
+            chatbotNextStepTimeout: setTimeout(
+                this._chatbotTriggerNextStep.bind(this),
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay,
+            ),
+        });
     },
 
     _onChatbotInputKeyDown() {

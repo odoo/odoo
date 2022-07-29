@@ -213,6 +213,7 @@ registerModel({
             inverse: 'livechatButtonViewOwner',
             isCausal: true,
         }),
+        chatbotNextStepTimeout: attr(),
         chatbotSessionCookieKey: attr({
             compute: '_computeChatbotSessionCookieKey',
         }),
