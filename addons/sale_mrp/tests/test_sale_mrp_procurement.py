@@ -181,3 +181,61 @@ class TestSaleMrpProcurement(TransactionCase):
 
         # ...with two products
         self.assertEqual(len(pickings[0].move_ids), 2)
+
+    def test_post_prod_location_child_of_stock_location(self):
+        """
+        3-steps manufacturing, the post-prod location is a child of the stock
+        location. Have a manufactured product with the manufacture route and a
+        RR min=max=0. Confirm a SO with that product -> It should generate a MO
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+
+        warehouse.manufacture_steps = 'pbm_sam'
+        warehouse.sam_loc_id.location_id = warehouse.lot_stock_id
+
+        product, component = self.env['product.product'].create([{
+            'name': 'Finished',
+            'type': 'product',
+            'route_ids': [(6, 0, manufacture_route.ids)],
+        }, {
+            'name': 'Component',
+            'type': 'consu',
+        }])
+
+        self.env['mrp.bom'].create({
+            'product_id': product.id,
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_uom_id': product.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ],
+        })
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': product.name,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+            'trigger': 'auto',
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Super Partner'}).id,
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': product.uom_id.id,
+                    'price_unit': 1,
+                })],
+        })
+        so.action_confirm()
+        self.assertEqual(so.state, 'sale')
+
+        mo = self.env['mrp.production'].search([('product_id', '=', product.id)], order='id desc', limit=1)
+        self.assertIn(so.name, mo.origin)
