@@ -3,6 +3,8 @@
 
 from odoo import api, models, fields, tools, _
 from odoo.tools import is_html_empty
+from odoo.addons.web.controllers.main import clean_action
+
 
 class MailActivityType(models.Model):
     _inherit = "mail.activity.type"
@@ -18,6 +20,7 @@ class MailActivity(models.Model):
     def action_create_calendar_event(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("calendar.action_calendar_event")
+        action = clean_action(action, env=self.env)
         action['context'] = {
             'default_activity_type_id': self.activity_type_id.id,
             'default_res_id': self.env.context.get('default_res_id'),
