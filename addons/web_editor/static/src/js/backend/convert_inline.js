@@ -287,15 +287,7 @@ function cardToTable($editable) {
         for (const child of [...card.childNodes]) {
             const row = document.createElement('tr');
             const col = document.createElement('td');
-            if (child.nodeName === 'IMG') {
-                col.append(child);
-            } else if (child.nodeType === Node.TEXT_NODE) {
-                if (child.textContent.replace(RE_WHITESPACE, '').length) {
-                    col.append(child);
-                } else {
-                    continue;
-                }
-            } else {
+            if (isBlock(child)) {
                 for (const attr of child.attributes) {
                     col.setAttribute(attr.name, attr.value);
                 }
@@ -303,6 +295,14 @@ function cardToTable($editable) {
                     col.append(descendant);
                 }
                 child.remove();
+            } else if (child.nodeType === Node.TEXT_NODE) {
+                if (child.textContent.replace(RE_WHITESPACE, '').length) {
+                    col.append(child);
+                } else {
+                    continue;
+                }
+            } else {
+                col.append(child);
             }
             const subTable = _createTable();
             const superRow = document.createElement('tr');
