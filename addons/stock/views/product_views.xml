@@ -442,12 +442,6 @@
                             icon="fa-cubes"/>
                     </div>
 
-                    <!-- change attrs of fields added in view_template_property_form
-                    to restrict the display for templates -->
-                    <xpath expr="//group[@name='group_lots_and_weight']" position="attributes">
-                        <attribute name="attrs">{'invisible': [('type', 'not in', ['product', 'consu'])]}</attribute>
-                    </xpath>
-
                     <xpath expr="//label[@for='weight']" position="before">
                         <field name="responsible_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                     </xpath>
