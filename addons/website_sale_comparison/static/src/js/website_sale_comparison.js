@@ -265,7 +265,7 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
     events: {
         'click .o_add_compare, .o_add_compare_dyn': '_onClickAddCompare',
         'click #o_comparelist_table tr': '_onClickComparelistTr',
-        'submit form[action="/shop/cart/update"]': '_onFormSubmit',
+        'submit .o_add_cart_form_compare': '_onFormSubmit',
     },
 
     /**
