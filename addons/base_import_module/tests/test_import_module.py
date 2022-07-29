@@ -61,9 +61,9 @@ class TestImportModule(odoo.tests.TransactionCase):
 
     def test_import_and_update_module(self):
         self.test_user = new_test_user(
-            self.env, login='Admin',
+            self.env, login='Admin2',
             groups='base.group_user,base.group_system',
-            name='Admin',
+            name='Admin2',
         )
         bundle = 'web.assets_backend'
         path = 'test_module/static/src/js/test.js'

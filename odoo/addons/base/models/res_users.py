@@ -337,9 +337,10 @@ class Users(models.Model):
     groups_count = fields.Integer('# Groups', help='Number of groups that apply to the current user',
                                   compute='_compute_accesses_count', compute_sudo=True)
 
-    _sql_constraints = [
-        ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
-    ]
+    def _auto_init(self):
+        super(Users, self)._auto_init()
+        if not tools.index_exists(self._cr, 'res_users_login_unique'):
+            self._cr.execute("CREATE UNIQUE INDEX res_users_login_unique ON res_users (UPPER(login)) WHERE active = TRUE")
 
     def init(self):
         cr = self.env.cr
