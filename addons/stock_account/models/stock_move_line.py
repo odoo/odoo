@@ -59,6 +59,7 @@ class StockMoveLine(models.Model):
         stock_valuation_layers = self.env['stock.valuation.layer']
         if move._is_in() and diff > 0 or move._is_out() and diff < 0:
             move.product_price_update_before_done(forced_qty=diff)
+            move = move.with_context(out_neg=True) if move._is_out() and diff < 0 else move
             stock_valuation_layers |= move._create_in_svl(forced_quantity=abs(diff))
             if move.product_id.cost_method in ('average', 'fifo'):
                 move.product_id._run_fifo_vacuum(move.company_id)

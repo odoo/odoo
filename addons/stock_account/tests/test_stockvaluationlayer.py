@@ -715,7 +715,7 @@ class TestStockValuationFIFO(TestStockValuationCommon):
 
         self.assertEqual(self.product1.value_svl, 30)
         self.assertEqual(self.product1.quantity_svl, 2)
-        self.assertAlmostEqual(self.product1.standard_price, 10)
+        self.assertAlmostEqual(self.product1.standard_price, 15)
 
     def test_return_delivery_2(self):
         self._make_in_move(self.product1, 1, unit_cost=10)

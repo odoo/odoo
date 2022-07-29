@@ -48,6 +48,12 @@ class StockMove(models.Model):
             layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
             quantity = sum(layers.mapped("quantity"))
             return layers.currency_id.round(sum(layers.mapped("value")) / quantity) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
+        # If the move was an out with a diff < 0 (compensate for the after-effect of some modification)
+        if self.env.context.get('out_neg') and float_is_zero(price_unit, precision):
+            unit_cost = self.stock_valuation_layer_ids.unit_cost
+            if unit_cost and not float_is_zero(unit_cost, precision):
+                return unit_cost
+
         return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
 
     @api.model
@@ -309,9 +315,9 @@ class StockMove(models.Model):
 
     def product_price_update_before_done(self, forced_qty=None):
         tmpl_dict = defaultdict(lambda: 0.0)
-        # adapt standard price on incomming moves if the product cost_method is 'average'
+        # adapt standard price on incomming moves if the product cost_method is 'average' or 'fifo'
         std_price_update = {}
-        for move in self.filtered(lambda move: move._is_in() and move.with_company(move.company_id).product_id.cost_method == 'average'):
+        for move in self.filtered(lambda move: move._is_in() and move.with_company(move.company_id).product_id.cost_method in ['average', 'fifo']):
             product_tot_qty_available = move.product_id.sudo().with_company(move.company_id).quantity_svl + tmpl_dict[move.product_id.id]
             rounding = move.product_id.uom_id.rounding
 
@@ -335,12 +341,6 @@ class StockMove(models.Model):
             # Write the standard price, as SUPERUSER_ID because a warehouse manager may not have the right to write on products
             move.product_id.with_company(move.company_id.id).with_context(disable_auto_svl=True).sudo().write({'standard_price': new_std_price})
             std_price_update[move.company_id.id, move.product_id.id] = new_std_price
-
-        # adapt standard price on incomming moves if the product cost_method is 'fifo'
-        for move in self.filtered(lambda move:
-                                  move.with_company(move.company_id).product_id.cost_method == 'fifo'
-                                  and float_is_zero(move.product_id.sudo().quantity_svl, precision_rounding=move.product_id.uom_id.rounding)):
-            move.product_id.with_company(move.company_id.id).sudo().write({'standard_price': move._get_price_unit()})
 
     def _get_accounting_data_for_valuation(self):
         """ Return the accounts and journal to use to post Journal Entries for

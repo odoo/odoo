@@ -315,13 +315,13 @@ class ProductProduct(models.Model):
             ('remaining_qty', '>', 0),
             ('company_id', '=', company.id),
         ])
-        new_standard_price = 0
+        last_unit_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
             qty_taken_on_candidate = min(qty_to_take_on_candidates, candidate.remaining_qty)
 
             candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
-            new_standard_price = candidate_unit_cost
+            last_unit_price = candidate_unit_cost
             value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
             value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
             new_remaining_value = candidate.remaining_value - value_taken_on_candidate
@@ -339,12 +339,20 @@ class ProductProduct(models.Model):
             if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
                 if float_is_zero(candidate.remaining_qty, precision_rounding=self.uom_id.rounding):
                     next_candidates = candidates.filtered(lambda svl: svl.remaining_qty > 0)
-                    new_standard_price = next_candidates and next_candidates[0].unit_cost or new_standard_price
+                    last_unit_price = next_candidates and next_candidates[0].unit_cost or last_unit_price
                 break
 
         # Update the standard price with the price of the last used candidate, if any.
-        if new_standard_price and self.cost_method == 'fifo':
-            self.sudo().with_company(company.id).with_context(disable_auto_svl=True).standard_price = new_standard_price
+        if self.cost_method == 'fifo':
+            # Scan through the updated SVL after the move
+            svl_sum_price = 0.0
+            svl_total_qty = 0.0
+            for move in candidates:
+                svl_total_qty += move.remaining_qty
+                svl_sum_price += move.remaining_value
+
+            if float_compare(svl_total_qty, 0.0, precision_rounding=self.uom_id.rounding) == 1:
+                self.sudo().with_company(company.id).with_context(disable_auto_svl=True).standard_price = svl_sum_price / svl_total_qty
 
         # If there's still quantity to value but we're out of candidates, we fall in the
         # negative stock use case. We chose to value the out move at the price of the
@@ -357,7 +365,8 @@ class ProductProduct(models.Model):
             }
         else:
             assert qty_to_take_on_candidates > 0
-            last_fifo_price = new_standard_price or self.standard_price
+            # last_fifo_price = self.standard_price
+            last_fifo_price = last_unit_price or self.standard_price
             negative_stock_value = last_fifo_price * -qty_to_take_on_candidates
             tmp_value += abs(negative_stock_value)
             vals = {
@@ -365,6 +374,11 @@ class ProductProduct(models.Model):
                 'value': -tmp_value,
                 'unit_cost': last_fifo_price,
             }
+        # We want to preserve the old behavior of when the stock reach 0 or negative
+        # -> standard price = last unit price
+        if self.cost_method == 'fifo' and len(candidates.filtered(lambda svl: svl.remaining_qty > 0)) == 0 \
+                and last_unit_price and not float_is_zero(last_unit_price, precision_rounding=self.uom_id.rounding):
+            self.sudo().with_company(company.id).with_context(disable_auto_svl=True).standard_price = last_unit_price
         return vals
 
     def _run_fifo_vacuum(self, company=None):
@@ -463,7 +477,7 @@ class ProductProduct(models.Model):
 
         # If some negative stock were fixed, we need to recompute the standard price.
         product = self.with_company(company.id)
-        if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
+        if product.cost_method in ['average', 'fifo'] and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
             product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
 
         self.env['stock.valuation.layer'].browse(x[0].id for x in as_svls)._validate_accounting_entries()

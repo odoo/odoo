@@ -78,7 +78,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
             description = _("Manual Stock Valuation: %s.", self.reason)
         else:
             description = _("Manual Stock Valuation: No Reason Given.")
-        if product_id.categ_id.property_cost_method == 'average':
+        if product_id.categ_id.property_cost_method in ['average', 'fifo']:
             description += _(
                 " Product cost updated from %(previous)s to %(new_cost)s.",
                 previous=product_id.standard_price,
@@ -107,7 +107,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
         revaluation_svl = self.env['stock.valuation.layer'].create(revaluation_svl_vals)
 
         # Update the stardard price in case of AVCO
-        if product_id.categ_id.property_cost_method == 'average':
+        if product_id.categ_id.property_cost_method in ['average', 'fifo']:
             product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / self.current_quantity_svl
 
         # If the Inventory Valuation of the product category is automated, create related account move.
