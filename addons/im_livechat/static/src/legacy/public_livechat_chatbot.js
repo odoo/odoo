@@ -260,19 +260,6 @@ const QWeb = core.qweb;
              !this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found));
     },
     /**
-     * Works as a hook since other modules can add their own step types.
-     *
-     * @private
-     */
-    _chatbotIsExpectingUserInput() {
-        return [
-            'question_phone',
-            'question_email',
-            'free_input_single',
-            'free_input_multi',
-        ].includes(this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type);
-    },
-    /**
      * Processes the step, depending on the current state of the script and the author of the last
      * message that was typed into the conversation.
      *
@@ -305,7 +292,7 @@ const QWeb = core.qweb;
         } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'forward_operator'
                    && this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found) {
             this._chatbotEnableInput();
-        }  else if (this._chatbotIsExpectingUserInput()) {
+        }  else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.isExpectingUserInput) {
             if (this._isLastMessageFromCustomer()) {
                 // user has already typed a message in -> trigger next step
                 this._chatbotSetIsTyping();
@@ -424,7 +411,7 @@ const QWeb = core.qweb;
                 // email is not (yet) valid, let the user answer / try again
                 return false;
             } else if (
-                (this._chatbotIsExpectingUserInput() ||
+                (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.isExpectingUserInput ||
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'question_selection') &&
                 this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0
             ) {
@@ -435,7 +422,7 @@ const QWeb = core.qweb;
                     // -> end the script
                     return true;
                 }
-            } else if (!this._chatbotIsExpectingUserInput()) {
+            } else if (!this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.isExpectingUserInput) {
                 // we are on the last step of the script and we do not expect a user input
                 // -> end the script
                 return true;

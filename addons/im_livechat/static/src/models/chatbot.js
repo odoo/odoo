@@ -10,6 +10,21 @@ registerModel({
     recordMethods: {
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeIsExpectingUserInput() {
+            if (!this.currentStep) {
+                return clear();
+            }
+            return [
+                'question_phone',
+                'question_email',
+                'free_input_single',
+                'free_input_multi',
+            ].includes(this.currentStep.data.chatbot_step_type);
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computeName() {
@@ -55,6 +70,10 @@ registerModel({
         currentStep: one('ChatbotStep', {
             inverse: 'chabotOwner',
             isCausal: true,
+        }),
+        isExpectingUserInput: attr({
+            compute: '_computeIsExpectingUserInput',
+            default: false,
         }),
         lastWelcomeStep: attr({
             compute: '_computeLastWelcomeStep',
