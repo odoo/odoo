@@ -95,7 +95,7 @@ registerModel({
             if (!chat || !chat.channel.isPinned) {
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc
-                chat = await this.messaging.models['Thread'].performRpcCreateChat({
+                chat = await this.messaging.models['Channel'].performRpcCreateChat({
                     partnerIds: [this.partner.id],
                 });
                 if (!this.exists()) {
