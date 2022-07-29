@@ -751,7 +751,7 @@ msgstr "Cấp phát Luỹ kế"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Accrual Level"
-msgstr "Mức lũy kế"
+msgstr "Cấp độ lũy kế"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_plan
@@ -764,7 +764,7 @@ msgstr "Kế hoạch lũy kế"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_level
 msgid "Accrual Plan Level"
-msgstr "Mức kế hoạch lũy kế"
+msgstr "Cấp độ kế hoạch lũy kế"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
@@ -894,7 +894,7 @@ msgstr "Quản trị viên"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__end_of_accrual
 msgid "After this accrual's period"
-msgstr "Sau khoảng thời gian tích lũy này"
+msgstr "Sau khoảng thời gian lũy kế này"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_date_from_period__pm
@@ -1018,7 +1018,7 @@ msgstr "Đề nghị cấp phát phải được xác nhận để có thể đ�
 msgid ""
 "Allocation request must be confirmed or validated in order to refuse it."
 msgstr ""
-"Đề nghị cấp phát phải được xác nhận hoặc thẩm định để có thể được từ chối."
+"Đề nghị cấp phát phải được xác nhận hoặc xác thực để có thể được từ chối."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -1166,12 +1166,12 @@ msgstr "Nghỉ đã lưu trữ"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
 msgid "At the end of the calendar year, unused accruals will be"
-msgstr "Vào cuối năm dương lịch, các khoản tích lũy chưa sử dụng sẽ"
+msgstr "Vào cuối năm dương lịch, các khoản lũy kế chưa sử dụng sẽ"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "At the end of the year, unused accruals will be"
-msgstr "Vào cuối năm, các khoản tích lũy chưa sử dụng sẽ"
+msgstr "Vào cuối năm, các khoản lũy kế chưa sử dụng sẽ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__supported_attachment_ids
@@ -2001,8 +2001,7 @@ msgid ""
 "If Accrual Allocation: Number of days allocated in addition to the ones you "
 "will get via the accrual' system."
 msgstr ""
-"Nếu cấp phát lũy kế: Số ngày được cấp phát ngoài những ngày bạn sẽ nhận được "
-"thông qua hệ thống tích lũy."
+"Nếu cấp phát lũy kế: Số ngày sẽ bổ sung vào lần đầu tiên của chu kỳ cấp phép."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
@@ -2010,8 +2009,7 @@ msgid ""
 "If Accrual Allocation: Number of hours allocated in addition to the ones you"
 " will get via the accrual' system."
 msgstr ""
-"Nếu cấp phát lũy kế: Số ngày được cấp phát ngoài những ngày bạn sẽ nhận được "
-"thông qua hệ thống tích lũy."
+"Nếu cấp phát lũy kế: Số giờ sẽ bổ sung vào lần đầu tiên của chu kỳ cấp phép. "
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -2070,8 +2068,8 @@ msgid ""
 "Immediately: When the date corresponds to the new level, your accrual is automatically computed, granted and you switch to new level\n"
 "                After this accrual's period: When the accrual is complete (a week, a month), and granted, you switch to next level if allocation date corresponds"
 msgstr ""
-"Ngay lập tức: Khi ngày tương ứng với cấp độ mới, khoản lũy kế của bạn sẽ tự động được tính, được cấp và bạn chuyển sang cấp độ mới \n"
-"Sau khoảng thời gian lũy kế này: Khi khoản tích lũy hoàn tất (một tuần, một tháng) và được cấp, bạn chuyển sang cấp độ tiếp theo của ngày cấp phát tương ứng"
+"Ngay lập tức: Khi đến ngày tương ứng với cấp độ mới, khoản lũy kế sẽ tự động được tính toán và cấp phát, đồng thời chuyển sang cấp độ mới\n "
+"Sau khoảng thời gian lũy kế này: Khi khoản lũy kế hoàn tất (một tuần, một tháng) và được cấp, cấp độ tiếp theo sẽ được áp dụng khi đến ngày cấp phát tương ứng."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -2230,7 +2228,7 @@ msgstr "Chuyển đổi cấp độ"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__level
 msgid "Level computed through the sequence."
-msgstr "Mức độ được tính toán thông qua trình tự."
+msgstr "Cấp độ được tính toán thông qua trình tự."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_count
@@ -2495,7 +2493,7 @@ msgstr "Đơn xin nghỉ có kiểu là %(leave_type)s được tạo bởi %(us
 #: code:addons/hr_holidays/static/src/js/time_off_calendar_employee.js:0
 #, python-format
 msgid "New Allocation"
-msgstr "Đề nghị cấp phát mới"
+msgstr "Cấp phát mới"
 
 #. module: hr_holidays
 #. openerp-web
@@ -2564,7 +2562,7 @@ msgstr "Không giới hạn"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__no_validation
 msgid "No Validation"
-msgstr "Không thẩm định"
+msgstr "Không xác thực"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_available_holidays_report
@@ -3054,7 +3052,7 @@ msgstr "Ngày thứ hai"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_day_display
 msgid "Second Day Display"
-msgstr "Hiển thị ngày thứ hai"
+msgstr "Hiển thị ngày thứ 2"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__second_month
@@ -3752,7 +3750,7 @@ msgstr "Hoạt động hôm nay"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__allocations_count
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocations_count
 msgid "Total number of allocations"
-msgstr ""
+msgstr "Tổng số lần cấp phát"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_count
@@ -3930,7 +3928,7 @@ msgstr "Nghỉ Còn Lại Biểu Kiến"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_leaves_taken
 msgid "Virtual Time Off Already Taken"
-msgstr "Virtual Time Off Already Taken"
+msgstr "Xin nghỉ ảo đã sử dụng"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__confirm
@@ -3944,7 +3942,7 @@ msgstr "Chờ phê duyệt"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__validate1
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__validate1
 msgid "Waiting Second Approval"
-msgstr "Đang chờ Chấp thuận Thứ hai"
+msgstr "Đang chờ Chấp thuận lần 2"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
