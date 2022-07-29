@@ -30,8 +30,8 @@ export async function initAutoMoreMenu(el, options) {
     const isUserNavbar = el.parentElement.classList.contains('o_main_navbar');
     const dropdownSubMenuClasses = ['show', 'border-0', 'position-static'];
     const dropdownToggleClasses = ['h-auto', 'py-2', 'text-secondary'];
-    var autoMarginLeftRegex = /\bm[lx]?(?:-(?:sm|md|lg|xl))?-auto\b/;
-    var autoMarginRightRegex = /\bm[rx]?(?:-(?:sm|md|lg|xl))?-auto\b/;
+    const autoMarginLeftRegex = /\bm[sx]?(?:-(?:sm|md|lg|xl|xxl))?-auto\b/; // grep: ms-auto mx-auto
+    const autoMarginRightRegex = /\bm[ex]?(?:-(?:sm|md|lg|xl|xxl))?-auto\b/; // grep: me-auto mx-auto
     var extraItemsToggle = null;
     let debounce;
     const afterFontsloading = new Promise((resolve) => {
