@@ -287,7 +287,7 @@ export class MockServer {
             modifiersNames.forEach((attr) => {
                 const mod = node.getAttribute(attr);
                 if (mod) {
-                    const v = evaluateExpr(mod, { context }) ? true : false;
+                    const v = evaluateExpr(mod, context) ? true : false;
                     if (inTreeView && !inListHeader && attr === "invisible") {
                         modifiers.column_invisible = v;
                     } else if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {
@@ -1913,10 +1913,11 @@ export class MockServer {
         }
         // return false or the latest range start (related to the shortest
         // granularity (i.e. day, week, ...))
-        return !values.length || values.includes(false) ? false :
-            values.reduce((max, value) => {
-                return value > max ? value : max;
-            });
+        return !values.length || values.includes(false)
+            ? false
+            : values.reduce((max, value) => {
+                  return value > max ? value : max;
+              });
     }
 
     /**
