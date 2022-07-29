@@ -36,7 +36,7 @@ QUnit.test('create (channel)', async function (assert) {
         model: 'mail.channel',
     }));
 
-    const thread = messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].insert({
         channel_type: 'channel',
         id: 100,
         members: insert([{
@@ -94,7 +94,7 @@ QUnit.test('create (chat)', async function (assert) {
         model: 'mail.channel',
     }));
 
-    const channel = messaging.models['Thread'].create({
+    const channel = messaging.models['Thread'].insert({
         channel_type: 'chat',
         id: 200,
         members: insert({
