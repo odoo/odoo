@@ -132,7 +132,7 @@
                     <BolloVirtuale>SI</BolloVirtuale>
                     <ImportoBollo t-esc="format_numbers(record.l10n_it_stamp_duty)"/>
                 </DatiBollo>
-                <ImportoTotaleDocumento t-esc="format_monetary(record.amount_total, currency)"/>
+                <ImportoTotaleDocumento t-esc="format_monetary(document_total, currency)"/>
             </DatiGeneraliDocumento>
             <DatiOrdineAcquisto t-if="record.ref">
                 <IdDocumento t-esc="format_alphanumeric(record.ref[:20])"/>
@@ -176,7 +176,7 @@
                     <IstitutoFinanziario t-if="partner_bank.bank_id" t-esc="format_alphanumeric(partner_bank.bank_id.name[:80])"/>
                     <IBAN t-if="partner_bank.acc_type == 'iban'" t-esc="partner_bank.sanitized_acc_number"/>
                     <BIC t-elif="partner_bank.acc_type == 'bank' and partner_bank.bank_id.bic" t-esc="partner_bank.bank_id.bic"/>
-                    <CodicePagamento t-esc="format_alphanumeric(record.payment_reference[:60])"/>
+                    <CodicePagamento t-if="record.payment_reference" t-esc="format_alphanumeric(record.payment_reference[:60])"/>
                 </DettaglioPagamento>
             </t>
         </DatiPagamento>
