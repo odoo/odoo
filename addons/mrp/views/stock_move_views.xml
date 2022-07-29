@@ -21,9 +21,6 @@
                 <xpath expr="//label[@for='quantity_done']" position="attributes">
 		    <attribute name="string">Consumed</attribute>
                 </xpath>
-                <xpath expr="//field[@name='quantity_done']" position='after'>
-                    <field name="raw_material_production_id" invisible="1"/>
-                </xpath>
             </field>
         </record>
 
@@ -50,7 +47,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='lot_id']" position="attributes">
 		            <attribute name="context">{
-                        'active_mo_id': parent.raw_material_production_id,
+                        'active_mo_id': context.get('active_mo_id'),
                         'active_picking_id': picking_id,
                         'default_company_id': parent.company_id,
                         'default_product_id': parent.product_id,
