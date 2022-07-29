@@ -36,18 +36,14 @@ function simulateBarCode(chars, target = document.body) {
 }
 
 QUnit.module('Barcodes', {
-    before() {
+    beforeEach: function () {
         barcodeService.maxTimeBetweenKeysInMs = 0;
         registry.category("services").add("barcode", barcodeService, { force: true});
         registry.category("services").add("barcode_autoclick", barcodeGenericHandlers, { force: true});
         // remove this one later
         registry.category("services").add("barcode_remapper", barcodeRemapperService);
         this.env = makeTestEnv();
-    },
-    after() {
-        barcodeService.maxTimeBetweenKeysInMs = maxTimeBetweenKeysInMs;
-    },
-    beforeEach: function () {
+
         this.data = {
             order: {
                 fields: {
@@ -82,7 +78,10 @@ QUnit.module('Barcodes', {
                 ],
             },
         };
-    }
+    },
+    afterEach: function () {
+        barcodeService.maxTimeBetweenKeysInMs = maxTimeBetweenKeysInMs;
+    },
 });
 
 QUnit.test('Button with barcode_trigger', async function (assert) {
