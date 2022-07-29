@@ -536,13 +536,16 @@ $line-height-truncate: 1.25em;
             .o_wslides_lesson_aside_list_link {
                 @include o-hover-text-color($gray-600, $headings-color );
 
-                .o_wslides_lesson_link_name {
-                    line-height: 1.2;
-                }
-
                 &.active {
                     box-shadow:inset 2px 0 map-get($theme-colors, 'primary');
                 }
+            }
+            button {
+                padding-top: 0;
+                border-top: 0;
+            }
+            i {
+                line-height: unset;
             }
             .o_wslides_button_complete {
                 margin-left: 5px;

@@ -251,7 +251,11 @@ class Channel(models.Model):
         help="Defines the email your Attendees will receive each time you upload new content.",
         default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.slide_template_published'),
         domain=[('model', '=', 'slide.slide')])
-    share_template_id = fields.Many2one(
+    share_channel_template_id = fields.Many2one(
+        'mail.template', string='Channel Share Template',
+        help='Email template used when sharing a channel',
+        default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.mail_template_channel_shared'))
+    share_slide_template_id = fields.Many2one(
         'mail.template', string='Share Template',
         help="Email template used when sharing a slide",
         default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('website_slides.slide_template_shared'))
@@ -751,6 +755,23 @@ class Channel(models.Model):
 
         if removed_channel_partner_domain:
             self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
+
+    def _send_share_email(self, emails):
+        """ Share channel through emails."""
+        mail_ids = []
+        for record in self:
+            template = record.share_channel_template_id.with_context(
+                user=self.env.user,
+                email=emails,
+                base_url=record.get_base_url(),
+            )
+            email_values = {'email_to': emails}
+            if self.env.user.has_group('base.group_portal'):
+                template = template.sudo()
+                email_values['email_from'] = self.env.company.catchall_formatted or self.env.company.email_formatted
+
+            mail_ids.append(template.send_mail(record.id, email_layout_xmlid='mail.mail_notification_light', email_values=email_values))
+        return mail_ids
 
     def action_view_slides(self):
         action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_slide_action")

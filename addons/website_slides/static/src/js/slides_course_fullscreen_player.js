@@ -368,12 +368,13 @@
             'click .o_wslides_js_share_email button': '_onShareByEmailClick',
             'click a.o_wslides_js_social_share': '_onSlidesSocialShare',
             'click .o_clipboard_button': '_onShareLinkCopy',
+            'keypress .o_wslides_js_share_email input': '_onKeypress',
         },
 
         init: function (parent, options, slide) {
             options = _.defaults(options || {}, {
-                title: "Share",
-                buttons: [{text: "Cancel", close: true}],
+                title: _t("Share This Content"),
+                buttons: [{text: "Close", close: true}],
                 size: 'medium',
             });
             this._super(parent, options);
@@ -381,23 +382,48 @@
             this.session = session;
         },
 
-        _onShareByEmailClick: function() {
+        //--------------------------------------------------------------------------
+        // Handlers
+        //--------------------------------------------------------------------------
+
+        /**
+         * Send the email(s) on 'Enter' key
+         *
+         * @private
+         * @param {Event} ev
+         */
+        _onKeypress: function (ev) {
+            if (ev.keyCode === $.ui.keyCode.ENTER) {
+                ev.preventDefault();
+                this._onShareByEmailClick();
+            }
+        },
+
+        _onShareByEmailClick: function () {
             var form = this.$('.o_wslides_js_share_email');
             var input = form.find('input');
-            var slideID = form.find('button').data('slide-id');
-            if (input.val() && input[0].checkValidity()) {
+            if (input.val()) {
                 form.removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
+                var slideID = form.find('button').data('slide-id');
                 this._rpc({
                     route: '/slides/slide/send_share_email',
                     params: {
                         slide_id: slideID,
-                        email: input.val(),
+                        emails: input.val(),
                         fullscreen: true
                     },
-                }).then(function () {
-                    form.html('<div class="alert alert-info" role="alert">' + _t('<strong>Thank you!</strong> Mail has been sent.') + '</div>');
+                }).then((action) => {
+                    if (action) {
+                        form.find('.alert-info').removeClass('d-none');
+                        form.find('.input-group').addClass('d-none');
+                    } else {
+                        this.displayNotification({ message: _t('Please enter valid email(s)'), type: 'danger' });
+                        form.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
+                        input.focus();
+                    }
                 });
             } else {
+                this.displayNotification({ message: _t('Please enter valid email(s)'), type: 'danger' });
                 form.addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
                 input.focus();
             }
@@ -405,6 +431,7 @@
 
         _onSlidesSocialShare: function (ev) {
             ev.preventDefault();
+            ev.stopPropagation();
             var popUpURL = $(ev.currentTarget).attr('href');
             window.open(popUpURL, 'Share Dialog', 'width=626,height=436');
         },
@@ -506,6 +533,10 @@
             var self = this;
             this.on('change:slide', this, this._onChangeSlide);
             this._toggleSidebar();
+            const backendNavEl = document.querySelector('.o_frontend_to_backend_nav');
+            if (backendNavEl) {
+                backendNavEl.remove();
+            }
             return this._super.apply(this, arguments).then(function () {
                 return self._onChangeSlide(); // trigger manually once DOM ready, since slide content is not rendered server side
             });
