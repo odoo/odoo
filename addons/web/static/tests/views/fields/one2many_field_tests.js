@@ -12252,4 +12252,50 @@ QUnit.module("Fields", (hooks) => {
             "localStorage getItem optional_fields,partner,form,100000001,turtles,list,display_name",
         ]);
     });
+
+    QUnit.test(
+        "if there are less than 4 lines in a one2many, empty lines must be displayed to cover the difference.",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+                resId: 1,
+            });
+
+            // Should contain 4 blank lines
+            assert.containsNone(target, ".o_list_renderer tbody tr .o_data_row");
+            assert.containsNone(target, ".o_list_renderer tbody tr .o_field_x2many_list_row_add");
+            assert.containsN(target, ".o_list_renderer tbody tr", 4);
+
+            await clickEdit(target);
+            // Should only contain the "Add a line" line and 3 blank lines
+            assert.containsNone(target, ".o_list_renderer tbody tr .o_data_row");
+            assert.containsOnce(target, ".o_list_renderer tbody tr .o_field_x2many_list_row_add");
+            assert.hasClass(
+                target.querySelector(".o_list_renderer tbody tr td"),
+                "o_field_x2many_list_row_add"
+            );
+            assert.containsN(target, ".o_list_renderer tbody tr", 4);
+
+            await addRow(target);
+            // Should only contain a new row, the "Add a line" line and 2 blank lines
+            assert.containsOnce(target, ".o_list_renderer tbody tr.o_data_row");
+            assert.hasClass(target.querySelector(".o_list_renderer tbody tr"), "o_data_row");
+            assert.containsOnce(target, ".o_list_renderer tbody tr .o_field_x2many_list_row_add");
+            assert.hasClass(
+                target.querySelectorAll(".o_list_renderer tbody tr")[1].querySelector("td"),
+                "o_field_x2many_list_row_add"
+            );
+            assert.containsN(target, ".o_list_renderer tbody tr", 4);
+        }
+    );
 });
