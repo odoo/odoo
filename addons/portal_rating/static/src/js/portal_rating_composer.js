@@ -93,8 +93,9 @@ const RatingPopupComposer = publicWidget.Widget.extend({
         return this._composer.appendTo(this.$('.o_rating_popup_composer_modal .o_portal_chatter_composer')).then(() => {
             // Change the text of the button
             this.$('.o_rating_popup_composer_text').text(
-                this.options.default_message_id ?
-                _t('Modify your review') : _t('Add a review')
+                this.options.is_fullscreen ?
+                _t('Review') : this.options.default_message_id ?
+                _t('Edit Review') : _t('Add Review')
             );
         });
     },
