@@ -50,24 +50,20 @@ const GalleryWidget = publicWidget.Widget.extend({
             interval: milliseconds || 0,
             id: _.uniqueId('slideshow_'),
         }));
-        $modal.modal({
-            keyboard: true,
-            backdrop: true,
-        });
         $modal.on('hidden.bs.modal', function () {
             $(this).hide();
             $(this).siblings().filter('.modal-backdrop').remove(); // bootstrap leaves a modal-backdrop
             $(this).remove();
         });
-        $modal.find('.modal-content, .modal-body.o_slideshow').css('height', '100%');
-        $modal.appendTo(document.body);
-
         $modal.one('shown.bs.modal', function () {
             self.trigger_up('widgets_start_request', {
                 editableMode: false,
                 $target: $modal.find('.modal-body.o_slideshow'),
             });
         });
+        $modal.appendTo(document.body);
+        const modalBS = new Modal($modal[0], {keyboard: true, backdrop: true});
+        modalBS.show();
     },
 });
 
