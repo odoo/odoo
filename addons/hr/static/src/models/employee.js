@@ -100,7 +100,7 @@ registerModel({
          *
          * If a chat is not appropriate, a notification is displayed instead.
          *
-         * @returns {Thread|undefined}
+         * @returns {Channel|undefined}
          */
         async getChat() {
             if (!this.user && !this.hasCheckedUser) {
@@ -136,11 +136,11 @@ registerModel({
             if (!chat) {
                 return;
             }
-            await chat.open(options);
+            await chat.thread.open(options);
             if (!this.exists()) {
                 return;
             }
-            return chat;
+            return chat.thread;
         },
         /**
          * Opens the most appropriate view that is a profile for this employee.

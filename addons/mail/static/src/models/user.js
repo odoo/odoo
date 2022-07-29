@@ -70,7 +70,7 @@ registerModel({
          *
          * If a chat is not appropriate, a notification is displayed instead.
          *
-         * @returns {Thread|undefined}
+         * @returns {Channel|undefined}
          */
         async getChat() {
             if (!this.partner) {
@@ -91,14 +91,13 @@ registerModel({
                 return;
             }
             // in other cases a chat would be valid, find it or try to create it
-            let chat = this.partner.dmChatWithCurrentPartner.thread;
-            if (!chat || !chat.channel.isPinned) {
+            let chat = this.partner.dmChatWithCurrentPartner;
+            if (!chat || !chat.isPinned) {
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc
-                const channel = await this.messaging.models['Channel'].performRpcCreateChat({
+                chat = await this.messaging.models['Channel'].performRpcCreateChat({
                     partnerIds: [this.partner.id],
                 });
-                chat = channel.thread;
                 if (!this.exists()) {
                     return;
                 }
@@ -125,11 +124,11 @@ registerModel({
             if (!this.exists() || !chat) {
                 return;
             }
-            await chat.open(options);
+            await chat.thread.open(options);
             if (!this.exists() || !chat.exists()) {
                 return;
             }
-            return chat;
+            return chat.thread;
         },
         /**
          * Opens the most appropriate view that is a profile for this user.
