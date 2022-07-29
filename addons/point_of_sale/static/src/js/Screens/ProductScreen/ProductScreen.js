@@ -168,6 +168,8 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         async _updateSelectedOrderline(event) {
             if (this.env.pos.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
                 let order = this.env.pos.get_order();
+                if(!order.orderlines.length)
+                    return;
                 let selectedLine = order.get_selected_orderline();
                 let orderlines = order.orderlines;
                 let lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
