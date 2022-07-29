@@ -34,8 +34,8 @@ export class DateRangeField extends Component {
                                 ? localization.dateTimeFormat
                                 : localization.dateFormat,
                         },
-                        startDate: window.moment(this.formattedStartDate),
-                        endDate: window.moment(this.formattedEndDate),
+                        startDate: this.formattedStartDate ? window.moment(this.formattedStartDate) : window.moment(),
+                        endDate: this.formattedEndDate ? window.moment(this.formattedEndDate) : window.moment(),
                     });
                     this.pickerContainer = window.$(el).data("daterangepicker").container[0];
 
