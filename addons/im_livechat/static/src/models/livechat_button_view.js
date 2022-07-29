@@ -44,6 +44,25 @@ registerModel({
             }
         },
         /**
+         * Once the script ends, adds a visual element at the end of the chat window allowing to restart
+         * the whole script.
+         */
+        chatbotEndScript() {
+            if (
+                this.chatbot.currentStep &&
+                this.chatbot.currentStep.data &&
+                this.chatbot.currentStep.data.conversation_closed
+            ) {
+                // don't touch anything if the user has closed the conversation, let the chat window
+                // handle the display
+                return;
+            }
+            this.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
+            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
+            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click',
+                this.widget._onChatbotRestartScript.bind(this.widget));
+        },
+        /**
          * See '_chatbotSaveSession'.
          *
          * We retrieve the livechat uuid from the session cookie since the livechat Widget is not yet

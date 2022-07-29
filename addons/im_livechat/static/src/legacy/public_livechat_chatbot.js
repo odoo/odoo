@@ -132,7 +132,7 @@ const QWeb = core.qweb;
     _chatbotAwaitUserInput() {
         if (this._isLastMessageFromCustomer()) {
             if (this._chatbotShouldEndScript()) {
-                this._chatbotEndScript();
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
             } else {
                 this._chatbotSetIsTyping();
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
@@ -225,28 +225,6 @@ const QWeb = core.qweb;
         }
     },
     /**
-     * Once the script ends, adds a visual element at the end of the chat window allowing to restart
-     * the whole script.
-     *
-     * @private
-     */
-    _chatbotEndScript() {
-        if (
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep &&
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data &&
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.conversation_closed
-        ) {
-            // don't touch anything if the user has closed the conversation, let the chat window
-            // handle the display
-            return;
-        }
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click',
-            this._onChatbotRestartScript.bind(this));
-
-    },
-    /**
      * Will display a "Restart script" button in the conversation toolbar.
      *
      * Side-case: if the conversation has been forwarded to a human operator, we don't want to
@@ -301,7 +279,7 @@ const QWeb = core.qweb;
      */
     _chatbotProcessStep() {
         if (this._chatbotShouldEndScript()) {
-            this._chatbotEndScript();
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
         } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'forward_operator'
                    && this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found) {
             this._chatbotEnableInput();
@@ -512,7 +490,7 @@ const QWeb = core.qweb;
             // did not find next step -> end the script
             this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_is_last = true;
             this._renderMessages();
-            this._chatbotEndScript();
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
         }
 
         this._chatbotSaveSession();
@@ -690,7 +668,7 @@ const QWeb = core.qweb;
                         ),
                     });
                 } else {
-                    this._chatbotEndScript();
+                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
                 }
 
                 this._chatbotSaveSession();
