@@ -219,6 +219,7 @@ registerModel({
         chatbotState: attr({
             compute: '_computeChatbotState',
         }),
+        chatbotWelcomeMessageTimeout: attr(),
         chatWindow: one('PublicLivechatWindow', {
             inverse: 'livechatButtonViewOwner',
             isCausal: true,

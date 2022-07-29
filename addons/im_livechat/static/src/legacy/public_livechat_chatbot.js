@@ -777,10 +777,12 @@ const QWeb = core.qweb;
                 this._chatbotSetIsTyping(true);
             }
 
-            this.welcomeMessageTimeout = setTimeout(() => {
-                this._sendWelcomeChatbotMessage(stepIndex + 1, welcomeMessageDelay);
-                this._renderMessages();
-            }, welcomeMessageDelay);
+            this.messaging.publicLivechatGlobal.livechatButtonView.update({
+                chatbotWelcomeMessageTimeout: setTimeout(() => {
+                    this._sendWelcomeChatbotMessage(stepIndex + 1, welcomeMessageDelay);
+                    this._renderMessages();
+                }, welcomeMessageDelay),
+            });
         } else {
             if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'forward_operator') {
                 // special case when the last welcome message is a forward to an operator
@@ -814,8 +816,8 @@ const QWeb = core.qweb;
             clearTimeout(this.nextStepTimeout);
         }
 
-        if (this.welcomeMessageTimeout) {
-            clearTimeout(this.welcomeMessageTimeout);
+        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotWelcomeMessageTimeout) {
+            clearTimeout(this.messaging.publicLivechatGlobal.livechatButtonView.chatbotWelcomeMessageTimeout);
         }
 
         const postedMessage = await session.rpc('/chatbot/restart', {
