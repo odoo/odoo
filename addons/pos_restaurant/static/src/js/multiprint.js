@@ -303,5 +303,4 @@ const PosResMultiprintOrder = (Order) => class PosResMultiprintOrder extends Ord
 }
 Registries.Model.extend(Order, PosResMultiprintOrder);
 
-
 });
