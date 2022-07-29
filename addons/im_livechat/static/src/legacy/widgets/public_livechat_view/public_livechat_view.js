@@ -175,7 +175,7 @@ const PublicLivechatView = Widget.extend({
         }
 
         this.$el.html(QWeb.render('im_livechat.legacy.mail.widget.Thread', {
-            thread: this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
+            thread: this.messaging.publicLivechatGlobal.publicLivechat,
             displayAuthorMessages,
             options,
             ORDER,
