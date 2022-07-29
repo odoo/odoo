@@ -13,6 +13,7 @@ class Employee(models.Model):
         'fleet.vehicle', 'driver_employee_id', string='Vehicles (private)',
         groups="fleet.fleet_group_manager,hr.group_hr_user",
     )
+    license_plate = fields.Char(compute="_compute_license_plate", search="_search_license_plate")
     mobility_card = fields.Char(groups="fleet.fleet_group_user")
 
     def action_open_employee_cars(self):
@@ -26,6 +27,18 @@ class Employee(models.Model):
             "context": dict(self._context, default_driver_id=self.user_id.partner_id.id, default_driver_employee_id=self.id),
             "name": "History Employee Cars",
         }
+
+    @api.depends('private_car_plate', 'car_ids.license_plate')
+    def _compute_license_plate(self):
+        for employee in self:
+            if employee.private_car_plate and employee.car_ids.license_plate:
+                employee.license_plate = ' '.join([employee.car_ids.license_plate, employee.private_car_plate])
+            else:
+                employee.license_plate = employee.car_ids.license_plate or employee.private_car_plate
+
+    def _search_license_plate(self, operator, value):
+        employees = self.env['hr.employee'].search(['|', ('car_ids.license_plate', operator, value), ('private_car_plate', operator, value)])
+        return [('id', 'in', employees.ids)]
 
     def _compute_employee_cars_count(self):
         rg = self.env['fleet.vehicle.assignation.log']._read_group([

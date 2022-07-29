@@ -28,9 +28,8 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='job_id']" position="after">
-                <field name="car_ids" string="License Plate"
-                    filter_domain="[('car_ids.license_plate', 'ilike', self)]"/>
+            <xpath expr="//field[@name='private_car_plate']" position="replace">
+                <field name="license_plate"/>
             </xpath>
         </field>
     </record>

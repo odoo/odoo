@@ -8,9 +8,14 @@
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employee" filter_domain="['|', ('work_email', 'ilike', self), ('name', 'ilike', self)]"/>
-                    <field name="category_ids" groups="hr.group_hr_user"/>
-                    <field name="job_id"/>
+                    <searchpanel>
+                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
+                        <field name="department_id" icon="fa-users" enable_counters="1"/>
+                    </searchpanel>
                     <field name="parent_id" string="Manager"/>
+                    <field name="job_id"/>
+                    <field name="category_ids" groups="hr.group_hr_user"/>
+                    <field name="private_car_plate" />
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
@@ -31,10 +36,6 @@
                         <filter name="group_job" string="Job" domain="[]" context="{'group_by': 'job_id'}"/>
                         <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
                     </group>
-                    <searchpanel>
-                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
-                        <field name="department_id" icon="fa-users" enable_counters="1"/>
-                    </searchpanel>
                 </search>
              </field>
         </record>
@@ -146,6 +147,9 @@
                                             <field name="km_home_work" groups="hr.group_hr_user"/>
                                             <span>Km</span>
                                         </div>
+                                        </group>
+                                        <group colspan="2">
+                                            <field name="private_car_plate" />
                                         </group>
                                     </group>
                                     <group>
