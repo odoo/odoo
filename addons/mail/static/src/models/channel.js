@@ -58,7 +58,7 @@ registerModel({
          * @param {Object} param0
          * @param {integer[]} param0.partnerIds
          * @param {boolean} [param0.pinForCurrentPartner]
-         * @returns {Thread|undefined} the created or existing chat
+         * @returns {Channel|undefined} the created or existing chat
          */
         async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
             // TODO FIX: potential duplicate chat task-2276490
@@ -73,9 +73,10 @@ registerModel({
             if (!data) {
                 return;
             }
-            return this.messaging.models['Thread'].insert(
+            const thread = this.messaging.models['Thread'].insert(
                 this.messaging.models['Thread'].convertData(data)
             );
+            return thread.channel;
         },
     },
     recordMethods: {
