@@ -79,7 +79,7 @@ Component.env = legacyEnv;
 
     const messaging = await env.services.messaging.get();
     messaging.models['Thread'].insert(messaging.models['Thread'].convertData(data.channelData));
-    const discussPublicView = messaging.models['DiscussPublicView'].create(data.discussPublicViewData);
+    const discussPublicView = messaging.models['DiscussPublicView'].insert(data.discussPublicViewData);
     if (discussPublicView.shouldDisplayWelcomeViewInitially) {
         discussPublicView.switchToWelcomeView();
     } else {

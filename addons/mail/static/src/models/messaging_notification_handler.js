@@ -565,7 +565,7 @@ registerModel({
                 0
             );
             const partnerRoot = this.messaging.partnerRoot;
-            const message = this.messaging.models['Message'].create(Object.assign(convertedData, {
+            const message = this.messaging.models['Message'].insert(Object.assign(convertedData, {
                 author: replace(partnerRoot),
                 id: lastMessageId + 0.01,
                 isTransient: true,

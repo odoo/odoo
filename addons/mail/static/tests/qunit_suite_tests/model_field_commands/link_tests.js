@@ -11,8 +11,8 @@ QUnit.test('link: should link a record to an empty x2one field', async function 
     assert.expect(2);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({ id: 10 });
-    const address = messaging.models['TestAddress'].create({ id: 10 });
+    const contact = messaging.models['TestContact'].insert({ id: 10 });
+    const address = messaging.models['TestAddress'].insert({ id: 10 });
     contact.update({ address: replace(address) });
     assert.strictEqual(
         contact.address,
@@ -30,12 +30,12 @@ QUnit.test('link: should replace a record to a non-empty x2one field', async fun
     assert.expect(3);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         id: 10,
         address: insertAndReplace({ id: 10 }),
     });
     const address10 = messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
-    const address20 = messaging.models['TestAddress'].create({ id: 20 });
+    const address20 = messaging.models['TestAddress'].insert({ id: 20 });
     contact.update({ address: replace(address20) });
     assert.strictEqual(
         contact.address,
@@ -58,8 +58,8 @@ QUnit.test('link: should link a record to an empty x2many field', async function
     assert.expect(3);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({ id: 10 });
-    const task = messaging.models['TestTask'].create({ id: 10 });
+    const contact = messaging.models['TestContact'].insert({ id: 10 });
+    const task = messaging.models['TestTask'].insert({ id: 10 });
     contact.update({ tasks: link(task) });
     assert.strictEqual(
         contact.tasks.length,
@@ -82,12 +82,12 @@ QUnit.test('link: should link and add a record to a non-empty x2many field', asy
     assert.expect(5);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         id: 10,
         tasks: insertAndReplace({ id: 10 }),
     });
     const task10 = messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
-    const task20 = messaging.models['TestTask'].create({ id: 20 });
+    const task20 = messaging.models['TestTask'].insert({ id: 20 });
     contact.update({ tasks: link(task20) });
     assert.strictEqual(
         contact.tasks.length,

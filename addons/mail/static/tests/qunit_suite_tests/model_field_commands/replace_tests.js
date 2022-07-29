@@ -11,8 +11,8 @@ QUnit.test('replace: should link a record for an empty x2one field', async funct
     assert.expect(2);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({ id: 10 });
-    const address = messaging.models['TestAddress'].create({ id: 10 });
+    const contact = messaging.models['TestContact'].insert({ id: 10 });
+    const address = messaging.models['TestAddress'].insert({ id: 10 });
     contact.update({ address: replace(address) });
     assert.strictEqual(
         contact.address,
@@ -30,12 +30,12 @@ QUnit.test('replace: should replace a record for a non-empty x2one field', async
     assert.expect(3);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         id: 10,
         address: insertAndReplace({ id: 10 }),
     });
     const address10 = messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
-    const address20 = messaging.models['TestAddress'].create({ id: 20 });
+    const address20 = messaging.models['TestAddress'].insert({ id: 20 });
     contact.update({ address: replace(address20) });
     assert.strictEqual(
         contact.address,
@@ -58,8 +58,8 @@ QUnit.test('replace: should link a record for an empty x2many field', async func
     assert.expect(4);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({ id: 10 });
-    const task = messaging.models['TestTask'].create({ id: 10 });
+    const contact = messaging.models['TestContact'].insert({ id: 10 });
+    const task = messaging.models['TestTask'].insert({ id: 10 });
     contact.update({ tasks: replace(task) });
     assert.strictEqual(
         contact.tasks.length,
@@ -87,7 +87,7 @@ QUnit.test('replace: should replace all records for a non-empty field', async fu
     assert.expect(5);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         id: 10,
         tasks: insertAndReplace([
             { id: 10 },
@@ -96,7 +96,7 @@ QUnit.test('replace: should replace all records for a non-empty field', async fu
     });
     const task10 = messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
     const task20 = messaging.models['TestTask'].findFromIdentifyingData({ id: 20 });
-    const task30 = messaging.models['TestTask'].create({ id: 30 });
+    const task30 = messaging.models['TestTask'].insert({ id: 30 });
     contact.update({ tasks: replace(task30) });
     assert.strictEqual(
         contact.tasks.length,
@@ -129,7 +129,7 @@ QUnit.test('replace: should order the existing records for x2many field', async 
     assert.expect(3);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         id: 10,
         tasks: insertAndReplace([
             { id: 10 },

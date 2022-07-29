@@ -10,7 +10,7 @@ QUnit.test('clear: should set attribute field undefined if there is no default v
     assert.expect(1);
 
     const { messaging } = await start();
-    const task = messaging.models['TestTask'].create({
+    const task = messaging.models['TestTask'].insert({
         id: 1,
         title: 'test title 1',
     });
@@ -26,7 +26,7 @@ QUnit.test('clear: should set attribute field the default value', async function
     assert.expect(1);
 
     const { messaging } = await start();
-    const task = messaging.models['TestTask'].create({
+    const task = messaging.models['TestTask'].insert({
         id: 1,
         difficulty: 5,
     });
@@ -42,7 +42,7 @@ QUnit.test('clear: should set x2one field undefined if no default value is given
     assert.expect(2);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         id: 10,
         address: insertAndReplace({ id: 20 }),
     });
@@ -64,7 +64,7 @@ QUnit.test('clear: should set x2one field the default value', async function (as
     assert.expect(1);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         favorite: insertAndReplace({ description: 'pingpong' }),
         id: 10,
     });
@@ -80,7 +80,7 @@ QUnit.test('clear: should set x2many field empty array if no default value is gi
     assert.expect(2);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         id: 10,
         tasks: insertAndReplace({ id: 20 }),
     });
@@ -102,7 +102,7 @@ QUnit.test('clear: should set x2many field the default value', async function (a
     assert.expect(1);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         id: 10,
         hobbies: [
             insertAndReplace({ description: 'basketball' }),

@@ -11,7 +11,7 @@ import { makeDeferred } from '@mail/utils/deferred';
 /**
  * Object that manage models and records, notably their update cycle: whenever
  * some records are requested for update (either with model static method
- * `create()` or record method `update()`), this object processes them with
+ * `insert()` or record method `update()`), this object processes them with
  * direct field & and computed field updates.
  */
 export class ModelManager {
@@ -174,13 +174,6 @@ export class ModelManager {
             return allRecords.filter(filterFunc);
         }
         return allRecords;
-    }
-
-    /**
-     * @deprecated use insert instead
-     */
-    create(model, data = {}) {
-        return this.insert(model, data);
     }
 
     /**

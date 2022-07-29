@@ -12,7 +12,7 @@ QUnit.test('create (txt)', async function (assert) {
     const { messaging } = await start();
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
 
-    const attachment = messaging.models['Attachment'].create({
+    const attachment = messaging.models['Attachment'].insert({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
@@ -34,7 +34,7 @@ QUnit.test('displayName', async function (assert) {
     const { messaging } = await start();
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
 
-    const attachment = messaging.models['Attachment'].create({
+    const attachment = messaging.models['Attachment'].insert({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
@@ -52,7 +52,7 @@ QUnit.test('extension', async function (assert) {
     const { messaging } = await start();
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
 
-    const attachment = messaging.models['Attachment'].create({
+    const attachment = messaging.models['Attachment'].insert({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
@@ -70,7 +70,7 @@ QUnit.test('fileType', async function (assert) {
     const { messaging } = await start();
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
 
-    const attachment = messaging.models['Attachment'].create({
+    const attachment = messaging.models['Attachment'].insert({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
@@ -90,7 +90,7 @@ QUnit.test('isTextFile', async function (assert) {
     const { messaging } = await start();
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
 
-    const attachment = messaging.models['Attachment'].create({
+    const attachment = messaging.models['Attachment'].insert({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
@@ -108,7 +108,7 @@ QUnit.test('isViewable', async function (assert) {
     const { messaging } = await start();
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
 
-    const attachment = messaging.models['Attachment'].create({
+    const attachment = messaging.models['Attachment'].insert({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',

@@ -281,7 +281,7 @@ registerModel({
                 });
             } else if (!this.thread || !this.thread.isTemporary) {
                 const currentPartner = this.messaging.currentPartner;
-                const message = this.messaging.models['Message'].create({
+                const message = this.messaging.models['Message'].insert({
                     author: replace(currentPartner),
                     body: this.env._t("Creating a new record..."),
                     id: getMessageNextTemporaryId(),

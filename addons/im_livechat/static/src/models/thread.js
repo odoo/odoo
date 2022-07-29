@@ -58,7 +58,7 @@ patchModelMethods('Thread', {
                  * easier to handle one temporary partner per channel.
                  */
                 data2.members.push(unlink(this.messaging.publicPartners));
-                const partner = this.messaging.models['Partner'].create(
+                const partner = this.messaging.models['Partner'].insert(
                     Object.assign(
                         this.messaging.models['Partner'].convertData(data.livechat_visitor),
                         { id: this.messaging.models['Partner'].getNextPublicId() }

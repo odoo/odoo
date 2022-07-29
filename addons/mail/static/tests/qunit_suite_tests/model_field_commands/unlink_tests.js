@@ -12,7 +12,7 @@ QUnit.test('unlink: should unlink the record for x2one field', async function (a
     assert.expect(2);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         id: 10,
         address: insertAndReplace({ id: 10 }),
     });
@@ -34,7 +34,7 @@ QUnit.test('unlink: should unlink the specified record for x2many field', async 
     assert.expect(2);
     const { messaging } = await start();
 
-    const contact = messaging.models['TestContact'].create({
+    const contact = messaging.models['TestContact'].insert({
         id: 10,
         tasks: insertAndReplace([
             { id: 10 },

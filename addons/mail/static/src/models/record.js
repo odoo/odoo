@@ -58,12 +58,6 @@ registerModel({
             return this.modelManager.all(this, filterFunc);
         },
         /**
-         * @deprecated use insert instead
-         */
-        create(data) {
-            return this.modelManager.create(this, data);
-        },
-        /**
          * Gets the unique record that matches the given identifying data, if it
          * exists.
          *

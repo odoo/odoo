@@ -21,12 +21,12 @@ QUnit.test('create', async function (assert) {
     assert.notOk(messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
     assert.notOk(messaging.models['Message'].findFromIdentifyingData({ id: 4000 }));
 
-    const thread = messaging.models['Thread'].create({
+    const thread = messaging.models['Thread'].insert({
         id: 100,
         model: 'mail.channel',
         name: "General",
     });
-    const message = messaging.models['Message'].create({
+    const message = messaging.models['Message'].insert({
         attachments: insertAndReplace({
             filename: "test.txt",
             id: 750,
@@ -97,70 +97,70 @@ QUnit.test('create', async function (assert) {
 QUnit.test('message without body should be considered empty', async function (assert) {
     assert.expect(1);
     const { messaging } = await start();
-    const message = messaging.models['Message'].create({ id: 11 });
+    const message = messaging.models['Message'].insert({ id: 11 });
     assert.ok(message.isEmpty);
 });
 
 QUnit.test('message with body "" should be considered empty', async function (assert) {
     assert.expect(1);
     const { messaging } = await start();
-    const message = messaging.models['Message'].create({ body: "", id: 11 });
+    const message = messaging.models['Message'].insert({ body: "", id: 11 });
     assert.ok(message.isEmpty);
 });
 
 QUnit.test('message with body "<p></p>" should be considered empty', async function (assert) {
     assert.expect(1);
     const { messaging } = await start();
-    const message = messaging.models['Message'].create({ body: "<p></p>", id: 11 });
+    const message = messaging.models['Message'].insert({ body: "<p></p>", id: 11 });
     assert.ok(message.isEmpty);
 });
 
 QUnit.test('message with body "<p><br></p>" should be considered empty', async function (assert) {
     assert.expect(1);
     const { messaging } = await start();
-    const message = messaging.models['Message'].create({ body: "<p><br></p>", id: 11 });
+    const message = messaging.models['Message'].insert({ body: "<p><br></p>", id: 11 });
     assert.ok(message.isEmpty);
 });
 
 QUnit.test('message with body "<p><br/></p>" should be considered empty', async function (assert) {
     assert.expect(1);
     const { messaging } = await start();
-    const message = messaging.models['Message'].create({ body: "<p><br/></p>", id: 11 });
+    const message = messaging.models['Message'].insert({ body: "<p><br/></p>", id: 11 });
     assert.ok(message.isEmpty);
 });
 
 QUnit.test(String.raw`message with body "<p>\n</p>" should be considered empty`, async function (assert) {
     assert.expect(1);
     const { messaging } = await start();
-    const message = messaging.models['Message'].create({ body: "<p>\n</p>", id: 11 });
+    const message = messaging.models['Message'].insert({ body: "<p>\n</p>", id: 11 });
     assert.ok(message.isEmpty);
 });
 
 QUnit.test(String.raw`message with body "<p>\r\n\r\n</p>" should be considered empty`, async function (assert) {
     assert.expect(1);
     const { messaging } = await start();
-    const message = messaging.models['Message'].create({ body: "<p>\r\n\r\n</p>", id: 11 });
+    const message = messaging.models['Message'].insert({ body: "<p>\r\n\r\n</p>", id: 11 });
     assert.ok(message.isEmpty);
 });
 
 QUnit.test('message with body "<p>   </p>  " should be considered empty', async function (assert) {
     assert.expect(1);
     const { messaging } = await start();
-    const message = messaging.models['Message'].create({ body: "<p>   </p>  ", id: 11 });
+    const message = messaging.models['Message'].insert({ body: "<p>   </p>  ", id: 11 });
     assert.ok(message.isEmpty);
 });
 
 QUnit.test(`message with body "<img src=''>" should not be considered empty`, async function (assert) {
     assert.expect(1);
     const { messaging } = await start();
-    const message = messaging.models['Message'].create({ body: "<img src=''>", id: 11 });
+    const message = messaging.models['Message'].insert({ body: "<img src=''>", id: 11 });
     assert.notOk(message.isEmpty);
 });
 
 QUnit.test('message with body "test" should not be considered empty', async function (assert) {
     assert.expect(1);
     const { messaging } = await start();
-    const message = messaging.models['Message'].create({ body: "test", id: 11 });
+    const message = messaging.models['Message'].insert({ body: "test", id: 11 });
     assert.notOk(message.isEmpty);
 });
 
