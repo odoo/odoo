@@ -8,7 +8,7 @@ from odoo.tools import consteq
 from odoo import _, api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-
+from odoo.addons.bus.models.bus_presence import AWAY_TIMER, DISCONNECTION_TIMER
 
 class MailGuest(models.Model):
     _name = 'mail.guest'
@@ -28,6 +28,22 @@ class MailGuest(models.Model):
     lang = fields.Selection(string="Language", selection=_lang_get)
     timezone = fields.Selection(string="Timezone", selection=_tz_get)
     channel_ids = fields.Many2many(string="Channels", comodel_name='mail.channel', relation='mail_channel_member', column1='guest_id', column2='channel_id', copy=False)
+    im_status = fields.Char('IM Status', compute='_compute_im_status')
+
+    def _compute_im_status(self):
+        self.env.cr.execute("""
+            SELECT
+                guest_id as id,
+                CASE WHEN age(now() AT TIME ZONE 'UTC', last_poll) > interval %s THEN 'offline'
+                     WHEN age(now() AT TIME ZONE 'UTC', last_presence) > interval %s THEN 'away'
+                     ELSE 'online'
+                END as status
+            FROM bus_presence
+            WHERE guest_id IN %s
+        """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, tuple(self.ids)))
+        res = dict(((status['id'], status['status']) for status in self.env.cr.dictfetchall()))
+        for guest in self:
+            guest.im_status = res.get(guest.id, 'offline')
 
     def _get_guest_from_context(self):
         """Returns the current guest record from the context, if applicable."""

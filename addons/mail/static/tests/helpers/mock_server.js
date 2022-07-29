@@ -71,7 +71,9 @@ patch(MockServer.prototype, 'mail', {
         // routes
         if (route === '/longpolling/im_status') {
             const { partner_ids } = args;
-            return this.pyEnv['res.partner'].searchRead([['id', 'in', partner_ids]], { context: { 'active_test': false }, fields: ['im_status'] });
+            return {
+                'partners': this.pyEnv['res.partner'].searchRead([['id', 'in', partner_ids]], { context: { 'active_test': false }, fields: ['im_status'] })
+            };
         }
         if (route === '/mail/message/post') {
             if (args.thread_model === 'mail.channel') {

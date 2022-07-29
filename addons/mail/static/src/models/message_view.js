@@ -415,6 +415,9 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computePersonaImStatusIconView() {
+            if (this.message.guestAuthor && this.message.guestAuthor.im_status) {
+                return insertAndReplace();
+            }
             return this.message.author && this.message.author.isImStatusSet ? insertAndReplace() : clear();
         },
     },

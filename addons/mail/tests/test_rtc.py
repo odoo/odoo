@@ -270,6 +270,7 @@ class TestChannelInternals(MailCommon):
                                     'guest': [('insert-and-replace', {
                                         'id': channel_member_test_guest.guest_id.id,
                                         'name': channel_member_test_guest.guest_id.name,
+                                        'im_status': channel_member_test_guest.guest_id.im_status,
                                     })],
                                 })],
                             },
@@ -299,6 +300,7 @@ class TestChannelInternals(MailCommon):
                     'guest': [('insert-and-replace', {
                         'id': channel_member_test_guest.guest_id.id,
                         'name': channel_member_test_guest.guest_id.name,
+                        'im_status': channel_member_test_guest.guest_id.im_status,
                     })],
                 })],
             },
@@ -404,6 +406,7 @@ class TestChannelInternals(MailCommon):
                                 'guest': [('insert-and-replace', {
                                     'id': channel_member_test_guest.guest_id.id,
                                     'name': channel_member_test_guest.guest_id.name,
+                                    'im_status': channel_member_test_guest.guest_id.im_status,
                                 })],
                             })],
                         }])],
@@ -423,6 +426,7 @@ class TestChannelInternals(MailCommon):
                                         "guest": [("insert-and-replace", {
                                             "id": channel_member_test_guest.guest_id.id,
                                             "name": channel_member_test_guest.guest_id.name,
+                                            'im_status': channel_member_test_guest.guest_id.im_status,
                                         })],
                                     })],
                                 })],
@@ -510,6 +514,7 @@ class TestChannelInternals(MailCommon):
                                 'guest': [('insert-and-replace', {
                                     'id': channel_member_test_guest.guest_id.id,
                                     'name': channel_member_test_guest.guest_id.name,
+                                    'im_status': channel_member_test_guest.guest_id.im_status,
                                 })],
                             })],
                         }])],
@@ -584,6 +589,7 @@ class TestChannelInternals(MailCommon):
                                     'guest': [('insert-and-replace', {
                                         'id': channel_member_test_guest.guest_id.id,
                                         'name': channel_member_test_guest.guest_id.name,
+                                        'im_status': channel_member_test_guest.guest_id.im_status,
                                     })],
                                 })],
                             },
@@ -704,6 +710,7 @@ class TestChannelInternals(MailCommon):
                                     'guest': [('insert-and-replace', {
                                         'id': channel_member_test_guest.guest_id.id,
                                         'name': channel_member_test_guest.guest_id.name,
+                                        'im_status': channel_member_test_guest.guest_id.im_status,
                                     })],
                                 })],
                             },

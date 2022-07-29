@@ -136,6 +136,7 @@ class ChannelMember(models.Model):
                     'guest': [('insert-and-replace', {
                         'id': member.guest_id.id,
                         'name': member.guest_id.name,
+                        'im_status': member.guest_id.im_status,
                     })],
                 }
             members_formatted_data.append({

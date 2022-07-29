@@ -39,6 +39,9 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computePersonaImStatusIconView() {
+            if (this.channelMember.persona.guest && this.channelMember.persona.guest.im_status) {
+                return insertAndReplace();
+            }
             return this.channelMember.persona.partner && this.channelMember.persona.partner.isImStatusSet ? insertAndReplace() : clear();
         },
     },

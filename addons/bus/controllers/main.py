@@ -36,7 +36,9 @@ class BusController(Controller):
 
     @route('/longpolling/im_status', type="json", auth="user")
     def im_status(self, partner_ids):
-        return request.env['res.partner'].with_context(active_test=False).search([('id', 'in', partner_ids)]).read(['im_status'])
+        return {
+            'partners': request.env['res.partner'].with_context(active_test=False).search([('id', 'in', partner_ids)]).read(['im_status'])
+        }
 
     @route('/longpolling/health', type='http', auth='none', save_session=False)
     def health(self):

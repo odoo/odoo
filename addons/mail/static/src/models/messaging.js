@@ -215,13 +215,23 @@ registerModel({
             if (partnerIds.length === 0) {
                 return;
             }
-            const dataList = await this.messaging.rpc({
-                route: '/longpolling/im_status',
-                params: {
-                    partner_ids: partnerIds,
-                },
-            }, { shadow: true });
-            this.models['Partner'].insert(dataList);
+            const guestIds = [];
+            for (const guest of this.models['Guest'].all()) {
+                guestIds.push(guest.id);
+            }
+            if (partnerIds.length !== 0 || guestIds.length !== 0) {
+                const dataList = await this.messaging.rpc({
+                    route: '/longpolling/im_status',
+                    params: {
+                        partner_ids: partnerIds,
+                        guest_ids: guestIds,
+                    },
+                }, { shadow: true });
+                this.models['Partner'].insert(dataList.partners);
+                if (dataList.guests) {
+                    this.models['Guest'].insert(dataList.guests);
+                }
+            }
         },
         /**
          * @private
