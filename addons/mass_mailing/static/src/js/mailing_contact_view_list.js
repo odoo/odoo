@@ -19,9 +19,12 @@ const MailingContactController = ListController.extend({
     }),
 
     _onImport() {
-        this.do_action('mass_mailing.mailing_contact_import_action', {
-            additional_context: this.renderer.state.context,
-        });
+        const context = this.renderer.state.context || {};
+        const actionParams = { additional_context: context };
+        if (!context.default_mailing_list_ids && context.active_model === 'mailing.list' && context.active_ids) {
+            actionParams.additional_context.default_mailing_list_ids = context.active_ids;
+        }
+        this.do_action('mass_mailing.mailing_contact_import_action', actionParams);
     }
 });
 
