@@ -22,13 +22,13 @@ to support In-App purchases inside Odoo. """,
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
-            'iap/static/src/js/**/*',
+            'iap/static/src/**/*.js',
         ],
         'web.tests_assets': [
             'iap/static/tests/**/*',
         ],
         'web.assets_qweb': [
-            'iap/static/src/xml/**/*',
+            'iap/static/src/**/*.xml',
         ],
     },
     'license': 'LGPL-3',
