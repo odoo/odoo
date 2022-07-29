@@ -116,6 +116,8 @@ function patchBrowserWithCleanup() {
     const originalRemoveEventListener = browser.removeEventListener;
     const originalSetTimeout = browser.setTimeout;
     const originalClearTimeout = browser.clearTimeout;
+    const originalSetInterval = browser.setInterval;
+    const originalClearInterval = browser.clearInterval;
 
     let hasHashChangeListeners = false;
     const mockLocation = makeMockLocation(() => hasHashChangeListeners);
@@ -142,6 +144,15 @@ function patchBrowserWithCleanup() {
                 });
                 return timeout;
             },
+            // patch setInterval to automatically remove callbacks registered (via
+            // browser.setInterval) during a test (e.g. during the deployment of a service)
+            setInterval() {
+                const interval = originalSetInterval(...arguments);
+                registerCleanup(() => {
+                    originalClearInterval(interval);
+                });
+                return interval;
+            },
             navigator: {
                 userAgent: browser.navigator.userAgent.replace(/\([^)]*\)/, "(X11; Linux x86_64)"),
             },
@@ -164,6 +175,23 @@ function patchBrowserWithCleanup() {
         },
         { pure: true }
     );
+}
+
+function patchBodyAddEventListener() {
+    // In some cases, e.g. tooltip service, event handlers are registered on document.body and not
+    // browser, because the events we listen to aren't triggered on window. We want to clear those
+    // handlers as well after each test.
+    const originalBodyAddEventListener = document.body.addEventListener;
+    const originalBodyRemoveEventListener = document.body.removeEventListener;
+    document.body.addEventListener = function () {
+        originalBodyAddEventListener.call(this, ...arguments);
+        registerCleanup(() => {
+            originalBodyRemoveEventListener.call(this, ...arguments);
+        });
+    };
+    registerCleanup(() => {
+        document.body.addEventListener = originalBodyAddEventListener;
+    });
 }
 
 function patchLegacyCoreBus() {
@@ -260,6 +288,7 @@ export async function setupTests() {
         forceLocaleAndTimezoneWithCleanup();
         cleanLoadedLanguages();
         patchBrowserWithCleanup();
+        patchBodyAddEventListener();
         patchLegacyCoreBus();
         patchOdoo();
         patchSessionInfo();
