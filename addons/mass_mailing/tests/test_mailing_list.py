@@ -193,14 +193,18 @@ class TestMailingContactImport(MassMailCommon):
         ))
 
         contact_import.contact_list = '''
+            invalid line1
             alice@example.com
             bob@example.com
+            invalid line2
             "Bob" <bob@EXAMPLE.com>
             "Test" <bob@example.com>
+
+            invalid line3, with a comma
             already_exists_list_1@example.com
             already_exists_list_2@example.com
             "Test" <already_exists_list_1_and_2@example.com>
-            invalid line
+            invalid line4
         '''
         contact_import = contact_import.save()
 
