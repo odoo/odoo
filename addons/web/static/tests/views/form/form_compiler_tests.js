@@ -154,7 +154,7 @@ QUnit.module("Form Compiler", () => {
                 <div class="o_form_sheet_bg">
                     <div class="o_form_statusbar"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
                     <div>someDiv</div>
-                    <div class="o_form_sheet">
+                    <div class="o_form_sheet position-relative">
                         <div>inside sheet</div>
                     </div>
                 </div>
