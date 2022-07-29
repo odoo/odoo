@@ -156,12 +156,28 @@
                             </t>
                         </t>
                         <t t-else="">
+                            <t t-set="total_vat" t-value="total_vat + line.tax"/>
                             <t t-if="line.is_program_reward">
                                 <t t-set="total_discount_coupon_minus" t-value="total_discount_coupon_minus + Math.abs(line.price_with_tax)"/>
                             </t>
                             <t t-else="">
                                 <t t-set="total_discount_global_minus" t-value="total_discount_global_minus + Math.abs(line.price_with_tax)"/>
                             </t>
+
+                            <t t-set="is_non_zero_vat" t-value="''"/>
+                            <t t-foreach="line.is_non_zero_vat_taxes_ids" t-as="taxes">
+                                <t t-set="is_non_zero_vat" t-value="taxes.is_non_zero_vat"/>
+                            </t>
+                            <t t-if="is_non_zero_vat == 'is_vat'">
+                                <t t-set="total_product_v" t-value="total_product_v + line.price_without_tax"/>
+                            </t>
+<!--                            <t t-elif="is_non_zero_vat == 'is_zero_vat'">-->
+<!--                                <t t-set="total_product_z" t-value="total_product_z + line.price_without_tax + price_discount"/>-->
+<!--                            </t>-->
+<!--                            <t t-else="">-->
+<!--                                <t t-set="total_product_e" t-value="total_product_e + line.price_without_tax + price_discount"/>-->
+<!--                            </t>-->
+
                         </t>
                     </t>
                     <span style="margin-left: 1%;" class="pos-receipt-left-align"><b><t t-esc="Math.round(total_qty)"/> Item(s)</b></span>
@@ -221,17 +237,17 @@
                     </div>
                     <div>
                         <span class="pos-receipt-left-align"><b>VATable (V)</b></span>
-<!--                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_product_v)"/></span>-->
+                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_product_v)"/></span>
 
-                        <t t-set="new_total_without_tax" t-value="receipt.total_without_tax - total_product_e - total_product_z"/>
-                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(new_total_without_tax)"/></span>
+<!--                        <t t-set="new_total_without_tax" t-value="receipt.total_without_tax - total_product_e - total_product_z"/>-->
+<!--                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(new_total_without_tax)"/></span>-->
 
                     </div>
                     <div>
                         <span class="pos-receipt-left-align"><b>VAT</b></span>
-<!--                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_vat)"/></span>-->
+                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(total_vat)"/></span>
 
-                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(receipt.total_tax)"/></span>
+<!--                        <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(receipt.total_tax)"/></span>-->
 
                     </div>
                 </div>
