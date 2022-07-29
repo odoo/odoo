@@ -9,7 +9,7 @@ import Widget from 'web.Widget';
 
 import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
 
-import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 const _t = core._t;
 const QWeb = core.qweb;
@@ -104,11 +104,6 @@ const LivechatButton = Widget.extend({
             id: data.id,
             legacyPublicLivechatMessage: legacyMessage,
         });
-        if (this.messaging.publicLivechatGlobal.publicLivechat) {
-            this.messaging.publicLivechatGlobal.publicLivechat.update({
-                messages: link(message),
-            });
-        }
 
         if (this.messaging.publicLivechatGlobal.publicLivechat && this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat) {
             this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.addMessage(legacyMessage);
