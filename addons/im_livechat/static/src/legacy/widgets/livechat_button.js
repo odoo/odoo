@@ -12,7 +12,6 @@ import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_me
 import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_command';
 
 const _t = core._t;
-const QWeb = core.qweb;
 
 const LivechatButton = Widget.extend({
     className: 'openerp o_livechat_button d-print-none',
@@ -48,7 +47,7 @@ const LivechatButton = Widget.extend({
             }
             this.messaging.publicLivechatGlobal.livechatButtonView.update({ rule: result.rule });
         }
-        return this._loadQWebTemplate();
+        return this.messaging.publicLivechatGlobal.loadQWebTemplate();
     },
     start() {
         this.$el.text(this.messaging.publicLivechatGlobal.livechatButtonView.buttonText);
@@ -137,16 +136,6 @@ const LivechatButton = Widget.extend({
     _closeChat() {
         this.messaging.publicLivechatGlobal.livechatButtonView.update({ chatWindow: clear() });
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
-    },
-    /**
-     * @private
-     */
-    _loadQWebTemplate() {
-        return session.rpc('/im_livechat/load_templates').then(function (templates) {
-            for (let template of templates) {
-                QWeb.add_template(template);
-            }
-        });
     },
     /**
      * @private
