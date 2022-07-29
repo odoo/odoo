@@ -670,8 +670,19 @@ export class ListRenderer extends Component {
     }
 
     get getEmptyRowIds() {
-        const nbEmptyRow = Math.max(0, 4 - this.props.list.records.length);
+        let nbEmptyRow = Math.max(0, 4 - this.props.list.records.length);
+        if (nbEmptyRow > 0 && this.displayRowCreates) {
+            nbEmptyRow -= 1;
+        }
         return Array.from(Array(nbEmptyRow).keys());
+    }
+
+    get displayRowCreates() {
+        const activeActions = this.props.activeActions;
+        return (
+            activeActions &&
+            ("canLink" in activeActions ? activeActions.canLink : activeActions.canCreate)
+        );
     }
 
     // Group headers logic:
@@ -1064,7 +1075,7 @@ export class ListRenderer extends Component {
         switch (hotkey) {
             case "tab":
                 // X2many add a line
-                if (activeActions && (activeActions.canLink || activeActions.canCreate)) {
+                if (this.displayRowCreates) {
                     if (record.isNew && !record.isDirty) {
                         list.unselectRecord(true);
                         return false;
@@ -1133,7 +1144,7 @@ export class ListRenderer extends Component {
             case "tab": {
                 const index = list.records.indexOf(record);
                 if (index === list.records.length - 1) {
-                    if (activeActions && (activeActions.canLink || activeActions.canCreate)) {
+                    if (this.displayRowCreates) {
                         if (record.isNew && !record.isDirty) {
                             list.unselectRecord(true);
                             return false;
@@ -1208,11 +1219,7 @@ export class ListRenderer extends Component {
 
                 if (futureRecord) {
                     futureRecord.switchMode("edit");
-                } else if (
-                    this.lastIsDirty ||
-                    !record.canBeAbandoned ||
-                    (activeActions && (activeActions.canLink || activeActions.canCreate))
-                ) {
+                } else if (this.lastIsDirty || !record.canBeAbandoned || this.displayRowCreates) {
                     this.props.onAdd({ group });
                 } else {
                     futureRecord = list.records.at(0);
