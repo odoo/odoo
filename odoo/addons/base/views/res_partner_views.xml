@@ -180,7 +180,7 @@
                             <field name="parent_id"
                                 widget="res_partner_many2one"
                                 placeholder="Company Name..."
-                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}"
+                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
                                 attrs="{'invisible': ['|', '&amp;', ('is_company','=', True),('parent_id', '=', False),('company_name', '!=', False),('company_name', '!=', '')]}"/>
                                 <field name="company_name" attrs="{'invisible': ['|', '|', ('company_name', '=', False), ('company_name', '=', ''), ('is_company', '=', True)]}"/>
                                 <button name="create_company" icon="fa-plus-square" string="Create company"
