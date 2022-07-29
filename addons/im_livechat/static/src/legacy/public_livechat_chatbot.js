@@ -30,69 +30,6 @@ const QWeb = core.qweb;
             10000);
     },
 
-    /**
-     * This override handles the following use cases:
-     *
-     * - If the chat is started for the first time (first visit of a visitor)
-     *   We register the chatbot configuration and the rest of the behavior is triggered by various
-     *   method overrides ('sendWelcomeMessage', 'sendMessage', ...)
-     *
-     * - If the chat has been started before, but the user did not interact with the bot
-     *   The default behavior is to open an empty chat window, without any messages.
-     *   In addition, we fetch the configuration (with a '/init' call), to see if we have a bot
-     *   configured.
-     *   Indeed we want to trigger the bot script on every page where the associated rule is matched.
-     *
-     * - If we have a non-empty chat history, resume the chat script where the end-user left it by
-     *   fetching the necessary information from the local storage.
-     *
-     * @override
-     */
-    async willStart() {
-        const superResult = await this._super(...arguments);
-
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.rule && !!this.messaging.publicLivechatGlobal.livechatButtonView.rule.chatbot) {
-            // noop
-        } else if (this.messaging.publicLivechatGlobal.livechatButtonView.history !== null && this.messaging.publicLivechatGlobal.livechatButtonView.history.length === 0) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ livechatInit: await session.rpc('/im_livechat/init', {channel_id: this.messaging.publicLivechatGlobal.livechatButtonView.channelId}) });
-        } else if (this.messaging.publicLivechatGlobal.livechatButtonView.history !== null && this.messaging.publicLivechatGlobal.livechatButtonView.history.length !== 0) {
-            const sessionCookie = utils.get_cookie('im_livechat_session');
-            if (sessionCookie) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.update({ sessionCookie });
-                if (localStorage.getItem(this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSessionCookieKey)) {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.update({ chatbotState: 'restore_session' });
-                }
-            }
-        }
-
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotState === 'init') {
-            // we landed on a website page where a channel rule is configured to run a chatbot.script
-            // -> initialize necessary state
-            if (this.messaging.publicLivechatGlobal.livechatButtonView.rule.chatbot_welcome_steps && this.messaging.publicLivechatGlobal.livechatButtonView.rule.chatbot_welcome_steps.length !== 0) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.update({
-                    currentStep: insertAndReplace({
-                        data: this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.lastWelcomeStep,
-                    }),
-                });
-            }
-        } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotState === 'welcome') {
-            // we landed on a website page and a chatbot script was initialized on a previous one
-            // however the end-user did not interact with the bot ( :( )
-            // -> remove cookie to force opening the popup again
-            // -> initialize necessary state
-            // -> batch welcome message (see '_sendWelcomeChatbotMessage')
-            utils.set_cookie('im_livechat_auto_popup', '', -1);
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ history: clear() });
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ rule: this.messaging.publicLivechatGlobal.livechatButtonView.livechatInit.rule });
-        } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotState === 'restore_session') {
-            // we landed on a website page and a chatbot script is currently running
-            // -> restore the user's session (see 'chatbotRestoreSession')
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotRestoreSession();
-        }
-
-        return superResult;
-    },
-
     //--------------------------------------------------------------------------
     // Private - Chatbot specifics
     //--------------------------------------------------------------------------
