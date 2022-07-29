@@ -66,7 +66,9 @@ export function makeFakeRPCService(mockRPC) {
                 let rejectFn;
                 const rpcProm = new Promise((resolve, reject) => {
                     rejectFn = reject;
-                    resolve(rpcService(...arguments));
+                    rpcService(...arguments)
+                        .then(resolve)
+                        .catch(reject);
                 });
                 rpcProm.abort = () => rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
                 return rpcProm;
