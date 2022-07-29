@@ -733,6 +733,8 @@ class AccountEdiFormat(models.Model):
                         'name': name_attachment,
                         'datas': attachment_64,
                         'type': 'binary',
+                        'res_model': 'account.move',
+                        'res_id': new_invoice.id,
                     })
 
                     # default_res_id is had to context to avoid facturx to import his content
