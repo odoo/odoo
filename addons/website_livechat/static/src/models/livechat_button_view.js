@@ -17,6 +17,13 @@ patchRecordMethods('LivechatButtonView', {
      * @override
      */
     async willStart() {
+        if (this.isTestChatbot) {
+            /**
+             * Overridden to avoid calling the "init" endpoint as it requires a im_livechat.channel linked
+             * to work properly.
+             */
+            return this.messaging.publicLivechatGlobal.loadQWebTemplate();
+        }
         if (this.messaging.publicLivechatGlobal.options.chat_request_session) {
             set_cookie('im_livechat_session', JSON.stringify(this.messaging.publicLivechatGlobal.options.chat_request_session), 60 * 60);
         }
