@@ -475,7 +475,8 @@ const _t = core._t;
         });
 
         this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').on('click',
-            this._onChatbotRestartScript.bind(this));
+            this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript
+        );
 
         if (this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0) {
             const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1];
@@ -639,43 +640,6 @@ const _t = core._t;
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * Restart the script and then trigger the "next step" (which will be the first of the script
-     * in this case).
-     *
-     * @private
-     */
-    async _onChatbotRestartScript(ev) {
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_composer_text_field').removeClass('d-none');
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
-
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotNextStepTimeout) {
-            clearTimeout(this.messaging.publicLivechatGlobal.livechatButtonView.chatbotNextStepTimeout);
-        }
-
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotWelcomeMessageTimeout) {
-            clearTimeout(this.messaging.publicLivechatGlobal.livechatButtonView.chatbotWelcomeMessageTimeout);
-        }
-
-        const postedMessage = await session.rpc('/chatbot/restart', {
-            channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
-            chatbot_script_id: this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.scriptId,
-        });
-
-        if (postedMessage) {
-            this._chatbotAddMessage(postedMessage);
-        }
-
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.update({ currentStep: clear() });
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({
-            chatbotNextStepTimeout: setTimeout(
-                this._chatbotTriggerNextStep.bind(this),
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay,
-            ),
-        });
-    },
 
     _onChatbotInputKeyDown() {
         if (

@@ -1,13 +1,27 @@
 /** @odoo-module **/
 
 import { patchRecordMethods } from '@mail/model/model_core';
-import { insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@im_livechat/models/livechat_button_view';
 
 import { set_cookie, unaccent } from 'web.utils';
 
 patchRecordMethods('LivechatButtonView', {
+    /**
+     * Small override that removes current messages when restarting.
+     * This allows to easily check for new posted messages without having the old ones "polluting"
+     * the thread and making it hard to write proper jQuery selectors in the tour.
+     *
+     * @override
+     */
+    async onChatbotRestartScript(ev) {
+        if (this.isWebsiteLivechatChatbotFlow) {
+            this.update({ messages: clear() });
+            this.widget._renderMessages();
+        }
+        return this._super(ev);
+    },
     /**
      * @override
      */

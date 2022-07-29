@@ -83,8 +83,44 @@ registerModel({
             }
             this.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
             this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click',
-                this.widget._onChatbotRestartScript.bind(this.widget));
+            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click', this.onChatbotRestartScript);
+        },
+        /**
+         * Restart the script and then trigger the "next step" (which will be the first of the script
+         * in this case).
+         */
+        async onChatbotRestartScript(ev) {
+            this.chatWindow.legacyChatWindow.$('.o_composer_text_field').removeClass('d-none');
+            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
+
+            if (this.chatbotNextStepTimeout) {
+                clearTimeout(this.chatbotNextStepTimeout);
+            }
+
+            if (this.chatbotWelcomeMessageTimeout) {
+                clearTimeout(this.chatbotWelcomeMessageTimeout);
+            }
+
+            const postedMessage = await this.messaging.rpc({
+                route: '/chatbot/restart',
+                params: {
+                    channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+                    chatbot_script_id: this.chatbot.scriptId,
+                },
+            });
+
+            if (postedMessage) {
+                this.widget._chatbotAddMessage(postedMessage);
+            }
+
+            this.chatbot.update({ currentStep: clear() });
+            this.chatbotSetIsTyping();
+            this.update({
+                chatbotNextStepTimeout: setTimeout(
+                    this.widget._chatbotTriggerNextStep.bind(this.widget),
+                    this.chatbot.messageDelay,
+                ),
+            });
         },
         /**
          * See '_chatbotSaveSession'.
