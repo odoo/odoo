@@ -17,6 +17,7 @@ from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, ValidationError, UserError, MissingError
 from odoo.http import request
 from odoo.osv import expression
+from odoo.tools import email_split
 
 _logger = logging.getLogger(__name__)
 
@@ -730,6 +731,14 @@ class WebsiteSlides(WebsiteProfile):
 
         return {'url': "/slides/%s" % (slug(channel))}
 
+    @http.route(['/slides/channel/send_share_email'], type='json', auth='user', website=True)
+    def slide_channel_send_share_email(self, channel_id, emails):
+        if not email_split(emails):
+            return False
+        channel = request.env['slide.channel'].browse(int(channel_id))
+        channel._send_share_email(emails)
+        return True
+
     @http.route(['/slides/channel/subscribe'], type='json', auth='user', website=True)
     def slide_channel_subscribe(self, channel_id):
         return request.env['slide.channel'].browse(channel_id).message_subscribe(partner_ids=[request.env.user.partner_id.id])
@@ -921,10 +930,12 @@ class WebsiteSlides(WebsiteProfile):
         return slide.is_preview
 
     @http.route(['/slides/slide/send_share_email'], type='json', auth='user', website=True)
-    def slide_send_share_email(self, slide_id, email, fullscreen=False):
+    def slide_send_share_email(self, slide_id, emails, fullscreen=False):
+        if not email_split(emails):
+            return False
         slide = request.env['slide.slide'].browse(int(slide_id))
-        result = slide._send_share_email(email, fullscreen)
-        return result
+        slide._send_share_email(emails, fullscreen)
+        return True
 
     # --------------------------------------------------
     # TAGS SECTION
