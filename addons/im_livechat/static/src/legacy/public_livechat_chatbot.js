@@ -305,21 +305,6 @@ const _t = core._t;
         }
      },
     /**
-     * Register current chatbot step state into localStorage to be able to resume if the visitor
-     * goes to another website page or if he refreshes his page.
-     *
-     * (Will not work if the visitor switches browser but his livechat session will not be restored
-     *  anyway in that case, since it's stored into a cookie).
-     *
-     * @private
-     */
-    _chatbotSaveSession() {
-        localStorage.setItem('im_livechat.chatbot.state.uuid_' + this.messaging.publicLivechatGlobal.publicLivechat.uuid, JSON.stringify({
-            '_chatbot': this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.data,
-            '_chatbotCurrentStep': this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data,
-        }));
-    },
-    /**
      * A special case is handled for email steps, where we first validate the email (server side)
      * and we allow the user to try again in case the format is incorrect.
      *
@@ -337,7 +322,7 @@ const _t = core._t;
 
         if (emailValidResult.success) {
             this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.is_email_valid = true;
-            this._chatbotSaveSession();
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
 
             return true;
         } else {
@@ -390,7 +375,7 @@ const _t = core._t;
             this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
         }
 
-        this._chatbotSaveSession();
+        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
 
         return nextStep;
     },
@@ -545,7 +530,7 @@ const _t = core._t;
                     this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
                 }
 
-                this._chatbotSaveSession();
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
             }
         });
     },
@@ -692,7 +677,7 @@ const _t = core._t;
         stepMessage.legacyPublicLivechatMessage.setChatbotStepAnswerId(selectedAnswer);
         this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_selected_answer_id = selectedAnswer;
         this._renderMessages();
-        this._chatbotSaveSession();
+        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
 
         const saveAnswerPromise = session.rpc('/chatbot/answer/save', {
             channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
