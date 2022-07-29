@@ -8,10 +8,12 @@
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employees" filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"/>
-                    <field name="job_title" string="Job Title"/>
-                    <field name="department_id" string="Department"/>
+                    <searchpanel>
+                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
+                        <field name="department_id" icon="fa-users" enable_counters="1"/>
+                    </searchpanel>
                     <field name="parent_id" string="Manager"/>
-                    <field name="company_id" string="Company"/>
+                    <field name="job_title"/>
                     <separator/>
                     <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
                     <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
@@ -22,10 +24,6 @@
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter name="group_company" string="Company" domain="[]" context="{'group_by':'company_id'}"/>
                     </group>
-                    <searchpanel>
-                        <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
-                        <field name="department_id" icon="fa-users" enable_counters="1"/>
-                    </searchpanel>
                 </search>
              </field>
         </record>
