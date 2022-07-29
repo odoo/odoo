@@ -1514,7 +1514,7 @@ which leads to stray network requests and inconsistencies."""))
             )
         """, 'awaitPromise': True})
         # wait for the screenshot or whatever
-        wait(self._responses.values())
+        wait(self._responses.values(), 10)
         self._logger.info('Deleting cookies and clearing local storage')
         self._websocket_request('Network.clearBrowserCache')
         self._websocket_request('Network.clearBrowserCookies')
@@ -1523,7 +1523,7 @@ which leads to stray network requests and inconsistencies."""))
         # hopefully after navigating to about:blank there's no event left
         self._frames.clear()
         # wait for the clearing requests to finish in case the browser is re-used
-        wait(self._responses.values())
+        wait(self._responses.values(), 10)
         self._responses.clear()
         self._result.cancel()
         self._result = Future()
