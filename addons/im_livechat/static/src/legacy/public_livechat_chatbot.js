@@ -429,7 +429,7 @@ const QWeb = core.qweb;
                 this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0
             ) {
                 const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1];
-                if (lastMessage.legacyPublicLivechatMessage.getAuthorID() !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id) {
+                if (lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id) {
                     // we are on the last step of the script, expect a user input and the user has
                     // already answered
                     // -> end the script
@@ -537,7 +537,7 @@ const QWeb = core.qweb;
      */
     _isLastMessageFromCustomer() {
         const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0 ? this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1] : null;
-        return lastMessage && lastMessage.legacyPublicLivechatMessage.getAuthorID() !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
+        return lastMessage && lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
     },
 
      //--------------------------------------------------------------------------
