@@ -710,6 +710,11 @@ Model({
          * This value can either be applied or discarded.
          */
         pendingThreadDescription: attr({ default: "" }),
+        shouldDisplayDebugIcon: attr({
+            compute() {
+                return this.threadView.threadViewer.discussPublicView && odoo.debug !== '';
+            },
+        }),
         /**
          * States the thread that is displayed by this top bar.
          */
