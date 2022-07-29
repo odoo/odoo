@@ -359,6 +359,7 @@ class StockMove(models.Model):
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_raw').id, 'form')]
             action['context']['show_destination_location'] = False
             action['context']['force_manual_consumption'] = True
+            action['context']['active_mo_id'] = self.raw_material_production_id.id
         elif self.production_id:
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_finished').id, 'form')]
             action['context']['show_source_location'] = False
