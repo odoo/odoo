@@ -1553,8 +1553,31 @@ class StockMove(models.Model):
                     # the reserved quantity on the quants, convert it here in
                     # `product_id.uom_id` (the UOM of the quants is the UOM of the product).
                     available_move_lines = _get_available_move_lines(move)
-                    if not available_move_lines:
+                    orig_ids = move.move_orig_ids
+                    origin_confirmed_or_cancel = orig_ids.filtered(lambda m: m.state in ('confirmed', 'cancel'))
+                    if not available_move_lines\
+                        and origin_confirmed_or_cancel\
+                        and any(orig_id not in assigned_moves_ids for orig_id in orig_ids.ids)\
+                        and any(orig_id not in partially_available_moves_ids for orig_id in orig_ids.ids):
+                        need = missing_reserved_quantity
+                        if float_is_zero(need, precision_rounding=rounding):
+                            assigned_moves_ids.add(move.id)
+                            continue
+                        forced_package_id = move.package_level_id.package_id or None
+                        available_quantity = move._get_available_quantity(move.location_id, package_id=forced_package_id)
+                        if available_quantity <= 0:
+                            continue
+                        taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, package_id=forced_package_id, strict=False)
+                        if float_is_zero(taken_quantity, precision_rounding=rounding):
+                            continue
+                        moves_to_redirect.add(move.id)
+                        if float_compare(need, taken_quantity, precision_rounding=rounding) == 0:
+                            assigned_moves_ids.add(move.id)
+                        else:
+                            partially_available_moves_ids.add(move.id)
+                    elif not available_move_lines:
                         continue
+
                     for move_line in move.move_line_ids.filtered(lambda m: m.reserved_qty):
                         if available_move_lines.get((move_line.location_id, move_line.lot_id, move_line.result_package_id, move_line.owner_id)):
                             available_move_lines[(move_line.location_id, move_line.lot_id, move_line.result_package_id, move_line.owner_id)] -= move_line.reserved_qty
