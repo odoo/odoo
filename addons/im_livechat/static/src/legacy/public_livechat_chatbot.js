@@ -131,7 +131,7 @@ const QWeb = core.qweb;
      */
     _chatbotAwaitUserInput() {
         if (this._isLastMessageFromCustomer()) {
-            if (this._chatbotShouldEndScript()) {
+            if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.shouldEndScript) {
                 this._chatbotEndScript();
             } else {
                 this._chatbotSetIsTyping();
@@ -287,7 +287,7 @@ const QWeb = core.qweb;
      * @private
      */
     _chatbotProcessStep() {
-        if (this._chatbotShouldEndScript()) {
+        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.shouldEndScript) {
             this._chatbotEndScript();
         } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'forward_operator'
                    && this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found) {
@@ -382,54 +382,6 @@ const QWeb = core.qweb;
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
             }, this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay / 3),
         });
-    },
-    /**
-     * Helper method that checks if the script should be ended or not.
-     * If the user has closed the conversation -> script has ended.
-     *
-     * Otherwise, there are 2 use cases where we want to end the script:
-     *
-     * If the current step is the last one AND the conversation was not taken over by a human operator
-     *   1. AND we expect a user input (or we are on a selection)
-     *       AND the user has already answered
-     *   2. AND we don't expect a user input
-     *
-     * @returns {Boolean}
-     * @private
-     */
-    _chatbotShouldEndScript() {
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.conversation_closed) {
-            return true;
-        }
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_is_last &&
-            (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type !== 'forward_operator' ||
-             !this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found)
-        ) {
-            if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'question_email'
-                && !this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.is_email_valid
-            ) {
-                // email is not (yet) valid, let the user answer / try again
-                return false;
-            } else if (
-                (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.isExpectingUserInput ||
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'question_selection') &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0
-            ) {
-                const lastMessage = this.messaging.publicLivechatGlobal.livechatButtonView.messages[this.messaging.publicLivechatGlobal.livechatButtonView.messages.length - 1];
-                if (lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id) {
-                    // we are on the last step of the script, expect a user input and the user has
-                    // already answered
-                    // -> end the script
-                    return true;
-                }
-            } else if (!this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.isExpectingUserInput) {
-                // we are on the last step of the script and we do not expect a user input
-                // -> end the script
-                return true;
-            }
-        }
-
-        return false;
     },
     /**
      * A special case is handled for email steps, where we first validate the email (server side)
@@ -668,7 +620,7 @@ const QWeb = core.qweb;
                     return;  // operator has taken over the conversation, let them speak
                 } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
                     this._debouncedChatbotAwaitUserInput();
-                } else if (!this._chatbotShouldEndScript()) {
+                } else if (!this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.shouldEndScript) {
                     this._chatbotSetIsTyping();
                     this.messaging.publicLivechatGlobal.livechatButtonView.update({
                         chatbotNextStepTimeout: setTimeout(
