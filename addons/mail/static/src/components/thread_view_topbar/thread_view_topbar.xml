@@ -26,6 +26,9 @@
             <div class="o_ThreadViewTopbar_actions d-flex align-items-center ms-1">
                 <button t-if="thread and thread === messaging.inbox.thread" class="o_ThreadViewTopbar_markAllReadButton btn btn-secondary" t-att-disabled="threadView.messages.length === 0" t-on-click="onClickInboxMarkAllAsRead">Mark all read</button>
                 <button t-if="thread and thread === messaging.starred.thread" class="o_ThreadViewTopbar_unstarAllButton btn btn-secondary" t-att-disabled="threadView.messages.length === 0" t-on-click="onClickUnstarAll">Unstar all</button>
+                <t t-if="shouldDisplayDebugIcon">
+                    <i class="o_ThreadViewTopbar_debugIcon px-2 fa fa-bug text-700" role="img" title="Developer mode is on" aria-label="Developer mode is on"/>
+                </t>
                 <t t-if="thread and thread.hasCallFeature and thread.rtcSessions.length === 0">
                     <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button btn px-2 border-none rounded shadow-none" t-att-disabled="thread.hasPendingRtcRequest" title="Start a Call" t-on-click="onClickPhone">
                         <i class="fa fa-lg fa-phone text-700"/>
