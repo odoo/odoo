@@ -205,6 +205,8 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 if (this.state.selectedTableId === originalSelectedTableId) {
                     this.state.selectedTableId = null;
                 }
+                delete this.env.pos.tables_by_id[originalSelectedTableId];
+                this.env.pos.TICKET_SCREEN_STATE.syncedOrders.cache = {};
             } catch (error) {
                 if (error.message.code < 0) {
                     await this.showPopup('OfflineErrorPopup', {
