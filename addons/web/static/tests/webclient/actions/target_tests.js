@@ -443,6 +443,32 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_kanban_view");
     });
 
+    QUnit.test("action with 'dialog_size' key in context", async function (assert) {
+        const action = {
+            name: "Some Action",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            target: "new",
+            views: [[false, "form"]],
+        };
+        const webClient = await createWebClient({ serverData });
+
+        await doAction(webClient, action);
+        assert.hasClass(target.querySelector(".o_dialog .modal-dialog"), "modal-lg");
+
+        await doAction(webClient, { ...action, context: { dialog_size: "small" } });
+        assert.hasClass(target.querySelector(".o_dialog .modal-dialog"), "modal-sm");
+
+        await doAction(webClient, { ...action, context: { dialog_size: "medium" } });
+        assert.hasClass(target.querySelector(".o_dialog .modal-dialog"), "modal-md");
+
+        await doAction(webClient, { ...action, context: { dialog_size: "large" } });
+        assert.hasClass(target.querySelector(".o_dialog .modal-dialog"), "modal-lg");
+
+        await doAction(webClient, { ...action, context: { dialog_size: "extra-large" } });
+        assert.hasClass(target.querySelector(".o_dialog .modal-dialog"), "modal-xl");
+    });
+
     QUnit.module('Actions in target="fullscreen"');
 
     QUnit.test(

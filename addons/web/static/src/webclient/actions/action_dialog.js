@@ -55,8 +55,7 @@ class LegacyAdaptedActionDialog extends ActionDialog {
     setup() {
         super.setup();
         const actionProps = this.props && this.props.actionProps;
-        const action = actionProps && actionProps.action;
-        const actionContext = action && action.context;
+        const actionContext = actionProps && actionProps.context;
         const actionDialogSize = actionContext && actionContext.dialog_size;
         this.props.size = LEGACY_SIZE_CLASSES[actionDialogSize] || Dialog.defaultProps.size;
         const ControllerComponent = this.props && this.props.ActionComponent;

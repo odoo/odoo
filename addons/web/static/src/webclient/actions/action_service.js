@@ -845,7 +845,8 @@ function makeActionManager(env) {
         const { views: viewDescriptions } = await keepLast.add(prom);
         const domParser = new DOMParser();
         const views = [];
-        for (const [, type] of action.views) {
+        for (let [, type] of action.views) {
+            type = type === "tree" ? "list" : type;
             if (type !== "search") {
                 const arch = viewDescriptions[type].arch;
                 const archDoc = domParser.parseFromString(arch, "text/xml").documentElement;
