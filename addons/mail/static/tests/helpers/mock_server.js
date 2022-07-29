@@ -1017,7 +1017,6 @@ patch(MockServer.prototype, 'mail', {
                 uuid: channel.uuid,
             };
             const res = Object.assign({}, channel, {
-                channel: [['insert-and-replace', channelData]],
                 last_message_id: lastMessageId,
                 members: [...this._mockResPartnerMailPartnerFormat(partnerIds).values()],
                 message_needaction_counter: messageNeedactionCounter,
@@ -1035,7 +1034,7 @@ patch(MockServer.prototype, 'mail', {
             }
             const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
             if (memberOfCurrentUser) {
-                res.channel[0][1].isServerPinned = memberOfCurrentUser.is_pinned;
+                channelData.isServerPinned = memberOfCurrentUser.is_pinned;
                 Object.assign(res, {
                     custom_channel_name: memberOfCurrentUser.custom_channel_name,
                     is_minimized: memberOfCurrentUser.is_minimized,
@@ -1047,6 +1046,7 @@ patch(MockServer.prototype, 'mail', {
                     res['rtc_inviting_session'] = { 'id': memberOfCurrentUser.rtc_inviting_session_id };
                 }
             }
+            res.channel = [['insert-and-replace', channelData]];
             return res;
         });
     },
