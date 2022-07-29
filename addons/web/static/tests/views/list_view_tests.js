@@ -962,6 +962,30 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "th", 2, "should have 2 th");
     });
 
+    QUnit.test(
+        "invisible column based on the context are correctly displayed",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                <tree>
+                    <field name="foo" invisible="context.get('notInvisible')"/>
+                    <field name="bar" invisible="context.get('invisible')"/>
+                </tree>`,
+                context: {
+                    invisible: true,
+                    notInvisible: false,
+                },
+            });
+
+            // 1 th for checkbox, 1 for 1 visible column (foo)
+            assert.containsN(target, "th", 2, "should have 2 th");
+            assert.strictEqual(target.querySelectorAll("th")[1].dataset.name, "foo");
+        }
+    );
+
     QUnit.test("boolean field has no title (data-tooltip)", async function (assert) {
         await makeView({
             type: "list",

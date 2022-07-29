@@ -78,14 +78,13 @@ export class ListArchParser extends XMLParser {
                 }
             } else if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "list");
-                const invisible = node.getAttribute("invisible");
                 fieldNodes[fieldInfo.name] = fieldInfo;
                 node.setAttribute("field_id", fieldInfo.name);
                 if (fieldInfo.widget === "handle") {
                     handleField = fieldInfo.name;
                 }
                 addFieldDependencies(activeFields, fieldInfo.FieldComponent.fieldDependencies);
-                if (!invisible || !archParseBoolean(invisible)) {
+                if (fieldInfo.modifiers.column_invisible !== true) {
                     const label = fieldInfo.FieldComponent.label;
                     columns.push({
                         ...fieldInfo,
