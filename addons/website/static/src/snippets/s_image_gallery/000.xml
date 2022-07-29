@@ -56,9 +56,9 @@
         <div role="dialog" class="modal o_technical_modal fade s_gallery_lightbox p-0" aria-labbelledby="Image Gallery Dialog">
             <div class="modal-dialog m-0" role="Picture Gallery"
                 t-attf-style="">
-                <div class="modal-content bg-transparent">
+                <div class="modal-content bg-transparent modal-fullscreen">
                     <main class="modal-body o_slideshow bg-transparent">
-                        <button type="button" class="close text-white" data-bs-dismiss="modal" style="position: absolute; right: 10px; top: 10px;"><span role="img" aria-label="Close">×</span><span class="visually-hidden">Close</span></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 10px; top: 10px;"></button>
                         <t t-call="website.gallery.slideshow"></t>
                     </main>
                 </div>
