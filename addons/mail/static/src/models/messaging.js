@@ -87,7 +87,6 @@ registerModel({
          *
          * @param {Object} person forwarded to @see `getChat()`
          * @param {Object} [options] forwarded to @see `Thread:open()`
-         * @returns {Thread|undefined}
          */
         async openChat(person, options) {
             const chat = await this.getChat(person);
@@ -95,10 +94,6 @@ registerModel({
                 return;
             }
             await chat.thread.open(options);
-            if (!this.exists()) {
-                return;
-            }
-            return chat.thread;
         },
         /**
          * Opens the form view of the record with provided id and model.

@@ -304,13 +304,11 @@ registerModel({
             return this.user.getChat();
         },
         /**
-         * Opens a chat between the user of this partner and the current user
-         * and returns it.
+         * Opens a chat between the user of this partner and the current user.
          *
          * If a chat is not appropriate, a notification is displayed instead.
          *
          * @param {Object} [options] forwarded to @see `Thread:open()`
-         * @returns {Thread|undefined}
          */
         async openChat(options) {
             const chat = await this.getChat();
@@ -318,10 +316,6 @@ registerModel({
                 return;
             }
             await chat.thread.open(options);
-            if (!this.exists()) {
-                return;
-            }
-            return chat.thread;
         },
         /**
          * Opens the most appropriate view that is a profile for this partner.
