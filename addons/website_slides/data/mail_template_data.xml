@@ -95,6 +95,39 @@
             <field name="lang">{{ object.partner_id.lang }}</field>
         </record>
 
+        <record id="mail_template_channel_shared" model="mail.template">
+            <field name="name">Channel Shared</field>
+            <field name="model_id" ref="model_slide_channel"/>
+            <field name="subject">{{ user.name }} shared a Course</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Hello<br/><br/>
+                        <t t-out="user.name or ''">Mitchell Admin</t> shared the <strong t-out="object.name or ''">document</strong> with you!
+                        <div style="margin: 16px 8px 16px 8px; text-align: center;">
+                            <a t-att-href="object.website_url">
+                                <img t-att-alt="object.name"
+                                    t-attf-src="{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256"
+                                    style="height:auto; width:150px; margin: 16px;"/>
+                            </a>
+                        </div>
+                        <div style="padding: 16px 8px 16px 8px; text-align: center;">
+                            <a t-att-href="object.website_url"
+                                style="background-color: #875a7b; padding: 8px 16px 8px 16px;
+                                text-decoration: none; color: #fff; border-radius: 5px;">
+                                View <strong t-out="object.name or ''">Document</strong></a>
+                        </div>
+                        <t t-if="user.signature">
+                            <br />
+                            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+                        </t>
+                    </p>
+                </div>
+            </field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
         <!-- Slide channel invite feature -->
         <record id="mail_template_slide_channel_invite" model="mail.template">
             <field name="name">Channel: Invite by email</field>

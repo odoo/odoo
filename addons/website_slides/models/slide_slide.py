@@ -804,7 +804,7 @@ class Slide(models.Model):
         # TDE FIXME: template to check
         mail_ids = []
         for record in self:
-            template = record.channel_id.share_template_id.with_context(
+            template = record.channel_id.share_slide_template_id.with_context(
                 user=self.env.user,
                 email=email,
                 base_url=record.get_base_url(),
