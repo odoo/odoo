@@ -106,7 +106,7 @@ const QWeb = core.qweb;
      */
     _chatbotAddMessage(message, options) {
         message.body = utils.Markup(message.body);
-        this._addMessage(message, options);
+        this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(message, options);
         if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.isAtBottom()) {
             this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: increment() });
         }
@@ -750,7 +750,7 @@ const QWeb = core.qweb;
         this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.update({ currentStep: insertAndReplace({ data: chatbotStep }) });
 
         if (chatbotStep.chatbot_step_message) {
-            this._addMessage({
+            this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
                 id: '_welcome_' + stepIndex,
                 is_discussion: true,  // important for css style -> we only want white background for chatbot
                 attachment_ids: [],

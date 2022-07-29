@@ -1,13 +1,52 @@
 /** @odoo-module **/
 
+import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
+
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'LivechatButtonView',
     identifyingFields: ['publicLivechatGlobalOwner'],
     recordMethods: {
+        /**
+         * @param {Object} data
+         * @param {Object} [options={}]
+         */
+        addMessage(data, options) {
+            const legacyMessage = new PublicLivechatMessage(this, this.messaging, data);
+
+            const hasAlreadyMessage = _.some(this.messages, function (msg) {
+                return legacyMessage.getID() === msg.id;
+            });
+            if (hasAlreadyMessage) {
+                return;
+            }
+            const message = this.messaging.models['PublicLivechatMessage'].insert({
+                id: data.id,
+                legacyPublicLivechatMessage: legacyMessage,
+            });
+            if (this.messaging.publicLivechatGlobal.publicLivechat) {
+                this.messaging.publicLivechatGlobal.publicLivechat.update({
+                    messages: link(message),
+                });
+            }
+
+            if (this.messaging.publicLivechatGlobal.publicLivechat && this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat) {
+                this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.addMessage(legacyMessage);
+            }
+
+            if (options && options.prepend) {
+                this.update({
+                    messages: replace([message, ...this.messages]),
+                });
+            } else {
+                this.update({
+                    messages: replace([...this.messages, message]),
+                });
+            }
+        },
         /**
          * @private
          * @returns {string}
