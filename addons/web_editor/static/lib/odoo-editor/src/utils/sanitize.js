@@ -158,6 +158,7 @@ class Sanitize {
             // Remove empty blocks in <li>
             if (
                 node.nodeName === 'P' &&
+                node.parentElement &&
                 node.parentElement.tagName === 'LI' &&
                 isEmptyBlock(node)
             ) {
