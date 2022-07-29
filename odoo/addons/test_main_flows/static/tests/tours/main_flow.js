@@ -332,7 +332,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: 'bottom',
 }, {
     trigger: '.o_form_button_save',
-    extra_trigger: ".o_field_widget[name=bom_line_ids] tr:nth-child(5):has(.o_field_x2many_list_row_add)",
+    extra_trigger: ".o_field_widget[name=bom_line_ids] tr:nth-child(3):has(.o_field_x2many_list_row_add)",
     content: _t('Save the bom.'),
     position: 'bottom',
 }, {

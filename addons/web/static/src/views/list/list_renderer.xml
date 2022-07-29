@@ -34,26 +34,6 @@
                     <t t-call="web.ListRenderer.Rows">
                         <t t-set="list" t-value="props.list"/>
                     </t>
-                    <t t-set="activeActions" t-value="props.activeActions" />
-                    <tr t-if="activeActions and ('canLink' in activeActions ? activeActions.canLink : activeActions.canCreate)">
-                        <td t-if="withHandleColumn"/>
-                        <td t-att-colspan="state.columns.length + 1"
-                            class="o_field_x2many_list_row_add"
-                            t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, null)"
-                        >
-                            <t t-foreach="creates" t-as="create" t-key="create_index">
-                                <a
-                                    href="#"
-                                    role="button"
-                                    t-att-class="create_index !== 0 ? 'ml16' : ''"
-                                    t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
-                                    t-on-click.stop.prevent="() => this.props.onAdd({context: create.context})"
-                                >
-                                    <t t-esc="create.description"/>
-                                </a>
-                            </t>
-                        </td>
-                    </tr>
                 </tbody>
                 <tfoot t-on-click="() => props.list.unselectRecord(true)" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}">
                     <tr>
@@ -93,6 +73,25 @@
             <t t-foreach="list.records" t-as="record" t-key="record.id">
                 <t t-call="web.ListRenderer.RecordRow"/>
             </t>
+            <tr t-if="displayRowCreates">
+                <td t-if="withHandleColumn"/>
+                <td t-att-colspan="state.columns.length + 1"
+                    class="o_field_x2many_list_row_add"
+                    t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, null)"
+                >
+                    <t t-foreach="creates" t-as="create" t-key="create_index">
+                        <a
+                            href="#"
+                            role="button"
+                            t-att-class="create_index !== 0 ? 'ml16' : ''"
+                            t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
+                            t-on-click.stop.prevent="() => this.props.onAdd({context: create.context})"
+                        >
+                            <t t-esc="create.description"/>
+                        </a>
+                    </t>
+                </td>
+            </tr>
             <t t-if="!props.list.isGrouped">
                 <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
                     <td t-att-colspan="state.columns.length + 1">&#8203;</td>
