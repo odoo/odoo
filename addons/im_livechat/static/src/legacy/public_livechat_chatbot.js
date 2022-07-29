@@ -86,8 +86,8 @@ const QWeb = core.qweb;
             this.messaging.publicLivechatGlobal.livechatButtonView.update({ rule: this.messaging.publicLivechatGlobal.livechatButtonView.livechatInit.rule });
         } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbotState === 'restore_session') {
             // we landed on a website page and a chatbot script is currently running
-            // -> restore the user's session (see '_chatbotRestoreSession')
-            this._chatbotRestoreSession();
+            // -> restore the user's session (see 'chatbotRestoreSession')
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotRestoreSession();
         }
 
         return superResult;
@@ -339,35 +339,6 @@ const QWeb = core.qweb;
 
         if (!this._chatbotDisplayRestartButton()) {
             this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
-        }
-     },
-     /**
-      * See '_chatbotSaveSession'.
-      *
-      * We retrieve the livechat uuid from the session cookie since the livechat Widget is not yet
-      * initialized when we restore the chatbot state.
-      *
-      * We also clear any older keys that store a previously saved chatbot session.
-      * (In that case we clear the actual browser's local storage, we don't use the localStorage
-      * object as it does not allow browsing existing keys, see 'local_storage.js'.)
-      *
-      * @private
-      */
-    _chatbotRestoreSession() {
-        const browserLocalStorage = window.localStorage;
-        if (browserLocalStorage && browserLocalStorage.length) {
-            for (let i = 0; i < browserLocalStorage.length; i++) {
-                const key = browserLocalStorage.key(i);
-                if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSessionCookieKey) {
-                    browserLocalStorage.removeItem(key);
-                }
-            }
-        }
-
-        let chatbotState = localStorage.getItem(this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSessionCookieKey);
-
-        if (chatbotState) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.update({ currentStep: insertAndReplace({ data: this.messaging.publicLivechatGlobal.livechatButtonView.localStorageChatbotState._chatbotCurrentStep }) });
         }
      },
     /**
