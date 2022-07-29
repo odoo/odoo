@@ -149,7 +149,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
      getMessages() {
         // ignore removed messages
-        return this._messages.filter(message => !message.isEmpty());
+        return this.messaging.publicLivechatGlobal.livechatButtonView.messages.filter(message => !message.legacyPublicLivechatMessage.isEmpty()).map(message => message.legacyPublicLivechatMessage);
     },
     /**
      * Get the text to display when some partners are typing something on the
