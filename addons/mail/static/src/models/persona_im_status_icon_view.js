@@ -31,7 +31,12 @@ registerModel({
                 return replace(this.composerSuggestionViewOwner.suggestable.partner.persona);
             }
             if (this.messageViewOwner) {
-                return replace(this.messageViewOwner.message.author.persona);
+                if (this.messageViewOwner.message.author) {
+                    return replace(this.messageViewOwner.message.author.persona);
+                }
+                if (this.messageViewOwner.message.guestAuthor) {
+                    return replace(this.messageViewOwner.message.guestAuthor.persona);
+                }
             }
             if (this.notificationRequestViewOwner) {
                 return replace(this.messaging.partnerRoot.persona);
