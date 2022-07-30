@@ -1,13 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_payment
+# 	* account_payment
+# 
+# Translators:
+# Jasmina Macur <jasmina@hbs.si>, 2022
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
+# Tadej Lupšina <tadej@hbs.si>, 2022
+# Nejc G <nejc@luxim.si>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~14.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2021-05-11 09:26+0000\n"
+"PO-Revision-Date: 2021-09-14 12:19+0000\n"
+"Last-Translator: Nejc G <nejc@luxim.si>, 2022\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,147 +23,142 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:61
-#, python-format
-msgid "<%s>  transaction (%s) invoice confirmation failed : <%s>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid "<b>Communication: </b>"
+msgstr "<b>Komuniciranje: </b>"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:45
-#, python-format
-msgid "<%s> transaction (%s) failed : <%s>"
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Pay Now</span>"
 msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/models/payment.py:52
-#, python-format
-msgid "<%s> transaction (%s) invalid state : %s"
-msgstr ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Plačaj zdaj</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
-msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
+msgid "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Pay Now"
+msgstr "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Plačaj zdaj"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Paid"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Plačano"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> V čakanju"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid ""
+"<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
+"to be able to use them."
+msgstr ""
+"<i class=\"fa fa-info\"/> Imate registrirane kreditne kartice, da jih boste "
+"lahko uporabljali se prijavite."
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<span class=\"badge badge-pill badge-danger\"><i class=\"fa fa-fw fa-"
+"remove\"/><span class=\"d-none d-md-inline\"> Cancelled</span></span>"
+msgstr ""
+"<span class=\"badge badge-pill badge-danger\"><i class=\"fa fa-fw fa-"
+"remove\"/><span class=\"d-none d-md-inline\"> Prekinjeno</span></span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-"
+"clock-o\"/><span class=\"d-none d-md-inline\"> Waiting for "
+"Payment</span></span>"
+msgstr ""
+"<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-"
+"clock-o\"/><span class=\"d-none d-md-inline\"> Čakanje na "
+"plačilo</span></span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<span class=\"badge badge-pill badge-primary\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Authorized</span></span>"
+msgstr ""
+"<span class=\"badge badge-pill badge-primary\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Pooblaščen</span></span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Paid</span></span>"
+msgstr ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Plačan</span></span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Reversed</span></span>"
 msgstr ""
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid ""
-"<i class=\"fa fa-arrow-circle-right\"/><span class=\"hidden-xs\"> Pay "
-"Now</span>"
+"<span class=\"badge badge-pill badge-warning\"><span class=\"d-none d-md-"
+"inline\"> Pending</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-warning\"><span class=\"d-none d-md-"
+"inline\"> V čakanju</span></span>"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
-msgid "<i class=\"fa fa-check-circle\"/> Paid"
-msgstr ""
-
-#. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
-msgid "<i class=\"fa fa-check-circle\"/> Pending"
-msgstr ""
-
-#. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_report
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
-" fa-clock-o\"/> Waiting</span>"
+"<strong>No suitable payment option could be found.</strong><br/>\n"
+"                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_report
-msgid ""
-"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
-"fa-fw fa-check\"/> Done</span>"
-msgstr ""
-
-#. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_report
-msgid "<strong>Transactions</strong>"
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:53
-#, python-format
-msgid ""
-"If we store your payment information on our server, subscription payments "
-"will be made automatically."
-msgstr ""
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_account_invoice
-#: model:ir.model.fields,field_description:account_payment.field_payment_transaction_account_invoice_id
-msgid "Invoice"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "Close"
+msgstr "Zaključi"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
-msgid "Invoice successfully paid."
+msgid ""
+"Done, your online payment has been successfully processed. Thank you for "
+"your order."
 msgstr ""
+"Končano, vaše spletno plačilo je bilo uspešno obdelano. Hvala za vaše "
+"naročilo."
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
-msgid "Last Transaction"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_count
-msgid "Number of payment transactions"
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/controllers/payment.py:50
-#, python-format
-msgid "Pay & Confirm"
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/models/payment.py:119
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
-#, python-format
 msgid "Pay Now"
-msgstr ""
+msgstr "Plačaj takoj"
 
 #. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "Pay now"
+msgstr "Plačaj takoj"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Pay with"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
-msgid "Payment Acquirer"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_payment_transaction
-msgid "Payment Transaction"
-msgstr ""
-
-#. module: account_payment
-#: code:addons/account_payment/models/account_invoice.py:28
-#, python-format
-msgid "Payment Transactions"
-msgstr ""
+msgstr "Plačaj preko"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Status"
-msgstr ""
-
-#. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
-msgid ""
-"There was an error processing your payment: impossible to validate invoice."
-msgstr ""
-
-#. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
-msgid "There was an error processing your payment: invalid invoice state."
-msgstr ""
+msgstr "Status"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr ""
+msgstr "Pri obdelavi plačila je prišlo do napake: neveljaven račun."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -164,30 +166,17 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
-
-#. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
-msgid ""
-"There was an error processing your payment: transaction amount issue.<br/>"
-msgstr ""
+"Pri obdelavi vašega plačila je prišlo do napake: težava s preverjanjem "
+"veljavnosti ID-ja kreditne kartice."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr ""
-
-#. module: account_payment
-#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
-msgid "There was an error processing your payment: transaction issue.<br/>"
-msgstr ""
+msgstr "Pri obdelavi plačila je prišlo do napake: transakcija ni uspela.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids
-#: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
-msgid "Transactions"
-msgstr ""
+"Pri obdelavi vašega plačila je prišlo do napake: neveljaven ID kreditne "
+"kartice."

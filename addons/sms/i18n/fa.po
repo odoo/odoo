@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Hamid Reza Kaveh <hamidrkp@riseup.net>, 2022
+# Far Har <fhari1234@gmail.com>, 2022
 # fardin fa <fardin2689@gmail.com>, 2022
 # Hamid Darabi, 2022
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
@@ -11,7 +12,6 @@
 # arya sadeghi <aryasadeghy@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Arash Sardari <arashss77@gmail.com>, 2022
-# Far Har <fhari1234@gmail.com>, 2022
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2022
 # Hanna Kheradroosta, 2022
 # 
@@ -93,18 +93,20 @@ msgid ""
 "<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
 "False)]}\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
+"False)]}\">بدون رکورد</span>"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
 msgid "Action Needed"
-msgstr "عملیات مورد نیاز است"
+msgstr "اقدام مورد نیاز است"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_base_automation__state
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
 #: model:ir.model.fields,field_description:sms.field_ir_cron__state
 msgid "Action To Do"
-msgstr "کنش برای انجام"
+msgstr "عمل برای انجام"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__active_domain
@@ -243,7 +245,7 @@ msgstr "محتوا"
 #: model:ir.model.fields,field_description:sms.field_sms_template__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_uid
 msgid "Created by"
-msgstr "ایجادشده توسط"
+msgstr "ایجاد شده توسط"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__create_date
@@ -280,7 +282,7 @@ msgstr "مقدار پیش‌فرض"
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Discard"
-msgstr "انصراف"
+msgstr "رها کردن"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_cancel_action
@@ -393,7 +395,7 @@ msgstr "دنبال‌کنندگان"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "دنبال کنندگان (طرف حساب ها)"
+msgstr "پیروان (شرکاء)"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -453,7 +455,8 @@ msgstr "شناسه"
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction
 #: model:ir.model.fields,help:sms.field_res_partner__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "در صورت علامت‌گذاری، پیام‌های جدید نیاز به توجه شما دارند."
+msgstr ""
+"اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
@@ -489,7 +492,7 @@ msgstr "در صورت علامت‌گذاری، پیام‌های جدید نی�
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_res_users__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "در صورت بررسی ، برخی پیام ها خطای تحویل دارند."
+msgstr "در صورت علامت‌گذاری، برخی پیام ها خطای تحویل دارند."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
@@ -602,7 +605,7 @@ msgstr "آخرین تغییر در"
 #: model:ir.model.fields,field_description:sms.field_sms_template__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_uid
 msgid "Last Updated by"
-msgstr "آخرین به‌روز‌رسانی توسط"
+msgstr "آخرین تغییر توسط"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_cancel__write_date
@@ -720,7 +723,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
 msgid "Number of Actions"
-msgstr "تعداد عملیات"
+msgstr "تعداد اقدامات"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
@@ -730,7 +733,7 @@ msgstr "تعداد خطاها"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "تعداد پیام ها که نیاز به اقدام دارد"
+msgstr "تعداد پیام ها که نیاز به عمل"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
@@ -796,7 +799,7 @@ msgstr "تلفن در لیست سیاه"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr "تلفن/ موبایل"
+msgstr "تلفن/موبایل"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
@@ -811,12 +814,12 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Preview"
-msgstr "پیش نمایش"
+msgstr "پیش‌نمایش"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Preview of"
-msgstr "پیشنمایشِ"
+msgstr "پیش‌نمایش"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -880,7 +883,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Resend"
-msgstr ""
+msgstr "ارسال مجدد"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend_recipient
@@ -961,7 +964,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS Preview"
-msgstr ""
+msgstr "پیش‌نمایش پیامک"
 
 #. module: sms
 #. openerp-web
@@ -1107,7 +1110,7 @@ msgstr "ارسال شد"
 #. module: sms
 #: model:ir.model,name:sms.model_ir_actions_server
 msgid "Server Action"
-msgstr "کنش سرور"
+msgstr "کنش کارپذیر"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_server
@@ -1171,7 +1174,7 @@ msgstr "موفق"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
 msgid "Template Preview"
-msgstr "پیشنمایش قالب"
+msgstr "پیش‌نمایش قالب"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
@@ -1254,12 +1257,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_unread
 msgid "Unread Messages"
-msgstr "پیام‌های خوانده‌‌نشده"
+msgstr "پیام های ناخوانده"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "شمارنده پیام‌های خوانده‌ نشده"
+msgstr "شمارنده پیام‌های خوانده‌نشده"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
@@ -1301,7 +1304,7 @@ msgstr "پیام‌های وب‌سایت"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__website_message_ids
 msgid "Website communication history"
-msgstr "تاریخچه ارتباطات با وبسایت"
+msgstr "تاریخچه ارتباط با وبسایت"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sub_model_object_field

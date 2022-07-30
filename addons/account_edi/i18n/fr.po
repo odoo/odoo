@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
@@ -51,7 +51,7 @@ msgstr "Une annulation de l'EDI a été demandée."
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
-msgstr ""
+msgstr "Une demande d'annulation de l'EDI a été annulée."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -62,7 +62,7 @@ msgstr "Pièce jointe"
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__blocking_level
 msgid "Blocking Level"
-msgstr ""
+msgstr "Niveau de blocage"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
@@ -72,6 +72,10 @@ msgid ""
 "  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
 "  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
+"Bloque l'opération en cours sur le document en fonction de la gravité de l'erreur :\n"
+"* Info : le document n'est pas bloqué et tout fonctionne comme il se doit.\n"
+"* Avertissement : il y a une erreur qui n'empêche pas l'opération de facturation électronique en cours de réussir.\n"
+"* Erreur : il y a une erreur qui bloque l'opération de facturation électronique en cours."
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -156,12 +160,12 @@ msgstr "Format EDI qui supporte les mouvements dans ce journal"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_blocking_level
 msgid "Edi Blocking Level"
-msgstr ""
+msgstr "Niveau de blocage EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
 msgid "Edi Content"
-msgstr ""
+msgstr "Contenu EDI"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
@@ -182,7 +186,7 @@ msgstr "Nombre d'erreurs Edi"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_message
 msgid "Edi Error Message"
-msgstr ""
+msgstr "Message d'erreur Edi"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
@@ -233,7 +237,7 @@ msgstr "Facturation électronique"
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing state"
-msgstr ""
+msgstr "État de la facturation électronique"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_mail_template
@@ -279,6 +283,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Configuration de la facture non valide :\n"
+"\n"
+"%s"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
@@ -338,7 +345,7 @@ msgstr "Paiements"
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Process now"
-msgstr ""
+msgstr "Traiter maintenant"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
@@ -387,7 +394,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_edi.field_account_move__edi_state
 #: model:ir.model.fields,help:account_edi.field_account_payment__edi_state
 msgid "The aggregated state of all the EDIs with web-service of this move"
-msgstr ""
+msgstr "L'état agrégé de tous les EDI avec le service web de ce mouvement."
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
@@ -404,6 +411,8 @@ msgid ""
 "The invoice will be processed asynchronously by the following E-invoicing "
 "service :"
 msgstr ""
+"La facture sera traitée de manière asynchrone par le service de facturation "
+"électronique suivant :"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
@@ -411,6 +420,8 @@ msgid ""
 "The payment will be processed asynchronously by the following E-invoicing "
 "service :"
 msgstr ""
+"Le paiement sera traité de manière asynchrone par le service de facturation "
+"électronique suivant :"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error
@@ -430,7 +441,7 @@ msgstr "Le code existe déjà:"
 #: code:addons/account_edi/models/account_edi_document.py:0
 #, python-format
 msgid "This document is being sent by another process already. "
-msgstr ""
+msgstr "Ce document est déjà envoyé via un autre processus. "
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel

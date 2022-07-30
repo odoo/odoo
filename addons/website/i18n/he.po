@@ -16,6 +16,7 @@
 # Jonathan Spier, 2022
 # Netta Waizer, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# NoaFarkash, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-10 06:07+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
+"Last-Translator: NoaFarkash, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4100,7 +4101,7 @@ msgstr "ערוך תפריט"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Edit code in backend"
-msgstr "ערוך קוד בצד האחורי"
+msgstr "ערוך קוד מתוך המערכת"
 
 #. module: website
 #. openerp-web
@@ -4114,7 +4115,7 @@ msgstr "ערוך embedded code"
 #: model_terms:ir.ui.view,arch_db:website.publish_management
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Edit in backend"
-msgstr "ערוך בצד האחורי"
+msgstr "ערוך מתוך המערכת"
 
 #. module: website
 #. openerp-web
@@ -4945,6 +4946,18 @@ msgstr "מפתח API של גוגל מפות"
 #: model:ir.model.fields,field_description:website.field_website__google_search_console
 msgid "Google Search Console"
 msgstr "קונסולת החיפוש של גוגל"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
@@ -5794,12 +5807,18 @@ msgid "Is not equal to"
 msgstr "האם לא שווה ל"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Is not set"
 msgstr "האם לא הוגדר"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Is set"
 msgstr "האם הוגדר"
 
@@ -6839,6 +6858,15 @@ msgstr "רשתות"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "New"
 msgstr "חדש"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -9573,6 +9601,15 @@ msgid "This view arch has been modified"
 msgstr "קשת התצוגה הזו שונתה"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Thumbnails"
@@ -11330,6 +11367,12 @@ msgstr "לוח בקרה של מסחר אלקטרוני"
 #: model:website.configurator.feature,name:website.feature_module_elearning
 msgid "eLearning"
 msgstr "למידה אלקטרונית"
+
+#. module: website
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "email"
+msgstr ""
 
 #. module: website
 #. openerp-web
