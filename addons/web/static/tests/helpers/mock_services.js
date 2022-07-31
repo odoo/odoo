@@ -76,7 +76,8 @@ export function makeFakeRPCService(mockRPC) {
     };
 }
 
-export function makeMockXHR(response, sendCb, def) {
+export function makeMockXHR(response, sendCb, def, doNotStringifyResponse) {
+    response = doNotStringifyResponse ? response : JSON.stringify(response || "");
     let MockXHR = function () {
         return {
             _loadListener: null,
@@ -120,7 +121,7 @@ export function makeMockXHR(response, sendCb, def) {
                 }
                 listener.call(this);
             },
-            response: JSON.stringify(response || ""),
+            response,
         };
     };
     return MockXHR;

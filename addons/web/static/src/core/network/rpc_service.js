@@ -64,10 +64,19 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
                 reject(new ConnectionLostError());
                 return;
             }
-            const { error: responseError, result: responseResult } = JSON.parse(request.response);
             if (!settings.silent) {
                 bus.trigger("RPC:RESPONSE", data.id);
             }
+            let resultObj;
+            try {
+                resultObj = JSON.parse(request.response);
+            } catch (e) {
+                // error was not a json parsable string => probably a hard server crash
+                const error = new RPCError();
+                error.message = request.response;
+                return reject(error);
+            }
+            const { error: responseError, result: responseResult } = resultObj;
             if (!responseError) {
                 return resolve(responseResult);
             }
