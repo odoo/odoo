@@ -567,6 +567,8 @@ class AccountChartTemplate(models.Model):
             code_digits = self.code_digits
         AccountTaxObj = self.env['account.tax']
 
+        chart_update_mode = self._context.get('chart_update')
+
         # Generate taxes from templates.
         generated_tax_res = self.with_context(active_test=False).tax_template_ids._generate_tax(company)
         taxes_ref.update(generated_tax_res['tax_template_to_tax'])
@@ -591,11 +593,12 @@ class AccountChartTemplate(models.Model):
         self._load_company_accounts(account_ref, company)
 
         # Create Journals - Only done for root chart template
-        if not self.parent_id:
+        if not self.parent_id and not chart_update_mode:
             self.generate_journals(account_ref, company)
 
         # generate properties function
-        self.generate_properties(account_ref, company)
+        if not chart_update_mode:
+            self.generate_properties(account_ref, company)
 
         # Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
         self.generate_fiscal_position(taxes_ref, account_ref, company)
@@ -632,7 +635,7 @@ class AccountChartTemplate(models.Model):
         return self._create_records_with_xmlid(model, [(template, vals)], company).id
 
     def _create_records_with_xmlid(self, model, template_vals, company):
-        """ Create records for the given model name with the given vals, and
+        """ Create or update records for the given model name with the given vals, and
             create xml ids based on each record's template and company id.
         """
         if not template_vals:
@@ -641,11 +644,29 @@ class AccountChartTemplate(models.Model):
         template_ids = [template.id for template, vals in template_vals]
         template_xmlids = template_model.browse(template_ids).get_external_id()
         data_list = []
+        xml_ids = []
+        module_scoped_update = self._context.get('module_update')
+        load_in_update_mode = self._context.get('load_in_update_mode')
+        Model = self.env[model]
         for template, vals in template_vals:
             module, name = template_xmlids[template.id].split('.', 1)
             xml_id = "%s.%s_%s" % (module, company.id, name)
+            xml_ids.append(xml_id)
+            if module_scoped_update and module != module_scoped_update:
+                continue
             data_list.append(dict(xml_id=xml_id, values=vals, noupdate=True))
-        return self.env[model]._load_records(data_list)
+        result = Model._load_records(data_list, update=load_in_update_mode)
+        # If working on limited module scope the _load_records return is not
+        # complete as per this functions's external return signature. Therefore,
+        # construct it artificially for as little DB overhead as possible.
+        if module_scoped_update:
+            imd = self.env['ir.model.data'].sudo()
+            # Resource DB id (res_id) is on slice position [4].
+            # _lookup_xmlids does batched lookups in unpredictable order.
+            # Therefore, we sort by id asc, the same sorting as taxes do have by default.
+            expected_return_ids = sorted([r[4] for r in imd._lookup_xmlids(xml_ids, template_model)])
+            return Model.browse(expected_return_ids)
+        return result
 
     @api.model
     def _load_records(self, data_list, update=False):
@@ -1132,7 +1153,8 @@ class AccountTaxTemplate(models.Model):
         todo_dict = {'account.tax': {}, 'account.tax.repartition.line': {}}
         tax_template_to_tax = {}
 
-        templates_todo = list(self)
+        # Ensure predictable sorting, in case default sorting is altered.
+        templates_todo = list(self.sorted('id'))
         while templates_todo:
             templates = templates_todo
             templates_todo = []

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_update_chart_wizard" model="ir.ui.view">
+        <field name="name">Update Chart of Accounts</field>
+        <field name="model">complete.chart.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Update Chart of Accounts">
+                This wizard helps you modify your loaded chart of account.
+                You can install extensions (legal or industry) or update existing chart data.
+                You can limit loading to a module scope for fine grained control.
+                <group>
+                    <group string="Chart of accounts">
+                        <field name="company_id" />
+                        <field name="chart_template_id" />
+                    </group>
+                    <group string="Config">
+                        <field name="update" string="Update existing values" />
+                        <field name="allowed_categories_domain_ids" invisible="1"/>
+                        <field name="module_id" string="Only treat values from module" options="{'no_create': True}"
+                            domain="[('state', '=', 'installed'),('category_id', 'in', allowed_categories_domain_ids)]" />
+                    </group>
+                </group>
+                <footer>
+                    <button string="Run update" type="object" name="execute" class="btn-primary" />
+                    <button string="Cancel" special="cancel" class="btn-default" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window
+        id="action_update_chart_wizard"
+        name="Update Chart of Accounts"
+        target="new"
+        res_model="complete.chart.wizard"
+        view_type="form"
+        view_mode="form"
+        view_id="view_update_chart_wizard" />
+    <menuitem
+        id="menu_update_chart_wizard"
+        name="Update Chart of Accounts"
+        parent="account.account_account_menu"
+        action="action_update_chart_wizard"
+        sequence="11"
+        groups="base.group_no_one" />
+</odoo>
+
