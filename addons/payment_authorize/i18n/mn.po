@@ -3,16 +3,20 @@
 # 	* payment_authorize
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
-# Martin Trigaux, 2019
+# Otgonbayar.A <gobi.mn@gmail.com>, 2018
+# hish, 2018
+# tserendavaa tsogtoo <tseegii011929@gmail.com>, 2020
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Munkhbilguun Altankhuyag <munkhbilguunaltankhuyag@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Munkhbilguun Altankhuyag <munkhbilguunaltankhuyag@gmail.com>, 2022\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,11 +25,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:0
-#, python-format
-msgid ""
-" If you don't have any account, ask your salesperson to grant you a portal "
-"access. "
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "ABA Routing Number"
 msgstr ""
 
 #. module: payment_authorize
@@ -35,13 +36,13 @@ msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
-msgid "API Login Id"
-msgstr "API Нэвтрэх ID"
+msgid "API Login ID"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "API гарын үсгийн түлхүүр"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -49,56 +50,158 @@ msgid "API Transaction Key"
 msgstr "API Гүйлгээний Түлхүүр"
 
 #. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Account Number"
+msgstr "Дансны дугаар"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_payment_method_type
+msgid "Allow Payments From"
+msgstr ""
+
+#. module: payment_authorize
+#. openerp-web
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#, python-format
+msgid "An error occurred when displayed this payment form."
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_currency_id
+msgid "Authorize Currency"
+msgstr ""
+
+#. module: payment_authorize
+#: model:account.payment.method,name:payment_authorize.payment_method_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__provider__authorize
 msgid "Authorize.Net"
 msgstr "Authorize.Net"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/authorize_request.py:0
-#, python-format
-msgid ""
-"Authorize.net Error:\n"
-"Code: %s\n"
-"Message: %s"
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_payment_method_type
+msgid "Authorize.Net Payment Type"
 msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
-msgid "Authorize.net Profile ID"
-msgstr "Authorize.net Профайлын ID"
+msgid "Authorize.Net Profile ID"
+msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:0
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid "Bank (powered by Authorize)"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__bank_account
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__bank_account
+msgid "Bank Account (USA Only)"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Account Type"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Name"
+msgstr "Банкны нэр"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Business Checking"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Card Code"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Card Number"
+msgstr "Картны Дугаар"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
 #, python-format
 msgid ""
-"Authorize: received data with missing reference (%s) or trans_id (%s) or "
-"fingerprint (%s)"
+"Could not fetch merchant details:\n"
+"%s"
 msgstr ""
-"Authorize: хүлээн авсан өгөгдөлд код (%s) эсвэл trans_id (%s) эсвэл хурууны "
-"хээ (%s) алга"
 
 #. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__credit_card
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__credit_card
+msgid "Credit Card"
+msgstr "Зээлийн карт"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid "Credit Card (powered by Authorize)"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
+msgid "Currency"
+msgstr "Валют"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_payment_method_type
+msgid "Determines with what payment method the customer can pay."
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Expiration"
+msgstr "Дуусах"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"Failed to authenticate.\n"
+"%s"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
 msgid "Generate Client Key"
 msgstr ""
 
 #. module: payment_authorize
-#: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
 msgid "How to get paid with Authorize.Net"
+msgstr "Authorize.Net-ээр хэрхэн төлөх вэ?"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "MM"
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:0
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Name On Account"
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
-msgid ""
-"Invalid token found: the Authorize profile is missing.Please make sure the "
-"token has a valid acquirer reference."
+msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Төлбөрийн хэрэгсэл"
+msgstr "Төлбөрийн эквайрер"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Төлбөрийн аргууд"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
@@ -111,30 +214,41 @@ msgid "Payment Transaction"
 msgstr "Төлбөрийн гүйлгээ"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:0
-#, python-format
-msgid "Please complete your profile. "
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Personal Checking"
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:0
-#, python-format
-msgid "Please sign in to complete the payment."
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Personal Savings"
 msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__provider
 msgid "Provider"
-msgstr "Үйлчилгээ үзүүлэгч"
+msgstr "Нийлүүлэгч"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__save_token
-msgid "Save Cards"
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/controllers/main.py:0
+#, python-format
+msgid "Received tampered payment request data."
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_token.py:0
+#, python-format
+msgid "Saved payment methods cannot be restored once they have been deleted."
 msgstr ""
 
 #. module: payment_authorize
 #. openerp-web
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
@@ -142,54 +256,69 @@ msgid "Server Error"
 msgstr "Серверийн алдаа"
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:0
-#, python-format
-msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr "Authorize.NET дээр Захиалагчийн профайлыг үүсгэж чадсангүй."
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
+msgid "Set Account Currency"
+msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/controllers/main.py:0
-#, python-format
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_login
+msgid "The ID solely used to identify the account with Authorize.Net"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_client_key
 msgid ""
-"The transaction cannot be processed because some contact details are missing"
-" or invalid: "
+"The public client key. To generate directly from Odoo or from Authorize.Net "
+"backend."
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_payment_method_type
+msgid "The type of payment method this token is linked to."
 msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
 msgid ""
-"This contains the unique reference for this partner/payment token "
-"combination in the Authorize.net backend"
-msgstr ""
-"Үүнд Authorize.net backend дээрх энэ түнш/төлбөрийн тасалбарын хослолын "
-"давтагдашгүй кодыг агуулна"
-
-#. module: payment_authorize
-#: model:ir.model.fields,help:payment_authorize.field_payment_token__save_token
-msgid ""
-"This option allows customers to save their credit card as a payment token "
-"and to reuse it for a later purchase. If you manage subscriptions (recurring"
-" invoicing), you need it to automatically charge the customer when you issue"
-" an invoice."
+"The unique reference for the partner/token combination in the Authorize.net "
+"backend."
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:0
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
 #, python-format
 msgid ""
-"Unable to fetch Client Key, make sure the API Login and Transaction Key are "
-"correct."
+"There are active tokens linked to this acquirer. To change the payment "
+"method type, please disable the acquirer and duplicate it. Then, change the "
+"payment method type on the duplicated acquirer."
 msgstr ""
 
 #. module: payment_authorize
-#: code:addons/payment_authorize/models/payment.py:0
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
 #, python-format
-msgid "Warning"
-msgstr "Анхааруулга"
+msgid "This action cannot be performed while the acquirer is disabled."
+msgstr ""
 
 #. module: payment_authorize
 #. openerp-web
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
-msgid "We are not able to add your payment method at the moment."
+msgid "We are not able to process your payment."
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "YY"
 msgstr ""
