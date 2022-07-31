@@ -23,7 +23,7 @@ class DataSet(http.Controller):
     def load(self, model, id, fields):
         warnings.warn("the route /web/dataset/load is deprecated and will be removed in Odoo 17. Use /web/dataset/call_kw with method 'read' and a list containing the id as args instead", DeprecationWarning)
         value = {}
-        r = request.env[model].browse([id]).read()
+        r = request.env[model].browse([id]).read(fields)
         if r:
             value = r[0]
         return {'value': value}
