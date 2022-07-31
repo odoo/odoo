@@ -2952,6 +2952,40 @@ class AccountMove(models.Model):
         move.message_subscribe(list(all_followers_ids))
         return move
 
+    def _post_check_invoice_non_negative(self):
+        """It checks that the total amount of a normal account cannot be less than zero.
+
+        In some accounting localizations this should be adjusted/disabled.
+        """
+        for move in self:
+            if (
+                move.is_invoice(include_receipts=True)
+                and float_compare(move.amount_total, 0.0, precision_rounding=move.currency_id.rounding) < 0
+            ):
+                raise UserError(_("You cannot validate an invoice with a negative total amount. "
+                                  "You should create a credit note instead. Use the action menu to transform it into "
+                                  "a credit note or refund."))
+
+    def _post_check_lock_date(self):
+        """When the accounting date is prior to a lock date, change it automatically upon posting.
+
+        /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
+        environment.
+
+        In some accounting localizations this should be disabled.
+        """
+        for move in self:
+            affects_tax_report = move._affect_tax_report()
+            lock_dates = move._get_violated_lock_dates(move.date, affects_tax_report)
+            if lock_dates:
+                move.date = move._get_accounting_date(move.invoice_date or move.date, affects_tax_report)
+                move.with_context(check_move_validity=False)._onchange_currency()
+
+    def _post_check_localization(self):
+        """Individual checks on accounting localizations can be placed here.
+        """
+        return
+
     def post(self):
         warnings.warn(
             "RedirectWarning method 'post()' is a deprecated alias to 'action_post()' or _post()",
@@ -3009,8 +3043,7 @@ class AccountMove(models.Model):
                 elif move.is_purchase_document():
                     raise UserError(_("The field 'Vendor' is required, please complete it to validate the Vendor Bill."))
 
-            if move.is_invoice(include_receipts=True) and float_compare(move.amount_total, 0.0, precision_rounding=move.currency_id.rounding) < 0:
-                raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead. Use the action menu to transform it into a credit note or refund."))
+            move._post_check_invoice_non_negative()
 
             if move.display_inactive_currency_warning:
                 raise UserError(_("You cannot validate an invoice with an inactive currency: %s",
@@ -3028,13 +3061,10 @@ class AccountMove(models.Model):
                     raise UserError(_("The Bill/Refund date is required to validate this document."))
 
             # When the accounting date is prior to a lock date, change it automatically upon posting.
-            # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
-            # environment.
-            affects_tax_report = move._affect_tax_report()
-            lock_dates = move._get_violated_lock_dates(move.date, affects_tax_report)
-            if lock_dates:
-                move.date = move._get_accounting_date(move.invoice_date or move.date, affects_tax_report)
-                move.with_context(check_move_validity=False)._onchange_currency()
+            move._post_check_lock_date()
+
+            # Other localization checks
+            move._post_check_localization()
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         to_post.mapped('line_ids').create_analytic_lines()
