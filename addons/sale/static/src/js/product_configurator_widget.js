@@ -42,7 +42,8 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
      * Add button linking to product_id/product_template_id form.
      */
     _addProductLinkButton: function () {
-        if (this.$('.o_external_button').length === 0) {
+        const hasExternalButton = !this.noOpen && !this.floating && this.isSet();
+        if (hasExternalButton && this.$('.o_external_button').length === 0) {
             var $productLinkButton = $('<button>', {
                 type: 'button',
                 class: 'fa fa-external-link btn btn-secondary o_external_button',

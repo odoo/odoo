@@ -96,5 +96,28 @@ odoo.define('sale.product_configurator_tests', function (require) {
 
             form.destroy();
         });
+
+        QUnit.test('product_configurator many2one with no_open option', async function (assert) {
+            assert.expect(1);
+
+            const form = await createView({
+                View: FormView,
+                model: 'line',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="product_id" widget="product_configurator" options="{'no_open': True}"/>
+                    </form>`,
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            assert.containsNone(form, '.o_external_button',
+                "should not have extenal button in form");
+
+            form.destroy();
+        });
     });
 });
