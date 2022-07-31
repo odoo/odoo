@@ -15,7 +15,13 @@ export function displayNotificationAction(env, action) {
         type: params.type || "info",
     };
     let links = (params.links || []).map((link) => {
-        return `<a href="${escape(link.url)}" target="_blank">${escape(link.label)}</a>`;
+        let target = '_blank';
+        if ('target' in link) {
+            if (link.target == 'current') {
+                target = '_self';
+            }
+        }
+        return `<a href="${escape(link.url)}" target="${target}">${escape(link.label)}</a>`;
     });
     const message = owl.markup(sprintf(escape(params.message), ...links));
     env.services.notification.add(message, options);
