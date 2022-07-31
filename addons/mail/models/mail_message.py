@@ -11,6 +11,8 @@ from odoo import _, api, Command, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.tools.misc import clean_context
+from odoo.tools import is_html_empty
+
 
 _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
@@ -177,6 +179,7 @@ class Message(models.Model):
     mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails', groups="base.group_system")
     canned_response_ids = fields.One2many('mail.shortcode', 'message_ids', string="Canned Responses", store=False)
     reaction_ids = fields.One2many('mail.message.reaction', 'message_id', string="Reactions", groups="base.group_system")
+    is_empty = fields.Boolean(string="Empty Message", compute="compute_is_empty")
 
     def _compute_description(self):
         for message in self:
@@ -674,6 +677,10 @@ class Message(models.Model):
 
         return super(Message, self).export_data(fields_to_export)
 
+    def compute_is_empty(self):
+        for message in self:
+            message.is_empty = is_html_empty(message.body) and not message.attachment_ids and not message.tracking_value_ids and not message.subtype_id.description
+
     def _update_content(self, body, attachment_ids):
         self.ensure_one()
         thread = self.env[self.model].browse(self.res_id)
@@ -689,6 +696,8 @@ class Message(models.Model):
             }
             attachement_values = thread._message_post_process_attachments([], attachment_ids, message_values)
             self.update(attachement_values)
+        if self.starred and self.is_empty:
+            self.toggle_message_starred()
         thread._message_update_content_after_hook(self)
 
     def action_open_document(self):
