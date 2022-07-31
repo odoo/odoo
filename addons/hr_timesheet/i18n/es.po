@@ -6,10 +6,11 @@
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Jon Perez <jop@odoo.com>, 2020
 # Martin Trigaux, 2020
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2021
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # Daniela Cervantes <dace@odoo.com>, 2021
 # Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
+# Richard Mouthier <rmo@odoo.com>, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,13 +18,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -45,26 +46,28 @@ msgstr "(Total:"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for employee:</em>"
-msgstr "Partes de horas para empleado:</em>"
+msgstr ""
+"<em class=\"font-weight-normal text-muted\">Partes de horas para el "
+"empleado:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for project:</em>"
 msgstr ""
-"<em class=\"font-weight-normal text-muted\">Hoja de horas para el "
+"<em class=\"font-weight-normal text-muted\">Partes de horas para el "
 "proyecto:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for task:</em>"
 msgstr ""
-"<em class=\"font-weight-normal text-muted\">Partes de horas para "
-"tareas:</em>"
+"<em class=\"font-weight-normal text-muted\">Partes de horas para la "
+"tarea:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets on </em>"
-msgstr "<em class=\"font-weight-normal text-muted\">Partes de horas en </em>"
+msgstr "<em class=\"font-weight-normal text-muted\">Partes de horas de </em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -896,27 +899,27 @@ msgstr "Ausencias"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Time Spent (Days)"
-msgstr "Tiempo dedicadado (Días)"
+msgstr "Tiempo dedicado (Días)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Time Spent (Hours)"
-msgstr "Tiempo dedicadado (Horas)"
+msgstr "Tiempo dedicado (Horas)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time spent on the sub-tasks (and their own sub-tasks) of this task."
-msgstr "Tiempo dedicadado en sub-tareas (y sus sub-tareas) de esta tarea."
+msgstr "Tiempo dedicado en sub-tareas (y sus sub-tareas) de esta tarea."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__effective_hours
 msgid "Time spent on this task, excluding its sub-tasks."
-msgstr "Tiempo dedicadado en esta tarea, excluyendo las sub-tareas."
+msgstr "Tiempo dedicado en esta tarea, excluyendo las sub-tareas."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task, including its sub-tasks."
-msgstr "Tiempo dedicadado en esta tarea, incluyendo las sub-tareas."
+msgstr "Tiempo dedicado en esta tarea, incluyendo las sub-tareas."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
