@@ -1,0 +1,78 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_coupon_delivery
+# 
+# Translators:
+# Martin Trigaux, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2022-06-17 09:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_coupon_program
+msgid "Coupon Program"
+msgstr "Programa de cupones"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_coupon_reward
+msgid "Coupon Reward"
+msgstr "Recompensa de cupón"
+
+#. module: sale_coupon_delivery
+#: model:ir.model.fields,help:sale_coupon_delivery.field_coupon_program__reward_type
+#: model:ir.model.fields,help:sale_coupon_delivery.field_coupon_reward__reward_type
+msgid ""
+"Discount - Reward will be provided as discount.\n"
+"Free Product - Free product will be provide as reward \n"
+"Free Shipping - Free shipping will be provided as reward (Need delivery module)"
+msgstr ""
+"Descuento: Descuento - Se entregará la recompensa en forma de descuento.\n"
+"Producto gratis: Se entregará un producto gratuito como recompensa\n"
+"Envío gratis: Se ofrecerá el envío gratuito como  recompensa (módulo de entrega requerido)"
+
+#. module: sale_coupon_delivery
+#: code:addons/sale_coupon_delivery/models/sale_order.py:0
+#, python-format
+msgid "Discount: %s"
+msgstr "Descuento: %s"
+
+#. module: sale_coupon_delivery
+#: code:addons/sale_coupon_delivery/models/sale_coupon_reward.py:0
+#: model:ir.model.fields.selection,name:sale_coupon_delivery.selection__coupon_reward__reward_type__free_shipping
+#, python-format
+msgid "Free Shipping"
+msgstr "Envío gratis"
+
+#. module: sale_coupon_delivery
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_program__reward_type
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_reward__reward_type
+msgid "Reward Type"
+msgstr "Tipo de recompensa"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_sale_order
+msgid "Sales Order"
+msgstr "Orden de venta"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de la orden de venta"
+
+#. module: sale_coupon_delivery
+#: code:addons/sale_coupon_delivery/models/sale_coupon.py:0
+#: code:addons/sale_coupon_delivery/models/sale_coupon_program.py:0
+#, python-format
+msgid "The shipping costs are not in the order lines."
+msgstr "Los gastos de envío no están incluidos en las líneas de la orden."
