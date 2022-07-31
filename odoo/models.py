@@ -3554,6 +3554,18 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError("Expected singleton or no record: %s" % self)
         return self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
+    def is_child_of(self, others):
+        """Return True if self is a child record of at least one other"""
+        if self._parent_store:
+            self.ensure_one()
+            # Efficient way to verify that the current record is
+            # below one of the other record without using SQL.
+            return any(self.parent_path.startswith(other.parent_path) for other in others)
+        else:
+            # TODO when parent_path is not used, revert to using SQL anyway
+            # or raise an error?
+            return False
+
     def _check_concurrency(self):
         if not (self._log_access and self._context.get(self.CONCURRENCY_CHECK_FIELD)):
             return
