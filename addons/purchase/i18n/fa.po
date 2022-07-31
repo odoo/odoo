@@ -16,6 +16,7 @@
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
 # Far Har <fhari1234@gmail.com>, 2021
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2021
+# Hanna Kheradroosta, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: M.Hossein S.Farvashani <Farvashani@gmail.com>, 2021\n"
+"Last-Translator: Hanna Kheradroosta, 2022\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +60,7 @@ msgstr "${object.company_id.name} سفارش (Ref ${object.name or 'n/a' })"
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
 msgid "'Request for Quotation - %s' % (object.name)"
-msgstr ""
+msgstr "\"درخواست برای استعلام قیمت - %s\" % (object.name)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -518,6 +519,11 @@ msgid ""
 "product if you directly do a Request for Quotation to one vendor or if you "
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
+"فراخوان مناقصه زمانی استفاده می‌شود که می‌خواهید برای یک مجموعه معین از "
+"محصولات، درخواست‌هایی را برای قیمت‌ها برای چندین فروشنده ایجاد کنید. اگر "
+"مستقیماً به یک فروشنده درخواست پیشنهاد قیمت بدهید یا اگر می‌خواهید یک "
+"فراخوان برای مناقصه برای مقایسه پیشنهادهای چند فروشنده داشته باشید، "
+"می‌توانید هر محصول را پیکربندی کنید."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -809,7 +815,7 @@ msgstr "فعالیتهای آینده"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr ""
+msgstr "برای تأیید سفارش خرید، دو سطح تأییدیه دریافت کنید"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1002,7 +1008,7 @@ msgstr "مطمئن شوید شما تنها صورتهایی که دریافت �
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr ""
+msgstr "قراردادهای خرید خود را مدیریت کنید (تماس برای مناقصه، سفارشات عمومی)"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1027,6 +1033,9 @@ msgid ""
 "Orders for procuring products, they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"حاشیه خطا برای زمان تحویل فروشنده. هنگامی که سیستم سفارشات خرید را برای تهیه"
+" محصولات تولید می کند، برای مقابله با تأخیرهای غیرمنتظره فروشنده، آنها چندین"
+" روز زودتر برنامه ریزی می شوند."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
@@ -1035,6 +1044,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"حاشیه خطا برای زمان تحویل فروشنده. وقتی سیستم سفارش‌های خرید را برای "
+"سفارش‌دهی مجدد محصولات ایجاد می‌کند، برای مقابله با تأخیرهای غیرمنتظره "
+"فروشنده، آن‌ها چند روز زودتر برنامه‌ریزی می‌شوند."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1067,7 +1079,7 @@ msgstr "مقدار کمینه"
 #: model:ir.model.fields,help:purchase.field_res_company__po_double_validation_amount
 #: model:ir.model.fields,help:purchase.field_res_config_settings__po_double_validation_amount
 msgid "Minimum amount for which a double validation is required"
-msgstr ""
+msgstr "حداقل مقداری که برای آن تایید مضاعف لازم است"
 
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
@@ -1180,6 +1192,8 @@ msgid ""
 "On ordered quantities: Control bills based on ordered quantities.\n"
 "On received quantities: Control bills based on received quantities."
 msgstr ""
+"در مقادیر سفارش داده شده: صورتحساب ها را بر اساس مقادیر سفارش داده شده کنترل کنید.\n"
+"در مقادیر دریافتی: کنترل صورت حساب ها بر اساس مقادیر دریافتی."
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__receive
@@ -1365,6 +1379,9 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your vendors, etc."
 msgstr ""
+"تجزیه و تحلیل خرید به شما اجازه می دهد تا به راحتی تاریخچه خرید و عملکرد "
+"شرکت خود را بررسی و تجزیه و تحلیل کنید. از این منو می توانید عملکرد مذاکره، "
+"عملکرد تحویل فروشندگان خود و غیره را ردیابی کنید."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -1536,6 +1553,8 @@ msgid ""
 "Put an address if you want to deliver directly from the vendor to the "
 "customer. Otherwise, keep empty to deliver to your own company."
 msgstr ""
+"اگر می خواهید مستقیماً از فروشنده به مشتری تحویل دهید، یک آدرس قرار دهید. در"
+" غیر این صورت خالی نگه دارید تا به شرکت خودتان تحویل دهید."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
@@ -1606,7 +1625,7 @@ msgstr "RFQ_${(object.name or '').replace('/','_')}"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "RFQs"
-msgstr ""
+msgstr "درخواست‌های استعلام قیمت"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1616,7 +1635,7 @@ msgstr "درخواست های پیش فاکتور و خریدها"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
 msgid "Ratio between the purchase order currency and the company currency"
-msgstr ""
+msgstr "نسبت بین ارز سفارش خرید و ارز شرکت"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1687,6 +1706,7 @@ msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
 msgstr ""
+"مرجع سندی که این درخواست سفارش خرید را ایجاد کرده است (مثلاً یک سفارش فروش)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
@@ -1695,6 +1715,9 @@ msgid ""
 "matching when you receive the products as this reference is usually written "
 "on the delivery order sent by your vendor."
 msgstr ""
+"مرجع سفارش فروش یا پیشنهاد ارسال شده توسط فروشنده. برای انجام تطابق هنگام "
+"دریافت محصولات استفاده می شود زیرا این مرجع معمولاً در سفارش تحویل ارسال شده"
+" توسط فروشنده شما نوشته می شود."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -1718,7 +1741,7 @@ msgstr "تعداد درخواست قیمت"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request managers to approve orders above a minimum amount"
-msgstr ""
+msgstr "از مدیران بخواهید تا سفارشات بالاتر از حداقل مقدار را تایید کنند"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -1767,7 +1790,7 @@ msgstr "یک عنوان انتخاب کنید ( مانند محصولات ء خ�
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
 msgid "Security Lead Time for Purchase"
-msgstr ""
+msgstr "زمان تحویل مطمئن برای خرید"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_token
@@ -1777,7 +1800,7 @@ msgstr "توکن امنیتی"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Select a purchase order or an old bill"
-msgstr ""
+msgstr "یک سفارش خرید یا یک صورتحساب قدیمی را انتخاب کنید"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__purchase_line_warn
@@ -1919,6 +1942,9 @@ msgid ""
 "                    converted into a purchase order, you will be able to control the receipt\n"
 "                    of the products and the vendor bill."
 msgstr ""
+"درخواست استعلام قیمت اولین مرحله از جریان خرید است. \n"
+"              پس از تبدیل به سفارش خرید، می توانید دریافت محصولات\n"
+"              و صورتحساب فروشنده را کنترل کنید."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_product__property_account_creditor_price_difference
@@ -1928,6 +1954,8 @@ msgid ""
 "difference between a purchase order and its related vendor bill when "
 "validating this vendor bill."
 msgstr ""
+"این حساب در ارزیابی خودکار موجودی برای ثبت تفاوت قیمت بین یک سفارش خرید و "
+"صورت‌حساب فروشنده مربوطه آن هنگام تایید این صورتحساب فروشنده استفاده می‌شود."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -1935,6 +1963,8 @@ msgid ""
 "This account will be used to value price difference between purchase price "
 "and accounting cost."
 msgstr ""
+"این حساب برای ارزش گذاری تفاوت قیمت بین قیمت خرید و هزینه حسابداری استفاده "
+"می شود."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
@@ -1942,7 +1972,7 @@ msgstr ""
 msgid ""
 "This currency will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr ""
+msgstr "این ارز به جای ارز پیش‌فرض، برای خرید از شریک فعلی استفاده می‌شود"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__default_purchase_method
@@ -1975,6 +2005,7 @@ msgstr "این صورت فروشنده تغییر یافته از: %s"
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
 msgstr ""
+"این فروشنده هیچ سفارش خریدی ندارد. یک درخواست استعلام قیمت جدید ایجاد کنید"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__to_approve
@@ -2163,6 +2194,9 @@ msgid ""
 "                    you receive from your vendor according to the draft\n"
 "                    document in Odoo."
 msgstr ""
+"صورت‌حساب‌های فروشندگان را می‌توان بر اساس سفارش‌های خرید\n"
+"            یا رسید تهیه کرد. این به شما امکان می دهد صورتحساب هایی را که\n"
+"             از فروشنده دریافت می کنید مطابق پیش نویس سند در Odoo کنترل کنید."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__volume
@@ -2220,6 +2254,7 @@ msgstr "تاریخچه ارتباط با وبسایت"
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"می توانید فروشنده ای را با نام، TIN، ایمیل یا مرجع داخلی آن پیدا کنید."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -2236,6 +2271,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "            whether it's a storable product, a consumable or a service."
 msgstr ""
+"شما باید برای هر چیزی که می فروشید یا می خرید یک محصول تعریف کنید،\n"
+"             خواه یک محصول قابل ذخیره سازی، یک کالای مصرفی یا یک سرویس باشد."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -2252,3 +2289,5 @@ msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
+"شما نمی توانید نوع خط سفارش خرید را تغییر دهید. در عوض باید خط فعلی را حذف "
+"کنید و یک خط جدید از نوع مناسب ایجاد کنید."
