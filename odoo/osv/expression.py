@@ -684,6 +684,9 @@ class expression(object):
                 for dom_leaf in dom:
                     push(dom_leaf, model, alias)
 
+            elif left == 'id' and operator not in HIERARCHY_FUNCS and isinstance(right, BaseModel):
+                push((left, operator, [right.id]), model, alias)
+
             # ----------------------------------------
             # PATH SPOTTED
             # -> many2one or one2many with _auto_join:
@@ -973,6 +976,10 @@ class expression(object):
                     instr = unaccent('%s')
                     push_result(f"{left} {sql_operator} {instr}", [right])
 
+                elif operator in ('in', 'not in') and isinstance(right, str):
+                    dict_op = {'not in': 'not like', 'in': 'like'}
+                    operator = dict_op[operator]
+                    push((left, operator, '%%%s%%' % right), model, alias, internal=True)
                 else:
                     expr, params = self.__leaf_to_sql(leaf, model, alias)
                     push_result(expr, params)

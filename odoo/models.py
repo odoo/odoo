@@ -5718,6 +5718,8 @@ class BaseModel(metaclass=MetaModel):
                             data = data.mapped('display_name')
                         else:
                             data = data and data.ids or [False]
+                            if isinstance(v, BaseModel):
+                                value = [v.id]
                     elif field and field.type in ('date', 'datetime'):
                         data = [Datetime.to_datetime(d) for d in data]
 
