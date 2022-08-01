@@ -19,7 +19,7 @@ import session from "web.session";
 import test_utils from "web.test_utils";
 import { registerCleanup } from "../../helpers/cleanup";
 import { defaultLocalization } from "../../helpers/mock_services";
-import { patchWithCleanup } from "../../helpers/utils";
+import { patchDate, patchWithCleanup } from "../../helpers/utils";
 
 const { DateTime, Settings } = luxon;
 
@@ -119,42 +119,51 @@ QUnit.module(
             unpatch(localization, "dateformat");
         });
 
+        QUnit.test("formatDate (with DateTime.fromISO)", async (assert) => {
+            patchWithCleanup(localization, { dateFormat: "MM/dd/yyyy" });
+
+            // NB: the local timezone in test env is UTC+1
+            let date = DateTime.fromISO("2022-07-21T22:00:00Z");
+            assert.strictEqual(formatDate(date), "07/21/2022");
+            assert.strictEqual(formatDate(date, { timezone: true }), "07/21/2022");
+
+            date = DateTime.fromISO("2022-07-21T23:00:00Z");
+            assert.strictEqual(formatDate(date), "07/21/2022");
+            assert.strictEqual(formatDate(date, { timezone: true }), "07/22/2022");
+
+            date = DateTime.fromISO("2022-07-22T00:00:00Z");
+            assert.strictEqual(formatDate(date), "07/22/2022");
+            assert.strictEqual(formatDate(date, { timezone: true }), "07/22/2022");
+
+            // Here are the 3 same instants as above, but expressed from a different ISO string
+            date = DateTime.fromISO("2022-07-22T00:00:00+02:00");
+            assert.strictEqual(formatDate(date), "07/21/2022");
+            assert.strictEqual(formatDate(date, { timezone: true }), "07/21/2022");
+
+            date = DateTime.fromISO("2022-07-22T01:00:00+02:00");
+            assert.strictEqual(formatDate(date), "07/21/2022");
+            assert.strictEqual(formatDate(date, { timezone: true }), "07/22/2022");
+
+            date = DateTime.fromISO("2022-07-22T02:00:00+02:00");
+            assert.strictEqual(formatDate(date), "07/22/2022");
+            assert.strictEqual(formatDate(date, { timezone: true }), "07/22/2022");
+        });
+
         QUnit.test("formatDateTime", async (assert) => {
-            patch(localization, "datetimeformat", { dateTimeFormat: "MM/dd/yyyy HH:mm:ss" });
-
-            let formatted = formatDateTime(DateTime.utc(2009, 5, 4, 12, 34, 23));
-            let expected = "05/04/2009 12:34:23";
-            assert.strictEqual(formatted, expected);
-
-            formatted = formatDateTime(DateTime.utc(2009, 5, 4, 12, 34, 23), { timezone: false });
-            assert.strictEqual(formatted, expected);
-
-            formatted = formatDateTime(DateTime.utc(2009, 5, 4, 12, 34, 23), { timezone: true });
-            expected = "05/04/2009 13:34:23";
-            assert.strictEqual(formatted, expected);
-
-            unpatch(localization, "datetimeformat");
+            patchWithCleanup(localization, { dateTimeFormat: "MM/dd/yyyy HH:mm:ss" });
+            const date = DateTime.utc(2009, 5, 4, 12, 34, 23);
+            assert.strictEqual(formatDateTime(date), "05/04/2009 13:34:23");
+            assert.strictEqual(formatDateTime(date, { timezone: false }), "05/04/2009 12:34:23");
         });
 
         QUnit.test("formatDateTime (with different timezone offset)", async (assert) => {
-            patch(localization, "datetimeformat", { dateTimeFormat: "MM/dd/yyyy HH:mm:ss" });
-
-            let str = formatDateTime(DateTime.utc(2017, 1, 1, 10, 0, 0, 0));
-            assert.strictEqual(str, "01/01/2017 10:00:00");
-            str = formatDateTime(DateTime.utc(2017, 6, 1, 10, 0, 0, 0));
-            assert.strictEqual(str, "06/01/2017 10:00:00");
-
-            str = formatDateTime(DateTime.utc(2017, 1, 1, 10, 0, 0, 0), { timezone: false });
-            assert.strictEqual(str, "01/01/2017 10:00:00");
-            str = formatDateTime(DateTime.utc(2017, 6, 1, 10, 0, 0, 0), { timezone: false });
-            assert.strictEqual(str, "06/01/2017 10:00:00");
-
-            str = formatDateTime(DateTime.utc(2017, 1, 1, 10, 0, 0, 0), { timezone: true });
-            assert.strictEqual(str, "01/01/2017 11:00:00");
-            str = formatDateTime(DateTime.utc(2017, 6, 1, 10, 0, 0, 0), { timezone: true });
-            assert.strictEqual(str, "06/01/2017 11:00:00");
-
-            unpatch(localization, "datetimeformat");
+            patchWithCleanup(localization, { dateTimeFormat: "MM/dd/yyyy HH:mm:ss" });
+            let date = DateTime.fromISO("2017-01-01T11:00:00+01:00");
+            assert.strictEqual(formatDateTime(date), "01/01/2017 11:00:00");
+            assert.strictEqual(formatDateTime(date, { timezone: false }), "01/01/2017 10:00:00");
+            date = DateTime.fromISO("2017-06-01T11:00:00+02:00");
+            assert.strictEqual(formatDateTime(date), "06/01/2017 10:00:00");
+            assert.strictEqual(formatDateTime(date, { timezone: false }), "06/01/2017 09:00:00");
         });
 
         QUnit.test("parseDateTime", async (assert) => {
@@ -221,6 +230,24 @@ QUnit.module(
 
             Settings.defaultLocale = originalLocale;
             unpatch(localization, "weird loc");
+        });
+
+        QUnit.test("parseDate", async (assert) => {
+            patchWithCleanup(localization, defaultLocalization);
+
+            let str = "07/21/2022";
+            assert.strictEqual(parseDate(str).toISO(), "2022-07-21T00:00:00.000Z");
+            assert.strictEqual(
+                parseDate(str, { timezone: true }).toISO(),
+                "2022-07-21T00:00:00.000+01:00"
+            );
+
+            str = "07/22/2022";
+            assert.strictEqual(parseDate(str).toISO(), "2022-07-22T00:00:00.000Z");
+            assert.strictEqual(
+                parseDate(str, { timezone: true }).toISO(),
+                "2022-07-22T00:00:00.000+01:00"
+            );
         });
 
         QUnit.test("parseDate without separator", async (assert) => {
@@ -373,6 +400,24 @@ QUnit.module(
             assert.strictEqual(serializeDate(date), "2022-02-21");
         });
 
+        QUnit.test("serializeDate, with DateTime.now()", async (assert) => {
+            patchDate(2022, 1, 21, 16, 11, 42);
+            const date = DateTime.now();
+            assert.strictEqual(date.toFormat("yyyy-MM-dd"), "2022-02-21");
+            assert.strictEqual(serializeDate(date), "2022-02-21");
+        });
+
+        QUnit.test("serializeDate, with DateTime.now(), midnight", async (assert) => {
+            patchDate(2022, 1, 21, 0, 0, 0);
+            const date = DateTime.now();
+            assert.strictEqual(date.toFormat("yyyy-MM-dd"), "2022-02-21");
+            assert.strictEqual(
+                serializeDate(date),
+                "2022-02-20",
+                "serializeDate should output an UTC converted string"
+            );
+        });
+
         QUnit.test("serializeDate with different numbering system", async (assert) => {
             patchWithCleanup(Settings, { defaultNumberingSystem: "arab" });
             const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
@@ -384,6 +429,28 @@ QUnit.module(
             const date = DateTime.utc(2022, 2, 21, 16, 11, 42);
             assert.strictEqual(date.toFormat("yyyy-MM-dd HH:mm:ss"), "2022-02-21 16:11:42");
             assert.strictEqual(serializeDateTime(date), "2022-02-21 16:11:42");
+        });
+
+        QUnit.test("serializeDateTime, with DateTime.now()", async (assert) => {
+            patchDate(2022, 1, 21, 16, 11, 42);
+            const date = DateTime.now();
+            assert.strictEqual(date.toFormat("yyyy-MM-dd HH:mm:ss"), "2022-02-21 16:11:42");
+            assert.strictEqual(
+                serializeDateTime(date),
+                "2022-02-21 15:11:42",
+                "serializeDateTime should output an UTC converted string"
+            );
+        });
+
+        QUnit.test("serializeDateTime, with DateTime.now(), midnight", async (assert) => {
+            patchDate(2022, 1, 21, 0, 0, 0);
+            const date = DateTime.now();
+            assert.strictEqual(date.toFormat("yyyy-MM-dd HH:mm:ss"), "2022-02-21 00:00:00");
+            assert.strictEqual(
+                serializeDateTime(date),
+                "2022-02-20 23:00:00",
+                "serializeDateTime should output an UTC converted string"
+            );
         });
 
         QUnit.test("serializeDateTime with different numbering system", async (assert) => {

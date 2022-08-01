@@ -158,12 +158,8 @@ class GetMetadataDialog extends Component {
         this.state.noupdate = metadata.noupdate;
         this.state.creator = formatMany2one(metadata.create_uid);
         this.state.lastModifiedBy = formatMany2one(metadata.write_uid);
-        this.state.createDate = formatDateTime(parseDateTime(metadata.create_date), {
-            timezone: true,
-        });
-        this.state.writeDate = formatDateTime(parseDateTime(metadata.write_date), {
-            timezone: true,
-        });
+        this.state.createDate = formatDateTime(parseDateTime(metadata.create_date));
+        this.state.writeDate = formatDateTime(parseDateTime(metadata.write_date));
     }
 }
 GetMetadataDialog.template = "web.DebugMenu.GetMetadataDialog";

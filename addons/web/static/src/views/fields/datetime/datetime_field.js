@@ -10,7 +10,7 @@ const { Component } = owl;
 
 export class DateTimeField extends Component {
     get formattedValue() {
-        return formatDateTime(this.props.value, { timezone: true });
+        return formatDateTime(this.props.value);
     }
 
     onDateTimeChanged(date) {
