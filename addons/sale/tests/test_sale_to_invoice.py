@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tools import float_is_zero
-from .common import TestSaleCommon
+from odoo.fields import Command
 from odoo.tests import Form, tagged
+from odoo.tools import float_is_zero
+
+from odoo.addons.sale.tests.common import TestSaleCommon
 
 
 @tagged('-at_install', 'post_install')
@@ -19,32 +21,36 @@ class TestSaleToInvoice(TestSaleCommon):
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
             'pricelist_id': cls.company_data['default_pricelist'].id,
+            'order_line': [
+                Command.create({
+                    'product_id': cls.company_data['product_order_no'].id,
+                    'product_uom_qty': 5,
+                    'tax_id': False,
+                }),
+                Command.create({
+                    'product_id': cls.company_data['product_service_delivery'].id,
+                    'product_uom_qty': 4,
+                    'tax_id': False,
+                }),
+                Command.create({
+                    'product_id': cls.company_data['product_service_order'].id,
+                    'product_uom_qty': 3,
+                    'tax_id': False,
+                }),
+                Command.create({
+                    'product_id': cls.company_data['product_delivery_no'].id,
+                    'product_uom_qty': 2,
+                    'tax_id': False,
+                }),
+            ]
         })
-        SaleOrderLine = cls.env['sale.order.line'].with_context(tracking_disable=True)
-        cls.sol_prod_order = SaleOrderLine.create({
-            'product_id': cls.company_data['product_order_no'].id,
-            'product_uom_qty': 5,
-            'order_id': cls.sale_order.id,
-            'tax_id': False,
-        })
-        cls.sol_serv_deliver = SaleOrderLine.create({
-            'product_id': cls.company_data['product_service_delivery'].id,
-            'product_uom_qty': 4,
-            'order_id': cls.sale_order.id,
-            'tax_id': False,
-        })
-        cls.sol_serv_order = SaleOrderLine.create({
-            'product_id': cls.company_data['product_service_order'].id,
-            'product_uom_qty': 3,
-            'order_id': cls.sale_order.id,
-            'tax_id': False,
-        })
-        cls.sol_prod_deliver = SaleOrderLine.create({
-            'product_id': cls.company_data['product_delivery_no'].id,
-            'product_uom_qty': 2,
-            'order_id': cls.sale_order.id,
-            'tax_id': False,
-        })
+
+        (
+            cls.sol_prod_order,
+            cls.sol_serv_deliver,
+            cls.sol_serv_order,
+            cls.sol_prod_deliver,
+        ) = cls.sale_order.order_line
 
         # Context
         cls.context = {
@@ -503,3 +509,200 @@ class TestSaleToInvoice(TestSaleCommon):
         # checking if the price_unit is the same
         self.assertEqual(so.order_line.price_unit, 123,
                          "The unit price should be the same as the one used to create the sales order line")
+
+    def test_group_invoice(self):
+        """ Test that invoicing multiple sales order for the same customer works. """
+        # Create 3 SOs for the same partner, one of which that uses another currency
+        eur_pricelist = self.env['product.pricelist'].create({'name': 'EUR', 'currency_id': self.env.ref('base.EUR').id})
+        so1 = self.sale_order.with_context(mail_notrack=True).copy()
+        so1.pricelist_id = eur_pricelist
+        so2 = so1.copy()
+        usd_pricelist = self.env['product.pricelist'].create({'name': 'USD', 'currency_id': self.env.ref('base.USD').id})
+        so3 = so1.copy()
+        so1.pricelist_id = usd_pricelist
+        orders = so1 | so2 | so3
+        orders.action_confirm()
+        # Create the invoicing wizard and invoice all of them at once
+        wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=orders.ids, open_invoices=True).create({})
+        res = wiz.create_invoices()
+        # Check that exactly 2 invoices are generated
+        self.assertEqual(
+            len(res['domain'][0][2]),
+            2,
+            "Invoicing 3 orders for the same partner with 2 currencies"
+            "should create exactly 2 invoices.")
+
+    def test_so_note_to_invoice(self):
+        """Test that notes from SO are pushed into invoices"""
+
+        self.sale_order.order_line = [Command.create({
+            'name': 'This is a note',
+            'display_type': 'line_note',
+            'product_id': False,
+            'product_uom_qty': 0,
+            'product_uom': False,
+            'price_unit': 0,
+            'order_id': self.sale_order.id,
+            'tax_id': False,
+        })]
+
+        # confirm quotation
+        self.sale_order.action_confirm()
+
+        # create invoice
+        invoice = self.sale_order._create_invoices()
+
+        # check note from SO has been pushed in invoice
+        self.assertEqual(
+            len(invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'line_note')),
+            1,
+            'Note SO line should have been pushed to the invoice')
+
+    def test_cost_invoicing(self):
+        """ Test confirming a vendor invoice to reinvoice cost on the so """
+        serv_cost = self.env['product.product'].create({
+            'name': "Ordered at cost",
+            'standard_price': 160,
+            'list_price': 180,
+            'type': 'consu',
+            'invoice_policy': 'order',
+            'expense_policy': 'cost',
+            'default_code': 'PROD_COST',
+            'service_type': 'manual',
+        })
+        prod_gap = self.company_data['product_service_order']
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': prod_gap.id,
+                'product_uom_qty': 2,
+                'product_uom': prod_gap.uom_id.id,
+                'price_unit': prod_gap.list_price,
+            })],
+            'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+        so.action_confirm()
+        so._create_analytic_account()
+
+        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'partner_id': self.partner_a.id,
+            'invoice_date': so.date_order,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': serv_cost.name,
+                    'product_id': serv_cost.id,
+                    'product_uom_id': serv_cost.uom_id.id,
+                    'quantity': 2,
+                    'price_unit': serv_cost.standard_price,
+                    'analytic_account_id': so.analytic_account_id.id,
+                }),
+            ],
+        })
+        inv.action_post()
+        sol = so.order_line.filtered(lambda l: l.product_id == serv_cost)
+        self.assertTrue(sol, 'Sale: cost invoicing does not add lines when confirming vendor invoice')
+        self.assertEqual(
+            (sol.price_unit, sol.qty_delivered, sol.product_uom_qty, sol.qty_invoiced),
+            (160, 2, 0, 0),
+            'Sale: line is wrong after confirming vendor invoice')
+
+    def test_sale_order_standard_flow_with_invoicing(self):
+        """ Test the sales order flow (invoicing and quantity updates)
+            - Invoice repeatedly while varrying delivered quantities and check that invoice are always what we expect
+        """
+        self.sale_order.order_line.product_uom_qty = 2.0
+        # TODO?: validate invoice and register payments
+        self.sale_order.order_line.read(['name', 'price_unit', 'product_uom_qty', 'price_total'])
+
+        self.assertEqual(self.sale_order.amount_total, 1240.0, 'Sale: total amount is wrong')
+        self.sale_order.order_line._compute_product_updatable()
+        self.assertTrue(self.sale_order.order_line[0].product_updatable)
+        # send quotation
+        email_act = self.sale_order.action_quotation_send()
+        email_ctx = email_act.get('context', {})
+        self.sale_order.with_context(**email_ctx).message_post_with_template(email_ctx.get('default_template_id'))
+        self.assertTrue(self.sale_order.state == 'sent', 'Sale: state after sending is wrong')
+        self.sale_order.order_line._compute_product_updatable()
+        self.assertTrue(self.sale_order.order_line[0].product_updatable)
+
+        # confirm quotation
+        self.sale_order.action_confirm()
+        self.assertTrue(self.sale_order.state == 'sale')
+        self.assertTrue(self.sale_order.invoice_status == 'to invoice')
+
+        # create invoice: only 'invoice on order' products are invoiced
+        invoice = self.sale_order._create_invoices()
+        self.assertEqual(len(invoice.invoice_line_ids), 2, 'Sale: invoice is missing lines')
+        self.assertEqual(invoice.amount_total, 740.0, 'Sale: invoice total amount is wrong')
+        self.assertTrue(self.sale_order.invoice_status == 'no', 'Sale: SO status after invoicing should be "nothing to invoice"')
+        self.assertTrue(len(self.sale_order.invoice_ids) == 1, 'Sale: invoice is missing')
+        self.sale_order.order_line._compute_product_updatable()
+        self.assertFalse(self.sale_order.order_line[0].product_updatable)
+
+        # deliver lines except 'time and material' then invoice again
+        for line in self.sale_order.order_line:
+            line.qty_delivered = 2 if line.product_id.expense_policy == 'no' else 0
+        self.assertTrue(self.sale_order.invoice_status == 'to invoice', 'Sale: SO status after delivery should be "to invoice"')
+        invoice2 = self.sale_order._create_invoices()
+        self.assertEqual(len(invoice2.invoice_line_ids), 2, 'Sale: second invoice is missing lines')
+        self.assertEqual(invoice2.amount_total, 500.0, 'Sale: second invoice total amount is wrong')
+        self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything should be "invoiced"')
+        self.assertTrue(len(self.sale_order.invoice_ids) == 2, 'Sale: invoice is missing')
+
+        # go over the sold quantity
+        self.sol_serv_order.write({'qty_delivered': 10})
+        self.assertTrue(self.sale_order.invoice_status == 'upselling', 'Sale: SO status after increasing delivered qty higher than ordered qty should be "upselling"')
+
+        # upsell and invoice
+        self.sol_serv_order.write({'product_uom_qty': 10})
+
+        # There is a bug with `new` and `_origin`
+        # If you create a first new from a record, then change a value on the origin record, than create another new,
+        # this other new wont have the updated value of the origin record, but the one from the previous new
+        # Here the problem lies in the use of `new` in `move = self_ctx.new(new_vals)`,
+        # and the fact this method is called multiple times in the same transaction test case.
+        # Here, we update `qty_delivered` on the origin record, but the `new` records which are in cache with this order line
+        # as origin are not updated, nor the fields that depends on it.
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        invoice3 = self.sale_order._create_invoices()
+        self.assertEqual(len(invoice3.invoice_line_ids), 1, 'Sale: third invoice is missing lines')
+        self.assertEqual(invoice3.amount_total, 720.0, 'Sale: second invoice total amount is wrong')
+        self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything (including the upsel) should be "invoiced"')
+
+    def test_so_create_multicompany(self):
+        """Check that only taxes of the right company are applied on the lines."""
+        # Preparing test Data
+        product_shared = self.env['product.template'].create({
+            'name': 'shared product',
+            'invoice_policy': 'order',
+            'taxes_id': [(6, False, (self.company_data['default_tax_sale'] + self.company_data_2['default_tax_sale']).ids)],
+            'property_account_income_id': self.company_data['default_account_revenue'].id,
+        })
+
+        so_1 = self.env['sale.order'].with_user(self.company_data['default_user_salesman']).create({
+            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
+            'company_id': self.company_data['company'].id,
+        })
+        so_1.write({
+            'order_line': [Command.create({'product_id': product_shared.product_variant_id.id})],
+        })
+        self.assertEqual(so_1.order_line.product_uom_qty, 1)
+
+        self.assertEqual(so_1.order_line.tax_id, self.company_data['default_tax_sale'],
+            'Only taxes from the right company are put by default')
+        so_1.action_confirm()
+        # i'm not interested in groups/acls, but in the multi-company flow only
+        # the sudo is there for that and does not impact the invoice that gets created
+        # the goal here is to invoice in company 1 (because the order is in company 1) while being
+        # 'mainly' in company 2 (through the context), the invoice should be in company 1
+        inv = so_1.sudo().with_context(
+            allowed_company_ids=(self.company_data['company'] + self.company_data_2['company']).ids
+        )._create_invoices()
+        self.assertEqual(
+            inv.company_id,
+            self.company_data['company'],
+            'invoices should be created in the company of the SO, not the main company of the context')
