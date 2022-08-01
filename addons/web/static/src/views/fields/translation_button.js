@@ -25,7 +25,7 @@ export class TranslationButton extends Component {
             model: "ir.translation",
             method: "translate_fields",
             args: [this.props.resModel, this.props.resId, this.props.fieldName],
-            kwargs: {},
+            kwargs: { context: this.props.context },
         });
 
         this.dialog.add(TranslationDialog, {

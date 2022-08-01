@@ -3,10 +3,9 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
+import { loadLanguages } from "@web/core/l10n/translation";
 
 const { Component, onWillStart } = owl;
-
-let installedLanguages = null;
 
 export class TranslationDialog extends Component {
     setup() {
@@ -20,7 +19,7 @@ export class TranslationDialog extends Component {
         this.updatedTerms = {};
 
         onWillStart(async () => {
-            const languages = await this.loadLanguages();
+            const languages = await loadLanguages(this.orm);
             const translations = await this.loadTranslations(languages);
 
             this.terms = translations.map((term) => {
@@ -52,24 +51,19 @@ export class TranslationDialog extends Component {
         });
     }
 
-    /**
-     * Load the installed languages long names and code
-     *
-     * The result of the call is put in cache.
-     * If any new language is installed, a full page refresh will happen,
-     * so there is no need invalidate it.
-     */
-    async loadLanguages() {
-        if (!installedLanguages) {
-            installedLanguages = await this.orm.call("res.lang", "get_installed");
+    get domain() {
+        const domain = this.props.domain;
+        if (this.props.searchName) {
+            domain.push(["name", "=", `${this.props.searchName}`]);
         }
-        return installedLanguages;
+        return domain;
     }
+
     /**
      * Load the translation terms for the installed language, for the current model and res_id
      */
     async loadTranslations(languages) {
-        const domain = [...this.props.domain, ["lang", "in", languages.map((l) => l[0])]];
+        const domain = [...this.domain, ["lang", "in", languages.map((l) => l[0])]];
         return this.orm.searchRead("ir.translation", domain, ["lang", "src", "value"]);
     }
 
