@@ -201,7 +201,13 @@
                         Please use the following communication for your payment : <b><span t-field="o.payment_reference"/></b>
                     </p>
                     <div t-if="o.invoice_payment_term_id" name="payment_term">
-                        <span t-field="o.invoice_payment_term_id.note"/>
+                        <div t-field="o.invoice_payment_term_id.note"/>
+                        <t t-set="terms" t-value="o.invoice_payment_term_id.compute(o.amount_total, o.amount_total_in_currency_signed, o.invoice_date, o.currency_id)"/>
+                        <t t-if="o.invoice_payment_term_id.display_on_invoice" t-foreach="o.invoice_payment_term_id._get_amount_by_date(terms, o.currency_id).items()" t-as="pay_term_line">
+                            <div>
+                                <span t-esc="pay_term_line[1]" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/> are due on <span t-esc="pay_term_line[0]"/>
+                            </div>
+                        </t>
                     </div>
                     <div t-if="not is_html_empty(o.narration)" name="comment">
                         <span t-field="o.narration"/>

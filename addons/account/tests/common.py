@@ -129,16 +129,13 @@ class AccountTestInvoicingCommon(TransactionCase):
                 (0, 0, {
                     'value': 'percent',
                     'value_amount': 30.0,
-                    'sequence': 400,
                     'days': 0,
-                    'option': 'day_after_invoice_date',
                 }),
                 (0, 0, {
                     'value': 'balance',
                     'value_amount': 0.0,
-                    'sequence': 500,
-                    'days': 31,
-                    'option': 'day_following_month',
+                    'months': 1,
+                    'end_month': True,
                 }),
             ],
         })

@@ -2,60 +2,6 @@
 <odoo>
     <data>
 
-        <record id="view_payment_term_line_tree" model="ir.ui.view">
-            <field name="name">account.payment.term.line.tree</field>
-            <field name="model">account.payment.term.line</field>
-            <field name="arch" type="xml">
-                <tree string="Payment Terms">
-                    <field name="sequence" widget="handle"/>
-                    <field name="value" string="Due Type"/>
-                    <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
-                    <field name="days"/>
-                    <field name="option" string=""/>
-                    <field name="day_of_the_month" string="Day of the month"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_payment_term_line_form" model="ir.ui.view">
-            <field name="name">account.payment.term.line.form</field>
-            <field name="model">account.payment.term.line</field>
-            <field name="arch" type="xml">
-                <form string="Payment Terms">
-                    <h2>Term Type</h2>
-                    <group>
-                        <group>
-                            <field name="value" widget="radio"/>
-                        </group>
-
-                        <group>
-                            <div attrs="{'invisible':[('value','=', 'balance')]}" class="o_row">
-                                <label for="value_amount" attrs="{'invisible':[('value','=', 'balance')]}"/>
-                                <field name="value_amount" class="oe_inline"/>
-                                <span class="o_form_label oe_inline" attrs="{'invisible':[('value','!=','percent')]}">%</span>
-                            </div>
-                        </group>
-                    </group>
-
-                    <field name="sequence" invisible="1"/>
-
-                    <h2>Due Date Computation</h2>
-                    <div colspan="2">
-                        <label for="days" string="Due" attrs="{'invisible': [('option','!=', 'day_after_invoice_date')]}"/>
-                        <label for="days" string="Due the" attrs="{'invisible': [('option','=', 'day_after_invoice_date')]}"/>
-                        <field name="days" class="oe_inline"/>
-                        <label for="option" string=""/> <!--Empty label to force space between elements-->
-                        <field name="option" class="oe_inline"/>
-                    </div>
-                    <div colspan="2" attrs="{'invisible': [('option','!=', 'day_after_invoice_date')]}">
-                        <label for="day_of_the_month" string="On the"/>
-                        <field name="day_of_the_month" class="oe_inline"/>
-                        <span class="o_form_label">of the month</span>
-                    </div>
-                </form>
-            </field>
-        </record>
-
         <record id="view_payment_term_search" model="ir.ui.view">
             <field name="name">account.payment.term.search</field>
             <field name="model">account.payment.term</field>
@@ -87,21 +33,48 @@
             <field name="arch" type="xml">
                 <form string="Payment Terms">
                     <sheet>
+                        <field name="active" invisible="1"/>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <group>
                             <group>
-                                <field name="active" invisible="1"/>
                                 <field name="name"/>
+                                <field name="display_on_invoice"/>
+                            </group>
+                            <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                             </group>
                         </group>
-                        <label for="note"/>
                         <field name="note" placeholder="Payment term explanation for the customer..."/>
                         <separator string="Terms"/>
                         <p class="text-muted">
                             The last line's computation type should be "Balance" to ensure that the whole amount will be allocated.
                         </p>
-                        <field name="line_ids"/>
+                        <field name="line_ids">
+                            <tree string="Payment Terms" editable="top" no_open="True">
+                                <field name="value" string="Due Type"/>
+                                <field name="value_amount" attrs="{'invisible': [('value', '=', 'balance')]}" digits="[2, 2]"/>
+                                <field name="months"/>
+                                <field name="days"/>
+                                <field name="end_month" widget="boolean_toggle"/>
+                                <field name="days_after" attrs="{'invisible': [('end_month','=', False)]}"/>
+                            </tree>
+                        </field>
+
+                        <div class="oe_edit_only">
+                            <separator string="Example"/>
+                            <field name="example_invalid" invisible="1"/>
+                            <div attrs="{'invisible': [('example_invalid', '=', False)]}">
+                                The Payment Term must have one Balance line.
+                            </div>
+                            <div attrs="{'invisible': [('example_invalid', '=', True)]}" class="d-flex" >
+                                For any invoice of
+                                <span class="mx-1"/> <field name="example_amount" /> <span class="mx-1"/>
+                                dated
+                                <span class="mx-1"/> <field name="example_date" class="oe_inline" style="color: #704A66; font-weight: bold"/>,
+                                the due date(s) and amount(s) will be:
+                            </div>
+                            <field name="example_preview" attrs="{'invisible': [('example_invalid', '=', True)]}"/>
+                        </div>
                     </sheet>
                 </form>
             </field>
