@@ -1,7 +1,46 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.fields import Command
+from odoo.tests import TransactionCase
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.base.tests.common import TransactionCase
+from odoo.addons.product.tests.common import ProductCommon
+from odoo.addons.sales_team.tests.common import SalesTeamCommon
+
+
+class SaleCommon(
+    ProductCommon, # BaseCommon, UomCommon
+    SalesTeamCommon,
+):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Not defined in product common because only used in sale
+        cls.group_discount_per_so_line = cls.env.ref('product.group_discount_per_so_line')
+
+        cls.empty_order = cls.env['sale.order'].create({
+            'partner_id': cls.partner.id,
+        })
+        cls.sale_order = cls.env['sale.order'].create({
+            'partner_id': cls.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': cls.consumable_product.id,
+                    'product_uom_qty': 5.0,
+                }),
+                Command.create({
+                    'product_id': cls.service_product.id,
+                    'product_uom_qty': 12.5,
+                })
+            ]
+        })
+
+    @classmethod
+    def _enable_pricelists(cls):
+        cls.env.user.groups_id += cls.env.ref('product.group_product_pricelist')
 
 
 class TestSaleCommonBase(TransactionCase):
