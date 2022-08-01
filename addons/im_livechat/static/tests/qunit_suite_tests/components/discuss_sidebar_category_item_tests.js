@@ -26,11 +26,8 @@ QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous
     await openDiscuss();
 
     const livechatItem = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        .o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]
     `);
     assert.containsOnce(
@@ -64,11 +61,8 @@ QUnit.test('livechat - avatar: should have a partner profile picture for a livec
     await openDiscuss();
 
     const livechatItem = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        .o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]
     `);
     assert.containsOnce(

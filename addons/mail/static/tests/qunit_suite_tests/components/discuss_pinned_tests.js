@@ -24,11 +24,8 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`,
         "should have the only channel of which user is member in discuss sidebar"
     );
@@ -42,16 +39,11 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
     const { click, messaging, openDiscuss } = await start();
     await openDiscuss();
 
-    const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    await click(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        threadGeneral.localId
-    }"]`);
+    const channelGeneral = messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 });
+    await click(`.o_DiscussSidebarCategoryItem[data-channel-local-id="${ channelGeneral.localId }"]`);
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_Discuss_thread[data-thread-local-id="${channelGeneral.thread.localId}"]`,
         "The channel #General is displayed in discuss"
     );
 });
@@ -79,12 +71,9 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
     });
     await openDiscuss();
 
-    const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    await click(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        threadGeneral.localId
+    const channelGeneral = messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 });
+    await click(`.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+        channelGeneral.localId
     }"]`);
     assert.verifySteps([], "action_unfollow is not called yet");
 
@@ -97,7 +86,7 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
     );
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${channelGeneral.localId}"]`,
         "The channel must have been removed from discuss sidebar"
     );
     assert.containsOnce(
@@ -114,10 +103,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, messaging, openDiscuss } = await start();
     await openDiscuss();
-    const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
+    const channelGeneral = messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 });
 
     assert.containsOnce(
         document.body,
@@ -126,16 +112,16 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${channelGeneral.localId}"]`,
         "1 channel is present in discuss sidebar and it is 'general'"
     );
 
-    await click(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        threadGeneral.localId
+    await click(`.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+        channelGeneral.localId
     }"]`);
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_Discuss_thread[data-thread-local-id="${channelGeneral.thread.localId}"]`,
         "The channel #General is opened in discuss"
     );
 
@@ -157,7 +143,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     );
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${channelGeneral.localId}"]`,
         "The channel must have been removed from discuss sidebar"
     );
 });
@@ -180,13 +166,10 @@ QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily p
     });
     const { messaging, openDiscuss } = await start();
     await openDiscuss();
-    const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
+    const channelGeneral = messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 });
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${channelGeneral.localId}"]`,
         "The channel #General is in discuss sidebar"
     );
     assert.containsNone(

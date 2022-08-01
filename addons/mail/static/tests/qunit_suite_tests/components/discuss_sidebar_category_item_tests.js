@@ -22,11 +22,8 @@ QUnit.test('channel - avatar: should have correct avatar', async function (asser
     await openDiscuss();
 
     const channelItem = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        .o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]
     `);
     assert.strictEqual(
@@ -51,14 +48,11 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
     const { messaging, openDiscuss } = await start();
     await openDiscuss();
 
-    const channelLocalId = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    }).localId;
+    const channelLocalId = messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId;
 
     assert.strictEqual(
         document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
+        .o_DiscussSidebarCategoryItem[data-channel-local-id="${
             channelLocalId
         }"] .o_DiscussSidebarCategoryItem_image`).dataset.src,
         `/web/image/mail.channel/${mailChannelId1}/avatar_128?unique=101010`,
@@ -76,7 +70,7 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
 
     assert.strictEqual(
         document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
+        .o_DiscussSidebarCategoryItem[data-channel-local-id="${
             channelLocalId
         }"] .o_DiscussSidebarCategoryItem_image`).dataset.src,
         `/web/image/mail.channel/${mailChannelId1}/avatar_128?unique=${newCacheKey}`,
@@ -100,11 +94,8 @@ QUnit.test('chat - avatar: should have correct avatar', async function (assert) 
     await openDiscuss();
 
     const chatItem = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        .o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]
     `);
     assert.strictEqual(
@@ -145,14 +136,8 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
     const { click, messaging, openDiscuss } = await start();
     await openDiscuss();
 
-    const chat1 = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    const chat2 = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId2,
-        model: 'mail.channel',
-    });
+    const chat1 = messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 });
+    const chat2 = messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId2 });
     const initialChats = document.querySelectorAll('.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem');
     assert.strictEqual(
         initialChats.length,
@@ -160,12 +145,12 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
         "should have 2 livechat items"
     );
     assert.strictEqual(
-        initialChats[0].dataset.threadLocalId,
+        initialChats[0].dataset.channelLocalId,
         chat2.localId,
         "first livechat should be the one with the more recent last activity time"
     );
     assert.strictEqual(
-        initialChats[1].dataset.threadLocalId,
+        initialChats[1].dataset.channelLocalId,
         chat1.localId,
         "second chat should be the one with the less recent last activity time"
     );
@@ -181,12 +166,12 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
         "should have 2 chat items"
     );
     assert.strictEqual(
-        newChats[0].dataset.threadLocalId,
+        newChats[0].dataset.channelLocalId,
         chat1.localId,
         "first chat should be the one with the more recent last activity time"
     );
     assert.strictEqual(
-        newChats[1].dataset.threadLocalId,
+        newChats[1].dataset.channelLocalId,
         chat2.localId,
         "second chat should be the one with the less recent last activity time"
     );

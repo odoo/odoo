@@ -204,11 +204,8 @@ QUnit.test('channel - states: close manually by clicking the title', async funct
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`,
         "Category channel should be closed and the content should be invisible"
     );
@@ -229,11 +226,8 @@ QUnit.test('channel - states: open manually by clicking the title', async functi
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`,
         "Category channel should be open and the content should be visible"
     );
@@ -333,11 +327,8 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`,
         "Category channel should be closed and the content should be invisible"
     );
@@ -363,11 +354,8 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`,
         "Category channel should be open and the content should be visible"
     );
@@ -379,24 +367,17 @@ QUnit.test('channel - states: the active category item should be visble even if 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, messaging, openDiscuss } = await start();
+    const channelLocalId = messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId;
     await openDiscuss();
 
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`
     );
 
-    const channel = document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        messaging.models['Thread'].findFromIdentifyingData({
-            id: mailChannelId1,
-            model: 'mail.channel',
-        }).localId
-    }"]`);
+    const channel = document.querySelector(`.o_DiscussSidebarCategoryItem[data-channel-local-id="${channelLocalId}"]`);
     await afterNextRender(() => {
         channel.click();
     });
@@ -405,12 +386,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${channelLocalId}"]`,
         'the active channel item should remain even if the category is folded'
     );
 
@@ -419,12 +395,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
     }"]`);
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${channelLocalId}"]`,
         "inactive item should be invisible if the category is folded"
     );
 });
@@ -583,11 +554,8 @@ QUnit.test('chat - states: close manually by clicking the title', async function
     await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`,
         "Category chat should be closed and the content should be invisible"
     );
@@ -610,11 +578,8 @@ QUnit.test('chat - states: open manually by clicking the title', async function 
     await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`,
         "Category chat should be closed and the content should be invisible"
     );
@@ -716,11 +681,8 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`,
         "Category chat should be open and the content should be visible"
     );
@@ -749,11 +711,8 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`,
         "Category chat should be closed and the content should be invisible"
     );
@@ -768,24 +727,17 @@ QUnit.test('chat - states: the active category item should be visble even if the
         public: 'private',
     });
     const { click, messaging, openDiscuss } = await start();
+    const channelLocalId = messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId;
     await openDiscuss();
 
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`
     );
 
-    const chat = document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        messaging.models['Thread'].findFromIdentifyingData({
-            id: mailChannelId1,
-            model: 'mail.channel',
-        }).localId
-    }"]`);
+    const chat = document.querySelector(`.o_DiscussSidebarCategoryItem[data-channel-local-id="${channelLocalId}"]`);
     await afterNextRender(() => {
         chat.click();
     });
@@ -794,12 +746,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
     await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${channelLocalId}"]`,
         'the active chat item should remain even if the category is folded'
     );
 
@@ -808,12 +755,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
     }"]`);
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-local-id="${channelLocalId}"]`,
         "inactive item should be invisible if the category is folded"
     );
 });
