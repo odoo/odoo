@@ -2758,6 +2758,72 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "groups can not be sorted on a different field than the first field of the groupBy - 1",
+        async function (assert) {
+            assert.expect(1);
+
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: '<tree default_order="foo"><field name="foo"/><field name="bar"/></tree>',
+                mockRPC(route, args) {
+                    if (args.method === "web_read_group") {
+                        assert.strictEqual(args.kwargs.orderby, "", "should not have an orderBy");
+                    }
+                },
+                groupBy: ["bar"],
+            });
+        }
+    );
+
+    QUnit.test(
+        "groups can not be sorted on a different field than the first field of the groupBy - 2",
+        async function (assert) {
+            assert.expect(1);
+
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: '<tree default_order="foo"><field name="foo"/><field name="bar"/></tree>',
+                mockRPC(route, args) {
+                    if (args.method === "web_read_group") {
+                        assert.strictEqual(args.kwargs.orderby, "", "should not have an orderBy");
+                    }
+                },
+                groupBy: ["bar", "foo"],
+            });
+        }
+    );
+
+    QUnit.test("groups can be sorted on the first field of the groupBy", async function (assert) {
+        assert.expect(3);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree default_order="bar desc"><field name="foo"/><field name="bar"/></tree>',
+            mockRPC(route, args) {
+                if (args.method === "web_read_group") {
+                    assert.strictEqual(args.kwargs.orderby, "bar DESC", "should have an orderBy");
+                }
+            },
+            groupBy: ["bar"],
+        });
+
+        assert.strictEqual(
+            document.querySelector(".o_group_header:first-child").textContent.trim(),
+            "Yes (3)"
+        );
+        assert.strictEqual(
+            document.querySelector(".o_group_header:last-child").textContent.trim(),
+            "No (1)"
+        );
+    });
+
     QUnit.test("groups can be sorted on aggregates", async function (assert) {
         await makeView({
             type: "list",

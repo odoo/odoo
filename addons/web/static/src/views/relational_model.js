@@ -2208,8 +2208,11 @@ export class DynamicGroupList extends DynamicList {
     // ------------------------------------------------------------------------
 
     async _loadGroups() {
-        const orderby = orderByToString(this.orderBy);
         const firstGroupByName = this.firstGroupBy.split(":")[0];
+        const _orderBy = this.orderBy.filter(
+            (o) => o.name === firstGroupByName || this.fields[o.name].group_operator !== undefined
+        );
+        const orderby = orderByToString(_orderBy);
         const { groups, length } = await this.model.orm.webReadGroup(
             this.resModel,
             this.domain,
