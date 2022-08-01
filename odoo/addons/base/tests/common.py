@@ -7,6 +7,74 @@ from unittest.mock import patch
 from odoo.tests.common import TransactionCase, HttpCase
 from odoo import Command
 
+DISABLED_MAIL_CONTEXT = {
+    'tracking_disable': True,
+    'mail_create_nolog': True,
+    'mail_create_nosubscribe': True,
+    'mail_notrack': True,
+    'no_reset_password': True,
+}
+
+
+class BaseCommon(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Enforce the use of USD as main currency unless modified in inherited class(es)
+        cls._use_currency('USD')
+
+        # Mail logic won't be tested by default in other modules.
+        # Mail API overrides should be tested with dedicated tests on purpose
+        # Hack to use with_context and avoid manual context dict modification
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env
+
+        cls.partner = cls.env['res.partner'].create({
+            'name': 'Test Partner',
+        })
+
+    @classmethod
+    def _use_currency(cls, currency_code):
+        # Enforce constant currency
+        currency = cls._enable_currency(currency_code)
+        if not cls.env.company.currency_id == currency:
+            cls.env.company.currency_id = currency
+
+    @classmethod
+    def _enable_currency(cls, currency_code):
+        currency = cls.env['res.currency'].with_context(active_test=False).search(
+            [('name', '=', currency_code.upper())]
+        )
+        currency.action_unarchive()
+        return currency
+
+
+class BaseUsersCommon(BaseCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.group_portal = cls.env.ref('base.group_portal')
+        cls.group_user = cls.env.ref('base.group_user')
+
+        cls.user_portal = cls.env['res.users'].create({
+            'name': 'Test Portal User',
+            'login': 'portal_user',
+            'password': 'portal_user',
+            'email': 'portal_user@gladys.portal',
+            'groups_id': [Command.set([cls.group_portal.id])],
+        })
+
+        cls.user_internal = cls.env['res.users'].create({
+            'name': 'Test Internal User',
+            'login': 'internal_user',
+            'password': 'internal_user',
+            'email': 'mark.brown23@example.com',
+            'groups_id': [Command.set([cls.group_user.id])],
+        })
+
 
 class TransactionCaseWithUserDemo(TransactionCase):
 
