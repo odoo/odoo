@@ -1759,6 +1759,10 @@ export class DynamicRecordList extends DynamicList {
             parentActiveFields: this.activeFields,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
             defaultContext: this.defaultContext,
+            rawContext: {
+                parent: this.rawContext,
+                make: () => this.context,
+            },
             ...params,
         });
         if (this.model.useSampleModel) {
