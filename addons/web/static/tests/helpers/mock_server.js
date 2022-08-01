@@ -8,9 +8,14 @@ import { intersection } from "@web/core/utils/arrays";
 import { registry } from "@web/core/registry";
 import { makeFakeRPCService, makeMockFetch } from "./mock_services";
 import { patchWithCleanup } from "./utils";
-import { parseDateTime } from "@web/core/l10n/dates";
+import {
+    deserializeDate,
+    deserializeDateTime,
+    parseDateTime,
+    serializeDate,
+    serializeDateTime,
+} from "@web/core/l10n/dates";
 
-const { DateTime } = luxon;
 const serviceRegistry = registry.category("services");
 
 const domParser = new DOMParser();
@@ -879,7 +884,7 @@ export class MockServer {
             const [fieldName, aggregateFunction = "month"] = groupByField.split(":");
             const { type } = fields[fieldName];
             if (type === "date") {
-                const date = DateTime.fromSQL(val);
+                const date = deserializeDate(val).setZone("default");
                 if (aggregateFunction === "day") {
                     return date.toFormat("yyyy-MM-dd");
                 } else if (aggregateFunction === "week") {
@@ -892,7 +897,7 @@ export class MockServer {
                     return date.toFormat("MMMM yyyy");
                 }
             } else if (type === "datetime") {
-                const date = DateTime.fromSQL(val);
+                const date = deserializeDateTime(val).setZone("default");
                 if (aggregateFunction === "hour") {
                     return date.toFormat("HH:00 dd MMM");
                 } else if (aggregateFunction === "day") {
@@ -987,48 +992,64 @@ export class MockServer {
                         switch (dateRange) {
                             case "hour": {
                                 try {
-                                    startDate = parseDateTime(value, { format: "HH dd MMM" });
+                                    startDate = parseDateTime(value, {
+                                        format: "HH dd MMM",
+                                        timezone: type !== "date",
+                                    });
                                 } catch {
-                                    startDate = parseDateTime(value, { format: "HH:00 dd MMM" });
+                                    startDate = parseDateTime(value, {
+                                        format: "HH:00 dd MMM",
+                                        timezone: type !== "date",
+                                    });
                                 }
                                 endDate = startDate.plus({ hours: 1 });
                                 break;
                             }
                             case "day": {
-                                startDate = parseDateTime(value, { format: "yyyy-MM-dd" });
+                                startDate = parseDateTime(value, {
+                                    format: "yyyy-MM-dd",
+                                    timezone: type !== "date",
+                                });
                                 endDate = startDate.plus({ days: 1 });
                                 break;
                             }
                             case "week": {
-                                startDate = parseDateTime(value, { format: "WW kkkk" });
+                                startDate = parseDateTime(value, {
+                                    format: "WW kkkk",
+                                    timezone: type !== "date",
+                                });
                                 endDate = startDate.plus({ weeks: 1 });
                                 break;
                             }
                             case "quarter": {
-                                startDate = parseDateTime(value, { format: "q yyyy" });
+                                startDate = parseDateTime(value, {
+                                    format: "q yyyy",
+                                    timezone: type !== "date",
+                                });
                                 endDate = startDate.plus({ quarters: 1 });
                                 break;
                             }
                             case "year": {
-                                startDate = parseDateTime(value, { format: "y" });
+                                startDate = parseDateTime(value, {
+                                    format: "y",
+                                    timezone: type !== "date",
+                                });
                                 endDate = startDate.plus({ years: 1 });
                                 break;
                             }
                             case "month":
                             default: {
-                                startDate = parseDateTime(value, { format: "MMMM yyyy" });
+                                startDate = parseDateTime(value, {
+                                    format: "MMMM yyyy",
+                                    timezone: type !== "date",
+                                });
                                 endDate = startDate.plus({ months: 1 });
                                 break;
                             }
                         }
-                        const from =
-                            type === "date"
-                                ? startDate.toFormat("yyyy-MM-dd")
-                                : startDate.toFormat("yyyy-MM-dd HH:mm:ss");
-                        const to =
-                            type === "date"
-                                ? endDate.toFormat("yyyy-MM-dd")
-                                : endDate.toFormat("yyyy-MM-dd HH:mm:ss");
+                        const serialize = type === "date" ? serializeDate : serializeDateTime;
+                        const from = serialize(startDate);
+                        const to = serialize(endDate);
                         group.__range[gbField] = { from, to };
                         group.__domain = [
                             [fieldName, ">=", from],

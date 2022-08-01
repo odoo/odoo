@@ -4333,7 +4333,7 @@ QUnit.module("Views", (hooks) => {
                         if ("date" in args[1]) {
                             assert.deepEqual(args[1], { date: "2017-02-28" });
                         } else if ("datetime" in args[1]) {
-                            assert.deepEqual(args[1], { datetime: "2017-02-28 23:59:59" });
+                            assert.deepEqual(args[1], { datetime: "2017-02-28 22:59:59" });
                         }
                     }
                 },
@@ -6923,10 +6923,8 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
         });
 
-        patchWithCleanup(luxon.Settings, { defaultLocale: "en" });
-
         assert.strictEqual(getCard(0).querySelector(".date").innerText, "01/25/2017");
-        assert.strictEqual(getCard(1).querySelector(".datetime").innerText, "12/12/2016 10:55:05");
+        assert.strictEqual(getCard(1).querySelector(".datetime").innerText, "12/12/2016 11:55:05");
     });
 
     QUnit.test("rendering date and datetime (raw value)", async (assert) => {
@@ -6949,8 +6947,6 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
         });
-
-        patchWithCleanup(luxon.Settings, { defaultLocale: "en" });
 
         assert.ok(getCard(0).querySelector(".date").innerText.startsWith("Wed Jan 25 2017"));
         assert.ok(getCard(1).querySelector(".datetime").innerText.startsWith("Mon Dec 12 2016"));
