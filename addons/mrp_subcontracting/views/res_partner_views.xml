@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="stock.view_partner_stock_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='property_stock_supplier']" position="after">
-                <field name="property_stock_subcontractor"/>
+                <field name="property_stock_subcontractor" context="{'default_is_subcontracting_location': True}"/>
                 <separator/>
             </xpath>
         </field>
