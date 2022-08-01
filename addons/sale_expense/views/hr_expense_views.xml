@@ -7,7 +7,22 @@
         <field name="priority">30</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='analytic_account_id']" position="before">
-                <field name="sale_order_id" attrs="{'invisible': [('can_be_reinvoiced', '=', False)], 'readonly': [('sheet_is_editable', '=', False)]}" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}" context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}" widget="sale_order_many2one"/>
+                <field name="sale_order_id" groups="!sales_team.group_sale_salesman,!account.group_account_manager"
+                    attrs="{'invisible': [('can_be_reinvoiced', '=', False)], 'readonly': [('sheet_is_editable', '=', False)]}"
+                    options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"
+                    context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"
+                    widget="sale_order_many2one"/>
+                <field name="sale_order_id" groups="sales_team.group_sale_salesman,!account.group_account_manager"
+                    attrs="{'invisible': [('can_be_reinvoiced', '=', False)], 'readonly': [('sheet_is_editable', '=', False)]}"
+                    options="{'no_create_edit': True, 'no_create': True}"
+                    context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"
+                    widget="many2one"/>
+                <field name="sale_order_id" groups="account.group_account_manager"
+                    widget="many2one"
+                    attrs="{'invisible':[['can_be_reinvoiced','=',False]],'readonly':['|', ['state','in',['done']], ['sheet_is_editable', '=', False]]}"
+                    options="{'no_create_edit': True, 'no_create': True, 'no_open': True}"
+                    context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}"
+                    />
                 <field name="can_be_reinvoiced" invisible="1"/>
             </xpath>
         </field>
@@ -22,30 +37,6 @@
                 <field name="can_be_reinvoiced" invisible="1" readonly="1"/>
             </xpath>
         </field>
-    </record>
-    <record id="hr_expense_form_view_inherit_account_manager" model="ir.ui.view">
-        <field name="name">hr.expense.form.inherit.sale.expense</field>
-        <field name="model">hr.expense</field>
-        <field name="inherit_id" ref="sale_expense.hr_expense_form_view_inherit_sale_expense"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='sale_order_id']" position="attributes">
-                <attribute name="attrs">{'invisible':[['can_be_reinvoiced','=',False]],'readonly':['|', ['state','in',['done']], ['sheet_is_editable', '=', False]]}</attribute>
-                <attribute name="widget">many2one</attribute>
-            </xpath>
-        </field>
-        <field name="groups_id" eval="[(6, 0, [ref('account.group_account_manager')])]"/>
-    </record>
-    <record id="hr_expense_form_view_inherit_saleman" model="ir.ui.view">
-        <field name="name">hr.expense.form.inherit.saleman</field>
-        <field name="model">hr.expense</field>
-        <field name="inherit_id" ref="sale_expense.hr_expense_form_view_inherit_sale_expense"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='sale_order_id']" position="attributes">
-                <attribute name="options">{'no_create_edit': True, 'no_create': True}</attribute>
-                <attribute name="widget">many2one</attribute>
-            </xpath>
-        </field>
-        <field name="groups_id" eval="[(6, 0, [ref('sales_team.group_sale_salesman')])]"/>
     </record>
 
     <record id="hr_expense_split_view_inherit_sale_expense" model="ir.ui.view">
