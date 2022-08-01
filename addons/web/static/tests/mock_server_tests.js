@@ -394,6 +394,36 @@ QUnit.module("MockServer", (hooks) => {
             result.map((x) => x.date_count),
             [1, 1, 3, 1]
         );
+        assert.deepEqual(
+            result.map((x) => x.__domain),
+            [
+                [
+                    ["date", ">=", "2016-04-01"],
+                    ["date", "<", "2016-05-01"],
+                ],
+                [
+                    ["date", ">=", "2016-10-01"],
+                    ["date", "<", "2016-11-01"],
+                ],
+                [
+                    ["date", ">=", "2016-12-01"],
+                    ["date", "<", "2017-01-01"],
+                ],
+                [
+                    ["date", ">=", "2019-12-01"],
+                    ["date", "<", "2020-01-01"],
+                ],
+            ]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__range["date"]),
+            [
+                { from: "2016-04-01", to: "2016-05-01" },
+                { from: "2016-10-01", to: "2016-11-01" },
+                { from: "2016-12-01", to: "2017-01-01" },
+                { from: "2019-12-01", to: "2020-01-01" },
+            ]
+        );
 
         result = await server.performRPC("", {
             model: "bar",
@@ -412,6 +442,41 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(
             result.map((x) => x.date_count),
             [1, 1, 1, 2, 1]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__domain),
+            [
+                [
+                    ["date", ">=", "2016-04-11"],
+                    ["date", "<", "2016-04-12"],
+                ],
+                [
+                    ["date", ">=", "2016-10-26"],
+                    ["date", "<", "2016-10-27"],
+                ],
+                [
+                    ["date", ">=", "2016-12-14"],
+                    ["date", "<", "2016-12-15"],
+                ],
+                [
+                    ["date", ">=", "2016-12-15"],
+                    ["date", "<", "2016-12-16"],
+                ],
+                [
+                    ["date", ">=", "2019-12-30"],
+                    ["date", "<", "2019-12-31"],
+                ],
+            ]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__range["date:day"]),
+            [
+                { from: "2016-04-11", to: "2016-04-12" },
+                { from: "2016-10-26", to: "2016-10-27" },
+                { from: "2016-12-14", to: "2016-12-15" },
+                { from: "2016-12-15", to: "2016-12-16" },
+                { from: "2019-12-30", to: "2019-12-31" },
+            ]
         );
 
         result = await server.performRPC("", {
@@ -432,6 +497,36 @@ QUnit.module("MockServer", (hooks) => {
             result.map((x) => x.date_count),
             [1, 1, 3, 1]
         );
+        assert.deepEqual(
+            result.map((x) => x.__domain),
+            [
+                [
+                    ["date", ">=", "2016-04-11"],
+                    ["date", "<", "2016-04-18"],
+                ],
+                [
+                    ["date", ">=", "2016-10-24"],
+                    ["date", "<", "2016-10-31"],
+                ],
+                [
+                    ["date", ">=", "2016-12-12"],
+                    ["date", "<", "2016-12-19"],
+                ],
+                [
+                    ["date", ">=", "2019-12-30"],
+                    ["date", "<", "2020-01-06"],
+                ],
+            ]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__range["date:week"]),
+            [
+                { from: "2016-04-11", to: "2016-04-18" },
+                { from: "2016-10-24", to: "2016-10-31" },
+                { from: "2016-12-12", to: "2016-12-19" },
+                { from: "2019-12-30", to: "2020-01-06" },
+            ]
+        );
 
         result = await server.performRPC("", {
             model: "bar",
@@ -451,6 +546,31 @@ QUnit.module("MockServer", (hooks) => {
             result.map((x) => x.date_count),
             [1, 4, 1]
         );
+        assert.deepEqual(
+            result.map((x) => x.__domain),
+            [
+                [
+                    ["date", ">=", "2016-04-01"],
+                    ["date", "<", "2016-07-01"],
+                ],
+                [
+                    ["date", ">=", "2016-10-01"],
+                    ["date", "<", "2017-01-01"],
+                ],
+                [
+                    ["date", ">=", "2019-10-01"],
+                    ["date", "<", "2020-01-01"],
+                ],
+            ]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__range["date:quarter"]),
+            [
+                { from: "2016-04-01", to: "2016-07-01" },
+                { from: "2016-10-01", to: "2017-01-01" },
+                { from: "2019-10-01", to: "2020-01-01" },
+            ]
+        );
 
         result = await server.performRPC("", {
             model: "bar",
@@ -469,6 +589,26 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(
             result.map((x) => x.date_count),
             [5, 1]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__domain),
+            [
+                [
+                    ["date", ">=", "2016-01-01"],
+                    ["date", "<", "2017-01-01"],
+                ],
+                [
+                    ["date", ">=", "2019-01-01"],
+                    ["date", "<", "2020-01-01"],
+                ],
+            ]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__range["date:year"]),
+            [
+                { from: "2016-01-01", to: "2017-01-01" },
+                { from: "2019-01-01", to: "2020-01-01" },
+            ]
         );
     });
 
@@ -492,6 +632,36 @@ QUnit.module("MockServer", (hooks) => {
             result.map((x) => x.datetime_count),
             [1, 1, 3, 1]
         );
+        assert.deepEqual(
+            result.map((x) => x.__domain),
+            [
+                [
+                    ["datetime", ">=", "2016-03-31 23:00:00"],
+                    ["datetime", "<", "2016-04-30 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2016-09-30 23:00:00"],
+                    ["datetime", "<", "2016-10-31 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2016-11-30 23:00:00"],
+                    ["datetime", "<", "2016-12-31 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2019-11-30 23:00:00"],
+                    ["datetime", "<", "2019-12-31 23:00:00"],
+                ],
+            ]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__range["datetime"]),
+            [
+                { from: "2016-03-31 23:00:00", to: "2016-04-30 23:00:00" },
+                { from: "2016-09-30 23:00:00", to: "2016-10-31 23:00:00" },
+                { from: "2016-11-30 23:00:00", to: "2016-12-31 23:00:00" },
+                { from: "2019-11-30 23:00:00", to: "2019-12-31 23:00:00" },
+            ]
+        );
 
         result = await server.performRPC("", {
             model: "bar",
@@ -505,11 +675,46 @@ QUnit.module("MockServer", (hooks) => {
         });
         assert.deepEqual(
             result.map((x) => x["datetime:hour"]),
-            ["12:00 11 Apr", "12:00 26 Oct", "12:00 14 Dec", "12:00 15 Dec", "12:00 30 Dec"]
+            ["13:00 11 Apr", "13:00 26 Oct", "13:00 14 Dec", "13:00 15 Dec", "13:00 30 Dec"]
         );
         assert.deepEqual(
             result.map((x) => x.datetime_count),
             [1, 1, 1, 2, 1]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__domain),
+            [
+                [
+                    ["datetime", ">=", "2022-04-11 12:00:00"],
+                    ["datetime", "<", "2022-04-11 13:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2022-10-26 12:00:00"],
+                    ["datetime", "<", "2022-10-26 13:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2022-12-14 12:00:00"],
+                    ["datetime", "<", "2022-12-14 13:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2022-12-15 12:00:00"],
+                    ["datetime", "<", "2022-12-15 13:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2022-12-30 12:00:00"],
+                    ["datetime", "<", "2022-12-30 13:00:00"],
+                ],
+            ]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__range["datetime:hour"]),
+            [
+                { from: "2022-04-11 12:00:00", to: "2022-04-11 13:00:00" },
+                { from: "2022-10-26 12:00:00", to: "2022-10-26 13:00:00" },
+                { from: "2022-12-14 12:00:00", to: "2022-12-14 13:00:00" },
+                { from: "2022-12-15 12:00:00", to: "2022-12-15 13:00:00" },
+                { from: "2022-12-30 12:00:00", to: "2022-12-30 13:00:00" },
+            ]
         );
 
         result = await server.performRPC("", {
@@ -530,6 +735,41 @@ QUnit.module("MockServer", (hooks) => {
             result.map((x) => x.datetime_count),
             [1, 1, 1, 2, 1]
         );
+        assert.deepEqual(
+            result.map((x) => x.__domain),
+            [
+                [
+                    ["datetime", ">=", "2016-04-10 23:00:00"],
+                    ["datetime", "<", "2016-04-11 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2016-10-25 23:00:00"],
+                    ["datetime", "<", "2016-10-26 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2016-12-13 23:00:00"],
+                    ["datetime", "<", "2016-12-14 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2016-12-14 23:00:00"],
+                    ["datetime", "<", "2016-12-15 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2019-12-29 23:00:00"],
+                    ["datetime", "<", "2019-12-30 23:00:00"],
+                ],
+            ]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__range["datetime:day"]),
+            [
+                { from: "2016-04-10 23:00:00", to: "2016-04-11 23:00:00" },
+                { from: "2016-10-25 23:00:00", to: "2016-10-26 23:00:00" },
+                { from: "2016-12-13 23:00:00", to: "2016-12-14 23:00:00" },
+                { from: "2016-12-14 23:00:00", to: "2016-12-15 23:00:00" },
+                { from: "2019-12-29 23:00:00", to: "2019-12-30 23:00:00" },
+            ]
+        );
 
         result = await server.performRPC("", {
             model: "bar",
@@ -548,6 +788,36 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(
             result.map((x) => x.datetime_count),
             [1, 1, 3, 1]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__domain),
+            [
+                [
+                    ["datetime", ">=", "2016-04-10 23:00:00"],
+                    ["datetime", "<", "2016-04-17 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2016-10-23 23:00:00"],
+                    ["datetime", "<", "2016-10-30 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2016-12-11 23:00:00"],
+                    ["datetime", "<", "2016-12-18 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2019-12-29 23:00:00"],
+                    ["datetime", "<", "2020-01-05 23:00:00"],
+                ],
+            ]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__range["datetime:week"]),
+            [
+                { from: "2016-04-10 23:00:00", to: "2016-04-17 23:00:00" },
+                { from: "2016-10-23 23:00:00", to: "2016-10-30 23:00:00" },
+                { from: "2016-12-11 23:00:00", to: "2016-12-18 23:00:00" },
+                { from: "2019-12-29 23:00:00", to: "2020-01-05 23:00:00" },
+            ]
         );
 
         result = await server.performRPC("", {
@@ -568,6 +838,31 @@ QUnit.module("MockServer", (hooks) => {
             result.map((x) => x.datetime_count),
             [1, 4, 1]
         );
+        assert.deepEqual(
+            result.map((x) => x.__domain),
+            [
+                [
+                    ["datetime", ">=", "2016-03-31 23:00:00"],
+                    ["datetime", "<", "2016-06-30 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2016-09-30 23:00:00"],
+                    ["datetime", "<", "2016-12-31 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2019-09-30 23:00:00"],
+                    ["datetime", "<", "2019-12-31 23:00:00"],
+                ],
+            ]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__range["datetime:quarter"]),
+            [
+                { from: "2016-03-31 23:00:00", to: "2016-06-30 23:00:00" },
+                { from: "2016-09-30 23:00:00", to: "2016-12-31 23:00:00" },
+                { from: "2019-09-30 23:00:00", to: "2019-12-31 23:00:00" },
+            ]
+        );
 
         result = await server.performRPC("", {
             model: "bar",
@@ -586,6 +881,26 @@ QUnit.module("MockServer", (hooks) => {
         assert.deepEqual(
             result.map((x) => x.datetime_count),
             [5, 1]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__domain),
+            [
+                [
+                    ["datetime", ">=", "2015-12-31 23:00:00"],
+                    ["datetime", "<", "2016-12-31 23:00:00"],
+                ],
+                [
+                    ["datetime", ">=", "2018-12-31 23:00:00"],
+                    ["datetime", "<", "2019-12-31 23:00:00"],
+                ],
+            ]
+        );
+        assert.deepEqual(
+            result.map((x) => x.__range["datetime:year"]),
+            [
+                { from: "2015-12-31 23:00:00", to: "2016-12-31 23:00:00" },
+                { from: "2018-12-31 23:00:00", to: "2019-12-31 23:00:00" },
+            ]
         );
     });
 
