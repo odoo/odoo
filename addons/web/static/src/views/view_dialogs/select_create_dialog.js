@@ -25,8 +25,7 @@ export class SelectCreateDialog extends Component {
     }
 
     get viewProps() {
-        let id;
-        const viewProps = {
+        return {
             ...this.baseViewProps,
             context: this.props.context,
             domain: this.props.domain,
@@ -36,14 +35,6 @@ export class SelectCreateDialog extends Component {
             searchViewId: this.props.searchViewId,
             type: this.env.isSmall ? "kanban" : "list",
         };
-        const context = this.props.context || {};
-        if (viewProps.type === "kanban") {
-            viewProps.forceGlobalClick = true;
-            id = context["kanban_view_ref"];
-        } else {
-            id = context["list_view_ref"] || context["tree_view_ref"];
-        }
-        return { ...viewProps, viewId: id || false };
     }
 
     async select(resIds) {

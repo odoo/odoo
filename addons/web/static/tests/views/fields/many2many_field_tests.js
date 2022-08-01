@@ -5,6 +5,7 @@ import {
     click,
     clickEdit,
     clickSave,
+    clickOpenedDropdownItem,
     editInput,
     editSelect,
     getFixture,
@@ -13,6 +14,8 @@ import {
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { editSearch, validateSearch } from "@web/../tests/search/helpers";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 let target;
 let serverData;
@@ -1820,5 +1823,50 @@ QUnit.module("Fields", (hooks) => {
         });
         await click(target.querySelector(".oe_kanban_global_click"));
         assert.verifySteps(["doActionButton type object name a1"]);
+    });
+
+    QUnit.test("select create with _view_ref as text", async (assert) => {
+        serverData.views = {
+            "partner_type,my.little.string,list": `<tree><field name="display_name"/></tree>`,
+            "partner_type,false,search": `<search />`,
+        };
+
+        patchWithCleanup(AutoComplete, {
+            timeout: 0,
+        });
+
+        patchWithCleanup(Many2XAutocomplete.defaultProps, {
+            searchLimit: 1,
+        });
+
+        let checkGetViews = false;
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy" widget="many2many_tags" context="{ 'tree_view_ref': 'my.little.string' }"/>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "get_views" && checkGetViews) {
+                    assert.step("get_views");
+                    assert.deepEqual(args.kwargs.views, [
+                        [false, "list"],
+                        [false, "search"],
+                    ]);
+                    assert.strictEqual(args.kwargs.context.tree_view_ref, "my.little.string");
+                }
+            },
+        });
+        await clickEdit(target);
+        await click(target, ".o_field_many2many_selection input");
+        checkGetViews = true;
+        await clickOpenedDropdownItem(target, "timmy", "Search More...");
+        assert.verifySteps([`get_views`]);
+
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal-title").textContent, "Search: pokemon");
     });
 });
