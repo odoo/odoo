@@ -6,6 +6,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
+import { qweb } from 'web.core';
+
 registerModel({
     name: 'LivechatButtonView',
     identifyingFields: ['publicLivechatGlobalOwner'],
@@ -67,6 +69,34 @@ registerModel({
             if (chatbotState) {
                 this.chatbot.update({ currentStep: insertAndReplace({ data: this.localStorageChatbotState._chatbotCurrentStep }) });
             }
+        },
+        /**
+         * Adds a small "is typing" animation into the chat window.
+         *
+         * @param {boolean} [isWelcomeMessage=false]
+         */
+        chatbotSetIsTyping(isWelcomeMessage = false) {
+            if (this.isTypingTimeout) {
+                clearTimeout(this.isTypingTimeout);
+            }
+            this.widget._chatbotDisableInput('');
+            this.update({
+                isTypingTimeout: setTimeout(
+                    () => {
+                        this.chatWindow.legacyChatWindow.$('.o_mail_thread_content').append(
+                            $(qweb.render('im_livechat.legacy.chatbot.is_typing_message', {
+                                'chatbotImageSrc': `/im_livechat/operator/${
+                                    this.messaging.publicLivechatGlobal.publicLivechat.operator.id
+                                }/avatar`,
+                                'chatbotName': this.chatbot.name,
+                                'isWelcomeMessage': isWelcomeMessage,
+                            }))
+                        );
+                        this.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
+                    },
+                    this.chatbot.messageDelay / 3,
+                ),
+            });
         },
         /**
          * @private

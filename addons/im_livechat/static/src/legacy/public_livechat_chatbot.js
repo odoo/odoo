@@ -10,7 +10,6 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
 import { clear, increment, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 const _t = core._t;
-const QWeb = core.qweb;
 
 /**
  * Override of the LivechatButton to include chatbot capabilities.
@@ -134,7 +133,7 @@ const QWeb = core.qweb;
             if (this._chatbotShouldEndScript()) {
                 this._chatbotEndScript();
             } else {
-                this._chatbotSetIsTyping();
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
                     chatbotNextStepTimeout: setTimeout(
                         this._chatbotTriggerNextStep.bind(this),
@@ -308,7 +307,7 @@ const QWeb = core.qweb;
         }  else if (this._chatbotIsExpectingUserInput()) {
             if (this._isLastMessageFromCustomer()) {
                 // user has already typed a message in -> trigger next step
-                this._chatbotSetIsTyping();
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
                     chatbotNextStepTimeout: setTimeout(
                         this._chatbotTriggerNextStep.bind(this),
@@ -337,7 +336,7 @@ const QWeb = core.qweb;
                     // -> in that case, don't wait and trigger the next step immediately
                     nextStepDelay = 0;
                 } else {
-                    this._chatbotSetIsTyping();
+                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                 }
 
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
@@ -367,34 +366,6 @@ const QWeb = core.qweb;
             '_chatbot': this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.data,
             '_chatbotCurrentStep': this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data,
         }));
-    },
-    /**
-     * Adds a small "is typing" animation into the chat window.
-     *
-     * @private
-     */
-    _chatbotSetIsTyping(isWelcomeMessage=false) {
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.isTypingTimeout) {
-            clearTimeout(this.isTypingTimeout);
-        }
-
-        this._chatbotDisableInput('');
-
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({
-            isTypingTimeout: setTimeout(() => {
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_mail_thread_content').append(
-                    $(QWeb.render('im_livechat.legacy.chatbot.is_typing_message', {
-                        'chatbotImageSrc': `/im_livechat/operator/${
-                            this.messaging.publicLivechatGlobal.publicLivechat.operator.id
-                        }/avatar`,
-                        'chatbotName': this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.name,
-                        'isWelcomeMessage': isWelcomeMessage,
-                    }))
-                );
-
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
-            }, this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay / 3),
-        });
     },
     /**
      * Helper method that checks if the script should be ended or not.
@@ -682,7 +653,7 @@ const QWeb = core.qweb;
                 } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
                     this._debouncedChatbotAwaitUserInput();
                 } else if (!this._chatbotShouldEndScript()) {
-                    this._chatbotSetIsTyping();
+                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                     this.messaging.publicLivechatGlobal.livechatButtonView.update({
                         chatbotNextStepTimeout: setTimeout(
                             this._chatbotTriggerNextStep.bind(this),
@@ -761,7 +732,7 @@ const QWeb = core.qweb;
 
         if (stepIndex + 1 < this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.welcomeSteps.length) {
             if (welcomeMessageDelay !== 0) {
-                this._chatbotSetIsTyping(true);
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping(true);
             }
 
             this.messaging.publicLivechatGlobal.livechatButtonView.update({
@@ -817,7 +788,7 @@ const QWeb = core.qweb;
         }
 
         this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.update({ currentStep: clear() });
-        this._chatbotSetIsTyping();
+        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
         this.messaging.publicLivechatGlobal.livechatButtonView.update({
             chatbotNextStepTimeout: setTimeout(
                 this._chatbotTriggerNextStep.bind(this),
