@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from urllib3.util.ssl_ import create_urllib3_context, DEFAULT_CIPHERS
+from urllib3.contrib.pyopenssl import inject_into_urllib3
 from OpenSSL.crypto import load_certificate, load_privatekey, FILETYPE_PEM
 from zeep.transports import Transport
 
@@ -24,6 +25,7 @@ class PatchedHTTPAdapter(requests.adapters.HTTPAdapter):
 
     def init_poolmanager(self, *args, **kwargs):
         # OVERRIDE
+        inject_into_urllib3()
         kwargs['ssl_context'] = create_urllib3_context(ciphers=EUSKADI_CIPHERS)
         return super().init_poolmanager(*args, **kwargs)
 
