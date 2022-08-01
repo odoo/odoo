@@ -247,19 +247,6 @@ const QWeb = core.qweb;
 
     },
     /**
-     * Will display a "Restart script" button in the conversation toolbar.
-     *
-     * Side-case: if the conversation has been forwarded to a human operator, we don't want to
-     * display that restart button.
-     *
-     * @private
-     */
-    _chatbotDisplayRestartButton() {
-        return this.messaging.publicLivechatGlobal.livechatButtonView.isChatbot && (!this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep ||
-            (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type !== 'forward_operator' ||
-             !this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found));
-    },
-    /**
      * Works as a hook since other modules can add their own step types.
      *
      * @private
@@ -349,7 +336,7 @@ const QWeb = core.qweb;
             }
         }
 
-        if (!this._chatbotDisplayRestartButton()) {
+        if (!this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.hasRestartButton) {
             this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
         }
      },

@@ -16,6 +16,24 @@ registerModel({
             return this.data.name;
         },
         /**
+         * Will display a "Restart script" button in the conversation toolbar.
+         *
+         * Side-case: if the conversation has been forwarded to a human operator, we don't want to
+         * display that restart button.
+         *
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasRestartButton() {
+            return Boolean(
+                !this.currentStep ||
+                (
+                    this.currentStep.data.chatbot_step_type !== 'forward_operator' ||
+                    !this.currentStep.data.chatbot_operator_found
+                )
+            );
+        },
+        /**
          * @private
          * @returns {Array|FieldCommand}
          */
@@ -55,6 +73,10 @@ registerModel({
         currentStep: one('ChatbotStep', {
             inverse: 'chabotOwner',
             isCausal: true,
+        }),
+        hasRestartButton: attr({
+            compute: '_computeHasRestartButton',
+            default: false,
         }),
         lastWelcomeStep: attr({
             compute: '_computeLastWelcomeStep',
