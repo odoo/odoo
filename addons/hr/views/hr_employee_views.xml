@@ -65,12 +65,12 @@
                                 <field name="name" placeholder="Employee's Name" required="True" style="font-size: min(4vw, 2.6rem);" />
                                 <field name="last_activity_time" invisible="1"/>
                                 <field name="last_activity" invisible="1"/>
-                                <div id="hr_presence_status" attrs="{'invisible': ['|', ('last_activity', '=', False), ('user_id', '=', False)]}">
-                                    <div role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
-                                    <div role="img" class="fa fa-2xs fa-fw fa-circle text-warning o_button_icon hr_presence" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
-                                    <div role="img" class="fa fa-2xs fa-fw fa-circle text-danger o_button_icon hr_presence" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
+                                <div id="hr_presence_status" attrs="{'invisible': ['|', ('last_activity', '=', False), ('user_id', '=', False)]}" class="ms-1">
+                                    <small role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}" aria-label="Available" title="Available"/>
+                                    <small role="img" class="fa fa-fw fa-circle text-warning o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
+                                    <small role="img" class="fa fa-fw fa-circle text-danger o_button_icon hr_presence align-middle fs-6" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
                                 </div>
-                                <a title="Chat" icon="fa-comments" t-on-click.prevent="() => openChat(props.record.resId)" href="#" class="ml8" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                <a title="Chat" icon="fa-comments" t-on-click.prevent="() => openChat(props.record.resId)" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments align-middle fs-6"/></a>
                             </h1>
                             <h2>
                                 <field name="job_title" placeholder="Job Position" />
@@ -269,7 +269,7 @@
                    <templates>
                        <t t-name="kanban-box">
                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record">
-                            <field name="image_1024" class="o_kanban_image_fill_left" preview_image="image_128"
+                            <field name="image_1024" class="o_kanban_image_fill_left d-block" preview_image="image_128"
                                 widget="background_image" options="{'zoom': true, 'zoom_delay': 1000}"/>
 
                             <div class="oe_kanban_details">
@@ -324,12 +324,12 @@
                                    <li t-if="record.work_phone.raw_value" class="o_force_ltr"><field name="work_phone" /></li>
                                </ul>
                            </div>
-                           <div class="oe_kanban_content position-absolute fixed-bottom me-2 o_hr_employee_kanban_bottom">
+                           <div class="oe_kanban_content o_hr_employee_kanban_bottom position-absolute bottom-0 start-0 end-0 me-2 pe-none">
                                <div class="o_kanban_record_bottom">
                                    <div class="oe_kanban_bottom_left"/>
-                                   <div class="oe_kanban_bottom_right float-end">
+                                   <div class="oe_kanban_bottom_right float-end pe-auto">
                                         <a title="Chat" icon="fa-comments" href="#" t-on-click.prevent="() => props.record.openChat(props.record.resId)" class="ml8" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
-                                        <div class="hr_activity_container">
+                                        <div class="hr_activity_container mb-1 me-n1">
                                             <field name="activity_ids" widget="kanban_activity"/>
                                         </div>
                                    </div>
