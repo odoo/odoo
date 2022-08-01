@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 
 class StockWarehouse(models.Model):
@@ -23,6 +23,12 @@ class StockWarehouse(models.Model):
     subcontracting_resupply_type_id = fields.Many2one(
         'stock.picking.type', 'Subcontracting Resupply Operation Type',
         domain=[('code', '=', 'outgoing')])
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        res._update_subcontracting_locations_rules()
+        return res
 
     def get_rules_dict(self):
         result = super(StockWarehouse, self).get_rules_dict()
@@ -90,7 +96,7 @@ class StockWarehouse(models.Model):
                     'auto': 'manual',
                     'route_id': self._find_global_route('mrp_subcontracting.route_resupply_subcontractor_mto',
                                                         _('Resupply Subcontractor on Order')).id,
-                    'name': self._format_rulename(self.lot_stock_id, subcontract_location_id, False),
+                    'name': self._format_rulename(subcontract_location_id, production_location_id, False),
                     'location_dest_id': production_location_id.id,
                     'location_src_id': subcontract_location_id.id,
                     'picking_type_id': self.subcontracting_resupply_type_id.id
@@ -129,16 +135,17 @@ class StockWarehouse(models.Model):
 
     def _get_sequence_values(self):
         values = super(StockWarehouse, self)._get_sequence_values()
+        count = self.env['ir.sequence'].search_count([('prefix', 'like', self.code + '/SBC%/%')])
         values.update({
             'subcontracting_type_id': {
                 'name': self.name + ' ' + _('Sequence subcontracting'),
-                'prefix': self.code + '/SBC/',
+                'prefix': self.code + (('/SBC' + str(count) + '/') if count else '/SBC/'),
                 'padding': 5,
                 'company_id': self.company_id.id
             },
             'subcontracting_resupply_type_id': {
                 'name': self.name + ' ' + _('Sequence Resupply Subcontractor'),
-                'prefix': self.code + '/RES/',
+                'prefix': self.code + (('/RES' + str(count) + '/') if count else '/RES/'),
                 'padding': 5,
                 'company_id': self.company_id.id
             },
@@ -165,3 +172,10 @@ class StockWarehouse(models.Model):
 
     def _get_subcontracting_location(self):
         return self.company_id.subcontracting_location_id
+
+    def _update_subcontracting_locations_rules(self):
+        subcontracting_locations = self.env['stock.location'].search([
+            ('company_id', 'in', self.company_id.ids),
+            ('is_subcontracting_location', '=', 'True'),
+        ])
+        subcontracting_locations._activate_subcontracting_location_rules()

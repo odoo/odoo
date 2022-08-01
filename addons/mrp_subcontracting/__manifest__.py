@@ -23,6 +23,7 @@
         'views/mrp_production_views.xml',
         'views/subcontracting_portal_views.xml',
         'views/subcontracting_portal_templates.xml',
+        'views/stock_location_views.xml',
         'wizard/stock_picking_return_views.xml',
         'report/mrp_report_bom_structure.xml',
     ],
