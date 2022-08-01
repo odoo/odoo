@@ -212,14 +212,14 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_it_document_type_mapping(self):
         return {
-            'TD01': dict(move_type='out_invoice', import_type='in_invoice'),
-            'TD04': dict(move_type='out_refund', import_type='in_refund'),
-            'TD07': dict(move_type='out_invoice', import_type='in_invoice', simplified=True),
-            'TD08': dict(move_type='out_refund', import_type='in_refund', simplified=True),
-            'TD09': dict(move_type='out_invoice', import_type='in_invoice', simplified=True),
-            'TD17': dict(move_type='in_invoice', import_type='out_invoice', self_invoice=True, services_or_goods="service"),
-            'TD18': dict(move_type='in_invoice', import_type='out_invoice', self_invoice=True, services_or_goods="consu", partner_in_eu=True),
-            'TD19': dict(move_type='in_invoice', import_type='out_invoice', self_invoice=True, services_or_goods="consu", goods_in_italy=True),
+            'TD01': dict(move_types=['out_invoice'], import_type='in_invoice'),
+            'TD04': dict(move_types=['out_refund'], import_type='in_refund'),
+            'TD07': dict(move_types=['out_invoice'], import_type='in_invoice', simplified=True),
+            'TD08': dict(move_types=['out_refund'], import_type='in_refund', simplified=True),
+            'TD09': dict(move_types=['out_invoice'], import_type='in_invoice', simplified=True),
+            'TD17': dict(move_types=['in_invoice', 'in_refund'], import_type='out_invoice', self_invoice=True, services_or_goods="service"),
+            'TD18': dict(move_types=['in_invoice', 'in_refund'], import_type='out_invoice', self_invoice=True, services_or_goods="consu", partner_in_eu=True),
+            'TD19': dict(move_types=['in_invoice', 'in_refund'], import_type='out_invoice', self_invoice=True, services_or_goods="consu", goods_in_italy=True),
         }
 
     def _l10n_it_get_document_type(self, invoice):
@@ -232,7 +232,7 @@ class AccountEdiFormat(models.Model):
             info_services_or_goods = infos.get('services_or_goods', "both")
             info_partner_in_eu = infos.get('partner_in_eu', False)
             if all([
-                invoice.move_type == infos.get('move_type', False),
+                invoice.move_type in infos.get('move_types', False),
                 is_self_invoice == infos.get('self_invoice', False),
                 is_simplified == infos.get('simplified', False),
                 info_services_or_goods in ("both", services_or_goods),
