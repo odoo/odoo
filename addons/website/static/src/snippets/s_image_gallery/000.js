@@ -26,6 +26,9 @@ const GalleryWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickImg: function (ev) {
+        if (document.querySelector('.modal[aria-labbelledby="Image Gallery Dialog"]')) {
+            return;
+        }
         var self = this;
         var $cur = $(ev.currentTarget);
 
