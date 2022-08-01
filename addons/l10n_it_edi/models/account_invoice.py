@@ -185,11 +185,16 @@ class AccountMove(models.Model):
             or (partner.country_id.code == 'IT' and '0000000')
             or 'XXXXXXX')
 
+        # Represent if the document is a reverse charge refund in a single variable
+        rc_refund = self.move_type == 'in_refund' and document_type in ['TD16', 'TD17', 'TD18']
+
         # Self-invoices are technically -100%/+100% repartitioned
         # but functionally need to be exported as 100%
         document_total = self.amount_total
         if is_self_invoice:
-            document_total += sum([v['tax_amount_currency'] for k, v in tax_details['tax_details'].items()])
+            document_total += sum([abs(v['tax_amount_currency']) for k, v in tax_details['tax_details'].items()])
+            if rc_refund:
+                document_total = -abs(document_total)
 
         # Create file content.
         template_values = {
@@ -227,7 +232,8 @@ class AccountMove(models.Model):
             'normalize_codice_fiscale': partner._l10n_it_normalize_codice_fiscale,
             'get_vat_number': get_vat_number,
             'get_vat_country': get_vat_country,
-            'in_eu': in_eu
+            'in_eu': in_eu,
+            'rc_refund': rc_refund,
         }
         return template_values
 
