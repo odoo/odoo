@@ -432,6 +432,7 @@ var BasicModel = AbstractModel.extend({
                 elem.limit -= elem.tempLimitIncrement;
                 delete elem.tempLimitIncrement;
             }
+            elem.specialData = Object.assign({}, elem._specialDataSavepoint);
         });
         element.offset = initialOffset;
     },
@@ -4574,6 +4575,7 @@ var BasicModel = AbstractModel.extend({
         defs.push(this._fetchSpecialData(record, options));
 
         return Promise.all(defs).then(function () {
+            record._specialDataSavepoint = Object.assign({}, record.specialData);
             return record;
         });
     },
