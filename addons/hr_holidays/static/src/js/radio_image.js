@@ -34,4 +34,4 @@ const FieldRadioImage = FieldRadio.extend({
     }
 });
 
-FieldRegistry.add('radio_image', FieldRadioImage);
+FieldRegistry.add('hr_holidays_radio_image', FieldRadioImage);

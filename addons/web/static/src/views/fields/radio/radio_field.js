@@ -57,7 +57,7 @@ RadioField.defaultProps = {
 RadioField.displayName = _lt("Radio");
 RadioField.supportedTypes = ["many2one", "selection"];
 
-RadioField.isEmpty = () => false;
+RadioField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
 RadioField.extractProps = ({ attrs }) => {
     return {
         orientation: attrs.options.horizontal ? "horizontal" : "vertical",
