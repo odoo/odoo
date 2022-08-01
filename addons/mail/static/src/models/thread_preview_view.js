@@ -38,6 +38,19 @@ registerModel({
          * @private
          * @returns {string|FieldCommand}
          */
+        _computeImageUrl() {
+            if (!this.thread.channel) {
+                return clear();
+            }
+            if (this.thread.channel.correspondent) {
+                return this.thread.channel.correspondent.avatarUrl;
+            }
+            return `/web/image/mail.channel/${this.thread.id}/avatar_128?unique=${this.thread.channel.avatarCacheKey}`;
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
         _computeInlineLastMessageBody() {
             if (!this.thread.lastMessage) {
                 return clear();
@@ -83,6 +96,10 @@ registerModel({
         },
     },
     fields: {
+        imageUrl: attr({
+            compute: '_computeImageUrl',
+            default: '/mail/static/src/img/smiley/avatar.jpg',
+        }),
         inlineLastMessageBody: attr({
             compute: '_computeInlineLastMessageBody',
             default: "",
