@@ -2468,15 +2468,9 @@ export class Group extends DataPoint {
                     return false;
                 }
                 if (type === "date") {
-                    return serializeDate(
-                        DateTime.fromFormat(range.to, "yyyy-MM-dd", { zone: "utc" }).minus({
-                            day: 1,
-                        })
-                    );
+                    return serializeDate(deserializeDate(range.to).minus({ day: 1 }));
                 } else {
-                    return serializeDateTime(
-                        DateTime.fromFormat(range.to, "yyyy-MM-dd HH:mm:ss").minus({ second: 1 })
-                    );
+                    return serializeDateTime(deserializeDateTime(range.to).minus({ second: 1 }));
                 }
             }
             default: {
