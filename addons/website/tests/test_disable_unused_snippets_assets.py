@@ -54,9 +54,9 @@ class TestDisableSnippetsAssets(TransactionCase):
 
         # The vaccuum should not have activated/deactivated any other snippet asset than the original ones
         self.assertEqual(
-          len(unwanted_snippets_assets_changes),
-          0,
-          'Following snippets are not following the snippet versioning system structure, or their previous assets have not been deactivated:\n'
+            len(unwanted_snippets_assets_changes),
+            0,
+            'Following snippets are not following the snippet versioning system structure, or their previous assets have not been deactivated:\n'
             + '\n'.join(unwanted_snippets_assets_changes))
 
     def test_homepage_up_to_date_and_mega_menu_outdated(self):

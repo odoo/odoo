@@ -97,7 +97,8 @@ class website_form_model_fields(models.Model):
         :return: nothing of import
         """
         # postgres does *not* like ``in [EMPTY TUPLE]`` queries
-        if not fields: return False
+        if not fields:
+            return False
 
         # only allow users who can change the website structure
         if not self.env['res.users'].has_group('website.group_website_designer'):
@@ -114,6 +115,6 @@ class website_form_model_fields(models.Model):
         return True
 
     website_form_blacklisted = fields.Boolean(
-        'Blacklisted in web forms', default=True, index=True, # required=True,
+        'Blacklisted in web forms', default=True, index=True,
         help='Blacklist this field for web forms'
     )

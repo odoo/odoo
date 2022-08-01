@@ -9,7 +9,6 @@ from odoo.addons.website.tools import text_from_html
 from odoo import api, fields, models
 from odoo.osv import expression
 from odoo.tools import escape_psql
-from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import _
 
 

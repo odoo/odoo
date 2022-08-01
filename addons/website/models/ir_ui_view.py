@@ -2,13 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import os
 import uuid
 import werkzeug
 
 from odoo import api, fields, models
 from odoo import tools
-from odoo.addons import website
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.http import request
