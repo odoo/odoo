@@ -63,7 +63,7 @@ class MailingTrace(models.Model):
         index='btree_not_null',
     )
     email = fields.Char(string="Email", help="Normalized email address")
-    message_id = fields.Char(string='Message-ID', help="Technical field for the email Message-ID (RFC 2392)")
+    message_id = fields.Char(string='Message-ID') # email Message-ID (RFC 2392)
     medium_id = fields.Many2one(related='mass_mailing_id.medium_id')
     source_id = fields.Many2one(related='mass_mailing_id.source_id')
     # document

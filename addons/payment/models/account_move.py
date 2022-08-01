@@ -17,7 +17,6 @@ class AccountMove(models.Model):
         compute='_compute_authorized_transaction_ids', readonly=True, copy=False)
     amount_paid = fields.Monetary(
         string="Amount paid",
-        help="The amount already paid for this invoice.",
         compute='_compute_amount_paid'
     )
 

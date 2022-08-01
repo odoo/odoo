@@ -26,8 +26,8 @@ OPERATORS = {
 class Product(models.Model):
     _inherit = "product.product"
 
-    stock_quant_ids = fields.One2many('stock.quant', 'product_id', help='Technical: used to compute quantities.')
-    stock_move_ids = fields.One2many('stock.move', 'product_id', help='Technical: used to compute quantities.')
+    stock_quant_ids = fields.One2many('stock.quant', 'product_id') # used to compute quantities
+    stock_move_ids = fields.One2many('stock.move', 'product_id') # used to compute quantities
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
         digits='Product Unit of Measure', compute_sudo=False,

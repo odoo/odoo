@@ -11,11 +11,11 @@ class Stargate(models.Model):
     _name = 'test_http.stargate'
     _description = 'Stargate'
 
-    name = fields.Char(required=True, store=True, compute='_compute_name', readonly=False, help="The stargate/planet common name.")
-    address = fields.Char(required=True, help="The stargate's 6-glyphs address used by other stargates to dial this one.")
-    sgc_designation = fields.Char(store=True, compute='_compute_sgc_designation', help="The SGC designation name of this stargate.")
-    galaxy_id = fields.Many2one('test_http.galaxy', required=True, help="The galaxy where this stargate is.")
-    has_galaxy_crystal = fields.Boolean(store=True, compute='_compute_has_galaxy_crystal', readonly=False, help="Whether this stargate can dial other galaxies.")
+    name = fields.Char(required=True, store=True, compute='_compute_name', readonly=False)
+    address = fields.Char(required=True)
+    sgc_designation = fields.Char(store=True, compute='_compute_sgc_designation')
+    galaxy_id = fields.Many2one('test_http.galaxy', required=True)
+    has_galaxy_crystal = fields.Boolean(store=True, compute='_compute_has_galaxy_crystal', readonly=False)
     glyph_attach = fields.Image(attachment=True)
     glyph_inline = fields.Image(attachment=False)
 
@@ -56,4 +56,4 @@ class Galaxy(models.Model):
     _name = 'test_http.galaxy'
     _description = 'Galaxy'
 
-    name = fields.Char(required=True, help='The galaxy common name.')
+    name = fields.Char(required=True)

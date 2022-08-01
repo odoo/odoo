@@ -13,8 +13,8 @@ class AutomaticEntryWizard(models.TransientModel):
 
     # General
     action = fields.Selection([('change_period', 'Change Period'), ('change_account', 'Change Account')], required=True)
-    move_data = fields.Text(compute="_compute_move_data", help="JSON value of the moves to be created")
-    preview_move_data = fields.Text(compute="_compute_preview_move_data", help="JSON value of the data to be displayed in the previewer")
+    move_data = fields.Text(compute="_compute_move_data") # JSON value of the moves to be created
+    preview_move_data = fields.Text(compute="_compute_preview_move_data") # JSON value of the data to be displayed in the previewer
     move_line_ids = fields.Many2many('account.move.line')
     date = fields.Date(required=True, default=lambda self: fields.Date.context_today(self))
     company_id = fields.Many2one('res.company', required=True, readonly=True)
@@ -46,8 +46,8 @@ class AutomaticEntryWizard(models.TransientModel):
 
     # change account
     destination_account_id = fields.Many2one(string="To", comodel_name='account.account', help="Account to transfer to.")
-    display_currency_helper = fields.Boolean(string="Currency Conversion Helper", compute='_compute_display_currency_helper',
-        help="Technical field. Used to indicate whether or not to display the currency conversion tooltip. The tooltip informs a currency conversion will be performed with the transfer.")
+    display_currency_helper = fields.Boolean(string="Currency Conversion Helper", compute='_compute_display_currency_helper')
+    # Technical field. Used to indicate whether or not to display the currency conversion tooltip. The tooltip informs a currency conversion will be performed with the transfer.
 
     @api.depends('company_id')
     def _compute_expense_accrual_account(self):

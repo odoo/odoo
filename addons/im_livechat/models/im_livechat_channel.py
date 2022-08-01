@@ -27,7 +27,7 @@ class ImLivechatChannel(models.Model):
         return [(6, 0, [self._uid])]
 
     # attribute fields
-    name = fields.Char('Name', required=True, help="The name of the channel")
+    name = fields.Char('Channel Name', required=True)
     button_text = fields.Char('Text of the Button', default='Have a Question? Chat with us.',
         help="Default text displayed on the Livechat Support Button")
     default_message = fields.Char('Welcome Message', default='How may I help you?',

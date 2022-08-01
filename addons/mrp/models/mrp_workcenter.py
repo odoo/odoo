@@ -28,8 +28,7 @@ class MrpWorkcenter(models.Model):
 
     code = fields.Char('Code', copy=False)
     note = fields.Html(
-        'Description',
-        help="Description of the Work Center.")
+        'Description')
     default_capacity = fields.Float(
         'Capacity', default=1.0,
         help="Default number of pieces (in product UoM) that can be produced in parallel (at the same time) at this work center. For example: the capacity is 5 and you need to produce 10 units, then the operation time listed on the BOM will be multiplied by two. However, note that both time before and after production will only be counted once.")
@@ -37,9 +36,9 @@ class MrpWorkcenter(models.Model):
         'Sequence', default=1, required=True,
         help="Gives the sequence order when displaying a list of work centers.")
     color = fields.Integer('Color')
-    costs_hour = fields.Float(string='Cost per hour', help='Specify cost of work center per hour.', default=0.0)
-    time_start = fields.Float('Setup Time', help="Time in minutes for the setup.")
-    time_stop = fields.Float('Cleanup Time', help="Time in minutes for the cleaning.")
+    costs_hour = fields.Float(string='Cost per hour', help='Hourly cost of work center.', default=0.0)
+    time_start = fields.Float('Setup Time')
+    time_stop = fields.Float('Cleanup Time')
     routing_line_ids = fields.One2many('mrp.routing.workcenter', 'workcenter_id', "Routing Lines")
     order_ids = fields.One2many('mrp.workorder', 'workcenter_id', "Orders")
     workorder_count = fields.Integer('# Work Orders', compute='_compute_workorder_count')

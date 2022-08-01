@@ -91,8 +91,7 @@ class MailComposer(models.TransientModel):
     subject = fields.Char('Subject', compute=False)
     body = fields.Html('Contents', render_engine='qweb', compute=False, default='', sanitize_style=True)
     parent_id = fields.Many2one(
-        'mail.message', 'Parent Message', ondelete='set null',
-        help="Initial thread message.")
+        'mail.message', 'Parent Message', ondelete='set null')
     template_id = fields.Many2one('mail.template', 'Use template', domain="[('model', '=', model)]")
     attachment_ids = fields.Many2many(
         'ir.attachment', 'mail_compose_message_ir_attachments_rel',
@@ -111,7 +110,7 @@ class MailComposer(models.TransientModel):
         ('mass_post', 'Post on Multiple Documents')], string='Composition mode', default='comment')
     model = fields.Char('Related Document Model')
     res_id = fields.Integer('Related Document ID')
-    record_name = fields.Char('Message Record Name', help="Name get of the related document.")
+    record_name = fields.Char('Message Record Name')
     use_active_domain = fields.Boolean('Use active domain')
     active_domain = fields.Text('Active domain', readonly=True)
     # characteristics
@@ -135,8 +134,8 @@ class MailComposer(models.TransientModel):
         ('new', 'Collect replies on a specific email address')],
         string='Replies', compute='_compute_reply_to_mode', inverse='_inverse_reply_to_mode',
         help="Original Discussion: Answers go in the original document discussion thread. \n Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n This has an impact on the generated message-id.")
-    is_log = fields.Boolean('Log an Internal Note',
-                            help='Whether the message is an internal note (comment mode only)')
+
+    is_log = fields.Boolean('Log as Internal Note') # comment mode only
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts',

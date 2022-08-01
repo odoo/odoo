@@ -23,9 +23,7 @@ class MrpBom(models.Model):
         return self.env['uom.uom'].search([], limit=1, order='id').id
 
     code = fields.Char('Reference')
-    active = fields.Boolean(
-        'Active', default=True,
-        help="If the active field is set to False, it will allow you to hide the bills of material without removing it.")
+    active = fields.Boolean('Active', default=True)
     type = fields.Selection([
         ('normal', 'Manufacture this product'),
         ('phantom', 'Kit')], 'BoM Type',
@@ -50,12 +48,12 @@ class MrpBom(models.Model):
         default=_get_default_product_uom_id, required=True,
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_tmpl_id.uom_id.category_id')
-    sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
+    sequence = fields.Integer('Sequence')
     operation_ids = fields.One2many('mrp.routing.workcenter', 'bom_id', 'Operations', copy=True)
     ready_to_produce = fields.Selection([
         ('all_available', ' When all components are available'),
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
-        default='all_available', help="Defines when a Manufacturing Order is considered as ready to be started", required=True)
+        default='all_available', required=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]",
         check_company=True,

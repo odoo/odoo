@@ -10,16 +10,13 @@ class IrModel(models.Model):
     _order = 'is_mail_thread DESC, name ASC'
 
     is_mail_thread = fields.Boolean(
-        string="Mail Thread", default=False,
-        help="Whether this model supports messages and notifications.",
+        string="Has Mail Thread", default=False,
     )
     is_mail_activity = fields.Boolean(
-        string="Mail Activity", default=False,
-        help="Whether this model supports activities.",
+        string="Has Mail Activity", default=False,
     )
     is_mail_blacklist = fields.Boolean(
-        string="Mail Blacklist", default=False,
-        help="Whether this model supports blacklist.",
+        string="Has Mail Blacklist", default=False,
     )
 
     def unlink(self):

@@ -41,11 +41,9 @@ class Mailing(models.Model):
         store=True, readonly=False)
     sms_template_id = fields.Many2one('sms.template', string='SMS Template', ondelete='set null')
     sms_has_insufficient_credit = fields.Boolean(
-        'Insufficient IAP credits', compute='_compute_sms_has_iap_failure',
-        help='UX Field to propose to buy IAP credits')
+        'Insufficient IAP credits', compute='_compute_sms_has_iap_failure') # used to propose buying IAP credits
     sms_has_unregistered_account = fields.Boolean(
-        'Unregistered IAP account', compute='_compute_sms_has_iap_failure',
-        help='UX Field to propose to Register the SMS IAP account')
+        'Unregistered IAP account', compute='_compute_sms_has_iap_failure') # used to propose to Register the SMS IAP account
     sms_force_send = fields.Boolean(
         'Send Directly', help='Immediately send the SMS Mailing instead of queuing up. Use at your own risk.')
     # opt_out_link

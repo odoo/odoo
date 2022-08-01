@@ -196,9 +196,9 @@ class AccountJournal(models.Model):
         compute='_compute_available_payment_method_ids'
     )
 
+    # used to hide or show payment method options if needed
     selected_payment_method_codes = fields.Char(
         compute='_compute_selected_payment_method_codes',
-        help='Technical field used to hide or show payment method options if needed.'
     )
 
     _sql_constraints = [

@@ -27,9 +27,9 @@ class AccountMove(models.Model):
         compute='_compute_edi_error_message')
     edi_error_message = fields.Html(
         compute='_compute_edi_error_message')
+    # Technical field to display the documents that will be processed by the CRON
     edi_web_services_to_process = fields.Text(
-        compute='_compute_edi_web_services_to_process',
-        help="Technical field to display the documents that will be processed by the CRON")
+        compute='_compute_edi_web_services_to_process')
     edi_show_cancel_button = fields.Boolean(
         compute='_compute_edi_show_cancel_button')
     edi_show_abandon_cancel_button = fields.Boolean(

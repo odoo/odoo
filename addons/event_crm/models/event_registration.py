@@ -11,11 +11,9 @@ class EventRegistration(models.Model):
 
     lead_ids = fields.Many2many(
         'crm.lead', string='Leads', copy=False, readonly=True,
-        groups='sales_team.group_sale_salesman',
-        help="Leads generated from the registration.")
+        groups='sales_team.group_sale_salesman')
     lead_count = fields.Integer(
-        '# Leads', compute='_compute_lead_count', compute_sudo=True,
-        help="Counter for the leads linked to this registration")
+        '# Leads', compute='_compute_lead_count', compute_sudo=True)
 
     @api.depends('lead_ids')
     def _compute_lead_count(self):

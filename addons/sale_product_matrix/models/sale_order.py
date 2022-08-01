@@ -8,10 +8,9 @@ from odoo.exceptions import ValidationError
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    report_grids = fields.Boolean(
-        string="Print Variant Grids", default=True,
-        help="If set, the matrix of the products configurable by matrix will"
-             " be shown on the report of the order.")
+    # if set, the matrix of the products configurable by matrix will be shown
+    # on the report of the order.
+    report_grids = fields.Boolean(string="Print Variant Grids", default=True)
 
     """ Matrix loading and update: fields and methods :
 
@@ -24,11 +23,9 @@ class SaleOrder(models.Model):
     """
 
     grid_product_tmpl_id = fields.Many2one(
-        'product.template', store=False,
-        help="Technical field for product_matrix functionalities.")
-    grid_update = fields.Boolean(
-        default=False, store=False,
-        help="Whether the grid field contains a new matrix to apply or not.")
+        'product.template', store=False)
+    # Whether the grid field contains a new matrix to apply or not
+    grid_update = fields.Boolean(default=False, store=False)
     grid = fields.Char(
         "Matrix local storage", store=False,
         help="Technical local storage of grid. "

@@ -18,14 +18,13 @@ class SaleOrder(models.Model):
         'sale.order.line',
         compute='_compute_website_order_line',
         string='Order Lines displayed on Website',
-        help='Order Lines to be displayed on the website. They should not be used for computation purpose.',
-    )
+    ) # should not be used for computation purpose.',
     cart_quantity = fields.Integer(compute='_compute_cart_info', string='Cart Quantity')
     only_services = fields.Boolean(compute='_compute_cart_info', string='Only Services')
     is_abandoned_cart = fields.Boolean('Abandoned Cart', compute='_compute_abandoned_cart', search='_search_abandoned_cart')
     cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
     website_id = fields.Many2one('website', string='Website', readonly=True,
-                                 help='Website through which this order was placed.')
+                                 help='Website through which this order was placed for eCommerce orders.')
     shop_warning = fields.Char('Warning')
 
     @api.model_create_multi

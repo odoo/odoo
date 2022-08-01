@@ -60,7 +60,7 @@ class SaleOrderTemplateLine(models.Model):
 
     display_type = fields.Selection([
         ('line_section', "Section"),
-        ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
+        ('line_note', "Note")], default=False)
 
     #=== COMPUTE METHODS ===#
 

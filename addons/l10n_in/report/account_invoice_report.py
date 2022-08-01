@@ -33,7 +33,7 @@ class L10nInAccountInvoiceReport(models.Model):
     cess_amount = fields.Float(string="Cess Amount")
     price_total = fields.Float(string='Total Without Tax')
     total = fields.Float(string="Invoice Total")
-    reversed_entry_id = fields.Many2one('account.move', string="Refund Invoice", help="From where this Refund is created")
+    reversed_entry_id = fields.Many2one('account.move', string="Refunded Invoice")
     shipping_bill_number = fields.Char(string="Shipping Bill Number")
     shipping_bill_date = fields.Date(string="Shipping Bill Date")
     shipping_port_code_id = fields.Many2one('l10n_in.port.code', string='Shipping port code')

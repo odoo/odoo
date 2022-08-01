@@ -13,7 +13,7 @@ class StockScrap(models.Model):
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order',
         states={'done': [('readonly', True)]},
-        help='Not to restrict or prefer quants, but informative.', check_company=True)
+        check_company=True) # Not to restrict or prefer quants, but informative
 
     @api.onchange('workorder_id')
     def _onchange_workorder_id(self):

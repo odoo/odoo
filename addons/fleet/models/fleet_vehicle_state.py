@@ -10,6 +10,6 @@ class FleetVehicleState(models.Model):
     _description = 'Vehicle Status'
 
     name = fields.Char(required=True, translate=True)
-    sequence = fields.Integer(help="Used to order the note stages")
+    sequence = fields.Integer()
 
     _sql_constraints = [('fleet_state_name_unique', 'unique(name)', 'State name already exists')]

@@ -12,7 +12,7 @@ class FleetVehicleLogServices(models.Model):
     _description = 'Services for vehicles'
 
     active = fields.Boolean(default=True)
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log')
+    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True)
     manager_id = fields.Many2one('res.users', 'Fleet Manager', related='vehicle_id.manager_id', store=True)
     amount = fields.Monetary('Cost')
     description = fields.Char('Description')

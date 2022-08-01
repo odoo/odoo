@@ -218,7 +218,7 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    is_anglo_saxon_line = fields.Boolean(help="Technical field used to retrieve the anglo-saxon lines.")
+    is_anglo_saxon_line = fields.Boolean()
 
     def _get_computed_account(self):
         # OVERRIDE to use the stock input account by default on vendor bills when dealing

@@ -11,7 +11,7 @@ class StockPickingToBatch(models.TransientModel):
 
     batch_id = fields.Many2one('stock.picking.batch', string='Batch Transfer', domain="[('state', '=', 'draft')]")
     mode = fields.Selection([('existing', 'an existing batch transfer'), ('new', 'a new batch transfer')], default='new')
-    user_id = fields.Many2one('res.users', string='Responsible', help='Person responsible for this batch transfer')
+    user_id = fields.Many2one('res.users', string='Responsible')
 
     def attach_pickings(self):
         self.ensure_one()
