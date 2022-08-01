@@ -74,8 +74,9 @@ class WebsiteBlog(http.Controller):
             active_tags = BlogTag.browse(active_tag_ids).exists()
             fixed_tag_slug = ",".join(slug(t) for t in active_tags)
             if fixed_tag_slug != tags:
-                new_url = request.httprequest.full_path.replace("/tag/%s" % tags, "/tag/%s" % fixed_tag_slug, 1)
-                if new_url != request.httprequest.full_path:  # check that really replaced and avoid loop
+                path = request.httprequest.full_path
+                new_url = path.replace("/tag/%s" % tags, fixed_tag_slug and "/tag/%s" % fixed_tag_slug or "", 1)
+                if new_url != path:  # check that really replaced and avoid loop
                     return request.redirect(new_url, 301)
             domain += [('tag_ids', 'in', active_tags.ids)]
 
