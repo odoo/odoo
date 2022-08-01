@@ -206,7 +206,7 @@ class Channel(models.Model):
     channel_type = fields.Selection([
         ('training', 'Training'), ('documentation', 'Documentation')],
         string="Course type", default="training", required=True)
-    sequence = fields.Integer(default=10, help='Display order')
+    sequence = fields.Integer(default=10)
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.uid)
     color = fields.Integer('Color Index', default=0, help='Used to decorate kanban view')
     tag_ids = fields.Many2many(

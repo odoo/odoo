@@ -29,20 +29,17 @@ class MrpWorkorder(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)], 'progress': [('readonly', True)]},
         group_expand='_read_group_workcenter_id', check_company=True)
     working_state = fields.Selection(
-        string='Workcenter Status', related='workcenter_id.working_state',
-        help='Technical: used in views only')
+        string='Workcenter Status', related='workcenter_id.working_state') # technical: used in views only
     product_id = fields.Many2one(related='production_id.product_id', readonly=True, store=True, check_company=True)
     product_tracking = fields.Selection(related="product_id.tracking")
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
     production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True, check_company=True, readonly=True)
     production_availability = fields.Selection(
         string='Stock Availability', readonly=True,
-        related='production_id.reservation_state', store=True,
-        help='Technical: used in views and domains only.')
+        related='production_id.reservation_state', store=True) # Technical: used in views and domains only
     production_state = fields.Selection(
         string='Production State', readonly=True,
-        related='production_id.state',
-        help='Technical: used in views only.')
+        related='production_id.state') # Technical: used in views only
     production_bom_id = fields.Many2one('mrp.bom', related='production_id.bom_id')
     qty_production = fields.Float('Original Production Quantity', readonly=True, related='production_id.product_qty')
     company_id = fields.Many2one(related='production_id.company_id')
@@ -93,7 +90,7 @@ class MrpWorkorder(models.Model):
     duration_expected = fields.Float(
         'Expected Duration', digits=(16, 2), compute='_compute_duration_expected',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        readonly=False, store=True, help="Expected duration (in minutes)")
+        readonly=False, store=True) # in minutes
     duration = fields.Float(
         'Real Duration', compute='_compute_duration', inverse='_set_duration',
         readonly=False, store=True, copy=False)
@@ -131,14 +128,13 @@ class MrpWorkorder(models.Model):
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id', copy=False)
     is_user_working = fields.Boolean(
-        'Is the Current User Working', compute='_compute_working_users',
-        help="Technical field indicating whether the current user is working. ")
+        'Is the Current User Working', compute='_compute_working_users') # technical: is the current user working
     working_user_ids = fields.One2many('res.users', string='Working user on this work order.', compute='_compute_working_users')
     last_working_user_id = fields.One2many('res.users', string='Last user that worked on this work order.', compute='_compute_working_users')
     costs_hour = fields.Float(
         string='Cost per hour',
-        help='Technical field to store the hourly cost of workcenter at time of work order completion (i.e. to keep a consistent cost).',
         default=0.0, group_operator="avg")
+        # Technical field to store the hourly cost of workcenter at time of work order completion (i.e. to keep a consistent cost).',
 
     scrap_ids = fields.One2many('stock.scrap', 'workorder_id')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')

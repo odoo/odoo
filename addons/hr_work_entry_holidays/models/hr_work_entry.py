@@ -83,4 +83,4 @@ class HrWorkEntryType(models.Model):
 
     leave_type_ids = fields.One2many(
         'hr.leave.type', 'work_entry_type_id', string='Time Off Type',
-        help="Every new time off type in this list will be reported as select work entry in payslip.")
+        help="Work entry used in the payslip.")

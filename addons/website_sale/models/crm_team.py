@@ -11,7 +11,7 @@ from odoo.exceptions import UserError, ValidationError
 class CrmTeam(models.Model):
     _inherit = "crm.team"
 
-    website_ids = fields.One2many('website', 'salesteam_id', string='Websites', help="Websites using this Sales Team")
+    website_ids = fields.One2many('website', 'salesteam_id', string='Websites')
     abandoned_carts_count = fields.Integer(
         compute='_compute_abandoned_carts',
         string='Number of Abandoned Carts', readonly=True)

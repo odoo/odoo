@@ -20,10 +20,9 @@ class MailingTrace(models.Model):
     sms_sms_id = fields.Many2one('sms.sms', string='SMS', index='btree_not_null', ondelete='set null')
     sms_sms_id_int = fields.Integer(
         string='SMS ID (tech)',
-        help='ID of the related sms.sms. This field is an integer field because '
-             'the related sms.sms can be deleted separately from its statistics. '
-             'However the ID is needed for several action and controllers.',
-        index='btree_not_null',
+        index='btree_not_null'
+        # Integer because the related sms.sms can be deleted separately from its statistics.
+        # However the ID is needed for several action and controllers.
     )
     sms_number = fields.Char('Number')
     sms_code = fields.Char('Code')

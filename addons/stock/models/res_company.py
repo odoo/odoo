@@ -14,9 +14,9 @@ class Company(models.Model):
         except ValueError:
             return False
 
+    # used for resupply routes between warehouses that belong to this company
     internal_transit_location_id = fields.Many2one(
-        'stock.location', 'Internal Transit Location', ondelete="restrict", check_company=True,
-        help="Technical field used for resupply routes between warehouses that belong to this company")
+        'stock.location', 'Internal Transit Location', ondelete="restrict", check_company=True)
     stock_move_email_validation = fields.Boolean("Email Confirmation picking", default=False)
     stock_mail_confirmation_template_id = fields.Many2one('mail.template', string="Email Template confirmation picking",
         domain="[('model', '=', 'stock.picking')]",

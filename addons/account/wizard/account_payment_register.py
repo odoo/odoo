@@ -19,10 +19,9 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_communication')
     group_payment = fields.Boolean(string="Group Payments", store=True, readonly=False,
         compute='_compute_group_payment',
-        help="Only one payment will be created by partner (bank)/ currency.")
+        help="Only one payment will be created by partner (bank), instead of one per billy.")
     currency_id = fields.Many2one('res.currency', string='Currency', store=True, readonly=False,
-        compute='_compute_currency_id',
-        help="The payment's currency.")
+        compute='_compute_currency_id')
     journal_id = fields.Many2one('account.journal', store=True, readonly=False,
         compute='_compute_journal_id',
         domain="[('id', 'in', available_journal_ids)]")
@@ -68,14 +67,11 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_from_lines')
     source_currency_id = fields.Many2one('res.currency',
         string='Source Currency', store=True, copy=False,
-        compute='_compute_from_lines',
-        help="The payment's currency.")
+        compute='_compute_from_lines')
     can_edit_wizard = fields.Boolean(store=True, copy=False,
-        compute='_compute_from_lines',
-        help="Technical field used to indicate the user can edit the wizard content such as the amount.")
+        compute='_compute_from_lines') # used to check if user can edit info such as the amount
     can_group_payments = fields.Boolean(store=True, copy=False,
-        compute='_compute_from_lines',
-        help="Technical field used to indicate the user can see the 'group_payments' box.")
+        compute='_compute_from_lines') # can the user see the 'group_payments' box
     company_id = fields.Many2one('res.company', store=True, copy=False,
         compute='_compute_from_lines')
     partner_id = fields.Many2one('res.partner',
@@ -109,11 +105,9 @@ class AccountPaymentRegister(models.TransientModel):
 
     # == Display purpose fields ==
     show_partner_bank_account = fields.Boolean(
-        compute='_compute_show_require_partner_bank',
-        help="Technical field used to know whether the field `partner_bank_id` needs to be displayed or not in the payments form views")
+        compute='_compute_show_require_partner_bank') # Used to know whether the field `partner_bank_id` should be displayed
     require_partner_bank_account = fields.Boolean(
-        compute='_compute_show_require_partner_bank',
-        help="Technical field used to know whether the field `partner_bank_id` needs to be required or not in the payments form views")
+        compute='_compute_show_require_partner_bank') # used to know whether the field `partner_bank_id` should be required
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
     # -------------------------------------------------------------------------

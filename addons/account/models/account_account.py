@@ -33,8 +33,8 @@ class AccountAccount(models.Model):
                 raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
 
     name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True)
-    currency_id = fields.Many2one('res.currency', string='Account Currency',
-        help="Forces all moves for this account to have this account currency.", tracking=True)
+    currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
+        help="Forces all journal items in this account to have a specific currency (i.e. bank journals). If no currency is set, entries can use any currency.")
     code = fields.Char(size=64, required=True, tracking=True)
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
@@ -96,9 +96,9 @@ class AccountAccount(models.Model):
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True)
     allowed_journal_ids = fields.Many2many('account.journal', string="Allowed Journals", help="Define in which journals this account can be used. If empty, can be used in all journals.")
 
-    opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
-    opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
-    opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', help="Opening balance value for this account.")
+    opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit')
+    opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit')
+    opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit')
 
     is_off_balance = fields.Boolean(compute='_compute_is_off_balance', default=False, store=True, readonly=True)
 

@@ -33,11 +33,10 @@ class SurveyInvite(models.TransientModel):
         'ir.attachment', 'survey_mail_compose_message_ir_attachments_rel', 'wizard_id', 'attachment_id',
         string='Attachments')
     # origin
-    email_from = fields.Char('From', default=_get_default_from, help="Email address of the sender.")
+    email_from = fields.Char('From', default=_get_default_from)
     author_id = fields.Many2one(
         'res.partner', 'Author', index=True,
-        ondelete='set null', default=_get_default_author,
-        help="Author of the message.")
+        ondelete='set null', default=_get_default_author)
     # recipients
     partner_ids = fields.Many2many(
         'res.partner', 'survey_invite_partner_ids', 'invite_id', 'partner_id', string='Recipients',

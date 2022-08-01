@@ -27,8 +27,7 @@ class EventBooth(models.Model):
     state = fields.Selection(
         [('available', 'Available'), ('unavailable', 'Unavailable')],
         string='Status', group_expand='_group_expand_states',
-        default='available', required=True, tracking=True,
-        help='Shows the availability of a Booth')
+        default='available', required=True, tracking=True)
     is_available = fields.Boolean(compute='_compute_is_available', search='_search_is_available')
 
     @api.depends('partner_id')

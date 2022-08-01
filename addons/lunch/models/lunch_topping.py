@@ -15,7 +15,7 @@ class LunchTopping(models.Model):
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     price = fields.Monetary('Price', required=True)
     supplier_id = fields.Many2one('lunch.supplier', ondelete='cascade')
-    topping_category = fields.Integer('Topping Category', help="This field is a technical field", required=True, default=1)
+    topping_category = fields.Integer('Topping Category', required=True, default=1)
 
     def name_get(self):
         currency_id = self.env.company.currency_id

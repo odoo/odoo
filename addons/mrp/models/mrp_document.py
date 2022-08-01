@@ -29,7 +29,7 @@ class MrpDocument(models.Model):
         ('0', 'Normal'),
         ('1', 'Low'),
         ('2', 'High'),
-        ('3', 'Very High')], string="Priority", help='Gives the sequence order when displaying a list of MRP documents.')
+        ('3', 'Very High')], string="Priority") # used to order
 
     def unlink(self):
         self.mapped('ir_attachment_id').unlink()

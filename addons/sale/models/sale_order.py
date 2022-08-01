@@ -84,8 +84,7 @@ class SaleOrder(models.Model):
 
     client_order_ref = fields.Char(string="Customer Reference", copy=False)
     create_date = fields.Datetime(  # Override of default create_date field from ORM
-        string="Creation Date", index=True, readonly=True,
-        help="Date on which sales order is created.")
+        string="Creation Date", index=True, readonly=True)
     commitment_date = fields.Datetime(
         string="Delivery Date", copy=False,
         states=LOCKED_FIELD_STATES,
@@ -121,12 +120,11 @@ class SaleOrder(models.Model):
 
     signature = fields.Image(
         string="Signature",
-        help="Signature received through the portal.",
         copy=False, attachment=True, max_width=1024, max_height=1024)
     signed_by = fields.Char(
-        string="Signed By", help="Name of the person that signed the SO.", copy=False)
+        string="Signed By", copy=False)
     signed_on = fields.Datetime(
-        string="Signed On", help="Date of the signature.", copy=False)
+        string="Signed On", copy=False)
 
     validity_date = fields.Date(
         string="Expiration",
@@ -186,17 +184,11 @@ class SaleOrder(models.Model):
         string="Currency Rate",
         compute='_compute_currency_rate',
         digits=(12, 6),
-        store=True, precompute=True,
-        help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
+        store=True, precompute=True)
     show_update_fpos = fields.Boolean(
-        string="Has Fiscal Position Changed", store=False,
-        help="Technical Field, True if the fiscal position was changed;\n"
-             " this will then display a recomputation button")
+        string="Has Fiscal Position Changed", store=False)     # True if the fiscal position was changed, to display button
     show_update_pricelist = fields.Boolean(
-        string="Has Pricelist Changed",
-        help="Technical Field, True if the pricelist was changed;\n"
-             " this will then display a recomputation button")
-
+        string="Has Pricelist Changed")                        # True if the pricelist was changed
     user_id = fields.Many2one(
         comodel_name='res.users',
         string="Salesperson",
@@ -264,8 +256,7 @@ class SaleOrder(models.Model):
         compute='_compute_analytic_account_id', store=True, readonly=False,
         copy=False, check_company=True,  # Unrequired company
         states=READONLY_FIELD_STATES,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="The analytic account related to a sales order.")
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     tag_ids = fields.Many2many(
         comodel_name='crm.tag',
         relation='sale_order_tag_rel', column1='order_id', column2='tag_id',
@@ -286,8 +277,7 @@ class SaleOrder(models.Model):
         groups='account.group_account_invoice,account.group_account_readonly')
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
-        compute='_compute_tax_country_id',
-        help="Technical field to filter the available taxes depending on the fiscal country and fiscal position.")
+        compute='_compute_tax_country_id')   # used to filter available taxes depending on the fiscal country and position
     tax_totals_json = fields.Char(compute='_compute_tax_totals_json')
     terms_type = fields.Selection(related='company_id.terms_type')
     type_name = fields.Char(string="Type Name", compute='_compute_type_name')

@@ -23,8 +23,7 @@ class Contract(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
     job_id = fields.Many2one('hr.job', compute='_compute_employee_contract', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string='Job Position')
-    date_start = fields.Date('Start Date', required=True, default=fields.Date.today, tracking=True,
-        help="Start date of the contract.", index=True)
+    date_start = fields.Date('Start Date', required=True, default=fields.Date.today, tracking=True, index=True)
     date_end = fields.Date('End Date', tracking=True,
         help="End date of the contract (if it's a fixed-term contract).")
     trial_date_end = fields.Date('End of Trial Period',

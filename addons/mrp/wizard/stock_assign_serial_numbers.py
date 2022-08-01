@@ -14,9 +14,9 @@ class StockAssignSerialNumbers(models.TransientModel):
     expected_qty = fields.Float('Expected Quantity', digits='Product Unit of Measure')
     serial_numbers = fields.Text('Produced Serial Numbers')
     produced_qty = fields.Float('Produced Quantity', digits='Product Unit of Measure')
-    show_apply = fields.Boolean(help="Technical field to show the Apply button")
-    show_backorders = fields.Boolean(help="Technical field to show the Create Backorder and No Backorder buttons")
-    multiple_lot_components_names = fields.Text(help="Names of components with multiple lots, used to show warning")
+    show_apply = fields.Boolean() # Technical field to show the Apply button
+    show_backorders = fields.Boolean() # Technical field to show the Create Backorder and No Backorder buttons
+    multiple_lot_components_names = fields.Text() # Names of components with multiple lots, used to show warning
 
     def generate_serial_numbers_production(self):
         if self.next_serial_number and self.next_serial_count:

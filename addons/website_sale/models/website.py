@@ -36,8 +36,8 @@ class Website(models.Model):
         string='Default Currency', readonly=False)
     pricelist_ids = fields.One2many('product.pricelist', compute="_compute_pricelist_ids",
                                     string='Price list available for this Ecommerce/Website')
-    all_pricelist_ids = fields.One2many('product.pricelist', 'website_id', string='All pricelists',
-                                        help='Technical: Used to recompute pricelist_ids')
+    # Technical: Used to recompute pricelist_ids
+    all_pricelist_ids = fields.One2many('product.pricelist', 'website_id', string='All pricelists')
 
     def _default_recovery_mail_template(self):
         try:

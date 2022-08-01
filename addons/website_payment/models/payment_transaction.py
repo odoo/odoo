@@ -7,7 +7,7 @@ from odoo import _, fields, models
 class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
-    is_donation = fields.Boolean(string="Is donation", help="Is the payment a donation")
+    is_donation = fields.Boolean(string="Is donation")
 
     def _finalize_post_processing(self):
         super()._finalize_post_processing()

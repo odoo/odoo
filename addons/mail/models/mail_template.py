@@ -30,7 +30,7 @@ class MailTemplate(models.Model):
 
     # description
     name = fields.Char('Name', translate=True)
-    model_id = fields.Many2one('ir.model', 'Applies to', help="The type of document this template can be used with")
+    model_id = fields.Many2one('ir.model', 'Applies to')
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     subject = fields.Char('Subject', translate=True, prefetch=True, help="Subject (placeholders may be used here)")
     email_from = fields.Char('From',

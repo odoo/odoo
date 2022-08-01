@@ -14,11 +14,10 @@ class KarmaRank(models.Model):
     description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False,)
     description_motivational = fields.Html(
         string='Motivational', translate=html_translate, sanitize_attributes=False,
-        help="Motivational phrase to reach this rank")
+        help="Motivational phrase to reach this rank on your profile page")
     karma_min = fields.Integer(
-        string='Required Karma', required=True, default=1,
-        help='Minimum karma needed to reach this rank')
-    user_ids = fields.One2many('res.users', 'rank_id', string='Users', help="Users having this rank")
+        string='Required Karma', required=True, default=1)
+    user_ids = fields.One2many('res.users', 'rank_id', string='Users')
     rank_users_count = fields.Integer("# Users", compute="_compute_rank_users_count")
 
     _sql_constraints = [

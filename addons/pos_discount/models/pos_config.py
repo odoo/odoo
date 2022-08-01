@@ -9,9 +9,9 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     iface_discount = fields.Boolean(string='Order Discounts', help='Allow the cashier to give discounts on the whole order.')
-    discount_pc = fields.Float(string='Discount Percentage', help='The default discount percentage', default=10.0)
+    discount_pc = fields.Float(string='Discount Percentage', help='The default discount percentage when clicking on the Discount button', default=10.0)
     discount_product_id = fields.Many2one('product.product', string='Discount Product',
-        domain="[('sale_ok', '=', True)]", help='The product used to model the discount.')
+        domain="[('sale_ok', '=', True)]", help='The product used to apply the discount on the ticket.')
 
     @api.model
     def _default_discount_value_on_module_install(self):

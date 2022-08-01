@@ -18,8 +18,8 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     # See https://developer.paypal.com/docs/api-basics/notifications/ipn/IPNandPDTVariables/
-    paypal_type = fields.Char(
-        string="PayPal Transaction Type", help="This has no use in Odoo except for debugging.")
+    # this field has no use in Odoo except for debugging
+    paypal_type = fields.Char(string="PayPal Transaction Type")
 
     def _get_specific_rendering_values(self, processing_values):
         """ Override of payment to return Paypal-specific rendering values.

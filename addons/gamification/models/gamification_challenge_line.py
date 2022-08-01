@@ -18,7 +18,7 @@ class ChallengeLine(models.Model):
     challenge_id = fields.Many2one('gamification.challenge', string='Challenge', required=True, ondelete="cascade")
     definition_id = fields.Many2one('gamification.goal.definition', string='Goal Definition', required=True, ondelete="cascade")
 
-    sequence = fields.Integer('Sequence', help='Sequence number for ordering', default=1)
+    sequence = fields.Integer('Sequence', default=1)
     target_goal = fields.Float('Target Value to Reach', required=True)
 
     name = fields.Char("Name", related='definition_id.name', readonly=False)

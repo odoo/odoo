@@ -10,13 +10,16 @@ from odoo.tools import float_is_zero, float_round
 class MrpProductionWorkcenterLineTime(models.Model):
     _inherit = 'mrp.workcenter.productivity'
 
-    cost_already_recorded = fields.Boolean('Cost Recorded', help="Technical field automatically checked when a ongoing production posts journal entries for its costs. This way, we can record one production's cost multiple times and only consider new entries in the work centers time lines.")
+    # checked when a ongoing production posts journal entries for its costs.
+    # This way, we can record one production's cost multiple times and only
+    # consider new entries in the work centers time lines."
+    cost_already_recorded = fields.Boolean('Cost Recorded')
 
 
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
-    extra_cost = fields.Float(copy=False, help='Extra cost per produced unit')
+    extra_cost = fields.Float(copy=False, string='Extra Unit Cost')
     show_valuation = fields.Boolean(compute='_compute_show_valuation')
     analytic_account_id = fields.Many2one(
         'account.analytic.account', 'Analytic Account', copy=True,

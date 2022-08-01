@@ -14,7 +14,7 @@ class UoMCategory(models.Model):
     name = fields.Char('Unit of Measure Category', required=True, translate=True)
 
     uom_ids = fields.One2many('uom.uom', 'category_id')
-    reference_uom_id = fields.Many2one('uom.uom', "Reference UoM", store=False, help="Dummy field to keep track of reference uom change")
+    reference_uom_id = fields.Many2one('uom.uom', "Reference UoM", store=False) # Dummy field to keep track of reference uom change
 
     @api.onchange('uom_ids')
     def _onchange_uom_ids(self):

@@ -28,7 +28,6 @@ class PosSession(models.Model):
 
     config_id = fields.Many2one(
         'pos.config', string='Point of Sale',
-        help="The physical point of sale you will use.",
         required=True,
         index=True)
     name = fields.Char(string='Session ID', required=True, readonly=True, default='/')
@@ -60,22 +59,19 @@ class PosSession(models.Model):
     cash_register_balance_end_real = fields.Monetary(
         related='cash_register_id.balance_end_real',
         string="Ending Balance",
-        help="Total of closing cash control lines.",
         readonly=True)
     cash_register_balance_start = fields.Monetary(
         related='cash_register_id.balance_start',
         string="Starting Balance",
-        help="Total of opening cash control lines.",
         readonly=True)
     cash_register_total_entry_encoding = fields.Monetary(
         compute='_compute_cash_balance',
         string='Total Cash Transaction',
-        readonly=True,
-        help="Total of all paid sales orders")
+        readonly=True)
     cash_register_balance_end = fields.Monetary(
         compute='_compute_cash_balance',
         string="Theoretical Closing Balance",
-        help="Sum of opening balance and transactions.",
+        help="Opening balance summed to all cash transactions.",
         readonly=True)
     cash_register_difference = fields.Monetary(
         compute='_compute_cash_balance',

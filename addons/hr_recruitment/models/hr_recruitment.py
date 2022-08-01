@@ -67,8 +67,7 @@ class RecruitmentStage(models.Model):
 
     name = fields.Char("Stage Name", required=True, translate=True)
     sequence = fields.Integer(
-        "Sequence", default=10,
-        help="Gives the sequence order when displaying a list of stages.")
+        "Sequence", default=10)
     job_ids = fields.Many2many(
         'hr.job', string='Job Specific',
         help='Specific jobs that uses this stage. Other jobs will not use this stage.')
@@ -115,7 +114,7 @@ class RecruitmentDegree(models.Model):
     ]
 
     name = fields.Char("Degree Name", required=True, translate=True)
-    sequence = fields.Integer("Sequence", default=1, help="Gives the sequence order when displaying a list of degrees.")
+    sequence = fields.Integer("Sequence", default=1)
 
 
 class Applicant(models.Model):

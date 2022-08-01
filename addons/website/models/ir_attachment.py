@@ -12,7 +12,8 @@ class Attachment(models.Model):
 
     _inherit = "ir.attachment"
 
-    key = fields.Char(help='Technical field used to resolve multiple attachments in a multi-website environment.')
+    # Technical field used to resolve multiple attachments in a multi-website environment.
+    key = fields.Char()
     website_id = fields.Many2one('website')
 
     @api.model_create_multi
