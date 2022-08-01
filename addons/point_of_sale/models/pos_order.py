@@ -402,8 +402,11 @@ class PosOrder(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):
-        for pos_order in self.filtered(lambda pos_order: pos_order.state not in ['draft', 'cancel']):
-            raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
+        for pos_order in self:
+            if (pos_order.state not in ['draft', 'cancel'] and not self.env.user.has_group('base.group_system')) or \
+                pos_order.session_id.state == 'closed' or \
+                pos_order.is_invoiced:
+                raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
 
     @api.model_create_multi
     def create(self, vals_list):
