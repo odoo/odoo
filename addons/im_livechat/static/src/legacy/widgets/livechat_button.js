@@ -21,7 +21,7 @@ const LivechatButton = Widget.extend({
         'updated_unread_counter': '_onUpdatedUnreadCounter',
     },
     events: {
-        'click': '_openChat'
+        'click': '_onClick'
     },
     init(parent, messaging) {
         this._super(parent);
@@ -53,12 +53,15 @@ const LivechatButton = Widget.extend({
             for (const m of this.messaging.publicLivechatGlobal.livechatButtonView.history) {
                 this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(m);
             }
-            this._openChat();
+            this.messaging.publicLivechatGlobal.livechatButtonView.openChat();
         } else if (!config.device.isMobile && this.messaging.publicLivechatGlobal.livechatButtonView.rule.action === 'auto_popup') {
             const autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
             if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                    autoOpenChatTimeout: setTimeout(this._openChat.bind(this), this.messaging.publicLivechatGlobal.livechatButtonView.rule.auto_popup_timer * 1000),
+                    autoOpenChatTimeout: setTimeout(
+                        this.messaging.publicLivechatGlobal.livechatButtonView.openChat,
+                        this.messaging.publicLivechatGlobal.livechatButtonView.rule.auto_popup_timer * 1000,
+                    ),
                 });
             }
         }
@@ -96,71 +99,6 @@ const LivechatButton = Widget.extend({
         this.messaging.publicLivechatGlobal.livechatButtonView.update({ chatWindow: clear() });
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
     },
-    /**
-     * @private
-     */
-    _openChat: _.debounce(function () {
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.isOpeningChat) {
-            return;
-        }
-        const cookie = utils.get_cookie('im_livechat_session');
-        let def;
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({ isOpeningChat: true });
-        clearTimeout(this.messaging.publicLivechatGlobal.livechatButtonView.autoOpenChatTimeout);
-        if (cookie) {
-            def = Promise.resolve(JSON.parse(cookie));
-        } else {
-            // re-initialize messages cache
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ messages: clear() });
-            def = session.rpc(
-                '/im_livechat/get_session',
-                this._prepareGetSessionParameters(),
-                { shadow: true },
-            );
-        }
-        def.then((livechatData) => {
-            if (!livechatData || !livechatData.operator_pid) {
-                try {
-                    this.displayNotification({
-                        message: _t("No available collaborator, please try again later."),
-                        sticky: true,
-                    });
-                } catch (_err) {
-                    /**
-                     * Failure in displaying notification happens when
-                     * notification service doesn't exist, which is the case in
-                     * external lib. We don't want notifications in external
-                     * lib at the moment because they use bootstrap toast and
-                     * we don't want to include boostrap in external lib.
-                     */
-                    console.warn(_t("No available collaborator, please try again later."));
-                }
-            } else {
-                this.messaging.publicLivechatGlobal.update({
-                    publicLivechat: insertAndReplace({ data: livechatData }),
-                });
-                return this._openChatWindow().then(() => {
-                    if (!this.messaging.publicLivechatGlobal.livechatButtonView.history) {
-                        this._sendWelcomeMessage();
-                    }
-                    this._renderMessages();
-                    this.messaging.publicLivechatGlobal.update({ notificationHandler: insertAndReplace() });
-
-                    utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
-                    utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60);
-                    if (this.messaging.publicLivechatGlobal.publicLivechat.operator) {
-                        const operatorPidId = this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
-                        const oneWeek = 7 * 24 * 60 * 60;
-                        utils.set_cookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek);
-                    }
-                });
-            }
-        }).then(() => {
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ isOpeningChat: false });
-        }).guardedCatch(() => {
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ isOpeningChat: false });
-        });
-    }, 200, true),
     /**
      * Will try to get a previous operator for this visitor.
      * If the visitor already had visitor A, it's better for his user experience
@@ -269,6 +207,12 @@ const LivechatButton = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _onClick() {
+        this.messaging.publicLivechatGlobal.livechatButtonView.openChat();
+    },
     /**
      * @private
      * @param {OdooEvent} ev
