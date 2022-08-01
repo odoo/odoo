@@ -168,7 +168,7 @@ class StockPickingBatch(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if not self.picking_ids and self.state == 'in_progress':
+        if not self.picking_ids and 'in_progress' in self.mapped('state'):
             self.action_cancel()
         if vals.get('picking_type_id'):
             self._sanity_check()
