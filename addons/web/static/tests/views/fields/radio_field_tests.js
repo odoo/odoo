@@ -355,4 +355,22 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test("field is empty", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 2,
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" widget="radio" />
+                </form>`,
+        });
+
+        assert.hasClass(target.querySelector(".o_field_widget[name=trululu]"), "o_field_empty");
+        assert.containsN(target, ".o_radio_input", 3);
+        assert.containsN(target, ".o_radio_input:disabled", 3);
+        assert.containsNone(target, ".o_radio_input:checked");
+    });
 });
