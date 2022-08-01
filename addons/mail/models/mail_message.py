@@ -92,20 +92,18 @@ class Message(models.Model):
     preview = fields.Char(
         'Preview', compute='_compute_preview',
         help='The text-only beginning of the body used as email preview.')
+    # Attachments are linked to a document through model / res_id and to the message through this field.
     attachment_ids = fields.Many2many(
         'ir.attachment', 'message_attachment_rel',
         'message_id', 'attachment_id',
-        string='Attachments',
-        help='Attachments are linked to a document through model / res_id and to the message '
-             'through this field.')
+        string='Attachments')
     parent_id = fields.Many2one(
-        'mail.message', 'Parent Message', index='btree_not_null', ondelete='set null',
-        help="Initial thread message.")
+        'mail.message', 'Parent Message', index='btree_not_null', ondelete='set null')
     child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
     # related document
     model = fields.Char('Related Document Model')
     res_id = fields.Many2oneReference('Related Document ID', model_field='model')
-    record_name = fields.Char('Message Record Name', help="Name get of the related document.")
+    record_name = fields.Char('Message Record Name') # name_get() of the related document
     # characteristics
     message_type = fields.Selection([
         ('email', 'Email'),
@@ -138,11 +136,9 @@ class Message(models.Model):
         'res.partner', 'mail_notification', string='Partners with Need Action',
         context={'active_test': False}, depends=['notification_ids'])
     needaction = fields.Boolean(
-        'Need Action', compute='_compute_needaction', search='_search_needaction',
-        help='Need Action')
+        'Need Action', compute='_compute_needaction', search='_search_needaction')
     has_error = fields.Boolean(
-        'Has error', compute='_compute_has_error', search='_search_has_error',
-        help='Has error')
+        'Has error', compute='_compute_has_error', search='_search_has_error')
     # notifications
     notification_ids = fields.One2many(
         'mail.notification', 'mail_message_id', 'Notifications',

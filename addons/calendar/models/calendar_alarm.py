@@ -19,8 +19,7 @@ class Alarm(models.Model):
         list(_interval_selection.items()), 'Unit', required=True, default='hours')
     duration_minutes = fields.Integer(
         'Duration in minutes', store=True,
-        search='_search_duration_minutes', compute='_compute_duration_minutes',
-        help="Duration in minutes")
+        search='_search_duration_minutes', compute='_compute_duration_minutes')
     mail_template_id = fields.Many2one(
         'mail.template', string="Email Template",
         domain=[('model', 'in', ['calendar.attendee'])],

@@ -159,7 +159,7 @@ class AccountMove(models.Model):
             ('cancel', 'Cancelled'),
         ], string='Status', required=True, readonly=True, copy=False, tracking=True,
         default='draft')
-    posted_before = fields.Boolean(help="Technical field for knowing if the move has been posted before", copy=False)
+    posted_before = fields.Boolean(copy=False)
     move_type = fields.Selection(selection=[
             ('entry', 'Journal Entry'),
             ('out_invoice', 'Customer Invoice'),
@@ -171,8 +171,7 @@ class AccountMove(models.Model):
         ], string='Type', required=True, store=True, index=True, readonly=True, tracking=True,
         default="entry", change_default=True)
     type_name = fields.Char('Type Name', compute='_compute_type_name')
-    is_storno = fields.Boolean(compute='_compute_is_storno', store=True, copy=False, readonly=False,
-                               help='Utility field to express whether the journal entry is subject to storno accounting. That is when the company uses storno and the journal entry is a refund or a reversal.')
+    is_storno = fields.Boolean(compute='_compute_is_storno', store=True, copy=False, readonly=False)
     to_check = fields.Boolean(string='To Check', default=False, tracking=True,
         help='If this checkbox is ticked, it means that the user was not sure of all the related information at the time of the creation of the move and that the move needs to be checked again.')
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True,
@@ -198,15 +197,15 @@ class AccountMove(models.Model):
     commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity', store=True, readonly=True,
         compute='_compute_commercial_partner_id', ondelete='restrict')
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
-    user_id = fields.Many2one(string='User', related='invoice_user_id',
-        help='Technical field used to fit the generic behavior in mail templates.')
+
+    # Technical field used to fit the generic behavior in mail templates.
+    user_id = fields.Many2one(string='User', related='invoice_user_id')
     partner_shipping_id = fields.Many2one(
         comodel_name='res.partner',
         string='Delivery Address',
         readonly=False,
         store=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="Delivery address for current invoice.",
         compute='_compute_partner_shipping_id',
     )
     is_move_sent = fields.Boolean(
@@ -228,12 +227,13 @@ class AccountMove(models.Model):
     statement_line_id = fields.Many2one(
         comodel_name='account.bank.statement.line',
         string="Statement Line", copy=False, check_company=True)
+
+    # used to open the linked bank statement from the edit button in a group by
+    # view, or via the smart button on journal entries.
     statement_id = fields.Many2one(
         related='statement_line_id.statement_id',
         copy=False,
-        readonly=True,
-        help="Technical field used to open the linked bank statement from the edit button in a group by view,"
-             " or via the smart button on journal entries.")
+        readonly=True)
 
     # === Amount fields ===
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, tracking=True,
@@ -264,29 +264,30 @@ class AccountMove(models.Model):
         readonly=True, copy=False, tracking=True, compute='_compute_amount')
 
     # ==== Cash basis feature fields ====
+
+    # used to keep track of the tax cash basis reconciliation. This is needed
+    # when cancelling the source: it will post the inverse journal entry to
+    # cancel that part too.
     tax_cash_basis_rec_id = fields.Many2one(
         'account.partial.reconcile',
-        string='Tax Cash Basis Entry of',
-        help="Technical field used to keep track of the tax cash basis reconciliation. "
-             "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
+        string='Tax Cash Basis Entry of')
+
     tax_cash_basis_origin_move_id = fields.Many2one(
         comodel_name='account.move',
         index='btree_not_null',
         string="Cash Basis Origin",
-        readonly=1,
-        help="The journal entry from which this tax cash basis journal entry has been created.")
+        readonly=1)
     tax_cash_basis_created_move_ids = fields.One2many(
         string="Cash Basis Entries",
         comodel_name='account.move',
         inverse_name='tax_cash_basis_origin_move_id',
-        help="The cash basis entries created from the taxes on this entry, when reconciling its lines."
     )
+
+    # used by cash basis taxes, telling the lines of the move are always
+    # exigible. This happens if the move contains no payable or receivable line.
     always_tax_exigible = fields.Boolean(
         compute='_compute_always_tax_exigible',
-        store=True,
-        help="Technical field used by cash basis taxes, telling the lines of the move are always exigible. "
-             "This happens if the move contains no payable or receivable line.")
-
+        store=True)
     # ==== Auto-post feature fields ====
     auto_post = fields.Selection(
         string='Auto-post',
@@ -386,16 +387,17 @@ class AccountMove(models.Model):
              'Odoo will automatically create one invoice line with default values to match it.')
 
     # ==== Display purpose fields ====
-    invoice_filter_type_domain = fields.Char(compute='_compute_invoice_filter_type_domain',
-        help="Technical field used to have a dynamic domain on journal / taxes in the form view.")
+
+    # used to have a dynamic domain on journal / taxes in the form view.
+    invoice_filter_type_domain = fields.Char(compute='_compute_invoice_filter_type_domain')
     bank_partner_id = fields.Many2one('res.partner', help='Technical field to get the domain on the bank', compute='_compute_bank_partner_id')
-    tax_lock_date_message = fields.Char(
-        compute='_compute_tax_lock_date_message',
-        help="Technical field used to display a message when the invoice's accounting date is prior of the tax lock date.")
+    # used to display a message when the invoice's accounting date is prior of the tax lock date
+    tax_lock_date_message = fields.Char(compute='_compute_tax_lock_date_message')
+    # used for tracking the status of the currency
     display_inactive_currency_warning = fields.Boolean(
-        compute="_compute_display_inactive_currency_warning",
-        help="Technical field used for tracking the status of the currency")
-    tax_country_id = fields.Many2one(comodel_name='res.country', compute='_compute_tax_country_id', help="Technical field to filter the available taxes depending on the fiscal country and fiscal position.")
+        compute="_compute_display_inactive_currency_warning")
+    # used to filter the available taxes depending on the fiscal country and fiscal position.
+    tax_country_id = fields.Many2one(comodel_name='res.country', compute='_compute_tax_country_id')
     tax_country_code = fields.Char(compute="_compute_tax_country_code")
     # Technical field to hide Reconciled Entries stat button
     has_reconciled_entries = fields.Boolean(compute="_compute_has_reconciled_entries")
@@ -3686,8 +3688,7 @@ class AccountMoveLine(models.Model):
     # ==== Business fields ====
     move_id = fields.Many2one('account.move', string='Journal Entry',
         index=True, required=True, readonly=True, auto_join=True, ondelete="cascade",
-        check_company=True,
-        help="The move of this entry line.")
+        check_company=True)
     move_name = fields.Char(string='Number', related='move_id.name', store=True, index='btree')
     date = fields.Date(related='move_id.date', store=True, readonly=True, index=True, copy=False, group_operator='min')
     ref = fields.Char(related='move_id.ref', store=True, copy=False, index='trigram', readonly=True)
@@ -3695,13 +3696,11 @@ class AccountMoveLine(models.Model):
     journal_id = fields.Many2one(related='move_id.journal_id', store=True, index=True, copy=False)
     company_id = fields.Many2one(related='move_id.company_id', store=True, readonly=True)
     company_currency_id = fields.Many2one(related='company_id.currency_id', string='Company Currency',
-        readonly=True, store=True,
-        help='Utility field to express amount currency')
+        readonly=True, store=True)
     is_same_currency = fields.Boolean(compute='_compute_same_currency')
     is_storno = fields.Boolean(
         related='move_id.is_storno',
-        string='Company Storno Accounting',
-        help='Utility field to express whether the journal item is subject to storno accounting')
+        string='Company Storno Accounting')
     account_id = fields.Many2one('account.account', string='Account',
         index=True, ondelete="cascade",
         domain="[('deprecated', '=', False), ('company_id', '=', 'company_id'),('is_off_balance', '=', False)]",
@@ -3722,8 +3721,7 @@ class AccountMoveLine(models.Model):
     credit = fields.Monetary(string='Credit', default=0.0, currency_field='company_currency_id')
     balance = fields.Monetary(string='Balance', store=True,
         currency_field='company_currency_id',
-        compute='_compute_balance',
-        help="Technical field holding the debit - credit in order to open meaningful graph views from reports")
+        compute='_compute_balance')
     cumulated_balance = fields.Monetary(string='Cumulated Balance', store=False,
         currency_field='company_currency_id',
         compute='_compute_cumulated_balance',
@@ -3763,19 +3761,16 @@ class AccountMoveLine(models.Model):
         comodel_name='account.tax',
         string="Taxes",
         context={'active_test': False},
-        check_company=True,
-        help="Taxes that apply on the base amount")
+        check_company=True)
     group_tax_id = fields.Many2one(
         comodel_name='account.tax',
         string="Originator Group of Taxes",
-        index='btree_not_null',
-        help="The group of taxes that generated this tax line",
+        index='btree_not_null'
     )
     tax_line_id = fields.Many2one('account.tax', string='Originator Tax', ondelete='restrict', store=True,
         compute='_compute_tax_line_id', help="Indicates that this journal item is a tax line")
     tax_group_id = fields.Many2one(related='tax_line_id.tax_group_id', string='Originator tax group',
-        readonly=True, store=True,
-        help='technical field for widget tax-group-custom-field')
+        readonly=True, store=True) # used in the widget tax-group-custom-field
     tax_base_amount = fields.Monetary(string="Base Amount", store=True, readonly=True,
         currency_field='company_currency_id')
     tax_repartition_line_id = fields.Many2one(comodel_name='account.tax.repartition.line',
@@ -3786,9 +3781,10 @@ class AccountMoveLine(models.Model):
         help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.", tracking=True)
     tax_audit = fields.Char(string="Tax Audit String", compute="_compute_tax_audit", store=True,
         help="Computed field, listing the tax grids impacted by this line, and the amount it applies to each of them.")
-    tax_tag_invert = fields.Boolean(string="Invert Tags", compute='_compute_tax_tag_invert', store=True, readonly=False,
-        help="Technical field. True if the balance of this move line needs to be "
-             "inverted when computing its total for each tag (for sales invoices, for example).")
+
+    # Technical field. True if the balance of this move line needs to be
+    # inverted when computing its total for each tag (for sales invoices, for # example)
+    tax_tag_invert = fields.Boolean(string="Invert Tags", compute='_compute_tax_tag_invert', store=True, readonly=False)
 
     # ==== Reconciliation fields ====
     amount_residual = fields.Monetary(string='Residual Amount', store=True,
@@ -3814,14 +3810,18 @@ class AccountMoveLine(models.Model):
         compute="_compute_analytic_tag_ids", store=True, readonly=False, check_company=True, copy=True)
 
     # ==== Onchange / display purpose fields ====
-    recompute_tax_line = fields.Boolean(store=False, readonly=True,
-        help="Technical field used to know on which lines the taxes must be recomputed.")
+
+    # Technical field used to know on which lines the taxes must be recomputed.
+    recompute_tax_line = fields.Boolean(store=False, readonly=True)
     display_type = fields.Selection([
         ('line_section', 'Section'),
         ('line_note', 'Note'),
-    ], default=False, help="Technical field for UX purpose.")
-    is_rounding_line = fields.Boolean(help="Technical field used to retrieve the cash rounding line.")
-    exclude_from_invoice_tab = fields.Boolean(help="Technical field used to exclude some lines from the invoice_line_ids tab in the form view.")
+    ], default=False)
+
+    # used to retrieve the cash rounding line.
+    is_rounding_line = fields.Boolean()
+    # used to exclude some lines from the invoice_line_ids tab in the form view.
+    exclude_from_invoice_tab = fields.Boolean()
 
     _sql_constraints = [
         (

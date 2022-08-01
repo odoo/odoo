@@ -22,7 +22,7 @@ class AccountCashboxLine(models.Model):
             cashbox_line.subtotal = cashbox_line.coin_value * cashbox_line.number
 
     coin_value = fields.Float(string='Coin/Bill Value', required=True, digits=0)
-    number = fields.Integer(string='#Coins/Bills', help='Opening Unit Numbers')
+    number = fields.Integer(string='Number of Coins/Bills')
     subtotal = fields.Float(compute='_sub_total', string='Subtotal', digits=0, readonly=True)
     cashbox_id = fields.Many2one('account.bank.statement.cashbox', string="Cashbox")
     currency_id = fields.Many2one('res.currency', related='cashbox_id.currency_id')
@@ -223,7 +223,7 @@ class AccountBankStatement(models.Model):
              "- Validated: All lines are reconciled. There is nothing left to process.")
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, states={'confirm': [('readonly', True)]}, default=_default_journal, check_company=True)
-    journal_type = fields.Selection(related='journal_id.type', help="Technical field used for usability purposes")
+    journal_type = fields.Selection(related='journal_id.type') # used for usability purposes
     company_id = fields.Many2one('res.company', related='journal_id.company_id', string='Company', store=True, readonly=True)
 
     total_entry_encoding = fields.Monetary('Transactions Subtotal', compute='_end_balance', store=True, help="Total of transaction lines.")
@@ -234,16 +234,14 @@ class AccountBankStatement(models.Model):
     move_line_ids = fields.One2many('account.move.line', 'statement_id', string='Entry lines', states={'confirm': [('readonly', True)]})
     move_line_count = fields.Integer(compute="_get_move_line_count")
 
-    all_lines_reconciled = fields.Boolean(compute='_compute_all_lines_reconciled',
-        help="Technical field indicating if all statement lines are fully reconciled.")
+    all_lines_reconciled = fields.Boolean(compute='_compute_all_lines_reconciled') # are all statement lines are fully reconciled?
     user_id = fields.Many2one('res.users', string='Responsible', required=False, default=lambda self: self.env.user)
     cashbox_start_id = fields.Many2one('account.bank.statement.cashbox', string="Starting Cashbox")
     cashbox_end_id = fields.Many2one('account.bank.statement.cashbox', string="Ending Cashbox")
     is_difference_zero = fields.Boolean(compute='_is_difference_zero', string='Is zero', help="Check if difference is zero.")
-    previous_statement_id = fields.Many2one('account.bank.statement', help='technical field to compute starting balance correctly', compute='_get_previous_statement', store=True)
+    previous_statement_id = fields.Many2one('account.bank.statement', compute='_get_previous_statement', store=True)
     is_valid_balance_start = fields.Boolean(string="Is Valid Balance Start", store=True,
-        compute="_compute_is_valid_balance_start",
-        help="Technical field to display a warning message in case starting balance is different than previous ending balance")
+        compute="_compute_is_valid_balance_start") # used to display a warning message if starting balance is different than previous ending balance
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
 
     def write(self, values):

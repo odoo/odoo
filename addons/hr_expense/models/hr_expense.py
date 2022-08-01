@@ -103,7 +103,7 @@ class HrExpense(models.Model):
         ('approved', 'Approved'),
         ('done', 'Paid'),
         ('refused', 'Refused')
-    ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True, default='draft', help="Status of the expense.")
+    ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True, default='draft')
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", domain="[('employee_id', '=', employee_id), ('company_id', '=', company_id)]", readonly=True, copy=False)
     sheet_is_editable = fields.Boolean(compute='_compute_sheet_is_editable')
     approved_by = fields.Many2one('res.users', string='Approved By', related='sheet_id.user_id')
@@ -980,7 +980,7 @@ class HrExpenseSheet(models.Model):
         ('post', 'Posted'),
         ('done', 'Done'),
         ('cancel', 'Refused')
-    ], string='Status', index=True, readonly=True, tracking=True, copy=False, default='draft', required=True, help='Expense Report State')
+    ], string='Status', index=True, readonly=True, tracking=True, copy=False, default='draft', required=True)
     payment_state = fields.Selection(selection=PAYMENT_STATE_SELECTION, string="Payment Status",
         store=True, readonly=True, copy=False, tracking=True, compute='_compute_payment_state')
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, tracking=True, states={'draft': [('readonly', False)]}, default=_default_employee_id, check_company=True, domain= lambda self: self.env['hr.expense']._get_employee_id_domain())

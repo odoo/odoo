@@ -109,8 +109,8 @@ class MrpProduction(models.Model):
     date_deadline = fields.Datetime(
         'Deadline', copy=False, store=True, readonly=True, compute='_compute_date_deadline',
         help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.")
-    date_start = fields.Datetime('Start Date', copy=False, readonly=True, help="Date of the WO")
-    date_finished = fields.Datetime('End Date', copy=False, readonly=True, help="Date when the MO has been close")
+    date_start = fields.Datetime('Start Date', copy=False, readonly=True)
+    date_finished = fields.Datetime('End Date', copy=False, readonly=True)
 
     production_duration_expected = fields.Float("Expected Duration", help="Total expected duration (in minutes)", compute='_compute_production_duration_expected')
     production_real_duration = fields.Float("Real Duration", help="Total real duration (in minutes)", compute='_compute_production_real_duration')

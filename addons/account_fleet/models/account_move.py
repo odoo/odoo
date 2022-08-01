@@ -34,8 +34,8 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle', index='btree_not_null')
-    need_vehicle = fields.Boolean(compute='_compute_need_vehicle',
-        help="Technical field to decide whether the vehicle_id field is editable")
+    # used to decide whether the vehicle_id field is editable
+    need_vehicle = fields.Boolean(compute='_compute_need_vehicle')
 
     def _compute_need_vehicle(self):
         self.need_vehicle = False

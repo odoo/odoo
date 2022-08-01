@@ -43,8 +43,8 @@ class Currency(models.Model):
     position = fields.Selection([('after', 'After Amount'), ('before', 'Before Amount')], default='after',
         string='Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     date = fields.Date(compute='_compute_date')
-    currency_unit_label = fields.Char(string="Currency Unit", help="Currency Unit Name")
-    currency_subunit_label = fields.Char(string="Currency Subunit", help="Currency Subunit Name")
+    currency_unit_label = fields.Char(string="Currency Unit")
+    currency_subunit_label = fields.Char(string="Currency Subunit")
     is_current_company_currency = fields.Boolean(compute='_compute_is_current_company_currency')
 
     _sql_constraints = [

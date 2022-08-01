@@ -36,7 +36,7 @@ class Sponsor(models.Model):
     sequence = fields.Integer('Sequence')
     active = fields.Boolean(default=True)
     # description
-    subtitle = fields.Char('Slogan', help='Catchy marketing sentence for promote')
+    subtitle = fields.Char('Slogan')
     exhibitor_type = fields.Selection(
         [('sponsor', 'Sponsor'), ('exhibitor', 'Exhibitor'), ('online', 'Online Exhibitor')],
         string="Sponsor Type", default="sponsor")

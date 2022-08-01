@@ -20,7 +20,7 @@ class ProductProduct(models.Model):
     sale_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Sale Unit Price',
         help="Avg. Price in Customer Invoices.")
     purchase_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Purchase Unit Price',
-        help="Avg. Price in Vendor Bills ")
+        help="Avg. Price in Vendor Bills")
     sale_num_invoiced = fields.Float(compute='_compute_product_margin_fields_values', string='# Invoiced in Sale',
         help="Sum of Quantity in Customer Invoices")
     purchase_num_invoiced = fields.Float(compute='_compute_product_margin_fields_values', string='# Invoiced in Purchase',

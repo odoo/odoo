@@ -51,7 +51,11 @@ class AccountChartTemplate(models.Model):
     _order = 'name'
 
     name = fields.Char(translate=True)
-    spoken_languages = fields.Char(string='Spoken Languages', help="State here the languages for which the translations of templates could be loaded at the time of installation of this localization module and copied in the final object when generating them from templates. You must provide the language codes separated by ';'")
+    spoken_languages = fields.Char(string='Spoken Languages')
+    # the languages for which the translations of templates could be loaded at
+    # the time of installation of this localization module and copied in the
+    # final object when generating them from templates. You must provide the
+    # language codes separated by ';'
 
 
 class AccountFiscalPosition(models.Model):

@@ -69,8 +69,7 @@ class StockMove(models.Model):
     # TDE FIXME: make it stored, otherwise group will not work
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
-        related='product_id.product_tmpl_id',
-        help="Technical: used in views")
+        related='product_id.product_tmpl_id')
     location_id = fields.Many2one(
         'stock.location', 'Source Location',
         auto_join=True, index=True, required=True,
@@ -107,9 +106,11 @@ class StockMove(models.Model):
              "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to be manufactured...\n"
              "* Available: When products are reserved, it is set to \'Available\'.\n"
              "* Done: When the shipment is processed, the state is \'Done\'.")
-    price_unit = fields.Float(
-        'Unit Price', help="Technical field used to record the product cost set by the user during a picking confirmation (when costing "
-                           "method used is 'average price' or 'real'). Value given in company currency and in product uom.", copy=False)  # as it's a technical field, we intentionally don't provide the digits attribute
+
+    # used to record the product cost set by the user during a picking confirmation (when costing
+    # method used is 'average price' or 'real'). Value given in company currency and in product uom.
+    # as it's a technical field, we intentionally don't provide the digits attribute
+    price_unit = fields.Float('Unit Price', copy=False)
     origin = fields.Char("Source Document")
     procure_method = fields.Selection([
         ('make_to_stock', 'Default: Take From Stock'),
@@ -145,13 +146,13 @@ class StockMove(models.Model):
     availability = fields.Float(
         'Forecasted Quantity', compute='_compute_product_availability',
         readonly=True, help='Quantity in stock that can still be reserved for this move')
+    # used to depict a restriction on the ownership of quants to consider when marking this move as 'done'
     restrict_partner_id = fields.Many2one(
-        'res.partner', 'Owner ', help="Technical field used to depict a restriction on the ownership of quants to consider when marking this move as 'done'",
-        check_company=True)
+        'res.partner', 'Owner ', check_company=True)
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route",
         check_company=True)
-    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="Technical field depicting the warehouse to consider for the route selection on the next procurement (if any).")
+    warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', help="the warehouse to consider for the route selection on the next procurement (if any).")
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
     quantity_done = fields.Float('Quantity Done', compute='_quantity_done_compute', digits='Product Unit of Measure', inverse='_quantity_done_set')
     show_operations = fields.Boolean(related='picking_id.picking_type_id.show_operations')
@@ -176,7 +177,7 @@ class StockMove(models.Model):
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
     lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True,
-        help="This is a technical field for calculating when a move should be reserved")
+        help="Computes when a move should be reserved")
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
     from_immediate_transfer = fields.Boolean(related="picking_id.immediate_transfer")
 

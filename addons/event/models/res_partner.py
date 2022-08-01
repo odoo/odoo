@@ -8,8 +8,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     event_count = fields.Integer(
-        '# Events', compute='_compute_event_count', groups='event.group_event_registration_desk',
-        help='Number of events the partner has participated.')
+        '# Events', compute='_compute_event_count', groups='event.group_event_registration_desk')
 
     def _compute_event_count(self):
         self.event_count = 0

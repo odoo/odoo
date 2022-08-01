@@ -8,9 +8,7 @@ class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
     subcontracting_to_resupply = fields.Boolean(
-        'Resupply Subcontractors', default=True,
-        help="Resupply subcontractors with components")
-
+        'Resupply Subcontractors', default=True)
     subcontracting_mto_pull_id = fields.Many2one(
         'stock.rule', 'Subcontracting MTO Rule')
     subcontracting_pull_id = fields.Many2one(

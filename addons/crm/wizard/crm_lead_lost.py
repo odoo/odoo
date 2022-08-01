@@ -11,8 +11,7 @@ class CrmLeadLost(models.TransientModel):
 
     lost_reason_id = fields.Many2one('crm.lost.reason', 'Lost Reason')
     lost_feedback = fields.Html(
-        'Closing Note', sanitize=True,
-        help="Closing note logged in leads discussion history."
+        'Closing Note', sanitize=True
     )
 
     def action_lost_reason_apply(self):

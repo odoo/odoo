@@ -42,7 +42,7 @@ class Goal(models.Model):
         ('canceled', "Canceled"),
     ], default='draft', string='State', required=True)
     to_update = fields.Boolean('To update')
-    closed = fields.Boolean('Closed goal', help="These goals will not be recomputed.")
+    closed = fields.Boolean('Closed goal')
 
     computation_mode = fields.Selection(related='definition_id.computation_mode', readonly=False)
     remind_update_delay = fields.Integer(

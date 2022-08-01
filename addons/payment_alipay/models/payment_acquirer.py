@@ -15,7 +15,6 @@ class PaymentAcquirer(models.Model):
         selection_add=[('alipay', "Alipay")], ondelete={'alipay': 'set default'})
     alipay_payment_method = fields.Selection(
         string="Account",
-        help="* Cross-border: For the overseas seller \n* Express Checkout: For the Chinese Seller",
         selection=[
             ('express_checkout', 'Express Checkout (only for Chinese merchants)'),
             ('standard_checkout', 'Cross-border')

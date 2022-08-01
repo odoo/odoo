@@ -18,9 +18,9 @@ class MailChannel(models.Model):
 
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})
-    livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor leave the conversation.')
+    livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor leaves the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
-    livechat_operator_id = fields.Many2one('res.partner', string='Operator', help="""Operator for this specific channel""")
+    livechat_operator_id = fields.Many2one('res.partner', string='Operator')
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'mail_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")

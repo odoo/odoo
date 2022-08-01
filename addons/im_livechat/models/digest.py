@@ -11,7 +11,7 @@ class Digest(models.Model):
     kpi_livechat_rating_value = fields.Float(digits=(16, 2), compute='_compute_kpi_livechat_rating_value')
     kpi_livechat_conversations = fields.Boolean('Conversations handled')
     kpi_livechat_conversations_value = fields.Integer(compute='_compute_kpi_livechat_conversations_value')
-    kpi_livechat_response = fields.Boolean('Time to answer (sec)', help="Time to answer the user in second.")
+    kpi_livechat_response = fields.Boolean('Time to answer (sec)')
     kpi_livechat_response_value = fields.Float(compute='_compute_kpi_livechat_response_value')
 
     def _compute_kpi_livechat_rating_value(self):

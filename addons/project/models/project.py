@@ -303,9 +303,8 @@ class Project(models.Model):
         default=_get_default_favorite_user_ids,
         string='Members')
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', compute_sudo=True,
-        string='Show Project on Dashboard',
-        help="Whether this project should be displayed on your dashboard.")
-    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Label used for the tasks of the project.", translate=True)
+        string='Show Project on Dashboard')
+    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', help="Label used for tasks in this project (e.g. Tasks, Features, Tickets, etc).", translate=True)
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
         'resource.calendar', string='Working Time',
@@ -1075,8 +1074,7 @@ class Task(models.Model):
         ('0', 'Low'),
         ('1', 'High'),
     ], default='0', index=True, string="Priority", tracking=True)
-    sequence = fields.Integer(string='Sequence', default=10,
-        help="Gives the sequence order when displaying a list of tasks.")
+    sequence = fields.Integer(string='Sequence', default=10)
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
         store=True, readonly=False, ondelete='restrict', tracking=True, index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',

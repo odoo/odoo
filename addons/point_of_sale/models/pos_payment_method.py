@@ -40,8 +40,8 @@ class PosPaymentMethod(models.Model):
     config_ids = fields.Many2many('pos.config', string='Point of Sale Configurations')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     use_payment_terminal = fields.Selection(selection=lambda self: self._get_payment_terminal_selection(), string='Use a Payment Terminal', help='Record payments with a terminal on this journal.')
-    hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal', help='Technical field which is used to '
-                                               'hide use_payment_terminal when no payment interfaces are installed.')
+    # used to hide use_payment_terminal when no payment interfaces are installed
+    hide_use_payment_terminal = fields.Boolean(compute='_compute_hide_use_payment_terminal')
     active = fields.Boolean(default=True)
     type = fields.Selection(selection=[('cash', 'Cash'), ('bank', 'Bank'), ('pay_later', 'Customer Account')], compute="_compute_type")
 

@@ -54,7 +54,7 @@ class MrpUnbuild(models.Model):
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial Number',
         domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True,
-        states={'done': [('readonly', True)]}, help="Lot/Serial Number of the product to unbuild.")
+        states={'done': [('readonly', True)]})
     has_tracking=fields.Selection(related='product_id.tracking', readonly=True)
     location_id = fields.Many2one(
         'stock.location', 'Source Location',

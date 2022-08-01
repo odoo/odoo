@@ -7,8 +7,7 @@ from odoo import api, fields, models
 class HrDepartureWizard(models.TransientModel):
     _inherit = 'hr.departure.wizard'
 
-    release_campany_car = fields.Boolean("Release Company Car", default=True,
-        help="Release the company car.")
+    release_campany_car = fields.Boolean("Release Company Car", default=True)
 
     def action_register_departure(self):
         super(HrDepartureWizard, self).action_register_departure()

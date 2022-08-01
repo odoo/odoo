@@ -14,12 +14,10 @@ class StockPickingBatch(models.Model):
 
     name = fields.Char(
         string='Batch Transfer', default='New',
-        copy=False, required=True, readonly=True,
-        help='Name of the batch transfer')
+        copy=False, required=True, readonly=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True, check_company=True,
-        readonly=True, states={'draft': [('readonly', False)], 'in_progress': [('readonly', False)]},
-        help='Person responsible for this batch transfer')
+        readonly=True, states={'draft': [('readonly', False)], 'in_progress': [('readonly', False)]})
     company_id = fields.Many2one(
         'res.company', string="Company", required=True, readonly=True,
         index=True, default=lambda self: self.env.company)
@@ -30,13 +28,13 @@ class StockPickingBatch(models.Model):
         help='List of transfers associated to this batch')
     show_check_availability = fields.Boolean(
         compute='_compute_move_ids',
-        help='Technical field used to compute whether the check availability button should be shown.')
+        string='Show Check Availability')
     show_validate = fields.Boolean(
         compute='_compute_show_validate',
-        help='Technical field used to decide whether the validate button should be shown.')
+        string='Show Validate Button')
     show_allocation = fields.Boolean(
         compute='_compute_show_allocation',
-        help='Technical Field used to decide whether the button "Allocation" should be displayed.')
+        string='Show Allocation Button')
     allowed_picking_ids = fields.One2many('stock.picking', compute='_compute_allowed_picking_ids')
     move_ids = fields.One2many(
         'stock.move', string="Stock moves", compute='_compute_move_ids')

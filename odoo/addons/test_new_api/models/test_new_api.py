@@ -80,8 +80,7 @@ class Discussion(models.Model):
     _name = 'test_new_api.discussion'
     _description = 'Test New API Discussion'
 
-    name = fields.Char(string='Title', required=True,
-        help="General description of what this discussion is about.")
+    name = fields.Char(string='Title', required=True, help="Description of discussion.")
     moderator = fields.Many2one('res.users')
     categories = fields.Many2many('test_new_api.category',
         'test_new_api_discussion_category', 'discussion', 'category')

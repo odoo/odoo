@@ -50,9 +50,10 @@ class AccountReconcileModelLine(models.Model):
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",
         required=True, check_company=True)
+
+    # This field is ignored in a bank statement reconciliation.
     journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade',
-        domain="[('type', '=', 'general'), ('company_id', '=', company_id)]",
-        help="This field is ignored in a bank statement reconciliation.", check_company=True)
+        domain="[('type', '=', 'general'), ('company_id', '=', company_id)]", check_company=True)
     label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
@@ -60,9 +61,12 @@ class AccountReconcileModelLine(models.Model):
         ('percentage_st_line', 'Percentage of statement line'),
         ('regex', 'From label'),
     ], required=True, default='percentage')
-    show_force_tax_included = fields.Boolean(compute='_compute_show_force_tax_included', help='Technical field used to show the force tax included button')
+
+    # used to show the force tax included button'
+    show_force_tax_included = fields.Boolean(compute='_compute_show_force_tax_included')
     force_tax_included = fields.Boolean(string='Tax Included in Price', help='Force the tax to be managed as a price included tax.')
-    amount = fields.Float(string="Float Amount", compute='_compute_float_amount', store=True, help="Technical shortcut to parse the amount to a float")
+    # technical shortcut to parse the amount to a float
+    amount = fields.Float(string="Float Amount", compute='_compute_float_amount', store=True)
     amount_string = fields.Char(string="Amount", default='100', required=True, help="""Value for the amount of the writeoff line
     * Percentage: Percentage of the balance, between 0 and 100.
     * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.
@@ -361,7 +365,8 @@ class AccountReconcileModel(models.Model):
         tracking=True,
         help="Every character that is nor a digit nor this separator will be removed from the matching string",
     )
-    show_decimal_separator = fields.Boolean(compute='_compute_show_decimal_separator', help="Technical field to decide if we should show the decimal separator for the regex matching field.")
+    # used to decide if we should show the decimal separator for the regex matching field
+    show_decimal_separator = fields.Boolean(compute='_compute_show_decimal_separator')
     number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
 
     def action_reconcile_stat(self):

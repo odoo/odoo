@@ -26,9 +26,9 @@ class AccountPayment(models.Model):
         comodel_name='payment.token',
         compute='_compute_suitable_payment_token_ids'
     )
+    # Technical field used to hide or show the payment_token_id if needed
     use_electronic_payment_method = fields.Boolean(
         compute='_compute_use_electronic_payment_method',
-        help='Technical field used to hide or show the payment_token_id if needed.'
     )
 
     # == Fields used for traceability ==

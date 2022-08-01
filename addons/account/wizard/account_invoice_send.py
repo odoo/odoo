@@ -23,13 +23,12 @@ class AccountInvoiceSend(models.TransientModel):
         domain="[('model', '=', 'account.move')]"
         )
 
-    # View fields
+    # Technical field containing a textual representation of the selected move types,
+    # if multiple. It is used to inform the user in the window in such case.
     move_types = fields.Char(
         string='Move types',
         compute='_compute_move_types',
-        readonly=True,
-        help='Technical field containing a textual representation of the selected move types, '
-             'if multiple. It is used to inform the user in the window in such case.')
+        readonly=True)
 
     @api.model
     def default_get(self, fields):

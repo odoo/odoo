@@ -90,8 +90,8 @@ class Location(models.Model):
     warehouse_view_ids = fields.One2many('stock.warehouse', 'view_location_id', readonly=True)
     warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id')
     storage_category_id = fields.Many2one('stock.storage.category', string='Storage Category', check_company=True)
-    outgoing_move_line_ids = fields.One2many('stock.move.line', 'location_id', help='Technical: used to compute weight.')
-    incoming_move_line_ids = fields.One2many('stock.move.line', 'location_dest_id', help='Technical: used to compute weight.')
+    outgoing_move_line_ids = fields.One2many('stock.move.line', 'location_id') # used to compute weight
+    incoming_move_line_ids = fields.One2many('stock.move.line', 'location_dest_id') # used to compute weight
     net_weight = fields.Float('Net Weight', compute="_compute_weight")
     forecast_weight = fields.Float('Forecasted Weight', compute="_compute_weight")
 

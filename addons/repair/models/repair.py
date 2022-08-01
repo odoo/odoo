@@ -99,9 +99,8 @@ class Repair(models.Model):
         copy=False, readonly=True, tracking=True,
         domain=[('move_type', '=', 'out_invoice')])
     move_id = fields.Many2one(
-        'stock.move', 'Move',
-        copy=False, readonly=True, tracking=True, check_company=True,
-        help="Move created by the repair order")
+        'stock.move', 'Inventory Move',
+        copy=False, readonly=True, tracking=True, check_company=True)
     fees_lines = fields.One2many(
         'repair.fee', 'repair_id', 'Operations',
         copy=True, readonly=False)
@@ -130,7 +129,7 @@ class Repair(models.Model):
     amount_total = fields.Float('Total', compute='_amount_total', store=True)
     tracking = fields.Selection(string='Product Tracking', related="product_id.tracking", readonly=False)
     invoice_state = fields.Selection(string='Invoice State', related='invoice_id.state')
-    priority = fields.Selection([('0', 'Normal'), ('1', 'Urgent')], default='0', string="Priority", help="Important repair order")
+    priority = fields.Selection([('0', 'Normal'), ('1', 'Urgent')], default='0', string="Priority")
 
     def _compute_allowed_picking_type_ids(self):
         '''

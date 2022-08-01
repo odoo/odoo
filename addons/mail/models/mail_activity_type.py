@@ -75,7 +75,7 @@ class MailActivityType(models.Model):
     #Fields for display purpose only
     initial_res_model = fields.Selection(selection=_get_model_selection, string='Initial model', compute="_compute_initial_res_model", store=False,
             help='Technical field to keep track of the model at the start of editing to support UX related behaviour')
-    res_model_change = fields.Boolean(string="Model has change", help="Technical field for UX related behaviour", default=False, store=False)
+    res_model_change = fields.Boolean(string="Model has change", default=False, store=False)
 
     @api.onchange('res_model')
     def _onchange_res_model(self):

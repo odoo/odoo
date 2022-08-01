@@ -58,7 +58,7 @@ class MailActivity(models.Model):
     res_id = fields.Many2oneReference(string='Related Document ID', index=True, model_field='res_model')
     res_name = fields.Char(
         'Document Name', compute='_compute_res_name', compute_sudo=True, store=True,
-        help="Display name of the related document.", readonly=True)
+        readonly=True)
     # activity
     activity_type_id = fields.Many2one(
         'mail.activity.type', string='Activity Type',
@@ -88,12 +88,11 @@ class MailActivity(models.Model):
     previous_activity_type_id = fields.Many2one('mail.activity.type', string='Previous Activity Type', readonly=True)
     has_recommended_activities = fields.Boolean(
         'Next activities available',
-        compute='_compute_has_recommended_activities',
-        help='Technical field for UX purpose')
+        compute='_compute_has_recommended_activities') # technical field for UX purpose
     mail_template_ids = fields.Many2many(related='activity_type_id.mail_template_ids', readonly=True)
     chaining_type = fields.Selection(related='activity_type_id.chaining_type', readonly=True)
     # access
-    can_write = fields.Boolean(compute='_compute_can_write', help='Technical field to hide buttons if the current user has no access.')
+    can_write = fields.Boolean(compute='_compute_can_write') # used to hide buttons if the current user has no access
 
     _sql_constraints = [
         # Required on a Many2one reference field is not sufficient as actually

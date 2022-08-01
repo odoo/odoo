@@ -18,7 +18,7 @@ class PurchaseReport(models.Model):
     _auto = False
     _order = 'date_order desc, price_total desc'
 
-    date_order = fields.Datetime('Order Date', readonly=True, help="Depicts the date when the Quotation should be validated and converted into a purchase order.")
+    date_order = fields.Datetime('Order Date', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft RFQ'),
         ('sent', 'RFQ Sent'),

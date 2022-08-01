@@ -21,15 +21,13 @@ class ReportProjectTaskUser(models.Model):
     date_last_stage_update = fields.Datetime(string='Last Stage Update', readonly=True)
     project_id = fields.Many2one('project.project', string='Project', readonly=True)
     working_days_close = fields.Float(string='Working Days to Close',
-        digits=(16,2), readonly=True, group_operator="avg",
-        help="Number of Working Days to close the task")
+        digits=(16, 2), readonly=True, group_operator="avg")
     working_days_open = fields.Float(string='Working Days to Assign',
-        digits=(16,2), readonly=True, group_operator="avg",
-        help="Number of Working Days to open the task")
+        digits=(16, 2), readonly=True, group_operator="avg")
     delay_endings_days = fields.Float(string='Days to Deadline', digits=(16, 2), group_operator="avg", readonly=True)
     nbr = fields.Integer('# of Tasks', readonly=True)  # TDE FIXME master: rename into nbr_tasks
-    working_hours_open = fields.Float(string='Working Hours to Assign', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Working Hours to open the task")
-    working_hours_close = fields.Float(string='Working Hours to Close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Working Hours to close the task")
+    working_hours_open = fields.Float(string='Working Hours to Assign', digits=(16, 2), readonly=True, group_operator="avg")
+    working_hours_close = fields.Float(string='Working Hours to Close', digits=(16, 2), readonly=True, group_operator="avg")
     rating_last_value = fields.Float('Rating Value (/5)', group_operator="avg", readonly=True, groups="project.group_project_rating")
     rating_avg = fields.Float('Average Rating', readonly=True, group_operator='avg', groups="project.group_project_rating")
     priority = fields.Selection([

@@ -28,11 +28,9 @@ class AccountPayment(models.Model):
         check_company=True)
 
     is_reconciled = fields.Boolean(string="Is Reconciled", store=True,
-        compute='_compute_reconciliation_status',
-        help="Technical field indicating if the payment is already reconciled.")
+        compute='_compute_reconciliation_status')
     is_matched = fields.Boolean(string="Is Matched With a Bank Statement", store=True,
-        compute='_compute_reconciliation_status',
-        help="Technical field indicating if the payment has been matched with a statement line.")
+        compute='_compute_reconciliation_status')
     available_partner_bank_ids = fields.Many2many(
         comodel_name='res.partner.bank',
         compute='_compute_available_partner_bank_ids',
@@ -46,9 +44,8 @@ class AccountPayment(models.Model):
         readonly=False, store=True,
         tracking=True,
         compute="_compute_is_internal_transfer")
-    qr_code = fields.Char(string="QR Code",
-        compute="_compute_qr_code",
-        help="QR-code report URL to use to generate the QR-code to scan with a banking app to perform this payment.")
+    qr_code = fields.Char(string="QR Code URL",
+        compute="_compute_qr_code")
     paired_internal_transfer_payment_id = fields.Many2one('account.payment',
         help="When an internal transfer is posted, a paired payment is created. "
         "They are cross referenced through this field", copy=False)
@@ -126,10 +123,11 @@ class AccountPayment(models.Model):
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_invoices_count = fields.Integer(string="# Reconciled Invoices",
         compute="_compute_stat_buttons_from_reconciliation")
+
+    # used to determine label 'invoice' or 'credit note' in view
     reconciled_invoices_type = fields.Selection(
         [('credit_note', 'Credit Note'), ('invoice', 'Invoice')],
-        compute='_compute_stat_buttons_from_reconciliation',
-        help="Technical field used to determine label 'invoice' or 'credit note' in view")
+        compute='_compute_stat_buttons_from_reconciliation')
     reconciled_bill_ids = fields.Many2many('account.move', string="Reconciled Bills",
         compute='_compute_stat_buttons_from_reconciliation',
         help="Invoices whose journal items have been reconciled with these payments.")
@@ -143,14 +141,14 @@ class AccountPayment(models.Model):
 
     # == Display purpose fields ==
     payment_method_code = fields.Char(
-        related='payment_method_line_id.code',
-        help="Technical field used to adapt the interface to the payment type selected.")
+        related='payment_method_line_id.code')
+
+    # used to know whether the field `partner_bank_id` needs to be displayed or not in the payments form views
     show_partner_bank_account = fields.Boolean(
-        compute='_compute_show_require_partner_bank',
-        help="Technical field used to know whether the field `partner_bank_id` needs to be displayed or not in the payments form views")
+        compute='_compute_show_require_partner_bank')
+    # used to know whether the field `partner_bank_id` needs to be required or not in the payments form views
     require_partner_bank_account = fields.Boolean(
-        compute='_compute_show_require_partner_bank',
-        help="Technical field used to know whether the field `partner_bank_id` needs to be required or not in the payments form views")
+        compute='_compute_show_require_partner_bank')
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
     amount_signed = fields.Monetary(
         currency_field='currency_id', compute='_compute_amount_signed', tracking=True,

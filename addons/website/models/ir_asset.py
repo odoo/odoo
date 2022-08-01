@@ -7,7 +7,7 @@ from odoo import fields, models
 class IrAsset(models.Model):
     _inherit = 'ir.asset'
 
-    key = fields.Char(copy=False, help='Technical field used to resolve multiple assets in a multi-website environment.')
+    key = fields.Char(copy=False) # used to resolve multiple assets in a multi-website environment
     website_id = fields.Many2one('website', ondelete='cascade')
 
     def _get_related_assets(self, domain):

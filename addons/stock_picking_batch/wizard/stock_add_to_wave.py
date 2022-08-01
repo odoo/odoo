@@ -31,7 +31,7 @@ class StockPickingToWave(models.TransientModel):
     picking_ids = fields.Many2many('stock.picking')
     line_ids = fields.Many2many('stock.move.line')
     mode = fields.Selection([('existing', 'an existing wave transfer'), ('new', 'a new wave transfer')], default='existing')
-    user_id = fields.Many2one('res.users', string='Responsible', help='Person responsible for this wave transfer')
+    user_id = fields.Many2one('res.users', string='Responsible')
 
 
     def attach_pickings(self):

@@ -43,7 +43,7 @@ class ServerActions(models.Model):
         ('generic', 'Generic User From Record')], default="specific",
         help="Use 'Specific User' to always assign the same user on the next activity. Use 'Generic User From Record' to specify the field name of the user to choose on the record.")
     activity_user_id = fields.Many2one('res.users', string='Responsible')
-    activity_user_field_name = fields.Char('User field name', help="Technical name of the user on the record", default="user_id")
+    activity_user_field_name = fields.Char('User field name', default="user_id")
 
     @api.onchange('activity_date_deadline_range')
     def _onchange_activity_date_deadline_range(self):

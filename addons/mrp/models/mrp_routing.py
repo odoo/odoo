@@ -19,15 +19,13 @@ class MrpRoutingWorkcenter(models.Model):
         help="Gives the sequence order when displaying a list of routing Work Centers.")
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
-        index=True, ondelete='cascade', required=True, check_company=True,
-        help="The Bill of Material this operation is linked to")
+        index=True, ondelete='cascade', required=True, check_company=True)
     company_id = fields.Many2one('res.company', 'Company', related='bom_id.company_id')
     worksheet_type = fields.Selection([
         ('pdf', 'PDF'), ('google_slide', 'Google Slide'), ('text', 'Text')],
-        string="Work Sheet", default="text",
-        help="Defines if you want to use a PDF or a Google Slide as work sheet."
+        string="Work Sheet", default="text"
     )
-    note = fields.Html('Description', help="Text worksheet description")
+    note = fields.Html('Description')
     worksheet = fields.Binary('PDF')
     worksheet_google_slide = fields.Char('Google Slide', help="Paste the url of your Google Slide. Make sure the access to the document is public.")
     time_mode = fields.Selection([

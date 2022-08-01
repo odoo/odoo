@@ -63,7 +63,6 @@ class SaleOrderLine(models.Model):
             ('line_section', "Section"),
             ('line_note', "Note"),
         ],
-        help="Technical field for UX purpose.",
         default=False)
     is_downpayment = fields.Boolean(
         string="Is a down payment",
@@ -123,10 +122,10 @@ class SaleOrderLine(models.Model):
         store=True, readonly=False, precompute=True,
         context={'active_test': False})
 
+    # Tech field caching pricelist rule used for price & discount computation
     pricelist_item_id = fields.Many2one(
         comodel_name='product.pricelist.item',
-        compute='_compute_pricelist_item_id',
-        help="Tech field caching pricelist rule used for price & discount computation")
+        compute='_compute_pricelist_item_id')
 
     price_unit = fields.Float(
         string="Unit Price",
@@ -253,11 +252,9 @@ class SaleOrderLine(models.Model):
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
     product_updatable = fields.Boolean(
         string="Can Edit Product",
-        compute='_compute_product_updatable',
-        help="UX field to know when the product can be modified")
+        compute='_compute_product_updatable')
     product_uom_readonly = fields.Boolean(
-        compute='_compute_product_uom_readonly',
-        help="UX field to know when the UoM can be modified")
+        compute='_compute_product_uom_readonly')
 
     #=== COMPUTE METHODS ===#
 

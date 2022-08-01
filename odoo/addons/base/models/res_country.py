@@ -35,7 +35,7 @@ class Country(models.Model):
     _order = 'name'
 
     name = fields.Char(
-        string='Country Name', required=True, translate=True, help='The full name of the country.')
+        string='Country Name', required=True, translate=True)
     code = fields.Char(
         string='Country Code', size=2,
         help='The ISO country code in two chars. \nYou can use this field for quick search.')

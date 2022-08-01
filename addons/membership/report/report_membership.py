@@ -23,7 +23,7 @@ class ReportMembership(models.Model):
     _rec_name = 'start_date'
 
     start_date = fields.Date(string='Start Date', readonly=True)
-    date_to = fields.Date(string='End Date', readonly=True, help="End membership date")
+    date_to = fields.Date(string='End Date', readonly=True)
     num_waiting = fields.Integer(string='# Waiting', readonly=True)
     num_invoiced = fields.Integer(string='# Invoiced', readonly=True)
     num_paid = fields.Integer(string='# Paid', readonly=True)

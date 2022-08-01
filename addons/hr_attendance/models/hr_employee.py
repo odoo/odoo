@@ -12,8 +12,7 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     attendance_ids = fields.One2many(
-        'hr.attendance', 'employee_id', groups="hr_attendance.group_hr_attendance_user",
-        help='list of attendances for the employee')
+        'hr.attendance', 'employee_id', groups="hr_attendance.group_hr_attendance_user")
     last_attendance_id = fields.Many2one(
         'hr.attendance', compute='_compute_last_attendance_id', store=True,
         groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance")

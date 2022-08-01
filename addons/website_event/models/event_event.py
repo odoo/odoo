@@ -81,8 +81,7 @@ class Event(models.Model):
         'Is Ongoing', compute='_compute_time_data', search='_search_is_ongoing',
         help="Whether event has begun")
     is_done = fields.Boolean(
-        'Is Done', compute='_compute_time_data',
-        help="Whether event is finished")
+        'Is Done', compute='_compute_time_data')
     start_today = fields.Boolean(
         'Start Today', compute='_compute_time_data',
         help="Whether event is going to start today if still not ongoing")

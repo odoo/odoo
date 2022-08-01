@@ -29,7 +29,7 @@ class FleetVehicle(models.Model):
         return state if state and state.id else False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
-    description = fields.Html("Vehicle Description", help="Add a note about this vehicle")
+    description = fields.Html("Vehicle Description")
     active = fields.Boolean('Active', default=True, tracking=True)
     manager_id = fields.Many2one(
         'res.users', 'Fleet Manager',
@@ -49,7 +49,7 @@ class FleetVehicle(models.Model):
     driver_id = fields.Many2one('res.partner', 'Driver', tracking=True, help='Driver address of the vehicle', copy=False)
     future_driver_id = fields.Many2one('res.partner', 'Future Driver', tracking=True, help='Next Driver Address of the vehicle', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     model_id = fields.Many2one('fleet.vehicle.model', 'Model',
-        tracking=True, required=True, help='Model of the vehicle')
+        tracking=True, required=True)
 
     brand_id = fields.Many2one('fleet.vehicle.model.brand', 'Brand', related="model_id.brand_id", store=True, readonly=False)
     log_drivers = fields.One2many('fleet.vehicle.assignation.log', 'vehicle_id', string='Assignment Logs')
@@ -79,11 +79,11 @@ class FleetVehicle(models.Model):
     odometer_unit = fields.Selection([
         ('kilometers', 'km'),
         ('miles', 'mi')
-        ], 'Odometer Unit', default='kilometers', help='Unit of the odometer ', required=True)
+        ], 'Odometer Unit', default='kilometers', required=True)
     transmission = fields.Selection(
-        [('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle',
+        [('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission',
         compute='_compute_model_fields', store=True, readonly=False)
-    fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', help='Fuel Used by the vehicle', compute='_compute_model_fields', store=True, readonly=False)
+    fuel_type = fields.Selection(FUEL_TYPES, 'Fuel Type', compute='_compute_model_fields', store=True, readonly=False)
     horsepower = fields.Integer(compute='_compute_model_fields', store=True, readonly=False)
     horsepower_tax = fields.Float('Horsepower Taxation', compute='_compute_model_fields', store=True, readonly=False)
     power = fields.Integer('Power', help='Power in kW of the vehicle', compute='_compute_model_fields', store=True, readonly=False)
@@ -103,13 +103,13 @@ class FleetVehicle(models.Model):
          ('expired', 'Expired'),
          ('closed', 'Closed')
         ], string='Last Contract State', compute='_compute_contract_reminder', required=False)
-    car_value = fields.Float(string="Catalog Value (VAT Incl.)", help='Value of the bought vehicle')
-    net_car_value = fields.Float(string="Purchase Value", help="Purchase value of the vehicle")
+    car_value = fields.Float(string="Catalog Value (VAT Incl.)")
+    net_car_value = fields.Float(string="Purchase Value")
     residual_value = fields.Float()
     plan_to_change_car = fields.Boolean(related='driver_id.plan_to_change_car', store=True, readonly=False)
     plan_to_change_bike = fields.Boolean(related='driver_id.plan_to_change_bike', store=True, readonly=False)
     vehicle_type = fields.Selection(related='model_id.vehicle_type')
-    frame_type = fields.Selection([('diamant', 'Diamant'), ('trapez', 'Trapez'), ('wave', 'Wave')], help="Frame type of the bike")
+    frame_type = fields.Selection([('diamant', 'Diamant'), ('trapez', 'Trapez'), ('wave', 'Wave')], string="Bike Frame Type")
     electric_assistance = fields.Boolean(compute='_compute_model_fields', store=True, readonly=False)
     frame_size = fields.Float()
     service_activity = fields.Selection([

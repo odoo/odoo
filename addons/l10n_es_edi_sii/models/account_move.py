@@ -12,10 +12,10 @@ class AccountMove(models.Model):
         compute='_compute_l10n_es_edi_is_required'
     )
     l10n_es_edi_csv = fields.Char(string="CSV return code", copy=False)
+    # Technical field to keep the date the invoice was sent the first time as
+    # the date the invoice was registered into the system.
     l10n_es_registration_date = fields.Date(
         string="Registration Date", copy=False,
-        help="Technical field to keep the date the invoice was sent the first time as the date the invoice was "
-             "registered into the system.",
     )
 
     # -------------------------------------------------------------------------

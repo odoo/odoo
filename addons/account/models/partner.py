@@ -43,12 +43,12 @@ class AccountFiscalPosition(models.Model):
     # To be used in hiding the 'Federal States' field('attrs' in view side) when selected 'Country' has 0 states.
     states_count = fields.Integer(compute='_compute_states_count')
     foreign_vat = fields.Char(string="Foreign Tax ID", help="The tax ID of your company in the region mapped by this fiscal position.")
+
+    # Technical field used to display a banner on top of foreign vat fiscal positions,
+    # in order to ease the instantiation of foreign taxes when possible.
     foreign_vat_header_mode = fields.Selection(
         selection=[('templates_found', "Templates Found"), ('no_template', "No Template")],
-        compute='_compute_foreign_vat_header_mode',
-        help="Technical field used to display a banner on top of foreign vat fiscal positions, "
-             "in order to ease the instantiation of foreign taxes when possible."
-    )
+        compute='_compute_foreign_vat_header_mode')
 
     def _compute_states_count(self):
         for position in self:
@@ -461,7 +461,7 @@ class ResPartner(models.Model):
     total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced",
         groups='account.group_account_invoice,account.group_account_readonly')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
-        string="Currency", help='Utility field to express amount currency')
+        string="Currency") # currency of amount currency
     journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
@@ -505,9 +505,9 @@ class ResPartner(models.Model):
     supplier_rank = fields.Integer(default=0, copy=False)
     customer_rank = fields.Integer(default=0, copy=False)
 
+    # Technical field holding the amount partners that share the same account number as any set on this partner.
     duplicated_bank_account_partners_count = fields.Integer(
         compute='_compute_duplicated_bank_account_partners_count',
-        help='Technical field holding the amount partners that share the same account number as any set on this partner.',
     )
 
     def _compute_bank_count(self):

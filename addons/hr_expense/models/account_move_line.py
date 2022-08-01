@@ -7,7 +7,7 @@ from odoo import fields, models
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    expense_id = fields.Many2one('hr.expense', string='Expense', copy=False, help="Expense where the move line come from")
+    expense_id = fields.Many2one('hr.expense', string='Expense', copy=False)
 
     def reconcile(self):
         # OVERRIDE

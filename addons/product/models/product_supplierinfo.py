@@ -29,7 +29,7 @@ class SupplierInfo(models.Model):
     partner_id = fields.Many2one(
         'res.partner', 'Vendor',
         ondelete='cascade', required=True,
-        help="Vendor of this product", check_company=True)
+        check_company=True)
     product_name = fields.Char(
         'Vendor Product Name',
         help="This vendor's product name will be used when printing a request for quotation. Keep empty to use the internal one.")
@@ -40,8 +40,7 @@ class SupplierInfo(models.Model):
         'Sequence', default=1, help="Assigns the priority to the list of product vendor.")
     product_uom = fields.Many2one(
         'uom.uom', 'Unit of Measure',
-        related='product_tmpl_id.uom_po_id',
-        help="This comes from the product form.")
+        related='product_tmpl_id.uom_po_id')
     min_qty = fields.Float(
         'Quantity', default=0.0, required=True, digits="Product Unit Of Measure",
         help="The quantity to purchase from this vendor to benefit from the price, expressed in the vendor Product Unit of Measure if not any, in the default unit of measure of the product otherwise.")
