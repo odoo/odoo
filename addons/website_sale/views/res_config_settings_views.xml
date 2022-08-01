@@ -5,10 +5,9 @@
         <field name="name">res.config.settings.view.form.inherit.account.web.terms</field>
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
-        <field name="groups_id" eval="[Command.link(ref('website.group_website_designer'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_update_terms']" position="replace">
-                <div class="mt8" attrs="{'invisible': [('terms_type', '!=', 'html')]}">
+                <div class="mt8" attrs="{'invisible': [('terms_type', '!=', 'html')]}" groups="website.group_website_designer">
                     <strong class="align-top">URL: </strong><field name="terms_url"/>
                     <div>
                         <button name='action_update_terms' icon="fa-arrow-right" type="object" string="Edit in Website Builder" class="btn-link"/>
