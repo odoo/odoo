@@ -3,6 +3,12 @@
     <data>
 
 <template id="account_invoice_line_it_FatturaPA">
+                <t t-if="rc_refund">
+                    <t t-set="price_subtotal" t-value="-line.price_subtotal"/>
+                </t>
+                <t t-else="">
+                    <t t-set="price_subtotal" t-value="line.price_subtotal"/>
+                </t>
                 <DettaglioLinee>
                     <NumeroLinea t-esc="line_counter"/>
                     <CodiceArticolo t-if="line.product_id.barcode">
@@ -19,12 +25,12 @@
                     </Descrizione>
                     <Quantita t-esc="format_numbers(line.quantity)"/>
                     <UnitaMisura t-if="line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')"  t-esc="format_alphanumeric(line.product_uom_id.name)"/>
-                    <PrezzoUnitario t-esc="'%.06f' % (line.price_subtotal / (( 1 - (line.discount or 0.0) / 100.0) * line.quantity) if line.quantity and line.discount != 100.0 else line.price_unit)"/>
+                    <PrezzoUnitario t-esc="'%.06f' % (price_subtotal / (( 1 - (line.discount or 0.0) / 100.0) * line.quantity) if line.quantity and line.discount != 100.0 else line.price_unit)"/>
                     <ScontoMaggiorazione t-if="line.discount != 0">
                         <Tipo t-esc="discount_type(line.discount)"/>
                         <Percentuale t-esc="format_numbers(abs(line.discount))"/>
                     </ScontoMaggiorazione>
-                    <PrezzoTotale t-esc="format_monetary(line.price_subtotal, currency)"/>
+                    <PrezzoTotale t-esc="format_monetary(price_subtotal, currency)"/>
                     <AliquotaIVA t-if="line.tax_ids.amount_type == 'percent'" t-esc="format_numbers(line.tax_ids.amount)"/>
                     <AliquotaIVA t-elif="line.tax_ids.amount_type != 'percent'" t-esc="'0.00'"/>
                     <Natura t-if="line.tax_ids.l10n_it_has_exoneration" t-esc="line.tax_ids.l10n_it_kind_exoneration"/>
@@ -158,8 +164,14 @@
                     <AliquotaIVA t-esc="format_numbers(tax.amount)"/>
                     <Natura t-if="has_exoneration" t-esc="kind_exoneration"/>
                     <Arrotondamento t-if="tax_dict.get('rounding')" t-esc="format_numbers(tax_dict['rounding'])"/>
-                    <ImponibileImporto t-esc="format_monetary(abs(tax_dict['base_amount_currency']), currency)"/>
-                    <Imposta t-esc="format_monetary(abs(tax_dict['tax_amount_currency']), currency)"/>
+                    <t t-if="rc_refund">
+                        <ImponibileImporto t-esc="format_monetary(tax_dict['base_amount_currency'], currency)"/>
+                        <Imposta t-esc="format_monetary(tax_dict['tax_amount_currency'], currency)"/>
+                    </t>
+                    <t t-else="">
+                        <ImponibileImporto t-esc="format_monetary(abs(tax_dict['base_amount_currency']), currency)"/>
+                        <Imposta t-esc="format_monetary(abs(tax_dict['tax_amount_currency']), currency)"/>
+                    </t>
                     <EsigibilitaIVA t-if="not has_exoneration or kind_exoneration == 'N6'" t-esc="tax.l10n_it_vat_due_date"/>
                     <RiferimentoNormativo t-if="has_exoneration" t-esc="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
                 </DatiRiepilogo>
