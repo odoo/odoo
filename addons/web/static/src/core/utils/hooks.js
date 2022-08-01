@@ -45,7 +45,7 @@ export function useAutofocus() {
         (el) => {
             if (el) {
                 el.focus();
-                if (["INPUT", "TEXTAREA"].includes(el.tagName)) {
+                if (["INPUT", "TEXTAREA"].includes(el.tagName) && el.type !== 'number') {
                     el.selectionStart = el.selectionEnd = el.value.length;
                 }
             }
