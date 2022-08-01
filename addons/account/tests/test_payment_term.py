@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo import fields
 from odoo.tests.common import Form
 
 
 @tagged('post_install', '-at_install')
-class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
+class TestAccountPaymentTerms(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -17,30 +18,18 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
                 (0, 0, {
                     'value': 'balance',
                     'days': 0,
-                    'option': 'day_after_invoice_date',
                 }),
             ],
         })
 
-        cls.pay_term_min_31days_15th = cls.env['account.payment.term'].create({
-            'name': 'the 15th of the month, min 31 days from now',
+        cls.pay_term_next_month_on_the_15 = cls.env['account.payment.term'].create({
+            'name': 'Next month on the 15th',
             'line_ids': [
                 (0, 0, {
                     'value': 'balance',
-                    'days': 31,
-                    'day_of_the_month': 15,
-                    'option': 'day_after_invoice_date',
-                }),
-            ],
-        })
-
-        cls.pay_term_45_end_month = cls.env['account.payment.term'].create({
-            'name': '45 Days from End of Month',
-            'line_ids': [
-                (0, 0, {
-                    'value': 'balance',
-                    'days': 45,
-                    'option': 'after_invoice_month',
+                    'days': 0,
+                    'end_month': True,
+                    'days_after': 15,
                 }),
             ],
         })
@@ -50,8 +39,8 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
             'line_ids': [
                 (0, 0, {
                     'value': 'balance',
-                    'days': 31,
-                    'option': 'day_current_month',
+                    'days': 0,
+                    'end_month': True
                 }),
             ],
         })
@@ -61,8 +50,102 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
             'line_ids': [
                 (0, 0, {
                     'value': 'balance',
-                    'days': 1,
-                    'option': 'day_following_month',
+                    'days': 0,
+                    'end_month': True,
+                    'days_after': 1,
+                }),
+            ],
+        })
+
+        cls.pay_term_net_30_days = cls.env['account.payment.term'].create({
+            'name': 'Net 30 days',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'days': 30,
+                }),
+            ],
+        })
+
+        cls.pay_term_30_days_end_of_month = cls.env['account.payment.term'].create({
+            'name': '30 days end of month',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'days': 30,
+                    'end_month': True
+                }),
+            ],
+        })
+
+        cls.pay_term_1_month_end_of_month = cls.env['account.payment.term'].create({
+            'name': '1 month, end of month',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'months': 1,
+                    'days': 0,
+                    'end_month': True
+                }),
+            ],
+        })
+
+        cls.pay_term_30_days_end_of_month_the_10 = cls.env['account.payment.term'].create({
+            'name': '30 days end of month the 10th',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'days': 30,
+                    'end_month': True,
+                    'days_after': 10,
+                }),
+            ],
+        })
+
+        cls.pay_term_90_days_end_of_month_the_10 = cls.env['account.payment.term'].create({
+            'name': '90 days end of month the 10',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'days': 90,
+                    'end_month': True,
+                    'days_after': 10,
+                }),
+            ],
+        })
+
+        cls.pay_term_3_months_end_of_month_the_10 = cls.env['account.payment.term'].create({
+            'name': '3 months end of month the 10',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'months': 3,
+                    'end_month': True,
+                    'days_after': 10,
+                }),
+            ],
+        })
+
+        cls.pay_term_end_month_on_the_30th = cls.env['account.payment.term'].create({
+            'name': 'End of month, the 30th',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'end_month': True,
+                    'days_after': 30,
+                }),
+            ],
+        })
+
+        cls.pay_term_1_month_15_days_end_month_45_days = cls.env['account.payment.term'].create({
+            'name': '1 month, 15 days, end month, 45 days',
+            'line_ids': [
+                (0, 0, {
+                    'value': 'balance',
+                    'months': 1,
+                    'days': 15,
+                    'end_month': True,
+                    'days_after': 45,
                 }),
             ],
         })
@@ -84,15 +167,45 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
         self.assertPaymentTerm(self.pay_term_today, '2019-01-01', ['2019-01-01'])
         self.assertPaymentTerm(self.pay_term_today, '2019-01-15', ['2019-01-15'])
         self.assertPaymentTerm(self.pay_term_today, '2019-01-31', ['2019-01-31'])
-        self.assertPaymentTerm(self.pay_term_45_end_month, '2019-01-01', ['2019-03-17'])
-        self.assertPaymentTerm(self.pay_term_45_end_month, '2019-01-15', ['2019-03-17'])
-        self.assertPaymentTerm(self.pay_term_45_end_month, '2019-01-31', ['2019-03-17'])
-        self.assertPaymentTerm(self.pay_term_min_31days_15th, '2019-01-01', ['2019-02-15'])
-        self.assertPaymentTerm(self.pay_term_min_31days_15th, '2019-01-15', ['2019-02-15'])
-        self.assertPaymentTerm(self.pay_term_min_31days_15th, '2019-01-31', ['2019-03-15'])
+        self.assertPaymentTerm(self.pay_term_next_month_on_the_15, '2019-01-01', ['2019-02-15'])
+        self.assertPaymentTerm(self.pay_term_next_month_on_the_15, '2019-01-15', ['2019-02-15'])
+        self.assertPaymentTerm(self.pay_term_next_month_on_the_15, '2019-01-31', ['2019-02-15'])
         self.assertPaymentTerm(self.pay_term_last_day_of_month, '2019-01-01', ['2019-01-31'])
         self.assertPaymentTerm(self.pay_term_last_day_of_month, '2019-01-15', ['2019-01-31'])
         self.assertPaymentTerm(self.pay_term_last_day_of_month, '2019-01-31', ['2019-01-31'])
         self.assertPaymentTerm(self.pay_term_first_day_next_month, '2019-01-01', ['2019-02-01'])
         self.assertPaymentTerm(self.pay_term_first_day_next_month, '2019-01-15', ['2019-02-01'])
         self.assertPaymentTerm(self.pay_term_first_day_next_month, '2019-01-31', ['2019-02-01'])
+        self.assertPaymentTerm(self.pay_term_net_30_days, '2022-01-01', ['2022-01-31'])
+        self.assertPaymentTerm(self.pay_term_net_30_days, '2022-01-15', ['2022-02-14'])
+        self.assertPaymentTerm(self.pay_term_net_30_days, '2022-01-31', ['2022-03-02'])
+        self.assertPaymentTerm(self.pay_term_30_days_end_of_month, '2022-01-01', ['2022-01-31'])
+        self.assertPaymentTerm(self.pay_term_30_days_end_of_month, '2022-01-15', ['2022-02-28'])
+        self.assertPaymentTerm(self.pay_term_30_days_end_of_month, '2022-01-31', ['2022-03-31'])
+        self.assertPaymentTerm(self.pay_term_1_month_end_of_month, '2022-01-01', ['2022-02-28'])
+        self.assertPaymentTerm(self.pay_term_1_month_end_of_month, '2022-01-15', ['2022-02-28'])
+        self.assertPaymentTerm(self.pay_term_1_month_end_of_month, '2022-01-31', ['2022-02-28'])
+        self.assertPaymentTerm(self.pay_term_30_days_end_of_month_the_10, '2022-01-01', ['2022-02-10'])
+        self.assertPaymentTerm(self.pay_term_30_days_end_of_month_the_10, '2022-01-15', ['2022-03-10'])
+        self.assertPaymentTerm(self.pay_term_30_days_end_of_month_the_10, '2022-01-31', ['2022-04-10'])
+        self.assertPaymentTerm(self.pay_term_90_days_end_of_month_the_10, '2022-01-01', ['2022-05-10'])
+        self.assertPaymentTerm(self.pay_term_90_days_end_of_month_the_10, '2022-01-15', ['2022-05-10'])
+        self.assertPaymentTerm(self.pay_term_90_days_end_of_month_the_10, '2022-01-31', ['2022-06-10'])
+        self.assertPaymentTerm(self.pay_term_3_months_end_of_month_the_10, '2022-01-01', ['2022-05-10'])
+        self.assertPaymentTerm(self.pay_term_3_months_end_of_month_the_10, '2022-01-15', ['2022-05-10'])
+        self.assertPaymentTerm(self.pay_term_3_months_end_of_month_the_10, '2022-01-31', ['2022-05-10'])
+        self.assertPaymentTerm(self.pay_term_1_month_15_days_end_month_45_days, '2022-01-01', ['2022-04-14'])
+        self.assertPaymentTerm(self.pay_term_1_month_15_days_end_month_45_days, '2022-01-15', ['2022-05-15'])
+        self.assertPaymentTerm(self.pay_term_1_month_15_days_end_month_45_days, '2022-01-31', ['2022-05-15'])
+
+    def test_wrong_payment_term(self):
+        with self.assertRaises(ValidationError):
+            self.env['account.payment.term'].create({
+                'name': 'Wrong Payment Term',
+                'line_ids': [
+                    (0, 0, {
+                        'value': 'balance',
+                        'months': -1,
+                    }),
+                ],
+            })
