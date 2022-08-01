@@ -7880,6 +7880,59 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([]);
     });
 
+    QUnit.test("translation dialog with right context and domain", async function (assert) {
+        serverData.models.partner.fields.foo.translate = true;
+
+        patchWithCleanup(localization, {
+            multiLang: true,
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo"/>
+                </form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "get_installed") {
+                    return [
+                        ["CUST", "custom lang"],
+                        ["CUST2", "second custom"],
+                    ];
+                }
+                if (args.method === "translate_fields") {
+                    assert.step(`translate args ${JSON.stringify(args.args)}`);
+                    assert.step(`translate context ${JSON.stringify(args.kwargs.context)}`);
+                    return {
+                        domain: [["res_id", "=", args.args[1]]],
+                        context: { search_default_name: "partner_type,foo" },
+                    };
+                }
+                if (args.method === "search_read" && args.model === "ir.translation") {
+                    assert.step(
+                        `search_read translations args: ${JSON.stringify(
+                            args.args
+                        )} ; kwargs: ${JSON.stringify(args.kwargs)}`
+                    );
+                }
+            },
+        });
+        await clickEdit(target);
+
+        await click(target, ".o_field_translate.btn-link");
+        assert.verifySteps([
+            `translate args ["partner",1,"foo"]`,
+            `translate context {"lang":"en","uid":7,"tz":"taht"}`,
+            `search_read translations args: [] ; kwargs: {"context":{"lang":"en","uid":7,"tz":"taht"},"domain":[["res_id","=",1],["name","=","partner_type,foo"],["lang","in",["CUST","CUST2"]]],"fields":["lang","src","value"]}`,
+        ]);
+
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal-title").textContent, "Translate: foo");
+    });
+
     QUnit.test("translation alerts are preserved on pager change", async function (assert) {
         serverData.models.partner.fields.foo.translate = true;
 

@@ -10,6 +10,7 @@ import { utils } from "./helpers/mock_env";
 import { session as sessionInfo } from "@web/session";
 import { prepareLegacyRegistriesWithCleanup } from "./helpers/legacy_env_utils";
 import { config as transitionConfig } from "@web/core/transition";
+import { loadLanguages } from "@web/core/l10n/translation";
 
 transitionConfig.disabled = true;
 
@@ -186,6 +187,12 @@ function patchOdoo() {
     });
 }
 
+function cleanLoadedLanguages() {
+    registerCleanup(() => {
+        loadLanguages.installedLanguages = null;
+    });
+}
+
 function patchSessionInfo() {
     patchWithCleanup(sessionInfo, {
         cache_hashes: {
@@ -251,6 +258,7 @@ export async function setupTests() {
         prepareRegistriesWithCleanup();
         prepareLegacyRegistriesWithCleanup();
         forceLocaleAndTimezoneWithCleanup();
+        cleanLoadedLanguages();
         patchBrowserWithCleanup();
         patchLegacyCoreBus();
         patchOdoo();

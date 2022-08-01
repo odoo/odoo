@@ -59,3 +59,17 @@ _lt("about a month ago");
 _lt("%d months ago");
 _lt("about a year ago");
 _lt("%d years ago");
+
+/**
+ * Load the installed languages long names and code
+ *
+ * The result of the call is put in cache.
+ * If any new language is installed, a full page refresh will happen,
+ * so there is no need invalidate it.
+ */
+export async function loadLanguages(orm) {
+    if (!loadLanguages.installedLanguages) {
+        loadLanguages.installedLanguages = await orm.call("res.lang", "get_installed");
+    }
+    return loadLanguages.installedLanguages;
+}
