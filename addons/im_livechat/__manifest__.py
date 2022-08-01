@@ -64,7 +64,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/js/im_livechat_chatbot_step_form_view_dialog.js',
             'im_livechat/static/src/js/chatbot_script_answers_m2m_tags.js',
             'im_livechat/static/src/js/chatbot_script_step_o2m.js',
-            'im_livechat/static/src/components/*/*.js',
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
         ],

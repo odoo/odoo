@@ -40,6 +40,22 @@ registerModel({
          * @private
          * @returns {string|FieldCommand}
          */
+        _computeImageUrl() {
+            if (this.thread.moduleIcon) {
+                return this.thread.moduleIcon;
+            }
+            if (!this.thread.channel) {
+                return clear();
+            }
+            if (this.thread.channel.correspondent) {
+                return this.thread.channel.correspondent.avatarUrl;
+            }
+            return `/web/image/mail.channel/${this.thread.id}/avatar_128?unique=${this.thread.channel.avatarCacheKey}`;
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
         _computeInlineLastNeedactionMessageAsOriginThreadBody() {
             if (!this.thread.lastNeedactionMessageAsOriginThread) {
                 return clear();
@@ -92,6 +108,10 @@ registerModel({
         },
     },
     fields: {
+        imageUrl: attr({
+            compute: '_computeImageUrl',
+            default: '/mail/static/src/img/smiley/avatar.jpg',
+        }),
         inlineLastNeedactionMessageAsOriginThreadBody: attr({
             compute: '_computeInlineLastNeedactionMessageAsOriginThreadBody',
             default: "",
