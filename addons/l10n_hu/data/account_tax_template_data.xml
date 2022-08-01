@@ -14,12 +14,10 @@
         <field name="tax_group_id" ref="tax_group_afa_27"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_fiz_afa_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_467'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_27_tag')],
@@ -27,12 +25,10 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_fiz_afa_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_467'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_27_tag')],
@@ -52,12 +48,10 @@
         <field name="tax_group_id" ref="tax_group_afa_18"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_fiz_afa_18_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_467'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_18_tag')],
@@ -65,12 +59,10 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_fiz_afa_18_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_467'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_18_tag')],
@@ -90,12 +82,10 @@
         <field name="tax_group_id" ref="tax_group_afa_5"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_fiz_afa_5_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_467'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_5_tag')],
@@ -103,12 +93,10 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_fiz_afa_5_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_467'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_5_tag')],
@@ -128,25 +116,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_fiz_alanyi_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_fiz_alanyi_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Payable - Material Tax Free -->
@@ -162,25 +142,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_fiz_targyi_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_fiz_targyi_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Excluding VAT service -->
@@ -196,25 +168,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_fiz_koron_kivuli_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_fiz_koron_kivuli_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Sales of products outside the scope of VAT -->
@@ -230,25 +194,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_fiz_koron_kivuli_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_fiz_koron_kivuli_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Payable - Reverse VAT -->
@@ -264,25 +220,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_forditott_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_forditott_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- EU service provision, tax-free -->
@@ -298,25 +246,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_fiz_eu_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_fiz_eu_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- EU supply of goods, tax-free -->
@@ -332,25 +272,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_fiz_eu_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_fiz_eu_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Provision of export services -->
@@ -366,25 +298,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_fiz_export_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_fiz_export_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Export supply of goods -->
@@ -400,25 +324,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_fiz_export_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_fiz_export_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Sale [END] -->
@@ -436,12 +352,10 @@
         <field name="tax_group_id" ref="tax_group_afa_27"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_viss_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -449,12 +363,10 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_viss_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -474,12 +386,10 @@
         <field name="tax_group_id" ref="tax_group_afa_27"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_viss_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -487,12 +397,10 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_viss_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -512,12 +420,10 @@
         <field name="tax_group_id" ref="tax_group_afa_18"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_viss_18_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_viss_18_tag')],
@@ -525,12 +431,10 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_viss_18_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_viss_18_tag')],
@@ -550,12 +454,10 @@
         <field name="tax_group_id" ref="tax_group_afa_5"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_viss_5_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_viss_5_tag')],
@@ -563,12 +465,10 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_viss_5_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_viss_5_tag')],
@@ -588,12 +488,10 @@
         <field name="tax_group_id" ref="tax_group_afa_komp"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_komp_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_viss_komp_tag')],
@@ -601,12 +499,10 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_komp_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_viss_komp_tag')],
@@ -626,12 +522,10 @@
         <field name="tax_group_id" ref="tax_group_afa_komp"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_komp_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_viss_komp_tag')],
@@ -639,12 +533,10 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_komp_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_viss_komp_tag')],
@@ -664,25 +556,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_viss_alanyi_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_viss_alanyi_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Reclaimable - Material Tax Free -->
@@ -698,25 +582,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_viss_targyi_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_viss_targyi_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Excluding VAT service -->
@@ -732,25 +608,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_viss_koron_kivuli_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_viss_koron_kivuli_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Purchase of products outside the scope of VAT -->
@@ -766,25 +634,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_viss_koron_kivuli_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_viss_koron_kivuli_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Reverse VAT -->
@@ -800,25 +660,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_forditott_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_forditott_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- EU product procurement 27% -->
@@ -834,7 +686,6 @@
         <field name="tax_group_id" ref="tax_group_afa_27"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_viss_tag')],
                 }),
@@ -845,7 +696,6 @@
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -853,7 +703,6 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_viss_tag')],
                 }),
@@ -864,7 +713,6 @@
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -884,7 +732,6 @@
         <field name="tax_group_id" ref="tax_group_afa_27"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_viss_tag')],
                 }),
@@ -895,7 +742,6 @@
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -903,7 +749,6 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_viss_tag')],
                 }),
@@ -914,7 +759,6 @@
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -934,7 +778,6 @@
         <field name="tax_group_id" ref="tax_group_afa_27"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_viss_tag')],
                 }),
@@ -945,7 +788,6 @@
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -953,7 +795,6 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_viss_tag')],
                 }),
@@ -964,7 +805,6 @@
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -984,25 +824,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_viss_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_viss_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Import service 27% -->
@@ -1018,7 +850,6 @@
         <field name="tax_group_id" ref="tax_group_afa_27"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_import_tag')],
                 }),
@@ -1029,7 +860,6 @@
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -1037,7 +867,6 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_import_tag')],
                 }),
@@ -1048,7 +877,6 @@
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_27_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -1068,12 +896,10 @@
         <field name="tax_group_id" ref="tax_group_afa_27"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_import_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'plus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -1081,12 +907,10 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_import_tag')],
                 }),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('l10n_hu_466'),
                     'minus_report_expression_ids': [ref('tax_report_fizetndo_viss_27_tag')],
@@ -1106,25 +930,17 @@
         <field name="tax_group_id" ref="tax_group_afa_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('tax_report_alap_import_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('tax_report_alap_import_tag')],
                 }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <!-- Purchase [END] -->

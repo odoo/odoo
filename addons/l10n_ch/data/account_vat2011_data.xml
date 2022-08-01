@@ -13,13 +13,11 @@
         <field name="tax_group_id" ref="tax_group_tva_25"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_312a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_2200'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_312b_tag')],
@@ -27,13 +25,11 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_312a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_2200'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_312b_tag')],
@@ -51,13 +47,11 @@
         <field name="tax_group_id" ref="tax_group_tva_25"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_312a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_2200'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_312b_tag')],
@@ -65,13 +59,11 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_312a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_2200'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_312b_tag')],
@@ -87,26 +79,18 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_tva_25"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
@@ -123,26 +107,18 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_tva_25"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
@@ -158,26 +134,18 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_tva_25"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
@@ -194,26 +162,18 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_tva_25"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
@@ -230,13 +190,11 @@
         <field name="tax_group_id" ref="tax_group_tva_37"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_342a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_2200'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_342b_tag')],
@@ -244,13 +202,11 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_342a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_2200'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_342b_tag')],
@@ -268,13 +224,11 @@
         <field name="tax_group_id" ref="tax_group_tva_37"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_342a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_2200'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_342b_tag')],
@@ -282,13 +236,11 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_342a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_2200'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_342b_tag')],
@@ -304,26 +256,18 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_tva_37"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
@@ -340,26 +284,18 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_tva_37"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
@@ -375,26 +311,18 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_tva_37"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
@@ -411,26 +339,18 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_tva_37"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
@@ -448,13 +368,11 @@
         <field name="tax_group_id" ref="tax_group_tva_77"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_302a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_2200'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_302b_tag')],
@@ -462,13 +380,11 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_302a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_2200'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_302b_tag')],
@@ -487,13 +403,11 @@
         <field name="tax_group_id" ref="tax_group_tva_77"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_302a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_2200'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_302b_tag')],
@@ -501,13 +415,11 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_302a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_2200'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_302b_tag')],
@@ -525,26 +437,18 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_tva_77"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
@@ -560,26 +464,18 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_tva_77"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
@@ -596,26 +492,18 @@
         <field name="type_tax_use">purchase</field>
         <field name="tax_group_id" ref="tax_group_tva_77"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
@@ -632,27 +520,19 @@
         <field name="tax_group_id" ref="tax_group_tva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_220_289_tag')],
                 }),
 
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_220_289_tag')],
                 }),
 
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <record model="account.tax.template" id="vat_O_exclude">
@@ -665,27 +545,19 @@
         <field name="tax_group_id" ref="tax_group_tva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_230_tag')],
                 }),
 
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_230_tag')],
                 }),
 
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <record model="account.tax.template" id="vat_O_import">
@@ -707,26 +579,18 @@
         <field name="tax_group_id" ref="tax_group_tva_100"/>
         <field name="price_include" eval="1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
@@ -743,26 +607,18 @@
         <field name="tax_group_id" ref="tax_group_tva_100"/>
         <field name="price_include" eval="1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1171'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_405_tag')],
@@ -780,13 +636,11 @@
         <field name="type_tax_use">purchase</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_382a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_382b_tag')],
@@ -794,13 +648,11 @@
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_382a_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_382b_tag')],
@@ -817,26 +669,18 @@
         <field name="tax_group_id" ref="tax_group_tva_77"/>
         <field name="type_tax_use">purchase</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ch_coa_1170'),
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_400_tag')],
@@ -864,27 +708,19 @@
         <field name="tax_group_id" ref="tax_group_tva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_900_tag')],
                 }),
 
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_900_tag')],
                 }),
 
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <record model="account.tax.template" id="vat_other_movements_910">
@@ -897,27 +733,19 @@
         <field name="tax_group_id" ref="tax_group_tva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_line_chtax_910_tag')],
                 }),
 
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_line_chtax_910_tag')],
                 }),
 
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
 </odoo>

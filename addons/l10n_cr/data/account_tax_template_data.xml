@@ -11,23 +11,15 @@
         <field name="chart_template_id" ref="account_chart_template_0"/>
         <field name="tax_group_id" ref="tax_group_13"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('account_account_template_0_212101'),
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('account_account_template_0_212101'),
                 }),
@@ -43,23 +35,15 @@
         <field name="chart_template_id" ref="account_chart_template_0"/>
         <field name="tax_group_id" ref="tax_group_13"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('account_account_template_0_212101'),
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('account_account_template_0_212101'),
                 }),

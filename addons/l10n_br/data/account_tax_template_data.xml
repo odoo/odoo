@@ -11,12 +11,10 @@
         <field name="tax_group_id" ref="tax_group_icms_17"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010903'),
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -24,12 +22,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020302'),
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -47,12 +43,10 @@
         <field name="tax_group_id" ref="tax_group_icms_17"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010903'),
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -60,12 +54,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020302'),
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -83,12 +75,10 @@
         <field name="tax_group_id" ref="tax_group_icms_17"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020302'),
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -96,12 +86,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010903'),
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -119,12 +107,10 @@
         <field name="tax_group_id" ref="tax_group_icms_17"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020302'),
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -132,12 +118,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010903'),
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -155,25 +139,17 @@
         <field name="tax_group_id" ref="tax_group_icms_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_out_icms_externo" model="account.tax.template">
@@ -187,25 +163,17 @@
         <field name="tax_group_id" ref="tax_group_icms_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_out_icms_interno" model="account.tax.template">
@@ -219,25 +187,17 @@
         <field name="tax_group_id" ref="tax_group_icms_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_out_icms_externo" model="account.tax.template">
@@ -251,25 +211,17 @@
         <field name="tax_group_id" ref="tax_group_icms_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_in_icms_interno" model="account.tax.template">
@@ -283,25 +235,17 @@
         <field name="tax_group_id" ref="tax_group_icms_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_in_icms_externo" model="account.tax.template">
@@ -315,25 +259,17 @@
         <field name="tax_group_id" ref="tax_group_icms_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_out_icms_externo7" model="account.tax.template">
@@ -347,12 +283,10 @@
         <field name="tax_group_id" ref="tax_group_icms_7"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010903'),
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -360,12 +294,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020302'),
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -382,12 +314,10 @@
         <field name="tax_group_id" ref="tax_group_icms_7"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010903'),
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -395,12 +325,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020302'),
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -418,12 +346,10 @@
         <field name="tax_group_id" ref="tax_group_icms_12"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010903'),
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -431,12 +357,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020302'),
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -453,12 +377,10 @@
         <field name="tax_group_id" ref="tax_group_icms_12"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010903'),
                 'plus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -466,12 +388,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icms_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020302'),
                 'minus_report_expression_ids': [ref('tax_report_icms_2_tag')],
@@ -489,25 +409,17 @@
         <field name="tax_group_id" ref="tax_group_icms_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icmsst_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icmsst_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_in_icms_subist" model="account.tax.template">
@@ -521,25 +433,17 @@
         <field name="tax_group_id" ref="tax_group_icms_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_icmsst_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_icmsst_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_out_ipi10" model="account.tax.template">
@@ -553,12 +457,10 @@
         <field name="tax_group_id" ref="tax_group_ipi_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010902'),
                 'plus_report_expression_ids': [ref('tax_report_ipi_2_tag')],
@@ -566,12 +468,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020301'),
                 'minus_report_expression_ids': [ref('tax_report_ipi_2_tag')],
@@ -589,12 +489,10 @@
         <field name="tax_group_id" ref="tax_group_ipi_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020301'),
                 'minus_report_expression_ids': [ref('tax_report_ipi_2_tag')],
@@ -602,12 +500,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010902'),
                 'plus_report_expression_ids': [ref('tax_report_ipi_2_tag')],
@@ -625,25 +521,17 @@
         <field name="tax_group_id" ref="tax_group_ipi_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_in_ipi" model="account.tax.template">
@@ -657,25 +545,17 @@
         <field name="tax_group_id" ref="tax_group_ipi_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_ipi_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_out_pis" model="account.tax.template">
@@ -689,25 +569,17 @@
         <field name="tax_group_id" ref="tax_group_pis_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_pis_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_pis_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_out_pis065" model="account.tax.template">
@@ -721,12 +593,10 @@
         <field name="tax_group_id" ref="tax_group_pis_065"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_pis_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010904'),
                 'plus_report_expression_ids': [ref('tax_report_pis_2_tag')],
@@ -734,12 +604,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_pis_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020303'),
                 'minus_report_expression_ids': [ref('tax_report_pis_2_tag')],
@@ -757,25 +625,17 @@
         <field name="tax_group_id" ref="tax_group_pis_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_pis_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_pis_2_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_in_pis065" model="account.tax.template">
@@ -789,12 +649,10 @@
         <field name="tax_group_id" ref="tax_group_pis_065"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_pis_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020303'),
                 'minus_report_expression_ids': [ref('tax_report_pis_2_tag')],
@@ -802,12 +660,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_pis_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010904'),
                 'plus_report_expression_ids': [ref('tax_report_pis_2_tag')],
@@ -825,25 +681,17 @@
         <field name="tax_group_id" ref="tax_group_cofins_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_out_cofins3" model="account.tax.template">
@@ -857,12 +705,10 @@
         <field name="tax_group_id" ref="tax_group_cofins_3"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010905'),
                 'plus_report_expression_ids': [ref('tax_report_cofins_2_tag')],
@@ -870,12 +716,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020305'),
                 'minus_report_expression_ids': [ref('tax_report_cofins_2_tag')],
@@ -893,25 +737,17 @@
         <field name="tax_group_id" ref="tax_group_cofins_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_in_cofins3" model="account.tax.template">
@@ -925,12 +761,10 @@
         <field name="tax_group_id" ref="tax_group_cofins_3"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020305'),
                 'minus_report_expression_ids': [ref('tax_report_cofins_2_tag')],
@@ -938,12 +772,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_cofins_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010905'),
                 'plus_report_expression_ids': [ref('tax_report_cofins_2_tag')],
@@ -961,25 +793,17 @@
         <field name="tax_group_id" ref="tax_group_irpj_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_irpj_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_irpj_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_out_ir" model="account.tax.template">
@@ -993,25 +817,17 @@
         <field name="tax_group_id" ref="tax_group_ir_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_ir_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_ir_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_out_issqn2" model="account.tax.template">
@@ -1025,12 +841,10 @@
         <field name="tax_group_id" ref="tax_group_issqn_2"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_issqn_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020340'),
                 'plus_report_expression_ids': [ref('tax_report_issqn_2_tag')],
@@ -1038,12 +852,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_issqn_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010928'),
                 'minus_report_expression_ids': [ref('tax_report_issqn_2_tag')],
@@ -1061,12 +873,10 @@
         <field name="tax_group_id" ref="tax_group_issqn_2"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_issqn_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_101020340'),
                 'minus_report_expression_ids': [ref('tax_report_issqn_2_tag')],
@@ -1074,12 +884,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_issqn_1_tag')],
             }),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_201010928'),
                 'plus_report_expression_ids': [ref('tax_report_issqn_2_tag')],
@@ -1097,25 +905,17 @@
         <field name="tax_group_id" ref="tax_group_csll_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_csll_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_csll_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_out_ii0" model="account.tax.template">
@@ -1129,25 +929,17 @@
         <field name="tax_group_id" ref="tax_group_ii_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_ii_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_ii_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_in_ii0" model="account.tax.template">
@@ -1161,25 +953,17 @@
         <field name="tax_group_id" ref="tax_group_ii_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_ii_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_ii_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_out_inss0" model="account.tax.template">
@@ -1193,25 +977,17 @@
         <field name="tax_group_id" ref="tax_group_inss_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_inss_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_inss_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="tax_template_in_inss0" model="account.tax.template">
@@ -1225,25 +1001,17 @@
         <field name="tax_group_id" ref="tax_group_inss_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_inss_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0, 0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_inss_1_tag')],
             }),
-            (0, 0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0, 0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <data noupdate="1">

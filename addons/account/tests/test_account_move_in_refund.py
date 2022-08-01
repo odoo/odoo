@@ -1041,12 +1041,10 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             'cash_basis_transition_account_id': tax_waiting_account.id,
             'invoice_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, tax_tags['invoice']['base'].ids)],
                 }),
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': tax_final_account.id,
                     'tag_ids': [(6, 0, tax_tags['invoice']['tax'].ids)],
@@ -1054,12 +1052,10 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             ],
             'refund_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, tax_tags['refund']['base'].ids)],
                 }),
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': tax_final_account.id,
                     'tag_ids': [(6, 0, tax_tags['refund']['tax'].ids)],

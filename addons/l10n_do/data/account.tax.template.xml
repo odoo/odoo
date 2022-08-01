@@ -14,27 +14,19 @@
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_2A3_ingrs_local_vnts_tag')],
                 }),
 
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_2A3_ingrs_local_vnts_tag')],
                 }),
 
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         </record>
         <record id="tax_0_purch" model="account.tax.template">
@@ -48,26 +40,14 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
         </record>
         <record id="tax_18_sale" model="account.tax.template">
@@ -82,13 +62,11 @@
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_2b6_grvd_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030102'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_18_casilla_tag')],
@@ -96,13 +74,11 @@
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_2b6_grvd_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030102'),
                     'minus_report_expression_ids': [ref('account_tax_report_itbs_18_casilla_tag')],
@@ -121,13 +97,11 @@
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_2b6_grvd_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030102'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_18_casilla_tag')],
@@ -135,13 +109,11 @@
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_2b6_grvd_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030102'),
                     'minus_report_expression_ids': [ref('account_tax_report_itbs_18_casilla_tag')],
@@ -159,25 +131,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="tax_group_tip"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030503'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030503'),
                 }),
@@ -194,26 +158,18 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_locales_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                     'minus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_locales_tag')],
@@ -231,26 +187,18 @@
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_locales_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                     'minus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_locales_tag')],
@@ -268,25 +216,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                 }),
@@ -303,25 +243,17 @@
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                 }),
@@ -338,25 +270,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                 }),
@@ -373,25 +297,17 @@
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                 }),
@@ -408,25 +324,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                 }),
@@ -443,25 +351,17 @@
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080101'),
                 }),
@@ -478,25 +378,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="tax_group_tip"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_52080900'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_52080900'),
                 }),
@@ -513,26 +405,18 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080102'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_locales_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080102'),
                     'minus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_locales_tag')],
@@ -550,26 +434,18 @@
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080102'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_locales_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080102'),
                     'minus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_locales_tag')],
@@ -587,26 +463,18 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080103'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_imptcn_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080103'),
                     'minus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_imptcn_tag')],
@@ -624,25 +492,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030102'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030102'),
                 }),
@@ -659,25 +519,17 @@
             <field eval="1" name="price_include"/>
             <field name="tax_group_id" ref="group_tax"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_52070200'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_52070200'),
                 }),
@@ -694,25 +546,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="tax_group_isc"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_52020200'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_52020200'),
                 }),
@@ -729,25 +573,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_tax"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_52020200'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_52020200'),
                 }),
@@ -774,25 +610,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030201'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030201'),
                 }),
@@ -810,13 +638,11 @@
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_retcn_prsn_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030203'),
                     'minus_report_expression_ids': [ref('account_tax_report_itbs_retcn_prsn_tag')],
@@ -824,13 +650,11 @@
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_retcn_prsn_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030203'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_retcn_prsn_tag')],
@@ -849,13 +673,11 @@
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'plus_report_expression_ids': [ref('account_tax_report_retcn_prsn_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030202'),
                     'minus_report_expression_ids': [ref('account_tax_report_itbs_retcn_prsn_tag')],
@@ -863,13 +685,11 @@
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_expression_ids': [ref('account_tax_report_retcn_prsn_tag')],
                 }),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030202'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_retcn_prsn_tag')],
@@ -887,25 +707,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030201'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030201'),
                 }),
@@ -923,25 +735,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030201'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030201'),
                 }),
@@ -958,25 +762,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030205'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030205'),
                 }),
@@ -993,25 +789,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_isr"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030301'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030301'),
                 }),
@@ -1028,25 +816,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_isr"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030302'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030302'),
                 }),
@@ -1063,25 +843,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_isr"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030303'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030303'),
                 }),
@@ -1098,25 +870,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_isr"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030308'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030308'),
                 }),
@@ -1133,25 +897,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_isr"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030306'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030306'),
                 }),
@@ -1168,25 +924,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_isr"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030307'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_21030307'),
                 }),
@@ -1203,25 +951,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_isr"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080302'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080302'),
                 }),
@@ -1297,25 +1037,17 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080102'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_11080102'),
                 }),
@@ -1331,26 +1063,18 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_51010500'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_locales_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_51010500'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_locales_tag')],
@@ -1367,26 +1091,18 @@
             <field eval="0" name="price_include"/>
             <field name="tax_group_id" ref="group_itbis"/>
             <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_51010500'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_locales_tag')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5,0,0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('do_niif_51010500'),
                     'plus_report_expression_ids': [ref('account_tax_report_itbs_pgdo_locales_tag')],

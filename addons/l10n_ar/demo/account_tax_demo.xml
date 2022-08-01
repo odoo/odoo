@@ -8,13 +8,9 @@
         <field name="amount_type">fixed</field>
         <field name="amount" eval="0.1"/>
         <field name="invoice_repartition_line_ids" model="account.account" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
+            (0,0, {'repartition_type': 'base'}),
 
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': obj().search([
                     ('company_id', '=', obj().env.ref('l10n_ar.company_ri').id),
@@ -23,13 +19,9 @@
             }),
         ]"/>
         <field name="refund_repartition_line_ids" model="account.account" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
+            (0,0, {'repartition_type': 'base'}),
 
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': obj().search([
                     ('company_id', '=', obj().env.ref('l10n_ar.company_ri').id),
@@ -49,13 +41,9 @@
         <field name="amount_type">fixed</field>
         <field name="amount" eval="0.1"/>
         <field name="invoice_repartition_line_ids" model="account.account" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
+            (0,0, {'repartition_type': 'base'}),
 
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': obj().search([
                     ('company_id', '=', obj().env.ref('l10n_ar.company_ri').id),
@@ -65,13 +53,9 @@
             }),
         ]"/>
         <field name="refund_repartition_line_ids" model="account.account" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
+            (0,0, {'repartition_type': 'base'}),
 
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': obj().search([
                     ('company_id', '=', obj().env.ref('l10n_ar.company_ri').id),

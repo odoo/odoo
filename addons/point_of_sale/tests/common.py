@@ -381,12 +381,10 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 'include_base_amount': False,
                 'invoice_repartition_line_ids': [
                     (0, 0, {
-                        'factor_percent': 100,
                         'repartition_type': 'base',
                         'tag_ids': [(6, 0, cls.tax_tag_invoice_base.ids)],
                     }),
                     (0, 0, {
-                        'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': cls.tax_received_account.id,
                         'tag_ids': [(6, 0, cls.tax_tag_invoice_tax.ids)],
@@ -394,12 +392,10 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 ],
                 'refund_repartition_line_ids': [
                     (0, 0, {
-                        'factor_percent': 100,
                         'repartition_type': 'base',
                         'tag_ids': [(6, 0, cls.tax_tag_refund_base.ids)],
                     }),
                     (0, 0, {
-                        'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': cls.tax_received_account.id,
                         'tag_ids': [(6, 0, cls.tax_tag_refund_tax.ids)],
@@ -415,12 +411,10 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 'amount_type': 'fixed',
                 'invoice_repartition_line_ids': [
                     (0, 0, {
-                        'factor_percent': 100,
                         'repartition_type': 'base',
                         'tag_ids': [(6, 0, cls.tax_tag_invoice_base.ids)],
                     }),
                     (0, 0, {
-                        'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': cls.tax_received_account.id,
                         'tag_ids': [(6, 0, cls.tax_tag_invoice_tax.ids)],
@@ -428,12 +422,10 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
                 ],
                 'refund_repartition_line_ids': [
                     (0, 0, {
-                        'factor_percent': 100,
                         'repartition_type': 'base',
                         'tag_ids': [(6, 0, cls.tax_tag_refund_base.ids)],
                     }),
                     (0, 0, {
-                        'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': cls.tax_received_account.id,
                         'tag_ids': [(6, 0, cls.tax_tag_refund_tax.ids)],

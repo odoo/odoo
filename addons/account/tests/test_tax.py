@@ -99,25 +99,15 @@ class TestTaxCommon(AccountTestInvoicingCommon):
             'amount': 0,
             'sequence': 8,
             'invoice_repartition_line_ids': [
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-
-                (0,0, {
-                    'factor_percent': 100,
+                (0, 0, {'repartition_type': 'base'}),
+                (0, 0, {
                     'repartition_type': 'tax',
                     'account_id': some_account.id,
                 }),
             ],
             'refund_repartition_line_ids': [
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-
-                (0,0, {
-                    'factor_percent': 100,
+                (0, 0, {'repartition_type': 'base'}),
+                (0, 0, {
                     'repartition_type': 'tax',
                     'account_id': some_account.id,
                 }),
@@ -1121,15 +1111,9 @@ class TestTax(TestTaxCommon):
             'amount': 42,
             'price_include': True,
             'invoice_repartition_line_ids': [
-                (0, 0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0, 0, {'repartition_type': 'base'}),
 
-                (0, 0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0, 0, {'repartition_type': 'tax'}),
 
                 (0, 0, {
                     'factor_percent': -100,
@@ -1137,15 +1121,9 @@ class TestTax(TestTaxCommon):
                 }),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0, 0, {'repartition_type': 'base'}),
 
-                (0, 0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0, 0, {'repartition_type': 'tax'}),
 
                 (0, 0, {
                     'factor_percent': -100,

@@ -12,12 +12,10 @@
         <field name="active">True</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_sales_taxable_8_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A21809'),
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_output_8_tag')],
@@ -25,12 +23,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_sales_taxable_8_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A21809'),
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_output_8_tag')],
@@ -50,12 +46,10 @@
         <field name="active">True</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_sales_taxable_10_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A21809'),
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_output_10_tag')],
@@ -63,12 +57,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_sales_taxable_10_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A21809'),
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_output_10_tag')],
@@ -88,12 +80,10 @@
         <field name="active">True</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_sales_taxable_8_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A21809'),
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_output_8_tag')],
@@ -101,12 +91,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_sales_taxable_8_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A21809'),
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_output_8_tag')],
@@ -126,12 +114,10 @@
         <field name="active">True</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_sales_taxable_10_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A21809'),
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_output_10_tag')],
@@ -139,12 +125,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_sales_taxable_10_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A21809'),
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_tx_output_10_tag')],
@@ -164,25 +148,17 @@
         <field name="active">True</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_sales_duty_free_tag')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_sales_duty_free_tag')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
     </record>
@@ -198,25 +174,17 @@
         <field name="active">True</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_sales_tax_free_tag')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_sales_tax_free_tag')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
     </record>
@@ -232,12 +200,10 @@
         <field name="active">True</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_purchases_taxable_8_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A11809'),
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_pmt_susp_cons_8_tag')],
@@ -245,12 +211,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_purchases_taxable_8_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A11809'),
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_pmt_susp_cons_8_tag')],
@@ -270,12 +234,10 @@
         <field name="active">True</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_purchases_taxable_10_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A11809'),
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_pmt_susp_cons_10_tag')],
@@ -283,12 +245,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_purchases_taxable_10_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A11809'),
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_pmt_susp_cons_10_tag')],
@@ -308,12 +268,10 @@
         <field name="active">True</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_purchases_taxable_8_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A11809'),
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_pmt_susp_cons_8_tag')],
@@ -321,12 +279,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_purchases_taxable_8_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A11809'),
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_pmt_susp_cons_8_tag')],
@@ -346,12 +302,10 @@
         <field name="active">True</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_purchases_taxable_10_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A11809'),
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_pmt_susp_cons_10_tag')],
@@ -359,12 +313,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_purchases_taxable_10_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('A11809'),
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_to_pay_temp_pmt_susp_cons_10_tag')],
@@ -384,25 +336,17 @@
         <field name="active">True</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_purchases_import_tag')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_purchases_import_tag')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
     </record>
@@ -418,25 +362,17 @@
         <field name="active">True</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_purchases_tax_free_tag')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('l10n_jp.tax_report_comp_basis_purchases_tax_free_tag')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="tax_group_id" ref="tax_group_0"/>
     </record>

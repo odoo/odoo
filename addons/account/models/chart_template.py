@@ -1227,7 +1227,12 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     _name = "account.tax.repartition.line.template"
     _description = "Tax Repartition Line Template"
 
-    factor_percent = fields.Float(string="%", required=True, help="Factor to apply on the account move lines generated from this distribution line, in percents")
+    factor_percent = fields.Float(
+        string="%",
+        required=True,
+        default=100,
+        help="Factor to apply on the account move lines generated from this distribution line, in percents",
+    )
     repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")
     account_id = fields.Many2one(string="Account", comodel_name='account.account.template', help="Account on which to post the tax amount")
     invoice_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this distribution on invoices. Mutually exclusive with refund_tax_id")

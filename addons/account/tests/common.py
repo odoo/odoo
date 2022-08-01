@@ -314,7 +314,6 @@ class AccountTestInvoicingCommon(TransactionCase):
                     'tax_exigibility': 'on_invoice',
                     'invoice_repartition_line_ids': [
                         (0, 0, {
-                            'factor_percent': 100,
                             'repartition_type': 'base',
                         }),
                         (0, 0, {
@@ -330,7 +329,6 @@ class AccountTestInvoicingCommon(TransactionCase):
                     ],
                     'refund_repartition_line_ids': [
                         (0, 0, {
-                            'factor_percent': 100,
                             'repartition_type': 'base',
                         }),
                         (0, 0, {
@@ -354,23 +352,19 @@ class AccountTestInvoicingCommon(TransactionCase):
                     'cash_basis_transition_account_id': cls.safe_copy(company_data['default_account_tax_sale']).id,
                     'invoice_repartition_line_ids': [
                         (0, 0, {
-                            'factor_percent': 100,
                             'repartition_type': 'base',
                         }),
                         (0, 0, {
-                            'factor_percent': 100,
                             'repartition_type': 'tax',
                             'account_id': company_data['default_account_tax_sale'].id,
                         }),
                     ],
                     'refund_repartition_line_ids': [
                         (0, 0, {
-                            'factor_percent': 100,
                             'repartition_type': 'base',
                         }),
 
                         (0, 0, {
-                            'factor_percent': 100,
                             'repartition_type': 'tax',
                             'account_id': company_data['default_account_tax_sale'].id,
                         }),
@@ -640,24 +634,20 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
             'cash_basis_transition_account_id': cls.tax_waiting_account.id,
             'invoice_repartition_line_ids': [
                     (0,0, {
-                        'factor_percent': 100,
                         'repartition_type': 'base',
                     }),
 
                     (0,0, {
-                        'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': cls.tax_final_account.id,
                     }),
                 ],
             'refund_repartition_line_ids': [
                     (0,0, {
-                        'factor_percent': 100,
                         'repartition_type': 'base',
                     }),
 
                     (0,0, {
-                        'factor_percent': 100,
                         'repartition_type': 'tax',
                         'account_id': cls.tax_final_account.id,
                     }),

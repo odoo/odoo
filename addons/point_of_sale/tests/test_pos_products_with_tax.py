@@ -510,12 +510,10 @@ class TestPoSProductsWithTax(TestPoSCommon):
             'amount': 1,
             'invoice_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, self.tax_tag_invoice_base.ids)],
                 }),
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': self.tax_received_account.id,
                     'tag_ids': [(6, 0, self.tax_tag_invoice_tax.ids)],
