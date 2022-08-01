@@ -14343,4 +14343,89 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_data_row [name=int_field]").innerText, value);
         assert.verifySteps(["create", "read"]);
     });
+
+    QUnit.test("create a record with the correct context", async (assert) => {
+        serverData.models.foo.fields.text.required = true;
+        serverData.models.foo.records = [];
+
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: ` <list editable="bottom">
+                        <field name="display_name"/>
+                        <field name="text"/>
+                    </list>`,
+            serverData,
+            mockRPC(route, args) {
+                if (args.method === "create") {
+                    assert.step("create");
+                    const { context } = args.kwargs;
+                    assert.strictEqual(context.default_text, "yop");
+                    assert.strictEqual(context.test, true);
+                }
+            },
+            context: {
+                default_text: "yop",
+                test: true,
+            },
+        });
+        await click(target.querySelector(".o_list_button_add"));
+        await editInput(target, "[name='display_name'] input", "blop");
+        assert.containsOnce(target, ".o_selected_row");
+
+        await click(target, ".o_list_view");
+        assert.containsNone(target, ".o_selected_row");
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row .o_data_cell")].map((el) => el.textContent)[
+                ("blop", "yop")
+            ]
+        );
+
+        assert.verifySteps(["create"]);
+    });
+
+    QUnit.test("create a record with the correct context in a group", async (assert) => {
+        serverData.models.foo.fields.text.required = true;
+
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: ` <list editable="bottom">
+                        <field name="display_name"/>
+                        <field name="text"/>
+                    </list>`,
+            groupBy: ["bar"],
+            serverData,
+            mockRPC(route, args) {
+                if (args.method === "create") {
+                    assert.step("create");
+                    const { context } = args.kwargs;
+                    assert.strictEqual(context.default_bar, true);
+                    assert.strictEqual(context.default_text, "yop");
+                    assert.strictEqual(context.test, true);
+                }
+            },
+            context: {
+                default_text: "yop",
+                test: true,
+            },
+        });
+        await click(target.querySelectorAll(".o_group_name")[1]);
+
+        await click(target.querySelector(".o_group_field_row_add a"));
+        await editInput(target, "[name='display_name'] input", "blop");
+        assert.containsOnce(target, ".o_selected_row");
+
+        await click(target, ".o_list_view");
+        assert.containsNone(target, ".o_selected_row");
+
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_row .o_data_cell")].map((el) => el.textContent)[
+                ("blop", "yop")
+            ]
+        );
+
+        assert.verifySteps(["create"]);
+    });
 });
