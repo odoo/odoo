@@ -92,13 +92,6 @@ const LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _closeChat() {
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({ chatWindow: clear() });
-        utils.set_cookie('im_livechat_session', "", -1); // remove cookie
-    },
-    /**
-     * @private
-     */
     _openChat: _.debounce(function () {
         if (this.messaging.publicLivechatGlobal.livechatButtonView.isOpeningChat) {
             return;
@@ -240,7 +233,7 @@ const LivechatButton = Widget.extend({
                          */
                         console.warn(_t("Session expired... Please refresh and try again."));
                     }
-                    this._closeChat();
+                    this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
                 }
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow._publicLivechatView.scrollToBottom();
             });
@@ -283,7 +276,7 @@ const LivechatButton = Widget.extend({
             this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.toggleFold(false);
             this._askFeedback();
         } else {
-            this._closeChat();
+            this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
         }
         this._visitorLeaveSession();
     },

@@ -6,6 +6,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
+import { set_cookie } from 'web.utils';
+
 registerModel({
     name: 'LivechatButtonView',
     identifyingFields: ['publicLivechatGlobalOwner'],
@@ -67,6 +69,10 @@ registerModel({
             if (chatbotState) {
                 this.chatbot.update({ currentStep: insertAndReplace({ data: this.localStorageChatbotState._chatbotCurrentStep }) });
             }
+        },
+        closeChat() {
+            this.update({ chatWindow: clear() });
+            set_cookie('im_livechat_session', "", -1); // remove cookie
         },
         /**
          * @private

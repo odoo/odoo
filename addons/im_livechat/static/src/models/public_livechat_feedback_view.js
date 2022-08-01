@@ -26,8 +26,8 @@ registerModel({
         },
     },
     recordMethods: {
-        _onFeedbackSent(...args) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.widget._closeChat(...args);
+        _onFeedbackSent() {
+            this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
         },
         _onSendMessage(...args) {
             this.messaging.publicLivechatGlobal.livechatButtonView.widget._sendMessage(...args);
