@@ -27,6 +27,7 @@ class ResCompany(models.Model):
                 'usage': 'internal',
                 'location_id': parent_location.id,
                 'company_id': company.id,
+                'is_subcontracting_location': True,
             })
             self.env['ir.property']._set_default(
                 "property_stock_subcontractor",
