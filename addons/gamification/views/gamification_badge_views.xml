@@ -145,7 +145,7 @@
                                     <strong><t t-esc="record.granted_count.raw_value"/></strong> granted,
                                     <strong><t t-esc="record.stat_this_month.raw_value"/></strong> this month
                                 </div>
-                                <div t-if="!widget.isHtmlEmpty(record.description.value)" class="o_kanban_badge_description">
+                                <div t-if="!widget.isHtmlEmpty(record.description.value)" class="o_kanban_badge_description pb-3">
                                     <em t-out="record.description.value"/>
                                     <div>
                                         <t t-foreach="record.unique_owner_ids.raw_value.slice(0,11)" t-as="owner" t-key="owner">
