@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import exceptions
-from odoo.tests.common import TransactionCase
+from odoo.exceptions import ValidationError
+from odoo.tests import tagged, TransactionCase
 
 
+@tagged('post_install', '-at_install')
 class TestProductBarcode(TransactionCase):
 
-    def setUp(self):
-        super().setUp()
-        self.env['product.product'].create({'name': 'BC1', 'barcode': '1'})
-        self.env['product.product'].create({'name': 'BC2', 'barcode': '2'})
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['product.product'].create([
+            {'name': 'BC1', 'barcode': '1'},
+            {'name': 'BC2', 'barcode': '2'},
+        ])
 
     def test_blank_barcodes_allowed(self):
         """Makes sure duplicated blank barcodes are allowed."""
@@ -24,7 +28,7 @@ class TestProductBarcode(TransactionCase):
 
     def test_duplicated_barcode(self):
         """Tests for simple duplication."""
-        with self.assertRaises(exceptions.ValidationError):
+        with self.assertRaises(ValidationError):
             self.env['product.product'].create({'name': 'BC3', 'barcode': '1'})
 
     def test_duplicated_barcode_in_batch_edit(self):
@@ -35,7 +39,7 @@ class TestProductBarcode(TransactionCase):
         ]
         self.env['product.product'].create(batch)
         batch.append({'name': 'BC5', 'barcode': '1'})
-        with self.assertRaises(exceptions.ValidationError):
+        with self.assertRaises(ValidationError):
             self.env['product.product'].create(batch)
 
     def test_test_duplicated_barcode_error_msg_content(self):
@@ -49,7 +53,7 @@ class TestProductBarcode(TransactionCase):
         ]
         try:
             self.env['product.product'].create(batch)
-        except exceptions.ValidationError as exc:
+        except ValidationError as exc:
             assert 'Barcode "3" already assigned to product(s): BC3, BC4' in exc.args[0]
             assert 'Barcode "4" already assigned to product(s): BC5, BC6' in exc.args[0]
             assert 'Barcode "1" already assigned to product(s): BC1' in exc.args[0]

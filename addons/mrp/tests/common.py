@@ -54,6 +54,23 @@ class TestMrpCommon(common2.TestStockCommon):
     def setUpClass(cls):
         super(TestMrpCommon, cls).setUpClass()
 
+        (
+            cls.product_4,
+            cls.product_5,
+            cls.product_6,
+            cls.product_8,
+        ) = cls.env['product.product'].create([{
+            'name': 'Stick',  # product_4
+            'uom_id': cls.uom_dozen.id,
+            'uom_po_id': cls.uom_dozen.id,
+        }, {
+            'name': 'Stone Tools',  # product_5
+        }, {
+            'name': 'Door',  # product_6
+        }, {
+            'name': 'House',  # product_8
+        }])
+
         # Update demo products
         (cls.product_2 | cls.product_3 | cls.product_4 | cls.product_5 | cls.product_6 | cls.product_7_3 | cls.product_8).write({
             'type': 'product',
