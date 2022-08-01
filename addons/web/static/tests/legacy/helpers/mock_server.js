@@ -1644,6 +1644,9 @@ var MockServer = Class.extend({
                         const to = type === "date"
                             ? endDate.format("YYYY-MM-DD")
                             : endDate.format("YYYY-MM-DD HH:mm:ss");
+                        // NOTE THAT the range and the domain computed here are not really accurate
+                        // due to a the timezone not really taken into account.
+                        // FYI, the non legacy version of the mock server handles this correctly.
                         group.__range[gbField] = { from, to };
                         group.__domain = [
                             [fieldName, ">=", from],
