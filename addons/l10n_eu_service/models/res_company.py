@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
-from .eu_tax_map import EU_TAX_MAP
+from odoo import api, models
+from odoo.addons.account.models.account_tax_report import AccountTaxReportLine
 from .eu_tag_map import EU_TAG_MAP
+from .eu_tax_map import EU_TAX_MAP
 
 
 class Company(models.Model):
@@ -125,11 +126,11 @@ class Company(models.Model):
             'refund_tax_tag': None,
         })
 
-        return {
-            repartition_line_key: (
-                self.env.ref(tag_xml_id).tag_ids.filtered(lambda t: not t.tax_negate)
-                if tag_xml_id
-                else None
-            )
-            for repartition_line_key, tag_xml_id in tag_for_country.items()
-        }
+        mapping = {}
+        for repartition_line_key, tag_xml_id in tag_for_country.items():
+            tag = self.env.ref(tag_xml_id) if tag_xml_id else None
+            if isinstance(tag, AccountTaxReportLine):
+                tag = tag.tag_ids.filtered(lambda t: not t.tax_negate)
+            mapping[repartition_line_key] = tag
+
+        return mapping
