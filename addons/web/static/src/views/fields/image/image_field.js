@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+import { _lt } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -24,6 +25,7 @@ function isBinarySize(value) {
 export class ImageField extends Component {
     setup() {
         this.notification = useService("notification");
+        this.isMobile = isMobileOS();
         this.state = useState({
             isValid: true,
         });

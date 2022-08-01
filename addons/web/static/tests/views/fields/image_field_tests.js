@@ -125,12 +125,12 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             target,
-            ".o_form_image_controls .o_select_file_button",
+            ".o_field_image .o_select_file_button",
             "the image can be edited"
         );
         assert.containsOnce(
             target,
-            ".o_form_image_controls .o_clear_file_button",
+            ".o_field_image .o_clear_file_button",
             "the image can be deleted"
         );
         assert.strictEqual(
@@ -203,12 +203,12 @@ QUnit.module("Fields", (hooks) => {
 
             assert.containsOnce(
                 target,
-                ".o_form_image_controls .o_select_file_button",
+                ".o_field_image .o_select_file_button",
                 "the image can be edited"
             );
             assert.containsNone(
                 target,
-                ".o_form_image_controls .o_clear_file_button",
+                ".o_field_image .o_clear_file_button",
                 "the image cannot be deleted as it has not been uploaded"
             );
         }
