@@ -70,7 +70,7 @@
                     <notebook>
                         <page name="tax_mapping" string="Tax Mapping">
                             <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
-                                <tree name="tax_map_tree" string="Tax Mapping" editable="bottom">
+                                <tree name="tax_map_tree" string="Tax Mapping" editable="bottom" no_open="1">
                                     <field name="tax_src_id"
                                         domain="[
                                             ('type_tax_use', '!=', 'none'),
