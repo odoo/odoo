@@ -486,69 +486,6 @@ const _t = core._t;
         }
     },
     /**
-     * When the Customer sends a message, we need to act depending on our current state:
-     * - If the conversation has been forwarded to an operator
-     *   Then there is nothing to do, we let them speak
-     * - If we are currently on a 'free_input_multi' step
-     *   Await more user input (see #_chatbotAwaitUserInput() for details)
-     * - Otherwise we continue the script or end it if it's the last step
-     *
-     * We also save the current session state.
-     * Important as this may be the very first interaction with the bot, we need to save right away
-     * to correctly handle any page redirection / page refresh.
-     *
-     * Special side case: if we are currently redirecting to another page (see '_onChatbotOptionClicked')
-     * we shortcut the process as we are currently moving to a different URL.
-     * The script will be resumed on the new page (if in the same website domain).
-     *
-     * @private
-     */
-    async _sendMessage(message) {
-        const superArguments = arguments;
-        const superMethod = this._super;
-
-        if (
-            this.messaging.publicLivechatGlobal.livechatButtonView.isChatbot &&
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep &&
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data
-        ) {
-            await this._chatbotPostWelcomeMessages();
-        }
-
-        return superMethod.apply(this, superArguments).then(() => {
-            if (this.messaging.publicLivechatGlobal.livechatButtonView.isChatbotRedirecting) {
-                return;
-            }
-
-            if (
-                this.messaging.publicLivechatGlobal.livechatButtonView.isChatbot &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data
-            ) {
-                if (
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'forward_operator' &&
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_operator_found
-                ) {
-                    return;  // operator has taken over the conversation, let them speak
-                } else if (this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
-                    this._debouncedChatbotAwaitUserInput();
-                } else if (!this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.shouldEndScript) {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
-                    this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                        chatbotNextStepTimeout: setTimeout(
-                            this._chatbotTriggerNextStep.bind(this),
-                            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.messageDelay,
-                        ),
-                    });
-                } else {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
-                }
-
-                this._chatbotSaveSession();
-            }
-        });
-    },
-    /**
      * Small override to handle chatbot welcome message(s).
      * @private
      */
@@ -708,7 +645,7 @@ const _t = core._t;
         const redirectLink = $target.data('chatbotStepRedirectLink');
         this.messaging.publicLivechatGlobal.livechatButtonView.update({ isChatbotRedirecting: !!redirectLink });
 
-        await this._sendMessage({
+        await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage({
             content: $target.text().trim(),
         });
 

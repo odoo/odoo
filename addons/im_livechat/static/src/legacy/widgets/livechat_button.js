@@ -138,38 +138,6 @@ const LivechatButton = Widget.extend({
     },
     /**
      * @private
-     * @param {Object} message
-     * @return {Promise}
-     */
-     _sendMessage(message) {
-        this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._notifyMyselfTyping({ typing: false });
-        return session
-            .rpc('/mail/chat_post', { uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid, message_content: message.content })
-            .then((messageId) => {
-                if (!messageId) {
-                    try {
-                        this.displayNotification({
-                            message: _t("Session expired... Please refresh and try again."),
-                            sticky: true,
-                        });
-                    } catch (_err) {
-                        /**
-                         * Failure in displaying notification happens when
-                         * notification service doesn't exist, which is the case
-                         * in external lib. We don't want notifications in
-                         * external lib at the moment because they use bootstrap
-                         * toast and we don't want to include boostrap in
-                         * external lib.
-                         */
-                        console.warn(_t("Session expired... Please refresh and try again."));
-                    }
-                    this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
-                }
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
-            });
-    },
-    /**
-     * @private
      */
     _sendWelcomeMessage() {
         if (this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage) {
@@ -221,13 +189,15 @@ const LivechatButton = Widget.extend({
      * @param {OdooEvent} ev
      * @param {Object} ev.data.messageData
      */
-    _onPostMessageChatWindow(ev) {
+    async _onPostMessageChatWindow(ev) {
         ev.stopPropagation();
         const messageData = ev.data.messageData;
-        this._sendMessage(messageData).guardedCatch((reason) => {
+        try {
+            await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData);
+        } catch (reason) {
             reason.event.preventDefault();
-            return this._sendMessage(messageData); // try again just in case
-        });
+            return this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData); // try again just in case
+        }
     },
     /**
      * @private

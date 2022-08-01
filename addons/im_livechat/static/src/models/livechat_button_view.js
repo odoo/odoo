@@ -163,6 +163,14 @@ registerModel({
             });
         },
         /**
+         * @param {Object} message
+         */
+        async sendMessage(message) {
+            await this._sendMessageChatbotBefore();
+            await this._sendMessage(message);
+            this._sendMessageChatbotAfter();
+        },
+        /**
          * @private
          * @returns {string}
          */
@@ -424,6 +432,97 @@ registerModel({
             }).guardedCatch(() => {
                 this.update({ isOpeningChat: false });
             });
+        },
+        /**
+         * @private
+         * @param {Object} message
+         */
+        async _sendMessage(message) {
+            this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._notifyMyselfTyping({ typing: false });
+            const messageId = await this.messaging.rpc({
+                route: '/mail/chat_post',
+                params: { uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid, message_content: message.content },
+            });
+            if (!messageId) {
+                try {
+                    this.widget.displayNotification({
+                        message: this.env._t("Session expired... Please refresh and try again."),
+                        sticky: true,
+                    });
+                } catch (_err) {
+                    /**
+                     * Failure in displaying notification happens when
+                     * notification service doesn't exist, which is the case
+                     * in external lib. We don't want notifications in
+                     * external lib at the moment because they use bootstrap
+                     * toast and we don't want to include boostrap in
+                     * external lib.
+                     */
+                    console.warn(this.env._t("Session expired... Please refresh and try again."));
+                }
+                this.closeChat();
+            }
+            this.chatWindow.publicLivechatView.widget.scrollToBottom();
+        },
+        /**
+         * @private
+         */
+        _sendMessageChatbotAfter() {
+            if (this.isChatbotRedirecting) {
+                return;
+            }
+            if (
+                this.isChatbot &&
+                this.chatbot.currentStep &&
+                this.chatbot.currentStep.data
+            ) {
+                if (
+                    this.chatbot.currentStep.data.chatbot_step_type === 'forward_operator' &&
+                    this.chatbot.currentStep.data.chatbot_operator_found
+                ) {
+                    return; // operator has taken over the conversation, let them speak
+                } else if (this.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
+                    this.widget._debouncedChatbotAwaitUserInput();
+                } else if (!this.chatbot.shouldEndScript) {
+                    this.chatbotSetIsTyping();
+                    this.update({
+                        chatbotNextStepTimeout: setTimeout(
+                            this.widget._chatbotTriggerNextStep.bind(this.widget),
+                            this.chatbot.messageDelay,
+                        ),
+                    });
+                } else {
+                    this.chatbotEndScript();
+                }
+                this.widget._chatbotSaveSession();
+            }
+        },
+        /**
+         * When the Customer sends a message, we need to act depending on our current state:
+         * - If the conversation has been forwarded to an operator
+         *   Then there is nothing to do, we let them speak
+         * - If we are currently on a 'free_input_multi' step
+         *   Await more user input (see #_chatbotAwaitUserInput() for details)
+         * - Otherwise we continue the script or end it if it's the last step
+         *
+         * We also save the current session state.
+         * Important as this may be the very first interaction with the bot, we need to save right away
+         * to correctly handle any page redirection / page refresh.
+         *
+         * Special side case: if we are currently redirecting to another page (see '_onChatbotOptionClicked')
+         * we shortcut the process as we are currently moving to a different URL.
+         * The script will be resumed on the new page (if in the same website domain).
+         *
+         * @private
+         */
+        async _sendMessageChatbotBefore() {
+            if (
+                this.isChatbot &&
+                this.chatbot.currentStep &&
+                this.chatbot.currentStep.data
+            ) {
+                await this.widget._chatbotPostWelcomeMessages();
+            }
         },
     },
     fields: {
