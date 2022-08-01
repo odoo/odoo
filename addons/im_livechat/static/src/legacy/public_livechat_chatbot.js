@@ -545,30 +545,6 @@ const QWeb = core.qweb;
      //--------------------------------------------------------------------------
 
     /**
-     * When we enter the "ask feedback" process of the chat, we hide some elements that become
-     * unnecessary and irrelevant (restart / end messages, any text field values, ...).
-     *
-     * @override
-     * @private
-     */
-     _askFeedback() {
-        this._super(...arguments);
-
-        if (
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot &&
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep &&
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data
-        ) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data.conversation_closed = true;
-            this._chatbotSaveSession();
-        }
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_composer_text_field')
-            .removeClass('d-none')
-            .val('');
-     },
-    /**
      * Resuming the chatbot script if we are currently running one.
      *
      * In addition, we register a resize event on the window object to scroll messages to bottom.

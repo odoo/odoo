@@ -43,6 +43,27 @@ registerModel({
                 });
             }
         },
+        askFeedback() {
+            this.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled', true);
+            this.messaging.publicLivechatGlobal.update({ feedbackView: insertAndReplace() });
+            /**
+             * When we enter the "ask feedback" process of the chat, we hide some elements that become
+             * unnecessary and irrelevant (restart / end messages, any text field values, ...).
+             */
+            if (
+                this.chatbot &&
+                this.chatbot.currentStep &&
+                this.chatbot.currentStep.data
+            ) {
+                this.chatbot.currentStep.data.conversation_closed = true;
+                this.widget._chatbotSaveSession();
+            }
+            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
+            this.chatWindow.legacyChatWindow.$('.o_composer_text_field')
+                .removeClass('d-none')
+                .val('');
+        },
         /**
          * See '_chatbotSaveSession'.
          *

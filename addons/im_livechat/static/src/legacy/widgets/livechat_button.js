@@ -85,13 +85,6 @@ const LivechatButton = Widget.extend({
     /**
      * @private
      */
-    _askFeedback() {
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled', true);
-        this.messaging.publicLivechatGlobal.update({ feedbackView: insertAndReplace() });
-    },
-    /**
-     * @private
-     */
     _closeChat() {
         this.messaging.publicLivechatGlobal.livechatButtonView.update({ chatWindow: clear() });
         utils.set_cookie('im_livechat_session', "", -1); // remove cookie
@@ -281,7 +274,7 @@ const LivechatButton = Widget.extend({
         });
         if (shouldAskFeedback) {
             this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.toggleFold(false);
-            this._askFeedback();
+            this.messaging.publicLivechatGlobal.livechatButtonView.askFeedback();
         } else {
             this._closeChat();
         }
