@@ -379,10 +379,10 @@ class ViewOwlTemplateDialog extends Component {
         for (const [name, xml] of Object.entries(this.props.templates)) {
             pages.push({
                 Component: DisplayIndentedTemplate,
+                isVisible: true,
+                title: name,
                 props: {
                     xml,
-                    isVisible: true,
-                    title: name,
                 },
             });
         }
