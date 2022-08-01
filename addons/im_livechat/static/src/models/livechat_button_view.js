@@ -6,6 +6,8 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
+import { get_cookie, set_cookie } from 'web.utils';
+
 registerModel({
     name: 'LivechatButtonView',
     identifyingFields: ['publicLivechatGlobalOwner'],
@@ -66,6 +68,18 @@ registerModel({
             const chatbotState = localStorage.getItem(this.chatbotSessionCookieKey);
             if (chatbotState) {
                 this.chatbot.update({ currentStep: insertAndReplace({ data: this.localStorageChatbotState._chatbotCurrentStep }) });
+            }
+        },
+        /**
+         * Called when the visitor leaves the livechat chatter the first time (first click on X button)
+         * this will deactivate the mail_channel, notify operator that visitor has left the channel.
+         */
+        leaveSession() {
+            const cookie = get_cookie('im_livechat_session');
+            if (cookie) {
+                const channel = JSON.parse(cookie);
+                this.messaging.rpc({ route: '/im_livechat/visitor_leave_session', params: { uuid: channel.uuid } });
+                set_cookie('im_livechat_session', "", -1); // remove cookie
             }
         },
         /**

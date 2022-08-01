@@ -285,7 +285,7 @@ const LivechatButton = Widget.extend({
         } else {
             this._closeChat();
         }
-        this._visitorLeaveSession();
+        this.messaging.publicLivechatGlobal.livechatButtonView.leaveSession();
     },
     /**
      * @private
@@ -323,19 +323,6 @@ const LivechatButton = Widget.extend({
     _onUpdatedUnreadCounter(ev) {
         ev.stopPropagation();
         this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.renderHeader();
-    },
-    /**
-     * @private
-     * Called when the visitor leaves the livechat chatter the first time (first click on X button)
-     * this will deactivate the mail_channel, notify operator that visitor has left the channel.
-     */
-     _visitorLeaveSession() {
-        const cookie = utils.get_cookie('im_livechat_session');
-        if (cookie) {
-            const channel = JSON.parse(cookie);
-            session.rpc('/im_livechat/visitor_leave_session', {uuid: channel.uuid});
-            utils.set_cookie('im_livechat_session', "", -1); // remove cookie
-        }
     },
 });
 
