@@ -479,7 +479,7 @@ export class Record extends DataPoint {
                     if (data[fieldName]) {
                         const deserialize =
                             fieldType === "date" ? deserializeDate : deserializeDateTime;
-                        data[fieldName] = deserialize(JSON.stringify(data[fieldName]));
+                        data[fieldName] = deserialize(data[fieldName].toJSON());
                     }
                     break;
                 }

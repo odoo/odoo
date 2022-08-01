@@ -9,6 +9,7 @@ const { DateTime, Settings } = luxon;
 
 const SERVER_DATE_FORMAT = "yyyy-MM-dd";
 const SERVER_TIME_FORMAT = "HH:mm:ss";
+const SERVER_DATETIME_FORMAT = `${SERVER_DATE_FORMAT} ${SERVER_TIME_FORMAT}`;
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -173,11 +174,11 @@ export function formatDate(value, options = {}) {
  *
  *  Default=the session localization format.
  *
- * @param {boolean} [options.timezone]
+ * @param {boolean} [options.timezone=true]
  *  - True = input will be set in local time before being formatted.
  *  - False = input will be set in UTC time before being formatted.
  *
- *  Default=false.
+ *  Default=true.
  *
  * @param {string} [options.numberingSystem]
  *  Provided numbering system used to parse the input value.
@@ -193,7 +194,7 @@ export function formatDateTime(value, options = {}) {
     }
     const format = options.format || localization.dateTimeFormat;
     const numberingSystem = options.numberingSystem || Settings.defaultNumberingSystem || "latn";
-    const zone = options.timezone ? "default" : "utc";
+    const zone = !("timezone" in options) || options.timezone ? "default" : "utc";
     value = value.setZone(zone, { keepLocaltime: options.timezone });
     return value.toFormat(format, { numberingSystem });
 }
@@ -236,7 +237,7 @@ export function parseDate(value, options = {}) {
  *
  *  Default=the session localization format
  *
- * @param {boolean} [options.timezone]
+ * @param {boolean} [options.timezone=false]
  *  - True = input value is considered being in localtime.
  *  - False = input value is considered being in utc time, and the returned
  *            value will have the UTC zone.
@@ -345,10 +346,7 @@ export function parseDateTime(value, options = {}) {
  * @returns {DateTime | false}
  */
 export function deserializeDate(value) {
-    return parseDate(value, {
-        format: SERVER_DATE_FORMAT,
-        numberingSystem: "latn",
-    });
+    return DateTime.fromSQL(value, { zone: "utc", numberingSystem: "latn" });
 }
 
 /**
@@ -357,10 +355,7 @@ export function deserializeDate(value) {
  * @returns {DateTime | false}
  */
 export function deserializeDateTime(value) {
-    return parseDateTime(value, {
-        format: `${SERVER_DATE_FORMAT} ${SERVER_TIME_FORMAT}`,
-        numberingSystem: "latn",
-    });
+    return DateTime.fromSQL(value, { zone: "utc", numberingSystem: "latn" });
 }
 
 /**
@@ -369,10 +364,7 @@ export function deserializeDateTime(value) {
  * @returns {string}
  */
 export function serializeDate(value) {
-    return formatDate(value, {
-        format: SERVER_DATE_FORMAT,
-        numberingSystem: "latn",
-    });
+    return value.setZone("utc").toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" });
 }
 
 /**
@@ -381,8 +373,5 @@ export function serializeDate(value) {
  * @returns {string}
  */
 export function serializeDateTime(value) {
-    return formatDateTime(value, {
-        format: `${SERVER_DATE_FORMAT} ${SERVER_TIME_FORMAT}`,
-        numberingSystem: "latn",
-    });
+    return value.setZone("utc").toFormat(SERVER_DATETIME_FORMAT, { numberingSystem: "latn" });
 }
