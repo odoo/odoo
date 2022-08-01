@@ -38,6 +38,7 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
+            'purchase/static/src/toaster_button/*',
             'purchase/static/src/scss/purchase.scss',
             'purchase/static/src/js/purchase_dashboard.js',
             'purchase/static/src/js/purchase_toaster_button.js',
@@ -49,6 +50,7 @@
             'purchase/static/src/js/purchase_portal_sidebar.js',
         ],
         'web.assets_qweb': [
+            'purchase/static/src/toaster_button/*.xml',
             'purchase/static/src/xml/**/*',
         ],
     },
