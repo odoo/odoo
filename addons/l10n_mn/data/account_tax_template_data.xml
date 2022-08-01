@@ -12,12 +12,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag5')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag5')],
@@ -25,12 +23,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag5')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag5')],
@@ -49,12 +45,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag36'),ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag36')],
@@ -62,12 +56,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag36'),ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag36')],
@@ -86,25 +78,17 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_sale_vat2" model="account.tax.template">
@@ -119,25 +103,17 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag2')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag2')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_sale_vat3" model="account.tax.template">
@@ -152,25 +128,17 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag2')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag2')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_sale_vat4" model="account.tax.template">
@@ -185,12 +153,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag6')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag6')],
@@ -198,12 +164,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag6')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag6')],
@@ -222,12 +186,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag7')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag7')],
@@ -235,12 +197,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag7')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag7')],
@@ -259,12 +219,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag8')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag8')],
@@ -272,12 +230,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag8')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag8')],
@@ -296,12 +252,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag9')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag9')],
@@ -309,12 +263,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag9')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag9')],
@@ -333,12 +285,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag11')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag11')],
@@ -346,12 +296,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag11')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag11')],
@@ -370,12 +318,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag12')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag12')],
@@ -383,12 +329,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag12')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag12')],
@@ -407,12 +351,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag13')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag13')],
@@ -420,12 +362,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag13')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag13')],
@@ -444,12 +384,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag14')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag14')],
@@ -457,12 +395,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag14')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag14')],
@@ -481,12 +417,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag15')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag15')],
@@ -494,12 +428,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag15')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag15')],
@@ -518,12 +450,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag16')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag16')],
@@ -531,12 +461,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag16')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag16')],
@@ -555,12 +483,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag17')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag17')],
@@ -568,12 +494,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag17')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag17')],
@@ -592,12 +516,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag18')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag18')],
@@ -605,12 +527,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag18')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag18')],
@@ -629,12 +549,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag19')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag19')],
@@ -642,12 +560,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag19')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag19')],
@@ -666,12 +582,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag20')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag20')],
@@ -679,12 +593,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag20')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag20')],
@@ -703,12 +615,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag21')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag21')],
@@ -716,12 +626,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag21')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag21')],
@@ -740,12 +648,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag22')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag22')],
@@ -753,12 +659,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag22')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag22')],
@@ -777,12 +681,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag23')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag23')],
@@ -790,12 +692,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag23')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag23')],
@@ -814,12 +714,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag24')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag24')],
@@ -827,12 +725,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag24')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag24')],
@@ -851,12 +747,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag25')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag25')],
@@ -864,12 +758,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag25')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag25')],
@@ -888,25 +780,17 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag28')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag28')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_sale_vat24" model="account.tax.template">
@@ -921,25 +805,17 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag29')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag29')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record id="account_tax_purchase_vat3" model="account.tax.template">
@@ -954,12 +830,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33'),ref('vat_report_tag35')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag35')],
@@ -967,12 +841,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33'),ref('vat_report_tag35')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag35')],
@@ -991,12 +863,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33'),ref('vat_report_tag37')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag37')],
@@ -1004,12 +874,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33'),ref('vat_report_tag37')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag37')],
@@ -1028,12 +896,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33'),ref('vat_report_tag38')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag38')],
@@ -1041,12 +907,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33'),ref('vat_report_tag38')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag38')],
@@ -1065,12 +929,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag41')],
@@ -1078,12 +940,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag41')],
@@ -1102,12 +962,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag42')],
@@ -1115,12 +973,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag42')],
@@ -1139,12 +995,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag43')],
@@ -1152,12 +1006,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag43')],
@@ -1176,12 +1028,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag44')],
@@ -1189,12 +1039,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag44')],
@@ -1213,12 +1061,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag45')],
@@ -1226,12 +1072,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag45')],
@@ -1250,12 +1094,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag46')],
@@ -1263,12 +1105,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag33')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag46')],
@@ -1287,12 +1127,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag48')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag48')],
@@ -1300,12 +1138,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag48')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag48')],
@@ -1324,12 +1160,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag49')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag49')],
@@ -1337,12 +1171,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag49')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_3401_0201'),
                 'tag_ids': [ref('vat_report_tag49')],
@@ -1361,12 +1193,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag51')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag51')],
@@ -1374,12 +1204,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag51')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag51')],
@@ -1398,12 +1226,10 @@
         <field name="chart_template_id" ref="mn_chart_1"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag52')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag52')],
@@ -1411,12 +1237,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'tag_ids': [ref('vat_report_tag52')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_template_1204_0301'),
                 'tag_ids': [ref('vat_report_tag52')],

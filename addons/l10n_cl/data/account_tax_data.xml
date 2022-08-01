@@ -12,12 +12,10 @@
         <field name="tax_group_id" ref="tax_group_iva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_ventas_netas_gravadas_c_iva_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_210710'),
                 'plus_report_expression_ids': [ref('tax_report_iva_debito_fiscal_tag')],
@@ -25,12 +23,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_ventas_netas_gravadas_c_iva_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_210710'),
                 'minus_report_expression_ids': [ref('tax_report_iva_debito_fiscal_tag')],
@@ -48,12 +44,10 @@
         <field name="tax_group_id" ref="tax_group_iva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_compras_netas_gr_iva_recup_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_110710'),
                 'plus_report_expression_ids': [ref('tax_report_compras_iva_recup_tag')],
@@ -61,12 +55,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_compras_netas_gr_iva_recup_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_110710'),
                 'minus_report_expression_ids': [ref('tax_report_compras_iva_recup_tag')],
@@ -86,12 +78,10 @@
         <field name="tax_group_id" ref="tax_group_2da_categ"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_base_retencion_segunda_categ_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_210740'),
                 'plus_report_expression_ids': [ref('tax_report_retencion_segunda_categ_tag')],
@@ -99,12 +89,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_base_retencion_segunda_categ_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_210740'),
                 'minus_report_expression_ids': [ref('tax_report_retencion_segunda_categ_tag')],
@@ -353,12 +341,10 @@
         <field name="tax_group_id" ref="tax_group_retenciones"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_retencion_total_compras_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_210715'),
                 'plus_report_expression_ids': [ref('tax_report_retencion_total_compras_tag')],
@@ -366,12 +352,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_retencion_total_compras_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_210715'),
                 'minus_report_expression_ids': [ref('tax_report_retencion_total_compras_tag')],
@@ -389,23 +373,15 @@
         <field name="sequence" eval="5"/>
         <field name="tax_group_id" ref="tax_group_impuestos_especificos"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_420220'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_420220'),
             }),
@@ -423,12 +399,10 @@
         <field name="tax_group_id" ref="tax_group_iva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_compras_activo_fijo_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_compras_iva_activo_fijo_tag')],
                 'account_id': ref('account_110730'),
@@ -436,12 +410,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_compras_activo_fijo_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_compras_iva_activo_fijo_tag')],
                 'account_id': ref('account_110730'),
@@ -460,12 +432,10 @@
         <field name="tax_group_id" ref="tax_group_iva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_compras_activo_fijo_uso_comun_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_compras_iva_activo_fijo_uso_comun_tag')],
                 'account_id': ref('account_110730'),
@@ -473,12 +443,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_compras_activo_fijo_uso_comun_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_compras_iva_activo_fijo_uso_comun_tag')],
                 'account_id': ref('account_110730'),
@@ -497,12 +465,10 @@
         <field name="tax_group_id" ref="tax_group_iva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_compras_activo_fijo_no_recup_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_compras_iva_activo_fijo_no_recup_tag')],
                 'account_id': ref('account_420220'),
@@ -510,12 +476,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_compras_activo_fijo_no_recup_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_compras_iva_activo_fijo_no_recup_tag')],
                 'account_id': ref('account_420220'),
@@ -534,12 +498,10 @@
         <field name="tax_group_id" ref="tax_group_ila"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_base_ila_compras_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_tax_ila_compras_tag')],
                 'account_id': ref('account_420220'),
@@ -547,12 +509,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_base_ila_compras_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_tax_ila_compras_tag')],
                 'account_id': ref('account_420220'),
@@ -571,12 +531,10 @@
         <field name="tax_group_id" ref="tax_group_ila"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_base_ila_compras_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_tax_ila_compras_tag')],
                 'account_id': ref('account_420220'),
@@ -584,12 +542,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_base_ila_compras_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_tax_ila_compras_tag')],
                 'account_id': ref('account_420220'),
@@ -608,12 +564,10 @@
         <field name="tax_group_id" ref="tax_group_ila"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_base_ila_compras_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_tax_ila_compras_tag')],
                 'account_id': ref('account_420220'),
@@ -621,12 +575,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_base_ila_compras_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_tax_ila_compras_tag')],
                 'account_id': ref('account_420220'),
@@ -645,12 +597,10 @@
         <field name="tax_group_id" ref="tax_group_ila"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_base_ila_compras_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_tax_ila_compras_tag')],
                 'account_id': ref('account_420220'),
@@ -658,12 +608,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_base_ila_compras_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_tax_ila_compras_tag')],
                 'account_id': ref('account_420220'),
@@ -682,12 +630,10 @@
         <field name="tax_group_id" ref="tax_group_ila"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_base_ila_ventas_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_tax_ila_ventas_tag')],
                 'account_id': ref('account_210760'),
@@ -695,12 +641,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_base_ila_ventas_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_tax_ila_ventas_tag')],
                 'account_id': ref('account_210760'),
@@ -719,12 +663,10 @@
         <field name="tax_group_id" ref="tax_group_ila"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_base_ila_ventas_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_tax_ila_ventas_tag')],
                 'account_id': ref('account_210760'),
@@ -732,12 +674,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_base_ila_ventas_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_tax_ila_ventas_tag')],
                 'account_id': ref('account_210760'),
@@ -756,12 +696,10 @@
         <field name="tax_group_id" ref="tax_group_ila"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_base_ila_ventas_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_tax_ila_ventas_tag')],
                 'account_id': ref('account_210760'),
@@ -769,12 +707,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_base_ila_ventas_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_tax_ila_ventas_tag')],
                 'account_id': ref('account_210760'),
@@ -793,12 +729,10 @@
         <field name="tax_group_id" ref="tax_group_ila"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_base_ila_ventas_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_tax_ila_ventas_tag')],
                 'account_id': ref('account_210760'),
@@ -806,12 +740,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_base_ila_ventas_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_tax_ila_ventas_tag')],
                 'account_id': ref('account_210760'),
@@ -830,12 +762,10 @@
         <field name="tax_group_id" ref="tax_group_iva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_compras_netas_gr_iva_no_recuperable_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_compras_iva_no_recup_tag')],
                 'account_id': ref('account_420220'),
@@ -843,12 +773,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_compras_netas_gr_iva_no_recuperable_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_compras_iva_no_recup_tag')],
                 'account_id': ref('account_420220'),
@@ -867,12 +795,10 @@
         <field name="tax_group_id" ref="tax_group_iva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_compras_netas_gr_iva_uso_comun_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_compras_iva_uso_comun_tag')],
                 'account_id': ref('account_110730'),
@@ -880,12 +806,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_compras_netas_gr_iva_uso_comun_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_compras_iva_uso_comun_tag')],
                 'account_id': ref('account_110730'),
@@ -904,12 +828,10 @@
         <field name="tax_group_id" ref="tax_group_iva_19"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_compras_supermercado_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_expression_ids': [ref('tax_report_compras_iva_supermercado_tag')],
                 'account_id': ref('account_110710'),
@@ -917,12 +839,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_compras_supermercado_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_expression_ids': [ref('tax_report_compras_iva_supermercado_tag')],
                 'account_id': ref('account_110710'),

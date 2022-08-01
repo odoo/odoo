@@ -250,13 +250,11 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'tax_exigibility': 'on_payment',
             'invoice_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, tax_tags[0].ids)],
                 }),
 
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': tax_account_1.id,
                     'tag_ids': [(6, 0, tax_tags[1].ids)],
@@ -264,13 +262,11 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             ],
             'refund_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, tax_tags[2].ids)],
                 }),
 
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': tax_account_1.id,
                     'tag_ids': [(6, 0, tax_tags[3].ids)],

@@ -11,12 +11,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_vat_return_sale_base_fourteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201017'),
                 'plus_report_expression_ids': [ref('tax_report_vat_return_sale_tax_fourteen_tag')],
@@ -24,12 +22,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_vat_return_sale_base_fourteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201017'),
                 'minus_report_expression_ids': [ref('tax_report_vat_return_sale_tax_fourteen_tag')],
@@ -47,12 +43,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_vat_return_expense_base_fourteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104041'),
                 'plus_report_expression_ids': [ref('tax_report_vat_return_expense_tax_fourteen_tag')],
@@ -60,12 +54,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_vat_return_expense_base_fourteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104041'),
                 'minus_report_expression_ids': [ref('tax_report_vat_return_expense_tax_fourteen_tag')],
@@ -82,12 +74,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_vat_return_sale_base_zero_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
                 'plus_report_expression_ids': [ref('tax_report_vat_return_sale_tax_zero_tag')],
@@ -95,12 +85,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_vat_return_sale_base_zero_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
                 'minus_report_expression_ids': [ref('tax_report_vat_return_sale_tax_zero_tag')],
@@ -117,12 +105,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_vat_return_expense_base_zero_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
                 'plus_report_expression_ids': [ref('tax_report_vat_return_expense_tax_zero_tag')],
@@ -130,12 +116,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_vat_return_expense_base_zero_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
                 'minus_report_expression_ids': [ref('tax_report_vat_return_expense_tax_zero_tag')],
@@ -153,12 +137,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_vat_return_sale_base_exempt_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
                 'plus_report_expression_ids': [ref('tax_report_vat_return_sale_tax_exempt_tag')],
@@ -166,12 +148,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_vat_return_sale_base_exempt_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
                 'minus_report_expression_ids': [ref('tax_report_vat_return_sale_tax_exempt_tag')],
@@ -189,12 +169,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_vat_return_expense_base_exempt_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
                 'plus_report_expression_ids': [ref('tax_report_vat_return_expense_tax_exempt_tag')],
@@ -202,12 +180,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_vat_return_expense_base_exempt_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': False,
                 'minus_report_expression_ids': [ref('tax_report_vat_return_expense_tax_exempt_tag')],
@@ -225,12 +201,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_other_taxes_stamp_tax_base_sales_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201025'),
                 'plus_report_expression_ids': [ref('tax_report_other_taxes_stamp_tax_tax_sales_tag')],
@@ -239,12 +213,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_other_taxes_stamp_tax_base_sales_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201025'),
                 'minus_report_expression_ids': [ref('tax_report_other_taxes_stamp_tax_tax_sales_tag')],
@@ -263,12 +235,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_other_taxes_stamp_purchase_tax_base_purchase_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400077'),
                 'plus_report_expression_ids': [ref('tax_report_other_taxes_stamp_purchase_tax_tax_purchase_tag')],
@@ -277,12 +247,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_other_taxes_stamp_purchase_tax_base_purchase_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400077'),
                 'minus_report_expression_ids': [ref('tax_report_other_taxes_stamp_purchase_tax_tax_purchase_tag')],
@@ -301,12 +269,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_eight_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_eight_tag')],
@@ -315,12 +281,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_eight_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_eight_tag')],
@@ -339,12 +303,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_eight_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_eight_tag')],
@@ -353,12 +315,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_eight_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_eight_tag')],
@@ -376,12 +336,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_one_tag')],
@@ -390,12 +348,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_one_tag')],
@@ -413,12 +369,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_ten_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_ten_tag')],
@@ -427,12 +381,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_ten_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_ten_tag')],
@@ -450,12 +402,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_half_tag')],
@@ -464,12 +414,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_half_tag')],
@@ -487,12 +435,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_half_tag')],
@@ -501,12 +447,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_half_tag')],
@@ -524,12 +468,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_one_tag')],
@@ -538,12 +480,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_one_tag')],
@@ -561,12 +501,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_ten_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_ten_tag')],
@@ -575,12 +513,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_ten_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_ten_tag')],
@@ -599,12 +535,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_three_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_three_tag')],
@@ -613,12 +547,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_three_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_three_tag')],
@@ -636,12 +568,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_one_tag')],
@@ -650,12 +580,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_one_tag')],
@@ -674,12 +602,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_three_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_three_tag')],
@@ -688,12 +614,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_three_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_three_tag')],
@@ -711,12 +635,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_one_tag')],
@@ -725,12 +647,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_one_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_one_tag')],
@@ -748,12 +668,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_five_tag')],
@@ -762,12 +680,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_sale_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_104042'),
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_sale_tax_five_tag')],
@@ -785,12 +701,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_fifteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_fifteen_tag')],
@@ -799,12 +713,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_fifteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_fifteen_tag')],
@@ -822,12 +734,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_five_tag')],
@@ -836,12 +746,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201020'),
                 'plus_report_expression_ids': [ref('tax_report_withholding_tax_purchase_tax_five_tag')],
@@ -859,12 +767,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_fifteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_fifteen_tag')],
@@ -873,12 +779,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_fifteen_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_fifteen_tag')],
@@ -896,12 +800,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_thirty_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_thirty_tag')],
@@ -910,12 +812,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_thirty_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_thirty_tag')],
@@ -933,12 +833,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_thirty_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_thirty_tag')],
@@ -947,12 +845,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_thirty_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_thirty_tag')],
@@ -970,12 +866,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_half_tag')],
@@ -984,12 +878,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_half_tag')],
@@ -1007,12 +899,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_half_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_half_tag')],
@@ -1021,12 +911,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
              Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_half_tag')],
             }),
              Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_half_tag')],
@@ -1044,12 +932,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_five_tag')],
@@ -1058,12 +944,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_400075'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_purchase_tax_five_tag')],
@@ -1081,12 +965,10 @@
         <field name="chart_template_id" ref="egypt_chart_template_standard"/>
         <field name="invoice_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'plus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_five_tag')],
@@ -1095,12 +977,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[Command.clear(),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_base_five_tag')],
             }),
             Command.create({
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('egy_account_201024'),
                 'minus_report_expression_ids': [ref('tax_report_schedule_tax_schedule_tax_sale_tax_five_tag')],

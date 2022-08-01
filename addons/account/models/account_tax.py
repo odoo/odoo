@@ -168,14 +168,14 @@ class AccountTax(models.Model):
 
         if 'refund_repartition_line_ids' in fields_list:
             rslt['refund_repartition_line_ids'] = [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
+                (0, 0, {'repartition_type': 'base', 'tag_ids': [], 'company_id': company_id}),
+                (0, 0, {'repartition_type': 'tax', 'tag_ids': [], 'company_id': company_id}),
             ]
 
         if 'invoice_repartition_line_ids' in fields_list:
             rslt['invoice_repartition_line_ids'] = [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id}),
+                (0, 0, {'repartition_type': 'base', 'tag_ids': [], 'company_id': company_id}),
+                (0, 0, {'repartition_type': 'tax', 'tag_ids': [], 'company_id': company_id}),
             ]
 
         return rslt
@@ -1209,7 +1209,12 @@ class AccountTaxRepartitionLine(models.Model):
     _order = 'sequence, repartition_type, id'
     _check_company_auto = True
 
-    factor_percent = fields.Float(string="%", required=True, help="Factor to apply on the account move lines generated from this distribution line, in percents")
+    factor_percent = fields.Float(
+        string="%",
+        default=100,
+        required=True,
+        help="Factor to apply on the account move lines generated from this distribution line, in percents",
+    )
     factor = fields.Float(string="Factor Ratio", compute="_compute_factor", help="Factor to apply on the account move lines generated from this distribution line")
     repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")
     account_id = fields.Many2one(string="Account",

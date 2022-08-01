@@ -215,7 +215,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'amount': 42,
             'invoice_repartition_line_ids': [
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(4, inv_base_tag.id, 0)],
                 }),
@@ -236,7 +235,6 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             ],
             'refund_repartition_line_ids': [
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(4, ref_base_tag.id, 0)],
                 }),
@@ -334,24 +332,20 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'invoice_repartition_line_ids': [
                 (0, 0, {
                     'repartition_type': 'base',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.base_tag_pos.ids)],
                 }),
                 (0, 0, {
                     'repartition_type': 'tax',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.tax_tag_pos.ids)],
                 }),
             ],
             'refund_repartition_line_ids': [
                 (0, 0, {
                     'repartition_type': 'base',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.base_tag_neg.ids)],
                 }),
                 (0, 0, {
                     'repartition_type': 'tax',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.tax_tag_neg.ids)],
                 }),
             ],
@@ -424,24 +418,20 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             'invoice_repartition_line_ids': [
                 (0, 0, {
                     'repartition_type': 'base',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.base_tag_pos.ids)],
                 }),
                 (0, 0, {
                     'repartition_type': 'tax',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.tax_tag_pos.ids)],
                 }),
             ],
             'refund_repartition_line_ids': [
                 (0, 0, {
                     'repartition_type': 'base',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.base_tag_neg.ids)],
                 }),
                 (0, 0, {
                     'repartition_type': 'tax',
-                    'factor_percent': 100.0,
                     'tag_ids': [(6, 0, self.tax_tag_neg.ids)],
                 }),
             ],
@@ -519,24 +509,16 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                 'invoice_repartition_line_ids': [
                     (0, 0, {
                         'repartition_type': 'base',
-                        'factor_percent': 100.0,
                         'tag_ids': [(6, 0, self.base_tag_pos.ids)],
                     }),
                     (0, 0, {
                         'repartition_type': 'tax',
-                        'factor_percent': 100.0,
                         'tag_ids': [(6, 0, self.tax_tag_pos.ids)],
                     }),
                 ],
                 'refund_repartition_line_ids': [
-                    (0, 0, {
-                        'repartition_type': 'base',
-                        'factor_percent': 100.0,
-                    }),
-                    (0, 0, {
-                        'repartition_type': 'tax',
-                        'factor_percent': 100.0,
-                    }),
+                    (0, 0, {'repartition_type': 'base'}),
+                    (0, 0, {'repartition_type': 'tax'}),
                 ],
             })
             child2_sale_tax = self.env['account.tax'].create({
@@ -546,24 +528,16 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                 'amount_type': 'percent',
                 'amount': 10,
                 'invoice_repartition_line_ids': [
-                    (0, 0, {
-                        'repartition_type': 'base',
-                        'factor_percent': 100.0,
-                    }),
-                    (0, 0, {
-                        'repartition_type': 'tax',
-                        'factor_percent': 100.0,
-                    }),
+                    (0, 0, {'repartition_type': 'base'}),
+                    (0, 0, {'repartition_type': 'tax'}),
                 ],
                 'refund_repartition_line_ids': [
                     (0, 0, {
                         'repartition_type': 'base',
-                        'factor_percent': 100.0,
                         'tag_ids': [(6, 0, self.base_tag_neg.ids)],
                     }),
                     (0, 0, {
                         'repartition_type': 'tax',
-                        'factor_percent': 100.0,
                         'tag_ids': [(6, 0, self.tax_tag_neg.ids)],
                     }),
                 ],
