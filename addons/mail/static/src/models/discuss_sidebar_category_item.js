@@ -223,6 +223,11 @@ registerModel({
             compute: '_computeCategoryCounterContribution',
             readonly: true,
         }),
+        channel: one('Channel', {
+            inverse: 'discussSidebarCategoryItem',
+            readonly: true,
+            required: true,
+        }),
         /**
          * Amount of unread/action-needed messages
          */
@@ -264,14 +269,6 @@ registerModel({
          */
         isUnread: attr({
             compute: '_computeIsUnread',
-        }),
-        /**
-         * The related channel.
-         */
-        channel: one('Channel', {
-            inverse: 'discussSidebarCategoryItem',
-            readonly: true,
-            required: true,
         }),
     },
 });
