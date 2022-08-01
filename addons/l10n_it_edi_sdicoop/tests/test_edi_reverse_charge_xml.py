@@ -55,13 +55,13 @@ class TestItEdiReverseCharge(TestItEdiCommon):
             'amount_type': 'percent',
             'type_tax_use': 'purchase',
             'invoice_repartition_line_ids': repartition_lines(
-                RepartitionLine(100, 'base', ('+03',)),
-                RepartitionLine(100, 'tax', ('+vj9',)),
-                RepartitionLine(-100, 'tax', False)),
+                RepartitionLine(100, 'base', ('+03', '+vj9')),
+                RepartitionLine(100, 'tax', ('+5v',)),
+                RepartitionLine(-100, 'tax', ('-4v',))),
             'refund_repartition_line_ids': repartition_lines(
-                RepartitionLine(100, 'base', False),
+                RepartitionLine(100, 'base', ('-03', '-vj9')),
                 RepartitionLine(100, 'tax', False),
-                RepartitionLine(-100, 'tax', False))
+                RepartitionLine(-100, 'tax', False)),
         }
         # Purchase tax 4% with Reverse Charge
         cls.purchase_tax_4p = cls.env['account.tax'].with_company(cls.company).create(tax_data)
@@ -74,10 +74,15 @@ class TestItEdiReverseCharge(TestItEdiCommon):
             **tax_data,
             'name': 'Tax 4% purchase Reverse Charge, in Italy',
             'invoice_repartition_line_ids': repartition_lines(
-                RepartitionLine(100, 'base', ('+03',)),
-                RepartitionLine(100, 'tax', ('+vj3',)),
+                RepartitionLine(100, 'base', ('+03', '+vj3')),
+                RepartitionLine(100, 'tax', ('+5v',)),
+                RepartitionLine(-100, 'tax', ('-4v',))),
+            'refund_repartition_line_ids': repartition_lines(
+                RepartitionLine(100, 'base', ('-03', '-vj3')),
+                RepartitionLine(100, 'tax', False),
                 RepartitionLine(-100, 'tax', False)),
         }
+
         cls.purchase_tax_4p_already_in_italy = cls.env['account.tax'].with_company(cls.company).create(tax_data_4p_already_in_italy)
         cls.line_tax_4p_already_in_italy = cls.standard_line.copy()
         cls.line_tax_4p_already_in_italy['tax_ids'] = [(6, 0, cls.purchase_tax_4p_already_in_italy.ids)]
@@ -153,11 +158,15 @@ class TestItEdiReverseCharge(TestItEdiCommon):
             ),
         }
         cls.reverse_charge_bill_2 = cls.env['account.move'].with_company(cls.company).create(bill_data_2)
+        cls.reverse_charge_refund = cls.reverse_charge_bill.with_company(cls.company)._reverse_moves([{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+        }])
 
         # Posting moves -----------
         cls.reverse_charge_invoice._post()
         cls.reverse_charge_bill._post()
         cls.reverse_charge_bill_2._post()
+        cls.reverse_charge_refund._post()
 
     def _cleanup_etree(self, content, xpaths=None):
         xpaths = {
@@ -193,5 +202,28 @@ class TestItEdiReverseCharge(TestItEdiCommon):
                 "//DatiGeneraliDocumento/TipoDocumento": "<TipoDocumento>TD19</TipoDocumento>",
                 "//DatiGeneraliDocumento/Numero": "<Numero/>",
                 "(//DettaglioLinee/Descrizione)[2]": "<Descrizione/>",
+            }
+        )
+
+    def test_reverse_charge_refund(self):
+        self._test_invoice_with_sample_file(
+            self.reverse_charge_refund,
+            "reverse_charge_bill.xml",
+            xpaths_result={
+                "//DatiGeneraliDocumento/Numero": "<Numero/>",
+                "//DatiPagamento/DettaglioPagamento/DataScadenzaPagamento": "<DataScadenzaPagamento/>",
+            },
+            xpaths_file={
+                "//DatiGeneraliDocumento/Numero": "<Numero/>",
+                "//DatiGeneraliDocumento/ImportoTotaleDocumento": "<ImportoTotaleDocumento>-1808.91</ImportoTotaleDocumento>",
+                "//DatiPagamento/DettaglioPagamento/DataScadenzaPagamento": "<DataScadenzaPagamento/>",
+                "(//DettaglioLinee/PrezzoUnitario)[1]": "<PrezzoUnitario>-800.400000</PrezzoUnitario>",
+                "(//DettaglioLinee/PrezzoUnitario)[2]": "<PrezzoUnitario>-800.400000</PrezzoUnitario>",
+                "(//DettaglioLinee/PrezzoTotale)[1]": "<PrezzoTotale>-800.40</PrezzoTotale>",
+                "(//DettaglioLinee/PrezzoTotale)[2]": "<PrezzoTotale>-800.40</PrezzoTotale>",
+                "(//DatiRiepilogo/ImponibileImporto)[1]": "<ImponibileImporto>-800.40</ImponibileImporto>",
+                "(//DatiRiepilogo/ImponibileImporto)[2]": "<ImponibileImporto>-800.40</ImponibileImporto>",
+                "(//DatiRiepilogo/Imposta)[1]": "<Imposta>-176.09</Imposta>",
+                "(//DatiRiepilogo/Imposta)[2]": "<Imposta>-32.02</Imposta>",
             }
         )
