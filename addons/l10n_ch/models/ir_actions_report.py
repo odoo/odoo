@@ -49,7 +49,7 @@ class IrActionsReport(models.Model):
                 for invoice_id, stream in qr_res.items():
                     streams_to_append[invoice_id] = stream
             if isr_inv_ids:
-                isr_res = self.env.ref('l10n_ch.l10n_ch_isr_report')._render_qweb_pdf_prepare_streams(data, res_ids=qr_inv_ids)
+                isr_res = self.env.ref('l10n_ch.l10n_ch_isr_report')._render_qweb_pdf_prepare_streams(data, res_ids=isr_inv_ids)
                 for invoice_id, stream in isr_res.items():
                     streams_to_append[invoice_id] = stream
             # Add to results
