@@ -119,7 +119,6 @@ class ThemeAttachment(models.Model):
     url = fields.Char()
     copy_ids = fields.One2many('ir.attachment', 'theme_template_id', 'Attachment using a copy of me', copy=False, readonly=True)
 
-
     def _convert_to_base_model(self, website, **kwargs):
         self.ensure_one()
         new_attach = {

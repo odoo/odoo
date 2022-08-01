@@ -4,7 +4,6 @@ import logging
 from lxml import etree
 import os
 import unittest
-import time
 
 import pytz
 import werkzeug
@@ -16,7 +15,7 @@ from functools import partial
 import odoo
 from odoo import api, models
 from odoo import SUPERUSER_ID
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN

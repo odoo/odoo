@@ -1117,11 +1117,11 @@ class Website(models.Model):
         methods = endpoint.routing.get('methods') or ['GET']
 
         converters = list(rule._converters.values())
-        if not ('GET' in methods and
-                endpoint.routing['type'] == 'http' and
-                endpoint.routing['auth'] in ('none', 'public') and
-                endpoint.routing.get('website', False) and
-                all(hasattr(converter, 'generate') for converter in converters)):
+        if not ('GET' in methods
+                and endpoint.routing['type'] == 'http'
+                and endpoint.routing['auth'] in ('none', 'public')
+                and endpoint.routing.get('website', False)
+                and all(hasattr(converter, 'generate') for converter in converters)):
             return False
 
         # dont't list routes without argument having no default value or converter
@@ -1129,11 +1129,10 @@ class Website(models.Model):
         params = list(sign.parameters.values())[1:]  # skip self
         supported_kinds = (inspect.Parameter.POSITIONAL_ONLY,
                            inspect.Parameter.POSITIONAL_OR_KEYWORD)
-        has_no_default = lambda p: p.default is inspect.Parameter.empty
 
         # check that all args have a converter
         return all(p.name in rule._converters for p in params
-                   if p.kind in supported_kinds and has_no_default(p))
+                   if p.kind in supported_kinds and p.default is inspect.Parameter.empty)
 
     def _enumerate_pages(self, query_string=None, force=False):
         """ Available pages in the website/CMS. This is mostly used for links
@@ -1460,7 +1459,7 @@ class Website(models.Model):
         snippets_assets = self._get_snippets_assets()
         html_fields = self._get_html_fields()
 
-        for snippet_module, snippet_id, asset_version, asset_type, _ in snippets_assets:
+        for snippet_module, snippet_id, asset_version, asset_type, _asset_id in snippets_assets:
             is_snippet_used = self._is_snippet_used(snippet_module, snippet_id, asset_version, asset_type, html_fields)
 
             # The regex catches XXX.scss, XXX.js and XXX_variables.scss
@@ -1773,7 +1772,7 @@ class Website(models.Model):
             for field in fields:
                 fields_domain.append([(field, '=ilike', '%s%%' % first)])
                 fields_domain.append([(field, '=ilike', '%% %s%%' % first)])
-                fields_domain.append([(field, '=ilike', '%%>%s%%' % first)]) # HTML
+                fields_domain.append([(field, '=ilike', '%%>%s%%' % first)])  # HTML
             domain.append(OR(fields_domain))
             domain = AND(domain)
             records = model.search_read(domain, fields, limit=1000)

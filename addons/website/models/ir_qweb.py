@@ -40,11 +40,11 @@ class IrQWeb(models.AbstractModel):
     _inherit = 'ir.qweb'
 
     URL_ATTRS = {
-        'form':   'action',
-        'a':      'href',
-        'link':   'href',
+        'form': 'action',
+        'a': 'href',
+        'link': 'href',
         'script': 'src',
-        'img':    'src',
+        'img': 'src',
     }
 
     # assume cache will be invalidated by third party on write to ir.ui.view
@@ -79,7 +79,6 @@ class IrQWeb(models.AbstractModel):
                 {'company_id': comp.id, 'name': comp.name}
                 for comp in irQweb.env.user.company_ids if comp != cur_company
             ])
-
 
         # update values
 

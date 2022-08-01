@@ -183,7 +183,7 @@ class TestPage(common.TransactionCase):
         View = self.env['ir.ui.view']
         Website = self.env['website']
 
-        website2 = self.env['website'].create({
+        self.env['website'].create({
             'name': 'My Second Website',
             'domain': '',
         })
