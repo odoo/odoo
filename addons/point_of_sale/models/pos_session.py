@@ -775,8 +775,14 @@ class PosSession(models.Model):
                         ('product_id.categ_id.property_valuation', '=', 'real_time')
                     ])
                     for move in stock_moves:
-                        exp_key = move.product_id._get_product_accounts()['expense']
-                        out_key = move.product_id.categ_id.property_stock_account_output_categ_id
+                        try:
+                            product = move.bom_line_id.bom_id.product_tmpl_id
+                        except AttributeError:
+                            pass
+                        if not product:
+                            product = move.product_id.product_tmpl_id
+                        exp_key = product._get_product_accounts()['expense']
+                        out_key = product.categ_id.property_stock_account_output_categ_id
                         amount = -sum(move.sudo().stock_valuation_layer_ids.mapped('value'))
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                         if move.location_id.usage == 'customer':
@@ -801,8 +807,15 @@ class PosSession(models.Model):
                     ('product_id.categ_id.property_valuation', '=', 'real_time'),
                 ])
                 for move in stock_moves:
-                    exp_key = move.product_id._get_product_accounts()['expense']
-                    out_key = move.product_id.categ_id.property_stock_account_output_categ_id
+                    product = None
+                    try:
+                        product = move.bom_line_id.bom_id.product_tmpl_id
+                    except AttributeError:
+                        pass
+                    if not product:
+                        product = move.product_id.product_tmpl_id
+                    exp_key = product._get_product_accounts()['expense']
+                    out_key = product.categ_id.property_stock_account_output_categ_id
                     amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
                     stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
                     if move.location_id.usage == 'customer':
