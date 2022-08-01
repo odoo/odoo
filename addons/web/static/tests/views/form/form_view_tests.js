@@ -7843,6 +7843,42 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("can save without any dirty translatable fields", async function (assert) {
+        serverData.models.partner.fields.foo.translate = true;
+
+        patchWithCleanup(localization, {
+            multiLang: true,
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo"/>
+                </form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.verifySteps(["get_views", "read"]);
+        await clickEdit(target);
+        assert.containsOnce(target, ".o_form_editable");
+        // o_field_translate is on the input and on the translate button
+        assert.containsN(target, "div[name='foo'] > .o_field_translate", 2);
+        await clickSave(target);
+        assert.containsNone(
+            target,
+            ".alert .o_field_translate",
+            "should not have a translation alert"
+        );
+        assert.containsOnce(target, ".o_form_readonly");
+        assert.verifySteps([]);
+    });
+
     QUnit.test("translation alerts are preserved on pager change", async function (assert) {
         serverData.models.partner.fields.foo.translate = true;
 
