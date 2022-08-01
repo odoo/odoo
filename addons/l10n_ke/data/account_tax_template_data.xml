@@ -9,23 +9,15 @@
         <field name="amount">16</field>
         <field name="tax_group_id" ref="tax_group_16"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke2200'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke2200'),
                 }),
@@ -40,23 +32,15 @@
         <field name="amount">8</field>
         <field name="tax_group_id" ref="tax_group_8"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke2200'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke2200'),
                 }),
@@ -71,24 +55,12 @@
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'base'}),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'base'}),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <record id="STEX" model="account.tax.template">
@@ -100,24 +72,12 @@
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'base'}),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'base'}),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <record id="PT16" model="account.tax.template">
@@ -129,23 +89,15 @@
         <field name="amount">16</field>
         <field name="tax_group_id" ref="tax_group_16"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke1110'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke1110'),
                 }),
@@ -160,23 +112,15 @@
         <field name="amount">8</field>
         <field name="tax_group_id" ref="tax_group_8"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke1110'),
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('ke1110'),
                 }),
@@ -191,24 +135,12 @@
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'base'}),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'base'}),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
     <record id="PTEX" model="account.tax.template">
@@ -220,24 +152,12 @@
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'base'}),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0,0, {'repartition_type': 'base'}),
+                (0,0, {'repartition_type': 'tax'}),
             ]"/>
     </record>
 </odoo>

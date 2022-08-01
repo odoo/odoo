@@ -20,23 +20,11 @@
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
         <field name="tax_group_id" ref="tax_group_tva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            })         ]"/>
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'})         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            })         ]"/>
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'})         ]"/>
     </record>
     <record model="account.tax.template" id="tva_exo1">
         <field name="name">Exonere de TVA ACHATS</field>
@@ -47,24 +35,12 @@
         <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
         <field name="tax_group_id" ref="tax_group_tva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
     </record>
     <record model="account.tax.template" id="tva_vt20">
@@ -77,12 +53,10 @@
         <field name="tax_group_id" ref="tax_group_tva_20"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_taux_normal_20_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445520'),
                 'plus_report_expression_ids': [ref('tax_report_taux_normal_tva_20_tag')],
@@ -90,12 +64,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_taux_normal_20_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445520'),
                 'minus_report_expression_ids': [ref('tax_report_taux_normal_tva_20_tag')],
@@ -112,24 +84,20 @@
         <field name="tax_group_id" ref="tax_group_tva_14"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_tauz_reduit_ht_14_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445514'),
                 'plus_report_expression_ids': [ref('tax_report_taux_rediut_tva_14_tag')],
             }),]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                   'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_tauz_reduit_ht_14_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445514'),
                 'minus_report_expression_ids': [ref('tax_report_taux_rediut_tva_14_tag')],
@@ -146,12 +114,10 @@
         <field name="tax_group_id" ref="tax_group_tva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('account_report_taux_reduit_base_ht_10_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445510'),
                 'plus_report_expression_ids': [ref('tax_report_taux_reduit_tva_10_tag')],
@@ -159,12 +125,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('account_report_taux_reduit_base_ht_10_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445510'),
                 'minus_report_expression_ids': [ref('tax_report_taux_reduit_tva_10_tag')],
@@ -181,12 +145,10 @@
         <field name="tax_group_id" ref="tax_group_tva_7"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_taux_reduit_ht_7_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445507'),
                 'plus_report_expression_ids': [ref('tax_report_taux_reduit_tva_7_tag')],
@@ -194,12 +156,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_taux_reduit_ht_7_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_445507'),
                 'minus_report_expression_ids': [ref('tax_report_taux_reduit_tva_7_tag')],
@@ -216,12 +176,10 @@
         <field name="tax_group_id" ref="tax_group_tva_20"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_achats_importation_ht_20_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455220'),
                 'plus_report_expression_ids': [ref('tax_report_achats_importation_tva_20_tag')],
@@ -229,12 +187,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_achats_importation_ht_20_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455220'),
                 'minus_report_expression_ids': [ref('tax_report_achats_importation_tva_20_tag')],
@@ -251,12 +207,10 @@
         <field name="tax_group_id" ref="tax_group_tva_20"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_immobilisations_base_ht_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_34551'),
                 'plus_report_expression_ids': [ref('tax_report_immobilisations_deductible_tva_tag')],
@@ -264,12 +218,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_immobilisations_base_ht_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_34551'),
                 'minus_report_expression_ids': [ref('tax_report_immobilisations_deductible_tva_tag')],
@@ -286,12 +238,10 @@
         <field name="tax_group_id" ref="tax_group_tva_14"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_achats_importation_ht_14_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455214'),
                 'plus_report_expression_ids': [ref('tax_report_achats_importation_tva_14_tag')],
@@ -299,12 +249,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_achats_importation_ht_14_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455214'),
                 'minus_report_expression_ids': [ref('tax_report_achats_importation_tva_14_tag')],
@@ -321,12 +269,10 @@
         <field name="tax_group_id" ref="tax_group_tva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_achats_importation_ht_10_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455210'),
                 'plus_report_expression_ids': [ref('tax_report_achats_importation_tva_10_tag')],
@@ -334,12 +280,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_achats_importation_ht_10_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455210'),
                 'minus_report_expression_ids': [ref('tax_report_achats_importation_tva_10_tag')],
@@ -356,12 +300,10 @@
         <field name="tax_group_id" ref="tax_group_tva_7"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'plus_report_expression_ids': [ref('tax_report_achat_importation_ht_7_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455207'),
                 'plus_report_expression_ids': [ref('tax_report_achats_importation_tva_7_tag')],
@@ -369,12 +311,10 @@
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'base',
                 'minus_report_expression_ids': [ref('tax_report_achat_importation_ht_7_tag')],
             }),
             (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('pcg_3455207'),
                 'minus_report_expression_ids': [ref('tax_report_achats_importation_tva_7_tag')],

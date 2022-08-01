@@ -543,12 +543,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'amount_type': 'fixed',
             'amount': 1,
             'invoice_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base'}),
                 (0, 0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': tax_received_account.id,
                 }),

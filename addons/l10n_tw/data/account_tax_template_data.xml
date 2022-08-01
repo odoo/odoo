@@ -11,23 +11,15 @@
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_5" />
         <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('tw_220400'),
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('tw_220400'),
                 }),
@@ -45,23 +37,15 @@
         <field name="include_base_amount" eval="1" />
         <field name="tax_group_id" ref="tax_group_gst_5" />
         <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('tw_220400'),
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('tw_220400'),
                 }),
@@ -78,23 +62,15 @@
         <field name="price_include" eval="0"/>
         <field name="tax_group_id" ref="tax_group_gst_5" />
         <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('tw_126800'),
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('tw_126800'),
                 }),
@@ -111,23 +87,15 @@
         <field name="include_base_amount" eval="1" />
         <field name="tax_group_id" ref="tax_group_gst_5" />
         <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('tw_126800'),
                 }),
             ]"/>
         <field name="refund_repartition_line_ids" eval="[
+                (0,0, {'repartition_type': 'base'}),
                 (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
-                (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': ref('tw_126800'),
                 }),

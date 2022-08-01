@@ -84,13 +84,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'tax_exigibility': 'on_payment',
             'invoice_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, cls.tax_tags[0].ids)],
                 }),
 
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': cls.tax_account_1.id,
                     'tag_ids': [(6, 0, cls.tax_tags[1].ids)],
@@ -98,13 +96,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ],
             'refund_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, cls.tax_tags[2].ids)],
                 }),
 
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': cls.tax_account_1.id,
                     'tag_ids': [(6, 0, cls.tax_tags[3].ids)],
@@ -120,13 +116,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'tax_exigibility': 'on_payment',
             'invoice_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, cls.tax_tags[4].ids)],
                 }),
 
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': cls.tax_account_2.id,
                     'tag_ids': [(6, 0, cls.tax_tags[5].ids)],
@@ -134,13 +128,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             ],
             'refund_repartition_line_ids': [
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'base',
                     'tag_ids': [(6, 0, cls.tax_tags[6].ids)],
                 }),
 
                 (0, 0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': cls.tax_account_2.id,
                     'tag_ids': [(6, 0, cls.tax_tags[7].ids)],
@@ -3508,25 +3500,17 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'amount': 20,
             'tax_exigibility': 'on_invoice',
             'invoice_repartition_line_ids': [
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': self.tax_account_1.id,
                 }),
             ],
             'refund_repartition_line_ids': [
-                (0,0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0,0, {'repartition_type': 'base'}),
 
                 (0,0, {
-                    'factor_percent': 100,
                     'repartition_type': 'tax',
                     'account_id': self.tax_account_1.id,
                 }),
@@ -3749,26 +3733,14 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'tax_exigibility': 'on_payment',
             'country_id': test_country.id,
             'invoice_repartition_line_ids': [
-                (0, 0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0, 0, {'repartition_type': 'base'}),
 
-                (0, 0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0, 0, {'repartition_type': 'tax'}),
             ],
             'refund_repartition_line_ids': [
-                (0, 0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'base',
-                }),
+                (0, 0, {'repartition_type': 'base'}),
 
-                (0, 0, {
-                    'factor_percent': 100,
-                    'repartition_type': 'tax',
-                }),
+                (0, 0, {'repartition_type': 'tax'}),
             ],
         })
 

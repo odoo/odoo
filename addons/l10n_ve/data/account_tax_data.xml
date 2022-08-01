@@ -11,24 +11,12 @@
             <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_iva_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         </record>
         <record id="tax1sale" model="account.tax.template">
@@ -40,23 +28,15 @@
             <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_iva_12"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_activa_account_2172003'),
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_activa_account_2172003'),
             }),
@@ -71,23 +51,15 @@
             <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_iva_8"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_activa_account_2172003'),
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_activa_account_2172003'),
             }),
@@ -102,23 +74,15 @@
             <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_iva_22"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_activa_account_2172003'),
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_activa_account_2172003'),
             }),
@@ -133,24 +97,12 @@
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_iva_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-            }),
+            (0,0, {'repartition_type': 'base'}),
+            (0,0, {'repartition_type': 'tax'}),
         ]"/>
         </record>
         <record id="tax1purchase" model="account.tax.template">
@@ -162,23 +114,15 @@
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_iva_12"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_activa_account_1151004'),
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_activa_account_1151004'),
             }),
@@ -193,23 +137,15 @@
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_iva_8"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_activa_account_1151004'),
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_activa_account_1151004'),
             }),
@@ -224,23 +160,15 @@
             <field name="type_tax_use">purchase</field>
             <field name="tax_group_id" ref="tax_group_iva_22"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_activa_account_1151004'),
             }),
         ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {'repartition_type': 'base'}),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('account_activa_account_1151004'),
             }),
