@@ -99,6 +99,7 @@ QUnit.module("Views", (hooks) => {
                         {
                             id: 1,
                             display_name: "first record",
+                            product_id: 37,
                             bar: true,
                             foo: "yop",
                             int_field: 10,
@@ -3975,6 +3976,47 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_form_button_cancel"));
 
         assert.containsNone(document.body, ".modal", "there should not be a confirm modal");
+    });
+
+    QUnit.test("discard form with specialdata", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <field name="product_id" domain="[('display_name', '=', name)]" widget="statusbar"></field>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"></field>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.containsOnce(
+            target,
+            ".o_statusbar_status button",
+            "Must have only one statusbar button"
+        );
+        await editInput(target, "input#name.o_input", "xpad");
+        assert.containsN(
+            target,
+            ".o_statusbar_status button",
+            2,
+            "Must have only two statusbar buttons"
+        );
+        await click(target.querySelector(".o_form_button_cancel"));
+        assert.containsOnce(
+            target,
+            ".o_statusbar_status button",
+            "Must have only one statusbar button"
+        );
+        const buttonText = target.querySelectorAll(".o_statusbar_status button")[0].textContent;
+        assert.strictEqual(buttonText, "xphone", "The statusbar button should be xphone");
     });
 
     QUnit.test("switching to another record from a dirty one", async function (assert) {
