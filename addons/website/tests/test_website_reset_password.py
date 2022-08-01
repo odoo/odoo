@@ -65,7 +65,7 @@ class TestWebsiteResetPassword(HttpCase):
         website.ensure_one()
 
         # Use AAA and ZZZ as names since res.users are ordered by 'login, name'
-        user1 = self.env["res.users"].create(
+        self.env["res.users"].create(
             {"website_id": False, "login": "bobo@mail.com", "name": "AAA", "password": "bobo@mail.com"}
         )
         user2 = self.env["res.users"].create(

@@ -56,8 +56,9 @@ class IrTranslation(models.Model):
                 ON s_menu.parent_id = root_menu.id AND root_menu.parent_id IS NULL
              WHERE t.lang IN %s and t.module IN %s
                AND o_menu.website_id IS NULL AND o_menu.parent_id = %s
-               AND s_menu.website_id IS NOT NULL""" + conflict_clause.format(
-                   "(type, lang, name, res_id) WHERE type = 'model'"
+               AND s_menu.website_id IS NOT NULL
+            """ + conflict_clause.format(
+            "(type, lang, name, res_id) WHERE type = 'model'"
         ), (tuple(langs), tuple(modules), default_menu.id))
 
         return res

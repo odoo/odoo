@@ -136,9 +136,9 @@ class TestUi(odoo.tests.HttpCase):
             'login': 'restricted',
             'password': 'restricted',
             'groups_id': [(6, 0, [
-                    self.ref('base.group_user'),
-                    self.ref('website.group_website_publisher')
-                ])]
+                self.ref('base.group_user'),
+                self.ref('website.group_website_publisher')
+            ])]
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'restricted_editor', login='restricted')
 

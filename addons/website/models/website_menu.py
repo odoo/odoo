@@ -88,7 +88,7 @@ class Menu(models.Model):
                     'website_id': website.id,
                     'parent_id': website.menu_id.id,
                 }) for website in self.env['website'].search([])]
-                new_menu = super().create(w_vals)[-1:] # take the last one
+                new_menu = super().create(w_vals)[-1:]  # take the last one
                 # if creating a default menu, we should also save it as such
                 default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
                 if default_menu and vals.get('parent_id') == default_menu.id:
@@ -114,10 +114,10 @@ class Menu(models.Model):
     def _compute_visible(self):
         for menu in self:
             visible = True
-            if menu.page_id and not menu.user_has_groups('base.group_user') and \
-                (not menu.page_id.sudo().is_visible or
-                 (not menu.page_id.view_id._handle_visibility(do_raise=False) and
-                 menu.page_id.view_id._get_cached_visibility() != "password")):
+            if (menu.page_id and not menu.user_has_groups('base.group_user')
+                and (not menu.page_id.sudo().is_visible
+                     or (not menu.page_id.view_id._handle_visibility(do_raise=False)
+                         and menu.page_id.view_id._get_cached_visibility() != "password"))):
                 visible = False
             menu.is_visible = visible
 
