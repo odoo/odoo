@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from .common import TestSaleCommon
+from odoo.fields import Command
 from odoo.tests import Form, tagged
+
+from odoo.addons.sale.tests.common import TestSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestSaleToInvoice(TestSaleCommon):
+class TestSaleRefund(TestSaleCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
@@ -18,32 +20,36 @@ class TestSaleToInvoice(TestSaleCommon):
             'partner_invoice_id': cls.partner_a.id,
             'partner_shipping_id': cls.partner_a.id,
             'pricelist_id': cls.company_data['default_pricelist'].id,
+            'order_line': [
+                Command.create({
+                    'product_id': cls.company_data['product_order_no'].id,
+                    'product_uom_qty': 5,
+                    'tax_id': False,
+                }),
+                Command.create({
+                    'product_id': cls.company_data['product_service_delivery'].id,
+                    'product_uom_qty': 4,
+                    'tax_id': False,
+                }),
+                Command.create({
+                    'product_id': cls.company_data['product_service_order'].id,
+                    'product_uom_qty': 3,
+                    'tax_id': False,
+                }),
+                Command.create({
+                    'product_id': cls.company_data['product_delivery_no'].id,
+                    'product_uom_qty': 2,
+                    'tax_id': False,
+                }),
+            ]
         })
-        SaleOrderLine = cls.env['sale.order.line'].with_context(tracking_disable=True)
-        cls.sol_prod_order = SaleOrderLine.create({
-            'product_id': cls.company_data['product_order_no'].id,
-            'product_uom_qty': 5,
-            'order_id': cls.sale_order.id,
-            'tax_id': False,
-        })
-        cls.sol_serv_deliver = SaleOrderLine.create({
-            'product_id': cls.company_data['product_service_delivery'].id,
-            'product_uom_qty': 4,
-            'order_id': cls.sale_order.id,
-            'tax_id': False,
-        })
-        cls.sol_serv_order = SaleOrderLine.create({
-            'product_id': cls.company_data['product_service_order'].id,
-            'product_uom_qty': 3,
-            'order_id': cls.sale_order.id,
-            'tax_id': False,
-        })
-        cls.sol_prod_deliver = SaleOrderLine.create({
-            'product_id': cls.company_data['product_delivery_no'].id,
-            'product_uom_qty': 2,
-            'order_id': cls.sale_order.id,
-            'tax_id': False,
-        })
+
+        (
+            cls.sol_prod_order,
+            cls.sol_serv_deliver,
+            cls.sol_serv_order,
+            cls.sol_prod_deliver,
+        ) = cls.sale_order.order_line
 
         # Confirm the SO
         cls.sale_order.action_confirm()
