@@ -299,6 +299,27 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, "label.o_form_label_empty:contains(timmy)");
     });
 
+    QUnit.test("form view with a group that contains an invisible group", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <group invisible="1">
+                                <field name="foo"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(target, ".o_form_view .o_group");
+    });
+
     QUnit.test("status bar rendering without buttons", async (assert) => {
         await makeView({
             type: "form",

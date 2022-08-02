@@ -31,6 +31,10 @@ export class OuterGroup extends Group {
     }
 }
 OuterGroup.template = "web.Form.OuterGroup";
+OuterGroup.defaultProps = {
+    ...Group.defaultProps,
+    slots: [],
+};
 
 export class InnerGroup extends Group {
     getRows() {
