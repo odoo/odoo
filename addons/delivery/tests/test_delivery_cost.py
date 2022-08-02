@@ -49,6 +49,7 @@ class TestDeliveryCost(common.TransactionCase):
             "UPDATE res_company SET currency_id = %s WHERE id = %s",
             [self.env.ref('base.USD').id, self.env.company.id])
         self.pricelist.currency_id = self.env.ref('base.USD').id
+        self.env.user.groups_id |= self.env.ref('uom.group_uom')
 
     def test_00_delivery_cost(self):
         # In order to test Carrier Cost
