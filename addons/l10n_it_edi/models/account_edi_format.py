@@ -218,6 +218,7 @@ class AccountEdiFormat(models.Model):
     def _l10n_it_document_type_mapping(self):
         return {
             'TD01': dict(move_types=['out_invoice'], import_type='in_invoice'),
+            'TD02': dict(move_types=['out_invoice'], import_type='in_invoice', downpayment=True),
             'TD04': dict(move_types=['out_refund'], import_type='in_refund'),
             'TD07': dict(move_types=['out_invoice'], import_type='in_invoice', simplified=True),
             'TD08': dict(move_types=['out_refund'], import_type='in_refund', simplified=True),
@@ -238,6 +239,7 @@ class AccountEdiFormat(models.Model):
             info_partner_in_eu = infos.get('partner_in_eu', False)
             if all([
                 invoice.move_type in infos.get('move_types', False),
+                invoice._is_downpayment() == infos.get('downpayment', False),
                 is_self_invoice == infos.get('self_invoice', False),
                 is_simplified == infos.get('simplified', False),
                 info_services_or_goods in ("both", services_or_goods),
