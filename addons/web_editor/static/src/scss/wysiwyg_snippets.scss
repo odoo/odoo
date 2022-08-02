@@ -1658,6 +1658,24 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        %o_we_sublevel > we-title::before {
+            content: "└"; // TODO The size and look of this depends on the
+                          // browser default font, we should use a SVG instead.
+            display: inline-block;
+            margin-right: 0.4em;
+        }
+        @for $level from 1 through 3 {
+            .o_we_sublevel_#{$level} {
+                @extend %o_we_sublevel;
+
+                @if $level > 1 {
+                    > we-title {
+                        padding-left: ($level - 1) * 0.6em;
+                    }
+                }
+            }
+        }
+
         .o_we_image_weight {
             margin-left: $o-we-sidebar-content-field-label-spacing * 2;
         }

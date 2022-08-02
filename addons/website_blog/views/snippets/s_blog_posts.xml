@@ -122,7 +122,9 @@
         </we-select>
     </xpath>
     <xpath expr="//we-select[@data-name='template_opt']" position="after">
-        <we-select t-if="snippet_name == 'dynamic_snippet_blog_posts'" string="⌙ Hover effect" data-no-widget-refresh="true" data-name="hover_effect_opt" class="o_we_inline">
+        <we-select t-if="snippet_name == 'dynamic_snippet_blog_posts'"
+                   string="Hover effect" class="o_we_sublevel_1 o_we_inline"
+                   data-no-widget-refresh="true" data-name="hover_effect_opt">
             <we-button data-select-class="">None</we-button>
             <we-button data-select-class="s_blog_posts_effect_marley">Marley</we-button>
             <we-button data-select-class="s_blog_posts_effect_dexter">Dexter</we-button>

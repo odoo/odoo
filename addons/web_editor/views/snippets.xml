@@ -49,7 +49,7 @@
 
 <template id="snippet_options_image_optimization_widgets">
     <t t-set="filter_label">Filter</t>
-    <we-select t-att-string="indent and (' ⌙ %s' % filter_label) or filter_label">
+    <we-select t-att-string="filter_label" t-att-class="indent and 'o_we_sublevel_2'">
         <we-button data-gl-filter="">None</we-button>
         <we-button data-gl-filter="blur">Blur</we-button>
         <we-button data-gl-filter="1977">1977</we-button>
@@ -70,7 +70,7 @@
     <t t-set="brightness_label">Brightness</t>
     <t t-set="sepia_label">Sepia</t>
     <t t-set="blur_label">Blur</t>
-    <we-row t-att-string="indent and ('  ⌙ %s' % color_label) or ('⌙ %s' % color_label)">
+    <we-row t-att-string="color_label" t-att-class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'">
         <we-select data-filter-property="blend" data-dependencies="custom_glfilter_opt">
             <we-button data-custom-filter="normal">Normal</we-button>
             <we-button data-custom-filter="overlay">overlay</we-button>
@@ -83,30 +83,35 @@
         </we-select>
         <we-colorpicker data-dependencies="custom_glfilter_opt" data-custom-filter="" data-filter-property="filterColor" data-excluded="common, theme"/>
     </we-row>
-    <we-range t-att-string="indent and ('  ⌙ %s' % saturation_label) or ('⌙ %s' % saturation_label)"
+    <we-range t-att-string="saturation_label"
+            t-att-class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
             data-dependencies="custom_glfilter_opt"
             data-custom-filter=""
             data-filter-property="saturation"
             data-min="-100"
             data-step="10"/>
-    <we-range t-att-string="indent and ('  ⌙ %s' % contrast_label) or ('⌙ %s' % contrast_label)"
+    <we-range t-att-string="contrast_label"
+            t-att-class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
             data-dependencies="custom_glfilter_opt"
             data-custom-filter=""
             data-filter-property="contrast"
             data-min="-100"
             data-step="10"/>
-    <we-range t-att-string="indent and ('  ⌙ %s' % brightness_label) or ('⌙ %s' % brightness_label)"
+    <we-range t-att-string="brightness_label"
+            t-att-class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
             data-dependencies="custom_glfilter_opt"
             data-custom-filter=""
             data-filter-property="brightness"
             data-min="-100"
             data-step="10"/>
-    <we-range t-att-string="indent and ('  ⌙ %s' % sepia_label) or ('⌙ %s' % sepia_label)"
+    <we-range t-att-string="sepia_label"
+            t-att-class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
             data-dependencies="custom_glfilter_opt"
             data-custom-filter=""
             data-filter-property="sepia"
             data-step="5"/>
-    <we-range t-att-string="indent and ('  ⌙ %s' % blur_label) or ('⌙ %s' % blur_label)"
+    <we-range t-att-string="blur_label"
+            t-att-class="indent and 'o_we_sublevel_3' or 'o_we_sublevel_1'"
             data-dependencies="custom_glfilter_opt"
             data-custom-filter=""
             data-filter-property="blur"
@@ -114,10 +119,14 @@
             data-step="100"/>
 
     <t t-set="width_label">Width</t>
-    <we-select t-att-string="indent and (' ⌙ %s' % width_label) or width_label" data-name="width_select_opt"/>
+    <we-select t-att-string="width_label"
+               t-att-class="indent and 'o_we_sublevel_2'"
+               data-name="width_select_opt"/>
 
     <t t-set="quality_label">Quality</t>
-    <we-range t-att-string="indent and (' ⌙ %s' % quality_label) or quality_label" data-set-quality=""/>
+    <we-range t-att-string="quality_label"
+              t-att-class="indent and 'o_we_sublevel_2'"
+              data-set-quality=""/>
 </template>
 
 <template id="snippet_options_background_color_widget">
@@ -161,13 +170,13 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-row string="⌙ Image">
+            <we-row string="Image" class="o_we_sublevel_1">
                 <we-imagepicker title="Edit image"
                                 data-background=""
                                 data-name="bg_image_opt"
                                 data-dependencies="bg_image_opt"/>
             </we-row>
-            <we-row string=" ⌙ Main Color" title="Main Color" data-name="main_color_opt"><!-- &emsp; -->
+            <we-row string="Main Color" class="o_we_sublevel_2" title="Main Color" data-name="main_color_opt">
                 <we-colorpicker data-dynamic-color="true" data-color-name="c1"/>
                 <we-colorpicker data-dynamic-color="true" data-color-name="c2"/>
                 <we-colorpicker data-dynamic-color="true" data-color-name="c3"/>
@@ -180,7 +189,7 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-row string=" ⌙ Position"><!-- &emsp; -->
+            <we-row string="Position" class="o_we_sublevel_2">
                 <we-select data-no-preview="true">
                     <we-button data-background-type="cover">Cover</we-button>
                     <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
@@ -188,9 +197,8 @@
                 <we-button class="fa fa-fw fa-crosshairs" title="Background Position" data-background-position-overlay="true" data-no-preview="true"/>
             </we-row>
             <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
-                <!-- &emsp; -->
-                <we-input string="  ⌙ Width" data-select-style="auto" placeholder="auto" data-unit="px"/>
-                <we-input string="  ⌙ Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
+                <we-input string="Width" class="o_we_sublevel_3" data-select-style="auto" placeholder="auto" data-unit="px"/>
+                <we-input string="Height" class="o_we_sublevel_3" data-select-style="auto" placeholder="auto" data-unit="px"/>
             </we-multi>
         </div>
 
@@ -209,8 +217,8 @@
              t-att-data-exclude="exclude"
              t-att-data-target="target">
             <t t-set="color_filter_dependencies" t-valuef="bg_image_toggle_opt"/>
-            <!-- &emsp; -->
-            <we-colorpicker string=" ⌙ Color filter"
+            <we-colorpicker string="Color filter"
+                            class="o_we_sublevel_2"
                             t-att-data-dependencies="color_filter_dependencies"
                             data-name="bg_filter_opt"
                             data-select-filter-color=""
@@ -226,7 +234,7 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-select-pager class="o_we_shape_menu" string="⌙ Shape" data-dependencies="!shape_none_opt" data-name="bg_shape_opt">
+            <we-select-pager string="Shape" class="o_we_sublevel_1 o_we_shape_menu" data-dependencies="!shape_none_opt" data-name="bg_shape_opt">
                 <!-- Invisible None button to be used for select's placeholder text -->
                 <we-button data-shape="" data-name="shape_none_opt"/>
                 <we-select-page string="Origins">
@@ -356,11 +364,11 @@
                     <we-button data-shape="web_editor/Floats/14" data-select-label="Float 14" data-animated="true"/>
                 </we-select-page>
             </we-select-pager>
-            <we-row string=" ⌙ Flip"><!-- &emsp; -->
+            <we-row string="Flip" class="o_we_sublevel_2">
                 <we-button class="fa fa-fw fa-arrows-h" data-flip-x="true" data-no-preview="true" data-dependencies="!shape_none_opt"/>
                 <we-button class="fa fa-fw fa-arrows-v" data-flip-y="true" data-no-preview="true" data-dependencies="!shape_none_opt"/>
             </we-row>
-            <we-row string=" ⌙ Colors" data-name="colors">
+            <we-row string="Colors" class="o_we_sublevel_2" data-name="colors">
                 <we-colorpicker data-select-style="" data-css-property="background-color" data-color-prefix="bg-" data-apply-to="> .o_we_shape"/>
             </we-row>
         </div>
@@ -392,12 +400,14 @@
                 data-set-link="true" data-no-preview="true"
                 title="Redirect the user elsewhere when he clicks on the media."/>
         </we-row>
-        <we-input string="⌙ Your URL"
+        <we-input string="Your URL"
+            class="o_we_sublevel_1 o_we_large"
             data-name="media_url_opt" data-dependencies="media_link_opt"
             data-set-url="" data-no-preview="true"
-            class="o_we_large" placeholder="www.example.com"
+            placeholder="www.example.com"
             data-request-focus="true"/>
-        <we-checkbox string="⌙ Open in new window"
+        <we-checkbox string="Open in new window"
+            class="o_we_sublevel_1"
             data-dependencies="media_url_opt"
             data-set-new-window="true" data-no-preview="true"/>
     </div>
@@ -548,7 +558,7 @@
                 </we-select-pager>
                 <we-button data-set-img-shape="" data-no-preview="true" data-label="None" data-dependencies="shape_img_opt" class="o_we_image_shape_remove fa fa-fw fa-times"/>
             </we-row>
-            <we-row string=" ⌙ Colors">
+            <we-row string="Colors" class="o_we_sublevel_1">
                 <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-0" data-color-id="0" />
                 <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-1" data-color-id="1" />
                 <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-2" data-color-id="2" />

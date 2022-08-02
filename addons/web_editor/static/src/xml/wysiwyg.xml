@@ -184,8 +184,8 @@
         </div>
     </div>
     <we-customizeblock-option t-name="wysiwyg.widgets.linkTools">
-        <we-row t-attf-class="{{widget.needLabel ? '' : 'd-none'}}">
-            <we-title>⌙ Link Label</we-title>
+        <we-row t-attf-class="o_we_sublevel_1 {{widget.needLabel ? '' : 'd-none'}}">
+            <we-title>Link Label</we-title>
             <we-input class="o_we_user_value_widget">
                 <div>
                     <input name="label" id="o_link_dialog_label_input" t-att-value="widget.data.content" type="text"/>
@@ -193,24 +193,24 @@
             </we-input>
         </we-row>
         <we-row id="url_row" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
-            <we-input class="o_we_user_value_widget">
-                <we-title class="o_short_title">⌙ </we-title>
+            <we-input class="o_we_user_value_widget o_we_sublevel_1">
+                <we-title class="o_short_title"></we-title>
                 <div class="o_url_input">
                     <input name="url" id="o_link_dialog_url_input" type="text" placeholder="Your URL"/>
                 </div>
             </we-input>
         </we-row>
         <we-row class="o_strip_domain d-none" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
-            <we-button class="o_we_user_value_widget o_we_checkbox_wrapper active">
-                <we-title class="o_long_title">⌙ Autoconvert to relative link</we-title>
+            <we-button class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 active">
+                <we-title class="o_long_title">Autoconvert to relative link</we-title>
                     <div class="o_switch">
                         <we-checkbox name="do_strip_domain" t-att-checked="widget.data.doStripDomain ? 'checked' : undefined"/>
                     </div>
             </we-button>
         </we-row>
         <we-row>
-            <we-select class="o_we_user_value_widget">
-                <we-title>⌙ Style</we-title>
+            <we-select class="o_we_user_value_widget o_we_sublevel_1">
+                <we-title>Style</we-title>
                 <div class="dropdown">
                     <button class="dropdown-toggle"
                         data-bs-toggle="dropdown" title="" tabindex="-1"
@@ -229,8 +229,8 @@
             </we-select>
         </we-row>
         <we-row class="link-custom-color link-custom-color-text">
-            <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette">
-                <we-title> ⌙ Text Color</we-title><!-- &emsp; -->
+            <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette o_we_sublevel_2">
+                <we-title>Text Color</we-title>
                 <div class="dropdown">
                     <span data-bs-toggle="dropdown" data-css-property="color" class="o_we_color_preview"></span>
                     <we-selection-items class="dropdown-menu" name="link_text_color"/>
@@ -238,16 +238,16 @@
             </we-select>
         </we-row>
         <we-row class="link-custom-color link-custom-color-fill">
-            <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette">
-                <we-title> ⌙ Fill Color</we-title><!-- &emsp; -->
+            <we-select title="Color" class="o_we_user_value_widget o_we_so_color_palette o_we_sublevel_2">
+                <we-title>Fill Color</we-title>
                 <div class="dropdown">
                     <span data-bs-toggle="dropdown" data-css-property="background-color" class="o_we_color_preview"></span>
                     <we-selection-items class="dropdown-menu" name="link_fill_color"/>
                 </div>
             </we-select>
         </we-row>
-        <we-row class="link-custom-color link-custom-color-border">
-            <we-title> ⌙ Border</we-title><!-- &emsp; -->
+        <we-row class="link-custom-color link-custom-color-border o_we_sublevel_2">
+            <we-title>Border</we-title>
             <div>
                 <we-input class="o_we_user_value_widget" title="Border Width">
                     <div class="o_custom_border_width_input">
@@ -279,8 +279,8 @@
             </div>
         </we-row>
         <we-row class="link-size-row">
-            <we-select class="o_we_user_value_widget">
-                <we-title>⌙ Size</we-title>
+            <we-select class="o_we_user_value_widget o_we_sublevel_1">
+                <we-title>Size</we-title>
                 <div>
                     <div class="dropdown">
                         <button class="dropdown-toggle"
@@ -307,8 +307,8 @@
             </we-select>
         </we-row>
         <we-row class="link-shape-row">
-            <we-select class="o_we_user_value_widget">
-                <we-title>⌙ Shape</we-title>
+            <we-select class="o_we_user_value_widget o_we_sublevel_1">
+                <we-title>Shape</we-title>
                 <div>
                     <div class="dropdown">
                         <button class="dropdown-toggle"
@@ -332,8 +332,8 @@
             </we-select>
         </we-row>
         <we-row  t-if="!widget.isButton &amp;&amp; !widget.options.forceNewWindow">
-            <we-button t-attf-class="o_we_user_value_widget o_we_checkbox_wrapper #{widget.data.isNewWindow ? 'active' : ''}">
-                <we-title class="o_long_title">⌙ Open in new window</we-title>
+            <we-button t-attf-class="o_we_user_value_widget o_we_checkbox_wrapper o_we_sublevel_1 #{widget.data.isNewWindow ? 'active' : ''}">
+                <we-title class="o_long_title">Open in new window</we-title>
                     <div class="o_switch">
                         <we-checkbox name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
                     </div>

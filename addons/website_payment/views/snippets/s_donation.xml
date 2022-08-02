@@ -61,19 +61,23 @@
                     data-dependencies="!no_input_opt"
                     data-no-preview="true">
             </we-checkbox>
-            <we-checkbox string="⌙ Descriptions"
-                    data-toggle-option-description="true"
-                    data-dependencies="pre_filled_opt"
-                    data-no-preview="true">
+            <we-checkbox string="Descriptions"
+                         class="o_we_sublevel_1"
+                         data-toggle-option-description="true"
+                         data-dependencies="pre_filled_opt"
+                         data-no-preview="true">
             </we-checkbox>
             <we-select string="Custom Amount" data-no-preview="true">
                 <we-button data-name="free_amount_opt" data-select-amount-input="freeAmount">Input</we-button>
                 <we-button data-name="slider_opt" data-select-amount-input="slider" data-dependencies="display_options_opt">Slider</we-button>
                 <we-button data-name="no_input_opt" data-select-amount-input="" data-dependencies="pre_filled_opt">None</we-button>
             </we-select>
-            <we-input string="⌙ Minimum" data-step="1" data-set-minimum-amount="" data-dependencies="!no_input_opt"/>
-            <we-input string="⌙ Maximum" data-step="1" data-set-maximum-amount="" data-dependencies="slider_opt"/>
-            <we-input string="⌙ Step" data-step="1" data-set-slider-step="" data-dependencies="slider_opt"/>
+            <we-input string="Minimum" class="o_we_sublevel_1"
+                      data-step="1" data-set-minimum-amount="" data-dependencies="!no_input_opt"/>
+            <we-input string="Maximum" class="o_we_sublevel_1"
+                      data-step="1" data-set-maximum-amount="" data-dependencies="slider_opt"/>
+            <we-input string="Step" class="o_we_sublevel_1"
+                      data-step="1" data-set-slider-step="" data-dependencies="slider_opt"/>
             <we-input string="Default Amount" data-step="1" data-attribute-default-value="25"
                 data-select-data-attribute="" data-attribute-name="defaultAmount"/>
         </div>
