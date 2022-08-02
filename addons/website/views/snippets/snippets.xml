@@ -203,8 +203,8 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <!-- &emsp; -->
-            <we-select string=" ⌙ Parallax"
+            <we-select string="Parallax"
+                       class="o_we_sublevel_2"
                        data-attribute-name="scrollBackgroundRatio"
                        data-attribute-default-value="0"
                        data-parallax-type-opt="true"
@@ -215,7 +215,8 @@
                 <we-button data-name="parallax_top_opt" data-select-data-attribute="1.5">Bottom to Top</we-button>
                 <we-button data-name="parallax_bottom_opt" data-select-data-attribute="-1.5">Top to Bottom</we-button>
             </we-select>
-            <we-range string="  ⌙ Intensity"
+            <we-range string="Intensity"
+                      class="o_we_sublevel_3"
                       data-dependencies="parallax_top_opt"
                       data-select-data-attribute=""
                       data-attribute-name="scrollBackgroundRatio"
@@ -224,7 +225,8 @@
                       data-min="0"
                       data-max="3"
                       data-step="0.15"/> <!-- Make sure this cannot land on 1 -->
-            <we-range string="  ⌙ Intensity"
+            <we-range string="Intensity"
+                      class="o_we_sublevel_3"
                       data-dependencies="parallax_bottom_opt"
                       data-select-data-attribute=""
                       data-attribute-name="scrollBackgroundRatio"
@@ -238,7 +240,7 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-row string="⌙ Video">
+            <we-row string="Video" class="o_we_sublevel_1">
                 <we-videopicker title="Edit video"
                                 data-background=""
                                 data-name="bg_video_opt"
@@ -301,13 +303,13 @@
                    title="Inset"/>
     </we-button-group>
     <we-multi data-css-property="box-shadow" data-dependencies="shadow_active_opt, shadow_inset_opt" t-att-data-variable="shadow_variable">
-        <we-colorpicker string="⌙ Color" data-select-style="" data-css-compatible=""/>
-        <we-row string="⌙ Offset (X, Y)">
+        <we-colorpicker string="Color" class="o_we_sublevel_1" data-select-style="" data-css-compatible=""/>
+        <we-row string="Offset (X, Y)" class="o_we_sublevel_1">
             <we-input data-select-style="" data-unit="px"/>
             <we-input data-select-style="" data-unit="px"/>
         </we-row>
-        <we-input string="⌙ Blur" data-select-style="" data-unit="px"/>
-        <we-input string="⌙ Spread" data-select-style="" data-unit="px"/>
+        <we-input string="Blur" class="o_we_sublevel_1" data-select-style="" data-unit="px"/>
+        <we-input string="Spread" class="o_we_sublevel_1" data-select-style="" data-unit="px"/>
         <!-- Inset parameter always hidden (as controlled above) but needed -->
         <!-- for the we-multi widget to work properly. -->
         <we-checkbox data-name="fake_inset_shadow_opt" data-select-style="inset"/>
@@ -315,7 +317,10 @@
 </template>
 
 <template id="snippet_options_conditional_visibility">
-    <we-select t-att-string="option_name" t-att-data-attribute-name="attribute_rule" data-no-preview="true" data-dependencies="visibility_conditional" data-is-visibility-condition="true">
+    <we-select t-att-string="option_name" class="o_we_sublevel_1"
+               data-dependencies="visibility_conditional"
+               t-att-data-attribute-name="attribute_rule"
+               data-no-preview="true"  data-is-visibility-condition="true">
         <we-button data-select-data-attribute="">Visible for</we-button>
         <we-button data-select-data-attribute="hide">Hidden for</we-button>
     </we-select>
@@ -654,7 +659,8 @@
         </we-select>
 
         <!-- Header Sidebar Template - Options -->
-        <we-input string="⌙ Width"
+        <we-input string="Width"
+                  class="o_we_sublevel_1"
                   data-dependencies="header_sidebar_opt"
                   data-customize-website-variable="null"
                   data-variable="sidebar-width"
@@ -770,7 +776,8 @@
     <div data-js="topMenuColor"
          data-selector="[data-main-object^='website.page('] #wrapwrap > header"
          data-no-check="true">
-        <we-colorpicker string="⌙ Background"
+        <we-colorpicker string="Background"
+            class="o_we_sublevel_1"
             id="option_header_transparent_color"
             data-select-style="true"
             data-css-property="background-color"
@@ -811,7 +818,7 @@
                        data-customize-website-views="website.option_header_no_mobile_hamburger">Same as desktop</we-button>
         </we-select>
 
-        <we-select string="⌙ Off-Canvas Logo" data-dependencies="off_canvas_menu_opt" data-reload="/">
+        <we-select string="Off-Canvas Logo" class="o_we_sublevel_1" data-dependencies="off_canvas_menu_opt" data-reload="/">
             <we-button data-customize-website-views="">Text</we-button>
             <we-button data-customize-website-views="website.option_header_off_canvas_logo_show">Image</we-button>
         </we-select>
@@ -857,7 +864,7 @@
             <we-button data-customize-website-views="website.header_language_selector">Dropdown</we-button>
             <we-button data-customize-website-views="website.header_language_selector, website.header_language_selector_inline">Inline</we-button>
         </we-select>
-        <we-select string="⌙ Label" data-dependencies="!header_language_selector_none_opt" data-reload="/">
+        <we-select string="Label" class="o_we_sublevel_1" data-dependencies="!header_language_selector_none_opt" data-reload="/">
             <we-button data-customize-website-views="">Text</we-button>
             <we-button data-customize-website-views="website.header_language_selector_flag, website.header_language_selector_no_text">Flag</we-button>
             <we-button data-customize-website-views="website.header_language_selector_flag">Flag and Text</we-button>
@@ -1017,7 +1024,7 @@
             <we-button data-customize-website-views="portal.footer_language_selector">Dropdown</we-button>
             <we-button data-customize-website-views="portal.footer_language_selector, website.footer_language_selector_inline">Inline</we-button>
         </we-select>
-        <we-select string="⌙ Label" data-dependencies="!language_selector_none_opt" data-reload="/">
+        <we-select string="Label" class="o_we_sublevel_1" data-dependencies="!language_selector_none_opt" data-reload="/">
             <we-button data-customize-website-views="">Text</we-button>
             <we-button data-customize-website-views="website.footer_language_selector_flag, website.footer_language_selector_no_text">Flag</we-button>
             <we-button data-customize-website-views="website.footer_language_selector_flag">Flag and Text</we-button>
@@ -1127,8 +1134,7 @@
                      data-no-preview="true"
                      data-dependencies="full_height_opt"
                      data-name="scroll_button_opt"/>
-        <!-- &emsp; -->
-        <we-row string=" ⌙ Colors">
+        <we-row string="Colors" class="o_we_sublevel_1">
             <we-colorpicker
                 data-select-style="true"
                 data-css-property="background-color"
@@ -1141,7 +1147,8 @@
                 data-apply-to=".o_scroll_button"
                 data-dependencies="scroll_button_opt"/>
         </we-row>
-        <we-select string=" ⌙ Spacing"
+        <we-select string="Spacing"
+                   class="o_we_sublevel_1"
                    data-apply-to=".o_scroll_button"
                    data-dependencies="scroll_button_opt">
             <we-button data-select-class="">None</we-button>
@@ -1181,7 +1188,7 @@
 
             <t t-if="request.geoip.get('country_code')">
                 <t t-call="website.snippet_options_conditional_visibility">
-                    <t t-set="option_name">⌙ Country</t>
+                    <t t-set="option_name">Country</t>
                     <t t-set="attribute_rule" t-valuef="visibilityValueCountryRule"/>
                     <t t-set="save_attribute" t-valuef="visibilityValueCountry"/>
                     <t t-set="attribute_name" t-valuef="data-country"/>
@@ -1192,7 +1199,7 @@
             </t>
             <t t-if="len(current_website.language_ids) > 1">
                 <t t-call="website.snippet_options_conditional_visibility">
-                    <t t-set="option_name">⌙ Languages</t>
+                    <t t-set="option_name">Languages</t>
                     <t t-set="attribute_rule" t-valuef="visibilityValueLangRule"/>
                     <t t-set="save_attribute" t-valuef="visibilityValueLang"/>
                     <t t-set="attribute_name" t-valuef="lang"/>
@@ -1203,7 +1210,7 @@
                 </t>
             </t>
             <t t-call="website.snippet_options_conditional_visibility">
-                <t t-set="option_name">⌙ UTM Campaign</t>
+                <t t-set="option_name">UTM Campaign</t>
                 <t t-set="attribute_rule" t-valuef="visibilityValueUtmCampaignRule"/>
                 <t t-set="save_attribute" t-valuef="visibilityValueUtmCampaign"/>
                 <t t-set="attribute_name" t-valuef="data-utm-campaign"/>
@@ -1211,7 +1218,7 @@
                 <t t-set="call_with" t-valuef="display_name"/>
             </t>
             <t t-call="website.snippet_options_conditional_visibility">
-                <t t-set="option_name">⌙ UTM Medium</t>
+                <t t-set="option_name">UTM Medium</t>
                 <t t-set="attribute_rule" t-valuef="visibilityValueUtmMediumRule"/>
                 <t t-set="save_attribute" t-valuef="visibilityValueUtmMedium"/>
                 <t t-set="attribute_name" t-valuef="data-utm-medium"/>
@@ -1219,14 +1226,15 @@
                 <t t-set="call_with" t-valuef="display_name"/>
             </t>
             <t t-call="website.snippet_options_conditional_visibility">
-                <t t-set="option_name">⌙ UTM Source</t>
+                <t t-set="option_name">UTM Source</t>
                 <t t-set="attribute_rule" t-valuef="visibilityValueUtmSourceRule"/>
                 <t t-set="save_attribute" t-valuef="visibilityValueUtmSource"/>
                 <t t-set="attribute_name" t-valuef="data-utm-source"/>
                 <t t-set="model" t-valuef="utm.source"/>
                 <t t-set="call_with" t-valuef="display_name"/>
             </t>
-            <we-select string="⌙ Users"
+            <we-select string="Users"
+                class="o_we_sublevel_1"
                 data-dependencies="visibility_conditional"
                 data-attribute-name="data-logged"
                 data-save-attribute="visibilityValueLogged"
@@ -1284,14 +1292,17 @@
             <we-button data-select-class="o_anim_flip_in_x">Flip-In-X</we-button>
             <we-button data-select-class="o_anim_flip_in_y">Flip-In-Y</we-button>
         </we-select>
-        <we-select string="Animation Launch" data-dependencies="!no_animation_opt" data-name="animation_launch_opt">
+        <we-select string="Launch" class="o_we_sublevel_1"
+                   data-dependencies="!no_animation_opt" data-name="animation_launch_opt">
             <we-button data-select-class="">First Time Only</we-button>
             <we-button data-select-class="o_animate_both_scroll">Every Time</we-button>
         </we-select>
-        <we-input string="Animation Duration" data-dependencies="!no_animation_opt" class="o_we_small_input"
-            data-select-style="0.4s" data-css-property="animation-duration" data-unit="s"/>
-        <we-input string="Animation Delay" data-dependencies="!no_animation_opt" class="o_we_small_input"
-            data-select-style="0s" data-css-property="animation-delay" data-unit="s"/>
+        <we-input string="Duration" class="o_we_sublevel_1 o_we_small_input"
+                  data-dependencies="!no_animation_opt"
+                  data-select-style="0.4s" data-css-property="animation-duration" data-unit="s"/>
+        <we-input string="Delay" class="o_we_sublevel_1 o_we_small_input"
+                  data-dependencies="!no_animation_opt"
+                  data-select-style="0s" data-css-property="animation-delay" data-unit="s"/>
     </div>
 
     <!-- Theme options -->
@@ -1330,7 +1341,7 @@
             <we-button data-customize-website-variable="'framed'">Framed</we-button>
             <we-button data-customize-website-variable="'postcard'">Postcard</we-button>
         </we-select>
-        <we-row string="⌙ Background" data-no-preview="true">
+        <we-row string="Background" class="o_we_sublevel_1" data-no-preview="true">
             <we-colorpicker data-dependencies="!layout_full_opt"
                             data-customize-website-color=""
                             data-color="body"/>
@@ -1353,8 +1364,8 @@
                   data-save-unit="rem"/>
         <we-collapse>
             <we-fontfamilypicker string="Font family" data-variable="font"/>
-            <we-fontfamilypicker string="⌙ Headings" data-variable="headings-font"/>
-            <we-fontfamilypicker string="⌙ Buttons" data-variable="buttons-font"/>
+            <we-fontfamilypicker string="Headings" class="o_we_sublevel_1" data-variable="headings-font"/>
+            <we-fontfamilypicker string="Buttons" class="o_we_sublevel_1" data-variable="buttons-font"/>
         </we-collapse>
 
         <!-- Buttons & Links -->
@@ -1372,25 +1383,25 @@
                 <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y" data-unit="px" data-save-unit="rem"/>
                 <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x" data-unit="px" data-save-unit="rem"/>
             </we-row>
-            <we-row string="⌙ Small">
+            <we-row string="Small" class="o_we_sublevel_1">
                 <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y-sm" data-unit="px" data-save-unit="rem"/>
                 <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x-sm" data-unit="px" data-save-unit="rem"/>
             </we-row>
-            <we-row string="⌙ Large">
+            <we-row string="Large" class="o_we_sublevel_1">
                 <we-input title="Y" data-customize-website-variable="" data-variable="btn-padding-y-lg" data-unit="px" data-save-unit="rem"/>
                 <we-input title="X" data-customize-website-variable="" data-variable="btn-padding-x-lg" data-unit="px" data-save-unit="rem"/>
             </we-row>
         </we-collapse>
         <we-collapse>
             <we-input string="Font Size" data-customize-website-variable="" data-variable="btn-font-size" data-unit="px" data-save-unit="rem"/>
-            <we-input string="⌙ Small" data-customize-website-variable="" data-variable="btn-font-size-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="⌙ Large" data-customize-website-variable="" data-variable="btn-font-size-lg" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-font-size-sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-font-size-lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-input string="Border Width" data-customize-website-variable="" data-variable="btn-border-width" data-unit="px" data-save-unit="rem"/>>
         <we-collapse>
             <we-input string="Border Radius" data-customize-website-variable="" data-variable="btn-border-radius" data-unit="px" data-save-unit="rem"/>
-            <we-input string="⌙ Small" data-customize-website-variable="" data-variable="btn-border-radius-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="⌙ Large" data-customize-website-variable="" data-variable="btn-border-radius-lg" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-border-radius-sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="btn-border-radius-lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-checkbox string="Ripple Effect"
                      data-customize-website-assets="website.ripple_effect_scss, website.ripple_effect_js"
@@ -1409,25 +1420,25 @@
                 <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y" data-unit="px" data-save-unit="rem"/>
                 <we-input title="X" data-customize-website-variable="" data-variable="input-padding-x" data-unit="px" data-save-unit="rem"/>
             </we-row>
-            <we-row string="⌙ Small">
+            <we-row string="Small" class="o_we_sublevel_1">
                 <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y-sm" data-unit="px" data-save-unit="rem"/>
                 <we-input title="X" data-customize-website-variable="" data-variable="input-padding-x-sm" data-unit="px" data-save-unit="rem"/>
             </we-row>
-            <we-row string="⌙ Large">
+            <we-row string="Large" class="o_we_sublevel_1">
                 <we-input title="Y" data-customize-website-variable="" data-variable="input-padding-y-lg" data-unit="px" data-save-unit="rem"/>
                 <we-input title="X" data-customize-website-variable="" data-variable="input-padding-x-lg" data-unit="px" data-save-unit="rem"/>
             </we-row>
         </we-collapse>
         <we-collapse>
             <we-input string="Font Size" data-customize-website-variable="" data-variable="input-font-size" data-unit="px" data-save-unit="rem"/>
-            <we-input string="⌙ Small" data-customize-website-variable="" data-variable="input-font-size-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="⌙ Large" data-customize-website-variable="" data-variable="input-font-size-lg" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-font-size-sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-font-size-lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
         <we-input string="Border Width" data-customize-website-variable="" data-variable="input-border-width" data-unit="px" data-save-unit="rem"/>
         <we-collapse>
             <we-input string="Border Radius" data-customize-website-variable="" data-variable="input-border-radius" data-unit="px" data-save-unit="rem"/>
-            <we-input string="⌙ Small" data-customize-website-variable="" data-variable="input-border-radius-sm" data-unit="px" data-save-unit="rem"/>
-            <we-input string="⌙ Large" data-customize-website-variable="" data-variable="input-border-radius-lg" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Small" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-border-radius-sm" data-unit="px" data-save-unit="rem"/>
+            <we-input string="Large" class="o_we_sublevel_1" data-customize-website-variable="" data-variable="input-border-radius-lg" data-unit="px" data-save-unit="rem"/>
         </we-collapse>
 
         <we-row string="Status Colors">
@@ -1445,8 +1456,8 @@
                           t-attf-class="o_we_user_value_widget o_we_gray_preview bg-#{grayCode}"/>
                 </t>
             </we-row>
-            <we-range string="⌙ Hue" class="o_we_slider_tint" data-customize-gray="" data-param="gray-hue" data-min="0" data-max="359.9" data-step="0.1"/>
-            <we-range string="⌙ Saturation" data-customize-gray="" data-param="gray-extra-saturation" data-step="0.1"/>
+            <we-range string="Hue" class="o_we_sublevel_1 o_we_slider_tint" data-customize-gray="" data-param="gray-hue" data-min="0" data-max="359.9" data-step="0.1"/>
+            <we-range string="Saturation" class="o_we_sublevel_1" data-customize-gray="" data-param="gray-extra-saturation" data-step="0.1"/>
         </we-collapse>
     </div>
     <div data-js="OptionsTab" data-selector="website-settings" data-no-check="true">

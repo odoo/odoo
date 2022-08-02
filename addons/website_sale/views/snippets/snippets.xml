@@ -19,7 +19,7 @@
                 <we-button data-customize-website-views="" data-name="grid_view_opt">Grid</we-button>
                 <we-button data-customize-website-views="website_sale.products_list_view">List</we-button>
             </we-select>
-            <we-row string="⌙ Size">
+            <we-row string="Size" class="o_we_sublevel_1">
                 <we-input data-set-ppg="" data-no-preview="true" data-reload="/"/>
                 <span class="mx-2 o_wsale_ppr_by">by</span>
                 <we-select class="o_wsale_ppr_submenu" data-dependencies="grid_view_opt" data-no-preview="true" data-reload="/">
@@ -28,7 +28,7 @@
                     <we-button data-set-ppr="4">4</we-button>
                 </we-select>
             </we-row>
-            <we-select string="⌙ Style">
+            <we-select string="Style" class="o_we_sublevel_1">
                 <we-button data-select-class=""
                            data-customize-website-views="">
                            Default
@@ -46,7 +46,7 @@
                            Grid
                 </we-button>
             </we-select>
-            <we-select string="⌙ Images Size">
+            <we-select string="Images Size" class="o_we_sublevel_1">
                 <we-button data-select-class="o_wsale_context_thumb_4_3"
                            data-customize-website-views="website_sale.products_thumb_4_3">
                            Landscape (4/3)
@@ -64,7 +64,7 @@
                            Vertical (2/3)
                 </we-button>
             </we-select>
-            <we-button-group string=" ⌙ Fill" data-variable="thumb_size">
+            <we-button-group string="Fill" class="o_we_sublevel_2" data-variable="thumb_size">
                 <we-button data-select-class=""
                            data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
                            data-customize-website-views="">
@@ -92,12 +92,14 @@
                            data-no-preview="true"
                            data-reload="/"/>
             </we-row>
-            <we-checkbox string="⌙ Collapse Category Recursive"
+            <we-checkbox string="Collapse Category Recursive"
+                         class="o_we_sublevel_1"
                          data-customize-website-views="website_sale.option_collapse_products_categories"
                          data-dependencies="categories_opt"
                          data-no-preview="true"
                          data-reload="/"/>
-            <we-checkbox string="⌙ Price Filter"
+            <we-checkbox string="Price Filter"
+                         class="o_we_sublevel_1"
                          data-customize-website-views="website_sale.filter_products_price"
                          data-dependencies="categories_opt, attributes_opt"
                          data-no-preview="true"
@@ -163,14 +165,17 @@
                 <we-button data-create-ribbon="" data-name="create_ribbon_opt" title="Create" class="fa fa-plus text-success" data-no-preview="true"/>
             </we-row>
             <div class="d-none" data-name="ribbon_customize_opt">
-                <we-input string="⌙ Content" data-set-ribbon-html="Badge Text" class="o_we_large" data-apply-to=".o_ribbon"/>
-                <we-colorpicker string="⌙ Background" title="" data-select-style="" data-css-property="background-color" data-color-prefix="bg-" data-apply-to=".o_ribbon"/>
-                <we-colorpicker string="⌙ Text" title="" data-select-style="" data-css-property="color" data-apply-to=".o_ribbon"/>
-                <we-select string="⌙ Style">
+                <we-input string="Content" class="o_we_sublevel_1 o_we_large"
+                          data-set-ribbon-html="Badge Text" data-apply-to=".o_ribbon"/>
+                <we-colorpicker string="Background" class="o_we_sublevel_1"
+                                title="" data-select-style="" data-css-property="background-color" data-color-prefix="bg-" data-apply-to=".o_ribbon"/>
+                <we-colorpicker string="Text" class="o_we_sublevel_1"
+                                title="" data-select-style="" data-css-property="color" data-apply-to=".o_ribbon"/>
+                <we-select string="Style" class="o_we_sublevel_1">
                     <we-button data-set-ribbon-mode="ribbon">Slanted</we-button>
                     <we-button data-set-ribbon-mode="tag">Tag</we-button>
                 </we-select>
-                <we-select string="⌙ Position">
+                <we-select string="Position" class="o_we_sublevel_1">
                     <we-button data-set-ribbon-position="left">Left</we-button>
                     <we-button data-set-ribbon-position="right">Right</we-button>
                 </we-select>

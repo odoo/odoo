@@ -92,15 +92,19 @@
                 <we-button data-select-type="tel">Telephone</we-button>
                 <we-button data-select-type="url">Url</we-button>
             </we-select>
-            <we-select string="⌙ Display" data-name="multi_check_display_opt" data-no-preview="true">
+            <we-select string="Display" class="o_we_sublevel_1" data-name="multi_check_display_opt" data-no-preview="true">
                 <we-button data-multi-checkbox-display="horizontal">Horizontal</we-button>
                 <we-button data-multi-checkbox-display="vertical">Vertical</we-button>
             </we-select>
             <t t-set="unit_textarea_height">rows</t>
-            <we-input string="⌙ Height" data-step="1" t-attf-data-select-attribute="3#{unit_textarea_height}" t-att-data-unit="unit_textarea_height"
-                data-attribute-name="rows" data-apply-to="textarea"/>
+            <we-input string="Height"
+                class="o_we_sublevel_1"
+                data-apply-to="textarea"
+                t-att-data-unit="unit_textarea_height" data-step="1"
+                t-attf-data-select-attribute="3#{unit_textarea_height}"
+                data-attribute-name="rows"/>
             <we-input string="Label" class="o_we_large" data-set-label-text=""/>
-            <we-button-group string="⌙ Position">
+            <we-button-group string="Position" class="o_we_sublevel_1">
                 <we-button title="Hide"
                            data-select-label-position="none">
                     <i class="fa fa-eye-slash"/>
