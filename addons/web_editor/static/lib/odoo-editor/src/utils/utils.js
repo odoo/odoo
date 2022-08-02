@@ -682,12 +682,8 @@ export function getDeepRange(editable, { range, sel, splitText, select, correctT
         (!beforeEnd || (beforeEnd.nodeType === Node.TEXT_NODE && !isVisibleStr(beforeEnd)))
     ) {
         const previous = previousLeaf(end, editable, true);
-        if (previous && closestElement(previous).isContentEditable) {
-            if (!endOffset && !startOffset && (start === end)) {
-                [end, endOffset] = [end, endOffset];
-            } else {
-                [end, endOffset] = [previous, nodeSize(previous)];
-            }
+        if (previous && closestElement(previous).isContentEditable && start !== end) {
+            [end, endOffset] = [previous, nodeSize(previous)];
         }
     }
 
