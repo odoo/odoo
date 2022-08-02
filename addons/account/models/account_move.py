@@ -3633,3 +3633,9 @@ class AccountMove(models.Model):
         :returns:       A list of tuples (priority, method) where method takes an attachment as parameter.
         """
         return []
+
+    def _is_downpayment(self):
+        ''' Return true if the invoice is a downpayment.
+        Down-payments can be created from a sale order. This method is overridden in the sale order module.
+        '''
+        return False
