@@ -11,7 +11,7 @@ from odoo.modules.module import get_resource_path
 class Rating(models.Model):
     _name = "rating.rating"
     _description = "Rating"
-    _order = 'write_date desc'
+    _order = 'write_date desc, id desc'
     _rec_name = 'res_name'
 
     @api.model

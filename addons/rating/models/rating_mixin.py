@@ -35,7 +35,7 @@ class RatingMixin(models.AbstractModel):
             return
         self.env.cr.execute("""
             SELECT
-                array_agg(rating ORDER BY write_date DESC) AS "ratings",
+                array_agg(rating ORDER BY write_date DESC, id DESC) AS "ratings",
                 res_id as res_id
             FROM "rating_rating"
             WHERE
