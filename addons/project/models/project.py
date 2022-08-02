@@ -1850,7 +1850,9 @@ class Task(models.Model):
             if project.analytic_account_id:
                 vals['analytic_account_id'] = project.analytic_account_id.id
         else:
-            vals['user_ids'] = [Command.link(self.env.user.id)]
+            user_ids = vals.get('user_ids', [])
+            user_ids.append(Command.link(self.env.user.id))
+            vals['user_ids'] = user_ids
 
         return vals
 
