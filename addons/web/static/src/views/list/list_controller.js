@@ -86,9 +86,10 @@ export class ListController extends Component {
         useSetupView({
             rootRef: this.rootRef,
             beforeLeave: async () => {
-                const editedRecord = this.model.root.editedRecord;
+                const list = this.model.root;
+                const editedRecord = list.editedRecord;
                 if (editedRecord) {
-                    if (!(await editedRecord.save())) {
+                    if (!(await list.unselectRecord(true))) {
                         throw new Error("View can't be saved");
                     }
                 }

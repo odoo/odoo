@@ -13615,6 +13615,56 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 5);
     });
 
+    QUnit.test(
+        "Auto save: create a new record without modifying it and leave action",
+        async function (assert) {
+            serverData.models.foo.fields.foo.required = true;
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "Action 1",
+                    res_model: "foo",
+                    type: "ir.actions.act_window",
+                    views: [[2, "list"]],
+                    search_view_id: [1, "search"],
+                },
+                2: {
+                    id: 2,
+                    name: "Action 2",
+                    res_model: "foo",
+                    type: "ir.actions.act_window",
+                    views: [[3, "list"]],
+                    search_view_id: [1, "search"],
+                },
+            };
+            serverData.views = {
+                "foo,1,search": "<search></search>",
+                "foo,2,list": '<tree editable="top"><field name="foo"/></tree>',
+                "foo,3,list": '<tree editable="top"><field name="foo"/></tree>',
+            };
+            const webClient = await createWebClient({ serverData });
+
+            await doAction(webClient, 1);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
+                ["yop", "blip", "gnap", "blip"]
+            );
+            assert.containsN(target, ".o_data_row", 4);
+
+            await click(target, ".o_list_button_add");
+            assert.containsN(target, ".o_data_row", 5);
+
+            // change action and come back
+            await doAction(webClient, 2);
+            await doAction(webClient, 1, { clearBreadcrumbs: true });
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
+                ["yop", "blip", "gnap", "blip"]
+            );
+            assert.containsN(target, ".o_data_row", 4);
+        }
+    );
+
     QUnit.test("Auto save: modify a record and leave action", async function (assert) {
         serverData.actions = {
             1: {
