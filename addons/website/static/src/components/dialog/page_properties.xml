@@ -8,14 +8,14 @@
                 <t t-call="{{ constructor.popoverTemplate }}"/>
             </t>
             <t t-if="props.type === 'key'">
-                <div t-att-data-template="depTemplate" data-html="true" title="Dependencies" t-ref="action">
+                <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-ref="action">
                     It looks like your file is being called by
                     <a href="#" t-on-click="showDependencies"><t t-esc="depText" /></a>.
                     Changing its name will break these calls.
                 </div>
             </t>
             <t t-else="">
-                <div t-att-data-template="depTemplate" data-html="true" title="Dependencies" t-ref="action">
+                <div t-att-data-bs-template="depTemplate" data-bs-html="true" title="Dependencies" t-ref="action">
                     (could be used in <a href="#" t-on-click="showDependencies"><t t-esc="depText" /></a>)
                 </div>
             </t>
@@ -60,7 +60,7 @@
         <p>Are you sure you want to delete this page ?</p>
         <p class="text-warning">Don't forget to update all links referring to this page.</p>
         <PageDependencies pageId="props.pageId" mode="'collapse'"/>
-        <CheckBox onChange.bind="onConfirmCheckboxChange">
+        <CheckBox value="state.confirm" onChange.bind="onConfirmCheckboxChange">
             <p class="text-warning">I am sure about this.</p>
         </CheckBox>
 
@@ -73,6 +73,13 @@
             </button>
         </t>
     </WebsiteDialog>
+</t>
+
+<t t-name="website.PagePropertiesDialog.Buttons" t-inherit="web.FormView.Buttons" owl="1">
+    <xpath expr="//div[hasclass('o_cp_buttons')]" position="after">
+        <button class="btn btn-link ms-auto o_page_properties_clone"><i class="fa fa-fw fa-clone"/>Duplicate Page</button>
+        <button class="btn btn-link o_page_properties_delete"><i class="fa fa-fw fa-trash"/>Delete Page</button>
+    </xpath>
 </t>
 
 </templates>

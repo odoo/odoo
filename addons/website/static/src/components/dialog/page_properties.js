@@ -4,11 +4,10 @@ import {CheckBox} from '@web/core/checkbox/checkbox';
 import {useService, useAutofocus} from "@web/core/utils/hooks";
 import {useWowlService} from '@web/legacy/utils';
 import {WebsiteDialog} from './dialog';
-import {FormViewDialog} from 'web.view_dialogs';
-import {standaloneAdapter} from 'web.OwlCompatibility';
-import {qweb} from 'web.core';
+import {FormViewDialog} from "@web/views/view_dialogs/form_view_dialog";
+import {qweb, _t} from 'web.core';
 
-const {Component, onWillStart, useState, xml, useRef, markup, onRendered} = owl;
+const {Component, onWillStart, onMounted, onWillUnmount, onRendered, useState, xml, useRef, markup} = owl;
 
 export class PageDependencies extends Component {
     setup() {
@@ -101,9 +100,9 @@ export class DeletePageDialog extends Component {
         await this.orm.unlink("website.page", [
             this.props.pageId,
         ]);
-        this.website.goToWebsite();
+        this.website.goToWebsite({path: '/'});
         this.props.close();
-        this.props.onClose();
+        this.props.onDelete();
     }
 }
 DeletePageDialog.components = {
@@ -113,8 +112,8 @@ DeletePageDialog.components = {
 };
 DeletePageDialog.template = 'website.DeletePageDialog';
 DeletePageDialog.props = {
+    onDelete: {type: Function, optional: true},
     pageId: Number,
-    onClose: Function,
     close: Function,
 };
 
@@ -138,7 +137,7 @@ export class DuplicatePageDialog extends Component {
             );
             this.website.goToWebsite({path: res, edition: true});
         }
-        this.props.onClose();
+        this.props.onDuplicate();
     }
 }
 DuplicatePageDialog.components = {WebsiteDialog};
@@ -155,108 +154,122 @@ DuplicatePageDialog.template = xml`
 </WebsiteDialog>
 `;
 DuplicatePageDialog.props = {
-    onClose: Function,
-    close: Function,
+    onDuplicate: {type: Function, optional: true},
     pageId: Number,
+    close: Function,
 };
 
-export class PagePropertiesDialogWrapper extends Component {
-    setup() {
-        try {
-            this.websiteService = useService('website');
-            this.dialogService = useService('dialog');
-            this.orm = useService('orm');
-        } catch {
-            // Use services in legacy environment.
-            this.websiteService = useWowlService('website');
-            this.dialogService = useWowlService('dialog');
-            this.orm = useWowlService('orm');
-        }
+export const pagePropertiesProps = {
+    title: _t('Page Properties'),
+    resModel: 'website.page',
+    context: {
+        form_view_ref: 'website.website_page_properties_view_form',
+    },
+};
 
+export class PagePropertiesDialog extends FormViewDialog {
+    setup() {
+        super.setup();
+        this.dialog = useService('dialog');
+        this.website = useService('website');
+
+        this.viewProps.resId = this.resId;
+        this.viewProps.buttonTemplate = 'website.PagePropertiesDialog.Buttons';
+
+        onMounted(() => {
+            this.actionClone = this.modalRef.el.querySelector('.o_page_properties_clone');
+            this.actionDelete = this.modalRef.el.querySelector('.o_page_properties_delete');
+            this.actionClone.addEventListener('click', this.clonePage.bind(this));
+            this.actionDelete.addEventListener('click', this.deletePage.bind(this));
+        });
+
+        onWillUnmount(() => {
+            this.actionClone.removeEventListener('click', this.clonePage.bind(this));
+            this.actionDelete.removeEventListener('click', this.deletePage.bind(this));
+        });
+    }
+
+    get resId() {
+        return this.props.resId || (this.website.currentWebsite && this.website.currentWebsite.metadata.mainObject.id);
+    }
+
+    clonePage() {
+        this.dialog.add(DuplicatePageDialog, {
+            pageId: this.resId,
+            onDuplicate: () => {
+                this.props.close();
+                this.props.onClose();
+            },
+        });
+    }
+
+    deletePage() {
+        this.dialog.add(DeletePageDialog, {
+            pageId: this.resId,
+            onDelete: () => {
+                this.props.close();
+                this.props.onClose();
+            },
+        });
+    }
+}
+PagePropertiesDialog.props = {
+    ...FormViewDialog.props,
+    onClose: {type: Function, optional: true},
+};
+
+PagePropertiesDialog.defaultProps = {
+    onClose: () => {},
+};
+
+// TODO remove this once the 'website.page' listView is adapted to OWL.
+export class PagePropertiesDialogManager extends Component {
+    setup() {
+        this.dialog = useService('dialog');
         onRendered(this.createDialog);
     }
 
     createDialog() {
-        if (this.props.mode === 'clone') {
-            this.dialogService.add(DuplicatePageDialog, {
-                pageId: this.pageId,
-                onClose: this.props.onClose,
-            });
-        } else if (this.props.mode === 'delete') {
-            this.dialogService.add(DeletePageDialog, {
-                pageId: this.pageId,
-                onClose: this.props.onClose,
-            });
-        } else {
-            const parent = standaloneAdapter({Component});
-            const formViewDialog = new FormViewDialog(parent, this.dialogOptions);
-            formViewDialog.buttons = [...formViewDialog.buttons, ...this.extraButtons];
-            formViewDialog.on('form_dialog_discarded', parent, () => this.websiteService.context.showPageProperties = false);
-            formViewDialog.open();
+        switch (this.props.mode) {
+            case 'clone':
+                this.dialog.add(DuplicatePageDialog, {
+                    pageId: this.props.resId,
+                    onDuplicate: this.props.onClose,
+                });
+                break;
+            case 'delete':
+                this.dialog.add(DeletePageDialog, {
+                    pageId: this.props.resId,
+                    onDelete: this.props.onClose,
+                });
+                break;
+            default:
+                this.dialog.add(PagePropertiesDialog, {
+                    ...pagePropertiesProps,
+                    resId: this.props.resId,
+                    onClose: this.props.onClose,
+                    onRecordSaved: this.props.onRecordSaved,
+                });
+                break;
         }
     }
-
-    get pageId() {
-        return this.props.currentPage || (this.websiteService.currentWebsite && this.websiteService.currentWebsite.metadata.mainObject.id);
-    }
-
-    get dialogOptions() {
-        return {
-            res_model: "website.page",
-            res_id: this.pageId,
-            context: {
-                form_view_ref: 'website.website_page_properties_view_form'
-            },
-            title: this.env._t("Page Properties"),
-            size: 'medium',
-            on_saved: (record, changed) => {
-                if (changed) {
-                    return this.orm.read("website.page", [this.pageId], ['url']).then(res => {
-                        this.websiteService.goToWebsite({websiteId: record.data.website_id.res_id, path: res[0]['url']});
-                    });
-                }
-            },
-        };
-    }
-
-    get extraButtons() {
-        const wrapper = this;
-        return [{
-            text: this.env._t("Duplicate Page"),
-            icon: 'fa-clone',
-            classes: 'btn-link ms-auto',
-            click: function () {
-                wrapper.dialogService.add(DuplicatePageDialog, {
-                    pageId: wrapper.pageId,
-                    onClose: this.close.bind(this),
-                });
-            },
-        },
-        {
-            text: this.env._t("Delete Page"),
-            icon: 'fa-trash',
-            classes: 'btn-link',
-            click: function () {
-                wrapper.dialogService.add(DeletePageDialog, {
-                    pageId: wrapper.pageId,
-                    onClose: this.close.bind(this),
-                });
-            },
-        }];
-    }
 }
-PagePropertiesDialogWrapper.template = xml``;
-PagePropertiesDialogWrapper.props = {
+PagePropertiesDialogManager.template = xml``;
+PagePropertiesDialogManager.props = {
     onClose: {
         type: Function,
-        optional: true,
-    },
-    currentPage: {
-        type: Number,
         optional: true,
     },
     mode: {
         type: String,
         optional: true,
     },
+    resId: {
+        type: [Number, Boolean],
+        optional: true,
+    },
+    onRecordSaved: {
+        type: Function,
+        optional: true,
+    }
 };
