@@ -14579,4 +14579,22 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("use a filter_domain in a list view", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/><field name="m2o"/></tree>',
+            searchViewArch: `
+                <search>
+                    <field name="m2o" filter_domain="[('m2o', 'child_of', raw_value)]"/>
+                </search>`,
+            context: {
+                search_default_m2o: 1,
+            },
+        });
+
+        assert.containsN(target, ".o_data_row", 3);
+    });
 });

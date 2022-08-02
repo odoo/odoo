@@ -153,7 +153,7 @@ export class SearchArchParser extends XMLParser {
                 preField.defaultRank = -10;
                 const { fieldType, fieldName } = preField;
                 const { selection, context, relation } = this.fields[fieldName];
-                preField.defaultAutocompleteValue = { label: value, operator, value };
+                preField.defaultAutocompleteValue = { label: `${value}`, operator, value };
                 if (fieldType === "selection") {
                     const option = selection.find((sel) => sel[0] === value);
                     if (!option) {
