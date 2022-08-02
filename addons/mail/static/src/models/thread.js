@@ -929,13 +929,8 @@ registerModel({
          * @returns {string}
          */
         _computeDisplayName() {
-            if (this.channel && this.channel.channel_type === 'chat' && this.channel.correspondent) {
-                return this.custom_channel_name || this.channel.correspondent.nameOrDisplayName;
-            }
-            if (this.channel && this.channel.channel_type === 'group' && !this.name) {
-                const partnerNames = this.members.map(partner => partner.nameOrDisplayName);
-                const guestNames = this.guestMembers.map(guest => guest.name);
-                return [...partnerNames, ...guestNames].join(this.env._t(", "));
+            if (this.channel) {
+                return this.channel.displayName;
             }
             return this.name;
         },

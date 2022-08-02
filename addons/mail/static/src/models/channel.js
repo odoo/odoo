@@ -214,6 +214,23 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computeDisplayName() {
+            if (this.channel_type === 'chat' && this.correspondent) {
+                return this.thread.custom_channel_name || this.correspondent.nameOrDisplayName;
+            }
+            if (this.name) {
+                return this.name;
+            }
+            if (this.channel_type === 'group') {
+                const partnerNames = this.thread.members.map(partner => partner.nameOrDisplayName);
+                const guestNames = this.thread.guestMembers.map(guest => guest.name);
+                return [...partnerNames, ...guestNames].join(this.env._t(", "));
+            }
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeHasCallFeature() {
@@ -413,6 +430,9 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
+        displayName: attr({
+            compute: '_computeDisplayName',
+        }),
         /**
          * Determines whether the RTC call feature should be displayed.
          */
@@ -491,6 +511,10 @@ registerModel({
          * States the number of members in this channel according to the server.
          */
         memberCount: attr(),
+        name: attr({
+            readonly: true,
+            related: 'thread.name',
+        }),
         orderedOfflineMembers: many('ChannelMember', {
             inverse: 'channelAsOfflineMember',
             sort: '_sortMembers',
