@@ -231,6 +231,7 @@ class HrWorkEntry(models.Model):
 class HrWorkEntryType(models.Model):
     _name = 'hr.work.entry.type'
     _description = 'HR Work Entry Type'
+    _order = 'sequence, id'
 
     name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True, help="Careful, the Code is used in many references, changing it could lead to unwanted changes.")
