@@ -19,7 +19,7 @@ class TestProjectReport(TestProjectCommon):
             {**rating_vals, 'rating': 4.25, 'res_id': self.task_2.id},
         ])
         self.assertEqual(self.task_1.rating_avg, 4.5)
-        self.assertEqual(self.task_1.rating_last_value, 5.0)
+        self.assertEqual(self.task_1.rating_last_value, 4.0)
 
         self.assertEqual(self.task_2.rating_avg, 4.25)
         self.assertEqual(self.task_2.rating_last_value, 4.25)
