@@ -64,12 +64,12 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
         this.inputEl.classList.add('text-left');
         const options = {
             position: {
-                collision: 'flip fit',
+                collision: 'flip flipfit',
             },
             classes: {
                 "ui-autocomplete": 'o_website_ui_autocomplete'
             },
-        }
+        };
         wUtils.autocompleteWithPages(this, $(this.inputEl), options);
     },
 
