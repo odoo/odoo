@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_cash_voucher_document" inherit_id="account.report_payment_receipt_document" primary="True">
+        <xpath expr="//h3" position="before">
+            <!-- Add Company Information -->
+            <t t-set="comp" t-value="o.company_id.partner_id"/>
+            <div class="row">
+                <div class="col-6 offset-6">
+                    <div>
+                        <span t-field="comp.name" /><br/>
+                        <span t-field="comp.vat"/> <span t-esc="comp.l10n_th_branch_number if comp.l10n_th_company_info == 'branch' else 'Headquarter'" /><br/>
+                        <span t-esc="comp"
+                            t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//h3" position="replace">
+            <h3 class="pt-2"><strong><span t-if="o.payment_type == 'inbound'">Receipt Voucher</span><span t-else="">Payment Voucher</span>: <span t-field="o.name" /></strong></h3>
+        </xpath>
+        <xpath expr="//table" position="replace">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th><span>Account</span></th>
+                        <th><span>Label</span></th>
+                        <th><span>Debit</span></th>
+                        <th><span>Credit</span></th>
+                        <th><span>Analytic Account</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="total_debit" t-value="0"/>
+                    <t t-set="total_credit" t-value="0"/>
+                    <t t-foreach="o.move_id._get_reconciled_invoices_partials()" t-as="rec">
+                        <t t-if="rec">
+                            <t t-set="inv" t-value="rec[0][2].move_id"/>
+                            <t t-if="inv.move_type != 'entry'">
+                                <t t-foreach="inv.line_ids" t-as="line">
+                                    <tr>
+                                        <td><span t-field="line.account_id"/></td>
+                                        <td><span t-field="line.name"/></td>
+                                        <td><span t-field="line.debit"/></td>
+                                        <td><span t-field="line.credit"/></td>
+                                        <td><span t-field="line.analytic_account_id"/></td>
+
+                                        <t t-set="total_debit" t-value="total_debit + line.debit"/>
+                                        <t t-set="total_credit" t-value="total_credit + line.credit"/>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-end"><span class="fw-bold">Total </span></td>
+                                    <td><span class="fw-bold" t-esc="total_debit" /></td>
+                                    <td><span class="fw-bold" t-esc="total_credit" /></td>
+                                    <td></td>
+                                </tr>
+                            </t>
+                        </t>
+                    </t>
+                </tbody>
+            </table>
+        </xpath>
+    </template>
+    <template id="report_cash_voucher">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang or o.company_id.partner_id.lang"/>
+                <t t-call="l10n_th.report_cash_voucher_document" t-lang="lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>
