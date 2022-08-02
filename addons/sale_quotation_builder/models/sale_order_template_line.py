@@ -15,6 +15,7 @@ class SaleOrderTemplateLine(models.Model):
         compute='_compute_website_description',
         store=True, readonly=False,
         translate=html_translate,
+        sanitize_overridable=True,
         sanitize_form=False)
 
     @api.depends('product_id')

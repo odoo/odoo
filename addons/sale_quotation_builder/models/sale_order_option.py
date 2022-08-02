@@ -12,6 +12,7 @@ class SaleOrderOption(models.Model):
         string="Website Description",
         compute='_compute_website_description',
         store=True, readonly=False, precompute=True,
+        sanitize_overridable=True,
         sanitize_attributes=False, translate=html_translate)
 
     @api.depends('product_id')
