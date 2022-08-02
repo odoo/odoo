@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, Command
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import file_open
+from odoo.tools.misc import file_open, formatLang
 
 _logger = logging.getLogger(__name__)
 
@@ -132,7 +132,7 @@ class AccountChartTemplate(models.Model):
                         'partner_id': ref('base.res_partner_12').id
                     }),
                     Command.create({
-                        'payment_ref': time.strftime('First 2000 $ of invoice %Y/00001'),
+                        'payment_ref': time.strftime(f'First {formatLang(self.env, 2000, currency_obj=self.env.company.currency_id)} of invoice %Y/00001'),
                         'amount': 2000,
                         'date': time.strftime('%Y-01-01'),
                         'partner_id': ref('base.res_partner_12').id
@@ -149,10 +149,9 @@ class AccountChartTemplate(models.Model):
                         'partner_id': ref('base.res_partner_2').id
                     }),
                     Command.create({
-                        'payment_ref': 'R:9772938  10/07 AX 9415116318 T:5 BRT: 100,00€ C/ croip',
+                        'payment_ref': f'R:9772938  10/07 AX 9415116318 T:5 BRT: {formatLang(self.env, 96.67, currency_obj=self.env.company.currency_id)} C/ croip',
                         'amount': 96.67,
                         'date': time.strftime('%Y-01-01'),
-                        'partner_id': ref('base.res_partner_2').id
                     }),
                 ]
             },
