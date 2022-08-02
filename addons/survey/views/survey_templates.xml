@@ -128,7 +128,7 @@
     <template id="survey_fill_form_start" name="Survey: start form content">
         <div class="wrap o_survey_start">
             <div class='mb32'>
-                <div t-field='survey.description' class="oe_no_empty pb-5"/>
+                <div t-field='survey.description' class="oe_no_empty pb-5 text-break"/>
                 <t t-if="answer.is_session_answer">
                     <div class="font-weight-bold">
                         The session will begin automatically when the host starts.
@@ -165,8 +165,8 @@
             t-att-data-time-limit-minutes="time_limit_minutes"/>
         <t t-if="survey.questions_layout == 'one_page'">
             <t t-foreach='survey.question_and_page_ids' t-as='question'>
-                <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title pb16" />
-                <div t-if="question.is_page" t-field='question.description'/>
+                <h2 t-if="question.is_page" t-field='question.title' class="o_survey_title pb16 text-break" />
+                <div t-if="question.is_page" t-field='question.description' class="text-break"/>
                 <t t-if="not question.is_page and question in answer.predefined_question_ids" t-call="survey.question_container"/>
             </t>
 
@@ -177,8 +177,8 @@
         </t>
 
         <t t-if="survey.questions_layout == 'page_per_section'">
-            <h2 t-field='page.title' class="o_survey_title pb16" />
-            <div t-field='page.description' class="oe_no_empty"/>
+            <h2 t-field='page.title' class="o_survey_title pb16 text-break" />
+            <div t-field='page.description' class="oe_no_empty text-break"/>
 
             <input type="hidden" name="page_id" t-att-value="page.id" />
             <t t-foreach='page.question_ids' t-as='question'>
@@ -309,10 +309,10 @@
              t-att-data-validation-error-msg="question.validation_error_msg">
             <div class="mb-4">
                 <h3 t-if="not hide_question_title">
-                    <span t-field='question.title' />
+                    <span t-field='question.title' class="text-break" />
                     <span t-if="question.constr_mandatory" class="text-danger">*</span>
                 </h3>
-                <div t-if="not is_html_empty(question.description)" t-field='question.description' class="text-muted oe_no_empty mt-1"/>
+                <div t-if="not is_html_empty(question.description)" t-field='question.description' class="text-muted oe_no_empty mt-1 text-break"/>
             </div>
             <t t-if="question.question_type == 'text_box'"><t t-call="survey.question_text_box"/></t>
             <t t-if="question.question_type == 'char_box'"><t t-call="survey.question_char_box"/></t>
@@ -417,7 +417,7 @@
                         <t t-call="survey.survey_selection_key">
                             <t t-set="selection_key_class" t-value="'position-relative o_survey_radio_btn float-left d-flex'"/>
                         </t>
-                        <span class="ml-2" t-field='label.value'/>
+                        <span class="ml-2 text-break" t-field='label.value'/>
                         <input t-att-id="str(question.id) + '_' + str(label.id)" type="radio" t-att-value='label.id' class="o_survey_form_choice_item invisible position-absolute"
                                t-att-name='question.id'
                                t-att-checked="answer_line and answer_line.suggested_answer_id.id == label.id and 'checked' or None"
@@ -483,7 +483,7 @@
                                t-att-name="question.id"
                                t-att-checked="'checked' if answer_line else None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                        <span class="ml-2" t-field='label.value'/>
+                        <span class="ml-2 text-break" t-field='label.value'/>
                         <i class="fa fa-check-square float-right mt-1 position-relative"></i>
                         <i class="fa fa-square-o float-right mt-1 position-relative"></i>
                         <t t-call="survey.question_suggested_value_image"/>
