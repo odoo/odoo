@@ -702,11 +702,16 @@ export class Record extends DataPoint {
     }
 
     getFieldDomain(fieldName) {
-        return Domain.and([
+        const rawDomains = [
             this._domains[fieldName] || [],
             this.fields[fieldName].domain || [],
-            evaluateExpr(this.activeFields[fieldName].domain, this.evalContext),
-        ]);
+            this.activeFields[fieldName].domain,
+        ];
+
+        const evalContext = this.evalContext;
+        return Domain.and(
+            rawDomains.map((d) => (typeof d === "string" ? evaluateExpr(d, evalContext) : d))
+        );
     }
 
     isInvalid(fieldName) {

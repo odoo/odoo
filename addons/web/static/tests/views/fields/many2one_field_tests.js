@@ -3385,6 +3385,36 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("many2one: dynamic domain set in the field's definition", async function (assert) {
+        assert.expect(2);
+        serverData.models.partner.fields.trululu.domain = "[('foo' ,'=', foo)]";
+
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo" invisible="1" />
+                    <field name="trululu" />
+                </tree>`,
+            mockRPC(route, { kwargs, method }) {
+                if (method === "name_search") {
+                    assert.deepEqual(
+                        kwargs.args,
+                        [["foo", "=", "yop"]],
+                        "sent domain should be correct"
+                    );
+                }
+            },
+        });
+
+        await click(target.querySelectorAll(".o_data_cell")[0]);
+        await click(target, ".o_field_many2one input");
+
+        assert.containsOnce(target, ".o_field_many2one .o-autocomplete--dropdown-item");
+    });
+
     QUnit.test("many2one: domain updated by an onchange", async function (assert) {
         assert.expect(2);
 
@@ -3885,7 +3915,7 @@ QUnit.module("Fields", (hooks) => {
         // Open many2one modal of field in many2one modal
         await click(originalModal, ".o_external_button");
 
-        let nextModal = target.querySelectorAll(".modal")[1];
+        const nextModal = target.querySelectorAll(".modal")[1];
 
         assert.containsN(target, ".modal", 2);
         assert.doesNotHaveClass(nextModal, "o_inactive_modal");
