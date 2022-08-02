@@ -4,7 +4,7 @@ import ListController from 'web.ListController';
 import viewRegistry from 'web.view_registry';
 import ListView from 'web.ListView';
 import {ComponentWrapper} from 'web.OwlCompatibility';
-import {PagePropertiesDialogWrapper} from '@website/components/dialog/page_properties';
+import {PagePropertiesDialogManager} from '@website/components/dialog/page_properties';
 import {qweb} from 'web.core';
 
 const WebsitePageListController = ListController.extend({
@@ -86,9 +86,10 @@ const WebsitePageListController = ListController.extend({
      * @private
      */
     async _addDialog(record, mode = '') {
-        this._pagePropertiesDialog = new ComponentWrapper(this, PagePropertiesDialogWrapper, {
-            currentPage: record.data.id,
+        this._pagePropertiesDialog = new ComponentWrapper(this, PagePropertiesDialogManager, {
+            resId: record.data.id,
             onClose: this._onCloseDialog.bind(this),
+            onRecordSaved: this.reload.bind(this),
             mode: mode,
         });
         await this._pagePropertiesDialog.mount(this.el);
