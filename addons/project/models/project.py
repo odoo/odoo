@@ -1810,7 +1810,7 @@ class Task(models.Model):
             if project.analytic_tag_ids:
                 vals['analytic_tag_ids'] = [Command.set(project.analytic_tag_ids.ids)]
         else:
-            vals['user_ids'] = [Command.link(self.env.user.id)]
+            vals['user_ids'] = self._context.get('default_user_ids', False) or [Command.link(self.env.user.id)]
 
         return vals
 
