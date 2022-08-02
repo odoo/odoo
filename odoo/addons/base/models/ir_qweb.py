@@ -1931,7 +1931,8 @@ class IrQWeb(models.AbstractModel):
                     values['__qweb_attrs__'] = field_attrs
                 else:
                     values['__qweb_attrs__'].update(field_attrs)
-                content = self._compile_to_str(content)
+                if content is not None and content is not False:
+                    content = self._compile_to_str(content)
                 """, level))
             force_display_dependent = True
         else:
