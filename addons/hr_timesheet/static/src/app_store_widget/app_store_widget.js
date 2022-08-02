@@ -45,6 +45,15 @@ class AppStoreWidget extends Component {
     }
 }
 AppStoreWidget.template = "hr_timesheet.AppStoreWidget";
+AppStoreWidget.props = {
+    ...standardWidgetProps,
+    type: { type: String },
+};
+AppStoreWidget.extractProps = ({ attrs }) => {
+    return {
+        type: attrs.type,
+    };
+};
 
 class AppStoreQRDialog extends Component {
     setup() {
@@ -58,13 +67,5 @@ class AppStoreQRDialog extends Component {
 }
 AppStoreQRDialog.components = { Dialog };
 AppStoreQRDialog.template = "hr_timesheet.AppStoreQRDialog";
-AppStoreQRDialog.props = {
-    ...standardWidgetProps,
-    type: { type: String },
-};
-AppStoreQRDialog.extractProps = ({ attrs }) => {
-    return {
-        type: attrs.type,
-    };
-};
+
 registry.category("view_widgets").add("hr_timesheet.app_store_widget", AppStoreWidget);
