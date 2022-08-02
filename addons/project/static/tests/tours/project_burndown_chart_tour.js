@@ -38,14 +38,8 @@ tour.register('burndown_chart_tour', {
     content: 'Open the group by menu',
     trigger: '.o_group_by_menu button',
 }, {
-    content: 'Click on the Stage group menu item',
-    trigger: '.o_group_by_menu .o_menu_item:contains("Stage")',
-}, {
-    content: 'A "The Burndown Chart must be grouped by Stage" notification is shown when trying to remove the group by "Date: Month > Stage"',
-    trigger: '.o_notification_manager .o_notification:contains("The Burndown Chart must be grouped by Stage") button.o_notification_close',
-}, {
-    content: 'Open the group by menu',
-    trigger: '.o_group_by_menu button',
+    content: 'The Stage group menu item is invisible',
+    trigger: '.o_group_by_menu:not(:has(.o_menu_item:contains("Stage")))',
 }, {
     content: 'Open the Date group by sub menu',
     trigger: '.o_group_by_menu button.o_menu_item:contains("Date")',
