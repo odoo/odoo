@@ -251,22 +251,6 @@ registerModel({
             ));
         },
         /**
-         * Performs the `channel_fold` RPC on `mail.channel`.
-         *
-         * @param {number} channelId
-         * @param {string} state
-         */
-        async performRpcChannelFold(channelId, state) {
-            return this.messaging.rpc({
-                model: 'mail.channel',
-                method: 'channel_fold',
-                args: [[channelId]],
-                kwargs: {
-                    state,
-                }
-            }, { shadow: true });
-        },
-        /**
          * Performs the `channel_info` RPC on `mail.channel`.
          *
          * @param {Object} param0
@@ -679,7 +663,7 @@ registerModel({
                 // Server sync of fold state is only supported for channels.
                 return;
             }
-            return this.messaging.models['Thread'].performRpcChannelFold(this.id, state);
+            return this.messaging.models['Channel'].performRpcChannelFold(this.id, state);
         },
         /**
          * Opens this thread either as form view, in discuss app, or as a chat

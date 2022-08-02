@@ -33,6 +33,22 @@ registerModel({
             return thread.channel;
         },
         /**
+         * Performs the `channel_fold` RPC on `mail.channel`.
+         *
+         * @param {number} channelId
+         * @param {string} state
+         */
+         async performRpcChannelFold(channelId, state) {
+            return this.messaging.rpc({
+                model: 'mail.channel',
+                method: 'channel_fold',
+                args: [[channelId]],
+                kwargs: {
+                    state,
+                }
+            }, { shadow: true });
+        },
+        /**
          * Performs the `channel_pin` RPC on `mail.channel`.
          *
          * @param {Object} param0
