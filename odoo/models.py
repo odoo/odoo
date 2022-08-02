@@ -2006,6 +2006,10 @@ class BaseModel(metaclass=MetaModel):
         Private implementation of name_search, allows passing a dedicated user
         for the name_get part to solve some access rights issues.
         """
+        domain = self._name_search_domain(name, args, operator)
+        return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
+
+    def _name_search_domain(self, name='', args=None, operator='ilike'):
         args = list(args or [])
         search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
         if not search_fnames:
@@ -2015,7 +2019,7 @@ class BaseModel(metaclass=MetaModel):
             aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
             domain = aggregator([[(field_name, operator, name)] for field_name in search_fnames])
             args += domain
-        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+        return args
 
     @api.model
     def _add_missing_default_values(self, values):
@@ -5721,6 +5725,7 @@ class BaseModel(metaclass=MetaModel):
                         field = model._fields[fname]
                         model = model[fname]
 
+                is_datetime = field and field.type in ('date', 'datetime')
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     value_esc = value.replace('_', '?').replace('%', '*').replace('[', '?')
                 if comparator in ('in', 'not in'):
@@ -5728,26 +5733,52 @@ class BaseModel(metaclass=MetaModel):
                         value = set(value)
                     else:
                         value = (value,)
-                    if field and field.type in ('date', 'datetime'):
+                    if is_datetime:
                         value = {Datetime.to_datetime(v) for v in value}
-                elif field and field.type in ('date', 'datetime'):
-                    value = Datetime.to_datetime(value)
+                elif is_datetime:
+                    try:
+                        value = Datetime.to_datetime(value)
+                    except ValueError:
+                        # User may pass a broken value. At least, the tests do
+                        # it with "res.currency.rate" model, which has Date and
+                        # Float fields in _rec_names_search
+                        is_datetime = False
 
                 matching_ids = set()
                 for record in self:
                     data = record.mapped(key)
+                    ok = None
                     if isinstance(data, BaseModel):
                         v = value
                         if isinstance(value, (list, tuple, set)) and value:
                             v = next(iter(value))
                         if isinstance(v, str):
-                            data = data.mapped('display_name')
+                            if data:
+                                if comparator in ['in', 'not in']:
+                                    v = list(value)
+                                domain = model._name_search_domain(name=v, operator=comparator)
+                                fil = data.filtered_domain(domain)
+                            else:
+                                fil = data
+                            if comparator in expression.NEGATIVE_TERM_OPERATORS:
+                                # all subrecords passed the negative filter => record is ok
+                                ok = (fil == data)
+                            else:
+                                # some subrecords passed the positive filter => record is ok
+                                ok = fil
                         else:
                             data = data and data.ids or [False]
-                    elif field and field.type in ('date', 'datetime'):
+                    elif is_datetime:
                         data = [Datetime.to_datetime(d) for d in data]
+                    elif comparator in ('=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike'):
+                        # String operator may be applied for non-string data.
+                        # For example, 'res.currency.rate' makes name search by 'rate' field, which is float
+                        data = [d and str(d) or d for d in data]
+                        value = str(value)
 
-                    if comparator == '=':
+                    if ok is not None:
+                        pass
+                    elif comparator == '=':
                         ok = value in data
                     elif comparator in ('!=', '<>'):
                         ok = value not in data
