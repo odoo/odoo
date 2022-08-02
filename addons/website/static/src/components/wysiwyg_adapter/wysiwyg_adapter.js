@@ -33,7 +33,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         this.action = useWowlService('action');
 
         this.oeStructureSelector = '#wrapwrap .oe_structure[data-oe-xpath][data-oe-id]';
-        this.oeFieldSelector = '#wrapwrap [data-oe-field]';
+        this.oeFieldSelector = '#wrapwrap [data-oe-field]:not([data-oe-sanitize-prevent-edition])';
         this.oeCoverSelector = '#wrapwrap .s_cover[data-res-model], #wrapwrap .o_record_cover_container[data-res-model]';
         if (this.props.savableSelector) {
             this.savableSelector = this.props.savableSelector;
@@ -144,6 +144,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             .not('img[data-oe-field="arch"], br[data-oe-field="arch"], input[data-oe-field="arch"]')
             .not('.oe_snippet_editor')
             .not('hr, br, input, textarea')
+            .not('[data-oe-sanitize-prevent-edition]')
             .add('.o_editable');
     }
     /**

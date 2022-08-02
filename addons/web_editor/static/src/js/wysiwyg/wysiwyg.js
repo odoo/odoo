@@ -215,6 +215,10 @@ const Wysiwyg = Widget.extend({
             this._peerToPeerLoading.then(() => this.ptp.notifyAllClients('ptp_join'));
         }
 
+        this.$editable.on('click', '[data-oe-field][data-oe-sanitize-prevent-edition]', () => {
+            Dialog.alert(this, _t("Someone with escalated rights previously modified this area, you are therefore not able to modify it yourself."));
+        });
+
         this._observeOdooFieldChanges();
         this.$editable.on(
             'mousedown touchstart',
