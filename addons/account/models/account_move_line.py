@@ -2589,3 +2589,9 @@ class AccountMoveLine(models.Model):
 
     def _copy_data_extend_business_fields(self, values):
         self.ensure_one()
+
+    def _get_downpayment_lines(self):
+        ''' Return the downpayment move lines associated with the move line.
+        This method is overridden in the sale order module.
+        '''
+        return self.env['account.move.line']
