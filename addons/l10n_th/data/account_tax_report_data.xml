@@ -131,4 +131,76 @@
         <field name="parent_id" ref="tax_report_net_vat"/>
     </record>
 
+    <!-- PND53 -->
+    <record id="tax_report_pnd53" model="account.tax.report">
+        <field name="name">PND53</field>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_total_income_pnd53" model="account.tax.report.line">
+        <field name="name">Total Income</field>
+        <field name="report_id" ref="tax_report_pnd53"/>
+        <field name="tag_name">Income PND53</field>
+        <field name="sequence" eval="1" />
+    </record>
+
+    <record id="tax_report_total_remittance_pnd53" model="account.tax.report.line">
+        <field name="name">Total Remittance</field>
+        <field name="report_id" ref="tax_report_pnd53"/>
+        <field name="tag_name">PND53</field>
+        <field name="code">P53</field>
+        <field name="sequence" eval="2" />
+    </record>
+
+    <record id="tax_report_surcharge_pnd53" model="account.tax.report.line">
+        <field name="name">Surcharge</field>
+        <field name="report_id" ref="tax_report_pnd53"/>
+        <field name="tag_name">SUR53</field>
+        <field name="code">S53</field>
+        <field name="sequence" eval="3" />
+    </record>
+
+    <record id="tax_report_total_pnd53" model="account.tax.report.line">
+        <field name="name">Total</field>
+        <field name="report_id" ref="tax_report_pnd53"/>
+        <field name="formula">(P53 + S53) * -1</field>
+        <field name="sequence" eval="4" />
+    </record>
+
+    <!-- PND3 -->
+    <record id="tax_report_pnd3" model="account.tax.report">
+        <field name="name">PND3</field>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_report_total_income_pnd3" model="account.tax.report.line">
+        <field name="name">Total Income</field>
+        <field name="report_id" ref="tax_report_pnd3"/>
+        <field name="tag_name">Income PND3</field>
+        <field name="sequence" eval="1" />
+    </record>
+
+    <record id="tax_report_total_remittance_pnd3" model="account.tax.report.line">
+        <field name="name">Total Remittance</field>
+        <field name="report_id" ref="tax_report_pnd3"/>
+        <field name="tag_name">PND3</field>
+        <field name="code">P3</field>
+        <field name="sequence" eval="2" />
+    </record>
+
+    <record id="tax_report_surcharge_pnd3" model="account.tax.report.line">
+        <field name="name">Surcharge</field>
+        <field name="report_id" ref="tax_report_pnd3"/>
+        <field name="tag_name">SUR PND3</field>
+        <field name="code">S3</field>
+        <field name="sequence" eval="3" />
+    </record>
+
+    <record id="tax_report_total_pnd3" model="account.tax.report.line">
+        <field name="name">Total</field>
+        <field name="report_id" ref="tax_report_pnd3"/>
+        <field name="formula">(P3 + S3) * -1</field>
+        <field name="sequence" eval="4" />
+    </record>
+
 </odoo>

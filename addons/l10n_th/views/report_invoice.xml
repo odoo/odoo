@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//span[@t-field='o.partner_id.vat']" position="after">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'TH'" >
+                <span t-field="o.l10n_th_company_info" />
+                <span t-field="o.l10n_th_branch_number" />
+            </t>
+        </xpath>
+        <xpath expr="//h2" position="before">
+            <t t-set="use_custom_l10n_header" t-value="o.l10n_th_custom_header and o.company_id.account_fiscal_country_id.code == 'TH'"/>
+            <h2 t-if="use_custom_l10n_header">
+                <span t-if="o.debit_origin_id">Debit Note</span>
+                <span t-if="not o.debit_origin_id">Tax Invoice</span>
+                <span t-if="o.name != '/'" t-field="o.name"/>
+            </h2>
+        </xpath>
+        <xpath expr="//h2[2]" position="attributes">
+            <attribute name="t-if">not use_custom_l10n_header</attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='account.document_tax_totals']" position="replace">
+            <t t-if="o.l10n_th_custom_header and o.company_id.account_fiscal_country_id.code == 'TH' and o.debit_origin_id">
+                <t t-call="l10n_th.document_tax_totals"/>
+            </t>
+            <t t-else="">
+                <t t-call="account.document_tax_totals"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="document_tax_totals">
+        <tr class="border-black o_subtotal">
+            <td><strong>Original Invoiced Amount (1)</strong></td>
+            <td class="text-right">
+                <span
+                    t-att-class="oe_subtotal_footer_separator"
+                    t-field="o.debit_origin_id.amount_untaxed"
+                />
+            </td>
+        </tr>
+        <tr>
+            <td><span class="text-nowrap">Invoice Amount (2)</span></td>
+            <td class="text-right o_price_total">
+                <span class="text-nowrap" t-field="o.amount_untaxed" />
+            </td>
+        </tr>
+        <t t-set="amount_difference" t-value="o.amount_untaxed - o.debit_origin_id.amount_untaxed"/>
+        <tr>
+            <td><span class="text-nowrap">Difference (2)-(1) = (3)</span></td>
+            <td class="text-right o_price_total">
+                <span
+                    class="text-nowrap" t-esc="amount_difference"
+                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                />
+            </td>
+        </tr>
+        <t t-set="vat_tax_group_name" t-value="o.env.ref('l10n_th.tax_group_vat_7').name"/>
+        <t t-set="tax_groups" t-value="[tax_group for subtotal_tax in tax_totals['groups_by_subtotal'].values() for tax_group in subtotal_tax ]"/>
+        <t t-set="filtered_tax_groups" t-value="list(filter(lambda tax_group: tax_group['tax_group_name'] == vat_tax_group_name, tax_groups))"/>
+        <t t-set="vat_tax_sum" t-value="sum([tax_group['tax_group_amount'] for tax_group in filtered_tax_groups])"/>
+        <tr>
+            <td><span class="text-nowrap">VAT 7% (4)</span></td>
+            <td class="text-right o_price_total">
+                <span class="text-nowrap" t-esc="vat_tax_sum" />
+            </td>
+        </tr>
+        <tr class="border-black o_total">
+            <td><strong>Total (3)+(4) = (5)</strong></td>
+            <td class="text-right">
+                <span
+                    t-esc="amount_difference + vat_tax_sum"
+                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'
+                />
+            </td>
+        </tr>
+    </template>
+</odoo>
