@@ -52,6 +52,7 @@ import Widget from "web.Widget";
 import { uiService } from "@web/core/ui/ui_service";
 import { ClientActionAdapter, ViewAdapter } from "@web/legacy/action_adapters";
 import { commandService } from "@web/core/commands/command_service";
+import { ConnectionAbortedError } from "@web/core/network/rpc_service";
 import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
 import { standaloneAdapter } from "web.OwlCompatibility";
 
@@ -215,7 +216,7 @@ export async function addLegacyMockEnvironment(env, legacyParams = {}) {
         const legacyMockServer = new LegacyMockServer(legacyParams.models, { widget });
         await legacyMockServer.setup();
         const originalRPC = env.services.rpc;
-        env.services.rpc = async (...args) => {
+        const rpc = async (...args) => {
             try {
                 return await originalRPC(...args);
             } catch (e) {
@@ -225,6 +226,15 @@ export async function addLegacyMockEnvironment(env, legacyParams = {}) {
                     throw e;
                 }
             }
+        };
+        env.services.rpc = function () {
+            let rejectFn;
+            const rpcProm = new Promise((resolve, reject) => {
+                rejectFn = reject;
+                rpc(...arguments).then(resolve).catch(reject);
+            });
+            rpcProm.abort = () => rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+            return rpcProm;
         };
     }
 }

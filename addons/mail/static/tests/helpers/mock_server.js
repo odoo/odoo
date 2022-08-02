@@ -579,29 +579,6 @@ patch(MockServer.prototype, 'mail', {
     //--------------------------------------------------------------------------
 
     /**
-     * Simulates `_sendone` on `bus.bus`.
-     *
-     * @param {string} channel
-     * @param {string} notificationType
-     * @param {any} message
-     */
-     _mockBusBus__sendone(channel, notificationType, message) {
-        this._mockBusBus__sendmany([[channel, notificationType, message]]);
-    },
-    /**
-     * Simulates `_sendmany` on `bus.bus`.
-     *
-     * @param {Array} notifications
-     */
-    _mockBusBus__sendmany(notifications) {
-        const values = [];
-        for (const notification of notifications) {
-            const [type, payload] = notification.slice(1, notification.length);
-            values.push({ payload, type });
-        }
-        owl.Component.env.services['bus_service'].trigger('notification', values);
-    },
-    /**
      * Simulates `_attachment_format` on `ir.attachment`.
      *
      * @private
