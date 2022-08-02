@@ -125,3 +125,8 @@ class AccountMove(models.Model):
             send_invoice_cron._trigger()
 
         return res
+
+    def _is_downpayment(self):
+        # OVERRIDE
+        self.ensure_one()
+        return self.line_ids.sale_line_ids and all(sale_line.is_downpayment for sale_line in self.line_ids.sale_line_ids) or False
