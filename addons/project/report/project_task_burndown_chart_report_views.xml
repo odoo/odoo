@@ -14,7 +14,7 @@
                 <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                 <field name="stage_id" />
                 <separator/>
-                <filter name="filter_date" date="date" string="Date" />
+                <filter name="filter_date" date="date" string="Date" default_period="this_year,last_year" />
                 <filter name="filter_date_deadline" date="date_deadline"/>
                 <filter name="filter_date_assign" date="date_assign"/>
                 <filter string="Last Month" invisible="1" name="last_month" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
@@ -22,7 +22,7 @@
                 <filter string="Late Milestones" name="late_milestone" domain="[('is_closed', '=', False), ('has_late_and_unreached_milestone', '=', True)]" groups="project.group_project_milestone"/>
                 <group expand="0" string="Group By">
                     <filter string="Date" name="date" context="{'group_by': 'date'}" />
-                    <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}" />
+                    <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}" invisible="1"/>
                 </group>
             </search>
         </field>
@@ -44,7 +44,7 @@
         <field name="res_model">project.task.burndown.chart.report</field>
         <field name="view_mode">graph</field>
         <field name="search_view_id" ref="project_task_burndown_chart_report_view_search"/>
-        <field name="context">{'search_default_project_id': active_id, 'search_default_date': 1, 'search_default_stage': 1}</field>
+        <field name="context">{'search_default_project_id': active_id, 'search_default_date': 1, 'search_default_stage': 1, 'search_default_filter_date': 1, 'search_default_open_tasks': 1}</field>
         <field name="domain">[('display_project_id', '!=', False)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
