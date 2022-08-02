@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { patch } from 'web.utils';
 import { EditMenuDialog } from '@website/components/dialog/edit_menu';
 import { OptimizeSEODialog } from '@website/components/dialog/seo';
+import {PagePropertiesDialog} from '@website/components/dialog/page_properties';
 
 const websiteSystrayRegistry = registry.category('website_systray');
 const { useState } = owl;
@@ -13,6 +14,7 @@ const { useState } = owl;
 patch(NavBar.prototype, 'website_navbar', {
     setup() {
         this._super();
+        this.orm = useService('orm');
         this.websiteService = useService('website');
         this.websiteContext = useState(this.websiteService.context);
 
@@ -41,8 +43,15 @@ patch(NavBar.prototype, 'website_navbar', {
                 isDisplayed: () => this.canShowAceEditor(),
             },
             'website.menu_page_properties': {
-                openWidget: () => this.websiteContext.showPageProperties = true,
+                Component: PagePropertiesDialog,
                 isDisplayed: () => this.canShowPageProperties(),
+                getProps: () => ({
+                    onRecordSaved: (record) => {
+                        return this.orm.read('website.page', [record.resId], ['url']).then(res => {
+                            this.websiteService.goToWebsite({websiteId: record.data.website_id[0], path: res[0]['url']});
+                        });
+                    },
+                })
             },
         };
     },
