@@ -194,6 +194,16 @@ class AccountMove(models.Model):
             if rc_refund:
                 document_total = -abs(document_total)
 
+        # For each line, if it follows a downpayment / downpayments, an entry is added
+        # to the dictionary containing the names of the downpayment invoices
+        downpayment_dict = {}
+        if not document_type == 'TD02':
+            for line in self.invoice_line_ids.filtered(lambda line: not line.display_type):
+                if line.price_subtotal < 0:
+                    moves = line._get_downpayment_lines().move_id
+                    if moves:
+                        downpayment_dict.update({line.id: ', '.join([move.name for move in moves])})
+
         # Create file content.
         template_values = {
             'record': self,
@@ -219,6 +229,7 @@ class AccountMove(models.Model):
             'format_numbers_two': format_numbers_two,
             'format_phone': format_phone,
             'format_alphanumeric': format_alphanumeric,
+            'downpayment_dict': downpayment_dict,
             'discount_type': discount_type,
             'formato_trasmissione': formato_trasmissione,
             'document_type': document_type,
