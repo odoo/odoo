@@ -219,7 +219,7 @@ QUnit.test('basic rendering: sidebar', async function (assert) {
         "channel category should list items"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).length,
+        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem`).length,
         0,
         "channel category should have no item by default"
     );
@@ -250,7 +250,7 @@ QUnit.test('basic rendering: sidebar', async function (assert) {
         "chat category should list items"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item`).length,
+        document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem`).length,
         0,
         "chat category should have no item by default"
     );
@@ -425,12 +425,12 @@ QUnit.test('sidebar: basic channel rendering', async function (assert) {
     const { click, messaging, openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).length,
+        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem`).length,
         1,
         "should have one channel item");
     let channel = document.querySelector(`
         .o_DiscussSidebar_categoryChannel
-        .o_DiscussSidebarCategory_item
+        .o_DiscussSidebarCategoryItem
     `);
     assert.strictEqual(
         channel.dataset.threadLocalId,
@@ -480,8 +480,8 @@ QUnit.test('sidebar: basic channel rendering', async function (assert) {
         "should have a counter when equals 0 (default value)"
     );
 
-    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`);
-    channel = document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`);
+    await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem`);
+    channel = document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem`);
     assert.hasClass(
         channel,
         'o-active',
@@ -511,7 +511,7 @@ QUnit.test('sidebar: channel rendering with needaction counter', async function 
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    const channel = document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`);
+    const channel = document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem`);
     assert.strictEqual(
         channel.querySelectorAll(`:scope .o_DiscussSidebarCategoryItem_counter`).length,
         1,
@@ -550,14 +550,14 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
     const { messaging, openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).length,
+        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem`).length,
         2,
         "should have 2 channel items"
     );
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_categoryChannel
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId1,
                     model: 'mail.channel',
@@ -570,7 +570,7 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_categoryChannel
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId2,
                     model: 'mail.channel'
@@ -582,7 +582,7 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
     );
     const channel1 = document.querySelector(`
         .o_DiscussSidebar_categoryChannel
-        .o_DiscussSidebarCategory_item[data-thread-local-id="${
+        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId1,
                 model: 'mail.channel'
@@ -591,7 +591,7 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
     `);
     const channel2 = document.querySelector(`
         .o_DiscussSidebar_categoryChannel
-        .o_DiscussSidebarCategory_item[data-thread-local-id="${
+        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId2,
                 model: 'mail.channel'
@@ -625,11 +625,11 @@ QUnit.test('sidebar: basic chat rendering', async function (assert) {
     const { messaging, openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item`).length,
+        document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem`).length,
         1,
         "should have one chat item"
     );
-    const chat = document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item`);
+    const chat = document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem`);
     assert.strictEqual(
         chat.dataset.threadLocalId,
         messaging.models['Thread'].findFromIdentifyingData({
@@ -691,7 +691,7 @@ QUnit.test('sidebar: chat rendering with unread counter', async function (assert
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    const chat = document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item`);
+    const chat = document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem`);
     assert.strictEqual(
         chat.querySelectorAll(`:scope .o_DiscussSidebarCategoryItem_counter`).length,
         1,
@@ -752,14 +752,14 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
     const { messaging, openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item`).length,
+        document.querySelectorAll(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem`).length,
         3,
         "should have 3 chat items"
     );
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_categoryChat
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId1,
                     model: 'mail.channel',
@@ -772,7 +772,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_categoryChat
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId2,
                     model: 'mail.channel',
@@ -785,7 +785,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_categoryChat
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId3,
                     model: 'mail.channel',
@@ -797,7 +797,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
     );
     const chat1 = document.querySelector(`
         .o_DiscussSidebar_categoryChat
-        .o_DiscussSidebarCategory_item[data-thread-local-id="${
+        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId1,
                 model: 'mail.channel',
@@ -806,7 +806,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
     `);
     const chat2 = document.querySelector(`
         .o_DiscussSidebar_categoryChat
-        .o_DiscussSidebarCategory_item[data-thread-local-id="${
+        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId2,
                 model: 'mail.channel',
@@ -815,7 +815,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
     `);
     const chat3 = document.querySelector(`
         .o_DiscussSidebar_categoryChat
-        .o_DiscussSidebarCategory_item[data-thread-local-id="${
+        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId3,
                 model: 'mail.channel',
@@ -857,7 +857,7 @@ QUnit.test('sidebar: chat custom name', async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    const chat = document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item`);
+    const chat = document.querySelector(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem`);
     assert.strictEqual(
         chat.querySelector(`:scope .o_DiscussSidebarCategoryItem_name`).textContent,
         "Marc",
@@ -901,7 +901,7 @@ QUnit.test('default thread rendering', async function (assert) {
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId1,
                     model: 'mail.channel',
@@ -986,7 +986,7 @@ QUnit.test('default thread rendering', async function (assert) {
     );
 
     await click(`
-        .o_DiscussSidebarCategory_item[data-thread-local-id="${
+        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId1,
                 model: 'mail.channel',
@@ -995,7 +995,7 @@ QUnit.test('default thread rendering', async function (assert) {
     `);
     assert.ok(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId1,
                     model: 'mail.channel',
@@ -1948,7 +1948,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
             // select channel 2
             document.querySelector(`
                 .o_DiscussSidebar_categoryChannel
-                .o_DiscussSidebarCategory_item[data-thread-local-id="${
+                .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                     messaging.models['Thread'].findFromIdentifyingData({
                         id: mailChannelId2,
                         model: 'mail.channel',
@@ -1981,7 +1981,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
             // select channel 1
             document.querySelector(`
                 .o_DiscussSidebar_categoryChannel
-                .o_DiscussSidebarCategory_item[data-thread-local-id="${
+                .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                     messaging.models['Thread'].findFromIdentifyingData({
                         id: mailChannelId1,
                         model: 'mail.channel',
@@ -2011,7 +2011,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
             // select channel 2
             document.querySelector(`
                 .o_DiscussSidebar_categoryChannel
-                .o_DiscussSidebarCategory_item[data-thread-local-id="${
+                .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                     messaging.models['Thread'].findFromIdentifyingData({
                         id: mailChannelId2,
                         model: 'mail.channel',
@@ -2073,7 +2073,7 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebar_categoryChannel
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId1,
                     model: 'mail.channel',
@@ -2085,7 +2085,7 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
     assert.notOk(
         document.querySelector(`
             .o_DiscussSidebar_categoryChat
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId2,
                     model: 'mail.channel',
@@ -2121,7 +2121,7 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
     assert.notOk(
         document.querySelector(`
             .o_DiscussSidebar_categoryChannel
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId1,
                     model: 'mail.channel',
@@ -2133,7 +2133,7 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebar_categoryChat
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId2,
                     model: 'mail.channel',
@@ -2155,7 +2155,7 @@ QUnit.test('sidebar quick search', async function (assert) {
     const { messaging, openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).length,
+        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem`).length,
         20,
         "should have 20 channel items"
     );
@@ -2174,7 +2174,7 @@ QUnit.test('sidebar quick search', async function (assert) {
         quickSearch.dispatchEvent(kevt1);
     });
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).length,
+        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem`).length,
         11,
         "should have filtered to 11 channel items"
     );
@@ -2185,13 +2185,13 @@ QUnit.test('sidebar quick search', async function (assert) {
         quickSearch.dispatchEvent(kevt2);
     });
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).length,
+        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem`).length,
         1,
         "should have filtered to a single channel item"
     );
     assert.strictEqual(
         document.querySelector(`
-            .o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item
+            .o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem
         `).dataset.threadLocalId,
         messaging.models['Thread'].findFromIdentifyingData({
             id: pyEnv['mail.channel'].search([['name', '=', 'channel12']]),
@@ -2206,7 +2206,7 @@ QUnit.test('sidebar quick search', async function (assert) {
         quickSearch.dispatchEvent(kevt3);
     });
     assert.strictEqual(
-        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).length,
+        document.querySelectorAll(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem`).length,
         0,
         "should have filtered to no channel item"
     );
@@ -2259,7 +2259,7 @@ QUnit.test('basic top bar rendering', async function (assert) {
     );
 
     await click(`
-        .o_DiscussSidebarCategory_item[data-thread-local-id="${
+        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId1,
                 model: 'mail.channel',
@@ -2325,7 +2325,7 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId1,
                     model: 'mail.channel',
@@ -2360,7 +2360,7 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId1,
                     model: 'mail.channel',
@@ -2598,7 +2598,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
     });
     await openDiscuss();
     const channels = document.querySelectorAll(`
-        .o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item
+        .o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategoryItem
     `);
     // Add attachment in a message for #general
     await afterNextRender(async () => {
@@ -2937,7 +2937,7 @@ QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategory_item[data-thread-local-id="${
+        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
             messaging.models['Thread'].findFromIdentifyingData({
                 id: mailChannelId1,
                 model: 'mail.channel',
@@ -2947,7 +2947,7 @@ QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async
     );
     assert.hasClass(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId1,
                     model: 'mail.channel',
@@ -2962,7 +2962,7 @@ QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
         func: () => {
             document.querySelector(`
-                .o_DiscussSidebarCategory_item[data-thread-local-id="${
+                .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                     messaging.models['Thread'].findFromIdentifyingData({
                         id: mailChannelId1,
                         model: 'mail.channel',
@@ -2981,7 +2981,7 @@ QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async
     }));
     assert.doesNotHaveClass(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId1,
                     model: 'mail.channel',
@@ -3725,27 +3725,27 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_DiscussSidebarCategory_item[data-thread-name="General"]
+            .o_DiscussSidebarCategoryItem[data-thread-name="General"]
         `).length,
         1,
         "should have channel 'General' in the sidebar"
     );
     assert.notOk(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-name="General"]
+            .o_DiscussSidebarCategoryItem[data-thread-name="General"]
         `).classList.contains('o-active'),
         "channel 'General' should not be active initially"
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_DiscussSidebarCategory_item[data-thread-name="Demo User"]
+            .o_DiscussSidebarCategoryItem[data-thread-name="Demo User"]
         `).length,
         1,
         "should have chat 'Demo User' in the sidebar"
     );
     assert.notOk(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-name="Demo User"]
+            .o_DiscussSidebarCategoryItem[data-thread-name="Demo User"]
         `).classList.contains('o-active'),
         "chat 'Demo User' should not be active initially"
     );
@@ -3755,10 +3755,10 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
         "there should be no composer when active thread of discuss is mailbox 'Inbox'"
     );
 
-    await click(`.o_DiscussSidebarCategory_item[data-thread-name="General"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-thread-name="General"]`);
     assert.ok(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-name="General"]
+            .o_DiscussSidebarCategoryItem[data-thread-name="General"]
         `).classList.contains('o-active'),
         "channel 'General' should become active after selecting it from the sidebar"
     );
@@ -3779,10 +3779,10 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
         "composer of channel 'General' should no longer focused on click away"
     );
 
-    await click(`.o_DiscussSidebarCategory_item[data-thread-name="Demo User"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-thread-name="Demo User"]`);
     assert.ok(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-name="Demo User"]
+            .o_DiscussSidebarCategoryItem[data-thread-name="Demo User"]
         `).classList.contains('o-active'),
         "chat 'Demo User' should become active after selecting it from the sidebar"
     );
@@ -3854,7 +3854,7 @@ QUnit.test('mark channel as seen if last message is visible when switching chann
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
         func: () => {
             document.querySelector(`
-                .o_DiscussSidebarCategory_item[data-thread-local-id="${
+                .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                     messaging.models['Thread'].findFromIdentifyingData({
                         id: mailChannelId1,
                         model: 'mail.channel',
@@ -3873,7 +3873,7 @@ QUnit.test('mark channel as seen if last message is visible when switching chann
     }));
     assert.doesNotHaveClass(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-local-id="${
+            .o_DiscussSidebarCategoryItem[data-thread-local-id="${
                 messaging.models['Thread'].findFromIdentifyingData({
                     id: mailChannelId1,
                     model: 'mail.channel',

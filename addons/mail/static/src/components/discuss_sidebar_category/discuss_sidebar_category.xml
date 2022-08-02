@@ -39,17 +39,11 @@
                             </div>
                         </t>
                         <t t-foreach="category.filteredCategoryItems" t-as="item" t-key="item.localId">
-                            <DiscussSidebarCategoryItem
-                                className="'o_DiscussSidebarCategory_item'"
-                                record="item"
-                            />
+                            <DiscussSidebarCategoryItem record="item"/>
                         </t>
                     </t>
                     <t t-if="!category.isOpen and category.activeItem">
-                        <DiscussSidebarCategoryItem
-                            className="'o_DiscussSidebarCategory_item'"
-                            record="category.activeItem"
-                        />
+                        <DiscussSidebarCategoryItem record="category.activeItem"/>
                     </t>
                 </div>
             </div>
