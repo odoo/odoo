@@ -18,7 +18,8 @@ import { registry } from '@web/core/registry';
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 
-const WEBCLIENT_LOAD_ROUTES = [
+const ROUTES_TO_IGNORE = [
+    '/longpolling/poll',
     '/web/webclient/load_menus',
     '/web/dataset/call_kw/res.users/load_views',
     '/web/dataset/call_kw/res.users/systray_get_activities'
@@ -90,7 +91,6 @@ function setupMessagingServiceRegistries({
             const originalService = busService.start(...arguments);
             Object.assign(originalService, {
                 _beep() {}, // Do nothing
-                _poll() {}, // Do nothing
                 _registerWindowUnload() {}, // Do nothing
                 updateOption() {},
             });
@@ -156,5 +156,5 @@ function setupMessagingServiceRegistries({
 
 export {
     getWebClientReady,
-    WEBCLIENT_LOAD_ROUTES,
+    ROUTES_TO_IGNORE,
 };
