@@ -73,7 +73,7 @@
                     <notebook>
                         <page name="pricelist_rules" string="Price Rules">
                             <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
-                                <tree string="Pricelist Rules" editable="bottom">
+                                <tree groups="!product.group_sale_pricelist" string="Pricelist Rules" editable="bottom">
                                     <field name="product_tmpl_id" string="Products" required="1"/>
                                     <field name="product_id" string="Variants"
                                     groups="product.group_product_variant"
@@ -90,6 +90,21 @@
                                     <field name="applied_on" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
                                 </tree>
+                                <!-- When in advanced pricelist mode : pricelist rules
+                                    Should open in a form view and not be editable inline anymore.
+                                -->
+                                <tree groups="product.group_sale_pricelist" string="Pricelist Rules">
+                                    <field name="product_tmpl_id" invisible="1"/>
+                                    <field name="name" string="Applicable On"/>
+                                    <field name="min_quantity"/>
+                                    <field name="price" string="Price"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="base" invisible="1"/>
+                                    <field name="price_discount" invisible="1"/>
+                                    <field name="applied_on" invisible="1"/>
+                                    <field name="compute_price" invisible="1"/>
+                                </tree>
                             </field>
                         </page>
                         <page name="pricelist_config" string="Configuration">
@@ -105,34 +120,6 @@
                     </notebook>
                 </sheet>
             </form>
-        </field>
-    </record>
-
-    <record id="product_pricelist_view_inherit" model="ir.ui.view">
-        <field name="name">product.pricelist.form.inherit</field>
-        <field name="model">product.pricelist</field>
-        <field name="inherit_id" ref="product.product_pricelist_view"/>
-        <field name="groups_id" eval="[(4, ref('product.group_sale_pricelist'))]"/>
-        <field name="arch" type="xml">
-            <!-- When in advanced pricelist mode : pricelist rules
-                Should open in a form view and not be editable inline anymore.
-            -->
-            <field name="item_ids" position="replace">
-                <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}" groups="product.group_product_pricelist">
-                    <tree string="Pricelist Rules">
-                        <field name="product_tmpl_id" invisible="1"/>
-                        <field name="name" string="Applicable On"/>
-                        <field name="min_quantity"/>
-                        <field name="price" string="Price"/>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                        <field name="base" invisible="1"/>
-                        <field name="price_discount" invisible="1"/>
-                        <field name="applied_on" invisible="1"/>
-                        <field name="compute_price" invisible="1"/>
-                    </tree>
-                </field>
-            </field>
         </field>
     </record>
 
