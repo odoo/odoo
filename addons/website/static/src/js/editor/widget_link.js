@@ -30,7 +30,7 @@ weWidgets.LinkTools.include({
         var def = await this._super.apply(this, arguments);
         const options = {
             position: {
-                collision: 'flip fit',
+                collision: 'flip flipfit',
             },
             classes: {
                 "ui-autocomplete": 'o_website_ui_autocomplete'
