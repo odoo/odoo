@@ -45,6 +45,11 @@ const LinkTools = Link.extend({
      * @override
      */
     start: function () {
+        const titleEls = this.el.querySelectorAll('we-title');
+        for (const titleEl of titleEls) {
+            // See _buildTitleElement for explanation
+            titleEl.textContent = titleEl.textContent.replace(/⌙/g, '└');
+        }
         this._addHintClasses();
         return this._super(...arguments);
     },
