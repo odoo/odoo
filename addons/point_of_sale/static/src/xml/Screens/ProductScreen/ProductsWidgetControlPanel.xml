@@ -4,22 +4,21 @@
     <t t-name="ProductsWidgetControlPanel" owl="1">
         <div class="products-widget-control">
             <t t-if="!props.hasNoCategories">
-                <div class="rightpane-header" t-att-class="{
+                <div class="rightpane-header d-flex p-0 text-center bg-white overflow-x-auto overflow-y-hidden" t-att-class="{
                     'green-border-bottom': !displayCategImages,
                     'grey-border-bottom': displayCategImages,
                 }">
                     <!-- Breadcrumbs -->
-                    <div class="breadcrumbs">
-                        <span class="breadcrumb">
-                            <span class="breadcrumb-button breadcrumb-home" t-on-click="() => this.trigger('switch-category', 0)">
+                    <div class="breadcrumbs d-flex align-items-center justify-content-center">
+                        <span class="breadcrumb d-flex align-items-center m-0 px-2 overflow-hidden">
+                            <span class="breadcrumb-button breadcrumb-home d-flex align-items-center justify-content-center px-3 py-3 fs-3 cursor-pointer overflow-hidden" t-on-click="() => this.trigger('switch-category', 0)">
                                 <i class="fa fa-home" role="img" aria-label="Home" title="Home"></i>
                             </span>
                         </span>
                         <t t-foreach="props.breadcrumbs" t-as="category" t-key="category.id">
-                            <span class="breadcrumb">
-                                <img src="/point_of_sale/static/src/img/bc-arrow-big.png" class="breadcrumb-arrow"
-                                    alt="Slash" />
-                                <span class="breadcrumb-button"
+                            <span class="breadcrumb d-flex align-items-center m-0 px-2 overflow-hidden">
+                                <i class="fa fa-caret-right me-4" aria-hidden="true"></i>
+                                <span class="breadcrumb-button d-flex align-items-center justify-content-center px-2 py-3 fw-bold cursor-pointer overflow-hidden"
                                     t-on-click="() => this.trigger('switch-category', category.id)">
                                     <t t-esc="category.name"></t>
                                 </span>
@@ -27,9 +26,9 @@
                         </t>
                     </div>
                     <!-- Subcategories -->
-                    <div t-if="props.subcategories.length > 0 and !displayCategImages"  class="category-list simple">
+                    <div t-if="props.subcategories.length > 0 and !displayCategImages"  class="category-list simple d-flex flex-grow-1 flex-shrink-1 p-0">
                         <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
-                            <span class="category-simple-button"
+                            <span class="category-simple-button position-relative d-flex align-items-center py-2 px-4 bg-white overflow-hidden fw-bold text-700 text-truncate cursor-pointer"
                                 t-on-click="() => this.trigger('switch-category', category.id)">
                                 <t t-esc="category.name" />
                             </span>
@@ -37,9 +36,9 @@
                     </div>
                 </div>
                 <t t-if="props.subcategories.length > 0 and displayCategImages">
-                    <div class="categories">
-                        <div class="category-list-scroller">
-                            <div class="category-list">
+                    <div class="categories position-relative flex-basis-0 flex-grow-1 border-bottom bg-300">
+                        <div class="category-list-scroller w-100 h-100 overflow-x-hidden overflow-y-auto">
+                            <div class="category-list d-flex p-1">
                                 <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
                                     <CategoryButton category="category" />
                                 </t>

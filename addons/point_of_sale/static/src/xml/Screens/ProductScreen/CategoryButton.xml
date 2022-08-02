@@ -2,11 +2,11 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="CategoryButton" owl="1">
-        <span class="category-button" t-on-click="() => this.trigger('switch-category', props.category.id)">
-            <div class="category-img">
-                <img t-att-src="imageUrl" alt="Category" />
+        <span class="category-button position-relative d-inline-block h-100 bg-white border text-center cursor-pointer" t-on-click="() => this.trigger('switch-category', props.category.id)">
+            <div class="category-img position-relative h-100 text-center cursor-pointer">
+                <img class="h-100 mw-100 o_object_fit_cover" t-att-src="imageUrl" alt="Category" />
             </div>
-            <div class="category-name">
+            <div class="category-name py-1">
                 <t t-esc="props.category.name" />
             </div>
         </span>

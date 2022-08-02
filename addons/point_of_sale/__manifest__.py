@@ -104,7 +104,6 @@
             ('remove', 'web/static/src/core/errors/error_handlers.js'),
             ('remove', 'web/static/src/legacy/legacy_rpc_error_handler.js'),
         ],
-        
         # This bundle includes the main pos assets.
         'point_of_sale.assets': [
             ('include', 'web._assets_helpers'),
@@ -127,6 +126,11 @@
             'point_of_sale/static/src/scss/OrderlineDetails.scss',
             'point_of_sale/static/src/scss/OrderSummary.scss',
 
+            'point_of_sale/static/src/scss/ProductItem.scss',
+            'point_of_sale/static/src/scss/ProductsWidget.scss',
+            'point_of_sale/static/src/scss/ProductsWidgetControlPanel.scss',
+
+            'point_of_sale/static/src/scss/topheader.scss',
 
             'point_of_sale/static/src/css/pos_receipts.css',
             'point_of_sale/static/src/css/popups/product_info_popup.css',

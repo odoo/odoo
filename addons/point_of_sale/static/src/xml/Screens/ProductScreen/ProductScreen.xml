@@ -25,7 +25,7 @@
                         </div> -->
                     </div>
                 </div>
-                <div class="rightpane" t-if="!env.isMobile || state.mobile_pane === 'right'">
+                <div class="rightpane w-100 h-100 d-flex flex-column flex-grow-1 flex-basis-25" t-if="!env.isMobile || state.mobile_pane === 'right'">
                     <ProductsWidget mobileSearchBarIsShown="props.mobileSearchBarIsShown"/>
                     <MobileOrderWidget t-if="env.isMobile" pane="state.mobile_pane" onSwitchPane.bind="switchPane"/>
                 </div>

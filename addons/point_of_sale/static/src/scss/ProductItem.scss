@@ -1,0 +1,37 @@
+.product {
+    width: 137px;
+    &:hover {
+        background-color: $gray-100 !important;
+    }
+    &:active {
+        background-color: $gray-200 !important;
+    }
+}
+
+.product-img {
+    height: 100px;
+}
+
+@media screen and (max-width: 768px) {
+    .product {
+        width: 32%;
+        height: auto;
+        margin: 0px !important;
+
+        &:active {
+            border: solid 3px #6ec89b;
+            box-sizing: border-box; 
+        }
+    }
+    
+    .product-img {
+        position: absolute;
+        width: 100%;
+        
+        img {
+            max-height: none;
+            max-width: none;
+        }
+    }
+
+}

@@ -2,11 +2,11 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="ProductsWidget" owl="1">
-      <div class="products-widget">
+      <div class="products-widget d-flex flex-column flex-grow-1 overflow-hidden">
             <ProductsWidgetControlPanel mobileSearchBarIsShown="props.mobileSearchBarIsShown" breadcrumbs="breadcrumbs"
                                         subcategories="subcategories" hasNoCategories="hasNoCategories" />
-            <div class="product-list-container">
-                <div t-if="productsToDisplay.length != 0" class="product-list">
+            <div class="product-list-container flex-grow-1 overflow-x-hidden overflow-y-auto">
+                <div t-if="productsToDisplay.length != 0" class="product-list d-flex flex-wrap p-1">
                     <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
                         <ProductItem product="product" />
                     </t>
