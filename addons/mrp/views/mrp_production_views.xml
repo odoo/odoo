@@ -561,7 +561,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="domain">[('picking_type_id', '=', active_id)]</field>
-            <field name="context">{}</field>
+            <field name="context">{'default_picking_type_id': active_id}</field>
         </record>
 
         <record id="mrp_production_action_unreserve_tree" model="ir.actions.server">
