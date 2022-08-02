@@ -1931,10 +1931,10 @@ class IrQWeb(models.AbstractModel):
                     values['__qweb_attrs__'] = field_attrs
                 else:
                     values['__qweb_attrs__'].update(field_attrs)
-                content = self._compile_to_str(content)
+                if content is not None and content is not False:
+                    content = self._compile_to_str(content)
                 """, level))
 
-            code.append(indent_code("content = self._compile_to_str(content)", level))
             force_display_dependent = True
         else:
             if expr == T_CALL_SLOT:
