@@ -1205,10 +1205,8 @@ class AccountJournal(models.Model):
         # We simply call the setup bar function.
         return self.env['res.company'].setting_init_bank_account_action()
 
-    def create_invoice_from_attachment(self, attachment_ids=[]):
-        ''' Create the invoices from files.
-         :return: A action redirecting to account.move tree/form view.
-        '''
+    def _generate_invoice_from_attachment(self, attachment_ids=None):
+        """Generate the invoices from attachments."""
         attachments = self.env['ir.attachment'].browse(attachment_ids)
         if not attachments:
             raise UserError(_("No attachment was provided"))
@@ -1219,7 +1217,13 @@ class AccountJournal(models.Model):
             attachment.write({'res_model': 'mail.compose.message'})
             invoice.message_post(attachment_ids=[attachment.id])
             invoices += invoice
+        return invoices
 
+    def create_invoice_from_attachment(self, attachment_ids=None):
+        ''' Create the invoices from files.
+         :return: A action redirecting to account.move tree/form view.
+        '''
+        invoices = self._generate_invoice_from_attachment(attachment_ids=attachment_ids)
         action_vals = {
             'name': _('Generated Documents'),
             'domain': [('id', 'in', invoices.ids)],
