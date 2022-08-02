@@ -884,31 +884,33 @@ export class SearchModel extends EventBus {
         if (searchItem.type !== "dateFilter") {
             return;
         }
-        generatorId = generatorId || searchItem.defaultGeneratorId;
-        const index = this.query.findIndex(
-            (queryElem) =>
-                queryElem.searchItemId === searchItemId &&
-                "generatorId" in queryElem &&
-                queryElem.generatorId === generatorId
-        );
-        if (index >= 0) {
-            this.query.splice(index, 1);
-            if (!yearSelected(this._getSelectedGeneratorIds(searchItemId))) {
-                // This is the case where generatorId was the last option
-                // of type 'year' to be there before being removed above.
-                // Since other options of type 'month' or 'quarter' do
-                // not make sense without a year we deactivate all options.
-                this.query = this.query.filter(
-                    (queryElem) => queryElem.searchItemId !== searchItemId
-                );
-            }
-        } else {
-            this.query.push({ searchItemId, generatorId });
-            if (!yearSelected(this._getSelectedGeneratorIds(searchItemId))) {
-                // Here we add 'this_year' as options if no option of type
-                // year is already selected.
-                const { defaultYearId } = this.optionGenerators.find((o) => o.id === generatorId);
-                this.query.push({ searchItemId, generatorId: defaultYearId });
+        const generatorIds = generatorId ? [generatorId] : searchItem.defaultGeneratorIds;
+        for (const generatorId of generatorIds) {
+            const index = this.query.findIndex(
+                (queryElem) =>
+                    queryElem.searchItemId === searchItemId &&
+                    "generatorId" in queryElem &&
+                    queryElem.generatorId === generatorId
+            );
+            if (index >= 0) {
+                this.query.splice(index, 1);
+                if (!yearSelected(this._getSelectedGeneratorIds(searchItemId))) {
+                    // This is the case where generatorId was the last option
+                    // of type 'year' to be there before being removed above.
+                    // Since other options of type 'month' or 'quarter' do
+                    // not make sense without a year we deactivate all options.
+                    this.query = this.query.filter(
+                        (queryElem) => queryElem.searchItemId !== searchItemId
+                    );
+                }
+            } else {
+                this.query.push({ searchItemId, generatorId });
+                if (!yearSelected(this._getSelectedGeneratorIds(searchItemId))) {
+                    // Here we add 'this_year' as options if no option of type
+                    // year is already selected.
+                    const { defaultYearId } = this.optionGenerators.find((o) => o.id === generatorId);
+                    this.query.push({ searchItemId, generatorId: defaultYearId });
+                }
             }
         }
         this._checkComparisonStatus();

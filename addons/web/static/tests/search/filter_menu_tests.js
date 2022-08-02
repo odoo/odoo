@@ -471,6 +471,34 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(target), ["Date: June 2019"]);
     });
 
+    QUnit.test("filter with multiple values in default_period date attribute set as search_default", async function (assert) {
+        assert.expect(3);
+
+        patchDate(2019, 6, 31, 13, 43, 0);
+
+        await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+            searchViewArch: `
+                    <search>
+                        <filter string="Date" name="date_field" date="date_field" default_period="this_year,last_year"/>
+                    </search>
+                `,
+            context: { search_default_date_field: true },
+        });
+
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "Date");
+
+        assert.ok(isItemSelected(target, "Date"));
+        assert.ok(isOptionSelected(target, "Date", "2019"));
+        assert.ok(isOptionSelected(target, "Date", "2018"));
+
+    });
+
     QUnit.test("filter domains are correcly combined by OR and AND", async function (assert) {
         assert.expect(2);
 

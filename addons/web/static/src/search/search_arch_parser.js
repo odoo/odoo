@@ -208,9 +208,9 @@ export class SearchArchParser extends XMLParser {
                 preSearchItem.type = "dateFilter";
                 preSearchItem.fieldName = fieldName;
                 preSearchItem.fieldType = this.fields[fieldName].type;
-                preSearchItem.defaultGeneratorId = DEFAULT_PERIOD;
+                preSearchItem.defaultGeneratorIds = [DEFAULT_PERIOD];
                 if (node.hasAttribute("default_period")) {
-                    preSearchItem.defaultGeneratorId = node.getAttribute("default_period");
+                    preSearchItem.defaultGeneratorIds = node.getAttribute("default_period").split(',');
                 }
             } else {
                 let stringRepr = "[]";
