@@ -9,8 +9,8 @@
             <div class="wrap">
                 <div class="o_survey_print container">
                     <div class='py-5 mt32'>
-                        <h1><span t-field='survey.title'/></h1>
-                        <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
+                        <h1><span t-field='survey.title' class="text-break"/></h1>
+                        <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty text-break"/></t>
                         <t t-if="review" t-call="survey.survey_button_retake"/>
                     </div>
                     <div role="form">
@@ -22,7 +22,7 @@
                                             or not is_html_empty(question.description))">
                                     <hr t-if="question != survey.page_ids[0]" />
                                     <div class="o_page_header mb-5">
-                                        <h1 t-field='question.title' />
+                                        <h1 t-field='question.title' class="text-break" />
                                         <div t-if="question.description" t-field='question.description' class="oe_no_empty"/>
                                     </div>
                                 </t>
@@ -30,11 +30,11 @@
                                     <t t-set="answer_lines" t-value="answer.user_input_line_ids.filtered(lambda line: line.question_id == question)"/>
                                     <div class="js_question-wrapper" t-att-id="question.id">
                                         <h2>
-                                            <span t-field='question.title'/>
+                                            <span t-field='question.title' class="text-break"/>
                                             <span t-if="question.constr_mandatory" class="text-danger">*</span>
                                             <span t-if="scoring_display_correction" class="badge rounded-pill" t-att-data-score-question="question.id"></span>
                                         </h2>
-                                        <div class="text-muted oe_no_empty mt-1" t-if="not is_html_empty(question.description)" t-field='question.description'/>
+                                        <div class="text-muted oe_no_empty mt-1 text-break" t-if="not is_html_empty(question.description)" t-field='question.description'/>
                                         <t t-if="question.question_type in ['numerical_box', 'date', 'datetime', 'text_box', 'char_box']">
                                             <t t-if="answer_lines">
                                                 <t t-set="answer_line" t-value="answer_lines[0]"/>
