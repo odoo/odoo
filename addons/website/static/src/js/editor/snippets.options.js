@@ -873,7 +873,8 @@ options.registry.ReplaceMedia.include({
         selectEl.dataset.name = 'media_link_anchor_opt';
         selectEl.dataset.dependencies = 'media_url_opt';
         selectEl.dataset.noPreview = 'true';
-        selectEl.setAttribute('string', _t("⌙ Page Anchor"));
+        selectEl.classList.add('o_we_sublevel_1');
+        selectEl.setAttribute('string', _t("Page Anchor"));
         const anchors = await wUtils.loadAnchors(urlWithoutAnchor);
         for (const anchor of anchors) {
             const weButtonEl = document.createElement('we-button');
