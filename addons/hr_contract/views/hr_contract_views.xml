@@ -137,7 +137,8 @@
             <field name="arch" type="xml">
                 <form string="Current Contract">
                     <header>
-                        <field name="state" widget="statusbar"/>
+                        <field name="state" groups="!hr_contract.group_hr_contract_manager" widget="statusbar"/>
+                        <field name="state" groups="hr_contract.group_hr_contract_manager" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
@@ -145,7 +146,8 @@
                         <div class="oe_title pe-0" name="title">
                             <h1 class="d-flex flex-row justify-content-between">
                                 <field name="name" class="text-truncate" placeholder="Contract Reference"/>
-                                <field name="kanban_state" widget="state_selection" readonly="1"/>
+                                <field name="kanban_state" groups="!hr_contract.group_hr_contract_manager" widget="state_selection" readonly="1"/>
+                                <field name="kanban_state" groups="hr_contract.group_hr_contract_manager" widget="state_selection" readonly="0"/>
                             </h1>
                             <h2>
                                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
@@ -161,11 +163,13 @@
                                 <field name="date_end" string="Contract End Date"/>
                                 <field name="company_country_id" invisible="1"/>
                                 <field name="country_code" invisible="1"/>
-                                <field name="structure_type_id" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="structure_type_id" groups="!hr_contract.group_hr_contract_manager" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="structure_type_id" groups="hr_contract.group_hr_contract_manager" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
                                 <field name="calendar_mismatch" invisible="1"/>
                                 <label for="resource_calendar_id"/>
                                 <div id="resource_calendar_warning">
-                                    <field name="resource_calendar_id" required="1" nolabel="1" options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="resource_calendar_id" groups="!hr_contract.group_hr_contract_manager" required="1" nolabel="1" options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="resource_calendar_id" groups="hr_contract.group_hr_contract_manager" required="1" nolabel="1"/>
                                     <span attrs="{'invisible': ['|', ('calendar_mismatch', '=', False), ('state', '!=', 'open')]}"
                                         class="fa fa-exclamation-triangle text-danger o_calendar_warning ms-3"
                                         data-tooltip-template="hr_contract.CalendarMismatch"
@@ -176,9 +180,12 @@
                                 </div>
                             </group>
                             <group name="top_info_right">
-                                <field name="department_id" options="{'no_open': True, 'no_create': True}"/>
-                                <field name="job_id" options="{'no_open': True, 'no_create': True}"/>
-                                <field name="contract_type_id" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="department_id" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="department_id" groups="hr_contract.group_hr_contract_manager"/>
+                                <field name="job_id" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="job_id" groups="hr_contract.group_hr_contract_manager"/>
+                                <field name="contract_type_id" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="contract_type_id" groups="hr_contract.group_hr_contract_manager"/>
                                 <field name="hr_responsible_id" required="1"/>
                             </group>
                         </group>
@@ -209,36 +216,6 @@
                         <field name="message_ids"/>
                     </div>
                 </form>
-            </field>
-        </record>
-
-        <record id="hr_contract_manager_view_form" model="ir.ui.view">
-            <field name="name">hr.contract.manager.view.form</field>
-            <field name="model">hr.contract</field>
-            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
-            <field name="groups_id" eval="[(4,ref('hr_contract.group_hr_contract_manager'))]"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='structure_type_id']" position="attributes">
-                    <attribute name="options">{}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='resource_calendar_id']" position="attributes">
-                    <attribute name="options">{}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='department_id']" position="attributes">
-                    <attribute name="options">{}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='job_id']" position="attributes">
-                    <attribute name="options">{}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='contract_type_id']" position="attributes">
-                    <attribute name="options">{}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='state']" position="attributes">
-                    <attribute name="options">{'clickable': '1'}</attribute>
-                </xpath>
-                <xpath expr="//field[@name='kanban_state']" position="attributes">
-                    <attribute name="readonly">0</attribute>
-                </xpath>
             </field>
         </record>
 
