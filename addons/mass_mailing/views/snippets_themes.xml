@@ -109,7 +109,7 @@
 <!-- Snippet Templates -->
 <template id="s_mail_block_header_social" name="Left Logo">
     <div class="o_mail_snippet_general o_mail_block_header_social s_header_social">
-        <div class="o_mail_table_styles container">
+        <div class="container">
             <div class="row">
                 <div class="col-lg-8 pt16 pb16">
                     <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;">
@@ -128,7 +128,7 @@
 
 <template id="s_mail_block_header_text_social" name="Left Text">
     <div class="o_mail_snippet_general o_mail_block_header_text_social s_header_text_social">
-        <div class="o_mail_table_styles container">
+        <div class="container">
             <div class="row">
                 <div class="col-lg-8 pt16 pb16">
                     <h3>
@@ -149,7 +149,7 @@
 
 <template id="s_mail_block_header_logo" name="Centered Logo">
     <div class="o_mail_snippet_general o_mail_block_header_logo s_header_logo">
-        <div class="container o_mail_table_styles">
+        <div class="container">
             <div class="row">
                 <div class="col-lg-4"/>
                 <div class="col-lg-4 text-center pt16 pb16">
@@ -202,7 +202,7 @@
 
 <template id="s_mail_block_discount1" name="Discount Offer">
     <div class="o_mail_snippet_general o_mail_block_discount1 s_discount1">
-        <div class="container o_mail_table_styles">
+        <div class="container">
             <div class="row">
                 <div class="col-lg pt16 pb16 text-center">
                     <h4 class="text-o-color-2 text-center mt0 mb16" style="font-weight:800;">-20%</h4>
@@ -210,7 +210,7 @@
                     <a role="button" href="#" class="btn btn-primary">Redeem Discount!</a>
                 </div>
                 <div class="col-lg pt16 pb16">
-                    <p class="o_mail_no_margin">We are continuing to grow and we miss seeing you be a part of it! We've increased store hours and have lot's of new brands available. To welcome you back please accept this 20% discount on you next purchase by clicking the button.</p>
+                    <p>We are continuing to grow and we miss seeing you be a part of it! We've increased store hours and have lot's of new brands available. To welcome you back please accept this 20% discount on you next purchase by clicking the button.</p>
                 </div>
             </div>
         </div>
@@ -222,8 +222,8 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-3 px-0 text-center">
-                    <h3 class="o_mail_no_margin">21 Jul</h3>
-                    <p class="o_mail_no_margin">ALL DAY</p>
+                    <h3>21 Jul</h3>
+                    <p>ALL DAY</p>
                 </div>
                 <div class="col-lg-2 px-0">
                     <img src="/web/image/mass_mailing.s_mail_block_event_default_image" class="img w-100"/>
@@ -244,20 +244,20 @@
 
 <template id="s_mail_block_footer_social" name="Footer Center">
     <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200">
-        <div class="container o_mail_table_styles">
+        <div class="container">
             <div class="row">
                 <div class="col-lg o_mail_footer_social">
                     <t t-call="mass_mailing.social_links"/>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg o_mail_footer_links">
+                <div class="o_mail_footer_links">
                     <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg">
-                    <p class="o_mail_no_margin o_mail_footer_copy">
+                    <p>
                         © <t t-esc="datetime.datetime.now().year"/> All Rights Reserved
                     </p>
                 </div>
@@ -268,10 +268,10 @@
 
 <template id="s_mail_block_footer_social_left" name="Footer Left">
     <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general">
-        <div class="container o_mail_table_styles">
+        <div class="container">
             <div class="row">
                 <div class="col-lg o_mail_footer_description">
-                    <p t-if="res_company" class="o_mail_no_margin">
+                    <p t-if="res_company">
                         <strong><t t-esc="res_company.partner_id.name"/></strong>
                     </p>
                     <div class="o_mail_footer_links">
