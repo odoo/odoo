@@ -449,8 +449,14 @@ class PosOrder(models.Model):
                 existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)
             if (existing_order and existing_order.state == 'draft') or not existing_order:
                 order_ids.append(self._process_order(order, draft, existing_order))
-
-        return self.env['pos.order'].search_read(domain = [('id', 'in', order_ids)], fields = ['id', 'pos_reference'])
+            else:
+                _logger.warning("%(order_name)s at creation date of %(creation_date)s already exists! ", {
+                    'order_name': order['data']['name'],
+                    'creation_date': order['data']['creation_date'].replace('T', ' ')[:19],
+                })
+        synced_orders = self.env['pos.order'].search_read(domain=[('id', 'in', order_ids)], fields=['id', 'pos_reference'])
+        _logger.info(_("PoS Orders get synced: %s"), ', '.join([o['pos_reference'] for o in synced_orders]))
+        return synced_orders
 
     def create_picking(self):
         """Create a picking for each order and validate it."""
