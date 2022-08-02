@@ -97,6 +97,50 @@ class TestQWebTField(TransactionCase):
         doc = etree.fromstring(rendered)
         self.assertEqual(len(doc.xpath('//script')), 1)
 
+    def test_default_value(self):
+        Partner = self.env['res.partner']
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="out-field-default">
+                <div t-field="record.name">
+                    DEFAULT
+                    <t t-out="'Text'" />
+                </div>
+            </t>''',
+        })
+
+        # record.name is non-empty
+        result = """
+                <div>My Company</div>
+        """
+        rendered = self.env['ir.qweb']._render(t.id, {
+            'record': Partner.new({'name': 'My Company'})
+        })
+        self.assertEqual(str(rendered.strip()), result.strip(), "")
+
+        # record.name is empty but not False or None, we should render depending on force_display
+        result = """
+                <div></div>
+        """
+        rendered = self.env['ir.qweb']._render(t.id, {
+            'record': Partner.new({'name': ''})
+        })
+        self.assertEqual(str(rendered.strip()), result.strip())
+
+        # record.name is False or None, we should render field default value
+        result = """
+                <div>
+                    DEFAULT
+                    Text
+                </div>
+        """
+        rendered = self.env['ir.qweb']._render(t.id, {
+            'record': Partner.new({})
+        })
+        self.assertEqual(str(rendered.strip()), result.strip())
+
+
 class TestQWebNS(TransactionCase):
     def test_render_static_xml_with_namespace(self):
         """ Test the rendering on a namespaced view with no static content. The resulting string should be untouched.
