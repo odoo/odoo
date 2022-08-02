@@ -61,7 +61,7 @@
                     text-decoration: none;
                 }
             @media screen and (max-width: 768px) {
-                .o_mail_table_styles {
+                .o_mail_snippet_general .container {
                     width: 100% !important;
                 }
                 .s_header_social table td, .s_header_text_social table td, .s_header_logo table td,
@@ -103,7 +103,7 @@
                 </p>
                 <p>
 		    <t t-if="mailing.ab_testing_winner_selection == 'manual'">Don't forget to send your preferred version</t>
-		    <t t-elif="not mailing.ab_testing_schedule_datetime">Since the date and time for this test has not been scheduled, don't forget to manually send your preferred version.</t>	
+		    <t t-elif="not mailing.ab_testing_schedule_datetime">Since the date and time for this test has not been scheduled, don't forget to manually send your preferred version.</t>
                     <t t-else="">
                         Then on <b><t t-out="mailing.ab_testing_schedule_datetime.strftime('%b %d, %Y')"/></b> the <t t-out="mailing.mailing_type_description"/> having the <b><t t-out="ab_testing_winner_selection_description"/></b> will be sent
                     </t> to the remaining <t t-out="remaining_ab_testing_pc"/>% of recipients.
