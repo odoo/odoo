@@ -449,8 +449,34 @@ class PosOrder(models.Model):
                 existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)
             if (existing_order and existing_order.state == 'draft') or not existing_order:
                 order_ids.append(self._process_order(order, draft, existing_order))
+            elif not self._is_the_same_order(order['data'], existing_order):
+                order_ids.append(self._process_order(order, draft, None))
 
         return self.env['pos.order'].search_read(domain = [('id', 'in', order_ids)], fields = ['id', 'pos_reference'])
+
+    def _is_the_same_order(self, data, existing_order):
+        if fields.Datetime.from_string(data['creation_date'].replace('T', ' ')[:19]) != existing_order.date_order:
+            return False
+
+        if len(data['statement_ids']) != len(existing_order.payment_ids):
+            return False
+        received_payments = [(fields.Datetime.from_string(p[2]['name']), p[2]['amount']) for p in data['statement_ids']]
+        received_payments = sorted(received_payments, key=lambda p: (p[0], p[1]))
+        existing_payments = [(p.payment_date, p.amount) for p in existing_order.payment_ids]
+        existing_payments = sorted(existing_payments, key=lambda p: (p[0], p[1]))
+        if received_payments != existing_payments:
+            return False
+
+        if len(data['lines']) != len(existing_order.lines):
+            return False
+        received_lines = [(l[2]['product_id'], l[2]['qty'], l[2]['price_unit']) for l in data['lines']]
+        received_lines = sorted(received_lines, key=lambda s: (s[0], s[1], s[2]))
+        existing_lines = [(l.product_id.id, l.qty, l.price_unit) for l in existing_order.lines]
+        existing_lines = sorted(existing_lines, key=lambda l: (l[0], l[1], l[2]))
+        if received_lines != existing_lines:
+            return False
+
+        return True
 
     def create_picking(self):
         """Create a picking for each order and validate it."""
