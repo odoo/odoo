@@ -63,50 +63,19 @@
     }
 }
 
-.pos .order {
-    
-    .active-programs {
-        padding-top: 0.5em;
-        font-weight: normal;
-        font-size: 80%;
-        text-align: right;
-        margin-right: 15px;
-        margin-left: 15px;
-        
-        .title {
-            padding-top: 0.8em;
-            padding-bottom: 0.2em;
-            font-weight: bold;
-        }
+.summary {
+    .loyalty-points {
+        color: #6EC89B;
+        background: rgba(110, 200, 155, 0.17);
     }
 
-    .orderline.program-reward {
-        font-style: italic;
+    .loyalty-points-spent {
+        color: #C86E6E;
+        background: rgba(200, 110, 110, 0.17);
     }
 
-    .summary {
-        .loyalty-points {
-            margin-left: 20px;
-            float: left;
-            padding: 10px;
-            max-width: 216px;
-            text-align: left;
-            color: #6EC89B;
-            background: rgba(110, 200, 155, 0.17);
-            border-radius: 3px;
-        }
-
-        .loyalty-points-spent {
-            color: #C86E6E;
-            background: rgba(200, 110, 110, 0.17);
-        }
-
-        .loyalty-points-total {
-            border-top: solid 2px;
-            text-align: center;
-            padding-top: 4px;
-            margin-top: 4px;
-        }
+    .loyalty-points-total {
+        border-top: solid 2px;
     }
 }
 
@@ -118,14 +87,4 @@
 .pos-coupon-rewards .coupon-container {
     padding-top: 1em;
     font-size: 75%;
-}
-
-// Seems unused
-.loyalty .subtitle{
-    text-align: center;
-}
-
-.loyalty .title {
-    font-size: 20px;
-    text-align: center;
 }

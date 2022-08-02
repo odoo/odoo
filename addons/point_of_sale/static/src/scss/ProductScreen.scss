@@ -1,0 +1,142 @@
+.leftpane {
+    max-width: 336px;
+}
+
+.order{
+    max-width: 500px;
+}
+
+.pos .switchpane {
+    display: flex;
+}
+
+.pos .switchpane .order-info {
+    flex-grow: 1;
+    border-top: 1px solid #ebebeb;
+    padding: 8px 16px;
+    background-color: #FFFFFF;
+    color: #6ec89b;
+}
+.pos .switchpane .order-info h2 {
+    padding: 0px;
+    margin: 3px 0px;
+    font-weight: bold;
+}
+
+.pos .switchpane .btn-switchpane {
+    background-color: #6ec89b;
+    border-radius: 0px;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    flex-grow: 1;
+    flex-basis: 50%;
+    padding-bottom: 20px;
+}
+.pos .switchpane .btn-switchpane h1 {
+    margin-bottom: 0px;
+}
+
+.pos .switchpane .btn-switchpane.secondary {
+    background-color: #FFFFFF;
+    color: #6ec89b;
+}
+
+.pos .pane-border {
+    border-right: solid 3px #787878;
+}
+
+.scrollable-y{
+    overflow: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+/* .submit-kitchen-button {
+    float: left;
+    background: rgb(61, 235, 82);
+    color: white;
+    padding: 12px 20px;
+    margin: 0px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+} */
+
+/*  ********* The control buttons ********* */
+
+.pos .control-buttons {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    padding: 8px 16px 0px 11px;
+    margin-bottom: -6px;
+}
+.pos .popup-control-buttons .control-buttons {
+    flex-direction: column;
+}
+.pos .control-button {
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+    background: #e2e2e2;
+    border: solid 1px #bfbfbf;
+    display: inline-block;
+    line-height: 38px;
+    min-width: 80px;
+    text-align: center;
+    border-radius: 3px;
+    padding: 0px 10px;
+    font-size: 18px;
+    margin-left: 6px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all linear 150ms;
+}
+.pos .control-button:hover {
+    background: #efefef;
+}
+.pos .control-button:active {
+    background: black;
+    color: white;
+    border-color: black;
+}
+.pos .control-button .fa{
+    margin-right: 4px;
+}
+.pos .control-button .control-button-number {
+    color: rgb(226, 226, 226);
+    background: rgb(85, 85, 85);
+    display: inline-block;
+    height: 28px;
+    vertical-align: middle;
+    font-weight: bold;
+    line-height: 28px;
+    width: 28px;
+    border-radius: 50%;
+    text-align: center;
+    margin-left: -16px;
+    margin-right: 4px;
+}
+
+.pos .control-button.highlight,
+.pos .button.highlight {
+    background: #6EC89B !important;
+    border: solid 1px #64AF8A !important;
+    color: white !important;
+}
+.pos .control-button.altlight,
+.pos .button.altlight {
+    background: #7F82AC !important;
+    border: solid 1px #756A99 !important;
+    color: white !important;
+}
+.pos .control-button.disabled,
+.pos .control-button.disabled:active{
+    background: #e2e2e2;
+    border: solid 1px #BEBEBE;
+    opacity: 0.5;
+    cursor: default;
+    color: inherit;
+}
+

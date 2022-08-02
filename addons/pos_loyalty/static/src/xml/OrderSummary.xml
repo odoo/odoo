@@ -4,7 +4,7 @@
         <xpath expr="//div[hasclass('summary')]//div[hasclass('line')]" position="before">
             <t t-set="newPoints" t-value="getLoyaltyPoints()"/>
             <t t-if="newPoints.won || newPoints.spent">
-                <div class='loyalty-points'>
+                <div class='loyalty-points d-flex flex-column flex-grow-1 m-0 px-2'>
                     <div class='loyalty-points-title'>
                         <t t-esc="newPoints.name"/>
                     </div>
@@ -18,7 +18,7 @@
                             <span class='value'>-<t t-esc='newPoints.spent'/></span>
                         </div>
                     </t>
-                    <div class='loyalty-points-total'>
+                    <div class='loyalty-points-total text-start'>
                         <span class='value'><t t-esc='newPoints.total'/></span>
                     </div>
                 </div>

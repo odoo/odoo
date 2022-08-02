@@ -1,0 +1,43 @@
+
+.actionpad .button {
+    --btn-height-size: 54px;
+    background-color: $o-gray-100;
+    height: var(--btn-height-size);
+    border: none;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    border-color: $border-color;
+    transition: all 150ms linear;
+    padding: 4px 10px;
+    
+    &:hover {
+        background-color: $o-gray-200;
+    }
+    &:active {
+        background-color: $o-gray-900;
+        color: white;
+
+        i {
+            color: $o-gray-700;
+        }
+    }
+}
+
+.actionpad .button.pay {
+    height: calc(var(--btn-height-size) * 3);
+    background-color: $o-enterprise-primary-color;
+
+    &.button.pay:hover {
+        background-color: darken($o-enterprise-primary-color, 5%);
+    }
+
+    &.button.pay:active {
+        background-color: darken($o-enterprise-primary-color, 10%);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .actionpad .button.pay {
+        height: calc(var(--btn-height-size) * 2);
+    }
+}

@@ -1,0 +1,96 @@
+.numpad {
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 48px);
+    grid-template-areas:
+    "one two three qty"
+    "four five six disc"
+    "seven eight nine price"
+    "plusminus zero dot back";
+
+    button:nth-child(1) {
+        grid-area: one;
+    }
+    button:nth-child(2) {
+        grid-area: two;
+    }
+    button:nth-child(3) {
+        grid-area: three;
+    }
+    button:nth-child(4) {
+        grid-area: qty;
+    }
+    button:nth-child(5) {
+        grid-area: four;
+    }
+    button:nth-child(6) {
+        grid-area: five;
+    }
+    button:nth-child(7) {
+        grid-area: six;
+    }
+    button:nth-child(8) {
+        grid-area: disc;
+    }
+    button:nth-child(9) {
+        grid-area: seven;
+    }
+    button:nth-child(10) {
+        grid-area: eight;
+    }
+    button:nth-child(11) {
+        grid-area: nine;
+    }
+    button:nth-child(12) {
+        grid-area: price;
+    }
+    button:nth-child(13) {
+        grid-area: plusminus;
+    }
+    button:nth-child(14) {
+        grid-area: zero;
+    }
+    button:nth-child(15) {
+        grid-area: dot;
+    }
+    button:nth-child(16) {
+        grid-area: back;
+    }
+
+    button {
+        transition: all 150ms linear;
+        border-radius: 0;
+        background-color: $white;
+        border: none;
+        border-right: 1px solid;
+        border-bottom: 1px solid;
+        border-color: $border-color;
+
+        &:hover {
+            background: $gray-300;
+        }
+
+        &:active {
+            background: black;
+            color: white;
+            border-color: transparent; 
+        }
+    }
+}
+
+.mode-button.selected-mode {
+    color: white;
+    background: $gray-700;
+    border-color: transparent;
+}
+.mode-button.selected-mode:hover {
+    background: #6EC89B;
+    color: white;
+    border-color: transparent;
+}
+.numpad .disabled-mode, .pos .numpad .disabled-mode:hover {
+    background: #c7c7c7;
+    color: #a5a1a1;
+    cursor: not-allowed;
+}
+

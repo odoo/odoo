@@ -2,17 +2,17 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="OrderWidget" owl="1">
-        <div class="order-container" t-ref="scrollable">
-            <div class="order">
+        <div class="order-container w-100 h-100 bg-white overflow-hidden shadow-sm" t-ref="scrollable">
+            <div class="order d-flex flex-column h-100 bg-white">
                 <t t-if="orderlinesArray.length === 0" >
-                    <div class='order-empty'>
-                        <i class='fa fa-shopping-cart' role="img" aria-label="Shopping cart"
+                    <div class='order-empty m-4 text-center'>
+                        <i class='fa fa-shopping-cart fa-5x text-300' role="img" aria-label="Shopping cart"
                            title="Shopping cart"/>
-                        <h1>This order is empty</h1>
+                        <h1 class="mt-2 fs-4 text-700">This order is empty</h1>
                     </div>
                 </t>
                 <t t-else="">
-                    <ul class="orderlines">
+                    <ul class="orderlines flex-grow-1 overflow-auto">
                         <t t-foreach="orderlinesArray" t-as="orderline" t-key="orderline.id">
                             <Orderline line="orderline" />
                         </t>

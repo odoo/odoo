@@ -2,27 +2,80 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="ActionpadWidget" owl="1">
-        <div class="actionpad">
-            <button class="button set-partner" t-att-class="{'decentered': isLongName}"
-                    t-on-click="() => this.trigger('click-partner')">
-                <t t-if="!env.isMobile"><i class="fa fa-user" role="img" aria-label="Customer" title="Customer" /></t>
-                <t t-if="props.partner">
-                    <t t-esc="props.partner.name" />
-                </t>
-                <t t-else="">
-                    Customer
-                </t>
-            </button>
-            <button class="button pay" t-on-click="() => this.trigger(props.actionToTrigger or 'click-pay')">
-                <div class="pay-circle" t-att-class="{ 'highlight': props.isActionButtonHighlighted }">
-                    <i class="fa fa-chevron-right" role="img" aria-label="Pay" title="Pay" />
+        <div class="actionpad ">
+            <div class="actionpad-customer d-flex flex-row">
+                <button class="button set-partner d-flex flex-row-reverse align-items-center justify-content-between w-100 rounded-0 fw-bold" t-att-class="{'decentered': isLongName}"
+                        t-on-click="() => this.trigger('click-partner')">
+                    <t t-if="!env.isMobile">
+                        <span class="fa-stack">
+                            <i class="fa fa-circle fa-stack-2x text-300"/>
+                            <i class="fa fa-user fa-stack-1x" role="img" aria-label="Customer" title="Customer" />
+                        </span>
+                    </t>
+                    <t t-if="props.partner">
+                        <t t-esc="props.partner.name" />
+                    </t>
+                    <t t-else="">
+                        Customer
+                    </t>
+                </button>
+                <!-- Change below for a Reward buton -->
+                <button class="button d-flex flex-row-reverse align-items-center justify-content-between w-100 rounded-0 fw-bold" t-att-class="{'decentered': isLongName}"
+                        t-on-click="() => this.trigger('click-partner')">
+                    <t t-if="!env.isMobile">
+                        <span class="fa-stack">
+                            <i class="fa fa-circle fa-stack-2x text-300"/>
+                            <i class="fa fa-star fa-stack-1x" role="img" aria-label="Reward" title="Reward" />
+                        </span>
+                    </t>
+                    <t t-if="props.partner">
+                        <t t-esc="props.partner.name" />
+                    </t>
+                    <t t-else="">
+                        Reward
+                    </t>
+                </button>
+            </div>
+            <div class="actionpad-actions d-flex flex-row">
+                <button class="button pay w-50 d-flex flex-column align-items-center justify-content-center rounded-0 fw-bold text-100" t-on-click="() => this.trigger(props.actionToTrigger or 'click-pay')">
+                    <span class="pay-circle fa-stack fa-2x" t-att-class="{ 'highlight': props.isActionButtonHighlighted }">
+                        <i class="fa fa-circle fa-stack-2x text-dark"/>
+                        <i class="fa fa-chevron-right fa-stack-1x text-white" role="img" aria-label="Pay" title="Pay" />
+                    </span>
+                    <t t-esc="props.actionName" />
+                </button>
+                <div class="actionpad-actions-extra w-50">
+                    <div class="col d-flex flex-row">
+                        <button class="button position-relative d-block w-100 align-middle rounded-0 fw-bold">
+                            Action 1
+                        </button>
+                        <button class="button position-relative d-block w-100 align-middle rounded-0 fw-bold">
+                            Action 2
+                        </button>
+                    </div>
+                    <div class="col d-flex flex-row">
+                        <button class="button position-relative d-block w-100 align-middle rounded-0 fw-bold">
+                            Action 3
+                        </button>
+                        <button class="button position-relative d-block w-100 align-middle rounded-0 fw-bold">
+                            Action 4
+                        </button>
+                    </div>
+                    <div class="col d-flex flex-row">
+                        <button class="button position-relative d-block w-100 align-middle rounded-0 fw-bold">
+                            Action 5
+                        </button>
+                        <button class="button position-relative d-block w-100 align-middle rounded-0 fw-bold">
+                            More
+                        </button>
+                    </div>
                 </div>
-                <t t-esc="props.actionName" />
-            </button>
+            </div>
             <button t-if="env.isMobile" class="button back-button" t-on-click="props.onSwitchPane">
                 <i class="fa fa-angle-double-left"/>
                 Back
             </button>
+
         </div>
     </t>
 

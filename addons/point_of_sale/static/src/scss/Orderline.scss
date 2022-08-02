@@ -1,0 +1,36 @@
+.order .orderline {
+    box-sizing: border-box;
+    transition: background 250ms ease-in-out;
+
+    &.selected {
+        background: $o-gray-100 !important;
+        transition: background 250ms ease-in-out;
+        cursor: default;
+        border-top:1px solid $o-enterprise-primary-color;
+        border-bottom:1px solid $o-enterprise-primary-color;
+    }
+    &:active {
+        background: $o-gray-200;
+        transition: background 50ms ease-in-out;
+    }
+
+    .empty:active{
+        background: transparent;
+        cursor: default;
+    }
+}
+
+.info-list em{
+    color: $o-gray-700;
+    font-weight: bold;
+    font-style:normal;
+}
+
+.OrderlineButtons{
+    height: 42px;
+    
+    button:hover, button:active, button:focus {
+        background-color: $white !important;
+        color: $o-enterprise-primary-color;
+    }
+}

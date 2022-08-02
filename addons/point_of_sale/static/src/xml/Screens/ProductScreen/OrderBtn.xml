@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderBtn" owl="1">
+        <div class="actionpad mt-3">
+            <button class="button d-flex flex-row-reverse align-items-center justify-content-between w-100 px-3 py-3 rounded-0 border-top border-bottom fw-bold" t-on-click="">
+                <t t-if="!env.isMobile">
+                    <span class="fa-stack">
+                        <i class="fa fa-circle fa-stack-2x text-300"/>
+                        <i class="fa fa-cutlery fa-stack-1x" role="img" aria-label="Reward" title="Reward" />
+                    </span>
+                </t>
+                <t t-if="props.partner">
+                    <t t-esc="props.partner.name" />
+                </t>
+                <t t-else="">
+                    Send Order
+                </t>
+            </button>
+        </div>
+    </t>
+
+</templates>

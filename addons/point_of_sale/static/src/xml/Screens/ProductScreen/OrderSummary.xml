@@ -2,16 +2,16 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="OrderSummary" owl="1">
-        <div class="summary clearfix">
+        <div class="summary position-sticky bottom-0 d-flex align-items-center justify-content-end w-100 fw-bolder bg-white border-top clearfix">
             <t t-set="_total" t-value="getTotal()" />
             <t t-set="_tax" t-value="getTax()" />
-            <div class="line">
-                <div class="entry total">
-                    <span class="badge">Total: </span>
+            <div class="line d-flex align-items-end mx-3 py-2 text-end">
+                <div class="entry total text-700 fs-4">
+                    <span class="badge text-700">Total: </span>
                     <span class="value">
                         <t t-esc="_total" />
                     </span>
-                    <div t-if="_tax.hasTax" class="subentry">
+                    <div t-if="_tax.hasTax" class="subentry fs-5 fw-normal">
                         Taxes:
                         <span class="value">
                             <t t-esc="_tax.displayAmount" />
