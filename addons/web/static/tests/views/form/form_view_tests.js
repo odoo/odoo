@@ -2725,7 +2725,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("disable buttons until reload data from server", async function (assert) {
-        let def;
+        let def = undefined;
         await makeView({
             type: "form",
             resModel: "partner",
@@ -9527,7 +9527,7 @@ QUnit.module("Views", (hooks) => {
                 },
             };
 
-            let onchangeDef;
+            let onchangeDef = undefined;
             await makeView({
                 type: "form",
                 resModel: "partner",
@@ -9615,7 +9615,7 @@ QUnit.module("Views", (hooks) => {
             "partner,false,search": "<search></search>",
         };
 
-        let onchangeDef;
+        let onchangeDef = undefined;
         const createDef = makeDeferred();
 
         const mockRPC = async (route, args) => {
