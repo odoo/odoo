@@ -853,15 +853,15 @@ export class Record extends DataPoint {
 
     /**
      * @param {"edit" | "readonly"} mode
-     * @returns {Promise<void>}
+     * @returns {Promise<Boolean>}
      */
     async switchMode(mode) {
         if (this.mode === mode) {
-            return;
+            return true;
         }
-        const preventSwitch = await this._onWillSwitchMode(this, mode);
-        if (preventSwitch === false) {
-            return;
+        const canSwitch = await this._onWillSwitchMode(this, mode);
+        if (canSwitch === false) {
+            return false;
         }
         if (mode === "readonly") {
             for (const fieldName in this.activeFields) {
@@ -876,6 +876,7 @@ export class Record extends DataPoint {
         }
         this.mode = mode;
         this.model.notify();
+        return true;
     }
 
     toggleSelection(selected) {
@@ -1412,7 +1413,7 @@ class DynamicList extends DataPoint {
 
     abandonRecord(recordId) {
         const record = this.records.find((r) => r.id === recordId);
-        this.removeRecord(record);
+        return this.removeRecord(record);
     }
 
     /**
@@ -1697,8 +1698,8 @@ class DynamicList extends DataPoint {
         return records;
     }
 
-    async unselectRecord() {
-        await unselectRecord(this.editedRecord, this.abandonRecord.bind(this));
+    unselectRecord() {
+        return unselectRecord(this.editedRecord, this.abandonRecord.bind(this));
     }
 }
 
@@ -3182,8 +3183,8 @@ export class StaticList extends DataPoint {
         await Promise.all(proms);
     }
 
-    async unselectRecord() {
-        await unselectRecord(this.editedRecord);
+    unselectRecord() {
+        return unselectRecord(this.editedRecord);
     }
 }
 
