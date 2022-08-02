@@ -205,6 +205,7 @@ class StockRule(models.Model):
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_dest_id.id,
             'date': new_date,
+            'date_deadline': move_to_copy.date_deadline,
             'company_id': company_id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
