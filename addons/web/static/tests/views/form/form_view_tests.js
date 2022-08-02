@@ -7833,7 +7833,8 @@ QUnit.module("Views", (hooks) => {
         );
 
         await clickEdit(target);
-        await editInput(target, '[name="display_name"] input', "test2");
+        await editInput(target, '[name="foo"] input', "test2");
+        await editInput(target, '[name="display_name"] input', "test3");
         await clickSave(target);
         assert.containsN(
             target,

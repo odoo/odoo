@@ -371,7 +371,9 @@ export class FormController extends Component {
     computeTranslateAlert() {
         if (this.shouldShowTranslateAlert) {
             this.translateAlertData[this.model.root.resId] = new Set([
-                ...(this.translateAlertData[this.model.root.resId] || []),
+                ...(this.translateAlertData[this.model.root.resId]
+                    ? toRaw(this.translateAlertData[this.model.root.resId])
+                    : []),
                 ...this.model.root.dirtyTranslatableFields,
             ]);
         }
