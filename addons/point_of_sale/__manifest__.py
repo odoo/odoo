@@ -104,12 +104,30 @@
             ('remove', 'web/static/src/core/errors/error_handlers.js'),
             ('remove', 'web/static/src/legacy/legacy_rpc_error_handler.js'),
         ],
+        
         # This bundle includes the main pos assets.
         'point_of_sale.assets': [
+            ('include', 'web._assets_helpers'),
+            'web/static/src/libs/bootstrap/pre_variables.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
+            'web/static/src/legacy/scss/bootstrap_overridden.scss',
+            ('include', 'web._assets_bootstrap'),
+            'web/static/src/**/**/*.variables.scss',
+            'web/static/src/webclient/webclient.scss',
+
             'web/static/fonts/fonts.scss',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/daterangepicker/daterangepicker.css',
             'point_of_sale/static/src/css/pos.css',
+
+            'point_of_sale/static/src/scss/ProductScreen.scss',
+            'point_of_sale/static/src/scss/ActionpadWidget.scss',
+            'point_of_sale/static/src/scss/NumpadWidget.scss',
+            'point_of_sale/static/src/scss/Orderline.scss',
+            'point_of_sale/static/src/scss/OrderlineDetails.scss',
+            'point_of_sale/static/src/scss/OrderSummary.scss',
+
+
             'point_of_sale/static/src/css/pos_receipts.css',
             'point_of_sale/static/src/css/popups/product_info_popup.css',
             'point_of_sale/static/src/css/popups/common.css',
