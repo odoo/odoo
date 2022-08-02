@@ -217,6 +217,7 @@ class HrEmployeePrivate(models.Model):
         employees_scheduled.write({'work_permit_scheduled_activity': True})
 
     def read(self, fields, load='_classic_read'):
+        # TODO doesn't work with mix of subordinates and non-subordinates...
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self).read(fields, load=load)
         private_fields = set(fields).difference(self.env['hr.employee.public']._fields.keys())

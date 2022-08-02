@@ -188,6 +188,9 @@ class IrRule(models.Model):
         return res
 
     def _make_access_error(self, operation, records):
+        # TODO debug - remove
+        from traceback import print_stack
+        print_stack()
         _logger.info('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, records.ids[:6], self._uid, records._name)
 
         model = records._name
