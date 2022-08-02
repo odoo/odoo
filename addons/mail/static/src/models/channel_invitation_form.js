@@ -17,7 +17,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickCopy(ev) {
-            await navigator.clipboard.writeText(this.thread.channel.invitationLink);
+            await navigator.clipboard.writeText(this.channel.invitationLink);
             this.messaging.notify({
                 message: this.env._t('Link copied!'),
                 type: 'success',
@@ -29,22 +29,22 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickInvite(ev) {
-            if (this.thread.channel && this.thread.channel.channel_type === 'chat') {
+            if (this.channel && this.channel.channel_type === 'chat') {
                 const partners_to = [...new Set([
                     this.messaging.currentPartner.id,
-                    ...this.thread.members.map(member => member.id),
+                    ...this.channel.thread.members.map(member => member.id),
                     ...this.selectedPartners.map(partner => partner.id),
                 ])];
                 const channel = await this.messaging.models['Channel'].createGroupChat({ partners_to });
-                if (this.thread.rtc) {
+                if (this.channel.thread.rtc) {
                     /**
                      * if we were in a RTC call on the current thread, we move to the new group chat.
                      * A smoother transfer would be moving the RTC sessions from one channel to
                      * the other (server-side too), but it would be considerably more complex.
                      */
                     await channel.thread.toggleCall({
-                        startWithVideo: !!this.thread.rtc.videoTrack,
-                        videoType: this.thread.rtc.sendUserVideo ? 'user-video' : 'display',
+                        startWithVideo: Boolean(this.channel.thread.rtc.videoTrack),
+                        videoType: this.channel.thread.rtc.sendUserVideo ? 'user-video' : 'display',
                     });
                 }
                 if (channel.exists()) {
@@ -54,10 +54,10 @@ registerModel({
                 await this.messaging.rpc(({
                     model: 'mail.channel',
                     method: 'add_members',
-                    args: [[this.thread.id]],
+                    args: [[this.channel.id]],
                     kwargs: {
                         partner_ids: this.selectedPartners.map(partner => partner.id),
-                        invite_to_rtc_call: !!this.thread.rtc,
+                        invite_to_rtc_call: Boolean(this.channel.thread.rtc),
                     },
                 }));
             }
@@ -130,7 +130,7 @@ registerModel({
                 hasSearchRpcInProgress: true,
             });
             try {
-                const channelId = (this.thread && this.thread.model === 'mail.channel') ? this.thread.id : undefined;
+                const channelId = this.channel ? this.channel.id : undefined;
                 const { count, partners: partnersData } = await this.messaging.rpc(
                     {
                         model: 'res.partner',
@@ -163,29 +163,46 @@ registerModel({
          * @returns {string|FieldCommand}
          */
         _computeAccessRestrictedToGroupText() {
-            if (!this.thread) {
+            if (!this.channel) {
                 return clear();
             }
             if (
-                !this.thread.channel.authorizedGroupFullName ||
-                this.thread.channel.public !== 'groups'
+                !this.channel.authorizedGroupFullName ||
+                this.channel.public !== 'groups'
             ) {
                 return clear();
             }
             return sprintf(
                 this.env._t('Access restricted to group "%(groupFullName)s"'),
-                { 'groupFullName': this.thread.channel.authorizedGroupFullName }
+                { 'groupFullName': this.channel.authorizedGroupFullName }
             );
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeChannel() {
+            if (
+                this.popoverViewOwner &&
+                this.popoverViewOwner.threadViewTopbarOwnerAsInvite &&
+                this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread.channel
+            ) {
+                return replace(this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread.channel);
+            }
+            if (this.chatWindow && this.chatWindow.thread.channel) {
+                return replace(this.chatWindow.thread.channel);
+            }
+            return clear();
         },
         /**
          * @private
          * @returns {string}
          */
         _computeInviteButtonText() {
-            if (!this.thread || !this.thread.channel) {
+            if (!this.channel) {
                 return clear();
             }
-            switch (this.thread.channel.channel_type) {
+            switch (this.channel.channel_type) {
                 case 'chat':
                     return this.env._t("Create group chat");
                 case 'group':
@@ -213,27 +230,15 @@ registerModel({
             }
             return insertAndReplace(this.selectedPartners.map(partner => ({ partner: replace(partner) })));
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeThread() {
-            if (
-                this.popoverViewOwner &&
-                this.popoverViewOwner.threadViewTopbarOwnerAsInvite &&
-                this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread
-            ) {
-                return replace(this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread);
-            }
-            if (this.chatWindow && this.chatWindow.thread) {
-                return replace(this.chatWindow.thread);
-            }
-            return clear();
-        },
     },
     fields: {
         accessRestrictedToGroupText: attr({
             compute: '_computeAccessRestrictedToGroupText',
+        }),
+        channel: one('Channel', {
+            compute: '_computeChannel',
+            readonly: true,
+            required: true,
         }),
         chatWindow: one('ChatWindow', {
             inverse: 'channelInvitationForm',
@@ -310,14 +315,6 @@ registerModel({
             compute: '_computeSelectedPartnerViews',
             inverse: 'channelInvitationFormOwner',
             isCausal: true,
-        }),
-        /**
-         * States the thread on which this list operates (if any).
-         */
-        thread: one('Thread', {
-            compute: '_computeThread',
-            readonly: true,
-            required: true,
         }),
     },
 });
