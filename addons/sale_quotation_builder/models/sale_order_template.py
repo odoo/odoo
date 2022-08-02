@@ -11,6 +11,7 @@ class SaleOrderTemplate(models.Model):
     website_description = fields.Html(
         string="Website Description",
         translate=html_translate,
+        sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False)
 

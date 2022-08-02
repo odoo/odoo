@@ -11,7 +11,7 @@
     <record id="group_website_designer" model="res.groups">
         <field name="name">Editor and Designer</field>
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
-        <field name="implied_ids" eval="[(4, ref('group_website_publisher'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_website_publisher')), (4, ref('base.group_sanitize_override'))]"/>
         <field name="category_id" ref="base.module_category_website_website"/>
     </record>
 
