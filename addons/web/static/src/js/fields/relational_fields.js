@@ -24,6 +24,7 @@ var Dialog = require('web.Dialog');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 var Pager = require('web.Pager');
+var Domain = require('web.Domain');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -119,8 +120,21 @@ var FieldMany2One = AbstractField.extend({
         this.orderer = new concurrency.DropMisordered();
 
         // should normally also be set, except in standalone M20
-        this.can_create = ('can_create' in this.attrs ? JSON.parse(this.attrs.can_create) : true) &&
-            !this.nodeOptions.no_create;
+        var can_create = ('can_create' in this.attrs ? JSON.parse(this.attrs.can_create) : true)
+
+        /** Alterado pela Multidados
+         * Muda forma de obter o 'no_create' de um campo many2one, antes era observado os valores
+         * True ou False, agora é possível utilizar um domínio.
+         */
+        if (typeof(this.nodeOptions.no_create) === "object"){
+            // Caso o valor da opção 'no_create' seja um domínio
+            can_create = can_create && !new Domain(this.nodeOptions.no_create, record.data).compute(record.data)
+        } else if (this.nodeOptions.no_create != undefined) {
+            // Caso o valor da opção seja 'bool' ou 'number'
+            can_create = can_create && !this.nodeOptions.no_create;
+        }
+        this.can_create = can_create;
+
         this.can_write = 'can_write' in this.attrs ? JSON.parse(this.attrs.can_write) : true;
 
         this.nodeOptions = _.defaults(this.nodeOptions, {
@@ -517,7 +531,11 @@ var FieldMany2One = AbstractField.extend({
                         classname: 'o_m2o_dropdown_option',
                     });
                 }
-                var create_enabled = self.can_create && !self.nodeOptions.no_create;
+                /** Alterado pela Multidados
+                 * A verificação do nodeOptions.no_create já foi realizada e adicionada ao
+                 * self.can_create, então não precisa ser verificado novamente.
+                */
+                var create_enabled = self.can_create; // && !self.nodeOptions.no_create;
                 // quick create
                 var raw_result = _.map(result, function (x) { return x[1]; });
                 if (create_enabled && !self.nodeOptions.no_quick_create &&
