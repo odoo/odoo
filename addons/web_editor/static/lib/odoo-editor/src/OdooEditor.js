@@ -2020,7 +2020,7 @@ export class OdooEditor extends EventTarget {
                 show = false;
             }
         }
-        if (this.options.autohideToolbar) {
+        if (this.options.autohideToolbar && !this.toolbar.contains(sel.anchorNode)) {
             if (show !== undefined && !this.isMobile) {
                 this.toolbar.style.visibility = show ? 'visible' : 'hidden';
             }
@@ -2137,7 +2137,7 @@ export class OdooEditor extends EventTarget {
         undoButton && undoButton.classList.toggle('disabled', !this.historyCanUndo());
         const redoButton = this.toolbar.querySelector('#redo');
         redoButton && redoButton.classList.toggle('disabled', !this.historyCanRedo());
-        if (this.options.autohideToolbar && !this.isMobile) {
+        if (this.options.autohideToolbar && !this.isMobile && !this.toolbar.contains(sel.anchorNode)) {
             this._positionToolbar();
         }
     }
