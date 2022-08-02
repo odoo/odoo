@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import {
     click,
@@ -11350,5 +11351,55 @@ QUnit.module("Views", (hooks) => {
                     </form>`,
         });
         assert.containsOnce(target, ".o_field_legacy_one2many .o_legacy_list_view");
+    });
+
+    QUnit.test("Action Button clicked with failing action", async function (assert) {
+        const handler = (ev) => {
+            assert.step("error");
+            // need to preventDefault to remove error from console (so python test pass)
+            ev.preventDefault();
+        };
+        window.addEventListener("unhandledrejection", handler);
+        registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
+        patchWithCleanup(QUnit, {
+            onUnhandledRejection: () => {},
+        });
+
+        class MyComponent extends Component {
+            setup() {
+                throw new Error("test");
+            }
+        }
+        MyComponent.template = xml`<div/>`;
+        registry.category("actions").add("someaction", MyComponent);
+
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box test">
+                            <button class="oe_stat_button" type="action" name="someaction">
+                                Test
+                            </button>
+                        </div>
+                    </sheet>
+                </form>`,
+            "partner,false,search": "<search></search>",
+        };
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            res_id: 1,
+            type: "ir.actions.act_window",
+            target: "current",
+            res_model: "partner",
+            view_mode: "form",
+            views: [[false, "form"]],
+        });
+        assert.containsOnce(target, ".o_form_view .test");
+
+        await click(target.querySelector(".oe_stat_button"));
+        assert.containsOnce(target, ".o_form_view .test");
+        assert.verifySteps(["error"]);
     });
 });

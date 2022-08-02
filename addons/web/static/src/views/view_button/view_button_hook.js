@@ -80,12 +80,16 @@ export function useViewButtons(model, ref, options = {}) {
                         comp.render(true); // FIXME WOWL reactivity
                     },
                 });
+                let error;
                 try {
                     await action.doActionButton(doActionParams);
                 } catch (_e) {
+                    error = _e;
                     await doActionParams.onClose();
-                } finally {
-                    enableButtons(getEl(), manuallyDisabledButtons);
+                }
+                enableButtons(getEl(), manuallyDisabledButtons);
+                if (error) {
+                    return Promise.reject(error);
                 }
             }
 
