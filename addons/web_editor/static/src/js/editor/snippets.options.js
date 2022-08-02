@@ -82,7 +82,16 @@ function _buildElement(tagName, title, options) {
  */
 function _buildTitleElement(title) {
     const titleEl = document.createElement('we-title');
-    titleEl.textContent = title;
+    // As a stable fix, to not touch XML templates and break existing
+    // translations, the ⌙ character is automatically replaced by └ which makes
+    // more sense for the usecase and should work properly in all browsers. The
+    // ⌙ character is actually rendered mirrored on Windows 11 Chrome (and
+    // others) as the font used for those unicode characters is left to the
+    // browser. We could force a font of our own but it's probably not worth it.
+    // TODO a better solution with a SVG or CSS solution has to be done in
+    // master. That would unify the look of the symbol across all browsers and
+    // also prevent special characters to be placed in translations.
+    titleEl.textContent = title.replace(/⌙/g, '└');
     return titleEl;
 }
 /**
