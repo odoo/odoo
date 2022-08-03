@@ -12,7 +12,7 @@ except ImportError:
 
 import odoo.tools
 from odoo.tests import HOST, common
-from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler
+from ..websocket import CloseCode, WebsocketConnectionHandler
 
 
 class WebsocketCase(common.HttpCase):
