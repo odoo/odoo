@@ -616,15 +616,8 @@ function parseFloat(value) {
  * @throws {Error} if no float is found or if parameter does not respect monetary condition
  */
 function parseMonetary(value, field, options) {
-    var values = value.split('&nbsp;');
-    if (values.length === 1) {
-        values = value.split(NBSP);
-    }
-    if (values.length === 1) {
+    if (!value.includes(NBSP) && !value.includes('&nbsp;')) {
         return parseFloat(value);
-    }
-    else if (values.length !== 2) {
-        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
     }
     options = options || {};
     var currency = options.currency;
@@ -636,7 +629,18 @@ function parseMonetary(value, field, options) {
         }
         currency = session.get_currency(currency_id);
     }
-    return parseFloat(values[0] === currency.symbol ? values[1] : values[0]);
+    if (!value.includes(currency.symbol)) {
+        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
+    }
+    if (currency.position === 'before') {
+        return parseFloat(value
+            .replace(`${ currency.symbol }${ NBSP }`, '')
+            .replace(`${ currency.symbol }&nbsp;`, ''));
+    } else {
+        return parseFloat(value
+            .replace(`${ NBSP }${ currency.symbol }`, '')
+            .replace(`&nbsp;${ currency.symbol }`, ''));
+    }
 }
 
 /**
