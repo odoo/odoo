@@ -35,16 +35,6 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
             }),
         });
     },
-
-    /**
-     * Overridden to avoid calling the "init" endpoint as it requires a im_livechat.channel linked
-     * to work properly.
-     *
-     * @override
-     */
-    willStart: function () {
-        return this.messaging.publicLivechatGlobal.loadQWebTemplate();
-    },
 });
 
 publicWidget.registry.livechatChatbotTestScript = publicWidget.Widget.extend({
