@@ -317,6 +317,32 @@ QUnit.module('Bus', {
             "Tab 2: addChannel beta",
         ]);
     });
+
+    QUnit.test('two tabs adding a different channel', async function (assert) {
+        const firstTabEnv = await makeTestEnv({
+            mockRPC: function (route, args) {
+                if (route === '/longpolling/poll') {
+                    assert.step(args.channels.join());
+                    return testUtils.makeTestPromise();
+                }
+            }
+        });
+        const secondTabEnv = await makeTestEnv({
+            mockRPC: function (route, args) {
+                if (route === '/longpolling/poll') {
+                    throw new Error("slave tab should not use the polling route");
+                }
+            }
+        });
+
+        firstTabEnv.services['bus_service'].addChannel("alpha");
+        await nextTick();
+        assert.verifySteps(["alpha"]);
+
+        secondTabEnv.services['bus_service'].addChannel("beta");
+        await nextTick();
+        assert.verifySteps(["alpha,beta"]);
+    });
 });
 
 });
