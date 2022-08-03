@@ -91,6 +91,21 @@ registerModel({
             return clear();
         },
         /**
+         * Compares the last message of the conversation to this livechat's operator id.
+         *
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsLastMessageFromCustomer() {
+            if (!this.lastMessage) {
+                return clear();
+            }
+            if (!this.publicLivechat) {
+                return clear();
+            }
+            return this.lastMessage.authorId !== this.publicLivechat.operator.id;
+        },
+        /**
           * @private
           * @returns {FieldCommand}
           */
@@ -257,6 +272,10 @@ registerModel({
             default: false,
         }),
         isAvailableForMe: attr({
+            default: false,
+        }),
+        isLastMessageFromCustomer: attr({
+            compute: '_computeIsLastMessageFromCustomer',
             default: false,
         }),
         isTestChatbot: attr({
