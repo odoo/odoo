@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
+import { click, getFixture, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 const MY_IMAGE =
@@ -32,7 +32,7 @@ QUnit.module("Fields", (hooks) => {
                             id: 1,
                             display_name: "first record",
                             timmy: [],
-                            document: "coucou==\n",
+                            document: "coucou==",
                         },
                         {
                             id: 2,
@@ -214,6 +214,51 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test("ImageField preview is updated when an image is uploaded", async function (assert) {
+        const imageData = Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)));
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form>
+                <field name="document" widget="image" options="{'size': [90, 90]}"/>
+            </form>`,
+        });
+
+        assert.strictEqual(
+            target.querySelector('div[name="document"] > img').dataset.src,
+            "data:image/png;base64,coucou==",
+            "the image should have the initial src"
+        );
+        await click(target, ".o_form_button_edit");
+        // Whitebox: replace the event target before the event is handled by the field so that we can modify
+        // the files that it will take into account. This relies on the fact that it reads the files from
+        // event.target and not from a direct reference to the input element.
+        const fileInput = target.querySelector("input[type=file]");
+        const fakeInput = {
+            files: [new File([imageData], "fake_file.png", { type: "png" })],
+        };
+        fileInput.addEventListener(
+            "change",
+            (ev) => {
+                Object.defineProperty(ev, "target", { value: fakeInput });
+            },
+            { capture: true }
+        );
+
+        fileInput.dispatchEvent(new Event("change"));
+        // It can take some time to encode the data as a base64 url
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        // Wait for a render
+        await nextTick();
+        assert.strictEqual(
+            target.querySelector("div[name=document] > img").dataset.src,
+            `data:image/png;base64,${MY_IMAGE}`,
+            "the image should have the new src"
+        );
+    });
+
     QUnit.test("ImageField: option accepted_file_extensions", async function (assert) {
         await makeView({
             type: "form",
@@ -269,7 +314,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "ImageField displays the right images with zoom and preview_image options",
         async function (assert) {
-            serverData.models.partner.records[0].document = MY_IMAGE;
+            serverData.models.partner.records[0].document = "3 kb";
 
             await makeView({
                 type: "form",
@@ -282,9 +327,10 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             });
 
-            assert.strictEqual(
-                JSON.parse(target.querySelector(".o_field_image img").dataset["tooltipInfo"]).url,
-                `data:image/png;base64,${MY_IMAGE}`,
+            assert.ok(
+                JSON.parse(
+                    target.querySelector(".o_field_image img").dataset["tooltipInfo"]
+                ).url.endsWith("/web/image?model=partner&id=1&field=document"),
                 "tooltip show the full image from the field value"
             );
             assert.strictEqual(
@@ -295,9 +341,7 @@ QUnit.module("Fields", (hooks) => {
             assert.ok(
                 target
                     .querySelector(".o_field_image img")
-                    .dataset["src"].includes(
-                        "/web/image?model=partner&id=1&field=document_preview"
-                    ),
+                    .dataset.src.endsWith("/web/image?model=partner&id=1&field=document_preview"),
                 "image src is the preview image given in option"
             );
         }
