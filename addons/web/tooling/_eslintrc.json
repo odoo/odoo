@@ -21,7 +21,10 @@
     "valid-typeof": ["error"],
     "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false, "caughtErrors": "all", "caughtErrorsIgnorePattern": "^_" }],
     "curly": ["error", "all"],
-    "prefer-const": ["error"]
+    "prefer-const": ["error", {
+      "destructuring": "all",
+      "ignoreReadBeforeAssign": true
+    }]
   },
   "globals": {
     "owl": "readonly",
