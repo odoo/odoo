@@ -916,9 +916,9 @@ QUnit.module("Views", (hooks) => {
             "graph should be a classic line chart."
         );
         assert.strictEqual(
-            getScaleY(graph).every((y) => y.stacked),
-            false,
-            "The y axes should have stacked property set to false"
+            getScaleY(graph).every((y) => y.stacked == undefined),
+            true,
+            "The y axes should have stacked property set to undefined"
         );
     });
 

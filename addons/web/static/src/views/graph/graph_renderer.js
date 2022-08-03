@@ -439,7 +439,7 @@ export class GraphRenderer extends Component {
                 suggestedMax: 0,
                 suggestedMin: 0,
             },
-            stacked: mode === "line" && stacked,
+            stacked: mode === "line" && stacked ? stacked : undefined,
         };
         return { xAxes: [xAxe], yAxes: [yAxe] };
     }
