@@ -6768,6 +6768,18 @@ class BaseModel(metaclass=MetaModel):
         # make a snapshot based on the initial values of record
         snapshot0 = Snapshot(record, nametree, fetch=(not first_call))
 
+        for name in initial_values:
+            # TODO: The parent field on "record" can be False, if it was changed,
+            # (even if if was changed to a not Falsy value) because of
+            # >>> initial_values = dict(values, **dict.fromkeys(names, False))
+            # If it's the case when we will read the properties field on this record,
+            # it will return False as well (no parent == no definition) but we need
+            # "snapshot0" to have the old value to be able to compare it with the new one
+            # and trigger the onchange if necessary.
+            field = self._fields.get(name)
+            if field and field.type == 'properties':
+                snapshot0[name] = initial_values[name]
+
         # store changed values in cache; also trigger recomputations based on
         # subfields (e.g., line.a has been modified, line.b is computed stored
         # and depends on line.a, but line.b is not in the form view)
