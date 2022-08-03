@@ -555,6 +555,7 @@ class Registry(Mapping):
             # recreate missing tables
             for name in missing:
                 _logger.info("Recreate table of model %s.", name)
+                env[name]._auto_init()
                 env[name].init()
             env.flush_all()
             # check again, and log errors if tables are still missing
