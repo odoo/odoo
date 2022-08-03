@@ -3229,8 +3229,10 @@ class AccountMove(models.Model):
             default_email_layout_xmlid="mail.mail_notification_paynow",
             model_description=self.with_context(lang=lang).type_name,
             force_email=True,
+            active_ids=self.ids,
         )
-        return {
+
+        report_action = {
             'name': _('Send Invoice'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
@@ -3241,6 +3243,11 @@ class AccountMove(models.Model):
             'target': 'new',
             'context': ctx,
         }
+
+        if self.env.is_admin() and not self.env.company.external_report_layout_id and not self.env.context.get('discard_logo_check'):
+            return self.env['ir.actions.report']._action_configure_external_report_layout(report_action)
+
+        return report_action
 
     def _get_new_hash(self, secure_seq_number):
         """ Returns the hash to write on journal entries when they get posted"""
