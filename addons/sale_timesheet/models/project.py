@@ -351,36 +351,28 @@ class Project(models.Model):
                 domain_per_model.get(Timesheet._name, []),
                 timesheet_domain,
             ])
-        timesheet_query = Timesheet._where_calc(timesheet_domain)
-        Timesheet._apply_ir_rules(timesheet_query, 'read')
-        timesheet_query_str, timesheet_params = timesheet_query.select(
-            f'{Timesheet._table}.project_id AS id',
-            f'{Timesheet._table}.so_line AS sale_line_id',
-        )
+        return super()._get_sale_order_items_query(domain_per_model)
 
-        EmployeeMapping = self.env['project.sale.line.employee.map']
-        employee_mapping_domain = [('project_id', 'in', self.ids), ('project_id.allow_billable', '=', True), ('sale_line_id', '!=', False)]
-        if EmployeeMapping._name in domain_per_model:
-            employee_mapping_domain = expression.AND([
-                domain_per_model[EmployeeMapping._name],
-                employee_mapping_domain,
-            ])
-        employee_mapping_query = EmployeeMapping._where_calc(employee_mapping_domain)
-        EmployeeMapping._apply_ir_rules(employee_mapping_query, 'read')
-        employee_mapping_query_str, employee_mapping_params = employee_mapping_query.select(
-            f'{EmployeeMapping._table}.project_id AS id',
-            f'{EmployeeMapping._table}.sale_line_id',
-        )
-
-        query._tables['project_sale_order_item'] = ' UNION '.join([
-            query._tables['project_sale_order_item'],
-            timesheet_query_str,
-            employee_mapping_query_str,
-        ])
-        query._where_params += timesheet_params + employee_mapping_params
-        return query
-
-    def _get_profitability_labels(self):
+    def _get_profitability_items(self):
+        if not self.user_has_groups('project.group_project_manager'):
+            return {'data': []}
+        data = []
+        if self.allow_billable:
+            profitability = self._get_profitability_common()
+            margin_color = False
+            if not float_is_zero(profitability['margin'], precision_digits=0):
+                margin_color = profitability['margin'] > 0 and 'green' or 'red'
+            data += [{
+                'name': _("Revenues"),
+                'value': format_amount(self.env, profitability['revenues'], self.company_id.currency_id)
+            }, {
+                'name': _("Costs"),
+                'value': format_amount(self.env, profitability['costs'], self.company_id.currency_id)
+            }, {
+                'name': _("Margin"),
+                'color': margin_color,
+                'value': format_amount(self.env, profitability['margin'], self.company_id.currency_id)
+            }]
         return {
             **super()._get_profitability_labels(),
             'billable_fixed': _lt('Timesheets (Fixed Price)'),
