@@ -27,6 +27,8 @@ class WebsiteSaleDelivery(WebsiteSale):
         order = request.website.sale_get_order()
         carrier_id = int(post['carrier_id'])
         if order:
+            if any(tx.state not in ("canceled", "error") for tx in order.transaction_ids):
+                raise UserError(_('It seems that there is already a transaction for your order, you can not change the delivery method anymore'))
             order._check_carrier_quotation(force_carrier_id=carrier_id)
         return self._update_website_sale_delivery_return(order, **post)
 
