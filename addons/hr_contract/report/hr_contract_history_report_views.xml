@@ -144,7 +144,8 @@
                   edit="false"
                   delete="false"
                   duplicate="false"
-                  import="false">
+                  import="false"
+                  create="false">
                 <field name="employee_id" widget="many2one_avatar_employee"/>
                 <field name="date_hired"/>
                 <field name="is_under_contract" invisible="1"/>
@@ -168,7 +169,7 @@
         <field name="name">hr.contract.history.view.kanban</field>
         <field name="model">hr.contract.history</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_small_column" default_order="date_end" sample="1">
+            <kanban class="o_kanban_small_column" default_order="date_end" sample="1" create="0">
                 <field name="employee_id"/>
                 <field name="activity_state"/>
                 <field name="state"/>
