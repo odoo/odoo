@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { getFixture, clickEdit, triggerEvents } from "@web/../tests/helpers/utils";
+import { clickEdit, getFixture, triggerEvents } from "@web/../tests/helpers/utils";
+import { pagerNext } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -22,10 +23,8 @@ QUnit.module("Fields", (hooks) => {
                         },
                     },
                     records: [
-                        {
-                            id: 1,
-                            foo: `yop`,
-                        },
+                        { id: 1, foo: `yop` },
+                        { id: 2, foo: `blip` },
                     ],
                 },
             },
@@ -74,5 +73,25 @@ QUnit.module("Fields", (hooks) => {
         await clickEdit(target);
         await triggerEvents(target, ".ace-view-editor textarea", ["focus", "click"]);
         assert.hasClass(target.querySelector(".ace-view-editor"), "ace_focus");
+    });
+
+    QUnit.test("AceEditorField is updated on value change", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            resIds: [1, 2],
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="foo" widget="ace" />
+                </form>`,
+        });
+
+        assert.ok(target.querySelector(".o_field_ace").textContent.includes("yop"));
+
+        await pagerNext(target);
+
+        assert.ok(target.querySelector(".o_field_ace").textContent.includes("blip"));
     });
 });
