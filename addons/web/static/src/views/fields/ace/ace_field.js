@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { formatText } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillStart, useEffect, useRef } = owl;
+const { Component, onWillStart, onWillUpdateProps, useEffect, useRef } = owl;
 
 export class AceField extends Component {
     setup() {
@@ -25,9 +25,12 @@ export class AceField extends Component {
             return Promise.all(proms);
         });
 
+        onWillUpdateProps(this.updateAce);
+
         useEffect(
             () => {
                 this.setupAce();
+                this.updateAce(this.props);
                 return () => this.destroyAce();
             },
             () => [this.editorRef.el]
@@ -52,31 +55,35 @@ export class AceField extends Component {
             useSoftTabs: true,
         });
 
+        this.aceEditor.on("blur", this.onBlur.bind(this));
+    }
+
+    updateAce({ mode, readonly, value }) {
+        if (!this.aceEditor) {
+            return;
+        }
+
         this.aceSession.setOptions({
-            mode: `ace/mode/${this.props.mode === "xml" ? "qweb" : this.props.mode}`,
+            mode: `ace/mode/${mode === "xml" ? "qweb" : mode}`,
         });
 
         this.aceEditor.setOptions({
-            readOnly: this.props.readonly,
-            highlightActiveLine: !this.props.readonly,
-            highlightGutterLine: !this.props.readonly,
+            readOnly: readonly,
+            highlightActiveLine: !readonly,
+            highlightGutterLine: !readonly,
         });
 
         this.aceEditor.renderer.setOptions({
-            displayIndentGuides: !this.props.readonly,
-            showGutter: !this.props.readonly,
+            displayIndentGuides: !readonly,
+            showGutter: !readonly,
         });
 
-        this.aceEditor.renderer.$cursorLayer.element.style.display = this.props.readonly
-            ? "none"
-            : "block";
+        this.aceEditor.renderer.$cursorLayer.element.style.display = readonly ? "none" : "block";
 
-        const formattedValue = formatText(this.props.value);
+        const formattedValue = formatText(value);
         if (this.aceSession.getValue() !== formattedValue) {
             this.aceSession.setValue(formattedValue);
         }
-
-        this.aceEditor.on("blur", this.onBlur.bind(this));
     }
 
     destroyAce() {
