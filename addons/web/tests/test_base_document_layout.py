@@ -223,3 +223,16 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
     #         self.assertColors(doc_layout, default_colors)
     #         doc_layout.report_layout_id = self.report_layout2
     #         self.assertColors(doc_layout, self.report_layout2)
+
+    def test_company_details_blank_lines(self):
+        """Test that the company address is generated dynamically using only the fields that are defined,
+        without leaving any blank lines."""
+        # Make sure there is no blank line in the company details.
+        doc_layout_1 = self.env['base.document.layout'].create({'company_id': self.company.id})
+        self.assertFalse('\n<br>\n' in doc_layout_1.company_details)
+
+        # Make sure that 'street2' (an optional field, initially blank),
+        # appears in the company details when it is defined.
+        self.company.write({'street2': 'street_2_detail'})
+        doc_layout_2 = self.env['base.document.layout'].create({'company_id': self.company.id})
+        self.assertTrue('street_2_detail' in doc_layout_2.company_details)
