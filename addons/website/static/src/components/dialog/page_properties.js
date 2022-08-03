@@ -162,6 +162,7 @@ DuplicatePageDialog.props = {
 export const pagePropertiesProps = {
     title: _t('Page Properties'),
     resModel: 'website.page',
+    size: 'md',
     context: {
         form_view_ref: 'website.website_page_properties_view_form',
     },

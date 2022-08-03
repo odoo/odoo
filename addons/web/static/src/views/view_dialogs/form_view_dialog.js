@@ -115,6 +115,7 @@ FormViewDialog.props = {
     preventCreate: { type: Boolean, optional: true },
     preventEdit: { type: Boolean, optional: true },
     isToMany: { type: Boolean, optional: true },
+    size: { type: String, optional: true },
 };
 FormViewDialog.defaultProps = {
     onRecordSaved: () => {},
