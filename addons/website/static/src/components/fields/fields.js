@@ -1,24 +1,32 @@
 /** @odoo-module **/
 
 import {PageDependencies} from '@website/components/dialog/page_properties';
+import {standardFieldProps} from '@web/views/fields/standard_field_props';
+import {useInputField} from '@web/views/fields/input_field_hook';
+import {useService} from '@web/core/utils/hooks';
 import {Switch} from '@website/components/switch/switch';
 import AbstractFieldOwl from 'web.AbstractFieldOwl';
 import fieldRegistry from 'web.field_registry_owl';
+import {registry} from '@web/core/registry';
+import {formatChar} from '@web/views/fields/formatters';
 
-const {useState, onWillStart} = owl;
+const {Component, useState, onWillStart} = owl;
 
-class FieldPageUrl extends AbstractFieldOwl {
+/**
+ * Displays website page dependencies and URL redirect options when the page URL
+ * is updated.
+ */
+class PageUrlField extends Component {
     setup() {
-        super.setup();
-
         this.state = useState({
             redirect_old_url: false,
-            url: this.value,
+            url: this.props.value,
             redirect_type: '301',
         });
+        useInputField({getValue: () => this.props.value.url || this.props.value});
 
         this.serverUrl = window.location.origin;
-        this.pageUrl = this.value;
+        this.pageUrl = this.props.value;
     }
 
     get enableRedirect() {
@@ -27,41 +35,55 @@ class FieldPageUrl extends AbstractFieldOwl {
 
     onChangeRedirectOldUrl(value) {
         this.state.redirect_old_url = value;
+        this.updateValues();
     }
 
-    /**
-     * @override
-     */
-    commitChanges() {
-        if (this.enableRedirect) {
-            this._setValue(this.state);
-        }
-        return super.commitChanges();
+    updateValues() {
+        // HACK: update redirect data from the URL field.
+        // TODO: remove this and use a transient model with redirect fields.
+        this.props.update(this.state);
     }
 }
-FieldPageUrl.components = {Switch, PageDependencies};
-FieldPageUrl.supportedFieldTypes = ['char'];
-FieldPageUrl.template = 'website.FieldPageUrl';
+PageUrlField.components = {Switch, PageDependencies};
+PageUrlField.template = 'website.PageUrlField';
+PageUrlField.props = {
+    ...standardFieldProps,
+    placeholder: {type: String, optional: true},
+};
+PageUrlField.extractProps = ({attrs}) => {
+    return {
+        placeholder: attrs.placeholder,
+    };
+};
+PageUrlField.supportedTypes = ['char'];
 
-class FieldPageName extends AbstractFieldOwl {
+registry.category("fields").add("page_url", PageUrlField);
+
+/**
+ * Used to display key dependencies and warn user about changing a special file
+ * (website.page & supported mimetype) name, since the key will be updated too.
+ */
+class PageNameField extends Component {
     setup() {
-        super.setup();
+        this.orm = useService('orm');
 
+        useInputField({getValue: () => this.props.value || ''});
         this.state = useState({
-            name: this.value,
+            name: this.props.value,
         });
 
-        this.pageName = this.value;
+        this.pageName = this.props.value;
         this.supportedMimetypes = {};
 
         onWillStart(() => this.onWillStart());
     }
 
+    get formattedPageName() {
+        return formatChar(this.props.value);
+    }
+
     async onWillStart() {
-        this.supportedMimetypes = await this.rpc({
-            model: 'website',
-            method: 'guess_mimetype',
-        });
+        this.supportedMimetypes = await this.orm.call('website', 'guess_mimetype', []);
     }
 
     get warnAboutCall() {
@@ -76,20 +98,21 @@ class FieldPageName extends AbstractFieldOwl {
         const ext = '.' + this.pageName.split('.').pop();
         return ext in this.supportedMimetypes && ext !== '.html';
     }
-
-    /**
-     * @override
-     */
-    commitChanges() {
-        if (this.nameChanged) {
-            this._setValue(this.state.name);
-        }
-        return super.commitChanges();
-    }
 }
-FieldPageName.components = {PageDependencies};
-FieldPageName.supportedFieldTypes = ['char'];
-FieldPageName.template = 'website.FieldPageName';
+PageNameField.components = {PageDependencies};
+PageNameField.template = 'website.PageNameField';
+PageNameField.props = {
+    ...standardFieldProps,
+    placeholder: {type: String, optional: true},
+};
+PageNameField.extractProps = ({attrs}) => {
+    return {
+        placeholder: attrs.placeholder,
+    };
+};
+PageNameField.supportedTypes = ['char'];
+
+registry.category("fields").add("page_name", PageNameField);
 
 /**
  * Displays 'char' field's value prefixed by a FA icon.
@@ -111,6 +134,4 @@ class FieldFaPrefix extends AbstractFieldOwl {
 FieldFaPrefix.supportedFieldTypes = ['char'];
 FieldFaPrefix.template = 'website.FieldFaPrefix';
 
-fieldRegistry.add('page_url', FieldPageUrl);
-fieldRegistry.add('page_name', FieldPageName);
 fieldRegistry.add('fa_prefix', FieldFaPrefix);
