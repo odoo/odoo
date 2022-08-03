@@ -38,6 +38,10 @@
                 t-on-click="toggleStacked"
                 t-att-class="{ active: model.metaData.stacked }"
             />
+            <button class="btn btn-secondary fa fa-signal o_graph_button" data-tooltip="Cumulative" aria-label="Cumulative"
+                t-on-click="toggleCumulated"
+                t-att-class="{ active: model.metaData.cumulated }"
+            />
         </div>
         <div t-if="model.metaData.mode !== 'pie' and model.metaData.domains.length === 1" class="btn-group" role="toolbar" aria-label="Sort graph" name="toggleOrderToolbar">
             <button class="btn btn-secondary fa fa-sort-amount-desc o_graph_button" data-tooltip="Descending" aria-label="Descending"

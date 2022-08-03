@@ -1024,6 +1024,56 @@ QUnit.module("Views", (hooks) => {
         checkDatasets(assert, graph, keysToEvaluate, expectedDatasets);
     });
 
+    QUnit.test("Cumulative prop and default line chart", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph type="line" stacked="0">
+                    <field name="bar"/>
+                    <field name="product_id"/>
+                </graph>
+            `,
+        });
+
+        assert.strictEqual(graph.model.metaData.mode, "line", "should be in line chart mode.");
+        assert.strictEqual(
+            graph.model.metaData.cumulated,
+            false,
+            "should not be cumulative by default."
+        );
+
+        await click(target, '[data-tooltip="Cumulative"]');
+        assert.strictEqual(graph.model.metaData.cumulated, true, "should be in cumulative");
+        const expectedDatasets = [
+            {
+                data: [1, 4],
+            },
+            {
+                data: [4, 4],
+            },
+        ];
+        checkDatasets(assert, graph, ["data"], expectedDatasets);
+    });
+
+    QUnit.test("Default cumulative prop", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph type="line" stacked="0" cumulated="1">
+                    <field name="bar"/>
+                    <field name="product_id"/>
+                </graph>
+            `,
+        });
+
+        assert.strictEqual(graph.model.metaData.mode, "line", "should be in line chart mode.");
+        assert.strictEqual(graph.model.metaData.cumulated, true, "should be in cumulative");
+    });
+
     QUnit.test("line chart rendering (no groupBy, several domains)", async function (assert) {
         assert.expect(7);
         const graph = await makeView({

@@ -112,6 +112,11 @@ export class GraphController extends Component {
         const { stacked } = this.model.metaData;
         this.model.updateMetaData({ stacked: !stacked });
     }
+
+    toggleCumulated() {
+        const { cumulated } = this.model.metaData;
+        this.model.updateMetaData({ cumulated: !cumulated });
+    }
 }
 
 GraphController.template = "web.GraphView";

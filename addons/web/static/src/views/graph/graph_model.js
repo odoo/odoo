@@ -125,7 +125,7 @@ export class GraphModel extends Model {
 
     /**
      * Only supposed to be called to change one or several parameters among
-     * "measure", "mode", "order", and "stacked".
+     * "measure", "mode", "order", "stacked" and "cumulated".
      * @param {Object} params
      */
     async updateMetaData(params) {
