@@ -4917,7 +4917,7 @@ QUnit.module("Views", (hooks) => {
         await mouseEnter(target.querySelector("th[data-name=foo]"));
         await nextTick(); // GES: see next nextTick comment
         assert.strictEqual(
-            target.querySelectorAll(".o-tooltip .o-tooltip--string").length,
+            target.querySelectorAll(".o-tooltip .o-tooltip--technical").length,
             0,
             "should not have rendered a tooltip"
         );
@@ -4932,7 +4932,7 @@ QUnit.module("Views", (hooks) => {
         await nextTick(); // GES: I had once an indetermist failure because of no tooltip, so for safety I add a nextTick.
 
         assert.strictEqual(
-            target.querySelectorAll(".o-tooltip .o-tooltip--string").length,
+            target.querySelectorAll(".o-tooltip .o-tooltip--technical").length,
             1,
             "should have rendered a tooltip"
         );

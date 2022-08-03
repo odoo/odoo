@@ -1865,28 +1865,28 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
         });
 
-        await mouseEnter(target.querySelector(".o_form_label[for=foo]"));
+        await mouseEnter(target.querySelector(".o_form_label[for=foo] sup"));
         await nextTick();
         assert.strictEqual(
             target.querySelector(".o-tooltip .o-tooltip--help").textContent,
             "foo tooltip"
         );
 
-        await mouseEnter(target.querySelector(".o_form_label[for=bar]"));
+        await mouseEnter(target.querySelector(".o_form_label[for=bar] sup"));
         await nextTick();
         assert.strictEqual(
             target.querySelector(".o-tooltip .o-tooltip--help").textContent,
             "bar tooltip"
         );
 
-        await mouseEnter(target.querySelector(".o_form_label[for=foo_1]"));
+        await mouseEnter(target.querySelector(".o_form_label[for=foo_1] sup"));
         await nextTick();
         assert.strictEqual(
             target.querySelector(".o-tooltip .o-tooltip--help").textContent,
             "foo tooltip"
         );
 
-        await mouseEnter(target.querySelector(".o_form_label[for=bar_1]"));
+        await mouseEnter(target.querySelector(".o_form_label[for=bar_1] sup"));
         await nextTick();
         assert.strictEqual(
             target.querySelector(".o-tooltip .o-tooltip--help").textContent,
@@ -10466,14 +10466,14 @@ QUnit.module("Views", (hooks) => {
                     </form>`,
             });
 
-            await mouseEnter(target.querySelector(".o_form_label[for=product_id]"));
+            await mouseEnter(target.querySelector(".o_form_label[for=product_id] sup"));
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o-tooltip .o-tooltip--help").textContent,
                 "this is a tooltip\n\nValues set here are company-specific."
             );
 
-            await mouseEnter(target.querySelector(".o_form_label[for=foo]"));
+            await mouseEnter(target.querySelector(".o_form_label[for=foo] sup"));
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o-tooltip .o-tooltip--help").textContent,
@@ -10509,7 +10509,7 @@ QUnit.module("Views", (hooks) => {
                     </form>`,
             });
 
-            await mouseEnter(target.querySelector(".o_form_label"));
+            await mouseEnter(target.querySelector(".o_form_label sup"));
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o-tooltip .o-tooltip--help").textContent,
