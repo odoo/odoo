@@ -4,16 +4,16 @@
     <t t-name="BackToFloorButton" owl="1">
         <span
             t-if="hasTable"
-            class="order-button floor-button"
+            class="floor-button d-flex align-items-center h-100 px-4 fw-bolder text-white text-uppercase cursor-pointer"
             t-att-class="{ oe_hidden: props.mobileSearchBarIsShown }"
             t-on-click="backToFloorScreen"
         >
             <i class="fa fa-angle-double-left" role="img" aria-label="Back to floor" title="Back to floor" />
             <t t-if="env.isMobile">
-                <span class="table-name" t-esc="table.name"/>
+                <span class="table-name ms-2" t-esc="table.name"/>
             </t>
             <t t-else="">
-                <span t-esc="floor.name" /><span class="table-name">(<t t-esc="table.name" />)</span>
+                <span class="ms-2" t-esc="floor.name" /><span class="table-name ms-2">(<t t-esc="table.name" />)</span>
             </t>
         </span>
         <span t-else=""></span>

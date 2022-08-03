@@ -1,0 +1,159 @@
+/*  ********* The black header bar ********* */
+
+.pos-topheader {
+    height: 48px;
+    background: $o-enterprise-color;
+}
+
+/*  b) The right part of the top-bar */
+
+.status-buttons {
+    > div {
+        display:flex;
+        align-items:center;
+        height: 100%;
+        padding: 0 10px; /*$dropdown-item-padding-x * .5*/
+    }
+    
+    .avatar {
+        width:25px;
+    }
+}  
+
+
+.floor-button {
+    background-color: $o-enterprise-primary-color;
+    min-width: max-content;
+    &:hover {
+        background-color: darken($o-enterprise-primary-color, 5%);
+    }
+    &:active {
+        background-color: darken($o-enterprise-primary-color, 10%);
+    }
+}
+
+.pos .order-button{
+    color: #f0f0f0;
+    display: inline-block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 46px;
+    padding: 4px 8px;
+    margin: 3px;
+    margin-bottom: 0px;
+    margin-right: 2px;
+    padding-top: 0px;
+    background: #8b8b8b;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    vertical-align: top;
+    line-height: 42px;
+    text-align: center;
+    box-shadow: 0px -5px 10px -6px rgb(82,82,82) inset;
+    cursor: pointer;
+    min-width: 45px;
+}
+
+.pos .order-button:first-child {
+    margin-left: 0px;
+}
+
+.pos .order-button.selected{
+    font-weight: 900;
+    background: #EEEEEE;
+    color: rgb(75,75,75);
+    height: 45px;
+    border-bottom: solid 1px rgb(196, 196, 196);
+    box-shadow: none;
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
+}
+
+.pos .order-button .order-sequence{
+    font-size: 16px;
+    font-weight: 800;
+    vertical-align: middle;
+}
+.pos .order-button.selected .order-sequence{
+    color: white;
+    background: black;
+    display: inline-block;
+    line-height: 24px;
+    min-width: 24px;
+    border-radius: 12px;
+    margin-right: 4px;
+    margin-left: -4px;
+}
+
+.pos .order-button.square{
+    margin-left:1px;
+    background: #5c5c5c;
+    color: rgb(160,160,160);
+    font-size: 18px;
+    line-height: 45px;
+}
+.pos .order-button:not(.square) > .fa {
+    font-size: 16px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+.pos .order-button .order-sequence{
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.pos .order-selector {
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex: 1;
+    flex: 1;
+}
+
+/*  c) The session buttons */
+
+.pos .pos-rightheader .header-button {
+    cursor: pointer;
+    -webkit-transition-property: background;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+.pos .pos-rightheader .header-button:active{
+    background: rgba(0,0,0,0.2);
+    color:#EEE;
+}
+
+/* Action buttons */
+
+.cash-move-button:hover {
+    background: darken($o-enterprise-color, 5%);
+}
+
+.ticket-button.highlight, .ticket-button:hover {
+    background: darken($o-enterprise-color, 5%);
+    cursor: pointer;
+}
+
+
+[badge] {
+    position: relative;
+}
+
+[badge]:after {
+    content: attr(badge);
+    position: absolute;
+    left: 0.6em;
+    bottom: 0.6em;
+    min-width: 2rem;
+    padding: 1px;
+    border-radius: 10rem;
+    background-color: lighten($o-enterprise-primary-color, 5%);
+    color: #fff;
+    font-size: small;
+    text-align: center;
+}
+
+[badge^="-"]:after,
+[badge="0"]:after,
+[badge=""]:after {
+ display: none;
+}
