@@ -2101,7 +2101,7 @@ QUnit.module("Views", (hooks) => {
             mode: "line",
             order: "ASC",
         });
-        let arch2 = `<graph disable_linking="0" string="Title" stacked="False"/>`;
+        const arch2 = `<graph disable_linking="0" string="Title" stacked="False"/>`;
         propsFromArch = new GraphArchParser().parse(arch2, fields);
 
         assert.deepEqual(propsFromArch, {
@@ -2118,7 +2118,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(1);
         const fields = serverData.models.foo.fields;
         fields.fighters = { type: "text", string: "Fighters" };
-        let arch = `
+        const arch = `
             <graph type="pie">
                 <field name="revenue" type="measure"/>
                 <field name="date" interval="day"/>
@@ -2128,7 +2128,7 @@ QUnit.module("Views", (hooks) => {
                 <field name="fighters" string="FooFighters"/>
             </graph>
         `;
-        let propsFromArch = new GraphArchParser().parse(arch, fields);
+        const propsFromArch = new GraphArchParser().parse(arch, fields);
         assert.deepEqual(propsFromArch, {
             fields,
             fieldAttrs: {
