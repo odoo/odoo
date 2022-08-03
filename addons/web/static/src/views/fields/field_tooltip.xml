@@ -3,10 +3,6 @@
 
     <t t-name="web.FieldTooltip" owl="1">
 
-        <div t-if="field.label" class="o-tooltip--string" role="tooltip">
-            <t t-esc="field.label"/> <t t-if="field.noLabel and viewMode === 'form'">(nolabel)</t>
-        </div>
-
         <p t-if="field.help" class="o-tooltip--help" role="tooltip">
             <t t-esc="field.help"/>
         </p>
