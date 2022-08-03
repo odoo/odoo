@@ -5,13 +5,7 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="priority">110</field>
-        <field name="groups_id" eval="[(4,ref('hr_attendance.group_hr_attendance_user'))]"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='hr_presence_status']" position="attributes">
-                <attribute name="attrs">
-                    {'invisible': ['|', '|', ('user_id', '=', False), ('hr_presence_state', '=', 'absent'), ('attendance_state', '=', 'checked_in')]}
-                </attribute>
-            </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="attendance_state" invisible="1"/>
                 <button name="%(hr_attendance_action)d"
@@ -19,7 +13,7 @@
                         icon="fa-clock-o"
                         type="action"
                         context="{'search_default_employee_id': id, 'search_default_check_in_filter': '1'}"
-                        groups="base.group_user"
+                        groups="hr_attendance.group_hr_attendance_user"
                         help="Worked hours last month">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
@@ -35,7 +29,8 @@
                         icon="fa-history"
                         type="action"
                         attrs="{'invisible': [('total_overtime', '=', 0.0)]}"
-                        context="{'search_default_employee_id': active_id}">
+                        context="{'search_default_employee_id': active_id}"
+                        groups="hr_attendance.group_hr_attendance_user">
                     <div class="o_stat_info">
                         <span class="o_stat_value text-success" attrs="{'invisible': [('total_overtime', '&lt;', 0)]}">
                             <field name="total_overtime" widget="float_time"/>
