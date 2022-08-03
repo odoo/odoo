@@ -13,6 +13,7 @@ import { cleanDomFromBootstrap } from "@web/legacy/utils";
 import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
+import { ReportAction } from "./reports/report_action";
 
 const { Component, markup, onMounted, onWillUnmount, onError, useChildSubEnv, xml } = owl;
 
@@ -1070,9 +1071,7 @@ function makeActionManager(env) {
 
         const controller = {
             jsId: `controller_${++id}`,
-            // for historical reasons, the report Component is a client action,
-            // but there's no need to keep this when it will be converted to
-            Component: actionRegistry.get("report.client_action"),
+            Component: ReportAction,
             action,
             ..._getActionInfo(action, props),
         };
