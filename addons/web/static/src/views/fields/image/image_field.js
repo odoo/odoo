@@ -51,7 +51,7 @@ export class ImageField extends Component {
 
     getUrl(previewFieldName) {
         if (this.state.isValid && this.props.value) {
-            if (previewFieldName !== this.props.name || isBinarySize(this.props.value)) {
+            if (isBinarySize(this.props.value)) {
                 return url("/web/image", {
                     model: this.props.record.resModel,
                     id: this.props.record.resId,
