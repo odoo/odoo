@@ -33,11 +33,21 @@ export class CrossTab extends Longpolling {
             this.env.services['multi_tab'].removeSharedValue('last');
         }
         this._lastNotificationID = this.env.services['multi_tab'].getSharedValue('last', 0);
-        this._registerWindowUnload();
 
-        services['multi_tab'].bus.addEventListener('shared_value_updated', this._onSharedValueUpdated.bind(this));
-        services['multi_tab'].bus.addEventListener('no_longer_main_tab', () => this.stopPolling());
-        services['multi_tab'].bus.addEventListener('become_main_tab', () => this.startPolling());
+        const onSharedValueUpdated = (event) => this._onSharedValueUpdated(event);
+        const stopPolling = () => this.stopPolling();
+        const startPolling = () => this.startPolling();
+        services['multi_tab'].bus.addEventListener('shared_value_updated', onSharedValueUpdated);
+        services['multi_tab'].bus.addEventListener('no_longer_main_tab', stopPolling);
+        services['multi_tab'].bus.addEventListener('become_main_tab', startPolling);
+
+        browser.addEventListener('unload', () => {
+            services['multi_tab'].bus.removeEventListener('shared_value_updated', onSharedValueUpdated);
+            services['multi_tab'].bus.removeEventListener('no_longer_main_tab', stopPolling);
+            services['multi_tab'].bus.removeEventListener('become_main_tab', startPolling);
+            this._currentTabChannels.clear();
+            this._updateChannels();
+        });
     }
 
     //--------------------------------------------------------------------------
@@ -101,13 +111,6 @@ export class CrossTab extends Longpolling {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _registerWindowUnload() {
-        browser.addEventListener('unload', this._onUnload.bind(this));
-    }
 
     /**
      * Update localstorage channels of with the channels of this tab.
@@ -203,13 +206,4 @@ export class CrossTab extends Longpolling {
         }
     }
 
-    /**
-     * Handler when unload the window
-     *
-     * @private
-     */
-    _onUnload() {
-        this._currentTabChannels.clear();
-        this._updateChannels();
-    }
 }

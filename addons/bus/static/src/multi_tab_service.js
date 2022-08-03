@@ -151,6 +151,8 @@ export const multiTabService = {
 
             // Unload main.
             if (_isOnMainTab) {
+                _isOnMainTab = false;
+                bus.trigger('no_longer_main_tab');
                 browser.localStorage.removeItem(generateLocalStorageKey('main'));
             }
         }
