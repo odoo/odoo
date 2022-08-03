@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useAutofocus } from "@web/core/utils/hooks";
+import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
-import { useNumpadDecimal } from "../numpad_decimal_hook";
 
 const { Component, onWillUpdateProps, useState } = owl;
 const formatters = registry.category("formatters");
@@ -13,6 +14,8 @@ const parsers = registry.category("parsers");
 export class ProgressBarField extends Component {
     setup() {
         useNumpadDecimal();
+        useAutofocus({ refName: "max-value", selectAll: true });
+        useAutofocus({ refName: "current-value", selectAll: true });
         this.state = useState({
             currentValue: this.getCurrentValue(this.props),
             maxValue: this.getMaxValue(this.props),
@@ -62,10 +65,10 @@ export class ProgressBarField extends Component {
         return formatter(this.state.maxValue, { humanReadable });
     }
 
-    onCurrentValueChange(value) {
+    onCurrentValueChange(ev) {
         let parsedValue;
         try {
-            parsedValue = parseFloat(value);
+            parsedValue = parseFloat(ev.target.value);
         } catch {
             this.props.record.setInvalidField(this.props.name);
             return;
@@ -81,10 +84,10 @@ export class ProgressBarField extends Component {
             this.props.record.save();
         }
     }
-    onMaxValueChange(value) {
+    onMaxValueChange(ev) {
         let parsedValue;
         try {
-            parsedValue = parseFloat(value);
+            parsedValue = parseFloat(ev.target.value);
         } catch {
             this.props.record.setInvalidField(this.props.name);
             return;
@@ -151,7 +154,7 @@ ProgressBarField.extractProps = ({ attrs }) => {
         maxValueField: attrs.options.max_value,
         currentValueField: attrs.options.current_value,
         isPercentage: !attrs.options.max_value,
-        isEditable: attrs.options.editable,
+        isEditable: !attrs.options.readonly && attrs.options.editable,
         isEditableInReadonly: attrs.options.editable_readonly,
         isCurrentValueEditable:
             attrs.options.editable &&
