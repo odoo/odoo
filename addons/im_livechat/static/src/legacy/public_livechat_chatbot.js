@@ -65,7 +65,7 @@ const _t = core._t;
      * at least one message before moving on.
      */
     _chatbotAwaitUserInput() {
-        if (this._isLastMessageFromCustomer()) {
+        if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
             if (this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
             } else {
@@ -191,7 +191,7 @@ const _t = core._t;
                    && this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_operator_found) {
             this._chatbotEnableInput();
         }  else if (this.messaging.publicLivechatGlobal.chatbot.isExpectingUserInput) {
-            if (this._isLastMessageFromCustomer()) {
+            if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
                 // user has already typed a message in -> trigger next step
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
@@ -206,7 +206,7 @@ const _t = core._t;
         } else {
             let triggerNextStep = true;
             if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'question_selection') {
-                if (!this._isLastMessageFromCustomer()) {
+                if (!this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
                     // if there is no last message or if the last message is from the bot
                     // -> don't trigger the next step, we are waiting for the user to pick an option
                     triggerNextStep = false;
@@ -323,15 +323,6 @@ const _t = core._t;
         return this.messaging.publicLivechatGlobal.messages.filter((message) => {
             return message.id && typeof message.id === 'string' && message.id.startsWith('_welcome_');
         });
-    },
-    /**
-     * Compares the last message of the conversation to this livechat's operator id.
-     *
-     * @private
-     */
-    _isLastMessageFromCustomer() {
-        const lastMessage = this.messaging.publicLivechatGlobal.lastMessage;
-        return lastMessage && lastMessage.authorId !== this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
     },
 
      //--------------------------------------------------------------------------
