@@ -36,7 +36,7 @@ registerModel({
                     return this.channel.thread.message_needaction_counter > 0 ? 1 : 0;
                 case 'chat':
                 case 'group':
-                    return this.channel.thread.localMessageUnreadCounter > 0 ? 1 : 0;
+                    return this.channel.localMessageUnreadCounter > 0 ? 1 : 0;
             }
         },
         /**
@@ -49,7 +49,7 @@ registerModel({
                     return this.channel.thread.message_needaction_counter;
                 case 'chat':
                 case 'group':
-                    return this.channel.thread.localMessageUnreadCounter;
+                    return this.channel.localMessageUnreadCounter;
             }
         },
         /**
@@ -75,7 +75,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasUnpinCommand() {
-            return this.channel.channel_type === 'chat' && !this.channel.thread.localMessageUnreadCounter;
+            return this.channel.channel_type === 'chat' && !this.channel.localMessageUnreadCounter;
         },
         /**
          * @private
@@ -92,7 +92,7 @@ registerModel({
             if (!this.channel) {
                 return clear();
             }
-            return this.channel.thread.localMessageUnreadCounter > 0;
+            return this.channel.localMessageUnreadCounter > 0;
         },
         /**
          * @private

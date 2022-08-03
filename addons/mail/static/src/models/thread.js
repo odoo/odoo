@@ -1092,41 +1092,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {integer}
-         */
-        _computeLocalMessageUnreadCounter() {
-            if (this.model !== 'mail.channel') {
-                // unread counter only makes sense on channels
-                return clear();
-            }
-            // By default trust the server up to the last message it used
-            // because it's not possible to do better.
-            let baseCounter = this.serverMessageUnreadCounter;
-            let countFromId = this.serverLastMessage ? this.serverLastMessage.id : 0;
-            // But if the client knows the last seen message that the server
-            // returned (and by assumption all the messages that come after),
-            // the counter can be computed fully locally, ignoring potentially
-            // obsolete values from the server.
-            const firstMessage = this.orderedMessages[0];
-            if (
-                firstMessage &&
-                this.lastSeenByCurrentPartnerMessageId &&
-                this.lastSeenByCurrentPartnerMessageId >= firstMessage.id
-            ) {
-                baseCounter = 0;
-                countFromId = this.lastSeenByCurrentPartnerMessageId;
-            }
-            // Include all the messages that are known locally but the server
-            // didn't take into account.
-            return this.orderedMessages.reduce((total, message) => {
-                if (message.id <= countFromId) {
-                    return total;
-                }
-                return total + 1;
-            }, baseCounter);
-        },
-        /**
-         * @private
          * @returns {FieldCommand}
          */
         _computeMessagingAsRingingThread() {
@@ -1143,7 +1108,7 @@ registerModel({
             if (!this.messaging.messagingMenu) {
                 return clear();
             }
-            return (this.channel && this.channel.isPinned && this.localMessageUnreadCounter > 0)
+            return (this.channel && this.channel.isPinned && this.channel.localMessageUnreadCounter > 0)
                 ? replace(this.messaging.messagingMenu)
                 : clear();
         },
@@ -1159,10 +1124,10 @@ registerModel({
          * @returns {Message|undefined}
          */
         _computeMessageAfterNewMessageSeparator() {
-            if (this.model !== 'mail.channel') {
+            if (!this.channel) {
                 return clear();
             }
-            if (this.localMessageUnreadCounter === 0) {
+            if (this.channel.localMessageUnreadCounter === 0) {
                 return clear();
             }
             const index = this.orderedMessages.findIndex(message =>
@@ -1643,13 +1608,6 @@ registerModel({
          * Useful to display rainbow man on inbox.
          */
         lastCounter: attr(),
-        /**
-         * Local value of message unread counter, that means it is based on initial server value and
-         * updated with interface updates.
-         */
-        localMessageUnreadCounter: attr({
-            compute: '_computeLocalMessageUnreadCounter',
-        }),
         mainAttachment: one('Attachment'),
         members: many('Partner', {
             sort: '_sortPartnerMembers',

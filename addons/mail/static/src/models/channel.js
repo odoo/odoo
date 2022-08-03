@@ -337,6 +337,37 @@ registerModel({
         },
         /**
          * @private
+         * @returns {integer}
+         */
+        _computeLocalMessageUnreadCounter() {
+            // By default trust the server up to the last message it used
+            // because it's not possible to do better.
+            let baseCounter = this.thread.serverMessageUnreadCounter;
+            let countFromId = this.thread.serverLastMessage ? this.thread.serverLastMessage.id : 0;
+            // But if the client knows the last seen message that the server
+            // returned (and by assumption all the messages that come after),
+            // the counter can be computed fully locally, ignoring potentially
+            // obsolete values from the server.
+            const firstMessage = this.thread.orderedMessages[0];
+            if (
+                firstMessage &&
+                this.thread.lastSeenByCurrentPartnerMessageId &&
+                this.thread.lastSeenByCurrentPartnerMessageId >= firstMessage.id
+            ) {
+                baseCounter = 0;
+                countFromId = this.thread.lastSeenByCurrentPartnerMessageId;
+            }
+            // Include all the messages that are known locally but the server
+            // didn't take into account.
+            return this.thread.orderedMessages.reduce((total, message) => {
+                if (message.id <= countFromId) {
+                    return total;
+                }
+                return total + 1;
+            }, baseCounter);
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeThread() {
@@ -526,6 +557,15 @@ registerModel({
          */
         isServerPinned: attr({
             default: false,
+        }),
+        /**
+         * Local value of message unread counter, that means it is based on
+         * initial server value and updated with interface updates.
+         *
+         * FIXME: this field should rather be on ChannelMember.
+         */
+        localMessageUnreadCounter: attr({
+            compute: '_computeLocalMessageUnreadCounter',
         }),
         /**
          * States the number of members in this channel according to the server.

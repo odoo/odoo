@@ -22,7 +22,7 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
     _computeCategoryCounterContribution() {
         switch (this.channel.channel_type) {
             case 'livechat':
-                return this.channel.thread.localMessageUnreadCounter > 0 ? 1 : 0;
+                return this.channel.localMessageUnreadCounter > 0 ? 1 : 0;
         }
         return this._super();
     },
@@ -31,7 +31,7 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      */
     _computeCounter() {
         if (this.channel.channel_type === 'livechat') {
-            return this.channel.thread.localMessageUnreadCounter;
+            return this.channel.localMessageUnreadCounter;
         }
         return this._super();
     },
@@ -40,7 +40,7 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
      */
     _computeHasUnpinCommand() {
         if (this.channel.channel_type === 'livechat') {
-            return !this.channel.thread.localMessageUnreadCounter;
+            return !this.channel.localMessageUnreadCounter;
         }
         return this._super();
     },
