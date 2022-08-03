@@ -14,7 +14,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
-const { Component, onMounted, xml } = owl;
+const { Component, onMounted, useState, xml } = owl;
 const serviceRegistry = registry.category("services");
 
 QUnit.module("utils", () => {
@@ -47,30 +47,33 @@ QUnit.module("utils", () => {
             assert.strictEqual(document.activeElement, comp.inputRef.el);
         });
 
-        QUnit.test("useAutofocus: simple usecase when input type is number", async function (assert) {
-            class MyComponent extends Component {
-                setup() {
-                    this.inputRef = useAutofocus();
+        QUnit.test(
+            "useAutofocus: simple usecase when input type is number",
+            async function (assert) {
+                class MyComponent extends Component {
+                    setup() {
+                        this.inputRef = useAutofocus();
+                    }
                 }
-            }
-            MyComponent.template = xml`
+                MyComponent.template = xml`
                 <span>
                     <input type="number" t-ref="autofocus" />
                 </span>
             `;
 
-            registry.category("services").add("ui", uiService);
+                registry.category("services").add("ui", uiService);
 
-            const env = await makeTestEnv();
-            const target = getFixture();
-            const comp = await mount(MyComponent, target, { env });
+                const env = await makeTestEnv();
+                const target = getFixture();
+                const comp = await mount(MyComponent, target, { env });
 
-            assert.strictEqual(document.activeElement, comp.inputRef.el);
+                assert.strictEqual(document.activeElement, comp.inputRef.el);
 
-            comp.render();
-            await nextTick();
-            assert.strictEqual(document.activeElement, comp.inputRef.el);
-        });
+                comp.render();
+                await nextTick();
+                assert.strictEqual(document.activeElement, comp.inputRef.el);
+            }
+        );
 
         QUnit.test("useAutofocus: conditional autofocus", async function (assert) {
             class MyComponent extends Component {
@@ -124,7 +127,7 @@ QUnit.module("utils", () => {
 
             const fakeUIService = {
                 start(env) {
-                    let ui = {};
+                    const ui = {};
                     Object.defineProperty(env, "isSmall", {
                         get() {
                             return true;
@@ -140,6 +143,64 @@ QUnit.module("utils", () => {
             const env = await makeTestEnv();
             const target = getFixture();
             await mount(MyComponent, target, { env });
+        });
+
+        QUnit.test("supports different ref names", async (assert) => {
+            class MyComponent extends Component {
+                setup() {
+                    this.secondRef = useAutofocus({ refName: "second" });
+                    this.firstRef = useAutofocus({ refName: "first" });
+
+                    this.state = useState({ showSecond: true });
+                }
+            }
+            MyComponent.template = xml`
+                <span>
+                    <input type="text" t-ref="first" />
+                    <input t-if="state.showSecond" type="text" t-ref="second" />
+                </span>
+            `;
+
+            registry.category("services").add("ui", uiService);
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            const comp = await mount(MyComponent, target, { env });
+            await nextTick();
+
+            // "first" is focused first since it has the last call to "useAutofocus"
+            assert.strictEqual(document.activeElement, comp.firstRef.el);
+
+            comp.state.showSecond = false;
+            await nextTick();
+            comp.state.showSecond = true;
+            await nextTick();
+
+            assert.strictEqual(document.activeElement, comp.secondRef.el);
+        });
+
+        QUnit.test("can select an entire text", async (assert) => {
+            class MyComponent extends Component {
+                setup() {
+                    this.inputRef = useAutofocus({ selectAll: true });
+                }
+            }
+            MyComponent.template = xml`
+                <span>
+                    <input type="text" value="abcdefghij" t-ref="autofocus" />
+                </span>
+            `;
+
+            registry.category("services").add("ui", uiService);
+
+            const env = await makeTestEnv();
+            const target = getFixture();
+            const comp = await mount(MyComponent, target, { env });
+            await nextTick();
+
+            assert.strictEqual(document.activeElement, comp.inputRef.el);
+            assert.strictEqual(comp.inputRef.el.selectionStart, 0);
+            assert.strictEqual(comp.inputRef.el.selectionEnd, 10);
         });
 
         QUnit.module("useBus");

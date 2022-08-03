@@ -27,11 +27,14 @@ const { status, useComponent, useEffect, useRef, onWillUnmount } = owl;
  * Focus an element referenced by a t-ref="autofocus" in the current component
  * as soon as it appears in the DOM and if it was not displayed before.
  * If it is an input/textarea, set the selection at the end.
+ * @param {Object} [params]
+ * @param {string} [params.refName] override the ref name "autofocus"
+ * @param {boolean} [params.selectAll] if true, will select the entire text value.
  * @returns {Object} the element reference
  */
-export function useAutofocus() {
+export function useAutofocus({ refName, selectAll } = {}) {
     const comp = useComponent();
-    const ref = useRef("autofocus");
+    const ref = useRef(refName || "autofocus");
     // Prevent autofocus in mobile
     if (comp.env.isSmall) {
         return ref;
@@ -45,8 +48,9 @@ export function useAutofocus() {
         (el) => {
             if (el) {
                 el.focus();
-                if (["INPUT", "TEXTAREA"].includes(el.tagName) && el.type !== 'number') {
-                    el.selectionStart = el.selectionEnd = el.value.length;
+                if (["INPUT", "TEXTAREA"].includes(el.tagName) && el.type !== "number") {
+                    el.selectionEnd = el.value.length;
+                    el.selectionStart = selectAll ? 0 : el.value.length;
                 }
             }
         },
