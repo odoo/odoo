@@ -9,6 +9,7 @@ import struct
 import selectors
 import threading
 import time
+from collections import deque
 from contextlib import suppress
 from enum import IntEnum
 from itertools import count
@@ -92,6 +93,13 @@ class PayloadTooLargeException(WebsocketException):
 class ProtocolError(WebsocketException):
     """
     Raised when a frame format doesn't match expectations.
+    """
+
+
+class RateLimitExceededException(Exception):
+    """
+    Raised when a client exceeds the number of request in a given
+    time.
     """
 
 
@@ -201,6 +209,10 @@ class Websocket:
     # or received within CONNECTION_TIMEOUT - 15 seconds.
     CONNECTION_TIMEOUT = 60
     INACTIVITY_TIMEOUT = CONNECTION_TIMEOUT - 15
+    # How many requests can be made in excess of the given rate.
+    RL_BURST = int(config['websocket_rate_limit_burst'])
+    # How many seconds between each request.
+    RL_DELAY = float(config['websocket_rate_limit_delay'])
 
     def __init__(self, socket):
         self._socket = socket
@@ -211,6 +223,8 @@ class Websocket:
         self._selector.register(self._socket, selectors.EVENT_READ)
         self._selector.register(self._outgoing_frame_queue, selectors.EVENT_READ)
         self._timeout_manager = TimeoutManager()
+        # Used for rate limiting.
+        self._incoming_frame_timestamps = deque(maxlen=type(self).RL_BURST)
         self.state = ConnectionState.OPEN
         type(self)._instances.add(self)
 
@@ -318,6 +332,7 @@ class Websocket:
             payload[3::4] = payload[3::4].translate(d)
             return payload
 
+        self._limit_rate()
         first_byte, second_byte = recv_bytes(2)
         fin, rsv1, rsv2, rsv3 = (is_bit_set(first_byte, n) for n in range(4))
         try:
@@ -503,10 +518,27 @@ class Websocket:
             code = CloseCode.INCONSISTENT_DATA
         elif isinstance(exc, PayloadTooLargeException):
             code = CloseCode.MESSAGE_TOO_BIG
+        elif isinstance(exc, RateLimitExceededException):
+            code = CloseCode.TRY_LATER
         if code is CloseCode.SERVER_ERROR:
             reason = None
             _logger.error(exc, exc_info=True)
         self.disconnect(code, reason)
+
+    def _limit_rate(self):
+        """
+        This method is a simple rate limiter designed not to allow
+        more than one request by `RL_DELAY` seconds. `RL_BURST` specify
+        how many requests can be made in excess of the given rate at the
+        begining. When requests are received too fast, raises the
+        `RateLimitExceededException`.
+        """
+        now = time.time()
+        if len(self._incoming_frame_timestamps) >= type(self).RL_BURST:
+            elapsed_time = now - self._incoming_frame_timestamps[0]
+            if elapsed_time < type(self).RL_DELAY * type(self).RL_BURST:
+                raise RateLimitExceededException()
+        self._incoming_frame_timestamps.append(now)
 
     @classmethod
     def _kick_all(cls):
