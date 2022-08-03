@@ -24,7 +24,7 @@ export class FormLabel extends Component {
         return classes.join(" ");
     }
 
-    get hasBigTooltip() {
+    get hasTooltip() {
         return Boolean(odoo.debug) || this.tooltipHelp;
     }
 
@@ -37,6 +37,13 @@ export class FormLabel extends Component {
         return help;
     }
     get tooltipInfo() {
+        if (!odoo.debug) {
+            return JSON.stringify({
+                field: {
+                    help: this.tooltipHelp,
+                },
+            });
+        }
         return getTooltipInfo({
             viewMode: "form",
             resModel: this.props.record.resModel,
@@ -47,7 +54,7 @@ export class FormLabel extends Component {
     }
 }
 FormLabel.template = xml`
-  <label class="o_form_label" t-att-for="props.id" t-att-class="className" t-att="{'data-tooltip-template': hasBigTooltip ? 'web.FieldTooltip' : false, 'data-tooltip-info': hasBigTooltip ? tooltipInfo : false}">
-    <t t-esc="props.string" />
+  <label class="o_form_label" t-att-for="props.id" t-att-class="className" >
+    <t t-esc="props.string"/><sup class="btn-link p-2" t-if="hasTooltip" t-att="{'data-tooltip-template': 'web.FieldTooltip', 'data-tooltip-info': tooltipInfo}">?</sup>
   </label>
 `;
