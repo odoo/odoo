@@ -37,7 +37,7 @@ export class GraphArchParser extends XMLParser {
                     break;
                 }
                 case "field": {
-                    let fieldName = node.getAttribute("name"); // exists (rng validation)
+                    const fieldName = node.getAttribute("name"); // exists (rng validation)
                     if (fieldName === "id") {
                         break;
                     }
