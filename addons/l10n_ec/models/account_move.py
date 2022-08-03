@@ -144,7 +144,6 @@ class AccountMove(models.Model):
         is_ruc = move.partner_id.commercial_partner_id.l10n_latam_identification_type_id.id == it_ruc.id
         is_dni = move.partner_id.commercial_partner_id.l10n_latam_identification_type_id.id == it_dni.id
         is_passport = move.partner_id.commercial_partner_id.l10n_latam_identification_type_id.id == it_passport.id
-        l10n_ec_is_exportation = move.partner_id.commercial_partner_id.country_id.code != 'EC'
         identification_code = False
         if move.move_type in ("in_invoice", "in_refund"):
             if is_ruc:
@@ -153,23 +152,15 @@ class AccountMove(models.Model):
                 identification_code = "02"
             else:
                 identification_code = "03"
-        elif move.move_type in ("out_invoice", "out_refund"):
-            if not l10n_ec_is_exportation:
-                if is_final_consumer:
-                    identification_code = "07"
-                elif is_ruc:
-                    identification_code = "04"
-                elif is_dni:
-                    identification_code = "05"
-                elif is_passport:
-                    identification_code = "06"
-            else:
-                if is_ruc:
-                    identification_code = "20"
-                elif is_dni:
-                    identification_code = "21"
-                else:
-                    identification_code = "09"
+        elif move.move_type in ("out_invoice", "out_refund", "entry"): #entry for withholds
+            if is_final_consumer:
+                identification_code = "07"
+            elif is_ruc:
+                identification_code = "04"
+            elif is_dni:
+                identification_code = "05"
+            elif is_passport:
+                identification_code = "06"
         return identification_code
 
     @api.model
