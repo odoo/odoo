@@ -484,6 +484,76 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
+    QUnit.test("Props are updated and kept when switching/restoring views", async (assert) => {
+        serverData.views["partner,false,form"] = /* xml */ `
+            <form>
+                <group>
+                    <field name="display_name" />
+                    <field name="m2o" />
+                </group>
+            </form>
+        `;
+
+        const mockRPC = async (_route, { args, method, model }) => {
+            if (method === "get_formview_action") {
+                return {
+                    res_id: args[0][0],
+                    res_model: model,
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                };
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 3);
+
+        // 5 records initially
+        assert.containsN(target, ".o_data_row", 5);
+
+        await click(target, ".o_data_row:first-of-type .o_data_cell");
+
+        // Open 1 / 5
+        assert.strictEqual(target.querySelector(".o_field_char").innerText, "First record");
+        assert.deepEqual(cpHelpers.getPagerValue(target), [1]);
+        assert.strictEqual(cpHelpers.getPagerLimit(target), 5);
+
+        await click(target, ".o_field_many2one a");
+
+        // Click on M2O -> 1 / 1
+        assert.strictEqual(target.querySelector(".o_field_char").innerText, "Third record");
+        assert.deepEqual(cpHelpers.getPagerValue(target), [1]);
+        assert.strictEqual(cpHelpers.getPagerLimit(target), 1);
+
+        await click(target, ".o_back_button");
+
+        // Back to 1 / 5
+        assert.strictEqual(target.querySelector(".o_field_char").innerText, "First record");
+        assert.deepEqual(cpHelpers.getPagerValue(target), [1]);
+        assert.strictEqual(cpHelpers.getPagerLimit(target), 5);
+
+        await cpHelpers.pagerNext(target);
+
+        // Next page -> 2 / 5
+        assert.strictEqual(target.querySelector(".o_field_char").innerText, "Second record");
+        assert.deepEqual(cpHelpers.getPagerValue(target), [2]);
+        assert.strictEqual(cpHelpers.getPagerLimit(target), 5);
+
+        await click(target, ".o_field_many2one a");
+
+        // Click on M2O -> still 1 / 1
+        assert.strictEqual(target.querySelector(".o_field_char").innerText, "Third record");
+        assert.deepEqual(cpHelpers.getPagerValue(target), [1]);
+        assert.strictEqual(cpHelpers.getPagerLimit(target), 1);
+
+        await click(target, ".o_back_button");
+
+        // Back to 2 / 5
+        assert.strictEqual(target.querySelector(".o_field_char").innerText, "Second record");
+        assert.deepEqual(cpHelpers.getPagerValue(target), [2]);
+        assert.strictEqual(cpHelpers.getPagerLimit(target), 5);
+    });
+
     QUnit.test("domain is kept when switching between views", async function (assert) {
         assert.expect(5);
         serverData.actions[3].search_view_id = [4, "a custom search view"];

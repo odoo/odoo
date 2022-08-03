@@ -1383,10 +1383,13 @@ function makeActionManager(env) {
         }
         const controller = controllerStack[index];
         if (controller.action.type === "ir.actions.act_window") {
-            Object.assign(
-                controller,
-                _getViewInfo(controller.view, controller.action, controller.views)
-            );
+            const { action, exportedState, view, views } = controller;
+            const props = { ...controller.props };
+            if (exportedState && "resId" in exportedState) {
+                // When restoring, we want to use the last exported ID of the controller
+                props.resId = exportedState.resId;
+            }
+            Object.assign(controller, _getViewInfo(view, action, views, props));
         }
         await clearUncommittedChanges(env);
         return _updateUI(controller, { index });
