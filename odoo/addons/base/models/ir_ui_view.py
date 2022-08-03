@@ -605,7 +605,14 @@ actual arch.
             check_view_ids = self._context.get('check_view_ids') or []
             ids_to_check = [vid for vid in view_ids if vid not in check_view_ids]
             if ids_to_check:
-                loaded_modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
+                install_module_name = self._context.get('install_module')
+                install_module = install_module_name and self.env['ir.module.module'].search([('name', '=', install_module_name)])
+                if install_module:
+                    modules = install_module
+                    modules |= install_module.upstream_dependencies(exclude_states=('uninstalled'))
+                    loaded_modules = tuple(modules.mapped('name'))
+                else:
+                    loaded_modules = tuple(self.pool._init_modules) + (self._context.get('install_module'),)
                 query = self._get_filter_xmlid_query()
                 self.env.cr.execute(query, {'res_ids': tuple(ids_to_check), 'modules': loaded_modules})
                 valid_view_ids = [r[0] for r in self.env.cr.fetchall()] + check_view_ids
