@@ -25,7 +25,6 @@ export class WebsiteEditorComponent extends Component {
         useChildSubEnv(legacyEnv);
 
         onWillStart(async () => {
-            this.websiteService.blockIframe(false);
             this.Wysiwyg = await this.websiteService.loadWysiwyg();
         });
 
@@ -36,6 +35,7 @@ export class WebsiteEditorComponent extends Component {
         }, () => [this.websiteContext.isPublicRootReady]);
 
         onMounted(() => {
+            this.websiteService.blockPreview(false);
             if (this.websiteContext.isPublicRootReady) {
                 this.publicRootReady();
             }
@@ -56,7 +56,7 @@ export class WebsiteEditorComponent extends Component {
     publicRootReady() {
         if (this.websiteService.currentWebsite.metadata.translatable) {
             this.websiteContext.edition = false;
-            this.websiteService.unblockIframe();
+            this.websiteService.unblockPreview();
         } else {
             this.state.showWysiwyg = true;
         }
@@ -72,7 +72,7 @@ export class WebsiteEditorComponent extends Component {
             this.state.reloading = false;
         }
         this.wysiwygOptions.invalidateSnippetCache = false;
-        this.websiteService.unblockIframe();
+        this.websiteService.unblockPreview();
         this.websiteService.hideLoader();
     }
     /**
@@ -83,7 +83,7 @@ export class WebsiteEditorComponent extends Component {
      * @param widgetEl {HTMLElement} Widget element of the editor to copy.
      */
     willReload(widgetEl) {
-        this.websiteService.blockIframe();
+        this.websiteService.blockPreview();
         if (widgetEl) {
             this.loadingDummy = markup(widgetEl.innerHTML);
         }
@@ -120,9 +120,9 @@ export class WebsiteEditorComponent extends Component {
     async quit({ reloadIframe = true, onLeave } = {}) {
         this.onWillUnmount = onLeave;
         if (reloadIframe) {
-            this.websiteService.blockIframe(true);
+            this.websiteService.blockPreview();
             await this.props.reloadIframe();
-            this.websiteService.unblockIframe();
+            this.websiteService.unblockPreview();
         }
         this.websiteContext.snippetsLoaded = false;
         setTimeout(this.destroyAfterTransition.bind(this), 400);
