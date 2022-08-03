@@ -52,6 +52,7 @@ from . import ir_model_fields
 from . import ir_translation
 from . import ir_ui_view
 from . import ir_qweb
+from . import ir_websocket
 from . import res_company
 from . import res_config_settings
 from . import res_partner

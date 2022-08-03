@@ -3,17 +3,15 @@
 
 import re
 
-from odoo.http import request
-from odoo.addons.bus.controllers.main import BusController
+from odoo import models
 from odoo.exceptions import AccessDenied
 
 
-class EditorCollaborationController(BusController):
-    # ---------------------------
-    # Extends BUS Controller Poll
-    # ---------------------------
-    def _poll(self, dbname, channels, last, options):
-        if request.session.uid:
+class IrWebsocket(models.AbstractModel):
+    _inherit = 'ir.websocket'
+
+    def _build_bus_channel_list(self, channels):
+        if self.env.uid:
             # Do not alter original list.
             channels = list(channels)
             for channel in channels:
@@ -25,10 +23,10 @@ class EditorCollaborationController(BusController):
                         res_id = int(match[3])
 
                         # Verify access to the edition channel.
-                        if not request.env.user._is_internal():
+                        if not self.env.user._is_internal():
                             raise AccessDenied()
 
-                        document = request.env[model_name].browse([res_id])
+                        document = self.env[model_name].browse([res_id])
 
                         document.check_access_rights('read')
                         document.check_field_access_rights('read', [field_name])
@@ -37,5 +35,5 @@ class EditorCollaborationController(BusController):
                         document.check_field_access_rights('write', [field_name])
                         document.check_access_rule('write')
 
-                        channels.append((request.db, 'editor_collaboration', model_name, field_name, res_id))
-        return super(EditorCollaborationController, self)._poll(dbname, channels, last, options)
+                        channels.append((self.env.registry.db_name, 'editor_collaboration', model_name, field_name, res_id))
+        return super()._build_bus_channel_list(channels)

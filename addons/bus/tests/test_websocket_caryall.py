@@ -1,14 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import gc
+import json
 from collections import defaultdict
 from datetime import timedelta
 from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo.api import Environment
-from odoo.tests import common
+from odoo.tests import common, new_test_user
 from .common import WebsocketCase
+from ..models.bus import dispatch
 from ..websocket import (
     CloseCode,
     Frame,
@@ -17,7 +19,6 @@ from ..websocket import (
     TimeoutReason,
     Websocket
 )
-
 
 @common.tagged('post_install', '-at_install')
 class TestWebsocketCaryall(WebsocketCase):
@@ -101,3 +102,41 @@ class TestWebsocketCaryall(WebsocketCase):
         self.assertEqual(timeout_manager._awaited_opcode, Opcode.CLOSE)
         timeout_manager.acknowledge_frame_receipt(Frame(Opcode.CLOSE))
         self.assertIsNone(timeout_manager._awaited_opcode)
+
+    def test_user_login(self):
+        websocket = self.websocket_connect()
+        new_test_user(self.env, login='test_user', password='Password!1')
+        self.authenticate('test_user', 'Password!1')
+        # The session with whom the websocket connected has been
+        # deleted. WebSocket should disconnect in order for the
+        # session to be updated.
+        websocket.send(json.dumps({'event_name': 'subscribe'}))
+        self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
+
+    def test_user_logout_incoming_message(self):
+        new_test_user(self.env, login='test_user', password='Password!1')
+        user_session = self.authenticate('test_user', 'Password!1')
+        websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
+        self.url_open('/web/session/logout')
+        # The session with whom the websocket connected has been
+        # deleted. WebSocket should disconnect in order for the
+        # session to be updated.
+        websocket.send(json.dumps({'event_name': 'subscribe'}))
+        self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
+
+    def test_user_logout_outgoing_message(self):
+        new_test_user(self.env, login='test_user', password='Password!1')
+        user_session = self.authenticate('test_user', 'Password!1')
+        websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
+        with patch.object(dispatch, '_ws_to_subscription', {}):
+            websocket.send(json.dumps({
+                'event_name': 'subscribe',
+                'data': {'channels': ['channel1'], 'last': 0}
+            }))
+            self.url_open('/web/session/logout')
+            # Simulate postgres notify. The session with whom the websocket
+            # connected has been deleted. WebSocket should be closed without
+            # receiving the message.
+            self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
+            dispatch._dispatch_notifications(next(iter(dispatch._ws_to_subscription.keys())))
+            self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)

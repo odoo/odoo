@@ -3,6 +3,7 @@ import functools
 import hashlib
 import json
 import logging
+import psycopg2
 import queue
 import socket
 import struct
@@ -15,10 +16,11 @@ from enum import IntEnum
 from itertools import count
 from weakref import WeakSet
 
+from werkzeug.local import LocalStack
 from werkzeug.exceptions import BadRequest, HTTPException
 
 from odoo import api
-from odoo.http import Response
+from odoo.http import root, Request, Response, SessionExpiredException
 from odoo.modules.registry import Registry
 from odoo.service import model as service_model
 from odoo.service.server import CommonServer
@@ -81,9 +83,23 @@ class InvalidCloseCodeException(WebsocketException):
         super().__init__(f"Invalid close code: {code}")
 
 
+class InvalidDatabaseException(WebsocketException):
+    """
+    When raised: the database probably does not exists anymore, the
+    database is corrupted or the database version doesn't match the
+    server version.
+    """
+
+
 class InvalidStateException(WebsocketException):
     """
     Raised when an operation is forbidden in the current state.
+    """
+
+
+class InvalidWebsocketRequest(WebsocketException):
+    """
+    Raised when a websocket request is invalid (format, wrong args).
     """
 
 
@@ -144,6 +160,7 @@ class CloseCode(IntEnum):
     RESTART = 1012
     TRY_LATER = 1013
     BAD_GATEWAY = 1014
+    SESSION_EXPIRED = 4001
     KEEP_ALIVE_TIMEOUT = 4002
 
 
@@ -664,6 +681,81 @@ class TimeoutManager:
 # ------------------------------------------------------
 
 
+_wsrequest_stack = LocalStack()
+wsrequest = _wsrequest_stack()
+
+class WebsocketRequest:
+    def __init__(self, db, httprequest, websocket):
+        self.db = db
+        self.httprequest = httprequest
+        self.session = None
+        self.ws = websocket
+
+    def __enter__(self):
+        _wsrequest_stack.push(self)
+        return self
+
+    def __exit__(self, *args):
+        _wsrequest_stack.pop()
+
+    def serve_websocket_message(self, message):
+        try:
+            jsonrequest = json.loads(message)
+            event_name = jsonrequest['event_name']  # mandatory
+        except KeyError as exc:
+            raise InvalidWebsocketRequest(
+                f'Key {exc.args[0]!r} is missing from request'
+            ) from exc
+        except ValueError as exc:
+            raise InvalidWebsocketRequest(
+                f'Invalid JSON data, {exc.args[0]}'
+            ) from exc
+        data = jsonrequest.get('data')
+        self.session = self._get_session()
+
+        try:
+            self.registry = Registry(self.db)
+            self.registry.check_signaling()
+        except (
+            AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError
+        ) as exc:
+            raise InvalidDatabaseException() from exc
+
+        with closing(self.registry.cursor()) as cr:
+            self.env = api.Environment(cr, self.session.uid, self.session.context)
+            threading.current_thread().uid = self.env.uid
+            service_model.retrying(
+                functools.partial(self._serve_ir_websocket, event_name, data),
+                self.env,
+            )
+
+    def _serve_ir_websocket(self, event_name, data):
+        """
+        Delegate most of the processing to the ir.websocket model
+        which is extensible by applications. Directly call the
+        appropriate ir.websocket method since only two events are
+        tolerated: `subscribe` and `update_presence`.
+        """
+        ir_websocket = self.env['ir.websocket']
+        ir_websocket._authenticate()
+        if event_name == 'subscribe':
+            ir_websocket._subscribe(data)
+        if event_name == 'update_presence':
+            ir_websocket._update_bus_presence(data)
+
+    def _get_session(self):
+        session = root.session_store.get(self.ws._session.sid)
+        if not session:
+            raise SessionExpiredException()
+        return session
+
+    def update_env(self, user=None, context=None, su=None):
+        """
+        Update the environment of the current websocket request.
+        """
+        Request.update_env(self, user, context, su)
+
+
 class WebsocketConnectionHandler:
     SUPPORTED_VERSIONS = {'13'}
     # Given by the RFC in order to generate Sec-WebSocket-Accept from
@@ -688,7 +780,12 @@ class WebsocketConnectionHandler:
         response.call_on_close(functools.partial(
             cls._serve_forever,
             Websocket(request.httprequest.environ['socket'], request.session),
+            request.db,
+            request.httprequest
         ))
+        # Force save the session. Session must be persisted to handle
+        # WebSocket authentication.
+        request.session.is_dirty = True
         return response
 
     @classmethod
@@ -745,14 +842,20 @@ class WebsocketConnectionHandler:
             )
 
     @classmethod
-    def _serve_forever(cls, websocket):
+    def _serve_forever(cls, websocket, db, httprequest):
         """
         Process incoming messages and dispatch them to the application.
         """
         current_thread = threading.current_thread()
         current_thread.type = 'websocket'
         for message in websocket.get_messages():
-            pass
+            with WebsocketRequest(db, httprequest, websocket) as req:
+                try:
+                    req.serve_websocket_message(message)
+                except SessionExpiredException:
+                    websocket.disconnect(CloseCode.SESSION_EXPIRED)
+                except Exception:
+                    _logger.exception("Exception occurred during websocket request handling")
 
 
 CommonServer.on_stop(Websocket._kick_all)
