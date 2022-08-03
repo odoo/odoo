@@ -5242,6 +5242,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     _isImageProcessingWidget(widgetName, params) {
         return params.optionsPossibleValues.glFilter
+            || 'customFilter' in params.optionsPossibleValues
             || params.optionsPossibleValues.setQuality
             || widgetName === 'width_select_opt';
     },
