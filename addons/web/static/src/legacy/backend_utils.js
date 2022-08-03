@@ -220,6 +220,10 @@ export function getGlobalState(legacyControllerState) {
 
 export function getLocalState(legacyControllerState) {
     const state = Object.assign({}, legacyControllerState);
+    if ("currentId" in state) {
+        state.resId = state.currentId;
+        delete state.currentId;
+    }
     delete state.searchModel;
     delete state.searchPanel;
     delete state.resIds;

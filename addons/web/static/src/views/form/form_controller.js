@@ -5,17 +5,17 @@ import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
-import { useService, useBus } from "@web/core/utils/hooks";
+import { SIZES } from "@web/core/ui/ui_service";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { createElement } from "@web/core/utils/xml";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
-import { useSetupView } from "@web/views/view_hook";
 import { isX2Many } from "@web/views/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
-import { SIZES } from "@web/core/ui/ui_service";
+import { useSetupView } from "@web/views/view_hook";
 
 const { Component, onWillStart, useEffect, useRef, onRendered, useState, toRaw } = owl;
 
@@ -99,19 +99,14 @@ export class FormController extends Component {
 
         this.archInfo = this.props.archInfo;
         const activeFields = this.archInfo.activeFields;
-        let resId;
-        if ("resId" in this.props) {
-            resId = this.props.resId; // could be false, for "create" mode
-        } else {
-            resId = this.props.state ? this.props.state.resId : false;
-        }
+
         this.beforeLoadResolver = null;
         const beforeLoadProm = new Promise((r) => {
             this.beforeLoadResolver = r;
         });
         this.model = useModel(this.props.Model, {
             resModel: this.props.resModel,
-            resId,
+            resId: this.props.resId || false,
             resIds: this.props.resIds,
             fields: this.props.fields,
             activeFields,
