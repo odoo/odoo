@@ -169,10 +169,10 @@ const DynamicSnippet = publicWidget.Widget.extend({
      */
     _render: function () {
         if (this.data.length > 0 || this.editableMode) {
-            this.$el.removeClass('d-none');
+            this.$el.removeClass('o_dynamic_empty');
             this._prepareContent();
         } else {
-            this.$el.addClass('d-none');
+            this.$el.addClass('o_dynamic_empty');
             this.renderedContent = '';
         }
         this._renderContent();
@@ -213,7 +213,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @private
      */
     _toggleVisibility: function (visible) {
-        this.$el.toggleClass('d-none', !visible);
+        this.$el.toggleClass('o_dynamic_empty', !visible);
     },
 
     //------------------------------------- -------------------------------------
