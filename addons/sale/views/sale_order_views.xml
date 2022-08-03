@@ -588,8 +588,13 @@
                                 <field name="user_id" widget="many2one_avatar_user"/>
                                 <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" options="{'no_create': True}"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                <field name="require_signature"/>
-                                <field name="require_payment"/>
+                                <label for="require_signature" string="Online confirmation"/>
+                                <div>
+                                    <field name="require_signature" class="oe_inline"/>
+                                    <span>Signature</span>
+                                    <field name="require_payment" class="oe_inline ms-3"/>
+                                    <span>Payment</span>
+                                </div>
                                 <field name="reference" readonly="1" attrs="{'invisible': [('reference', '=', False)]}"/>
                                 <field name="client_order_ref"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>

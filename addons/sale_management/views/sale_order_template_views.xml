@@ -23,22 +23,28 @@
                 <sheet>
                     <div name="button_box" class="oe_button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <div class="oe_title">
-                        <label for="name"/>
+                    <div class="oe_title" name="sale_order_template_title">
+                        <label for="name" id="sale_order_template_title"/>
                         <h1>
                             <field name="name" placeholder="e.g. Standard Consultancy Package"/>
                         </h1>
                     </div>
                     <group>
-                        <group>
+                        <group name="sale_info">
                             <field name="active" invisible="1"/>
-                            <field name="company_id" invisible="1"/>
-                           <label for="number_of_days" string="Quotation Validity"/>
-                           <div id="number_of_days">
-                               <field name="number_of_days" class="oe_inline"/> days
-                           </div>
-                        </group>
-                        <group>
+                            <label for="number_of_days" string="Quotation expires after"/>
+                            <div id="number_of_days">
+                                <field name="number_of_days" class="oe_inline"/>
+                                days
+                            </div>
+                            <label for="require_signature" string="Online confirmation"/>
+                            <div>
+                                <field name="require_signature" class="oe_inline"/>
+                                <span>Signature</span>
+                                <field name="require_payment" class="oe_inline ms-3"/>
+                                <span>Payment</span>
+                            </div>
+                            <field name="mail_template_id" context="{'default_model': 'sale.order'}"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -109,17 +115,10 @@
                           </tree>
                         </field>
                     </page>
-                    <page string="Confirmation" name="confirmation">
-                        <group>
-                            <field name="require_signature"/>
-                            <field name="require_payment"/>
-                            <field name="mail_template_id" context="{'default_model':'sale.order'}"/>
-                        </group>
-                    </page>
-                    <page string="Terms &amp; Conditions" name="terms_and_conditions">
-                        <field name="note" nolabel="1"
-                            placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
-                    </page>
+                        <page string="Terms &amp; Conditions" name="terms_and_conditions">
+                            <field name="note" nolabel="1"
+                                   placeholder="The Administrator can set default Terms &amp; Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."/>
+                        </page>
                     </notebook>
                 </sheet>
             </form>

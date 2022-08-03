@@ -111,13 +111,12 @@ class SaleOrder(models.Model):
         compute='_compute_require_signature',
         store=True, readonly=False, precompute=True,
         states=READONLY_FIELD_STATES,
-        help="Request a online signature to the customer in order to confirm orders automatically.")
+        help="Request a online signature and/or payment to the customer in order to confirm orders automatically.")
     require_payment = fields.Boolean(
         string="Online Payment",
         compute='_compute_require_payment',
         store=True, readonly=False, precompute=True,
-        states=READONLY_FIELD_STATES,
-        help="Request an online payment to the customer in order to confirm orders automatically.")
+        states=READONLY_FIELD_STATES)
 
     signature = fields.Image(
         string="Signature",
