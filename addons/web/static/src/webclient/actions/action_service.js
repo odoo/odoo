@@ -851,8 +851,10 @@ function makeActionManager(env) {
                 const arch = viewDescriptions[type].arch;
                 const archDoc = domParser.parseFromString(arch, "text/xml").documentElement;
                 const jsClass = archDoc.getAttribute("js_class");
-                const key = viewRegistry.contains(jsClass) ? jsClass : type;
-                views.push(viewRegistry.get(key));
+                const view = viewRegistry.get(jsClass, false) || viewRegistry.get(type, false);
+                if (view) {
+                    views.push(view);
+                }
             }
         }
         // END LEGACY CODE COMPATIBILITY

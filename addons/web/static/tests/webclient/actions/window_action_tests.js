@@ -938,7 +938,7 @@ QUnit.module("ActionManager", (hooks) => {
         "requests for execute_action of type object: disable buttons",
         async function (assert) {
             assert.expect(2);
-            let def;
+            let def = undefined;
             const mockRPC = async (route, args) => {
                 if (route === "/web/dataset/call_button") {
                     return Promise.resolve(false);
@@ -1398,6 +1398,26 @@ QUnit.module("ActionManager", (hooks) => {
             "get_views",
             "web_search_read",
         ]);
+    });
+
+    QUnit.test("execute action with unknown view type", async function (assert) {
+        serverData.views["partner,false,unknown"] = "<unknown/>";
+        serverData.actions[33] = {
+            id: 33,
+            name: "Partners",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "list"],
+                [false, "unknown"], // typically, an enterprise-only view on a community db
+                [false, "kanban"],
+                [false, "form"],
+            ],
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 33);
+        assert.containsOnce(target, ".o_list_view");
+        assert.containsN(target, ".o_cp_switch_buttons button", 2);
     });
 
     QUnit.test("flags field of ir.actions.act_window is used", async function (assert) {
