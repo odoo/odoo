@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from '@web/core/registry';
-import { useService } from '@web/core/utils/hooks';
+import { useService, useBus } from '@web/core/utils/hooks';
 import core from 'web.core';
 import { AceEditorAdapterComponent } from '../../components/ace_editor/ace_editor';
 import { WebsiteEditorComponent } from '../../components/editor/editor';
@@ -10,42 +10,8 @@ import {OptimizeSEODialog} from '@website/components/dialog/seo';
 
 const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
 
-class BlockIframe extends Component {
-    setup() {
-        this.websiteService = useService('website');
-        this.state = useState({
-            blockIframe: false,
-            showLoader: false,
-        });
-        this.processes = [];
-        this.ANONYMOUS_PROCESS_ID = 'ANONYMOUS_PROCESS_ID';
-        this.websiteService.bus.addEventListener("BLOCK", this.block.bind(this));
-        this.websiteService.bus.addEventListener("UNBLOCK", this.unblock.bind(this));
-    }
-    block(event) {
-        if (event.detail.showLoader && !this.state.showLoader) {
-            setTimeout(() => {
-                this.state.showLoader = true;
-            }, event.detail.loaderDelay);
-        }
-        if (!this.processes.length) {
-            this.state.blockIframe = true;
-        }
-        this.processes.push(event.detail.processId || this.ANONYMOUS_PROCESS_ID);
-    }
-    unblock(event) {
-        const processId = event.detail.processId || this.ANONYMOUS_PROCESS_ID;
-        const processIndex = this.processes.indexOf(processId);
-        if (processIndex > -1) {
-            this.processes.splice(processIndex, 1);
-        }
-        if (this.processes.length === 0) {
-            this.state.blockIframe = false;
-            this.state.showLoader = false;
-        }
-    }
-}
-BlockIframe.template = 'website.BlockIframe';
+class BlockPreview extends Component {}
+BlockPreview.template = 'website.BlockPreview';
 
 export class WebsitePreview extends Component {
     setup() {
@@ -62,6 +28,13 @@ export class WebsitePreview extends Component {
         this.iframefallback = useRef('iframefallback');
         this.container = useRef('container');
         this.websiteContext = useState(this.websiteService.context);
+        this.blockedState = useState({
+            isBlocked: false,
+            showLoader: false,
+        });
+
+        useBus(this.websiteService.bus, 'BLOCK', (event) => this.block(event.detail));
+        useBus(this.websiteService.bus, 'UNBLOCK', () => this.unblock());
 
         onWillStart(async () => {
             await this.websiteService.fetchWebsites();
@@ -98,12 +71,12 @@ export class WebsitePreview extends Component {
         }, () => [this.props.action.context.params]);
 
         onMounted(() => {
-            this.websiteService.blockIframe(true, 0, 'load-iframe');
-            this.iframe.el.addEventListener('load', () => this.websiteService.unblockIframe('load-iframe'), { once: true });
+            this.websiteService.blockPreview(true, 'load-iframe');
+            this.iframe.el.addEventListener('load', () => this.websiteService.unblockPreview('load-iframe'), { once: true });
             // For a frontend page, it is better to use the
             // OdooFrameContentLoaded event to unblock the iframe, as it is
             // triggered faster than the load event.
-            this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockIframe('load-iframe'), { once: true });
+            this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockPreview('load-iframe'), { once: true });
         });
 
         onWillUnmount(() => {
@@ -171,6 +144,16 @@ export class WebsitePreview extends Component {
                 this.iframe.el.contentWindow.location.reload();
             }
         });
+    }
+
+    block({ showLoader = true } = {}) {
+        this.blockedState.isBlocked = true;
+        this.blockedState.showLoader = showLoader;
+    }
+
+    unblock() {
+        this.blockedState.isBlocked = false;
+        this.blockedState.showLoader = false;
     }
 
     addWelcomeMessage() {
@@ -313,7 +296,7 @@ export class WebsitePreview extends Component {
 WebsitePreview.template = 'website.WebsitePreview';
 WebsitePreview.components = {
     WebsiteEditorComponent,
-    BlockIframe,
+    BlockPreview,
     WebsiteTranslator,
     AceEditorAdapterComponent,
 };

@@ -23,6 +23,8 @@ export const unslugHtmlDataObject = (repr) => {
     };
 };
 
+const ANONYMOUS_PROCESS_ID = 'ANONYMOUS_PROCESS_ID';
+
 export const websiteService = {
     dependencies: ['orm', 'action', 'user', 'dialog', 'hotkey'],
     async start(env, { orm, action, user, dialog, hotkey }) {
@@ -39,6 +41,7 @@ export const websiteService = {
         let isDesigner;
         let hasMultiWebsites;
         let actionJsId;
+        let blockingProcesses = [];
         const context = reactive({
             showNewContentModal: false,
             showAceEditor: false,
@@ -198,11 +201,20 @@ export const websiteService = {
                 }
                 return Wysiwyg;
             },
-            blockIframe(showLoader = true, loaderDelay = 0, processId) {
-                bus.trigger('BLOCK', {showLoader, loaderDelay, processId});
+            blockPreview(showLoader, processId) {
+                if (!blockingProcesses.length) {
+                    bus.trigger('BLOCK', { showLoader });
+                }
+                blockingProcesses.push(processId || ANONYMOUS_PROCESS_ID);
             },
-            unblockIframe(processId) {
-                bus.trigger('UNBLOCK', { processId });
+            unblockPreview(processId) {
+                const processIndex = blockingProcesses.indexOf(processId || ANONYMOUS_PROCESS_ID);
+                if (processIndex > -1) {
+                    blockingProcesses.splice(processIndex, 1);
+                    if (blockingProcesses.length === 0) {
+                        bus.trigger('UNBLOCK');
+                    }
+                }
             },
             showLoader(props) {
                 bus.trigger('SHOW-WEBSITE-LOADER', props);
