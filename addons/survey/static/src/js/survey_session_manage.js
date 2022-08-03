@@ -6,8 +6,17 @@ var SurveyPreloadImageMixin = require('survey.preload_image_mixin');
 var SurveySessionChart = require('survey.session_chart');
 var SurveySessionTextAnswers = require('survey.session_text_answers');
 var SurveySessionLeaderBoard = require('survey.session_leaderboard');
-var core = require('web.core');
-var _t = core._t;
+const {_lt} = require('web.core');
+
+const nextPageTooltips = {
+    closingWords: _lt('End of Survey'),
+    leaderboard: _lt('Show Leaderboard'),
+    leaderboardFinal: _lt('Show Final Leaderboard'),
+    nextQuestion: _lt('Next'),
+    results: _lt('Show Correct Answer(s)'),
+    startScreen: _lt('Start'),
+    userInputs: _lt('Show Results'),
+};
 
 publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPreloadImageMixin, {
     selector: '.o_survey_session_manage',
@@ -36,6 +45,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             }
             // general survey props
             self.surveyId = self.$el.data('surveyId');
+            self.surveyHasConditionalQuestions = self.$el.data('surveyHasConditionalQuestions');
             self.surveyAccessToken = self.$el.data('surveyAccessToken');
             self.isStartScreen = self.$el.data('isStartScreen');
             self.isFirstQuestion = self.$el.data('isFirstQuestion');
@@ -93,7 +103,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             container: 'body',
             offset: '0, 3',
             content: function () {
-                return _t("Copied!");
+                return _lt("Copied!");
             }
         });
 
@@ -178,6 +188,11 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         }
 
         this.currentScreen = screenToDisplay;
+        // To avoid a flicker, we do not update the tooltip when going to the next question,
+        // as it will be done in "_setupCurrentScreen"
+        if (!['question', 'nextQuestion'].includes(screenToDisplay)) {
+            this._updateNextScreenTooltip();
+        }
     },
 
     /**
@@ -213,6 +228,11 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         }
 
         this.currentScreen = screenToDisplay;
+        // To avoid a flicker, we do not update the tooltip when going to the next question,
+        // as it will be done in "_setupCurrentScreen"
+        if (!['question', 'nextQuestion'].includes(screenToDisplay)) {
+            this._updateNextScreenTooltip();
+        }
     },
 
     /**
@@ -398,7 +418,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             // Display last screen if leaderboard activated
             this.isLastQuestion = true;
             this._setupLeaderboard().then(function () {
-                self.$('.o_survey_session_leaderboard_title').text(_t('Final Leaderboard'));
+                self.$('.o_survey_session_leaderboard_title').text(_lt('Final Leaderboard'));
                 self.$('.o_survey_session_navigation_next').addClass('d-none');
                 self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
                 self.leaderBoard.showLeaderboard(false, false);
@@ -623,6 +643,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         this.$('.o_survey_session_navigation_previous').toggleClass('d-none', !!this.isFirstQuestion);
 
         this._setShowInputs(this.currentScreen === 'userInputs');
+        this._updateNextScreenTooltip();
     },
 
     /**
@@ -655,6 +676,30 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         if (this.resultsChart) {
             this.resultsChart.setShowAnswers(showAnswers);
             this.resultsChart.updateChart();
+        }
+    },
+    /**
+     * @private
+     * Updates the tooltip for current page (on right arrow icon for 'Next' content).
+     * this method will be called on Clicking of Next and Previous Arrow to show the
+     * tooltip for the Next Content.
+     */
+    _updateNextScreenTooltip() {
+        let tooltip;
+        if (this.currentScreen === 'startScreen') {
+            tooltip = nextPageTooltips['startScreen'];
+        } else if (this.isLastQuestion && !this.surveyHasConditionalQuestions && !this.isScoredQuestion && !this.sessionShowLeaderboard) {
+            tooltip = nextPageTooltips['closingWords'];
+        } else {
+            const nextScreen = this._getNextScreen();
+            if (nextScreen === 'nextQuestion' || this.surveyHasConditionalQuestions) {
+                tooltip = nextPageTooltips['nextQuestion'];
+            }
+            tooltip = nextPageTooltips[nextScreen];
+        }
+        const sessionNavigationNextEl = this.el.querySelector('.o_survey_session_navigation_next_label');
+        if (sessionNavigationNextEl && tooltip) {
+            sessionNavigationNextEl.textContent = tooltip;
         }
     }
 });
