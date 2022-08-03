@@ -310,11 +310,21 @@ class ProductProduct(models.Model):
 
         # Find back incoming stock valuation layers (called candidates here) to value `quantity`.
         qty_to_take_on_candidates = quantity
-        candidates = self.env['stock.valuation.layer'].sudo().search([
-            ('product_id', '=', self.id),
-            ('remaining_qty', '>', 0),
-            ('company_id', '=', company.id),
-        ])
+        location = self.env.context.get('location')
+        candidates = self.env['stock.valuation.layer']
+        if location:
+            candidates = self.env['stock.valuation.layer'].sudo().search([
+                ('product_id', '=', self.id),
+                ('remaining_qty', '>', 0),
+                ('company_id', '=', company.id),
+                ('stock_move_id.location_dest_id', '=', location.id),
+            ])
+        if len(candidates) == 0 or location is None:
+            candidates = self.env['stock.valuation.layer'].sudo().search([
+                ('product_id', '=', self.id),
+                ('remaining_qty', '>', 0),
+                ('company_id', '=', company.id),
+            ])
         new_standard_price = 0
         tmp_value = 0  # to accumulate the value taken on the candidates
         for candidate in candidates:
