@@ -9,7 +9,7 @@ const { EventBus } = owl;
  * - notification : when a notification is receive from the long polling
  */
 export class Longpolling extends EventBus {
-    constructor(env) {
+    constructor(env, { multi_tab }) {
         super();
         this.env = env;
 
@@ -20,7 +20,7 @@ export class Longpolling extends EventBus {
 
         // PROPERTIES
         this._isActive = null;
-        this._id = _.uniqueId('bus');
+        this._id = multi_tab.currentTabId;
         this._lastNotificationID = 0;
         this._pollRetryTimeout = null;
 

@@ -132,10 +132,9 @@ export class CrossTab extends Longpolling {
         }
 
         const peerChannelsAfter = JSON.stringify(peerChannels);
-        if (peerChannelsBefore === peerChannelsAfter) {
-            return false;
+        if (peerChannelsBefore !== peerChannelsAfter) {
+            this.env.services['multi_tab'].setSharedValue('channels', peerChannels);
         }
-        this.env.services['multi_tab'].setSharedValue('channels', peerChannels);
 
         const allChannels = new Set();
         for (const channels of Object.values(peerChannels)) {
@@ -148,8 +147,13 @@ export class CrossTab extends Longpolling {
         for (const channel of this._currentTabChannels) {
             allChannels.add(channel);
         }
-        this._channels = Array.from(allChannels);
-        return true;
+        const allChannelsSorted = Array.from(allChannels).sort();
+        if (JSON.stringify(allChannelsSorted) === JSON.stringify(this._channels.sort())) {
+            return false;
+        } else {
+            this._channels = allChannelsSorted;
+            return true;
+        }
     }
 
     //--------------------------------------------------------------------------
