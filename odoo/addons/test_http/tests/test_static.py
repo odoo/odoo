@@ -25,9 +25,9 @@ class TestHttpStaticCommon(TestHttpBase):
             cls.placeholder_data = file.read()
 
     def assertDownload(
-        self, url, assert_status_code, assert_headers, assert_content=None
+        self, url, headers, assert_status_code, assert_headers, assert_content=None
     ):
-        res = self.db_url_open(url)
+        res = self.db_url_open(url, headers=headers)
         res.raise_for_status()
         self.assertEqual(res.status_code, assert_status_code)
         for header_name, header_value in assert_headers.items():
@@ -49,7 +49,7 @@ class TestHttpStaticCommon(TestHttpBase):
             headers['X-Accel-Redirect'] = f'/web/filestore/{self.cr.dbname}/{sha[:2]}/{sha}'
             headers['Content-Length'] = '0'
 
-        return self.assertDownload(url, 200, headers, b'' if x_sendfile else self.gizeh_data)
+        return self.assertDownload(url, {}, 200, headers, b'' if x_sendfile else self.gizeh_data)
 
     def assertDownloadPlaceholder(self, url):
         headers = {
@@ -57,7 +57,7 @@ class TestHttpStaticCommon(TestHttpBase):
             'Content-Type': 'image/png',
             'Content-Disposition': 'inline; filename=placeholder.png'
         }
-        return self.assertDownload(url, 200, headers, self.placeholder_data)
+        return self.assertDownload(url, {}, 200, headers, self.placeholder_data)
 
 
 @tagged('post_install', '-at_install')
@@ -247,6 +247,21 @@ class TestHttpStatic(TestHttpStaticCommon):
     def test_static14_download_not_found(self):
         res = self.url_open('/web/image/idontexist?download=True')
         self.assertEqual(res.status_code, 404)
+
+    def test_static15_range(self):
+        self.assertDownload(
+            url='/web/content/test_http.gizeh_png',
+            headers={'Range': 'bytes=100-199'},
+
+            assert_status_code=206,
+            assert_headers={
+                'Content-Length': '100',
+                'Content-Range': 'bytes 100-199/814',
+                'Content-Type': 'image/png',
+                'Content-Disposition': 'inline; filename=gizeh.png',
+            },
+            assert_content=self.gizeh_data[100:200]
+        )
 
 
 class TestHttpStaticCache(TestHttpStaticCommon):
