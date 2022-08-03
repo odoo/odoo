@@ -16,26 +16,6 @@ class MailChatController(BusController):
         return request.session.uid and request.session.uid or SUPERUSER_ID
 
     # --------------------------
-    # Extends BUS Controller Poll
-    # --------------------------
-    def _poll(self, dbname, channels, last, options):
-        channels = list(channels)  # do not alter original list
-        guest_sudo = request.env['mail.guest']._get_guest_from_request(request).sudo()
-        mail_channels = request.env['mail.channel']
-        if request.session.uid:
-            partner = request.env.user.partner_id
-            mail_channels = partner.channel_ids
-            channels.append(partner)
-        elif guest_sudo:
-            if 'bus_inactivity' in options:
-                guest_sudo.env['bus.presence'].update(inactivity_period=options.get('bus_inactivity'), identity_field='guest_id', identity_value=guest_sudo.id)
-            mail_channels = guest_sudo.channel_ids
-            channels.append(guest_sudo)
-        for mail_channel in mail_channels:
-            channels.append(mail_channel)
-        return super()._poll(dbname, channels, last, options)
-
-    # --------------------------
     # Anonymous routes (Common Methods)
     # --------------------------
     @route('/mail/chat_post', type="json", auth="public", cors="*")
@@ -71,7 +51,7 @@ class MailChatController(BusController):
         else:
             return channel._channel_fetch_message(last_id, limit)
 
-    @route('/longpolling/im_status', type="json", auth="user")
+    @route('/bus/im_status', type="json", auth="user")
     def im_status(self, partner_ids, guest_ids=None):
         im_status = super().im_status(partner_ids)
         if guest_ids:
