@@ -6,7 +6,7 @@ import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessageAuthorPrefixView',
-    identifyingFields: [['threadNeedactionPreviewViewOwner', 'threadPreviewViewOwner']],
+    identifyingFields: [['threadNeedactionPreviewViewOwner', 'channelPreviewViewOwner']],
     recordMethods: {
         /**
          * @private
@@ -16,8 +16,8 @@ registerModel({
             if (this.threadNeedactionPreviewViewOwner) {
                 return replace(this.threadNeedactionPreviewViewOwner.thread.lastNeedactionMessageAsOriginThread);
             }
-            if (this.threadPreviewViewOwner) {
-                return replace(this.threadPreviewViewOwner.thread.lastMessage);
+            if (this.channelPreviewViewOwner) {
+                return replace(this.channelPreviewViewOwner.channel.thread.lastMessage);
             }
             return clear();
         },
@@ -29,8 +29,8 @@ registerModel({
             if (this.threadNeedactionPreviewViewOwner) {
                 return replace(this.threadNeedactionPreviewViewOwner.thread);
             }
-            if (this.threadPreviewViewOwner) {
-                return replace(this.threadPreviewViewOwner.thread);
+            if (this.channelPreviewViewOwner) {
+                return replace(this.channelPreviewViewOwner.channel.thread);
             }
             return clear();
         },
@@ -46,7 +46,7 @@ registerModel({
             inverse: 'messageAuthorPrefixView',
             readonly: true,
         }),
-        threadPreviewViewOwner: one('ThreadPreviewView', {
+        channelPreviewViewOwner: one('ChannelPreviewView', {
             inverse: 'messageAuthorPrefixView',
             readonly: true,
         }),

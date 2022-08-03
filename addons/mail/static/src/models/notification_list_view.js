@@ -119,7 +119,7 @@ registerModel({
             }
             notifications.push(...this.notificationGroupViews);
             notifications.push(...this.threadNeedactionPreviewViews);
-            notifications.push(...this.threadPreviewViews);
+            notifications.push(...this.channelPreviewViews);
             return replace(notifications);
         },
         /**
@@ -160,7 +160,7 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
-        _computeThreadPreviewViews() {
+        _computeChannelPreviewViews() {
             return insertAndReplace(
                 this.filteredThreads
                     .sort((t1, t2) => {
@@ -183,7 +183,7 @@ registerModel({
                     })
                     .map(thread => {
                         return {
-                            thread: replace(thread),
+                            channel: replace(thread.channel),
                         };
                     })
             );
@@ -195,8 +195,8 @@ registerModel({
          * @private
          */
         async _loadPreviews() {
-            const threads = this.threadPreviewViews
-                .map(threadPreviewView => threadPreviewView.thread);
+            const threads = this.channelPreviewViews
+                .map(channelPreviewView => channelPreviewView.channel.thread);
             this.messaging.models['Thread'].loadPreviews(threads);
         },
     },
@@ -234,8 +234,8 @@ registerModel({
             inverse: 'notificationListViewOwner',
             isCausal: true,
         }),
-        threadPreviewViews: many('ThreadPreviewView', {
-            compute: '_computeThreadPreviewViews',
+        channelPreviewViews: many('ChannelPreviewView', {
+            compute: '_computeChannelPreviewViews',
             inverse: 'notificationListViewOwner',
             isCausal: true,
         }),

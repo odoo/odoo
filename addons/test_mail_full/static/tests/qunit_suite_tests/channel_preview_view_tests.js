@@ -3,9 +3,9 @@
 import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('test_mail_full', {}, function () {
-QUnit.module('thread_preview_tests.js');
+QUnit.module('channel_preview_view_tests.js');
 
-QUnit.test('rating value displayed on the thread preview', async function (assert) {
+QUnit.test('rating value displayed on the channel preview', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -31,22 +31,22 @@ QUnit.test('rating value displayed on the thread preview', async function (asser
         },
     }));
     assert.strictEqual(
-        document.querySelector('.o_ThreadPreview_ratingText').textContent,
+        document.querySelector('.o_ChannelPreviewView_ratingText').textContent,
         "Rating:",
         "should display the correct content (Rating:)"
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadPreview_ratingImage',
+        '.o_ChannelPreviewView_ratingImage',
         "should have a rating image in the body"
     );
     assert.strictEqual(
-        $('.o_ThreadPreview_ratingImage').attr('data-src'),
+        $('.o_ChannelPreviewView_ratingImage').attr('data-src'),
         "/rating/static/src/img/rating_5.png",
         "should contain the correct rating image"
     );
     assert.strictEqual(
-        $('.o_ThreadPreview_ratingImage').attr('data-alt'),
+        $('.o_ChannelPreviewView_ratingImage').attr('data-alt'),
         "top",
         "should contain the correct rating text"
     );

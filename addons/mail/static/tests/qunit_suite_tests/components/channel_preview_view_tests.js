@@ -4,7 +4,7 @@ import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('thread_preview_tests.js');
+QUnit.module('channel_preview_tests.js');
 
 QUnit.test('mark as read', async function (assert) {
     assert.expect(6);
@@ -39,23 +39,23 @@ QUnit.test('mark as read', async function (assert) {
     await click('.o_MessagingMenu_toggler');
     assert.containsOnce(
         document.body,
-        '.o_ThreadPreview_markAsRead',
+        '.o_ChannelPreviewView_markAsRead',
         "should have the mark as read button"
     );
 
-    await click('.o_ThreadPreview_markAsRead');
+    await click('.o_ChannelPreviewView_markAsRead');
     assert.verifySteps(
         ['set_last_seen_message'],
         "should have marked the thread as seen"
     );
     assert.hasClass(
-        document.querySelector('.o_ThreadPreview'),
+        document.querySelector('.o_ChannelPreviewView'),
         'o-muted',
         "should be muted once marked as read"
     );
     assert.containsNone(
         document.body,
-        '.o_ThreadPreview_markAsRead',
+        '.o_ChannelPreviewView_markAsRead',
         "should no longer have the mark as read button"
     );
     assert.containsNone(

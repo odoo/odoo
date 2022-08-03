@@ -418,6 +418,10 @@ registerModel({
             inverse: 'channel',
             isCausal: true,
         }),
+        channelPreviewViews: many('ChannelPreviewView', {
+            inverse: 'channel',
+            isCausal: true,
+        }),
         /**
          * Either 'channel', 'chat', 'group', or 'livechat'.
          */

@@ -13,7 +13,7 @@ registerModel({
         'messageViewOwner',
         'notificationRequestViewOwner',
         'threadNeedactionPreviewViewOwner',
-        'threadPreviewViewOwner',
+        'channelPreviewViewOwner',
     ]],
     recordMethods: {
         /**
@@ -39,8 +39,8 @@ registerModel({
             if (this.threadNeedactionPreviewViewOwner) {
                 return replace(this.threadNeedactionPreviewViewOwner.thread.channel.correspondent.persona);
             }
-            if (this.threadPreviewViewOwner) {
-                return replace(this.threadPreviewViewOwner.thread.channel.correspondent.persona);
+            if (this.channelPreviewViewOwner) {
+                return replace(this.channelPreviewViewOwner.channel.correspondent.persona);
             }
             return clear();
         },
@@ -70,7 +70,7 @@ registerModel({
             inverse: 'personaImStatusIconView',
             readonly: true,
         }),
-        threadPreviewViewOwner: one('ThreadPreviewView', {
+        channelPreviewViewOwner: one('ChannelPreviewView', {
             inverse: 'personaImStatusIconView',
             readonly: true,
         }),

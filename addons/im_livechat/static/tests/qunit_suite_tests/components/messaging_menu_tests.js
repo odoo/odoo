@@ -48,11 +48,8 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        `.o_ThreadPreview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_ChannelPreviewView[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`,
         "livechat should be listed in 'all' tab/filter of messaging menu"
     );
@@ -67,11 +64,8 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        `.o_ThreadPreview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        `.o_ChannelPreviewView[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`,
         "livechat should be listed in 'chat' tab/filter of messaging menu"
     );

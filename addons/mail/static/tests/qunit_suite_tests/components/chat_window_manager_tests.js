@@ -274,11 +274,8 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
 
     // open channel-2
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_NotificationListItem[data-thread-local-id="${
-        messaging.models['Thread'].findFromIdentifyingData({
-            id: mailChannelId2,
-            model: 'mail.channel',
-        }).localId
+    await click(`.o_ChannelPreviewView[data-channel-local-id="${
+        messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId2 }).localId
     }"]`);
     assert.containsN(
         document.body,
@@ -1018,11 +1015,8 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        .o_ChannelPreviewView[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]
     `);
     assert.strictEqual(
@@ -1057,11 +1051,8 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId2,
-                model: 'mail.channel',
-            }).localId
+        .o_ChannelPreviewView[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId2 }).localId
         }"]
     `);
     assert.strictEqual(
@@ -1149,11 +1140,8 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        .o_ChannelPreviewView[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]
     `);
     assert.strictEqual(
@@ -1175,11 +1163,8 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId2,
-                model: 'mail.channel',
-            }).localId
+        .o_ChannelPreviewView[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId2 }).localId
         }"]
     `);
     assert.strictEqual(
@@ -1201,11 +1186,8 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId3,
-                model: 'mail.channel',
-            }).localId
+        .o_ChannelPreviewView[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId3 }).localId
         }"]
     `);
     assert.strictEqual(
@@ -1270,11 +1252,8 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        .o_ChannelPreviewView[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]`
     );
 
@@ -1307,11 +1286,8 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId2,
-                model: 'mail.channel',
-            }).localId
+        .o_ChannelPreviewView[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId2 }).localId
         }"]`
     );
 
@@ -2048,21 +2024,15 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
     await click('.o_MessagingMenu_toggler');
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
+        .o_ChannelPreviewView[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
         }"]
     `);
     await click('.o_ChatWindowHeader_commandBack');
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId2,
-                model: 'mail.channel',
-            }).localId
+        .o_ChannelPreviewView[data-channel-local-id="${
+            messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId2 }).localId
         }"]
     `);
     // simulate resize to go into mobile

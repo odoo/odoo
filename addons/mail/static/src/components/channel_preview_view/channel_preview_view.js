@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class ThreadPreview extends Component {
+export class ChannelPreviewView extends Component {
 
     /**
      * @override
@@ -16,17 +16,17 @@ export class ThreadPreview extends Component {
     }
 
     /**
-     * @returns {ThreadPreviewView}
+     * @returns {ChannelPreviewView}
      */
-    get threadPreviewView() {
+    get channelPreviewView() {
         return this.props.record;
     }
 
 }
 
-Object.assign(ThreadPreview, {
+Object.assign(ChannelPreviewView, {
     props: { record: Object },
-    template: 'mail.ThreadPreview',
+    template: 'mail.ChannelPreviewView',
 });
 
-registerMessagingComponent(ThreadPreview);
+registerMessagingComponent(ChannelPreviewView);

@@ -6,8 +6,8 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 registerModel({
-    name: 'ThreadPreviewView',
-    identifyingFields: ['notificationListViewOwner', 'thread'],
+    name: 'ChannelPreviewView',
+    identifyingFields: ['notificationListViewOwner', 'channel'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -21,17 +21,17 @@ registerModel({
                 // handled in `_onClickMarkAsRead`
                 return;
             }
-            this.thread.open();
+            this.channel.thread.open();
             if (!this.messaging.device.isSmall) {
                 this.messaging.messagingMenu.close();
             }
         },
         /**
-         * @param {MouseEvent} ev 
+         * @param {MouseEvent} ev
          */
         onClickMarkAsRead(ev) {
-            if (this.thread.lastNonTransientMessage) {
-                this.thread.markAsSeen(this.thread.lastNonTransientMessage);
+            if (this.channel.thread.lastNonTransientMessage) {
+                this.channel.thread.markAsSeen(this.channel.thread.lastNonTransientMessage);
             }
         },
         /**
@@ -39,23 +39,20 @@ registerModel({
          * @returns {string|FieldCommand}
          */
         _computeImageUrl() {
-            if (!this.thread.channel) {
-                return clear();
+            if (this.channel.correspondent) {
+                return this.channel.correspondent.avatarUrl;
             }
-            if (this.thread.channel.correspondent) {
-                return this.thread.channel.correspondent.avatarUrl;
-            }
-            return `/web/image/mail.channel/${this.thread.id}/avatar_128?unique=${this.thread.channel.avatarCacheKey}`;
+            return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
         },
         /**
          * @private
          * @returns {string|FieldCommand}
          */
         _computeInlineLastMessageBody() {
-            if (!this.thread.lastMessage) {
+            if (!this.channel.thread.lastMessage) {
                 return clear();
             }
-            return htmlToTextContentInline(this.thread.lastMessage.prettyBody);
+            return htmlToTextContentInline(this.channel.thread.lastMessage.prettyBody);
         },
         /**
          * @private
@@ -69,8 +66,8 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeLastTrackingValue() {
-            if (this.thread.lastMessage && this.thread.lastMessage.lastTrackingValue) {
-                return replace(this.thread.lastMessage.lastTrackingValue);
+            if (this.channel.thread.lastMessage && this.channel.thread.lastMessage.lastTrackingValue) {
+                return replace(this.channel.thread.lastMessage.lastTrackingValue);
             }
             return clear();
         },
@@ -80,8 +77,8 @@ registerModel({
          */
         _computeMessageAuthorPrefixView() {
             if (
-                this.thread.lastMessage &&
-                this.thread.lastMessage.author
+                this.channel.thread.lastMessage &&
+                this.channel.thread.lastMessage.author
             ) {
                 return insertAndReplace();
             }
@@ -92,10 +89,15 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computePersonaImStatusIconView() {
-            return this.thread.channel.correspondent && this.thread.channel.correspondent.isImStatusSet ? insertAndReplace() : clear();
+            return this.channel.correspondent && this.channel.correspondent.isImStatusSet ? insertAndReplace() : clear();
         },
     },
     fields: {
+        channel: one('Channel', {
+            inverse: 'channelPreviewViews',
+            readonly: true,
+            required: true,
+        }),
         imageUrl: attr({
             compute: '_computeImageUrl',
             default: '/mail/static/src/img/smiley/avatar.jpg',
@@ -120,24 +122,19 @@ registerModel({
         markAsReadRef: attr(),
         messageAuthorPrefixView: one('MessageAuthorPrefixView', {
             compute: '_computeMessageAuthorPrefixView',
-            inverse: 'threadPreviewViewOwner',
+            inverse: 'channelPreviewViewOwner',
             isCausal: true,
         }),
         notificationListViewOwner: one('NotificationListView', {
-            inverse: 'threadPreviewViews',
+            inverse: 'channelPreviewViews',
             readonly: true,
             required: true,
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
-            inverse: 'threadPreviewViewOwner',
+            inverse: 'channelPreviewViewOwner',
             isCausal: true,
             readonly: true,
-        }),
-        thread: one('Thread', {
-            inverse: 'threadPreviewViews',
-            readonly: true,
-            required: true,
         }),
     },
 });

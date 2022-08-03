@@ -440,7 +440,7 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
     await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_MessagingMenu_dropdownMenu .o_ThreadPreview
+            .o_MessagingMenu_dropdownMenu .o_ChannelPreviewView
         `).length,
         1,
         "should have one preview"
@@ -448,7 +448,7 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview_sidebar
+            .o_ChannelPreviewView_sidebar
         `).length,
         1,
         "preview should have a sidebar"
@@ -456,7 +456,7 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview_content
+            .o_ChannelPreviewView_content
         `).length,
         1,
         "preview should have some content"
@@ -464,7 +464,7 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview_header
+            .o_ChannelPreviewView_header
         `).length,
         1,
         "preview should have header in content"
@@ -472,8 +472,8 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview_header
-            .o_ThreadPreview_name
+            .o_ChannelPreviewView_header
+            .o_ChannelPreviewView_name
         `).length,
         1,
         "preview should have name in header of content"
@@ -481,15 +481,15 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
     assert.strictEqual(
         document.querySelector(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview_name
+            .o_ChannelPreviewView_name
         `).textContent,
         "General", "preview should have name of channel"
     );
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview_content
-            .o_ThreadPreview_core
+            .o_ChannelPreviewView_content
+            .o_ChannelPreviewView_core
         `).length,
         1,
         "preview should have core in content"
@@ -497,8 +497,8 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview_core
-            .o_ThreadPreview_inlineText
+            .o_ChannelPreviewView_core
+            .o_ChannelPreviewView_inlineText
         `).length,
         1,
         "preview should have inline text in core of content"
@@ -506,8 +506,8 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
     assert.strictEqual(
         document.querySelector(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview_core
-            .o_ThreadPreview_inlineText
+            .o_ChannelPreviewView_core
+            .o_ChannelPreviewView_inlineText
         `).textContent.trim(),
         "Demo: test",
         "preview should have message content as inline text of core content"
@@ -536,18 +536,15 @@ QUnit.test('filtered previews', async function (assert) {
 
     await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
-        document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`).length,
+        document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ChannelPreviewView`).length,
         2,
         "should have 2 previews"
     );
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
+            .o_ChannelPreviewView[data-channel-local-id="${
+                messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
             }"]
         `).length,
         1,
@@ -556,11 +553,8 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId2,
-                    model: 'mail.channel',
-                }).localId
+            .o_ChannelPreviewView[data-channel-local-id="${
+                messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId2 }).localId
             }"]
         `).length,
         1,
@@ -569,18 +563,15 @@ QUnit.test('filtered previews', async function (assert) {
 
     await click('.o_MessagingMenuTab[data-tab-id="chat"]');
     assert.strictEqual(
-        document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`).length,
+        document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ChannelPreviewView`).length,
         1,
         "should have one preview"
     );
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
+            .o_ChannelPreviewView[data-channel-local-id="${
+                messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
             }"]
         `).length,
         1,
@@ -589,11 +580,8 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId2,
-                    model: 'mail.channel',
-                }).localId
+            .o_ChannelPreviewView[data-channel-local-id="${
+                messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId2 }).localId
             }"]
         `).length,
         0,
@@ -604,7 +592,7 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview
+            .o_ChannelPreviewView
         `).length,
         1,
         "should have one preview"
@@ -612,11 +600,8 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
+            .o_ChannelPreviewView[data-channel-local-id="${
+                messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
             }"]
         `).length,
         0,
@@ -625,11 +610,8 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId2,
-                    model: 'mail.channel',
-                }).localId
+            .o_ChannelPreviewView[data-channel-local-id="${
+                messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId2 }).localId
             }"]
         `).length,
         1,
@@ -638,18 +620,15 @@ QUnit.test('filtered previews', async function (assert) {
 
     await click('.o_MessagingMenuTab[data-tab-id="all"]');
     assert.strictEqual(
-        document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`).length,
+        document.querySelectorAll(`.o_MessagingMenu_dropdownMenu .o_ChannelPreviewView`).length,
         2,
         "should have 2 previews"
     );
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
+            .o_ChannelPreviewView[data-channel-local-id="${
+                messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId
             }"]
         `).length,
         1,
@@ -658,11 +637,8 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId2,
-                    model: 'mail.channel',
-                }).localId
+            .o_ChannelPreviewView[data-channel-local-id="${
+                messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId2 }).localId
             }"]
         `).length,
         1,
@@ -678,7 +654,7 @@ QUnit.test('open chat window from preview', async function (assert) {
     const { click } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_MessagingMenu_dropdownMenu .o_ThreadPreview`);
+    await click(`.o_MessagingMenu_dropdownMenu .o_ChannelPreviewView`);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
         1,
@@ -701,27 +677,27 @@ QUnit.test('no code injection in message body preview', async function (assert) 
     await click(`.o_MessagingMenu_toggler`);
     assert.containsOnce(
         document.body,
-        '.o_MessagingMenu_dropdownMenu .o_ThreadPreview',
+        '.o_MessagingMenu_dropdownMenu .o_ChannelPreviewView',
         "should display a preview",
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadPreview_core',
+        '.o_ChannelPreviewView_core',
         "preview should have core in content",
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadPreview_inlineText',
+        '.o_ChannelPreviewView_inlineText',
         "preview should have inline text in core of content",
     );
     assert.strictEqual(
-        document.querySelector('.o_ThreadPreview_inlineText')
+        document.querySelector('.o_ChannelPreviewView_inlineText')
             .textContent.replace(/\s/g, ""),
         "You:&shoulnotberaisedthrownewError('CodeInjectionError');",
         "should display correct uninjected last message inline content"
     );
     assert.containsNone(
-        document.querySelector('.o_ThreadPreview_inlineText'),
+        document.querySelector('.o_ChannelPreviewView_inlineText'),
         'script',
         "last message inline content should not have any code injection"
     );
@@ -742,27 +718,27 @@ QUnit.test('no code injection in message body preview from sanitized message', a
     await click(`.o_MessagingMenu_toggler`);
     assert.containsOnce(
         document.body,
-        '.o_MessagingMenu_dropdownMenu .o_ThreadPreview',
+        '.o_MessagingMenu_dropdownMenu .o_ChannelPreviewView',
         "should display a preview",
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadPreview_core',
+        '.o_ChannelPreviewView_core',
         "preview should have core in content",
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadPreview_inlineText',
+        '.o_ChannelPreviewView_inlineText',
         "preview should have inline text in core of content",
     );
     assert.strictEqual(
-        document.querySelector('.o_ThreadPreview_inlineText')
+        document.querySelector('.o_ChannelPreviewView_inlineText')
             .textContent.replace(/\s/g, ""),
         "You:<em>&shoulnotberaised</em><script>thrownewError('CodeInjectionError');</script>",
         "should display correct uninjected last message inline content"
     );
     assert.containsNone(
-        document.querySelector('.o_ThreadPreview_inlineText'),
+        document.querySelector('.o_ChannelPreviewView_inlineText'),
         'script',
         "last message inline content should not have any code injection"
     );
@@ -783,21 +759,21 @@ QUnit.test('<br/> tags in message body preview are transformed in spaces', async
     await click(`.o_MessagingMenu_toggler`);
     assert.containsOnce(
         document.body,
-        '.o_MessagingMenu_dropdownMenu .o_ThreadPreview',
+        '.o_MessagingMenu_dropdownMenu .o_ChannelPreviewView',
         "should display a preview",
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadPreview_core',
+        '.o_ChannelPreviewView_core',
         "preview should have core in content",
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadPreview_inlineText',
+        '.o_ChannelPreviewView_inlineText',
         "preview should have inline text in core of content",
     );
     assert.strictEqual(
-        document.querySelector('.o_ThreadPreview_inlineText').textContent,
+        document.querySelector('.o_ChannelPreviewView_inlineText').textContent,
         "You: a b c d",
         "should display correct last message inline content with brs replaced by spaces"
     );
@@ -942,10 +918,7 @@ QUnit.test('Group chat should be displayed inside the chat section of the messag
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-             }).localId}"]`).length,
+            .o_ChannelPreviewView[data-channel-local-id="${messaging.models['Channel'].findFromIdentifyingData({ id: mailChannelId1 }).localId}"]`).length,
         1,
         "should have one preview of group"
     );
