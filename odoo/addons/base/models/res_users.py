@@ -1298,7 +1298,7 @@ class GroupsView(models.Model):
         # We have to try-catch this, because at first init the view does not
         # exist but we are already creating some basic groups.
         view = self.env.ref('base.user_groups_view', raise_if_not_found=False)
-        if not (view and view.exists() and view._name == 'ir.ui.view'):
+        if not (view and view._name == 'ir.ui.view'):
             return
 
         if self._context.get('install_filename') or self._context.get(MODULE_UNINSTALL_FLAG):
