@@ -77,7 +77,9 @@ export class FormViewDialog extends Component {
                 this.state.error = e.cause;
                 const adapterParent = standaloneAdapter({ Component });
                 const dialog = new LegacyFormViewDialog(adapterParent, {
+                    res_id: this.props.resId,
                     res_model: this.props.resModel,
+                    view_id: this.props.viewId,
                     context: this.props.context || {},
                     title: this.props.title,
                     disable_multiple_selection: true,
