@@ -11,11 +11,11 @@ export class ProjectTaskListController extends ListController {
 
     getStaticActionMenuItems() {
         const menuItems = super.getStaticActionMenuItems();
-        const hasAnyRecurrences = this._anySelectedTasksWithRecurrence();
+        const hasAnyRecurrences = this._anyRecurrentTaskSelected();
 
         if (hasAnyRecurrences) {
             menuItems.archive.callback = () =>
-                this.taskRecurrence.stopRecurrence(this.model.root.selection, () =>
+                this.taskRecurrence.addressRecurrence(this.model.root.selection, "archive", () =>
                     this.toggleArchiveState(true)
                 );
         }
@@ -23,21 +23,14 @@ export class ProjectTaskListController extends ListController {
     }
 
     onDeleteSelectedRecords() {
-        if (this._anySelectedTasksWithRecurrence()) {
-            return this.taskRecurrence.stopRecurrence(
-                this.model.root.selection,
-                () => this.model.root.deleteRecords(),
-            );
-        }
-        return super.onDeleteSelectedRecords();
+        return this.taskRecurrence.addressRecurrence(
+            this.model.root.selection,
+            'delete',
+            () => this.model.root.deleteRecords(),
+        );
     }
 
-    _anySelectedTasksWithRecurrence() {
-        for (const selectedTask of this.model.root.selection) {
-            if (selectedTask.data.recurrence_id) {
-                return true;
-            }
-        }
-        return false;
+    _anyRecurrentTaskSelected() {
+        return this.model.root.selection.some(task => task.data.recurrence_id);
     }
 }

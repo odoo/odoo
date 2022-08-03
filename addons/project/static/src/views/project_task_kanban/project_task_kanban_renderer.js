@@ -11,6 +11,7 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         super.setup();
         this.userService = useService('user');
         this.action = useService('action');
+        this.taskRecurrence = useService('project_task_recurrence');
 
         this.isProjectManager = false;
         onWillStart(this.onWillStart);
@@ -87,5 +88,13 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
                 this.props.list.model.notify();
             },
         });
+    }
+
+    archiveGroup(group) {
+        this.taskRecurrence.addressRecurrence(
+            group.list.records,
+            'archive',
+            () => super.archiveGroup(group),
+        );
     }
 }

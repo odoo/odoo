@@ -13,7 +13,7 @@ export class ProjectTaskFormController extends FormController {
         const menuItems = super.getStaticActionMenuItems();
         if (this.model.root.data.recurrence_id) {
             menuItems.archive.callback = () =>
-                this.taskRecurrence.stopRecurrence([this.model.root], () =>
+                this.taskRecurrence.addressRecurrence([this.model.root], "archive", () =>
                     this.model.root.archive()
                 );
         }
@@ -21,11 +21,9 @@ export class ProjectTaskFormController extends FormController {
     }
 
     deleteRecord() {
-        if (!this.model.root.data.recurrence_id) {
-            return super.deleteRecord();
-        }
-        this.taskRecurrence.stopRecurrence(
+        this.taskRecurrence.addressRecurrence(
             [this.model.root],
+            'delete',
             () => {
                 this.model.root.delete();
                 if (!this.model.root.resId) {

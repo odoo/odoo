@@ -2,14 +2,30 @@
 <templates xml:space="preserve">
 
     <t t-name="project.ProjectStopRecurrenceConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary" owl="1">
-        <xpath expr="//button[@t-on-click='_confirm']" position="replace">
-            <button class="btn btn-primary" t-on-click="_confirm">
-                Stop Recurrence
-            </button>
+        <xpath expr="//t[@t-set-slot='footer']" position="before">
+            <div>
+                <p t-if="props.mode == 'delete'">This task is recurrent. Delete it and...</p>
+                <p t-else="">This task is recurrent. Archive it and...</p>
+                <div>
+                    <input type="radio"
+                           class="form-check-input o_radio_input me-2" id="this"
+                           name="targetOption" value="this" checked="1"
+                    />
+                    <label for="this">continue the recurrence</label>
+                </div>
+                <div>
+                    <input type="radio"
+                           class="form-check-input o_radio_input me-2" id="subsequent"
+                           name="targetOption" value="subsequent"
+                    />
+                    <label for="subsequent">stop the recurrence</label>
+                </div>
+            </div>
         </xpath>
-        <xpath expr="//button[@t-on-click='_confirm']" position="after">
-            <button t-if="props.continueRecurrence" class="btn btn-secondary" t-on-click="_continueRecurrence">
-                Continue Recurrence
+        <xpath expr="//button[@t-on-click='_confirm']" position="replace">
+            <button class="btn btn-primary" t-on-click="_addressRecurrence">
+                <t t-if="props.mode == 'delete'">Delete Recurring Task</t>
+                <t t-else="">Archive Recurring Task</t>
             </button>
         </xpath>
     </t>

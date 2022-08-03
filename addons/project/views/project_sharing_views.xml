@@ -296,7 +296,10 @@
         <field name="res_model">project.task</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
-        <field name="domain">[('display_project_id', '=', active_id)]</field>
+        <field name="domain">[
+            ('display_project_id', '=', active_id),
+            ('is_recurrence_template', '=', False),
+        ]</field>
         <field name="context">{
             'default_project_id': active_id,
             'delete': 0,

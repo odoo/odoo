@@ -685,10 +685,9 @@ class ProjectTask(models.Model):
 class ProjectTaskRecurrence(models.Model):
     _inherit = 'project.task.recurrence'
 
-    def _new_task_values(self, task):
-        values = super(ProjectTaskRecurrence, self)._new_task_values(task)
-        task = self.sudo().task_ids[0]
-        values['sale_line_id'] = self._get_sale_line_id(task)
+    def _new_task_values(self, task_from, to_template=False):
+        values = super(ProjectTaskRecurrence, self)._new_task_values(task_from, to_template=to_template)
+        values['sale_line_id'] = self._get_sale_line_id(task_from)
         return values
 
     def _get_sale_line_id(self, task):
