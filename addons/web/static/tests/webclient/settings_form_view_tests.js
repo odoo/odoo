@@ -11,6 +11,7 @@ import {
 import { editSearch } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { registry } from "@web/core/registry";
 
 let target;
 let serverData;
@@ -307,7 +308,7 @@ QUnit.module("SettingsFormView", (hooks) => {
     QUnit.test(
         "settings views does not read existing id when coming back in breadcrumbs",
         async function (assert) {
-            assert.expect(9);
+            assert.expect(11);
 
             serverData.actions = {
                 1: {
@@ -373,7 +374,9 @@ QUnit.module("SettingsFormView", (hooks) => {
             assert.notOk(target.querySelector(".o_field_boolean input").disabled);
             assert.verifySteps([
                 "get_views", // initial setting action
-                "onchange", // this is a setting view => create new record
+                "onchange", // this is a setting view => new record transient record
+                "create", // create the record before doing the action
+                "read", // read the created record
                 "get_views", // for other action in breadcrumb,
                 "web_search_read", // with a searchread
                 "onchange", // when we come back, we want to restart from scratch
@@ -646,6 +649,84 @@ QUnit.module("SettingsFormView", (hooks) => {
             assert.containsNone(document.body, ".modal", "should not open a warning dialog");
         }
     );
+
+    QUnit.test("clicking a button with dirty settings -- save", async (assert) => {
+        registry.category("services").add(
+            "action",
+            {
+                start() {
+                    return {
+                        doActionButton(params) {
+                            assert.step(`action executed ${JSON.stringify(params)}`);
+                        },
+                    };
+                },
+            },
+            { force: true }
+        );
+        await makeView({
+            type: "form",
+            arch: `
+                <form js_class="base_settings">
+                    <field name="foo" />
+                    <button type="object" name="mymethod" class="myBtn"/>
+                </form>`,
+            serverData,
+            resModel: "res.config.settings",
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.verifySteps(["get_views", "onchange"]);
+        await click(target, ".o_field_boolean input[type='checkbox']");
+        await click(target, ".myBtn");
+        await click(target, ".modal .btn-primary");
+        assert.verifySteps([
+            "create",
+            "read",
+            'action executed {"name":"execute","type":"object","resModel":"res.config.settings","resId":1,"resIds":[1],"context":{"lang":"en","uid":7,"tz":"taht"},"buttonContext":{}}',
+        ]);
+    });
+
+    QUnit.test("clicking a button with dirty settings -- discard", async (assert) => {
+        registry.category("services").add(
+            "action",
+            {
+                start() {
+                    return {
+                        doActionButton(params) {
+                            assert.step(`action executed ${JSON.stringify(params)}`);
+                        },
+                    };
+                },
+            },
+            { force: true }
+        );
+        await makeView({
+            type: "form",
+            arch: `
+                <form js_class="base_settings">
+                    <field name="foo" />
+                    <button type="object" name="mymethod" class="myBtn"/>
+                </form>`,
+            serverData,
+            resModel: "res.config.settings",
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        assert.verifySteps(["get_views", "onchange"]);
+        await click(target, ".o_field_boolean input[type='checkbox']");
+        await click(target, ".myBtn");
+        await click(target.querySelectorAll(".modal .btn-secondary")[1]);
+        assert.verifySteps([
+            "create",
+            "read",
+            'action executed {"context":{"lang":"en","uid":7,"tz":"taht"},"type":"object","name":"mymethod","resModel":"res.config.settings","resId":1,"resIds":[1],"buttonContext":{}}',
+        ]);
+    });
 
     QUnit.test(
         "clicking on a button with noSaveDialog will not show discard warning",

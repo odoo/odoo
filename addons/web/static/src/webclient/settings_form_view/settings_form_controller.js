@@ -20,26 +20,30 @@ export class SettingsFormController extends formView.Controller {
             ) {
                 const message = this.env._t("Would you like to save your changes?");
                 await new Promise((resolve) => {
-                    this.dialogService.add(
-                        SettingsConfirmationDialog,
-                        {
-                            body: message,
-                            confirm: async () => {
-                                await this.model.root.save({ stayInEdition: true });
-                                await this.save();
-                            },
-                            cancel: () => {},
-                            stayHere: () => {
-                                _continue = false;
-                            },
+                    this.dialogService.add(SettingsConfirmationDialog, {
+                        body: message,
+                        confirm: async () => {
+                            await this.model.root.save({ stayInEdition: true });
+                            await this.save();
+                            // It doesn't make sense to do the action of the button
+                            // as the res.config.settings `execute` method will trigger a reload.
+                            _continue = false;
+                            resolve();
                         },
-                        { onClose: resolve }
-                    );
+                        cancel: async () => {
+                            await this.model.root.discard();
+                            await this.model.root.save({ stayInEdition: true });
+                            _continue = true;
+                            resolve();
+                        },
+                        stayHere: () => {
+                            _continue = false;
+                            resolve();
+                        },
+                    });
                 });
             } else {
-                if (clickParams.name === "execute") {
-                    _continue = await this.model.root.save({ stayInEdition: true });
-                }
+                _continue = await this.model.root.save({ stayInEdition: true });
             }
             return _continue;
         };
