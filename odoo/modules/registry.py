@@ -560,7 +560,7 @@ class Registry(Mapping):
             # check again, and log errors if tables are still missing
             missing_tables = set(table2model).difference(existing_tables(cr, table2model))
             for table in missing_tables:
-                _logger.error("Model %s has no table.", table2model[table])
+                _logger.error("Model %s has no table: try running 'odoo-bin -u' (local) or increasing module's version (odoo.sh)", table2model[table])
 
     def _clear_cache(self):
         """ Clear the cache and mark it as invalidated. """
