@@ -54,6 +54,8 @@ PROJECT_TASK_READABLE_FIELDS = {
     'dependent_ids',
     'is_blocked',
     'message_is_follower',
+    'recurring_task',
+    'recurrence_template_id',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -1228,7 +1230,7 @@ class Task(models.Model):
     is_closed = fields.Boolean(related="stage_id.fold", string="Closing Stage", store=True, index=True, help="Folded in Kanban stages are closing stages.")
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
     ancestor_id = fields.Many2one('project.task', string='Ancestor Task', compute='_compute_ancestor_id', index='btree_not_null', recursive=True, store=True)
-    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks")
+    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]")
     child_text = fields.Char(compute="_compute_child_text")
     allow_subtasks = fields.Boolean(string="Allow Sub-tasks", related="project_id.allow_subtasks", readonly=True)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
@@ -1282,10 +1284,10 @@ class Task(models.Model):
     recurrence_id = fields.Many2one('project.task.recurrence', copy=False)
     recurrence_update = fields.Selection([
         ('this', 'This task'),
-        ('subsequent', 'This and following tasks'),
-        ('all', 'All tasks'),
+        ('future', 'This and future tasks'),
     ], default='this', store=False)
     recurrence_message = fields.Char(string='Next Recurrencies', compute='_compute_recurrence_message')
+    recurrence_template_id = fields.Many2one('project.task')
 
     repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', readonly=False)
     repeat_unit = fields.Selection([
@@ -1366,6 +1368,10 @@ class Task(models.Model):
             "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary.")
     is_analytic_account_id_changed = fields.Boolean('Is Analytic Account Manually Changed', compute='_compute_is_analytic_account_id_changed', store=True)
     project_analytic_account_id = fields.Many2one('account.analytic.account', string='Project Analytic Account', related='project_id.analytic_account_id')
+
+    _sql_constraints = [
+        ('recurring_task_has_no_parent', 'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))', "A subtask cannot be recurrent.")
+    ]
 
     @property
     def SELF_READABLE_FIELDS(self):
@@ -1972,15 +1978,11 @@ class Task(models.Model):
                 raise AccessError(_('You have not write access of %s field.') % field)
 
     def _load_records_create(self, vals_list):
-        projects_with_recurrence = self.env['project.project'].search([('allow_recurring_tasks', '=', True)])
         for vals in vals_list:
             if vals.get('recurring_task'):
-                if vals.get('project_id') in projects_with_recurrence.ids and not vals.get('recurrence_id'):
+                if not vals.get('recurrence_id'):
                     default_val = self.default_get(self._get_recurrence_fields())
                     vals.update(**default_val)
-                else:
-                    for field_name in self._get_recurrence_fields() + ['recurring_task']:
-                        vals.pop(field_name, None)
             project_id = vals.get('project_id')
             if project_id:
                 self = self.with_context(default_project_id=project_id)
@@ -2001,6 +2003,7 @@ class Task(models.Model):
         if is_portal_user:
             self.check_access_rights('create')
         default_stage = dict()
+        recurrences = self.env['project.task.recurrence']
         for vals in vals_list:
             if is_portal_user:
                 self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
@@ -2043,6 +2046,7 @@ class Task(models.Model):
                 rec_values['next_recurrence_date'] = fields.Datetime.today()
                 recurrence = self.env['project.task.recurrence'].create(rec_values)
                 vals['recurrence_id'] = recurrence.id
+                recurrences += recurrence
         # The sudo is required for a portal user as the record creation
         # requires the read access on other models, as mail.template
         # in order to compute the field tracking
@@ -2073,6 +2077,8 @@ class Task(models.Model):
                 task.message_subscribe(follower.partner_id.ids, follower.subtype_ids.ids)
             if current_partner not in task.message_partner_ids:
                 task.message_subscribe(current_partner.ids)
+        for recurrence in recurrences:
+            recurrence._create_task(task_from=recurrence.task_ids[-1])
         return tasks
 
     def write(self, vals):
@@ -2089,10 +2095,6 @@ class Task(models.Model):
         now = fields.Datetime.now()
         if 'parent_id' in vals and vals['parent_id'] in self.ids:
             raise UserError(_("Sorry. You can't set a task as its parent task."))
-        if 'active' in vals and not vals.get('active') and any(self.mapped('recurrence_id')):
-            vals['recurring_task'] = False
-        if 'recurrence_id' in vals and vals.get('recurrence_id') and any(not task.active for task in self):
-            raise UserError(_('Archived tasks cannot be recurring. Please unarchive the task first.'))
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             if not 'project_id' in vals and self.filtered(lambda t: not t.project_id):
@@ -2107,6 +2109,7 @@ class Task(models.Model):
 
         # recurrence fields
         rec_fields = vals.keys() & self._get_recurrence_fields()
+        task_for_recurrence = {}
         if rec_fields:
             rec_values = {rec_field: vals[rec_field] for rec_field in rec_fields}
             for task in self:
@@ -2116,20 +2119,17 @@ class Task(models.Model):
                     rec_values['next_recurrence_date'] = fields.Datetime.today()
                     recurrence = self.env['project.task.recurrence'].create(rec_values)
                     task.recurrence_id = recurrence.id
+                    task_for_recurrence[recurrence] = task
 
         if 'recurring_task' in vals and not vals.get('recurring_task'):
             self.recurrence_id.unlink()
 
         tasks = self
         recurrence_update = vals.pop('recurrence_update', 'this')
-        if recurrence_update != 'this':
-            recurrence_domain = []
-            if recurrence_update == 'subsequent':
-                for task in self:
-                    recurrence_domain = expression.OR([recurrence_domain, ['&', ('recurrence_id', '=', task.recurrence_id.id), ('create_date', '>=', task.create_date)]])
-            else:
-                recurrence_domain = [('recurrence_id', 'in', self.recurrence_id.ids)]
-            tasks |= self.env['project.task'].search(recurrence_domain)
+        if recurrence_update == 'future':
+            for task in self:
+                recurrent_task = task.ancestor_id if task.ancestor_id.recurring_task else task
+                task_for_recurrence[recurrent_task.recurrence_id] = task
 
         # The sudo is required for a portal user as the record update
         # requires the write access on others models, as rating.rating
@@ -2165,19 +2165,21 @@ class Task(models.Model):
                 task.display_project_id = task.project_id
 
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
+        for recurrence, task in task_for_recurrence.items():
+            recurrence._create_task(task_from=task)
         return result
+
+    def unlink_task_and_subtasks_recursively(self):
+        childs = self.with_context(active_test=False).child_ids
+        if childs:
+            childs.unlink_task_and_subtasks_recursively()
+        self.unlink()
 
     def update_date_end(self, stage_id):
         project_task_type = self.env['project.task.type'].browse(stage_id)
         if project_task_type.fold:
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_recurring(self):
-        if any(self.mapped('recurrence_id')):
-            # TODO: show a dialog to stop the recurrence
-            raise UserError(_('You cannot delete recurring tasks. Please disable the recurrence first.'))
 
     # ---------------------------------------------------
     # Subtasks
@@ -2642,14 +2644,12 @@ class Task(models.Model):
         else:
             return action
 
-    def action_stop_recurrence(self):
-        tasks = self.env['project.task'].with_context(active_test=False).search([('recurrence_id', 'in', self.recurrence_id.ids)])
-        tasks.write({'recurring_task': False})
+    def action_unlink_recurrence(self):
+        self.recurrence_id.task_ids.recurring_task = False
         self.recurrence_id.unlink()
 
-    def action_continue_recurrence(self):
-        self.recurrence_id = False
-        self.recurring_task = False
+    def action_unlink_task_from_recurrence(self):
+        self.recurrence_template_id.unlink_task_and_subtasks_recursively()
 
     # ---------------------------------------------------
     # Rating business
