@@ -2,7 +2,6 @@
 
 import config from 'web.config';
 import core from 'web.core';
-import session from 'web.session';
 import time from 'web.time';
 import utils from 'web.utils';
 import Widget from 'web.Widget';
@@ -29,23 +28,7 @@ const LivechatButton = Widget.extend({
     },
     async willStart() {
         this.messaging.publicLivechatGlobal.livechatButtonView.update({ widget: this });
-        const cookie = utils.get_cookie('im_livechat_session');
-        if (cookie) {
-            const channel = JSON.parse(cookie);
-            const history = await session.rpc('/mail/chat_history', {uuid: channel.uuid, limit: 100});
-            history.reverse();
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ history });
-            for (const message of this.messaging.publicLivechatGlobal.livechatButtonView.history) {
-                message.body = utils.Markup(message.body);
-            }
-        } else {
-            const result = await session.rpc('/im_livechat/init', {channel_id: this.messaging.publicLivechatGlobal.livechatButtonView.channelId});
-            if (!result.available_for_me) {
-                return Promise.reject();
-            }
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({ rule: result.rule });
-        }
-        return this.messaging.publicLivechatGlobal.loadQWebTemplate();
+        return this.messaging.publicLivechatGlobal.livechatButtonView.willStart();
     },
     start() {
         this.$el.text(this.messaging.publicLivechatGlobal.livechatButtonView.buttonText);

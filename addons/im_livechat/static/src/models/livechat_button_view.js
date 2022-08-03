@@ -7,7 +7,7 @@ import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
-import { get_cookie, set_cookie, unaccent } from 'web.utils';
+import { get_cookie, Markup, set_cookie, unaccent } from 'web.utils';
 
 registerModel({
     name: 'LivechatButtonView',
@@ -169,6 +169,9 @@ registerModel({
             await this._sendMessageChatbotBefore();
             await this._sendMessage(message);
             this._sendMessageChatbotAfter();
+        },
+        async willStart() {
+            await this._willStart();
         },
         /**
          * @private
@@ -523,6 +526,31 @@ registerModel({
             ) {
                 await this.widget._chatbotPostWelcomeMessages();
             }
+        },
+        async _willStart() {
+            const cookie = get_cookie('im_livechat_session');
+            if (cookie) {
+                const channel = JSON.parse(cookie);
+                const history = await this.messaging.rpc({
+                    route: '/mail/chat_history',
+                    params: { uuid: channel.uuid, limit: 100 },
+                });
+                history.reverse();
+                this.update({ history });
+                for (const message of this.history) {
+                    message.body = Markup(message.body);
+                }
+            } else {
+                const result = await this.messaging.rpc({
+                    route: '/im_livechat/init',
+                    params: { channel_id: this.channelId },
+                });
+                if (!result.available_for_me) {
+                    return Promise.reject();
+                }
+                this.update({ rule: result.rule });
+            }
+            return this.messaging.publicLivechatGlobal.loadQWebTemplate();
         },
     },
     fields: {
