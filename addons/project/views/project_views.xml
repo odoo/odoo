@@ -144,7 +144,12 @@
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
-            <field name="domain">[('display_project_id', '=', active_id)]</field>
+            <field name="domain">[
+                ('display_project_id', '=', active_id),
+                '|',
+                    ('recurring_task', '=', False),
+                    ('recurrence_template_id', '!=', False),
+            ]</field>
             <field name="context">{
                 'default_project_id': active_id,
                 'show_project_update': True,
@@ -1074,14 +1079,16 @@
                     <field name="allow_milestones" invisible="1" />
                     <field name="parent_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="recurrence_template_id" invisible="1" />
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight" attrs="{'invisible' : &quot;['|', ('user_ids', 'in', uid), ('user_ids', '!=', [])]&quot;}" data-hotkey="q"/>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" attrs="{'invisible': &quot;['|', ('user_ids', 'in', uid), ('user_ids', '=', [])]&quot;}" data-hotkey="q"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}"/>
                         <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '!=', False)]}" domain="[('user_id', '=', uid)]" string="Personal Stage"/>
                     </header>
-                    <div class="alert alert-info oe_edit_only mb-0" role="status" attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_id', '=', False)]}" groups="project.group_project_recurring_tasks">
-                        <p>Edit recurring task</p>
+                    <div class="alert alert-info oe_edit_only mb-0" role="status" attrs="{'invisible': [('recurrence_template_id', '=', False), ('recurrence_id', '=', False)]}" groups="project.group_project_recurring_tasks">
+                        <p attrs="{'invisible': [('recurrence_id', '=', False)]}">Edit recurring task</p>
+                        <p attrs="{'invisible': ['|', ('recurrence_id', '!=', False), ('recurrence_template_id', '=', False)]}">Edit recurring task's child</p>
                         <field name="recurrence_update" widget="radio"/>
                     </div>
                     <sheet string="Task">
@@ -1105,7 +1112,7 @@
                         <!-- Dummy tag used to organize buttons -->
                         <span id="end_rating_buttons" invisible="1"/>
                         <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" string="Parent Task" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('parent_id', '=', False)]}" groups="project.group_subtask_project"/>
-                        <button name="action_recurring_tasks" type="object" attrs="{'invisible': [('recurrence_id', '=', False)]}" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
+                        <button name="action_recurring_tasks" type="object" attrs="{'invisible': ['|', ('active', '=', False), ('recurrence_id', '=', False)]}" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="recurring_count" widget="statinfo" nolabel="1" />
@@ -1187,7 +1194,7 @@
                                    context="{'search_view_ref' : 'project.view_task_search_form', 'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id,
                                     'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id, 'search_default_display_project_id': project_id, 'tree_view_ref': 'project.open_view_all_tasks_list_view'}"
                                    widget="many2many"
-                                   domain="['!', ('id', 'parent_of', id)]">
+                                   domain="['!', ('id', 'parent_of', id), ('recurring_task', '=', False)]">
                                 <tree editable="bottom" decoration-muted="is_closed == True">
                                     <field name="legend_normal" invisible="1"/>
                                     <field name="legend_done" invisible="1"/>
@@ -1264,7 +1271,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page name="recurrence" string="Recurrent"  groups="project.group_project_recurring_tasks">
+                        <page name="recurrence" string="Recurrent" attrs="{'invisible': ['|', ('active', '=', False), ('parent_id', '!=', False)]}" groups="project.group_project_recurring_tasks">
                             <label for="recurring_task" />
                             <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
                             <group attrs="{'invisible': [('recurring_task', '=', False)]}">
@@ -1412,6 +1419,7 @@
                     <field name="rating_active"/>
                     <field name="has_late_and_unreached_milestone" />
                     <field name="allow_milestones" />
+                    <field name="recurrence_id" />
                     <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger", "normal": "200"}'/>
                     <templates>
                     <t t-name="kanban-menu" t-if="!selection_mode" groups="base.group_user">
@@ -1638,7 +1646,12 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="context">{'search_default_my_tasks': 1}</field>
-            <field name="domain">[('display_project_id', '!=', False)]</field>
+            <field name="domain">[
+                ('display_project_id', '!=', False),
+                '|',
+                    ('recurring_task', '=', False),
+                    ('recurrence_template_id', '!=', False),
+            ]</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
