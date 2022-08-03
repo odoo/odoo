@@ -46,7 +46,10 @@
                         </h2>
                     </div>
                     <a role="button"
-                        class="fw-bold fa fa-chevron-right o_survey_session_navigation o_survey_session_navigation_next p-3" />
+                        class="o_survey_session_navigation o_survey_session_navigation_next p-2">
+                        <span class="o_survey_session_navigation_next_label me-2 fw-bold">Start</span>
+                        <i class="fw-bold fa fa-chevron-right"/>
+                    </a>
                 </div>
             </div>
         </t>
@@ -67,6 +70,7 @@
             t-att-style="'display: none;' if is_rpc_call else ''"
             t-att-data-is-rpc-call="is_rpc_call"
             t-att-data-survey-id="survey.id"
+            t-att-data-survey-has-conditional-questions="survey.has_conditional_questions"
             t-att-data-attendees-count="survey.session_answer_count"
             t-att-data-survey-access-token="survey.access_token"
             t-att-data-timer="survey.session_question_start_time.isoformat()"
@@ -109,7 +113,10 @@
                     <div t-field="survey.description_done"/>
                 </div>
                 <a role="button"
-                    class="fw-bold fa fa-chevron-right o_survey_session_navigation o_survey_session_navigation_next p-3" />
+                    class="o_survey_session_navigation o_survey_session_navigation_next p-2">
+                    <span class="o_survey_session_navigation_next_label me-2 fw-bold"/>
+                    <i class="fw-bold fa fa-chevron-right"/>
+                </a>
                 <a role="button"
                     class="fw-bold fa fa-chevron-left o_survey_session_navigation o_survey_session_navigation_previous p-3" />
                 <div class="o_survey_session_results flex-column flex-grow-1 mx-5">
