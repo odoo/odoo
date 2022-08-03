@@ -279,9 +279,10 @@ def exp_restore(db_name, data, copy=False):
 def restore_db(db, dump_file, copy=False):
     assert isinstance(db, str)
     if exp_db_exist(db):
-        _logger.info('RESTORE DB: %s already exists', db)
+        _logger.warning('RESTORE DB: %s already exists', db)
         raise Exception("Database already exists")
 
+    _logger.info('RESTORING DB: %s', db)
     _create_empty_database(db)
 
     filestore_path = None
