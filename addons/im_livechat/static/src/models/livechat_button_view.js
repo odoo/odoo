@@ -171,7 +171,11 @@ registerModel({
             this._sendMessageChatbotAfter();
         },
         async willStart() {
-            await this._willStart();
+            try {
+                await this._willStart();
+            } finally {
+                await this._willStartChatbot();
+            }
         },
         /**
          * @private
@@ -551,6 +555,69 @@ registerModel({
                 this.update({ rule: result.rule });
             }
             return this.messaging.publicLivechatGlobal.loadQWebTemplate();
+        },
+        /**
+         * This override handles the following use cases:
+         *
+         * - If the chat is started for the first time (first visit of a visitor)
+         *   We register the chatbot configuration and the rest of the behavior is triggered by various
+         *   method overrides ('sendWelcomeMessage', 'sendMessage', ...)
+         *
+         * - If the chat has been started before, but the user did not interact with the bot
+         *   The default behavior is to open an empty chat window, without any messages.
+         *   In addition, we fetch the configuration (with a '/init' call), to see if we have a bot
+         *   configured.
+         *   Indeed we want to trigger the bot script on every page where the associated rule is matched.
+         *
+         * - If we have a non-empty chat history, resume the chat script where the end-user left it by
+         *   fetching the necessary information from the local storage.
+         *
+         * @override
+         */
+        async _willStartChatbot() {
+            if (this.rule && !!this.chatbot) {
+                // noop
+            } else if (this.history !== null && this.history.length === 0) {
+                this.update({
+                    livechatInit: await this.messaging.rpc({
+                        route: '/im_livechat/init',
+                        params: { channel_id: this.channelId },
+                    }),
+                });
+            } else if (this.history !== null && this.history.length !== 0) {
+                const sessionCookie = get_cookie('im_livechat_session');
+                if (sessionCookie) {
+                    this.update({ sessionCookie });
+                    if (localStorage.getItem(this.chatbotSessionCookieKey)) {
+                        this.update({ chatbotState: 'restore_session' });
+                    }
+                }
+            }
+
+            if (this.chatbotState === 'init') {
+                // we landed on a website page where a channel rule is configured to run a chatbot.script
+                // -> initialize necessary state
+                if (this.rule.chatbot_welcome_steps && this.rule.chatbot_welcome_steps.length !== 0) {
+                    this.chatbot.update({
+                        currentStep: insertAndReplace({
+                            data: this.chatbot.lastWelcomeStep,
+                        }),
+                    });
+                }
+            } else if (this.chatbotState === 'welcome') {
+                // we landed on a website page and a chatbot script was initialized on a previous one
+                // however the end-user did not interact with the bot ( :( )
+                // -> remove cookie to force opening the popup again
+                // -> initialize necessary state
+                // -> batch welcome message (see '_sendWelcomeChatbotMessage')
+                set_cookie('im_livechat_auto_popup', '', -1);
+                this.update({ history: clear() });
+                this.update({ rule: this.livechatInit.rule });
+            } else if (this.chatbotState === 'restore_session') {
+                // we landed on a website page and a chatbot script is currently running
+                // -> restore the user's session (see 'chatbotRestoreSession')
+                this.chatbotRestoreSession();
+            }
         },
     },
     fields: {
