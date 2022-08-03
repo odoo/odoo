@@ -1028,12 +1028,14 @@ class IrActionsReport(models.Model):
 
         discard_logo_check = self.env.context.get('discard_logo_check')
         if self.env.is_admin() and not self.env.company.external_report_layout_id and config and not discard_logo_check:
-            action = self.env["ir.actions.actions"]._for_xml_id("web.action_base_document_layout_configurator")
-            ctx = action.get('context')
-            py_ctx = json.loads(ctx) if ctx else {}
-            report_action['close_on_report_download'] = True
-            py_ctx['report_action'] = report_action
-            action['context'] = py_ctx
-            return action
+            return self._action_configure_external_report_layout(report_action)
 
         return report_action
+
+    def _action_configure_external_report_layout(self, report_action):
+        action = self.env["ir.actions.actions"]._for_xml_id("web.action_base_document_layout_configurator")
+        py_ctx = json.loads(action.get('context', {}))
+        report_action['close_on_report_download'] = True
+        py_ctx['report_action'] = report_action
+        action['context'] = py_ctx
+        return action
