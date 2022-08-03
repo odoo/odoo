@@ -98,10 +98,6 @@ class PublisherWarrantyContract(AbstractModel):
             # old behavior based on res.log; now on mail.message, that is not necessarily installed
             user = self.env['res.users'].sudo().browse(SUPERUSER_ID)
             poster = self.sudo().env.ref('mail.channel_all_employees')
-            if not (poster and poster.exists()):
-                if not user.exists():
-                    return True
-                poster = user
             for message in result["messages"]:
                 try:
                     poster.message_post(body=message, subtype_xmlid='mail.mt_comment', partner_ids=[user.partner_id.id])
