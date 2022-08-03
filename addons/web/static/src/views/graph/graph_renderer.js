@@ -318,7 +318,7 @@ export class GraphRenderer extends Component {
      * @returns {Object}
      */
     getLineChartData() {
-        const { groupBy, domains, stacked } = this.model.metaData;
+        const { groupBy, domains, stacked, cumulated } = this.model.metaData;
         const data = this.model.data;
         for (let index = 0; index < data.datasets.length; ++index) {
             const dataset = data.datasets[index];
@@ -347,6 +347,13 @@ export class GraphRenderer extends Component {
             dataset.pointBorderColor = "rgba(0,0,0,0.2)";
             if (stacked) {
                 dataset.backgroundColor = hexToRGBA(dataset.borderColor, 0.4);
+            }
+            if (cumulated) {
+                let accumulator = 0;
+                dataset.data = dataset.data.map((value) => {
+                    accumulator += value;
+                    return accumulator;
+                });
             }
         }
         if (data.datasets.length === 1 && data.datasets[0].originIndex === 0) {

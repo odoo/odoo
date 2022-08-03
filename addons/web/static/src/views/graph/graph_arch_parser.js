@@ -22,6 +22,9 @@ export class GraphArchParser extends XMLParser {
                     if (node.hasAttribute("stacked")) {
                         archInfo.stacked = archParseBoolean(node.getAttribute("stacked"));
                     }
+                    if (node.hasAttribute("cumulated")) {
+                        archInfo.cumulated = archParseBoolean(node.getAttribute("cumulated"));
+                    }
                     const mode = node.getAttribute("type");
                     if (mode && MODES.includes(mode)) {
                         archInfo.mode = mode;
