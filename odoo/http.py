@@ -1308,8 +1308,8 @@ class Request:
                 _logger.warning("Profiling expiration reached, disabling profiling")
             elif 'set_profiling' in self.httprequest.path:
                 _logger.debug("Profiling disabled on set_profiling route")
-            elif self.httprequest.path.startswith('/longpolling'):
-                _logger.debug("Profiling disabled for longpolling")
+            elif self.httprequest.path.startswith('/websocket'):
+                _logger.debug("Profiling disabled for websocket")
             elif odoo.evented:
                 # only longpolling should be in a evented server, but this is an additional safety
                 _logger.debug("Profiling disabled for evented server")
