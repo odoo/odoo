@@ -529,7 +529,7 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="user_id" string="Project Manager" widget="many2one_avatar_user" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]"/>
-                            <label for="date_start" string="Dates"/>
+                            <label for="date_start" string="Planned Date"/>
                             <div name="dates" class="o_row">
                                 <field name="date_start" widget="daterange" options='{"related_end_date": "date"}'/>
                                 <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
