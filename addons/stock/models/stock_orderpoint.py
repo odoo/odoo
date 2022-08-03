@@ -11,7 +11,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare, frozendict, split_every
+from odoo.tools import float_compare, float_is_zero, frozendict, split_every
 
 _logger = logging.getLogger(__name__)
 
@@ -94,6 +94,8 @@ class StockWarehouseOrderpoint(models.Model):
         help="Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
              "The value depends on the type of the route (Buy or Manufacture)")
 
+    unwanted_replenish = fields.Boolean('Unwanted Replenish', compute="_compute_unwanted_replenish")
+
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
         ('product_location_check', 'unique (product_id, location_id, company_id)', 'A replenishment rule already exists for this product on this location.'),
@@ -168,6 +170,15 @@ class StockWarehouseOrderpoint(models.Model):
                     ('company_id', '=', orderpoint.company_id.id)
                 ], limit=1)
             orderpoint.location_id = warehouse.lot_stock_id.id
+
+    @api.depends('product_id', 'qty_to_order', 'product_max_qty')
+    def _compute_unwanted_replenish(self):
+        for orderpoint in self:
+            if not orderpoint.product_id or float_is_zero(orderpoint.qty_to_order, precision_rounding=orderpoint.product_uom.rounding) or float_is_zero(orderpoint.product_max_qty, precision_rounding=orderpoint.product_uom.rounding):
+                orderpoint.unwanted_replenish = False
+            else:
+                after_replenish_qty = orderpoint.product_id.with_context(company_id=orderpoint.company_id.id, location=orderpoint.location_id.id).virtual_available + orderpoint.qty_to_order
+                orderpoint.unwanted_replenish = float_compare(after_replenish_qty, orderpoint.product_max_qty, precision_rounding=orderpoint.product_uom.rounding) > 0
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
