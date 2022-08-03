@@ -13,13 +13,13 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(HttpCase):
 
         cls.test_product_default = ProductTemplate.create({
             'name': 'test_product_default',
-            'type': 'product',
+            'type': 'consu',
             'website_published': True,
             'list_price': 1000
         })
         cls.test_product_with_compare_list_price = ProductTemplate.create({
             'name': 'test_product_with_compare_list_price',
-            'type': 'product',
+            'type': 'consu',
             'website_published': True,
             'list_price': 2000,
             'compare_list_price': 2500
@@ -27,13 +27,13 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(HttpCase):
         cls.test_product_with_pricelist = ProductTemplate.create({
             'name': 'test_product_with_pricelist',
             'website_published': True,
-            'type': 'product',
+            'type': 'consu',
             'list_price': 2000
         })
         cls.test_product_with_pricelist_and_compare_list_price = ProductTemplate.create({
             'name': 'test_product_with_pricelist_and_compare_list_price',
             'website_published': True,
-            'type': 'product',
+            'type': 'consu',
             'list_price': 4000,
             'compare_list_price': 4500
 
