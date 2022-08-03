@@ -14,7 +14,7 @@
         <field name="name">stock.location.form</field>
         <field name="model">stock.location</field>
         <field name="arch" type="xml">
-            <form string="Stock Location" create="false">
+            <form string="Stock Location">
                 <field name="company_id" invisible="1"/>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -61,10 +61,9 @@
         <field name="name">stock.location.form.editable</field>
         <field name="model">stock.location</field>
         <field name="inherit_id" ref="stock.view_location_form"/>
-        <field name="groups_id" eval="[(4, ref('stock.group_stock_multi_locations'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//form" position="attributes">
-                <attribute name="create">true</attribute>
+                <attribute name="create">false</attribute>
             </xpath>
         </field>
     </record>
@@ -91,7 +90,7 @@
         <field name="model">stock.location</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
-            <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'" create="false" multi_edit="1">
+            <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'" multi_edit="1">
                 <field name="active" invisible="1"/>
                 <field name="complete_name" string="Location"/>
                 <field name="usage"/>
@@ -105,10 +104,9 @@
         <field name="name">stock.location.tree2.editable</field>
         <field name="model">stock.location</field>
         <field name="inherit_id" ref="stock.view_location_tree2"/>
-        <field name="groups_id" eval="[(4, ref('stock.group_stock_multi_locations'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
-                <attribute name="create">true</attribute>
+                <attribute name="create">false</attribute>
             </xpath>
         </field>
     </record>

@@ -103,11 +103,27 @@ class ResConfigSettings(models.TransientModel):
         if self.group_stock_multi_locations and not previous_group.get('group_stock_multi_locations'):
             # override active_test that is false in set_values
             warehouse_obj.with_context(active_test=True).search([]).int_type_id.active = True
+            # Disable the views removing the create button from the location list and form.
+            # Be resilient if the views have been deleted manually.
+            for view in (
+                self.env.ref('stock.stock_location_view_tree2_editable', raise_if_not_found=False),
+                self.env.ref('stock.stock_location_view_form_editable', raise_if_not_found=False),
+            ):
+                if view:
+                    view.active = False
         elif not self.group_stock_multi_locations and previous_group.get('group_stock_multi_locations'):
             warehouse_obj.search([
                 ('reception_steps', '=', 'one_step'),
                 ('delivery_steps', '=', 'ship_only')
             ]).int_type_id.active = False
+            # Enable the views removing the create button from the location list and form.
+            # Be resilient if the views have been deleted manually.
+            for view in (
+                self.env.ref('stock.stock_location_view_tree2_editable', raise_if_not_found=False),
+                self.env.ref('stock.stock_location_view_form_editable', raise_if_not_found=False),
+            ):
+                if view:
+                    view.active = True
 
         if not was_operations_showed and self.env['stock.picking.type'].with_user(SUPERUSER_ID)._default_show_operations():
             self.env['stock.picking.type'].with_context(active_test=False).sudo().search([
