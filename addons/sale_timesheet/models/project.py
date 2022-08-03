@@ -400,14 +400,14 @@ class Project(models.Model):
                 margin_color = profitability['margin'] > 0 and 'green' or 'red'
             data += [{
                 'name': _("Revenues"),
-                'value': format_amount(self.env, profitability['revenues'], self.env.company.currency_id)
+                'value': format_amount(self.env, profitability['revenues'], self.company_id.currency_id)
             }, {
                 'name': _("Costs"),
-                'value': format_amount(self.env, profitability['costs'], self.env.company.currency_id)
+                'value': format_amount(self.env, profitability['costs'], self.company_id.currency_id)
             }, {
                 'name': _("Margin"),
                 'color': margin_color,
-                'value': format_amount(self.env, profitability['margin'], self.env.company.currency_id)
+                'value': format_amount(self.env, profitability['margin'], self.company_id.currency_id)
             }]
         return {
             'action': self.allow_billable and self.allow_timesheets and "action_view_timesheet",
