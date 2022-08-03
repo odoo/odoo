@@ -1514,6 +1514,7 @@ var SnippetsMenu = Widget.extend({
         }
         core.bus.off('deactivate_snippet', this, this._onDeactivateSnippet);
         $(document.body).off('click', this._checkEditorToolbarVisibilityCallback);
+        this.el.ownerDocument.body.classList.remove('editor_has_snippets');
     },
 
     //--------------------------------------------------------------------------

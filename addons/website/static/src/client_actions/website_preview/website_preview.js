@@ -268,9 +268,19 @@ export class WebsitePreview extends Component {
                 });
             } else if (classList.contains('js_change_lang') && isEditing) {
                 ev.preventDefault();
-                // The switch to the right language is handled by the
-                // Website Root, inside the iframe.
-                this.websiteService.leaveEditMode();
+                const lang = linkEl.dataset['url_code'];
+                // The "edit_translations" search param coming from keep_query
+                // is removed, and the hash is added.
+                const destinationUrl = new URL(href, window.location);
+                destinationUrl.searchParams.delete('edit_translations');
+                destinationUrl.hash = this.websiteService.contentWindow.location.hash;
+                const forceLangUrl = `/website/lang/${lang}?r=${destinationUrl.toString()}`;
+                this.websiteService.bus.trigger('LEAVE-EDIT-MODE', {
+                    onLeave: () => {
+                        this.websiteService.goToWebsite({ path: forceLangUrl });
+                    },
+                    reloadIframe: false,
+                });
             } else if (href && target !== '_blank' && !isEditing && this._isTopWindowURL(linkEl)) {
                 ev.preventDefault();
                 this.router.redirect(href);

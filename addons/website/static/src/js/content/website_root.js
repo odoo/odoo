@@ -39,19 +39,6 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
      */
     start: function () {
         KeyboardNavigationMixin.start.call(this);
-        // Compatibility lang change ?
-        if (!this.$('.js_change_lang').length) {
-            var $links = this.$('.js_language_selector a:not([data-oe-id])');
-            var m = $(_.min($links, function (l) {
-                return $(l).attr('href').length;
-            })).attr('href');
-            $links.each(function () {
-                var $link = $(this);
-                var t = $link.attr('href');
-                var l = (t === m) ? "default" : t.split('/')[1];
-                $link.data('lang', l).addClass('js_change_lang');
-            });
-        }
 
         // Enable magnify on zommable img
         this.$('.zoomable img[data-zoom]').zoomOdoo();
@@ -178,7 +165,11 @@ export const WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMi
      */
     _onLangChangeClick: function (ev) {
         ev.preventDefault();
-
+        // In edit mode, the client action redirects the iframe to the correct
+        // location with the chosen language.
+        if (document.body.classList.contains('editor_enable')) {
+            return;
+        }
         var $target = $(ev.currentTarget);
         // retrieve the hash before the redirect
         var redirect = {

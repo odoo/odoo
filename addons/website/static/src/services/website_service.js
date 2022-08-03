@@ -204,16 +204,6 @@ export const websiteService = {
             unblockIframe(processId) {
                 bus.trigger('UNBLOCK', { processId });
             },
-            leaveEditMode() {
-                // FIXME this does not care about if the page is dirty or not.
-
-                // TODO this should not be needed here, the one who was in
-                // charge of adding this class should be the one in charge of
-                // removing it.
-                document.body.classList.remove('editor_has_snippets');
-                context.snippetsLoaded = false;
-                context.edition = false;
-            },
             showLoader(props) {
                 bus.trigger('SHOW-WEBSITE-LOADER', props);
             },

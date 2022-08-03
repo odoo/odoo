@@ -5,7 +5,7 @@ import { useService } from '@web/core/utils/hooks';
 import { WysiwygAdapterComponent } from '../wysiwyg_adapter/wysiwyg_adapter';
 import { useActiveElement } from '@web/core/ui/ui_service';
 
-const { markup, Component, useState, useChildSubEnv, useEffect, onWillStart, onMounted } = owl;
+const { markup, Component, useState, useChildSubEnv, useEffect, onWillStart, onMounted, onWillUnmount } = owl;
 
 export class WebsiteEditorComponent extends Component {
     /**
@@ -41,6 +41,12 @@ export class WebsiteEditorComponent extends Component {
             }
         });
 
+        onWillUnmount(() => {
+            if (this.onWillUnmount) {
+                this.onWillUnmount();
+            }
+        });
+
         useActiveElement('wysiwyg-adapter');
     }
     /**
@@ -61,7 +67,10 @@ export class WebsiteEditorComponent extends Component {
      */
     wysiwygReady() {
         this.websiteContext.snippetsLoaded = true;
-        this.state.reloading = false;
+        if (this.state.reloading) {
+            document.body.classList.remove('editor_has_dummy_snippets');
+            this.state.reloading = false;
+        }
         this.wysiwygOptions.invalidateSnippetCache = false;
         this.websiteService.unblockIframe();
         this.websiteService.hideLoader();
@@ -76,13 +85,10 @@ export class WebsiteEditorComponent extends Component {
     willReload(widgetEl) {
         this.websiteService.blockIframe();
         if (widgetEl) {
-            widgetEl.querySelectorAll('#oe_manipulators').forEach(el => el.remove());
-            widgetEl.querySelectorAll('we-input input').forEach(input => {
-                input.setAttribute('value', input.closest('we-input').dataset.selectStyle || '');
-            });
             this.loadingDummy = markup(widgetEl.innerHTML);
         }
         this.state.reloading = true;
+        document.body.classList.add('editor_has_dummy_snippets');
     }
     /**
      * Dismount the editor and reload the iframe.
@@ -106,12 +112,18 @@ export class WebsiteEditorComponent extends Component {
     }
     /**
      * Blocks the iframe and start the hiding transition.
-     *
+     * @param {Boolean} [reloadIframe=true]
+     * @param {Function} onLeave A callback that will be played after the
+     * transition, when the component is unmounted.
      * @returns {Promise<void>}
      */
-    async quit() {
-        this.websiteService.blockIframe(true, 400);
-        document.body.classList.remove('editor_has_snippets');
+    async quit({ reloadIframe = true, onLeave } = {}) {
+        this.onWillUnmount = onLeave;
+        if (reloadIframe) {
+            this.websiteService.blockIframe(true);
+            await this.props.reloadIframe();
+            this.websiteService.unblockIframe();
+        }
         this.websiteContext.snippetsLoaded = false;
         setTimeout(this.destroyAfterTransition.bind(this), 400);
     }
@@ -120,11 +132,9 @@ export class WebsiteEditorComponent extends Component {
      *
      * @returns {Promise<void>}
      */
-    async destroyAfterTransition() {
+    destroyAfterTransition() {
         this.state.showWysiwyg = false;
-        await this.props.reloadIframe();
         this.websiteContext.edition = false;
-        this.websiteService.unblockIframe();
     }
 }
 WebsiteEditorComponent.components = { WysiwygAdapterComponent };
