@@ -81,6 +81,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @private
      */
     _adaptToHeaderChange: function () {
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
         this._updateMainPaddingTop();
         // Take menu into account when `dom.scrollTo()` is used whenever it is
         // visible - be it floating, fully displayed or partially hidden.
@@ -89,6 +90,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
         for (const callback of extraMenuUpdateCallbacks) {
             callback();
         }
+        this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
     },
     /**
      * @private
