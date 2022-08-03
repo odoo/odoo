@@ -126,6 +126,21 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
         me = threading.current_thread()
         me.name = 'odoo.service.http.request.%s' % (me.ident,)
 
+    def send_response(self, code, message=None):
+        # Since the upgrade header is introduced in version 1.1, Firefox
+        # won't accept a websocket connection if the version is set to
+        # 1.0.
+        if self.environ.get('REQUEST_URI') == '/websocket':
+            self.protocol_version = "HTTP/1.1"
+        return super().send_response(code, message=message)
+
+    def make_environ(self):
+        environ = super().make_environ()
+        # Add the TCP socket to environ in order for the websocket
+        # connections to use it.
+        environ['socket'] = self.connection
+        return environ
+
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
@@ -304,9 +319,10 @@ class FSWatcherInotify(FSWatcherBase):
 #----------------------------------------------------------
 
 class CommonServer(object):
+    _on_stop_funcs = []
+
     def __init__(self, app):
         self.app = app
-        self._on_stop_funcs = []
         # config
         self.interface = config['http_interface'] or '0.0.0.0'
         self.port = config['http_port']
@@ -334,12 +350,13 @@ class CommonServer(object):
                 raise
         sock.close()
 
-    def on_stop(self, func):
+    @classmethod
+    def on_stop(cls, func):
         """ Register a cleanup function to be executed when the server stops """
-        self._on_stop_funcs.append(func)
+        cls._on_stop_funcs.append(func)
 
     def stop(self):
-        for func in self._on_stop_funcs:
+        for func in type(self)._on_stop_funcs:
             try:
                 _logger.debug("on_close call %s", func)
                 func()
@@ -388,9 +405,10 @@ class ThreadedServer(CommonServer):
             self.limits_reached_threads.add(threading.current_thread())
 
         for thread in threading.enumerate():
-            if not thread.daemon or getattr(thread, 'type', None) == 'cron':
+            thread_type = getattr(thread, 'type', None)
+            if not thread.daemon and thread_type != 'websocket' or thread_type == 'cron':
                 # We apply the limits on cron threads and HTTP requests,
-                # longpolling requests excluded.
+                # websocket requests excluded.
                 if getattr(thread, 'start_time', None):
                     thread_execution_time = time.time() - thread.start_time
                     thread_limit_time_real = config['limit_time_real']
@@ -614,11 +632,11 @@ class GeventServer(CommonServer):
     def process_limits(self):
         restart = False
         if self.ppid != os.getppid():
-            _logger.warning("LongPolling Parent changed: %s", self.pid)
+            _logger.warning("Gevent Parent changed: %s", self.pid)
             restart = True
         memory = memory_info(psutil.Process(self.pid))
         if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
-            _logger.warning('LongPolling virtual memory limit reached: %s', memory)
+            _logger.warning('Gevent virtual memory limit reached: %s', memory)
             restart = True
         if restart:
             # suicide !!
@@ -645,6 +663,13 @@ class GeventServer(CommonServer):
             Derived from werzeug.serving.WSGIRequestHandler.log
             / werzeug.serving.WSGIRequestHandler.address_string
             """
+            def _connection_upgrade_requested(self):
+                if self.headers.get('Connection', '').lower() == 'upgrade':
+                    return True
+                if self.headers.get('Upgrade', '').lower() == 'websocket':
+                    return True
+                return False
+
             def format_request(self):
                 old_address = self.client_address
                 if getattr(self, 'environ', None):
@@ -656,6 +681,27 @@ class GeventServer(CommonServer):
                     return super().format_request()
                 finally:
                     self.client_address = old_address
+
+            def finalize_headers(self):
+                # We need to make gevent.pywsgi stop dealing with chunks when the connection
+                # Is being upgraded. see https://github.com/gevent/gevent/issues/1712
+                super().finalize_headers()
+                if self.code == 101:
+                    # Switching Protocols. Disable chunked writes.
+                    self.response_use_chunked = False
+
+            def get_environ(self):
+                # Add the TCP socket to environ in order for the websocket
+                # connections to use it.
+                environ = super().get_environ()
+                environ['socket'] = self.socket
+                # Disable support for HTTP chunking on reads which cause
+                # an issue when the connection is being upgraded, see
+                # https://github.com/gevent/gevent/issues/1712
+                if self._connection_upgrade_requested():
+                    environ['wsgi.input'] = self.rfile
+                    environ['wsgi.input_terminated'] = False
+                return environ
 
         set_limit_memory_hard()
         if os.name == 'posix':

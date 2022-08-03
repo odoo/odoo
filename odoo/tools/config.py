@@ -77,6 +77,7 @@ class configmanager(object):
             'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty/',
             'reportgz': False,
             'root_path': None,
+            'websocket_keep_alive_timeout': 600,
         }
 
         # Not exposed in the configuration file.
