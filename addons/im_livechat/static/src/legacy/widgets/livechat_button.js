@@ -1,14 +1,9 @@
 /** @odoo-module **/
 
 import config from 'web.config';
-import core from 'web.core';
 import time from 'web.time';
 import utils from 'web.utils';
 import Widget from 'web.Widget';
-
-import { insertAndReplace } from '@mail/model/model_field_command';
-
-const _t = core._t;
 
 const LivechatButton = Widget.extend({
     className: 'openerp o_livechat_button d-print-none',
@@ -85,19 +80,6 @@ const LivechatButton = Widget.extend({
         }
 
         return null;
-    },
-    /**
-     * @private
-     * @return {Promise}
-     */
-     _openChatWindow() {
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({ chatWindow: insertAndReplace() });
-        return this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.appendTo($('body')).then(() => {
-            const cssProps = { bottom: 0 };
-            cssProps[_t.database.parameters.direction === 'rtl' ? 'left' : 'right'] = 0;
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$el.css(cssProps);
-            this.$el.hide();
-        });
     },
     /**
      * @private

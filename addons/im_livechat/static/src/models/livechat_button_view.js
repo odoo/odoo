@@ -134,6 +134,15 @@ registerModel({
                 this._openChat();
             }
         },
+        async openChatWindow() {
+            this.update({ chatWindow: insertAndReplace() });
+            await this.chatWindow.legacyChatWindow.appendTo($('body'));
+            const cssProps = { bottom: 0 };
+            cssProps[this.messaging.locale.textDirection === 'rtl' ? 'left' : 'right'] = 0;
+            this.chatWindow.legacyChatWindow.$el.css(cssProps);
+            this.widget.$el.hide();
+            this._openChatWindowChatbot();
+        },
         /**
          * Adds a small "is typing" animation into the chat window.
          *
@@ -418,7 +427,7 @@ registerModel({
                     this.messaging.publicLivechatGlobal.update({
                         publicLivechat: insertAndReplace({ data: livechatData }),
                     });
-                    return this.widget._openChatWindow().then(() => {
+                    return this.openChatWindow().then(() => {
                         if (!this.history) {
                             this.widget._sendWelcomeMessage();
                         }
@@ -439,6 +448,34 @@ registerModel({
             }).guardedCatch(() => {
                 this.update({ isOpeningChat: false });
             });
+        },
+        /**
+         * Resuming the chatbot script if we are currently running one.
+         *
+         * In addition, we register a resize event on the window object to scroll messages to bottom.
+         * This is done especially for mobile (Android) where the keyboard opens upon focusing the input
+         * field and shrinks the whole window size.
+         * Scrolling to the bottom allows the user to see the last messages properly when that happens.
+         *
+         * @private
+         * @override
+         */
+        _openChatWindowChatbot() {
+            window.addEventListener('resize', () => {
+                if (this.chatWindow) {
+                    this.chatWindow.publicLivechatView.widget.scrollToBottom();
+                }
+            });
+
+            if (
+                this.chatbot &&
+                this.chatbot.currentStep &&
+                this.chatbot.currentStep.data &&
+                this.messages &&
+                this.messages.length !== 0
+            ) {
+                this.widget._chatbotProcessStep();
+            }
         },
         /**
          * @private

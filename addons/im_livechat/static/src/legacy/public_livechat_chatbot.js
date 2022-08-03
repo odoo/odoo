@@ -357,36 +357,6 @@ const _t = core._t;
      //--------------------------------------------------------------------------
 
     /**
-     * Resuming the chatbot script if we are currently running one.
-     *
-     * In addition, we register a resize event on the window object to scroll messages to bottom.
-     * This is done especially for mobile (Android) where the keyboard opens upon focusing the input
-     * field and shrinks the whole window size.
-     * Scrolling to the bottom allows the user to see the last messages properly when that happens.
-     *
-     * @private
-     * @override
-     */
-    _openChatWindow() {
-        return this._super(...arguments).then(() => {
-            window.addEventListener('resize', () => {
-                if (this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow) {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
-                }
-            });
-
-            if (
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.currentStep.data &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.messages &&
-                this.messaging.publicLivechatGlobal.livechatButtonView.messages.length !== 0
-            ) {
-                this._chatbotProcessStep();
-            }
-        });
-    },
-    /**
      * @private
      * @override
      */

@@ -55,7 +55,7 @@ patchRecordMethods('LivechatButtonView', {
         this.messaging.publicLivechatGlobal.update({
             publicLivechat: insertAndReplace({ data: this.testChatbotData.channel }),
         });
-        await this.widget._openChatWindow();
+        await this.openChatWindow();
         this.widget._sendWelcomeMessage();
         this.widget._renderMessages();
         this.env.services.bus_service.addChannel(this.messaging.publicLivechatGlobal.publicLivechat.uuid);
