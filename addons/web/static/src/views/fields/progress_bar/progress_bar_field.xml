@@ -30,8 +30,8 @@
                             inputmode="numeric"
                             t-att-value="formatCurrentValue() or ''"
                             t-att-required="props.required"
-                            t-on-change="(ev) => this.onCurrentValueChange(ev.target.value)"
-                            t-on-input="(ev) => this.onCurrentValueInput(ev)"
+                            t-on-change="onCurrentValueChange"
+                            t-on-input="onCurrentValueInput"
                             t-on-blur="onBlur"
                         />
                         <span>%</span>
@@ -40,23 +40,25 @@
                 <t t-else="">
                     <input
                         t-if="props.isCurrentValueEditable"
+                        t-ref="current-value"
                         class="o_progressbar_value o_input"
                         type="text"
                         inputmode="numeric"
                         t-att-value="formatCurrentValue()"
-                        t-on-change="(ev) => this.onCurrentValueChange(ev.target.value)"
-                        t-on-input="(ev) => this.onCurrentValueInput(ev)"
+                        t-on-change="onCurrentValueChange"
+                        t-on-input="onCurrentValueInput"
                         t-on-blur="onBlur"
                     />
                     <span t-if="props.isCurrentValueEditable and props.isMaxValueEditable" t-esc="'/'" />
                     <input
                         t-if="props.isMaxValueEditable"
+                        t-ref="max-value"
                         class="o_progressbar_value o_input"
                         type="text"
                         inputmode="numeric"
                         t-att-value="formatMaxValue()"
-                        t-on-change="(ev) => this.onMaxValueChange(ev.target.value)"
-                        t-on-input="(ev) => this.onMaxValueInput(ev)"
+                        t-on-change="onMaxValueChange"
+                        t-on-input="onMaxValueInput"
                         t-on-blur="onBlur"
                     />
                 </t>
@@ -65,4 +67,3 @@
     </t>
 
 </templates>
-

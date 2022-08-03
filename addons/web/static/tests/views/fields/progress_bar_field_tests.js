@@ -364,6 +364,8 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("ProgressBarField: field is editable in kanban", async function (assert) {
         assert.expect(7);
+
+        serverData.models.partner.fields.int_field.readonly = true;
         serverData.models.partner.records[0].int_field = 99;
 
         await makeView({
@@ -412,6 +414,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await editInput(target, ".o_progressbar_value.o_input", "69");
+
         assert.strictEqual(
             target.querySelector(".o_progressbar_value").textContent,
             "69 / 100",
@@ -421,6 +424,42 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_progressbar_title").textContent,
             "ProgressBarTitle"
         );
+    });
+
+    QUnit.test("force readonly in kanban", async (assert) => {
+        assert.expect(3);
+
+        serverData.models.partner.records[0].int_field = 99;
+
+        await makeView({
+            serverData,
+            type: "kanban",
+            resModel: "partner",
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="int_field" widget="progressbar" options="{'editable': true, 'max_value': 'float_field', 'readonly': True}" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            resId: 1,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    throw new Error("Not supposed to write");
+                }
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_progressbar_value").textContent, "99 / 100");
+
+        // Clicking on the progress bar should not change the value
+        await click(target.querySelector(".o_progress"));
+
+        assert.strictEqual(target.querySelector(".o_progressbar_value").textContent, "99 / 100");
+        assert.containsNone(target, ".o_progressbar_value.o_input");
     });
 
     QUnit.test(
