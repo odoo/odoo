@@ -91,11 +91,9 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
     /**
      * @override
      */
-    async destroyAfterTransition() {
+    destroyAfterTransition() {
         this.state.showWysiwyg = false;
-        await this.props.reloadIframe();
         this.websiteContext.translation = false;
-        this.websiteService.unblockIframe();
     }
 
     get savableSelector() {
