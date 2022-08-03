@@ -53,11 +53,11 @@ class Website(models.Model):
     @staticmethod
     def _get_product_sort_mapping():
         return [
-            ('website_sequence asc', 'Featured'),
-            ('create_date desc', 'Newest Arrivals'),
-            ('name asc', 'Name (A-Z)'),
-            ('list_price asc', 'Price - Low to High'),
-            ('list_price desc', 'Price - High to Low'),
+            ('website_sequence asc', _('Featured')),
+            ('create_date desc', _('Newest Arrivals')),
+            ('name asc', _('Name (A-Z)')),
+            ('list_price asc', _('Price - Low to High')),
+            ('list_price desc', _('Price - High to Low')),
         ]
     shop_default_sort = fields.Selection(selection='_get_product_sort_mapping', default='website_sequence asc', required=True)
 
