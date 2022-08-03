@@ -11,7 +11,7 @@ QUnit.module('bus', function () {
     QUnit.module('multi_tab_service_tests.js');
 
     QUnit.test('multi tab service elects new master on unload', async function (assert) {
-        assert.expect(2);
+        assert.expect(5);
 
         registry.category('services').add('multi_tab', multiTabService);
 
@@ -28,11 +28,19 @@ QUnit.module('bus', function () {
             },
         });
         const secondTabEnv = await makeTestEnv();
+        firstTabEnv.services["multi_tab"].bus.addEventListener("no_longer_main_tab", () =>
+            assert.step("tab1 no_longer_main_tab")
+        );
+        secondTabEnv.services["multi_tab"].bus.addEventListener("no_longer_main_tab", () =>
+            assert.step("tab2 no_longer_main_tab")
+        );
         window.dispatchEvent(new Event('unload'));
 
         // Let the multi tab elect a new main.
         await nextTick();
+        assert.notOk(firstTabEnv.services['multi_tab'].isOnMainTab());
         assert.ok(secondTabEnv.services['multi_tab'].isOnMainTab());
+        assert.verifySteps(['tab1 no_longer_main_tab']);
     });
 
     QUnit.test('multi tab allow to share values between tabs', async function (assert) {
