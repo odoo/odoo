@@ -9,6 +9,21 @@ import { set_cookie, unaccent } from 'web.utils';
 
 patchRecordMethods('LivechatButtonView', {
     /**
+     * Check if a chat request is opened for this visitor
+     * if yes, replace the session cookie and start the conversation immediately.
+     * Do this before calling super to have everything ready before executing existing start logic.
+     * This is used for chat request mechanism, when an operator send a chat request
+     * from backend to a website visitor.
+     *
+     * @override
+     */
+    willStart: function () {
+        if (this.messaging.publicLivechatGlobal.options.chat_request_session) {
+            set_cookie('im_livechat_session', JSON.stringify(this.messaging.publicLivechatGlobal.options.chat_request_session), 60 * 60);
+        }
+        return this._super();
+    },
+    /**
      * @override
      */
     _computeIsOpenChatDebounced() {
