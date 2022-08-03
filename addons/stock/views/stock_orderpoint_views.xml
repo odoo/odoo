@@ -43,12 +43,14 @@
                 <field name="company_id" invisible="1"/>
                 <field name="product_category_id" invisible="1"/>
                 <field name="product_tmpl_id" invisible="1"/>
+                <field name="unwanted_replenish" invisible="1"/>
                 <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" force_save="1"/>
                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
                 <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide"/>
                 <field name="qty_on_hand" force_save="1"/>
                 <field name="qty_forecast" force_save="1"/>
-                <button name="action_product_forecast_report" type="object" icon="fa-area-chart" title="Forecast Report" attrs="{'invisible': [('id', '=', False)]}"/>
+                <button name="action_product_forecast_report" type="object" icon="fa-area-chart" title="Forecast Report" attrs="{'invisible': ['|', ('id', '=', False), ('unwanted_replenish', '=', True)]}"/>
+                <button name="action_product_forecast_report" type="object" icon="fa-warning text-warning" title="Due to receipts scheduled in the future, you might end up with excessive stock . Check the Forecasted Report  before reordering" attrs="{'invisible': ['|', ('id', '=', False), ('unwanted_replenish', '=', False)]}"/>
                 <field name="visibility_days" optional="hidden"/>
                 <field name="route_id" options="{'no_create': True, 'no_open': True}" optional="hidden"/>
                 <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Replenishment Information" attrs="{'invisible': [('id', '=', False)]}"/>
