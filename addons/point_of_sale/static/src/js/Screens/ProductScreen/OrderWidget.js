@@ -46,6 +46,7 @@ odoo.define('point_of_sale.OrderWidget', function(require) {
             const packLotLinesToEdit = orderline.getPackLotLinesToEdit(isAllowOnlyOneLot);
             const { confirmed, payload } = await this.showPopup('EditListPopup', {
                 title: this.env._t('Lot/Serial Number(s) Required'),
+                name: orderline.product.display_name,
                 isSingleItem: isAllowOnlyOneLot,
                 array: packLotLinesToEdit,
             });

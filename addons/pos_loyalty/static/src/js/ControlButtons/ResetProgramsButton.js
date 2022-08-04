@@ -10,8 +10,10 @@ export class ResetProgramsButton extends PosComponent {
         super.setup();
         useListener('click', this.onClick);
     }
-
-    async onClick() {
+    _isDisabled() {
+        return !this.env.pos.get_order().isProgramsResettable();
+    }
+    onClick() {
         this.env.pos.get_order()._resetPrograms();
     }
 }

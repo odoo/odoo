@@ -98,6 +98,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
                 const { confirmed, payload } = await this.showPopup('EditListPopup', {
                     title: this.env._t('Lot/Serial Number(s) Required'),
+                    name: product.display_name,
                     isSingleItem: isAllowOnlyOneLot,
                     array: packLotLinesToEdit,
                 });

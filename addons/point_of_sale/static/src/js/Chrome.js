@@ -243,7 +243,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
         openCashControl() {
             if (this.shouldShowCashControl()) {
-                this.showPopup('CashOpeningPopup');
+                this.showPopup('CashOpeningPopup', { keepBehind: true });
             }
         }
 

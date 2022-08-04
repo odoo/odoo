@@ -11,11 +11,12 @@ odoo.define('pos_restaurant.SplitBillButton', function(require) {
             super.setup();
             useListener('click', this.onClick);
         }
-        async onClick() {
+        _isDisabled() {
             const order = this.env.pos.get_order();
-            if (order.get_orderlines().length > 0) {
-                this.showScreen('SplitBillScreen');
-            }
+            return order.get_orderlines().reduce((totalProduct, orderline) => totalProduct + orderline.quantity, 0) < 2;
+        }
+        async onClick() {
+            this.showScreen('SplitBillScreen');
         }
     }
     SplitBillButton.template = 'SplitBillButton';

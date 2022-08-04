@@ -41,6 +41,8 @@ export class RewardButton extends PosComponent {
         return discountRewards.concat(this._mergeFreeProductRewards(freeProductRewards, potentialFreeProductRewards));
     }
 
+    _isDisabled() {}
+
     hasClaimableRewards() {
         return this._getPotentialRewards().length > 0;
     }
@@ -94,13 +96,7 @@ export class RewardButton extends PosComponent {
 
     async onClick() {
         const rewards = this._getPotentialRewards();
-        if (rewards.length === 0) {
-            await this.showPopup('ErrorPopup', {
-                title: this.env._t('No rewards available.'),
-                body: this.env._t('There are no rewards claimable for this customer.')
-            });
-            return false;
-        } else if (rewards.length === 1) {
+        if (rewards.length === 1) {
             return this._applyReward(rewards[0].reward, rewards[0].coupon_id, rewards[0].potentialQty);
         } else {
             const rewardsList = rewards.map((reward) => ({

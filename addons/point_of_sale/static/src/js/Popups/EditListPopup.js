@@ -67,16 +67,18 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
             // Put _id for each item. It will serve as unique identifier of each item.
             return array.map((item) => Object.assign({}, { _id: this._nextId() }, typeof item === 'object'? item: { 'text': item}));
         }
-        removeItem(event) {
-            const itemToRemove = event.detail;
+        _hasMoreThanOneItem() {
+            return this.state.array.length > 1;
+        }
+        removeItem(itemId) {
             this.state.array.splice(
-                this.state.array.findIndex(item => item._id == itemToRemove._id),
+                this.state.array.findIndex(item => item._id == itemId),
                 1
             );
-            // We keep a minimum of one empty item in the popup.
-            if (this.state.array.length === 0) {
-                this.state.array.push(this._emptyItem());
-            }
+        }
+        onInputChange(itemId, text) {
+            const item = this.state.array.find(elem => elem._id === itemId);
+            item.text = text;
         }
         createNewItem() {
             if (this.props.isSingleItem) return;
@@ -95,8 +97,8 @@ odoo.define('point_of_sale.EditListPopup', function(require) {
     }
     EditListPopup.template = 'EditListPopup';
     EditListPopup.defaultProps = {
-        confirmText: _lt('Ok'),
-        cancelText: _lt('Cancel'),
+        confirmText: _lt('Add'),
+        cancelText: _lt('Discard'),
         array: [],
         isSingleItem: false,
     };
