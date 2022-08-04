@@ -59,6 +59,51 @@ export function useAutofocus({ refName, selectAll } = {}) {
     return ref;
 }
 
+/**
+ * To avoid elements to keep their spellcheck appearance when they are no
+ * longer in focus. We only add this attribute when needed. To disable this
+ * behavior, use the spellcheck attribute on the element.
+ */
+export function useSpellCheck() {
+    const listeners = [];
+    const ref = useRef("spellcheck");
+    function toggleSpellcheck(ev) {
+        ev.target.spellcheck = document.activeElement === ev.target;
+    }
+    const enableSpellCheckHook = () => {
+        if (ref.el) {
+            const inputs =
+                ref.el.nodeName === "TEXTAREA"
+                    ? [ref.el]
+                    : ref.el.querySelectorAll("[contenteditable=true], textarea");
+            inputs.forEach((input) => {
+                if (input.spellcheck !== false) {
+                    listeners.push(input);
+                    input.addEventListener("focus", toggleSpellcheck);
+                    input.addEventListener("blur", toggleSpellcheck);
+                }
+            });
+        }
+    };
+    const disableSpellCheckHook = () => {
+        listeners.forEach((input) => {
+            input.removeEventListener("focus", toggleSpellcheck);
+            input.removeEventListener("blur", toggleSpellcheck);
+        });
+    };
+    useEffect(
+        (el) => {
+            enableSpellCheckHook();
+            return disableSpellCheckHook;
+        },
+        () => [ref.el]
+    );
+    return {
+        disable: disableSpellCheckHook,
+        enable: enableSpellCheckHook,
+    };
+}
+
 // -----------------------------------------------------------------------------
 // useBus
 // -----------------------------------------------------------------------------

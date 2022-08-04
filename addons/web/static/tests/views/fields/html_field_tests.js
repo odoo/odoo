@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture, triggerEvent } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { HtmlField } from "@web/views/fields/html/html_field";
@@ -109,5 +109,35 @@ QUnit.module("Fields", ({ beforeEach }) => {
         const txt = target.querySelector(".kek");
         assert.strictEqual(txt.textContent, "some text");
         assert.strictEqual(txt.style.color, "red");
+    });
+
+    QUnit.test("html fields: spellcheck is disabled on blur", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: /* xml */ `<form><field name="txt" /></form>`,
+        });
+
+        const textarea = target.querySelector(".o_field_html textarea");
+        assert.strictEqual(textarea.spellcheck, true, "by default, spellcheck is enabled");
+        textarea.focus();
+
+        await editInput(textarea, null, "nev walue");
+        textarea.blur();
+        assert.strictEqual(
+            textarea.spellcheck,
+            false,
+            "spellcheck is disabled once the field has lost its focus"
+        );
+        textarea.focus();
+
+        await triggerEvent(textarea, null, "focus");
+        assert.strictEqual(
+            textarea.spellcheck,
+            true,
+            "spellcheck is re-enabled once the field is focused"
+        );
     });
 });
