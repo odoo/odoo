@@ -442,6 +442,8 @@ class HolidaysAllocation(models.Model):
                 gained_days = allocation._process_accrual_plan_level(
                     current_level, period_start, allocation.lastcall, period_end, allocation.nextcall)
                 days_added_per_level[current_level] += gained_days
+                if current_level.maximum_leave > 0 and sum(days_added_per_level.values()) > current_level.maximum_leave:
+                    days_added_per_level[current_level] -= sum(days_added_per_level.values()) - current_level.maximum_leave
                 # We have to check for end of year actions if it is within our period
                 #  since we can create retroactive allocations.
                 if allocation.lastcall.year < allocation.nextcall.year and\
