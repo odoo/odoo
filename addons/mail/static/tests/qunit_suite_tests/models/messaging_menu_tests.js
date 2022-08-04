@@ -20,13 +20,9 @@ QUnit.test('messaging menu counter should ignore unread messages in channels tha
         },
     });
     const { messaging } = await start();
-    messaging.models['Thread'].insert({
-        channel: insertAndReplace({
-            id: 31,
-            isServerPinned: false,
-        }),
+    messaging.models['Channel'].insert({
         id: 31,
-        model: 'mail.channel',
+        isServerPinned: false,
         serverMessageUnreadCounter: 1,
     });
     assert.strictEqual(

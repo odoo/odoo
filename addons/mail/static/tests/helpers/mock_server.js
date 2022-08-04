@@ -1034,12 +1034,14 @@ patch(MockServer.prototype, 'mail', {
             }
             const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
             if (memberOfCurrentUser) {
-                channelData.isServerPinned = memberOfCurrentUser.is_pinned;
+                Object.assign(channelData, {
+                    isServerPinned: memberOfCurrentUser.is_pinned,
+                    serverMessageUnreadCounter: memberOfCurrentUser.message_unread_counter,
+                });
                 Object.assign(res, {
                     custom_channel_name: memberOfCurrentUser.custom_channel_name,
                     is_minimized: memberOfCurrentUser.is_minimized,
                     last_interest_dt: memberOfCurrentUser.last_interest_dt,
-                    message_unread_counter: memberOfCurrentUser.message_unread_counter,
                     state: memberOfCurrentUser.fold_state || 'open',
                 });
                 if (memberOfCurrentUser.rtc_inviting_session_id) {

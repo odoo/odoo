@@ -170,6 +170,9 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeCallParticipants() {
+            if (!this.thread) {
+                return clear();
+            }
             const callParticipants = this.thread.invitedMembers;
             for (const rtcSession of this.thread.rtcSessions) {
                 callParticipants.push(rtcSession.channelMember);
@@ -181,6 +184,9 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeCorrespondent() {
+            if (!this.thread) {
+                return clear();
+            }
             if (this.channel_type === 'channel') {
                 return clear();
             }
@@ -337,12 +343,15 @@ registerModel({
         },
         /**
          * @private
-         * @returns {integer}
+         * @returns {integer|FieldCommand}
          */
         _computeLocalMessageUnreadCounter() {
+            if (!this.thread) {
+                return clear();
+            }
             // By default trust the server up to the last message it used
             // because it's not possible to do better.
-            let baseCounter = this.thread.serverMessageUnreadCounter;
+            let baseCounter = this.serverMessageUnreadCounter;
             let countFromId = this.thread.serverLastMessage ? this.thread.serverLastMessage.id : 0;
             // But if the client knows the last seen message that the server
             // returned (and by assumption all the messages that come after),
@@ -584,6 +593,19 @@ registerModel({
             sort: '_sortMembers',
         }),
         public: attr(),
+        /**
+         * Message unread counter coming from server.
+         *
+         * Value of this field is unreliable, due to dynamic nature of
+         * messaging. So likely outdated/unsync with server. Should use
+         * localMessageUnreadCounter instead, which smartly guess the actual
+         * message unread counter at all time.
+         *
+         * @see localMessageUnreadCounter
+         */
+        serverMessageUnreadCounter: attr({
+            default: 0,
+        }),
         thread: one('Thread', {
             compute: '_computeThread',
             inverse: 'channel',

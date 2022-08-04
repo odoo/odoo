@@ -41,6 +41,7 @@ QUnit.test('create (channel)', async function (assert) {
             channel_type: 'channel',
             id: 100,
             public: 'public',
+            serverMessageUnreadCounter: 5,
         }),
         id: 100,
         members: insert([{
@@ -55,7 +56,6 @@ QUnit.test('create (channel)', async function (assert) {
         message_needaction_counter: 6,
         model: 'mail.channel',
         name: "General",
-        serverMessageUnreadCounter: 5,
     });
     assert.ok(thread);
     assert.ok(messaging.models['Partner'].findFromIdentifyingData({ id: 9 }));
@@ -78,7 +78,7 @@ QUnit.test('create (channel)', async function (assert) {
     assert.strictEqual(thread.message_needaction_counter, 6);
     assert.strictEqual(thread.name, "General");
     assert.strictEqual(thread.channel.public, 'public');
-    assert.strictEqual(thread.serverMessageUnreadCounter, 5);
+    assert.strictEqual(thread.channel.serverMessageUnreadCounter, 5);
     assert.strictEqual(partner9.email, "john@example.com");
     assert.strictEqual(partner9.id, 9);
     assert.strictEqual(partner9.name, "John");

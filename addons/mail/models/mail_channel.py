@@ -801,7 +801,7 @@ class Channel(models.Model):
                 member = member_of_current_user_by_channel.get(channel, self.env['mail.channel.member']).with_prefetch([m.id for m in member_of_current_user_by_channel.values()])
                 if member:
                     info['state'] = member.fold_state or 'open'
-                    info['message_unread_counter'] = member.message_unread_counter
+                    channel_data['serverMessageUnreadCounter'] = member.message_unread_counter
                     info['is_minimized'] = member.is_minimized
                     info['seen_message_id'] = member.seen_message_id.id
                     info['custom_channel_name'] = member.custom_channel_name

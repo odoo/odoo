@@ -89,9 +89,6 @@ registerModel({
             if ('message_needaction_counter' in data) {
                 data2.message_needaction_counter = data.message_needaction_counter;
             }
-            if ('message_unread_counter' in data) {
-                data2.serverMessageUnreadCounter = data.message_unread_counter;
-            }
             if ('name' in data) {
                 data2.name = data.name;
             }
@@ -1783,19 +1780,6 @@ registerModel({
          * @see localMessageUnreadCounter
          */
         serverLastMessage: one('Message'),
-        /**
-         * Message unread counter coming from server.
-         *
-         * Value of this field is unreliable, due to dynamic nature of
-         * messaging. So likely outdated/unsync with server. Should use
-         * localMessageUnreadCounter instead, which smartly guess the actual
-         * message unread counter at all time.
-         *
-         * @see localMessageUnreadCounter
-         */
-        serverMessageUnreadCounter: attr({
-            default: 0,
-        }),
         suggestable: one('ComposerSuggestable', {
             default: insertAndReplace(),
             inverse: 'thread',
