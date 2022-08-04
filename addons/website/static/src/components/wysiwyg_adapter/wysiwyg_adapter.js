@@ -602,6 +602,19 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         return event.data.callback(this._context);
     }
     /**
+     * Returns the website service context.
+     *
+     * @param event
+     * @returns {*}
+     * @private
+     */
+    _onServiceContextGet(event) {
+        const readOnly = {
+            isMobile: this.websiteService.context.isMobile,
+        };
+        return event.data.callback(readOnly);
+    }
+    /**
      * Discards changes and reload the iframe.
      *
      * @param event
@@ -770,6 +783,7 @@ WysiwygAdapterComponent.prototype.events = {
     'gmap_api_key_request': '_onRootEventRequest',
     'request_save': '_onSaveRequest',
     'context_get': '_onContextGet',
+    'service_context_get': '_onServiceContextGet',
     'action_demand': '_handleAction',
     'request_cancel': '_onCancelRequest',
     'snippet_will_be_cloned': '_onSnippetWillBeCloned',

@@ -548,12 +548,17 @@
         <t t-call="website.snippet_options_shadow_widgets"/>
     </div>
 
-    <!-- Mobile display options -->
-    <div data-js="MobileVisibility" data-selector="section, section .row > div"
+    <!-- Mobile/Desktop display options -->
+    <div data-js="DeviceVisibility" data-selector="section, section .row > div"
          data-exclude=".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize">
-        <we-button class="o_we_link o_we_mobile" data-show-on-mobile="true" data-no-preview="true"
-                   data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"
-                   data-active-img="/website/static/src/img/snippets_options/mobile_visible.svg"/>
+        <we-button class="o_we_link o_we_device fa fa-fw fa-eye" data-toggle-device-visibility="current" data-no-preview="true"
+                   data-name="device_visibility_opt" data-device="both" title="Visible on all devices"/>
+        <we-button class="o_we_link o_we_device" data-toggle-device-visibility="both" data-no-preview="true"
+                   data-name="device_visibility_opt" data-device="no_mobile" title="Hidden on mobile"
+                   data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"/>
+        <we-button class="o_we_link o_we_device" data-toggle-device-visibility="both" data-no-preview="true"
+                   data-name="device_visibility_opt" data-device="no_desktop" title="Hidden on desktop"
+                   data-img="/website/static/src/img/snippets_options/desktop_invisible.svg"/>
     </div>
 
     <div data-js="sizing_y"

@@ -3519,6 +3519,9 @@ var SnippetsMenu = Widget.extend({
      */
     _onMobilePreviewClick: function () {
         this.trigger_up('request_mobile_preview');
+        this.snippetEditors.forEach(editor => {
+            editor.updateOptionsUIVisibility();
+        });
     },
     /**
      * Undo..

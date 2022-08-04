@@ -93,7 +93,7 @@ $i: 1;
         }
     }
 
-    we-button.o_we_mobile {
+    we-button.o_we_device {
         > div {
             // FIXME maybe there is some refactoring to do so that all SVG icons
             // can be properly aligned with extra CSS rules...
@@ -109,13 +109,6 @@ $i: 1;
                 &:hover {
                     fill: darken($o-we-color-danger, 7.5%);
                 }
-            }
-        }
-        &.active > div > svg {
-            fill: $o-we-sidebar-content-field-color;
-
-            &:hover {
-                fill: $o-we-sidebar-content-field-pressed-color;
             }
         }
     }

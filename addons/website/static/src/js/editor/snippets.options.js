@@ -2294,36 +2294,39 @@ options.registry.topMenuColor = options.Class.extend({
 });
 
 /**
- * Manage the visibility of snippets on mobile.
+ * Manage the visibility of snippets on mobile/desktop.
  */
-options.registry.MobileVisibility = options.Class.extend({
+options.registry.DeviceVisibility = options.Class.extend({
     isTopOption: true,
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async updateUI() {
-        await this._super(...arguments);
-        const $button = this.$el.find('we-button');
-        $button.attr('title', $button.hasClass('active') ? _t("Visible on mobile") : _t("Hidden on mobile"));
-    },
 
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
 
     /**
-     * Allows to show or hide the associated snippet in mobile display mode.
+     * Toggles the device visibility.
      *
      * @see this.selectClass for parameters
      */
-    showOnMobile(previewMode, widgetValue, params) {
-        const classes = `d-none d-md-${this.$target.css('display')}`;
-        this.$target.toggleClass(classes, !widgetValue);
+    toggleDeviceVisibility(previewMode, widgetValue, params) {
+        if (widgetValue === 'both') {
+            this.$target[0].classList.remove('d-none');
+            this.$target[0].classList.remove('d-md-none');
+            this.$target[0].classList.remove(`d-md-${this.$target.css('display')}`);
+        } else { // According to current display mode.
+            let isMobile;
+            this.trigger_up('service_context_get', {
+                callback: (ctx) => {
+                    isMobile = ctx['isMobile'];
+                },
+            });
+            if (isMobile) {
+                this.$target[0].classList.add(`d-md-${this.$target.css('display')}`);
+                this.$target[0].classList.add('d-none');
+            } else {
+                this.$target[0].classList.add('d-md-none');
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -2331,15 +2334,29 @@ options.registry.MobileVisibility = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Returns the current device visibility.
+     *
+     * @return {string} 'both', 'no_mobile' or 'no_desktop'
+     */
+    _getDeviceVisibility() {
+        const classList = [...this.$target[0].classList];
+        if (classList.includes('d-none') &&
+                classList.some(className => className.startsWith('d-md-'))) {
+            return 'no_mobile';
+        }
+        if (classList.includes('d-md-none')) {
+            return 'no_desktop';
+        }
+        return 'both';
+    },
+    /**
      * @override
      */
-    async _computeWidgetState(methodName, params) {
-        if (methodName === 'showOnMobile') {
-            const classList = [...this.$target[0].classList];
-            return classList.includes('d-none') &&
-                classList.some(className => className.startsWith('d-md-')) ? '' : 'true';
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'device_visibility_opt') {
+            return this._getDeviceVisibility() === params.device;
         }
-        return await this._super(...arguments);
+        return this._super(...arguments);
     },
 });
 
