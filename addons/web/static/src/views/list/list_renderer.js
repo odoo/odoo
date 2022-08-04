@@ -1499,10 +1499,7 @@ export class ListRenderer extends Component {
         this.tableRef.el.querySelector("tbody").classList.remove("o_keyboard_navigation");
 
         const target = ev.target;
-        if (
-            this.tableRef.el.contains(target) &&
-            (target.closest(".o_data_row") || target.closest(".o_column_sortable"))
-        ) {
+        if (this.tableRef.el.contains(target) && target.closest(".o_data_row")) {
             // ignore clicks inside the table that are originating from a record row
             // as they are handled directly by the renderer.
             return;

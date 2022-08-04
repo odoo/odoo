@@ -2058,7 +2058,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "editable list view: save data when list sorting in edit mode",
         async function (assert) {
-            assert.expect(3);
+            assert.expect(2);
 
             serverData.models.foo.fields.foo.sortable = true;
 
@@ -2081,15 +2081,7 @@ QUnit.module("Views", (hooks) => {
             await click(target.querySelector(".o_data_cell"));
             await editInput(target, '.o_field_widget[name="foo"] input', "xyz");
             await click(target.querySelector(".o_column_sortable"));
-
-            assert.hasClass(
-                target.querySelector(".o_data_row"),
-                "o_selected_row",
-                "first row should still be in edition"
-            );
-
-            await click(target.querySelector(".o_list_button_save"));
-            assert.containsNone(target, ".o_list_button_save");
+            assert.containsNone(target, ".o_selected_row");
         }
     );
 
