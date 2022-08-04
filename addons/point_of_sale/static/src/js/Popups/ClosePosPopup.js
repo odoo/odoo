@@ -66,6 +66,15 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         }
         //@override
         async confirm() {
+            if(Object.values(this.env.pos.get_order_list()).filter(order => order.orderlines.length || order.paymentlines.length).length) {
+                let confirmedPopup = await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('Order still in ongoing state'),
+                    body: this.env._t('Do you really want to close the pos with ongoing orders?'),
+                });
+                if (!confirmedPopup.confirmed) {
+                    this.cancel();
+                }
+            }
             if (!this.cashControl || !this.hasDifference()) {
                 this.closeSession();
             } else if (this.hasUserAuthority()) {
