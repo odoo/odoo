@@ -1,5 +1,5 @@
 /** @odoo-module **/
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture, clickEdit } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -13,6 +13,7 @@ QUnit.module("Fields", (hooks) => {
                 partner: {
                     fields: {
                         hex_color: { string: "hexadecimal color", type: "char" },
+                        foo: { type: "char" },
                     },
                     records: [
                         {
@@ -32,6 +33,9 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("ColorField");
 
     QUnit.test("field contains a color input", async function (assert) {
+        serverData.models.partner.onchanges = {
+            hex_color: () => {},
+        };
         await makeView({
             type: "form",
             serverData,
@@ -43,6 +47,11 @@ QUnit.module("Fields", (hooks) => {
                         <field name="hex_color" widget="color" />
                     </group>
                 </form>`,
+            mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    assert.step(`onchange ${JSON.stringify(args.args)}`);
+                }
+            },
         });
         assert.containsOnce(
             target,
@@ -56,7 +65,12 @@ QUnit.module("Fields", (hooks) => {
             "field has the default color set as background if no value has been selected"
         );
 
+        assert.strictEqual(target.querySelector(".o_field_color input").value, "#000000");
         await editInput(target, ".o_field_color input", "#fefefe");
+        assert.verifySteps([
+            'onchange [[1],{"id":1,"hex_color":"#fefefe"},"hex_color",{"hex_color":"1"}]',
+        ]);
+        assert.strictEqual(target.querySelector(".o_field_color input").value, "#fefefe");
         assert.strictEqual(
             target.querySelector(".o_field_color div").style.backgroundColor,
             "rgb(254, 254, 254)",
@@ -84,5 +98,47 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target.querySelector(".o_field_color input"));
         assert.doesNotHaveClass(target.querySelector(".o_data_row"), "o_selected_row");
+    });
+
+    QUnit.test("color field change via another field's onchange", async (assert) => {
+        serverData.models.partner.onchanges = {
+            foo: (rec) => {
+                rec.hex_color = "#fefefe";
+            },
+        };
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 1,
+            arch: `
+                <form>
+                    <field name="foo" />
+                    <field name="hex_color" widget="color" />
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    assert.step(`onchange ${JSON.stringify(args.args)}`);
+                }
+            },
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_color div").style.backgroundColor,
+            "rgb(0, 0, 0)",
+            "field has the default color set as background if no value has been selected"
+        );
+        assert.strictEqual(target.querySelector(".o_field_color input").value, "#000000");
+        await clickEdit(target);
+        await editInput(target, ".o_field_char[name='foo'] input", "someValue");
+        assert.verifySteps([
+            'onchange [[1],{"id":1,"foo":"someValue","hex_color":false},"foo",{"foo":"1","hex_color":""}]',
+        ]);
+        assert.strictEqual(target.querySelector(".o_field_color input").value, "#fefefe");
+        assert.strictEqual(
+            target.querySelector(".o_field_color div").style.backgroundColor,
+            "rgb(254, 254, 254)",
+            "field has the new color set as background"
+        );
     });
 });
