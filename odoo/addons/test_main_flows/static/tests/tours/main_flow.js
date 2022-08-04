@@ -715,7 +715,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
 ...tour.stepUtils.goToAppSteps('purchase.menu_purchase_root', _t('Go to Purchase')),
 {
     mobile: false,
-    trigger: '.o_data_row:has(.o_data_cell:contains("the_flow.vendor"))',
+    trigger: '.o_data_row:has(.o_data_cell:contains("the_flow.vendor")) .o_data_cell:first',
     content: _t('Select the generated request for quotation'),
     position: 'bottom',
 }, {

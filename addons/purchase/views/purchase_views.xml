@@ -479,7 +479,7 @@
             <field name="name">purchase.order.kanban</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" js_class="purchase_kanban_dashboard" sample="1">
+                <kanban class="o_kanban_mobile" js_class="purchase_dashboard_kanban" sample="1">
                     <field name="name"/>
                     <field name="partner_id" readonly="1"/>
                     <field name="amount_total"/>
@@ -518,6 +518,7 @@
             <field name="name">purchase.order.view.kanban.without.dashboard</field>
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.view_purchase_order_kanban"/>
+            <field name="mode">primary</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <xpath expr="//kanban" position="attributes">
@@ -563,7 +564,7 @@
             <field name="arch" type="xml">
                 <tree string="Purchase Order" decoration-info="state in ['draft', 'sent']"
                 decoration-muted="state == 'cancel'"
-                class="o_purchase_order" js_class="purchase_list_dashboard" sample="1">
+                class="o_purchase_order" js_class="purchase_dashboard_list" sample="1">
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
                     </header>
@@ -666,7 +667,10 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,calendar,activity</field>
-            <field name="view_id" ref="purchase_order_view_tree"/>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('purchase.purchase_order_view_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('purchase.purchase_order_view_kanban_without_dashboard')}),
+            ]"/>
             <field name="domain">[('state','in',('purchase', 'done'))]</field>
             <field name="search_view_id" ref="purchase_order_view_search"/>
             <field name="context">{}</field>
@@ -817,37 +821,6 @@
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>
         <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
         <field name="target">new</field>
-    </record>
-
-    <!-- Dashboard action buttons -->
-    <!-- Dashboard action buttons: End in List view -->
-    <record id="purchase_action_dashboard_list" model="ir.actions.act_window">
-        <field name="name">Requests for Quotation</field>
-        <field name="res_model">purchase.order</field>
-        <field name="view_mode">form,tree,kanban,pivot,graph,calendar,activity</field>
-        <field name="view_id" ref="purchase.purchase_order_kpis_tree"/>
-        <field name="search_view_id" ref="view_purchase_order_filter"/>
-        <field name="target">main</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                No RFQs to display
-            </p>
-        </field>
-    </record>
-
-    <!-- Dashboard action buttons: End in Kanban view-->
-    <record id="purchase_action_dashboard_kanban" model="ir.actions.act_window">
-        <field name="name">Requests for Quotation</field>
-        <field name="res_model">purchase.order</field>
-        <field name="view_mode">form,tree,kanban,pivot,graph,calendar,activity</field>
-        <field name="view_id" ref="purchase.view_purchase_order_kanban"/>
-        <field name="search_view_id" ref="view_purchase_order_filter"/>
-        <field name="target">main</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                No RFQs to display
-            </p>
-        </field>
     </record>
 
     <record id="action_rfq_form" model="ir.actions.act_window">

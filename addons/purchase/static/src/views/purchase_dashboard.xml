@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="purchase.PurchaseDashboard">
+    <t t-name="purchase.PurchaseDashboard" owl="1">
         <div class="o_purchase_dashboard container-fluid py-4 border-bottom bg-white">
             <div class="row justify-content-between gap-3 gap-lg-0">
                 <div class="col-12 col-lg-5 col-xl-5 col-xxl-4 flex-grow-1 flex-lg-grow-0 flex-shrink-0">
@@ -9,19 +9,19 @@
                             All RFQs
                         </div>
                         <div class="g-col-9 g-col-sm-10 grid gap-1">
-                            <div class="o_dashboard_action g-col-4 p-0" title="All Draft RFQs" context='{"search_default_draft_rfqs": true}'>
+                            <div class="g-col-4 p-0" t-on-click="setSearchContext" title="All Draft RFQs" filter_name="draft_rfqs">
                                 <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize fw-normal">
-                                    <h2 t-out="values['all_to_send']"/>To Send
+                                    <h2 t-out="purchaseData['all_to_send']"/>To Send
                                 </a>
                             </div>
-                            <div class="o_dashboard_action g-col-4 p-0" title="All Waiting RFQs" context='{"search_default_waiting_rfqs": true}'>
+                            <div class="g-col-4 p-0" t-on-click="setSearchContext" title="All Waiting RFQs" filter_name="waiting_rfqs">
                                 <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize fw-normal">
-                                    <h2 t-out="values['all_waiting']"/>Waiting
+                                    <h2 t-out="purchaseData['all_waiting']"/>Waiting
                                 </a>
                             </div>
-                            <div class="o_dashboard_action g-col-4 p-0" title="All Late RFQs" context='{"search_default_late_rfqs": true}'>
+                            <div class="g-col-4 p-0" t-on-click="setSearchContext" title="All Late RFQs" filter_name="late_rfqs">
                                 <a href="#" class="btn btn-primary w-100 h-100 border-0 rounded-0 text-capitalize fw-normal">
-                                    <h2 t-out="values['all_late']"/>Late
+                                    <h2 t-out="purchaseData['all_late']"/>Late
                                 </a>
                             </div>
                         </div>
@@ -31,19 +31,19 @@
                             My RFQs
                         </div>
                         <div class="g-col-9 g-col-sm-10 grid gap-2">
-                            <div class="o_dashboard_action g-col-4 p-0" title="My Draft RFQs" context='{"search_default_draft_rfqs": true, "search_default_my_purchases": true}'>
+                            <div class="g-col-4 p-0" t-on-click="setSearchContext" title="My Draft RFQs" filter_name="draft_rfqs,my_purchases">
                                 <a href="#" class="btn btn-light d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 fw-normal">
-                                    <div class="w-100 p-2" t-out="values['my_to_send']"/>
+                                    <div class="w-100 p-2" t-out="purchaseData['my_to_send']"/>
                                 </a>
                             </div>
-                            <div class="o_dashboard_action g-col-4 p-0" title="My Waiting RFQs" context='{"search_default_waiting_rfqs": true, "search_default_my_purchases": true}'>
+                            <div class="g-col-4 p-0" t-on-click="setSearchContext" title="My Waiting RFQs" filter_name="waiting_rfqs,my_purchases">
                                 <a href="#" class="btn btn-light d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 fw-normal">
-                                    <div class="w-100 p-2" t-out="values['my_waiting']"/>
+                                    <div class="w-100 p-2" t-out="purchaseData['my_waiting']"/>
                                 </a>
                             </div>
-                            <div class="o_dashboard_action g-col-4 p-0" title="My Late RFQs" context='{"search_default_late_rfqs": true, "search_default_my_purchases": true}'>
+                            <div class="g-col-4 p-0" t-on-click="setSearchContext" title="My Late RFQs" filter_name="late_rfqs,my_purchases">
                                 <a href="#" class="btn btn-light d-flex align-items-center w-100 h-100 p-0 border-0 bg-100 fw-normal">
-                                    <div class="w-100 p-2" t-out="values['my_late']"/>
+                                    <div class="w-100 p-2" t-out="purchaseData['my_late']"/>
                                 </a>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                                     Avg Order Value
                                 </div>
                                 <div class="g-col-12 g-col-sm-8 g-col-lg-5 d-flex align-items-center justify-content-center py-2 bg-light">
-                                    <span><t t-out="values['all_avg_order_value']"/></span>
+                                    <span><t t-out="purchaseData['all_avg_order_value']"/></span>
                                 </div>
                             </div>
                             <div class="g-col-6 g-col-md-6 grid gap-1 gap-md-4">
@@ -65,7 +65,7 @@
                                     Purchased Last 7 Days
                                 </div>
                                 <div class="g-col-12 g-col-sm-8 g-col-lg-6 d-flex align-items-center justify-content-center py-2 bg-light">
-                                    <span><t t-out="values['all_total_last_7_days']"/></span>
+                                    <span><t t-out="purchaseData['all_total_last_7_days']"/></span>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                                     Lead Time to Purchase
                                 </div>
                                 <div class="g-col-12 g-col-sm-8 g-col-lg-5 d-flex align-items-center justify-content-center py-2 bg-light">
-                                    <span><t t-out="values['all_avg_days_to_purchase']"/> &#160;Days</span>
+                                    <span><t t-out="purchaseData['all_avg_days_to_purchase']"/> &#160;Days</span>
                                 </div>
                             </div>
                             <div class="g-col-6 g-col-md-6 grid gap-1 gap-md-4">
@@ -83,7 +83,7 @@
                                     RFQs Sent Last 7 Days
                                 </div>
                                 <div class="g-col-12 g-col-sm-8 g-col-lg-6 d-flex align-items-center justify-content-center py-2 bg-light">
-                                    <span><t t-out="values['all_sent_rfqs']"/></span>
+                                    <span><t t-out="purchaseData['all_sent_rfqs']"/></span>
                                 </div>
                             </div>
                         </div>
@@ -93,4 +93,3 @@
         </div>
     </t>
 </templates>
-
