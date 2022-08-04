@@ -201,7 +201,7 @@ models.Order = models.Order.extend({
         for (p_key in old_res) {
             for (note in old_res[p_key]['qties']) {
                 var found = p_key in current_res && note in current_res[p_key]['qties'];
-                if (!found) {
+                if (!found && this.pos.db.get_product_by_id(pid)) {
                     var old = old_res[p_key];
                     var pid = old.pid;
                     rem.push({
