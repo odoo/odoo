@@ -452,11 +452,10 @@ actual arch.
     @api.constrains('type', 'groups_id', 'inherit_id')
     def _check_groups(self):
         for view in self:
-            if (view.type == 'qweb' and
-                view.groups_id and
+            if (view.groups_id and
                 view.inherit_id and
                 view.mode != 'primary'):
-                raise ValidationError(_("Inherited Qweb view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"))
+                raise ValidationError(_("Inherited view cannot have 'Groups' define on the record. Use 'groups' attributes inside the view definition"))
 
     @api.constrains('inherit_id')
     def _check_000_inheritance(self):
@@ -629,8 +628,7 @@ actual arch.
                       AND ({where_clause})
             )
             SELECT
-                v.id, v.inherit_id, v.mode,
-                ARRAY(SELECT r.group_id FROM ir_ui_view_group_rel r WHERE r.view_id=v.id)
+                v.id, v.inherit_id, v.mode
             FROM ir_ui_view_inherits v
             ORDER BY v.priority, v.id
         """
@@ -644,11 +642,6 @@ actual arch.
 
         self.env.cr.execute(query, [tuple(self.ids)] + where_params + where_params)
         rows = self.env.cr.fetchall()
-
-        # filter out forbidden views
-        if any(row[3] for row in rows):
-            user_groups = set(self.env.user.groups_id.ids)
-            rows = [row for row in rows if not (row[3] and user_groups.isdisjoint(row[3]))]
 
         views = self.browse(row[0] for row in rows)
 
