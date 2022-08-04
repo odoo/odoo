@@ -925,8 +925,8 @@ options.registry.WebsiteSaleProductAttribute = options.Class.extend({
     },
 });
 
-// Disable "Shown on Mobile" option if for dynamic product snippets
-options.registry.MobileVisibility.include({
+// Disable "Shown on Mobile/Desktop" option if for dynamic product snippets
+options.registry.DeviceVisibility.include({
 
     //--------------------------------------------------------------------------
     // Private

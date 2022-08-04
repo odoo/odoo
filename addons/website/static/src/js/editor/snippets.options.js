@@ -2294,36 +2294,61 @@ options.registry.topMenuColor = options.Class.extend({
 });
 
 /**
- * Manage the visibility of snippets on mobile.
+ * Manage the visibility of snippets on mobile/desktop.
  */
-options.registry.MobileVisibility = options.Class.extend({
-    isTopOption: true,
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    async updateUI() {
-        await this._super(...arguments);
-        const $button = this.$el.find('we-button');
-        $button.attr('title', $button.hasClass('active') ? _t("Visible on mobile") : _t("Hidden on mobile"));
-    },
+options.registry.DeviceVisibility = options.Class.extend({
 
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
 
     /**
-     * Allows to show or hide the associated snippet in mobile display mode.
+     * Toggles the device visibility.
      *
      * @see this.selectClass for parameters
      */
-    showOnMobile(previewMode, widgetValue, params) {
-        const classes = `d-none d-md-${this.$target.css('display')}`;
-        this.$target.toggleClass(classes, !widgetValue);
+    async toggleDeviceVisibility(previewMode, widgetValue, params) {
+        this.$target[0].classList.remove('d-none', 'd-md-none',
+            'o_snippet_mobile_invisible', 'o_snippet_desktop_invisible',
+            'o_snippet_override_invisible',
+        );
+        const style = getComputedStyle(this.$target[0]);
+        this.$target[0].classList.remove(`d-md-${style['display']}`);
+        if (widgetValue === 'no_desktop') {
+            this.$target[0].classList.add('d-md-none', 'o_snippet_desktop_invisible');
+        } else if (widgetValue === 'no_mobile') {
+            this.$target[0].classList.add(`d-md-${style['display']}`, 'd-none', 'o_snippet_mobile_invisible');
+        }
+
+        // Update invisible elements.
+        let isMobile;
+        this.trigger_up('service_context_get', {
+            callback: (ctx) => {
+                isMobile = ctx['isMobile'];
+            },
+        });
+        this.trigger_up('snippet_option_visibility_update', {show: widgetValue !== (isMobile ? 'no_mobile' : 'no_desktop')});
+    },
+    /**
+     * @override
+     */
+    async onTargetHide() {
+        this.$target[0].classList.remove('o_snippet_override_invisible');
+    },
+    /**
+     * @override
+     */
+    async onTargetShow() {
+        if (this.$target[0].classList.contains('o_snippet_mobile_invisible')
+                || this.$target[0].classList.contains('o_snippet_desktop_invisible')) {
+            this.$target[0].classList.add('o_snippet_override_invisible');
+        }
+    },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        this.$target[0].classList.remove('o_snippet_override_invisible');
     },
 
     //--------------------------------------------------------------------------
@@ -2334,10 +2359,16 @@ options.registry.MobileVisibility = options.Class.extend({
      * @override
      */
     async _computeWidgetState(methodName, params) {
-        if (methodName === 'showOnMobile') {
+        if (methodName === 'toggleDeviceVisibility') {
             const classList = [...this.$target[0].classList];
-            return classList.includes('d-none') &&
-                classList.some(className => className.startsWith('d-md-')) ? '' : 'true';
+            if (classList.includes('d-none') &&
+                    classList.some(className => className.startsWith('d-md-'))) {
+                return 'no_mobile';
+            }
+            if (classList.includes('d-md-none')) {
+                return 'no_desktop';
+            }
+            return '';
         }
         return await this._super(...arguments);
     },
@@ -2874,7 +2905,9 @@ options.registry.ConditionalVisibility = options.Class.extend({
      * @override
      */
     async onTargetHide() {
-        this.$target[0].classList.add('o_conditional_hidden');
+        if (this.$target[0].classList.contains('o_snippet_invisible')) {
+            this.$target[0].classList.add('o_conditional_hidden');
+        }
     },
     /**
      * @override
@@ -2891,7 +2924,9 @@ options.registry.ConditionalVisibility = options.Class.extend({
         // snippet will be shown naturally (as the CSS rules won't apply).
         // Without this, the "eye" icon of the visibility panel would be shut
         // when entering edit mode.
-        this.trigger_up('snippet_option_visibility_update', { show: true });
+        if (this.$target[0].classList.contains('o_snippet_invisible')) {
+            this.trigger_up('snippet_option_visibility_update', { show: true });
+        }
     },
 
     //--------------------------------------------------------------------------
