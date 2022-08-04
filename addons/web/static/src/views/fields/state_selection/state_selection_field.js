@@ -15,7 +15,6 @@ export class StateSelectionField extends Component {
         if (this.props.record.activeFields[this.props.name].viewType === "form") {
             this.initiateCommand();
         }
-        this.excludedValues = [];
         this.colorPrefix = "o_status_";
         this.colors = {
             blocked: "red",
@@ -23,15 +22,20 @@ export class StateSelectionField extends Component {
         };
     }
     get options() {
-        return Array.from(this.props.record.fields[this.props.name].selection);
+        return this.props.record.fields[this.props.name].selection.map(([state, label]) => {
+            return [state, this.props.record.data[`legend_${state}`] || label];
+        });
     }
     get availableOptions() {
-        return this.options.filter((o) => !this.excludedValues.includes(o[0]));
+        return this.options.filter((o) => o[0] !== this.currentValue);
     }
     get currentValue() {
         return this.props.value || this.options[0][0];
     }
     get label() {
+        if (this.props.value && this.props.record.data[`legend_${this.props.value[0]}`]) {
+            return this.props.record.data[`legend_${this.props.value[0]}`];
+        }
         return formatSelection(this.currentValue, { selection: this.options });
     }
     get showLabel() {
