@@ -781,17 +781,17 @@ class Channel(models.Model):
                 'is_minimized': False,
                 'group_based_subscription': bool(channel.group_ids),
                 'create_uid': channel.create_uid.id,
-                'channel': [('insert-and-replace', {
-                    'authorizedGroupFullName': channel.group_public_id.full_name,
-                    'avatarCacheKey': channel._get_avatar_cache_key(),
-                    'channel_type': channel.channel_type,
-                    'defaultDisplayMode': channel.default_display_mode,
-                    'description': channel.description,
-                    'id': channel.id,
-                    'memberCount': channel.member_count,
-                    'public': channel.public,
-                    'uuid': channel.uuid,
-                })],
+            }
+            channel_data = {
+                'authorizedGroupFullName': channel.group_public_id.full_name,
+                'avatarCacheKey': channel._get_avatar_cache_key(),
+                'channel_type': channel.channel_type,
+                'defaultDisplayMode': channel.default_display_mode,
+                'description': channel.description,
+                'id': channel.id,
+                'memberCount': channel.member_count,
+                'public': channel.public,
+                'uuid': channel.uuid,
             }
             # add last message preview (only used in mobile)
             info['last_message_id'] = channel_last_message_ids.get(channel.id, False)
@@ -805,7 +805,7 @@ class Channel(models.Model):
                     info['is_minimized'] = member.is_minimized
                     info['seen_message_id'] = member.seen_message_id.id
                     info['custom_channel_name'] = member.custom_channel_name
-                    info['channel'][0][1]['isServerPinned'] = member.is_pinned
+                    channel_data['isServerPinned'] = member.is_pinned
                     info['last_interest_dt'] = member.last_interest_dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
                     if member.rtc_inviting_session_id:
                         info['rtc_inviting_session'] = {'id': member.rtc_inviting_session_id.id}
@@ -825,7 +825,7 @@ class Channel(models.Model):
                     'id': member.guest_id.id,
                     'name': member.guest_id.name,
                 } for member in members_by_channel[channel] if member.guest_id], key=lambda g: g['id']))]
-
+            info['channel'] = [('insert-and-replace', channel_data)]
             # add RTC sessions info
             info.update({
                 'invitedMembers': [('insert', invited_members_by_channel[channel].mail_channel_member_format())],
