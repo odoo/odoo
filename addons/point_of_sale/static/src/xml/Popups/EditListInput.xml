@@ -3,10 +3,10 @@
 
     <t t-name="EditListInput" owl="1">
         <div>
-            <input type="text" t-model="props.item.text" class="popup-input list-line-input"
+            <input type="text" t-att-value="props.item.text" t-on-input="onInput" class="popup-input list-line-input"
                    placeholder="Serial/Lot Number" t-on-keyup="onKeyup" />
-            <i class="oe_link_icon fa fa-trash-o" role="img" aria-label="Remove" title="Remove"
-               t-on-click="() => this.trigger('remove-item', props.item)"></i>
+            <i t-if="props.deletable" class="oe_link_icon fa fa-trash-o" role="img" aria-label="Remove" title="Remove"
+               t-on-click="props.removeItem"></i>
         </div>
     </t>
 

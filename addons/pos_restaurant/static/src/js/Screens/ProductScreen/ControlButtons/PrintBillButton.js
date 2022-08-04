@@ -11,16 +11,12 @@ odoo.define('pos_restaurant.PrintBillButton', function(require) {
             super.setup();
             useListener('click', this.onClick);
         }
-        async onClick() {
+        _isDisabled() {
             const order = this.env.pos.get_order();
-            if (order.get_orderlines().length > 0) {
-                await this.showTempScreen('BillScreen');
-            } else {
-                await this.showPopup('ErrorPopup', {
-                    title: this.env._t('Nothing to Print'),
-                    body: this.env._t('There are no order lines'),
-                });
-            }
+            return order.get_orderlines().length === 0;
+        }
+        onClick() {
+            this.showTempScreen('BillScreen');
         }
     }
     PrintBillButton.template = 'PrintBillButton';

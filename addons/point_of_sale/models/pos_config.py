@@ -337,6 +337,12 @@ class PosConfig(models.Model):
             if any(pricelist.company_id.id not in [False, config.company_id.id] for pricelist in config.available_pricelist_ids):
                 raise ValidationError(_("The selected pricelists must belong to no company or the company of the point of sale."))
 
+    def _check_company_has_template(self):
+        self.ensure_one()
+        if not self.company_has_template:
+            raise ValidationError(_("No chart of account configured, go to the \"configuration / settings\" menu, and "
+                                    "install one from the Invoicing tab."))
+
     def name_get(self):
         result = []
         for config in self:
@@ -472,6 +478,7 @@ class PosConfig(models.Model):
         }
 
     def _check_before_creating_new_session(self):
+        self._check_company_has_template()
         self._check_pricelists()
         self._check_company_journal()
         self._check_company_invoice_journal()

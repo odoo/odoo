@@ -165,6 +165,22 @@
         </field>
     </record>
 
+    <record id="action_pos_config_tree" model="ir.actions.act_window">
+        <field name="name">Point of Sale List</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">pos.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain"></field>
+        <field name="search_view_id" ref="view_pos_config_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new PoS
+            </p><p>
+                Configure at least one Point of Sale.
+            </p>
+        </field>
+    </record>
+
     <!-- Products sub Category -->
     <menuitem id="menu_products_pos_category"
         action="point_of_sale.product_pos_category_action"
@@ -175,4 +191,7 @@
         parent="point_of_sale.pos_menu_products_configuration"  groups="product.group_product_variant" sequence="2"/>
 
     <menuitem id="menu_pos_dashboard" action="action_pos_config_kanban" parent="menu_point_root" name="Dashboard" sequence="1"/>
+    <menuitem id="menu_point_of_sale_list" name="Point of Sales" parent="menu_point_config_product"
+              action="action_pos_config_tree" sequence="10"/>
+
 </odoo>
