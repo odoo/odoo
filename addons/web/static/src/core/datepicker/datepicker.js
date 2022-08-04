@@ -3,6 +3,7 @@
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { useAutofocus } from "@web/core/utils/hooks";
+import { isIOS } from "@web/core/browser/feature_detection";
 
 const {
     Component,
@@ -250,7 +251,7 @@ export class DatePicker extends Component {
      * @param {Event} ev
      */
     onWindowScroll(ev) {
-        if (ev.target !== this.inputRef.el) {
+        if (!isIOS() && ev.target !== this.inputRef.el) {
             this.bootstrapDateTimePicker("hide");
         }
     }
