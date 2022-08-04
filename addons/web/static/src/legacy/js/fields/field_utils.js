@@ -178,7 +178,7 @@ function formatFloat(value, field, options) {
     }
     var formatted = _.str.sprintf('%.' + precision + 'f', value || 0).split('.');
     formatted[0] = utils.insert_thousand_seps(formatted[0]);
-    return formatted.join(l10n.decimal_point);
+    return '\u202A' + formatted.join(l10n.decimal_point) + '\u202C';
 }
 
 
@@ -250,9 +250,9 @@ function formatInteger(value, field, options) {
         return "";
     }
     if (options.humanReadable && options.humanReadable(value)) {
-        return utils.human_number(value, options.decimals, options.minDigits, options.formatterCallback);
+        return '\u202A' + utils.human_number(value, options.decimals, options.minDigits, options.formatterCallback) + '\u202C';
     }
-    return utils.insert_thousand_seps(_.str.sprintf('%d', value));
+    return '\u202A' + utils.insert_thousand_seps(_.str.sprintf('%d', value)) + '\u202C';
 }
 
 /**

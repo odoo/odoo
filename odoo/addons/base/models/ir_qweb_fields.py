@@ -138,7 +138,7 @@ class IntegerConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return pycompat.to_text(self.user_lang().format('%d', value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}'))
+        return pycompat.to_text('\u202A' + self.user_lang().format('%d', value, grouping=True).replace(r'-', '-\N{ZERO WIDTH NO-BREAK SPACE}')+ '\u202C')
 
 
 class FloatConverter(models.AbstractModel):
@@ -176,7 +176,7 @@ class FloatConverter(models.AbstractModel):
         if precision is None:
             formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
 
-        return pycompat.to_text(formatted)
+        return pycompat.to_text('\u202A' + formatted + '\u202C')
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -455,9 +455,9 @@ class MonetaryConverter(models.AbstractModel):
             sep = lang.decimal_point
             integer_part, decimal_part = formatted_amount.split(sep)
             integer_part += sep
-            return M('{pre}<span class="oe_currency_value">{0}</span><span class="oe_currency_value" style="font-size:0.5em">{1}</span>{post}').format(integer_part, decimal_part, pre=pre, post=post)
+            return M('{pre}<span class="oe_currency_value" dir=ltr">{0}</span><span class="oe_currency_value" style="font-size:0.5em">{1}</span>{post}').format(integer_part, decimal_part, pre=pre, post=post)
 
-        return M('{pre}<span class="oe_currency_value">{0}</span>{post}').format(formatted_amount, pre=pre, post=post)
+        return M('{pre}<span class="oe_currency_value" dir="ltr">{0}</span>{post}').format(formatted_amount, pre=pre, post=post)
 
     @api.model
     def record_to_html(self, record, field_name, options):
