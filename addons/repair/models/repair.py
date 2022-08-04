@@ -677,7 +677,7 @@ class RepairLine(models.Model):
     move_id = fields.Many2one(
         'stock.move', 'Inventory Move',
         copy=False, readonly=True)
-    move_line_id = fields.Many2one('stock.move.line', compute='_compute_move_line_id')
+    move_line_id = fields.Many2one('stock.move.line', compute='_compute_move_line_id', store=True)
     lot_id = fields.Many2one('stock.lot', related='move_line_id.lot_id', readonly=False, store=True)
     state = fields.Selection([
         ('draft', 'Draft'),
