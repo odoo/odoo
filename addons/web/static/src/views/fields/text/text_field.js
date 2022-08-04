@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { useSpellCheck } from "@web/core/utils/hooks";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
@@ -10,8 +11,9 @@ const { Component, useEffect, useRef } = owl;
 
 export class TextField extends Component {
     setup() {
-        this.textareaRef = useRef("textarea");
-        useInputField({ getValue: () => this.props.value || "", refName: "textarea" });
+        this.textareaRef = useRef("spellcheck");
+        useInputField({ getValue: () => this.props.value || "", refName: "spellcheck" });
+        useSpellCheck();
 
         useEffect(() => {
             if (!this.props.readonly) {

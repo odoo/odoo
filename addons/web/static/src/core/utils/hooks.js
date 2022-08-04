@@ -59,6 +59,34 @@ export function useAutofocus({ refName, selectAll } = {}) {
     return ref;
 }
 
+/**
+ * To avoid elements to keep their spellcheck appearance when they are no
+ * longer in focus. We only add this attribute when needed. To disable this
+ * behavior, use the spellcheck attribute on the element.
+ */
+export function useSpellCheck() {
+    const ref = useRef("spellcheck");
+    function toggleSpellcheck(ev) {
+        ev.target.spellcheck = document.activeElement === ev.target;
+    }
+    useEffect(
+        (el) => {
+            if (el && el.spellcheck !== false) {
+                el.spellcheck = false;
+                el.addEventListener("focus", toggleSpellcheck);
+                el.addEventListener("blur", toggleSpellcheck);
+            }
+            return () => {
+                if (el) {
+                    el.removeEventListener("focus", toggleSpellcheck);
+                    el.removeEventListener("blur", toggleSpellcheck);
+                }
+            };
+        },
+        () => [ref.el]
+    );
+}
+
 // -----------------------------------------------------------------------------
 // useBus
 // -----------------------------------------------------------------------------
