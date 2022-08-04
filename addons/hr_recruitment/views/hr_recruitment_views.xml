@@ -113,7 +113,7 @@
                 </div>
                 <widget name="web_ribbon" title="Refused" bg_color="bg-danger" attrs="{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=', False)]}"/>
                 <widget name="web_ribbon" title="Hired" attrs="{'invisible': [('date_closed', '=', False)]}" />
-                <field name="kanban_state" widget="kanban_state_selection"/>
+                <field name="kanban_state" widget="state_selection"/>
                 <field name="active" invisible="1"/>
                 <field name="legend_normal" invisible="1"/>
                 <field name="legend_blocked" invisible="1"/>
@@ -387,7 +387,7 @@
                                             </span>
                                         </a>
                                         <div class="o_kanban_state_with_padding ms-1 me-2" >
-                                            <field name="kanban_state" widget="kanban_state_selection"/>
+                                            <field name="kanban_state" widget="state_selection"/>
                                             <field name="legend_normal" invisible="1"/>
                                             <field name="legend_blocked" invisible="1"/>
                                             <field name="legend_done" invisible="1"/>
