@@ -10,7 +10,7 @@ addFields('Messaging', {
     /**
      * All pinned livechats that are known.
      */
-    pinnedLivechats: many('Thread', {
+    pinnedLivechats: many('Channel', {
         inverse: 'messagingAsPinnedLivechat',
         readonly: true,
     }),

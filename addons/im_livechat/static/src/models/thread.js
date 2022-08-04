@@ -1,33 +1,9 @@
 /** @odoo-module **/
 
-import { addFields, addRecordMethods, patchModelMethods, patchRecordMethods } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
-import { clear, insert, link, replace, unlink } from '@mail/model/model_field_command';
+import { patchModelMethods, patchRecordMethods } from '@mail/model/model_core';
+import { insert, link, replace, unlink } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/thread';
-
-addFields('Thread', {
-    /**
-     * If set, current thread is a livechat.
-     */
-    messagingAsPinnedLivechat: one('Messaging', {
-        compute: '_computeMessagingAsPinnedLivechat',
-        inverse: 'pinnedLivechats',
-    }),
-});
-
-addRecordMethods('Thread', {
-    /**
-     * @private
-     * @returns {FieldCommand}
-     */
-    _computeMessagingAsPinnedLivechat() {
-        if (!this.channel || this.channel.channel_type !== 'livechat' || !this.channel.isPinned) {
-            return clear();
-        }
-        return replace(this.messaging);
-    },
-});
 
 patchModelMethods('Thread', {
     /**
