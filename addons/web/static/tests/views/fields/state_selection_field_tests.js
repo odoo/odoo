@@ -468,4 +468,44 @@ QUnit.module("Fields", (hooks) => {
             assert.containsOnce(target, ".o_status_green");
         }
     );
+
+    QUnit.test("StateSelectionField uses legend_* fields", async function (assert) {
+        serverData.models.partner.fields.legend_normal = { type: "char" };
+        serverData.models.partner.fields.legend_blocked = { type: "char" };
+        serverData.models.partner.fields.legend_done = { type: "char" };
+        serverData.models.partner.records[0].legend_normal = "Custom normal";
+        serverData.models.partner.records[0].legend_blocked = "Custom blocked";
+        serverData.models.partner.records[0].legend_done = "Custom done";
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="legend_normal" invisible="1" />
+                            <field name="legend_blocked" invisible="1" />
+                            <field name="legend_done" invisible="1" />
+                            <field name="selection" widget="state_selection"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        await click(target, ".o_status");
+        let dropdownItemTexts = [...target.querySelectorAll(".dropdown-item")].map(
+            (el) => el.textContent
+        );
+        assert.deepEqual(dropdownItemTexts, ["Custom normal", "Custom done"]);
+
+        await click(target.querySelector(".dropdown-item .o_status"));
+        await click(target, ".o_status");
+        dropdownItemTexts = [...target.querySelectorAll(".dropdown-item")].map(
+            (el) => el.textContent
+        );
+        assert.deepEqual(dropdownItemTexts, ["Custom blocked", "Custom done"]);
+    });
 });
