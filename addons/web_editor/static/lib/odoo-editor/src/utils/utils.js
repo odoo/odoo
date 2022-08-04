@@ -1968,10 +1968,10 @@ export function enforceWhitespace(el, offset, direction, rule) {
     let expr;
     if (direction === DIRECTIONS.LEFT) {
         domPath = leftLeafOnlyNotBlockPath(el, offset);
-        expr = /[^\S\u00A0]+$/;
+        expr = /\s+/g;
     } else {
         domPath = rightLeafOnlyNotBlockPath(el, offset);
-        expr = /^[^\S\u00A0]+/;
+        expr = /\s+/g;
     }
 
     const invisibleSpaceTextNodes = [];
