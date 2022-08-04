@@ -1896,6 +1896,153 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         invoice.action_post()
         self.assertEqual(invoice.state, 'posted')
 
+    def test_15_anglo_saxon_variant_price_unit(self):
+        """
+        Test the price unit of a variant from which template has another variant with kit bom.
+        Products:
+            Template A
+                variant NOKIT
+                variant KIT:
+                    Component A
+        Business Flow:
+            create products and kit
+            create SO selling both variants
+            validate the delivery
+            create the invoice
+            post the invoice
+        """
+
+        # Create environment
+        self.env.company.currency_id = self.env.ref('base.USD')
+        self.env.company.anglo_saxon_accounting = True
+        self.partner = self.env.ref('base.res_partner_1')
+        self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category', 'property_valuation': 'real_time', 'property_cost_method': 'fifo'})
+        account_type = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'other', 'internal_group': 'asset'})
+        account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00', 'user_type_id': account_type.id, 'reconcile': True})
+        account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00', 'user_type_id': account_type.id, 'reconcile': True})
+        account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00', 'user_type_id': account_type.id, 'reconcile': True})
+        account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00', 'user_type_id': account_type.id, 'reconcile': True})
+        self.stock_location = self.company_data['default_warehouse'].lot_stock_id
+        self.partner.property_account_receivable_id = account_receiv
+        self.category.property_account_income_categ_id = account_receiv
+        self.category.property_account_expense_categ_id = account_expense
+        self.category.property_stock_account_input_categ_id = account_receiv
+        self.category.property_stock_account_output_categ_id = account_output
+        self.category.property_stock_valuation_account_id = account_valuation
+
+        # Create variant attributes
+        self.prod_att_test = self.env['product.attribute'].create({'name': 'test'})
+        self.prod_attr_KIT = self.env['product.attribute.value'].create({'name': 'KIT', 'attribute_id': self.prod_att_test.id, 'sequence': 1})
+        self.prod_attr_NOKIT = self.env['product.attribute.value'].create({'name': 'NOKIT', 'attribute_id': self.prod_att_test.id, 'sequence': 2})
+
+        # Create the template
+        self.product_template = self.env['product.template'].create({
+            'name': 'Template A',
+            'type': 'product',
+            'uom_id': self.uom_unit.id,
+            'invoice_policy': 'delivery',
+            'categ_id': self.category.id,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': self.prod_att_test.id,
+                'value_ids': [(6, 0, [self.prod_attr_KIT.id, self.prod_attr_NOKIT.id])]
+            })]
+        })
+
+        # Create the variants
+        self.pt_attr_KIT = self.product_template.attribute_line_ids[0].product_template_value_ids[0]
+        self.pt_attr_NOKIT = self.product_template.attribute_line_ids[0].product_template_value_ids[1]
+        self.variant_KIT = self.product_template._get_variant_for_combination(self.pt_attr_KIT)
+        self.variant_NOKIT = self.product_template._get_variant_for_combination(self.pt_attr_NOKIT)
+        # Assign a cost to the NOKIT variant
+        self.variant_NOKIT.write({'standard_price': 25})
+
+        # Create the components
+        self.comp_kit_a = self.env['product.product'].create({
+            'name': 'Component Kit A',
+            'type': 'product',
+            'uom_id': self.uom_unit.id,
+            'categ_id': self.category.id,
+            'standard_price': 20
+        })
+        self.comp_kit_b = self.env['product.product'].create({
+            'name': 'Component Kit B',
+            'type': 'product',
+            'uom_id': self.uom_unit.id,
+            'categ_id': self.category.id,
+            'standard_price': 10
+        })
+
+        # Create the bom
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_template.id,
+            'product_id': self.variant_KIT.id,
+            'product_qty': 1.0,
+            'type': 'phantom'
+        })
+        self.env['mrp.bom.line'].create({
+            'product_id': self.comp_kit_a.id,
+            'product_qty': 2.0,
+            'bom_id': bom.id
+        })
+        self.env['mrp.bom.line'].create({
+            'product_id': self.comp_kit_b.id,
+            'product_qty': 1.0,
+            'bom_id': bom.id
+        })
+
+        # Create the quants
+        self.env['stock.quant']._update_available_quantity(self.variant_KIT, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.comp_kit_a, self.stock_location, 2)
+        self.env['stock.quant']._update_available_quantity(self.comp_kit_b, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.variant_NOKIT, self.stock_location, 1)
+
+        # Create the sale order
+        so_vals = {
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'name': self.variant_KIT.name,
+                'product_id': self.variant_KIT.id,
+                'product_uom_qty': 1,
+                'product_uom': self.uom_unit.id,
+                'price_unit': 100,
+            }), (0, 0, {
+                'name': self.variant_NOKIT.name,
+                'product_id': self.variant_NOKIT.id,
+                'product_uom_qty': 1,
+                'product_uom': self.uom_unit.id,
+                'price_unit': 50
+            })],
+            'pricelist_id': self.env.ref('product.list0').id,
+            'company_id': self.env.company.id
+        }
+        so = self.env['sale.order'].create(so_vals)
+        # Validate the sale order
+        so.action_confirm()
+        # Deliver the products
+        pick = so.picking_ids
+        wiz_act = pick.button_validate()
+        Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save().process()
+        # Create the invoice
+        so._create_invoices()
+        # Validate the invoice
+        invoice = so.invoice_ids
+        invoice.action_post()
+
+        amls = invoice.line_ids
+        aml_kit_expense = amls.filtered(lambda l: l.is_anglo_saxon_line and l.debit > 0 and l.product_id == self.variant_KIT)
+        aml_kit_output = amls.filtered(lambda l: l.is_anglo_saxon_line and l.credit > 0 and l.product_id == self.variant_KIT)
+        aml_nokit_expense = amls.filtered(lambda l: l.is_anglo_saxon_line and l.debit > 0 and l.product_id == self.variant_NOKIT)
+        aml_nokit_output = amls.filtered(lambda l: l.is_anglo_saxon_line and l.credit > 0 and l.product_id == self.variant_NOKIT)
+
+        # Check that the Cost of Goods Sold for variant KIT is equal to (2*20)+10 = 50
+        self.assertEqual(aml_kit_expense.debit, 50, "Cost of Good Sold entry missing or mismatching for variant with kit")
+        self.assertEqual(aml_kit_output.credit, 50, "Cost of Good Sold entry missing or mismatching for variant with kit")
+        # Check that the Cost of Goods Sold for variant NOKIT is equal to its standard_price = 25
+        self.assertEqual(aml_nokit_expense.debit, 25, "Cost of Good Sold entry missing or mismatching for variant without kit")
+        self.assertEqual(aml_nokit_output.credit, 25, "Cost of Good Sold entry missing or mismatching for variant without kit")
+
     def test_reconfirm_cancelled_kit(self):
         so = self.env['sale.order'].create({
             'partner_id': self.env.ref('base.res_partner_1').id,
