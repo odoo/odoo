@@ -3,12 +3,16 @@
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, useState } = owl;
+const { Component, useState, onWillUpdateProps } = owl;
 
 export class ColorField extends Component {
     setup() {
         this.state = useState({
             color: this.props.value || "#000000",
+        });
+
+        onWillUpdateProps((nextProps) => {
+            this.state.color = nextProps.value || "#000000";
         });
     }
 
