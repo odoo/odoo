@@ -320,6 +320,12 @@ class AccountPayment(models.Model):
                 reconcile_lines = (counterpart_lines + writeoff_lines).filtered(lambda line: line.account_id.reconcile)
                 pay.is_reconciled = pay.currency_id.is_zero(sum(reconcile_lines.mapped(residual_field)))
 
+    @api.constrains('invoice_ids')
+    def _check_invoices(self):
+        for payment in self:
+            if any(invoice.company_id != payment.company_id for invoice in payment.invoice_ids):
+                raise ValidationError(_('You can only register payments for invoices in the same company'))
+
     @api.model
     def _get_method_codes_using_bank_account(self):
         return ['manual']
@@ -359,6 +365,7 @@ class AccountPayment(models.Model):
             is_account_ok = payment.destination_account_id and payment.destination_account_id == payment.journal_id.company_id.transfer_account_id
             payment.is_internal_transfer = is_partner_ok and is_account_ok
 
+<<<<<<< HEAD
     @api.depends('payment_type', 'journal_id')
     def _compute_payment_method_id(self):
         ''' Compute the 'payment_method_id' field.
@@ -369,6 +376,149 @@ class AccountPayment(models.Model):
                 available_payment_methods = pay.journal_id.inbound_payment_method_ids
             else:
                 available_payment_methods = pay.journal_id.outbound_payment_method_ids
+||||||| parent of c8dbeff959d3... temp
+    @api.onchange('journal_id')
+    def _onchange_journal(self):
+        if self.journal_id:
+            if self.journal_id.currency_id:
+                self.currency_id = self.journal_id.currency_id
+
+            # Set default payment method (we consider the first to be the default one)
+            payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
+            payment_methods_list = payment_methods.ids
+
+            default_payment_method_id = self.env.context.get('default_payment_method_id')
+            if default_payment_method_id:
+                # Ensure the domain will accept the provided default value
+                payment_methods_list.append(default_payment_method_id)
+            else:
+                self.payment_method_id = payment_methods and payment_methods[0] or False
+
+            # Set payment method domain (restrict to methods enabled for the journal and to selected payment type)
+            payment_type = self.payment_type in ('outbound', 'transfer') and 'outbound' or 'inbound'
+
+            domain = {'payment_method_id': [('payment_type', '=', payment_type), ('id', 'in', payment_methods_list)]}
+
+            if self.env.context.get('active_model') == 'account.move':
+                active_ids = self._context.get('active_ids')
+                invoices = self.env['account.move'].browse(active_ids)
+                self.amount = abs(self._compute_payment_amount(invoices, self.currency_id, self.journal_id, self.payment_date))
+
+            return {'domain': domain}
+        return {}
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        if self.invoice_ids and self.invoice_ids[0].invoice_partner_bank_id:
+            self.partner_bank_account_id = self.invoice_ids[0].invoice_partner_bank_id
+        elif self.partner_id != self.partner_bank_account_id.partner_id:
+            # This condition ensures we use the default value provided into
+            # context for partner_bank_account_id properly when provided with a
+            # default partner_id. Without it, the onchange recomputes the bank account
+            # uselessly and might assign a different value to it.
+            if self.partner_id and len(self.partner_id.bank_ids) > 0:
+                self.partner_bank_account_id = self.partner_id.bank_ids[0]
+            elif self.partner_id and len(self.partner_id.commercial_partner_id.bank_ids) > 0:
+                self.partner_bank_account_id = self.partner_id.commercial_partner_id.bank_ids[0]
+            else:
+                self.partner_bank_account_id = False
+        if self.payment_type == 'inbound' and self.invoice_ids:
+            partner_ids = [self.invoice_ids[0].company_id.partner_id.id, self.invoice_ids[0].company_id.partner_id.commercial_partner_id.id]
+        else:
+            partner_ids = [self.partner_id.id, self.partner_id.commercial_partner_id.id]
+        return {'domain': {'partner_bank_account_id': [('partner_id', 'in', partner_ids)]}}
+
+    @api.onchange('payment_type')
+    def _onchange_payment_type(self):
+        if not self.invoice_ids and not self.partner_type:
+            # Set default partner type for the payment type
+            if self.payment_type == 'inbound':
+                self.partner_type = 'customer'
+            elif self.payment_type == 'outbound':
+                self.partner_type = 'supplier'
+        elif self.payment_type not in ('inbound', 'outbound'):
+            self.partner_type = False
+        # Set payment method domain
+        res = self._onchange_journal()
+        if not res.get('domain', {}):
+            res['domain'] = {}
+        jrnl_filters = self._compute_journal_domain_and_types()
+        journal_types = jrnl_filters['journal_types']
+        journal_types.update(['bank', 'cash'])
+        res['domain']['journal_id'] = jrnl_filters['domain'] + [('type', 'in', list(journal_types))]
+        return res
+=======
+    @api.onchange('journal_id')
+    def _onchange_journal(self):
+        if self.journal_id:
+            if self.journal_id.currency_id:
+                self.currency_id = self.journal_id.currency_id
+
+            # Set default payment method (we consider the first to be the default one)
+            payment_methods = self.payment_type == 'inbound' and self.journal_id.inbound_payment_method_ids or self.journal_id.outbound_payment_method_ids
+            payment_methods_list = payment_methods.ids
+
+            default_payment_method_id = self.env.context.get('default_payment_method_id')
+            if default_payment_method_id:
+                # Ensure the domain will accept the provided default value
+                payment_methods_list.append(default_payment_method_id)
+            else:
+                self.payment_method_id = payment_methods and payment_methods[0] or False
+
+            # Set payment method domain (restrict to methods enabled for the journal and to selected payment type)
+            payment_type = self.payment_type in ('outbound', 'transfer') and 'outbound' or 'inbound'
+
+            domain = {'payment_method_id': [('payment_type', '=', payment_type), ('id', 'in', payment_methods_list)]}
+
+            if self.env.context.get('active_model') == 'account.move':
+                active_ids = self._context.get('active_ids')
+                invoices = self.env['account.move'].browse(active_ids)
+                self.amount = abs(self._compute_payment_amount(invoices, self.currency_id, self.journal_id, self.payment_date))
+
+            return {'domain': domain}
+        return {}
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        if self.invoice_ids and self.invoice_ids[0].invoice_partner_bank_id:
+            self.partner_bank_account_id = self.invoice_ids[0].invoice_partner_bank_id
+        elif self.partner_id != self.partner_bank_account_id.partner_id:
+            # This condition ensures we use the default value provided into
+            # context for partner_bank_account_id properly when provided with a
+            # default partner_id. Without it, the onchange recomputes the bank account
+            # uselessly and might assign a different value to it.
+            filter_company = lambda x: x.company_id is False or x.company_id == self.company_id
+            self.partner_bank_account_id = (
+                self.partner_id.bank_ids.filtered(filter_company)
+                or self.partner_id.commercial_partner_id.bank_ids.filtered(filter_company)
+            )[:1]
+        if self.payment_type == 'inbound' and self.invoice_ids:
+            partner_ids = [self.invoice_ids[0].company_id.partner_id.id,
+                           self.invoice_ids[0].company_id.partner_id.commercial_partner_id.id]
+        else:
+            partner_ids = [self.partner_id.id, self.partner_id.commercial_partner_id.id]
+        return {'domain': {'partner_bank_account_id': [('partner_id', 'in', partner_ids)]}}
+
+    @api.onchange('payment_type')
+    def _onchange_payment_type(self):
+        if not self.invoice_ids and not self.partner_type:
+            # Set default partner type for the payment type
+            if self.payment_type == 'inbound':
+                self.partner_type = 'customer'
+            elif self.payment_type == 'outbound':
+                self.partner_type = 'supplier'
+        elif self.payment_type not in ('inbound', 'outbound'):
+            self.partner_type = False
+        # Set payment method domain
+        res = self._onchange_journal()
+        if not res.get('domain', {}):
+            res['domain'] = {}
+        jrnl_filters = self._compute_journal_domain_and_types()
+        journal_types = jrnl_filters['journal_types']
+        journal_types.update(['bank', 'cash'])
+        res['domain']['journal_id'] = jrnl_filters['domain'] + [('type', 'in', list(journal_types))]
+        return res
+>>>>>>> c8dbeff959d3... temp
 
             # Select the first available one by default.
             if pay.payment_method_id in available_payment_methods:
