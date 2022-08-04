@@ -11416,10 +11416,11 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: `
                     <form>
-                        <field name="p" mode="tree" widget="legacy_one2many"/>
+                        <field name="p" mode="tree" class="o_my_legacy_class" widget="legacy_one2many"/>
                     </form>`,
         });
         assert.containsOnce(target, ".o_field_legacy_one2many .o_legacy_list_view");
+        assert.containsOnce(target, ".o_field_widget.o_legacy_field_widget.o_my_legacy_class");
     });
 
     QUnit.test("Action Button clicked with failing action", async function (assert) {
