@@ -673,6 +673,7 @@ td {
     opacity: 0.5;
     cursor: default;
     color: inherit;
+    pointer-events: none;
 }
 
 /*  ********* The actionpad (payment, set customer) ********* */
@@ -1906,12 +1907,12 @@ td {
 }
 .pos .partnerlist-screen .partner-list th,
 .pos .partnerlist-screen .partner-list td {
-    padding: 12px;
+    padding: 15px 8px;
 }
 
 .pos .partnerlist-screen .fa.fa.fa-phone,
-.pos .partnerlist-screen .fa.fa-mobile,
-.pos .partnerlist-screen .fa.fa-paper-plane-o {
+.pos .partnerlist-screen .fa.fa-paper-plane-o,
+.pos .partnerlist-screen .fa.fa-mobile{
     margin-right: 4px;
 }
 
@@ -1977,9 +1978,11 @@ td {
     width: 30px;
     opacity: .75;
 }
+.pos .edit-partner-button-cell {
+    vertical-align: middle;
+}
 .pos .edit-partner-button {
-    margin-top: 6px;
-    color: black;
+    height: 30px;
     font-weight: bold;
 }
 .pos .partner-list tr.partner-line.highlight{
@@ -2638,13 +2641,6 @@ td {
     color: $primary;
 }
 
-.pos .popup-textarea textarea {
-    width: 100%;
-    box-sizing: border-box;
-}
-.pos .popup-textarea .popup-textarea-wrap {
-    padding: map-get($spacers, 2);
-}
 .pos .popup .button.dont-show-again {
     width: 130px;
 }
@@ -2698,13 +2694,35 @@ td {
     box-sizing: border-box;
     width: 80%;
 }
-.pos .popup .list-lines{
-    overflow: auto;
-    height: 250px;
-    margin: 10px;
+.pos .edit-list-popup header {
+    display: flex;
+    flex-direction: column;
 }
-.pos .popup .list-line-input {
-    margin: 3px;
+.pos .edit-list-popup header .sub-title {
+    font-weight: normal;
+    margin-top: 5px
+}
+.pos .edit-list-popup main {
+    margin: 10px;
+    padding-left: 40px;
+    text-align: left;
+}
+.pos .edit-list-popup .list-lines {
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    height: 250px;
+}
+
+.pos .edit-list-popup .list-lines span {
+    font-size: 16px;
+    padding-right: 40px;
+    margin-left: 3px;
+}
+
+.pos .edit-list-popup .list-line-input {
+    margin: 3px 10px 3px 3px;
+    width: 90%
 }
 
 .pos .popup-number .popup-input {
@@ -2772,6 +2790,9 @@ td {
 .pos .popup-number .title,
 .pos .popup-textinput .title
 {
+    margin-bottom: 20px;
+}
+.pos .popup-textinput main {
     margin-bottom: 20px;
 }
 .pos .popup-numpad .input-button,
@@ -3010,6 +3031,20 @@ td {
     grid-column: 1;
     word-break: break-word;
     max-width: 300px;
+    position: relative
+}
+
+.pos .product_configurator_attributes .configurator_radio .attribute-name-cell label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80vw;
+    max-width: 600px;
+    height: 100%;
+}
+
+.pos .product_configurator_attributes .configurator_radio .attribute-name-cell label:hover {
+    cursor: pointer;
 }
 
 .pos .product_configurator_attributes .configurator_radio .price-extra-cell {
@@ -3019,6 +3054,7 @@ td {
 .pos .product_configurator_attributes .configurator_radio input[type='radio'] {
     box-shadow: none;
     margin-right: 0.5em;
+    cursor: pointer;
 }
 
 .pos .product_configurator_attributes .configurator_radio .price_extra {
@@ -3032,7 +3068,8 @@ td {
 .pos .product_configurator_attributes .configurator_radio .custom_value {
     margin-left: 0.5em;
     height: 1.3em;
-
+    position: relative;
+    z-index: 1;
 }
 
 /** Selector attribute **/
@@ -3727,7 +3764,7 @@ td {
     font-size: 17px;
 }
 
-.pos .pos-topheader .status-buttons > div:hover {
+.pos .pos-topheader .status-buttons > div:not(.not-clickable):hover {
     background: rgba(0, 0, 0, .08);
 }
 

@@ -15,6 +15,9 @@ odoo.define('point_of_sale.CashierName', function(require) {
             const id = user_id ? user_id : -1;
             return `/web/image/res.users/${id}/avatar_128`;
         }
+        get cssClass() {
+            return {'not-clickable': true};
+        }
     }
     CashierName.template = 'CashierName';
 

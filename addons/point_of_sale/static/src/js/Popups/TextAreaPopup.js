@@ -30,8 +30,8 @@ odoo.define('point_of_sale.TextAreaPopup', function(require) {
     }
     TextAreaPopup.template = 'TextAreaPopup';
     TextAreaPopup.defaultProps = {
-        confirmText: _lt('Ok'),
-        cancelText: _lt('Cancel'),
+        confirmText: _lt('Add'),
+        cancelText: _lt('Discard'),
         title: '',
         body: '',
     };

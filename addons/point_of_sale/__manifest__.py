@@ -116,6 +116,7 @@
             'point_of_sale/static/src/css/popups/cash_opening_popup.css',
             'point_of_sale/static/src/css/popups/closing_pos_popup.css',
             'point_of_sale/static/src/css/popups/money_details_popup.css',
+            'point_of_sale/static/src/css/popups/text_area_popup.css',
             'web/static/src/legacy/scss/fontawesome_overridden.scss',
 
             # Here includes the lib and POS UI assets.

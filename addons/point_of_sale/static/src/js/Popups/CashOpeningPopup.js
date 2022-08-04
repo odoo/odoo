@@ -10,10 +10,10 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
         setup() {
             super.setup();
             this.manualInputCashCount = null;
+            this.moneyDetails = null;
             this.state = useState({
                 notes: "",
                 openingCash: this.env.pos.pos_session.cash_register_balance_start || 0,
-                displayMoneyDetailsPopup: false,
             });
         }
         //@override
@@ -27,25 +27,22 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
             });
             super.confirm();
         }
-        openDetailsPopup() {
-            this.state.openingCash = 0;
-            this.state.notes = "";
-            this.state.displayMoneyDetailsPopup = true;
-        }
-        closeDetailsPopup() {
-            this.state.displayMoneyDetailsPopup = false;
-        }
-        updateCashOpening({ total, moneyDetailsNotes }) {
-            this.state.openingCash = total;
-            if (moneyDetailsNotes) {
-                this.state.notes = moneyDetailsNotes;
+        async openDetailsPopup() {
+            const { confirmed, payload } = await this.showPopup('MoneyDetailsPopup', {
+                moneyDetails: this.moneyDetails, total: this.manualInputCashCount ? 0 : this.state.openingCash });
+            if (confirmed) {
+                const { total, moneyDetails, moneyDetailsNotes } = payload;
+                this.state.openingCash = total;
+                if (moneyDetailsNotes) {
+                    this.state.notes = moneyDetailsNotes;
+                }
+                this.manualInputCashCount = false;
+                this.moneyDetails = moneyDetails;
             }
-            this.manualInputCashCount = false;
-            this.closeDetailsPopup();
         }
         handleInputChange() {
             this.manualInputCashCount = true;
-            this.state.notes = "";
+            this.moneyDetails = null;
         }
     }
 

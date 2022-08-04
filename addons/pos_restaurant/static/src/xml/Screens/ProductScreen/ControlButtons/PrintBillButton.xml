@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="PrintBillButton" owl="1">
-        <span class="control-button order-printbill">
+        <span class="control-button order-printbill" t-att-class="{'disabled': _isDisabled()}">
             <i class="fa fa-print"></i>
             <span> </span>
             <span>Bill</span>
