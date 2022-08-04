@@ -17,35 +17,25 @@ export class BinaryField extends Component {
     setup() {
         this.notification = useService("notification");
         this.state = useState({
-            fileName: this.fileName || "",
-            isValid: true,
+            fileName: this.props.record.data[this.props.fileNameField] || "",
         });
         onWillUpdateProps((nextProps) => {
             if (nextProps.readonly) {
-                this.state.fileName = "";
+                this.state.fileName = nextProps.record.data[nextProps.fileNameField] || "";
             }
         });
     }
 
     get fileName() {
-        return this.props.record.data[this.props.fileNameField];
-    }
-    get file() {
-        return {
-            data: this.props.value,
-            name: this.state.fileName || this.props.value || null,
-        };
-    }
-    get isDownloadable() {
-        return !(
-            this.props.record.isReadonly(this.props.name) && this.props.record.mode === "edit"
-        );
+        return this.state.fileName || this.props.value || "";
     }
 
-    update(file) {
-        const changes = { [this.props.name]: file.data || false };
-        if (this.props.fileNameField && this.props.fileNameField !== this.props.name) {
-            changes[this.props.fileNameField] = file.name || false;
+    update({ data, name }) {
+        this.state.fileName = name || "";
+        const { fileNameField, record } = this.props;
+        const changes = { [this.props.name]: data || false };
+        if (fileNameField in record.fields && record.data[fileNameField] !== name) {
+            changes[fileNameField] = name || false;
         }
         return this.props.record.update(changes);
     }
@@ -56,27 +46,12 @@ export class BinaryField extends Component {
                 model: this.props.record.resModel,
                 id: this.props.record.resId,
                 field: this.props.name,
-                filename_field: this.file.name,
-                filename: this.file.name || "",
+                filename_field: this.fileName,
+                filename: this.fileName || "",
                 download: true,
                 data: isBinarySize(this.props.value) ? null : this.props.value,
             },
             url: "/web/content",
-        });
-    }
-    onFileRemove() {
-        this.state.isValid = true;
-        this.update(false);
-    }
-    onFileUploaded(file) {
-        this.state.fileName = file.name;
-        this.state.isValid = true;
-        this.update(file);
-    }
-    onLoadFailed() {
-        this.state.isValid = false;
-        this.notification.add(this.env._t("Could not display the selected binary"), {
-            type: "danger",
         });
     }
 }

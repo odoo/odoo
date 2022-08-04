@@ -92,5 +92,6 @@ export class FileUploader extends Component {
         this.fileInputRef.el.click();
     }
 }
+
 FileUploader.template = "web.FileUploader";
 FileUploader.nextId = 0;
