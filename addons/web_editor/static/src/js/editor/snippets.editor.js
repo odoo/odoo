@@ -313,7 +313,9 @@ var SnippetEditor = Widget.extend({
         if (this.isDestroyed()) {
             return;
         }
-        await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible'));
+        await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible')
+            && !this.$target.hasClass('o_snippet_mobile_invisible')
+            && !this.$target.hasClass('o_snippet_desktop_invisible'));
         const proms = _.map(this.styles, option => {
             return option.cleanForSave();
         });
@@ -2162,7 +2164,14 @@ var SnippetsMenu = Widget.extend({
             this.invisibleDOMMap = new Map();
             const $invisibleDOMPanelEl = $(this.invisibleDOMPanelEl);
             $invisibleDOMPanelEl.find('.o_we_invisible_entry').remove();
-            const $invisibleSnippets = globalSelector.all().find('.o_snippet_invisible').addBack('.o_snippet_invisible');
+            let isMobile;
+            this.trigger_up('service_context_get', {
+                callback: (ctx) => {
+                    isMobile = ctx['isMobile'];
+                },
+            });
+            const invisibleSelector = `.o_snippet_invisible, ${isMobile ? '.o_snippet_mobile_invisible' : '.o_snippet_desktop_invisible'}`;
+            const $invisibleSnippets = globalSelector.all().find(invisibleSelector).addBack(invisibleSelector);
 
             $invisibleDOMPanelEl.toggleClass('d-none', !$invisibleSnippets.length);
 
@@ -3875,6 +3884,12 @@ var SnippetsMenu = Widget.extend({
         for (const gridItemEl of gridItemEls) {
             gridUtils._reloadLazyImages(gridItemEl);
         }
+        for (const invisibleOverrideEl of this.getEditableArea().find('.o_snippet_mobile_invisible, .o_snippet_desktop_invisible')) {
+            invisibleOverrideEl.classList.remove('o_snippet_override_invisible');
+            invisibleOverrideEl.dataset.invisible = '1';
+        }
+        // This is async but using the main editor mutex.
+        this._updateInvisibleDOM();
     },
     /**
      * Undo..

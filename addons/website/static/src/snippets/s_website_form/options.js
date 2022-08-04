@@ -1503,8 +1503,8 @@ options.registry.WebsiteFormSubmitRequired = DisableOverlayButtonOption.extend({
     }
 });
 
-// Disable "Shown on Mobile" option if for an hidden field
-options.registry.MobileVisibility.include({
+// Disable "Shown on Mobile/Desktop" option if for an hidden field
+options.registry.DeviceVisibility.include({
 
     //--------------------------------------------------------------------------
     // Private
