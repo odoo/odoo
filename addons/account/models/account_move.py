@@ -1,5 +1,21 @@
 # -*- coding: utf-8 -*-
 
+<<<<<<< HEAD
+||||||| parent of df1f56fdbed3... temp
+from odoo import api, fields, models, Command, _
+from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
+from odoo.tools import float_compare, date_utils, email_split, email_re, is_html_empty, sql
+from odoo.tools.misc import format_amount, formatLang, format_date, get_lang
+
+from datetime import date, timedelta
+=======
+from odoo import api, fields, models, Command, _
+from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
+from odoo.tools import float_compare, float_is_zero, date_utils, email_split, email_re, is_html_empty, sql
+from odoo.tools.misc import format_amount, formatLang, format_date, get_lang
+
+from datetime import date, timedelta
+>>>>>>> df1f56fdbed3... temp
 from collections import defaultdict
 from contextlib import ExitStack, contextmanager
 from datetime import date, timedelta
@@ -1042,12 +1058,93 @@ class AccountMove(models.Model):
 
             payments_widget_vals = {'outstanding': True, 'content': [], 'move_id': move.id}
 
+<<<<<<< HEAD
             if move.is_inbound():
                 domain.append(('balance', '<', 0.0))
                 payments_widget_vals['title'] = _('Outstanding credits')
             else:
                 domain.append(('balance', '>', 0.0))
                 payments_widget_vals['title'] = _('Outstanding debits')
+||||||| parent of df1f56fdbed3... temp
+        :param recompute_all_taxes: Force the computation of taxes. If set to False, the computation will be done
+                                    or not depending on the field 'recompute_tax_line' in lines.
+        '''
+        for invoice in self:
+            # Dispatch lines and pre-compute some aggregated values like taxes.
+            expected_tax_rep_lines = set()
+            current_tax_rep_lines = set()
+            inv_recompute_all_taxes = recompute_all_taxes
+            for line in invoice.line_ids:
+                if line.recompute_tax_line:
+                    inv_recompute_all_taxes = True
+                    line.recompute_tax_line = False
+                if line.tax_repartition_line_id:
+                    current_tax_rep_lines.add(line.tax_repartition_line_id._origin)
+                elif line.tax_ids:
+                    if invoice.is_invoice(include_receipts=True):
+                        is_refund = invoice.move_type in ('out_refund', 'in_refund')
+                    else:
+                        tax_type = line.tax_ids[0].type_tax_use
+                        is_refund = (tax_type == 'sale' and line.debit) or (tax_type == 'purchase' and line.credit)
+                    taxes = line.tax_ids.flatten_taxes_hierarchy()
+                    if is_refund:
+                        tax_rep_lines = taxes.refund_repartition_line_ids._origin.filtered(lambda x: x.repartition_type == "tax")
+                    else:
+                        tax_rep_lines = taxes.invoice_repartition_line_ids._origin.filtered(lambda x: x.repartition_type == "tax")
+                    for tax_rep_line in tax_rep_lines:
+                        expected_tax_rep_lines.add(tax_rep_line)
+            delta_tax_rep_lines = expected_tax_rep_lines - current_tax_rep_lines
+
+            # Compute taxes.
+            if inv_recompute_all_taxes:
+                invoice._recompute_tax_lines()
+            elif recompute_tax_base_amount:
+                invoice._recompute_tax_lines(recompute_tax_base_amount=True)
+            elif delta_tax_rep_lines and not self._context.get('move_reverse_cancel'):
+                invoice._recompute_tax_lines()
+=======
+        :param recompute_all_taxes: Force the computation of taxes. If set to False, the computation will be done
+                                    or not depending on the field 'recompute_tax_line' in lines.
+        '''
+        for invoice in self:
+            # Dispatch lines and pre-compute some aggregated values like taxes.
+            expected_tax_rep_lines = set()
+            current_tax_rep_lines = set()
+            inv_recompute_all_taxes = recompute_all_taxes
+            for line in invoice.line_ids:
+                if line.recompute_tax_line:
+                    inv_recompute_all_taxes = True
+                    line.recompute_tax_line = False
+                if line.tax_repartition_line_id:
+                    current_tax_rep_lines.add(line.tax_repartition_line_id._origin)
+                elif line.tax_ids:
+                    if invoice.is_invoice(include_receipts=True):
+                        is_refund = invoice.move_type in ('out_refund', 'in_refund')
+                    else:
+                        tax_type = line.tax_ids[0].type_tax_use
+                        is_refund = (tax_type == 'sale' and line.debit) or (tax_type == 'purchase' and line.credit)
+                    taxes = line.tax_ids._origin.flatten_taxes_hierarchy().filtered(
+                        lambda tax: (
+                                tax.amount_type == 'fixed' and not invoice.company_id.currency_id.is_zero(tax.amount)
+                                or not float_is_zero(tax.amount, precision_digits=4)
+                        )
+                    )
+                    if is_refund:
+                        tax_rep_lines = taxes.refund_repartition_line_ids._origin.filtered(lambda x: x.repartition_type == "tax")
+                    else:
+                        tax_rep_lines = taxes.invoice_repartition_line_ids._origin.filtered(lambda x: x.repartition_type == "tax")
+                    for tax_rep_line in tax_rep_lines:
+                        expected_tax_rep_lines.add(tax_rep_line)
+            delta_tax_rep_lines = expected_tax_rep_lines - current_tax_rep_lines
+
+            # Compute taxes.
+            if inv_recompute_all_taxes:
+                invoice._recompute_tax_lines()
+            elif recompute_tax_base_amount:
+                invoice._recompute_tax_lines(recompute_tax_base_amount=True)
+            elif delta_tax_rep_lines and not self._context.get('move_reverse_cancel'):
+                invoice._recompute_tax_lines()
+>>>>>>> df1f56fdbed3... temp
 
             for line in self.env['account.move.line'].search(domain):
 
