@@ -21,22 +21,21 @@ export class DomainField extends Component {
         this.addDialog = useOwnedDialogs();
 
         this.displayedDomain = null;
-        this.isDebugEdited = false;
+        this.debugValue = undefined;
 
         onWillStart(() => {
             this.displayedDomain = this.props.value;
             this.loadCount(this.props);
         });
         onWillUpdateProps((nextProps) => {
-            this.isDebugEdited = this.isDebugEdited && this.props.readonly === nextProps.readonly;
-            if (!this.isDebugEdited) {
+            if (this.debugValue === undefined || this.props.readonly !== nextProps.readonly) {
                 this.displayedDomain = nextProps.value;
                 this.loadCount(nextProps);
             }
         });
 
         useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", async (ev) => {
-            if (this.isDebugEdited) {
+            if (this.debugValue !== undefined) {
                 const prom = this.loadCount(this.props);
                 ev.detail.proms.push(prom);
                 await prom;
@@ -104,7 +103,7 @@ export class DomainField extends Component {
     }
 
     update(domain, isDebugEdited) {
-        this.isDebugEdited = isDebugEdited;
+        this.debugValue = isDebugEdited ? domain : undefined;
         return this.props.update(domain);
     }
 

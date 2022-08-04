@@ -5,7 +5,7 @@
         <div class="o_domain_node o_domain_leaf o_domain_selector_row" t-ref="root">
             <t t-if="props.readonly">
                 <div class="o_domain_leaf_info">
-                    <ModelFieldSelector fieldName="props.node.operands[0]" resModel="props.resModel" readonly="props.readonly" isDebugMode="props.isDebugMode" />
+                    <ModelFieldSelector fieldName="props.node.operands[0].toString()" resModel="props.resModel" readonly="props.readonly" isDebugMode="props.isDebugMode" />
                     <t t-if="typeof props.node.operands[1] === 'string'">
                         <span class="o_domain_leaf_operator"> <t t-esc="displayedOperator" /></span>
                         <span class="o_domain_leaf_value text-primary"> "<t t-esc="props.node.operands[1]" />"</span>
@@ -38,7 +38,7 @@
                     onHoverInsertBranchNodeBtn.bind="onHoverInsertBranchNodeBtn"
                 />
                 <div class="o_domain_leaf_edition">
-                    <ModelFieldSelector fieldName="props.node.operands[0]" resModel="props.resModel" readonly="props.readonly" update="(name) => this.onFieldChange(name)" isDebugMode="props.isDebugMode" />
+                    <ModelFieldSelector fieldName="props.node.operands[0].toString()" resModel="props.resModel" readonly="props.readonly" update="(name) => this.onFieldChange(name)" isDebugMode="props.isDebugMode" />
                     <t t-set="field" t-value="getFieldComponent(fieldInfo.type)" />
                     <t t-if="field">
                         <div>
