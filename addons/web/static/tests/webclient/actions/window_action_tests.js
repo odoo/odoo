@@ -1426,10 +1426,11 @@ QUnit.module("ActionManager", (hooks) => {
         serverData.actions[44] = {
             id: 33,
             name: "Partners",
+            res_id: 1,
             res_model: "partner",
             type: "ir.actions.act_window",
             flags: {
-                mode: "readonly",
+                mode: "edit",
             },
             views: [[false, "form"]],
         };
@@ -1440,16 +1441,11 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 44);
         assert.containsOnce(
             target,
-            ".o_form_view .o_form_readonly",
-            "should display the form view in readonly mode"
-        ); // provided that the default mode is edit
+            ".o_form_view .o_form_editable",
+            "should display the form view in edit mode"
+        ); // provided that the default mode is readonly
 
-        assert.verifySteps([
-            "/web/webclient/load_menus",
-            "/web/action/load",
-            "get_views",
-            "onchange",
-        ]);
+        assert.verifySteps(["/web/webclient/load_menus", "/web/action/load", "get_views", "read"]);
     });
 
     QUnit.test("save current search", async function (assert) {

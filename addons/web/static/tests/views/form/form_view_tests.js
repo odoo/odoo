@@ -11471,4 +11471,44 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_form_view .test");
         assert.verifySteps(["error"]);
     });
+
+    QUnit.test(
+        "form with an initial mode (readonly) -- create new record from an existing one",
+        async (assert) => {
+            await makeView({
+                type: "form",
+                resId: 1, // important
+                resModel: "partner",
+                serverData,
+                arch: `<form><field name="display_name" /></form>`,
+                mode: "readonly", // important
+            });
+
+            assert.containsOnce(target, ".o_form_readonly");
+            assert.containsOnce(target, ".o_form_button_edit");
+            assert.containsOnce(target, ".o_form_button_create");
+
+            await click(target, ".o_form_button_create");
+            assert.containsOnce(target, ".o_form_editable");
+            assert.containsOnce(target, ".o_form_button_save");
+            assert.containsOnce(target, ".o_form_button_cancel");
+        }
+    );
+
+    QUnit.test(
+        "form with an initial mode (readonly) -- new record from scratch",
+        async (assert) => {
+            await makeView({
+                type: "form",
+                resModel: "partner", // no resId: important
+                serverData,
+                arch: `<form><field name="display_name" /></form>`,
+                mode: "readonly", // important
+            });
+
+            assert.containsOnce(target, ".o_form_editable");
+            assert.containsOnce(target, ".o_form_button_save");
+            assert.containsOnce(target, ".o_form_button_cancel");
+        }
+    );
 });

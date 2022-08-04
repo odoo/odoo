@@ -247,7 +247,12 @@ export class Record extends DataPoint {
             }
         }
 
-        this.mode = params.mode || (this.resId ? state.mode || "readonly" : "edit");
+        if (!this.resId && this.__viewType === "form") {
+            this.mode = "edit"; // always edit a new record in form view.
+        } else {
+            this.mode = params.mode || state.mode || "readonly";
+        }
+
         this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
 
         if (this.__bm_handle__) {
