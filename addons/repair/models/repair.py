@@ -589,6 +589,7 @@ class Repair(models.Model):
 
                 moves |= move
                 operation.write({'state': 'done'})
+
             move = Move.create({
                 'name': repair.name,
                 'product_id': repair.product_id.id,
@@ -678,7 +679,6 @@ class RepairLine(models.Model):
         'stock.move', 'Inventory Move',
         copy=False, readonly=True)
     move_line_id = fields.Many2one('stock.move.line', compute='_compute_move_line_id', store=True)
-    lot_store_id = fields.Many2one('stock.lot', related='move_line_id.lot_id', readonly=False, store=True)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
         domain="[('product_id','=', product_id), ('company_id', '=', company_id)]", check_company=True)
@@ -728,6 +728,11 @@ class RepairLine(models.Model):
         self.move_line_id = False
         repair_lines_with_move_line = self.filtered(lambda rl: rl.move_id.move_line_ids)
         repair_lines_with_move_line.move_line_id = repair_lines_with_move_line.move_id.move_line_ids
+
+    @api.onchange('lot_id')
+    def onchange_lot_id(self):
+        if self.repair_id.state == 'confirmed':
+            self.move_line_id.lot_id = self.lot_id
 
     @api.onchange('type')
     def onchange_operation_type(self):
