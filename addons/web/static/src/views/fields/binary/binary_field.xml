@@ -3,45 +3,47 @@
 
     <t t-name="web.BinaryField" owl="1">
         <t t-if="!props.readonly">
-            <t t-if="file.data">
-                <FileUploader
-                    acceptedFileExtensions="props.acceptedFileExtensions"
-                    file="file"
-                    onUploaded.bind="onFileUploaded"
-                >
-                    <t t-set-slot="toggler">
-                        <span class="mx-2" t-esc="file.name"/>
+            <t t-if="props.value">
+                <div class="w-100 d-inline-flex">
+                    <FileUploader
+                        acceptedFileExtensions="props.acceptedFileExtensions"
+                        file="{ data: props.value, name: fileName }"
+                        onUploaded.bind="update"
+                    >
+                        <t t-set-slot="toggler">
+                            <input type="text" class="o_input" t-att-value="fileName" readonly="readonly" />
+                            <button
+                                class="btn btn-secondary fa fa-pencil o_select_file_button"
+                                data-tooltip="Edit"
+                                aria-label="Edit"
+                            />
+                        </t>
                         <button
-                            class="btn btn-secondary fa fa-pencil o_select_file_button"
-                            data-tooltip="Edit"
-                            aria-label="Edit"
+                            class="btn btn-secondary fa fa-trash o_clear_file_button"
+                            data-tooltip="Clear"
+                            aria-label="Clear"
+                            t-on-click="() => this.update({})"
                         />
-                    </t>
-                    <button
-                        class="btn btn-secondary fa fa-trash o_clear_file_button"
-                        data-tooltip="Clear"
-                        aria-label="Clear"
-                        t-on-click="onFileRemove"
-                    />
-                </FileUploader>
+                    </FileUploader>
+                </div>
             </t>
             <t t-else="">
                 <label class="o_select_file_button btn btn-primary">
                     <FileUploader
                         acceptedFileExtensions="props.acceptedFileExtensions"
-                        onUploaded.bind="onFileUploaded"
+                        onUploaded.bind="update"
                     >
                         <t t-set-slot="toggler">
-                            <span t-esc="'Upload your file'"/>
+                            Upload your file
                         </t>
                     </FileUploader>
                 </label>
             </t>
         </t>
-        <t t-elif="file.data and isDownloadable">
-            <span t-esc="file.name"/>
-            <a class="o_form_uri mx-2" href="javascript:void(0)" t-on-click.prevent="onFileDownload">
-                <span class="fa fa-download"/>
+        <t t-elif="props.record.resId and props.value">
+            <a class="o_form_uri" href="#" t-on-click.prevent="onFileDownload">
+                <span class="fa fa-download me-2" />
+                <t t-if="state.fileName" t-esc="state.fileName" />
             </a>
         </t>
     </t>
