@@ -1,6 +1,7 @@
 odoo.define('web.DatePickerOwl', function (require) {
     "use strict";
 
+    const config = require('web.config');
     const field_utils = require('web.field_utils');
     const time = require('web.time');
     const { useAutofocus } = require("@web/core/utils/hooks");
@@ -184,7 +185,7 @@ odoo.define('web.DatePickerOwl', function (require) {
          * @private
          */
         _onWindowScroll(ev) {
-            if (ev.target !== this.inputRef.el) {
+            if (!config.device.isIOS && ev.target !== this.inputRef.el) {
                 this._datetimepicker('hide');
             }
         }
