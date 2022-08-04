@@ -589,14 +589,6 @@
         <t t-call="website.snippet_options_shadow_widgets"/>
     </div>
 
-    <!-- Mobile display options -->
-    <div data-js="MobileVisibility" data-selector="section, section .row > div"
-         data-exclude=".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize">
-        <we-button class="o_we_link o_we_mobile" data-show-on-mobile="true" data-no-preview="true"
-                   data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"
-                   data-active-img="/website/static/src/img/snippets_options/mobile_visible.svg"/>
-    </div>
-
     <div data-js="sizing_y"
         data-selector="section, .row > div, .parallax, .s_hr, .carousel-item, .s_rating"
         data-exclude="section:has(> .carousel), .s_image_gallery .carousel-item, .s_col_no_resize.row > div, .s_col_no_resize"/>
@@ -1275,6 +1267,21 @@
                 <we-button data-select-value="">Visible for Everyone</we-button>
             </we-select>
         </we-collapse>
+    </div>
+
+    <!-- Mobile/Desktop display options -->
+    <div data-js="DeviceVisibility" data-selector="section, section .row > div"
+            data-exclude=".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize">
+        <we-row string="Device">
+            <we-button class="o_we_device" data-toggle-device-visibility="no_desktop" title="Show/Hide on Desktop"
+                data-no-preview="true"
+                data-img="/website/static/src/img/snippets_options/desktop_invisible.svg"
+            />
+            <we-button class="o_we_device" data-toggle-device-visibility="no_mobile" title="Show/Hide on Mobile"
+                data-no-preview="true"
+                data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"
+            />
+        </we-row>
     </div>
 
     <!-- Cookies Bar -->
