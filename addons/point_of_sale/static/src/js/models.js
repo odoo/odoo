@@ -1460,6 +1460,13 @@ export class Product extends PosModel {
         }
         return this.pos.units_by_id[unit_id];
     }
+    isPricelistItemUsable(item, context) {
+        return (
+            (!item.categ_id || _.contains(context[0], item.categ_id[0])) &&
+            (!item.date_start || moment.utc(item.date_start).isSameOrBefore(context[1])) &&
+            (!item.date_end || moment.utc(item.date_end).isSameOrAfter(context[1]))
+        );
+    }
     // Port of _get_product_price on product.pricelist.
     //
     // Anything related to UOM can be ignored, the POS will always use
@@ -1495,11 +1502,7 @@ export class Product extends PosModel {
         var pricelist_items = _.filter(
             self.applicablePricelistItems[pricelist.id],
             function (item) {
-                return (
-                    (!item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
-                    (!item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
-                    (!item.date_end || moment.utc(item.date_end).isSameOrAfter(date))
-                );
+                return self.isPricelistItemUsable(item, {category_ids, date});
             }
         );
 
