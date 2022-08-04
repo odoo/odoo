@@ -686,7 +686,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         allocation.action_validate()
         with freeze_time('2022-7-20'):
             allocation._update_accrual()
-        self.assertEqual(allocation.number_of_days, 10)
+        # The first level gives 3 days
+        # The second level could give 6 days but since the first level was already giving
+        # 3 days, the second level gives 3 days to reach the second level's limit.
+        # The third level gives 1 day since it only counts for one iteration.
+        self.assertEqual(allocation.number_of_days, 7)
 
     def test_accrual_lost_previous_days(self):
         # Test that when an allocation with two levels is made and that the first level has it's action
