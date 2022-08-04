@@ -1,10 +1,17 @@
 /** @odoo-module **/
 
-import { getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
 let target;
+
+const getIframe = () => target.querySelector(".o_field_widget iframe.o_pdfview_iframe");
+
+const getIframeProtocol = () => getIframe().dataset.src.match(/\?file=(\w+)%3A/)[1];
+
+const getIframeViewerParams = () =>
+    decodeURIComponent(getIframe().dataset.src.match(/%2Fweb%2Fcontent%3F(.*)#page/)[1]);
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -54,12 +61,8 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             resId: 1,
             arch: '<form><field name="document" widget="pdf_viewer"/></form>',
-            mockRPC: function (route) {
-                if (route.indexOf("/web/static/lib/pdfjs/web/viewer.html") !== -1) {
-                    return Promise.resolve();
-                }
-            },
         });
+
         assert.hasClass(target.querySelector(".o_field_widget"), "o_field_pdf_viewer");
         assert.containsNone(target, ".o_select_file_button", "there should be no 'Upload' button");
         assert.containsOnce(
@@ -67,39 +70,36 @@ QUnit.module("Fields", (hooks) => {
             ".o_field_widget iframe.o_pdfview_iframe",
             "there should be an iframe"
         );
-        const iframeFile = target
-            .querySelector(".o_field_widget iframe.o_pdfview_iframe")
-            .dataset.src.split("%2Fweb%2Fcontent")[1];
-        assert.strictEqual(
-            iframeFile,
-            "%3Fmodel%3Dpartner%26id%3D1%26field%3Ddocument#page=1",
-            "the src attribute should be correctly set on the iframe"
-        );
+        assert.strictEqual(getIframeProtocol(), "http");
+        assert.strictEqual(getIframeViewerParams(), "model=partner&field=document&id=1");
     });
 
     QUnit.test("PdfViewerField: upload rendering", async function (assert) {
+        assert.expect(6);
+
         await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: '<form><field name="document" widget="pdf_viewer"/></form>',
+            async mockRPC(_route, { method, args }) {
+                if (method === "create") {
+                    assert.deepEqual(args[0], { document: btoa("test") });
+                }
+            },
         });
 
         assert.containsNone(target, ".o_pdfview_iframe", "there is no PDF Viewer");
 
-        // Set and trigger the change of a pdf file for the input
-        const fileInput = target.querySelector('input[type="file"]');
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(new File(["test"], "test.pdf", { type: "application/pdf" }));
-        fileInput.files = dataTransfer.files;
-        fileInput.dispatchEvent(new Event("change", { bubbles: true }));
-        await nextTick();
-        await nextTick();
+        const file = new File(["test"], "test.pdf", { type: "application/pdf" });
+        await editInput(target, ".o_field_pdf_viewer input[type=file]", file);
 
         assert.containsOnce(target, ".o_pdfview_iframe", "there is a PDF Viewer");
-        const iframeFile = target
-            .querySelector(".o_field_widget iframe.o_pdfview_iframe")
-            .dataset.src.split("?file=")[1];
-        assert.ok(/^blob%3/.test(iframeFile), "the file starts with 'blob:'");
+        assert.strictEqual(getIframeProtocol(), "blob");
+
+        await click(target, ".o_form_button_save");
+
+        assert.strictEqual(getIframeProtocol(), "http");
+        assert.strictEqual(getIframeViewerParams(), "model=partner&field=document&id=2");
     });
 });

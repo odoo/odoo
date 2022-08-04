@@ -47,7 +47,9 @@ export class FileUploader extends Component {
      * @param {Event} ev
      */
     async onFileChange(ev) {
-        if (!ev.target.files.length) return;
+        if (!ev.target.files.length) {
+            return;
+        }
         for (const file of ev.target.files) {
             if (file.size > this.maxUploadSize) {
                 this.notification.add(
@@ -90,5 +92,6 @@ export class FileUploader extends Component {
         this.fileInputRef.el.click();
     }
 }
+
 FileUploader.template = "web.FileUploader";
 FileUploader.nextId = 0;
