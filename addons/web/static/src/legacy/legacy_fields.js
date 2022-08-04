@@ -2,7 +2,6 @@
 
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
-import { evalDomain } from "@web/views/utils";
 import { Domain } from "web.Domain";
 import legacyFieldRegistry from "web.field_registry";
 import { ComponentAdapter } from "web.OwlCompatibility";
@@ -40,6 +39,7 @@ class FieldAdapter extends ComponentAdapter {
             if (fieldClassnames) {
                 for (const className of fieldClassnames.split(" ")) {
                     this.widgetEl.parentElement.classList.remove(className);
+                    this.widgetEl.classList.add(className);
                 }
                 this.widgetEl.parentElement.style.display = "contents";
             }
@@ -287,47 +287,42 @@ function registerField(name, LegacyFieldWidget) {
 
         get fieldParams() {
             const { name, record } = this.props;
-            if (record.model.__bm__) {
-                const legacyRecord = record.model.__bm__.get(record.__bm_handle__);
-                const hasReadonlyModifier = record.isReadonly(name);
-                const options = {
-                    viewType: legacyRecord.viewType,
-                    hasReadonlyModifier,
-                    mode: hasReadonlyModifier ? "readonly" : record.mode,
-                };
-                return { name, record: legacyRecord, options };
-            } else {
-                const legacyRecord = mapRecordDatapoint(record);
-                const fieldInfo = record.activeFields[name];
-                const views = {};
-                for (const viewType in fieldInfo.views || {}) {
-                    let arch = fieldInfo.views[viewType].arch;
-                    if (viewType === "list") {
-                        const editable = fieldInfo.views.list.editable;
-                        arch = `<tree editable='${editable}'></tree>`;
-                    }
-                    // FIXME: need the legacy fieldInfo here
-                    views[viewType] = {
-                        ...fieldInfo.views[viewType],
-                        arch: viewUtils.parseArch(arch),
-                    };
+            let legacyRecord;
+            const fieldInfo = record.activeFields[name];
+            const views = {};
+            for (const viewType in fieldInfo.views || {}) {
+                let arch = fieldInfo.views[viewType].arch;
+                if (viewType === "list") {
+                    const editable = fieldInfo.views.list.editable;
+                    arch = `<tree editable='${editable}'></tree>`;
                 }
-                const modifiers = JSON.parse(fieldInfo.rawAttrs.modifiers || "{}");
-                let hasReadonlyModifier = evalDomain(modifiers.readonly, record.evalContext);
-                const options = {
-                    attrs: {
-                        ...fieldInfo.rawAttrs,
-                        modifiers,
-                        options: fieldInfo.options,
-                        widget: fieldInfo.widget,
-                        views,
-                        mode: fieldInfo.viewMode,
-                    },
-                    mode: hasReadonlyModifier ? "readonly" : record.mode,
-                    hasReadonlyModifier,
+                // FIXME: need the legacy fieldInfo here
+                views[viewType] = {
+                    ...fieldInfo.views[viewType],
+                    arch: viewUtils.parseArch(arch),
                 };
-                return { name, record: legacyRecord, options };
             }
+            const modifiers = JSON.parse(fieldInfo.rawAttrs.modifiers || "{}");
+            const hasReadonlyModifier = record.isReadonly(name);
+            if (record.model.__bm__) {
+                legacyRecord = record.model.__bm__.get(record.__bm_handle__);
+            } else {
+                legacyRecord = mapRecordDatapoint(record);
+            }
+            const options = {
+                attrs: {
+                    ...fieldInfo.rawAttrs,
+                    modifiers,
+                    options: fieldInfo.options,
+                    widget: fieldInfo.widget,
+                    views,
+                    mode: fieldInfo.viewMode,
+                },
+                viewType: legacyRecord.viewType,
+                mode: hasReadonlyModifier ? "readonly" : record.mode,
+                hasReadonlyModifier,
+            };
+            return { name, record: legacyRecord, options };
         }
 
         update(fieldName, value) {
