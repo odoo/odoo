@@ -234,7 +234,7 @@ registerModel({
         /**
          * States all the pinned channels that have unread messages.
          */
-        pinnedAndUnreadChannels: many('Thread', {
+        pinnedAndUnreadChannels: many('Channel', {
             inverse: 'messagingMenuAsPinnedAndUnreadChannel',
             readonly: true,
         }),

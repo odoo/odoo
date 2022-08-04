@@ -1099,18 +1099,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessagingMenuAsPinnedAndUnreadChannel() {
-            if (!this.messaging.messagingMenu) {
-                return clear();
-            }
-            return (this.channel && this.channel.isPinned && this.channel.localMessageUnreadCounter > 0)
-                ? replace(this.messaging.messagingMenu)
-                : clear();
-        },
-        /**
-         * @private
          * @returns {Message[]}
          */
         _computeNeedactionMessagesAsOriginThread() {
@@ -1655,11 +1643,6 @@ registerModel({
         messagingAsRingingThread: one('Messaging', {
             compute: '_computeMessagingAsRingingThread',
             inverse: 'ringingThreads',
-            readonly: true,
-        }),
-        messagingMenuAsPinnedAndUnreadChannel: one('MessagingMenu', {
-            compute: '_computeMessagingMenuAsPinnedAndUnreadChannel',
-            inverse: 'pinnedAndUnreadChannels',
             readonly: true,
         }),
         model: attr({

@@ -379,6 +379,19 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeMessagingMenuAsPinnedAndUnreadChannel() {
+            if (!this.messaging.messagingMenu) {
+                return clear();
+            }
+            if (this.isPinned && this.localMessageUnreadCounter > 0) {
+                return replace(this.messaging.messagingMenu);
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeThread() {
             return insertAndReplace({
                 id: this.id,
@@ -580,6 +593,11 @@ registerModel({
          * States the number of members in this channel according to the server.
          */
         memberCount: attr(),
+        messagingMenuAsPinnedAndUnreadChannel: one('MessagingMenu', {
+            compute: '_computeMessagingMenuAsPinnedAndUnreadChannel',
+            inverse: 'pinnedAndUnreadChannels',
+            readonly: true,
+        }),
         name: attr({
             readonly: true,
             related: 'thread.name',
