@@ -33,6 +33,32 @@ html[data-edit_translations="1"] {
     }
 }
 
+.o_snippet_override_invisible {
+    display: block !important;
+    opacity: 70%;
+    position: relative;
+
+    &::before {
+        position: absolute;
+        // Content is 0px wide => use available width. 
+        width: -webkit-fill-available;
+        width: -moz-available;
+        right: 20px;
+        z-index: 100;
+        background-color: $o-we-accent;
+        font-size: 0px;
+        content: "."; // Content is mandatory.
+    }
+    &.d-md-none::before {
+        height: 50px;
+        -webkit-mask: url("/website/static/src/img/snippets_options/desktop_invisible.svg") no-repeat 100% 100%;
+    }
+    &:not(.d-md-none)::before {
+        height: 30px;
+        -webkit-mask: url("/website/static/src/img/snippets_options/mobile_invisible.svg") no-repeat 100% 100%;
+    }
+}
+
 // SNIPPET PANEL
 $i: 1;
 @each $font-name, $font-config in $o-theme-font-configs {
@@ -89,7 +115,7 @@ $i: 1;
         }
     }
 
-    we-button.o_we_mobile {
+    we-button.o_we_device {
         > div {
             // FIXME maybe there is some refactoring to do so that all SVG icons
             // can be properly aligned with extra CSS rules...
@@ -97,21 +123,19 @@ $i: 1;
             align-items: center;
 
             svg {
-                width: 15px;
-                fill: $o-we-color-danger;
+                width: 12px;
+                fill: $o-we-sidebar-content-field-clickable-color;
                 margin-bottom: 0;
-                margin-left: -3px;
 
                 &:hover {
-                    fill: darken($o-we-color-danger, 7.5%);
+                    fill: $o-we-sidebar-content-field-pressed-color;
                 }
             }
         }
-        &.active > div > svg {
-            fill: $o-we-sidebar-content-field-color;
-
+        &.active > div svg {
+            fill: $o-we-color-danger;
             &:hover {
-                fill: $o-we-sidebar-content-field-pressed-color;
+                fill: darken($o-we-color-danger, 7.5%);
             }
         }
     }
