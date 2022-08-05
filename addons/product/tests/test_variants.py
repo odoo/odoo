@@ -3,7 +3,7 @@
 
 import base64
 from collections import OrderedDict
-from datetime import timedelta
+from datetime import datetime, timedelta
 import io
 import unittest.mock
 
@@ -667,10 +667,17 @@ class TestVariantsImages(common.TestProductCommon):
         """
         # Pretend setup happened in an older transaction by updating on the SQL layer and making sure it gets reloaded
         # Using _write() instead of write() because write() only allows updating log access fields at boot time
-        self.variants._write({
-            'write_date': self.cr.now() - timedelta(milliseconds=1),
+        before = datetime.now() - timedelta(seconds=1)
+        self.template._write({
+            'create_date': before,
+            'write_date': before,
         })
-        self.variants.invalidate_cache(['write_date'], self.variants.ids)
+        self.variants._write({
+            'create_date': before,
+            'write_date': before,
+        })
+        self.template.invalidate_cache(['create_date', 'write_date'], self.template.ids)
+        self.variants.invalidate_cache(['create_date', 'write_date'], self.variants.ids)
 
         f = io.BytesIO()
         Image.new('RGB', (800, 500), '#000000').save(f, 'PNG')
@@ -684,6 +691,7 @@ class TestVariantsImages(common.TestProductCommon):
 
         self.assertFalse(variant_no_image.image_1920)
         self.template.image_1920 = image_black
+        self.template.write({'write_date': datetime.now()})
         new_last_update = variant_no_image['__last_update']
 
         # the first has no image variant, all the others do

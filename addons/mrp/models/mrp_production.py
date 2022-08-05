@@ -1505,6 +1505,7 @@ class MrpProduction(models.Model):
 
     def _generate_backorder_productions(self, close_mo=True):
         backorders = self.env['mrp.production']
+        bo_to_assign = self.env['mrp.production']
         for production in self:
             if production.backorder_sequence == 0:  # Activate backorder naming
                 production.backorder_sequence = 1
@@ -1533,6 +1534,8 @@ class MrpProduction(models.Model):
                         new_moves_vals.append(move_vals[0])
                 self.env['stock.move'].create(new_moves_vals)
             backorders |= backorder_mo
+            if backorder_mo.picking_type_id.reservation_method == 'at_confirm':
+                bo_to_assign |= backorder_mo
 
             # We need to adapt `duration_expected` on both the original workorders and their
             # backordered workorders. To do that, we use the original `duration_expected` and the
@@ -1548,6 +1551,7 @@ class MrpProduction(models.Model):
             self.move_raw_ids.filtered(lambda m: not m.additional)._do_unreserve()
             self.move_raw_ids.filtered(lambda m: not m.additional)._action_assign()
         backorders.action_confirm()
+        bo_to_assign.action_assign()
 
         # Remove the serial move line without reserved quantity. Post inventory will assigned all the non done moves
         # So those move lines are duplicated.
