@@ -2458,7 +2458,7 @@ options.registry.anchor = options.Class.extend({
             }
             this._setAnchorName(anchorName + n);
         }
-        return `${window.location.pathname}#${this.$target[0].id}`;
+        return `${this.ownerDocument.location.pathname}#${this.$target[0].id}`;
     },
     /**
      * Creates a safe id/anchor from text.
