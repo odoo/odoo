@@ -186,7 +186,12 @@ export class KanbanRenderer extends Component {
             return false;
         }
         const { modifiers, type } = this.props.list.groupByField;
-        return !(modifiers && modifiers.readonly) && DRAGGABLE_GROUP_TYPES.includes(type);
+        const { groupsDraggable } = this.props.archInfo;
+        return (
+            groupsDraggable &&
+            !(modifiers && modifiers.readonly) &&
+            DRAGGABLE_GROUP_TYPES.includes(type)
+        );
     }
 
     get canResequenceRecords() {

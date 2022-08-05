@@ -7069,6 +7069,42 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getCardTexts(), ["2", "4", "1", "3"]);
     });
 
+    QUnit.test("prevent resequence columns if groups_draggable=false", async (assert) => {
+        serverData.models.product.fields.sequence = { type: "integer" };
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban groups_draggable='0'>
+                    <field name="product_id"/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="id"/></div>
+                    </t></templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "hello");
+        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+
+        await dragAndDrop(".o_kanban_group:first-child", ".o_kanban_group:nth-child(2)");
+
+        // Drag & drop on column (not title) should not work
+        assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "hello");
+        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_column_title",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        assert.strictEqual(getColumn(0).querySelector(".o_column_title").innerText, "hello");
+        assert.deepEqual(getCardTexts(), ["1", "3", "2", "4"]);
+    });
+
     QUnit.test("properly evaluate more complex domains", async (assert) => {
         await makeView({
             type: "kanban",
@@ -10854,7 +10890,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test('column quick create - title and placeholder', async function (assert) {
+    QUnit.test("column quick create - title and placeholder", async function (assert) {
         assert.expect(2);
 
         await makeView({
@@ -10862,20 +10898,30 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch:
-                '<kanban>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="int_field"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
-            groupBy: ['product_id'],
+                "<kanban>" +
+                '<templates><t t-name="kanban-box">' +
+                "<div>" +
+                '<field name="int_field"/>' +
+                "</div>" +
+                "</t></templates>" +
+                "</kanban>",
+            groupBy: ["product_id"],
         });
 
         const productFieldName = serverData.models.partner.fields.product_id.string;
-        assert.strictEqual(target.querySelector('.o_column_quick_create .o_quick_create_folded').innerText, productFieldName);
+        assert.strictEqual(
+            target.querySelector(".o_column_quick_create .o_quick_create_folded").innerText,
+            productFieldName
+        );
 
         await click(target, "button.o_kanban_add_column");
-        assert.strictEqual(target.querySelector('.o_column_quick_create .o_quick_create_unfolded .input-group .o_input').getAttribute('placeholder'), productFieldName + '...');
+        assert.strictEqual(
+            target
+                .querySelector(
+                    ".o_column_quick_create .o_quick_create_unfolded .input-group .o_input"
+                )
+                .getAttribute("placeholder"),
+            productFieldName + "..."
+        );
     });
 });
