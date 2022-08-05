@@ -171,6 +171,13 @@ class FieldAdapter extends ComponentAdapter {
             }
         } else if (evType === "history_back") {
             return this.wowlEnv.config.historyBack();
+        } else if (evType === "translate") {
+            const { fieldParams, record, update } = this.props;
+            return this.translationDialog({
+                fieldName: fieldParams.name,
+                record,
+                updateField: update,
+            });
         }
         super._trigger_up(...arguments);
     }
