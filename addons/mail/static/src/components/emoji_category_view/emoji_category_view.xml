@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.EmojiCategoryView" owl="1">
-        <span class="o_EmojiCategoryView px-2 py-1 fs-5 cursor-pointer" t-att-class="(emojiCategoryView.isHovered or emojiCategoryView.emojiCategoryBarViewOwnerAsActive) ? 'bg-300' : ''" t-on-click="emojiCategoryView.onClick" t-on-mouseenter="emojiCategoryView.onMouseenter" t-on-mouseleave="emojiCategoryView.onMouseleave" t-attf-class="{{ className }}" t-ref="root">
-            <t t-esc="emojiCategoryView.emojiCategory.categoryName"/>
+        <span class="o_EmojiCategoryView px-2 py-1 fs-5 cursor-pointer" t-att-class="(emojiCategoryView.isHovered or emojiCategoryView.isActive) ? 'bg-200' : ''" t-att-title="emojiCategoryView.category.name" t-on-click="emojiCategoryView.onClick" t-on-mouseenter="emojiCategoryView.onMouseenter" t-on-mouseleave="emojiCategoryView.onMouseleave" t-attf-class="{{ className }}" t-ref="root">
+            <t t-esc="emojiCategoryView.category.title"/>
         </span>
     </t>
 
