@@ -493,6 +493,11 @@ registerModel({
          * Mailbox Starred.
          */
         starred: one('Thread'),
+        userNotificationManager: one('UserNotificationManager', {
+            default: insertAndReplace(),
+            isCausal: true,
+            readonly: true,
+        }),
         userSetting: one('UserSetting', {
             default: insertAndReplace(),
             isCausal: true,

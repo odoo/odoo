@@ -629,7 +629,7 @@ registerModel({
             // then open a chat for the current user with the new user.
             const message = sprintf(this.env._t('%s connected'), username);
             const title = this.env._t("This is their first connection. Wish them luck.");
-            this.env.services['bus_service'].sendNotification({ message, title, type: 'info' });
+            this.messaging.userNotificationManager.sendNotification({ message, title, type: 'info' });
             const chat = await this.messaging.getChat({ partnerId });
             if (!this.exists() || !chat || this.messaging.device.isSmall) {
                 return;
@@ -671,7 +671,7 @@ registerModel({
             const notificationContent = escape(
                 htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE)
             );
-            this.env.services['bus_service'].sendNotification({
+            this.messaging.userNotificationManager.sendNotification({
                 message: notificationContent,
                 title: notificationTitle,
                 type: 'info',
