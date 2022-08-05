@@ -97,11 +97,11 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/**/*',
             'web/static/src/legacy/legacy_fields.scss',
             'web/static/src/search/**/*',
-            'web/static/src/views/**/*',
-            ('remove', 'web/static/src/views/form/button_box/*.scss'),
             'web/static/src/webclient/**/*',
             ('remove', 'web/static/src/webclient/navbar/navbar.scss'), # already in _assets_common_styles
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
+            'web/static/src/views/**/*',
+            ('remove', 'web/static/src/views/form/button_box/*.scss'),
             'web/static/src/env.js',
 
             'web/static/lib/jquery.scrollTo/jquery.scrollTo.js',
