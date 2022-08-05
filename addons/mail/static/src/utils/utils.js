@@ -33,7 +33,7 @@ async function executeGracefully(functions, maxTimeFrame = 100) {
     let startDate = new Date();
     for (const func of functions) {
         if (new Date() - startDate > maxTimeFrame) {
-            await new Promise(resolve => setTimeout(resolve));
+            await new Promise(resolve => setTimeout(resolve, 50));
             startDate = new Date();
         }
         await func();

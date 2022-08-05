@@ -47,7 +47,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickReaction(ev) {
-            this.messageAction.messageActionListOwner.message.addReaction(ev.currentTarget.dataset.unicode);
+            this.messageAction.messageActionListOwner.message.addReaction(ev.currentTarget.dataset.codepoints);
             this.update({ reactionPopoverView: clear() });
         },
         /**
