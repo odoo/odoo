@@ -10,6 +10,14 @@
                 <field name="priority" optional="show" widget="priority" nolabel="1"/>
                 <field name="name"/>
                 <field name="schedule_date" optional="show" widget="remaining_days"/>
+                <field name="operations_availability_state" invisible="1" options='{"lazy": true}'/>
+                <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
+                <field name="operations_availability" options='{"lazy": true}'
+                    attrs="{'invisible': [('state', 'in', ['draft', 'done', 'cancel', '2binvoiced'])]}"
+                    optional="show"
+                    decoration-success="reservation_state == 'assigned' or operations_availability_state == 'available'"
+                    decoration-warning="reservation_state != 'assigned' and operations_availability_state in ('expected', 'available')"
+                    decoration-danger="reservation_state != 'assigned' and operations_availability_state == 'late'"/>
                 <field name="description" optional="hide"/>
                 <field name="product_id" readonly="1" optional="show"/>
                 <field name="product_qty" optional="hide" string="Quantity"/>
@@ -42,6 +50,10 @@
                    <button name="action_repair_invoice_create" type="object" string="Create Invoice" class="oe_highlight" groups="account.group_account_invoice" attrs="{'invisible': ['|', ('state', '!=', '2binvoiced'), ('invoice_id', '!=', False)]}" data-hotkey="w"/>
                    <button name="action_send_mail" states="draft" string="Send Quotation" type="object" data-hotkey="g"/>
                    <button name="print_repair_order" states="draft" string="Print Quotation" type="object" data-hotkey="y"/>
+                   <button name="action_assign" type="object" string="Check Availability" attrs="{'invisible': [('reserve_visible', '=', False)]}"/>
+                   <button name="do_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
+                   <field name="unreserve_visible" invisible="1"/>
+                   <field name="reserve_visible" invisible="1"/>
                    <button name="action_repair_cancel_draft" states="cancel" string="Set to Draft" type="object" data-hotkey="z"/>
                    <button name="action_repair_cancel" string="Cancel Repair" type="object" confirm="Draft invoices for this order will be cancelled. Do you confirm the action?" attrs="{'invisible':['|', ('state', '=', 'cancel'), ('invoice_state', '!=', 'draft')]}" data-hotkey="l"/>
                    <button name="action_repair_cancel" string="Cancel Repair" type="object" attrs="{'invisible': ['|', ('state','=', 'cancel',), ('invoice_state', '=', 'draft')]}" data-hotkey="l"/>
@@ -90,10 +102,21 @@
                             <field name="picking_id" domain="[('picking_type_id','in', allowed_picking_type_ids)]" options="{'no_create': True}"/>
                         </group>
                         <group>
-                            <field name="schedule_date"/>
+                            <field name="schedule_date"
+                                attrs="{'readonly': [('state', 'in', ['close', 'cancel'])]}"
+                                    decoration-warning="state not in ('done', 'cancel') and schedule_date &lt; now"
+                                    decoration-danger="state not in ('done', 'cancel') and schedule_date &lt; current_date"
+                                    decoration-bf="state not in ('done', 'cancel') and (schedule_date &lt; current_date or schedule_date &lt; now)"/>
+                            />
+                            <field name="operations_availability_state" invisible="1"/>
+                            <field name="reservation_state" invisible="1"/>
+                            <field name="operations_availability"
+                                attrs="{'invisible': [('state', 'in', ['draft', 'done', 'cancel', '2binvoiced'])]}"
+                                optional="show"
+                                decoration-success="reservation_state == 'assigned' or operations_availability_state == 'available'"
+                                decoration-warning="reservation_state != 'assigned' and operations_availability_state in ('expected', 'available')"
+                                decoration-danger="reservation_state != 'assigned' and operations_availability_state == 'late'"/>
                             <field name="user_id" domain="[('share', '=', False)]"/>
-                            <field name="location_id" options="{'no_create': True}"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="guarantee_limit"/>
                             <field name="invoice_method"/>
                             <field name="partner_invoice_id" attrs="{'invisible':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="account.group_delivery_invoice_address"/>
@@ -142,16 +165,27 @@
                                 <field name='name' optional="show"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="tracking" invisible="1"/>
+                                <field name="product_qty" invisible="1" readonly="1"/>
+                                <field name="product_type" invisible="1"/>
+                                <field name="state" invisible="1" force_save="1"/>
+                                <field name="move_state" string="Stock state" invisible="1"/>
+                                <field name="reserved_availability" invisible="1"/>
+                                <field name="forecast_expected_date" invisible="1"/>
+                                <field name="type" invisible="1"/>
                                 <field name="lot_id" context="{'default_product_id': product_id, 'default_company_id': company_id}" groups="stock.group_production_lot" attrs="{'readonly':[('tracking', 'not in', ['serial', 'lot'])]}"/>
                                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" optional="show"/>
                                 <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" optional="show"/>
-                                <field name="product_uom_qty" string="Quantity"/>
+                                <field name="product_uom_qty" string="Quantity" attrs="{'readonly':[('tracking', '==', 'serial')]}"/>
                                 <field name="product_uom" string="UoM" groups="uom.group_uom" optional="show"/>
+                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'column_invisible': [('parent.state', '!=', 'draft')], 'invisible': ['|', ('type', '=', 'remove'), ('forecast_availability', '&lt;', 0)]}"/>
+                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" attrs="{'column_invisible': [('parent.state', '!=', 'draft')], 'invisible': ['|', ('type', '=', 'remove'), ('forecast_availability', '&gt;=', 0)]}"/>
+                                <field name="forecast_availability" attrs="{'invisible':[('type', '=', 'remove')], 'column_invisible': [('parent.state', 'in', ('draft', 'done', 'cancel'))]}" string="Reserved" widget="repair_forecast_widget"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags" optional="show"/>
                                 <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
                                 <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                 <field name="currency_id" invisible="1"/>
+                                <field name="schedule_date" invisible="1"/>
                             </tree>
                         </field>
                         <group class="oe_subtotal_footer oe_right">
@@ -216,6 +250,12 @@
                     </page>
                     <page string="Quotation Notes">
                         <field name="quotation_notes" placeholder="Add quotation notes."/>
+                    </page>
+                    <page string="Miscellaneous" name="miscellaneous">
+                        <group>
+                            <field name="location_id" string="Repair Location" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
                     </page>
                 </notebook>
                 </sheet>

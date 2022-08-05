@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import datetime
 from random import randint
 
 from markupsafe import Markup
@@ -8,12 +9,21 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, is_html_empty
+from odoo.tools.misc import format_date
 
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    repair_id = fields.Many2one('repair.order', check_company=True)
+    repair_id = fields.Many2one('repair.order', check_company=True, index='btree_not_null')
+    repair_line_id = fields.One2many('repair.line', 'move_id')
+
+    def _is_consuming(self):
+        return super()._is_consuming() or (self.repair_line_id and self.repair_line_id.type == 'add')
+
+    def _get_source_document(self):
+        res = super()._get_source_document()
+        return res or self.repair_id
 
 
 class Repair(models.Model):
@@ -21,6 +31,12 @@ class Repair(models.Model):
     _description = 'Repair Order'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'priority desc, create_date desc'
+
+    @api.model
+    def _get_default_schedule_date(self):
+        if self.env.context.get('default_date_deadline'):
+            return fields.Datetime.to_datetime(self.env.context.get('default_date_deadline'))
+        return datetime.now()
 
     name = fields.Char(
         'Repair Reference',
@@ -66,7 +82,7 @@ class Repair(models.Model):
              "* The \'To be Invoiced\' status is used to generate the invoice before or after repairing done.\n"
              "* The \'Done\' status is set when repairing is completed.\n"
              "* The \'Cancelled\' status is used when user cancel repair order.")
-    schedule_date = fields.Date("Scheduled Date")
+    schedule_date = fields.Datetime("Scheduled Date", default=_get_default_schedule_date)
     location_id = fields.Many2one(
         'stock.location', 'Location',
         compute="_compute_location_id", store=True, precompute=True,
@@ -130,6 +146,74 @@ class Repair(models.Model):
     tracking = fields.Selection(string='Product Tracking', related="product_id.tracking", readonly=False)
     invoice_state = fields.Selection(string='Invoice State', related='invoice_id.state')
     priority = fields.Selection([('0', 'Normal'), ('1', 'Urgent')], default='0', string="Priority")
+    unreserve_visible = fields.Boolean(
+        'Allowed to Unreserve Production', compute='_compute_unreserve_visible',
+        help='Technical field to check when we can unreserve')
+    reserve_visible = fields.Boolean(
+        'Allowed to Reserve Production', compute='_compute_unreserve_visible',
+        help='Technical field to check when we reserve')
+    operations_availability = fields.Char(
+        string="Parts Status", compute='_compute_operations_availability',
+        help="Latest component availability status for this RO. If green, then the RO's readiness status is ready.")
+    operations_availability_state = fields.Selection([
+        ('available', 'Available'),
+        ('expected', 'Expected'),
+        ('late', 'Late')], compute='_compute_operations_availability')
+    reservation_state = fields.Selection([
+        ('confirmed', 'Waiting'),
+        ('assigned', 'Ready'),
+        ('waiting', 'Waiting Another Operation')],
+        string='RO Readiness',
+        compute='_compute_reservation_state', copy=False, index=True, readonly=True,
+        store=True, tracking=True,
+        help="Readiness for this RO: \n\
+            * Ready: The material is available to start the repair.\n\
+            * Waiting: The material is not available to start the repair.\n")
+
+    @api.depends('state', 'operations.move_id.state')
+    def _compute_reservation_state(self):
+        self.reservation_state = False
+        for repair in self:
+            if repair.state in ('draft', 'done', 'cancel'):
+                continue
+            relevant_move_state = repair.operations.filtered(lambda o: o.type == 'add').move_id._get_relevant_state_among_moves()
+            # Compute reservation state according to its component's moves.
+            if relevant_move_state == 'partially_available':
+                repair.reservation_state = 'waiting'
+            elif relevant_move_state != 'draft':
+                repair.reservation_state = relevant_move_state
+
+    @api.depends('state', 'schedule_date', 'operations', 'operations.move_id', 'operations.move_id.forecast_availability', 'operations.move_id.forecast_expected_date')
+    def _compute_operations_availability(self):
+        repairs = self.filtered(lambda ro: ro.state not in ('cancel', 'done', 'draft'))
+        repairs.operations_availability_state = 'available'
+        repairs.operations_availability = _('Available')
+
+        other_repairs = self - repairs
+        other_repairs.operations_availability = False
+        other_repairs.operations_availability_state = False
+
+        all_moves = repairs.operations.filtered(lambda o: o.type == 'add').move_id
+        # Force to prefetch more than 1000 by 1000
+        all_moves._fields['forecast_availability'].compute_value(all_moves)
+        for repair in repairs:
+            if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, precision_rounding=move.product_id.uom_id.rounding) == -1 for move in repair.operations.filtered(lambda o: o.type == 'add').move_id):
+                repair.operations_availability = _('Not Available')
+                repair.operations_availability_state = 'late'
+            else:
+                forecast_date = max(repair.operations.filtered(lambda o: o.type == 'add').move_id.filtered('forecast_expected_date').mapped('forecast_expected_date'), default=False)
+                if forecast_date:
+                    repair.operations_availability = _('Exp %s', format_date(self.env, forecast_date))
+                    if repair.schedule_date:
+                        repair.operations_availability_state = 'late' if forecast_date > repair.schedule_date else 'expected'
+
+    @api.depends('operations', 'state', 'operations.product_uom_qty')
+    def _compute_unreserve_visible(self):
+        for order in self:
+            already_reserved = order.state not in ('done', 'cancel') and order.mapped('operations.move_id.move_line_ids')
+            any_quantity_done = any(o.move_id.quantity_done > 0 for o in order.operations.filtered(lambda o: o.type == 'add'))
+            order.unreserve_visible = not any_quantity_done and already_reserved
+            order.reserve_visible = order.state in ('confirmed', 'under_repair', '2binvoiced') and any(move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in order.operations.move_id)
 
     def _compute_allowed_picking_type_ids(self):
         '''
@@ -263,6 +347,30 @@ class Repair(models.Model):
         # TDE FIXME: this button is very interesting
         return True
 
+    def action_assign(self):
+        for operation in self.operations.filtered(lambda o: o.type == 'remove'):
+            move = operation.move_id
+            # Best effort to reserve the product in a (sub)-location where it is available
+            product_qty = move.product_uom._compute_quantity(
+                operation.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
+            available_quantity = self.env['stock.quant']._get_available_quantity(
+                move.product_id,
+                move.location_id,
+                lot_id=operation.lot_id,
+                strict=False,
+            )
+            move._update_reserved_quantity(
+                product_qty,
+                available_quantity,
+                move.location_id,
+                lot_id=operation.lot_id,
+                strict=False,
+            )
+        self.operations.filtered(lambda o: o.type == 'add').mapped('move_id').filtered(lambda m: m.state not in ('done', 'cancel'))._action_assign()
+
+    def do_unreserve(self):
+        self.operations.mapped('move_id').filtered(lambda m: m.state not in ('done', 'cancel'))._do_unreserve()
+
     def action_repair_cancel_draft(self):
         if self.filtered(lambda repair: repair.state != 'cancel'):
             raise UserError(_("Repair must be canceled in order to reset it to draft."))
@@ -313,8 +421,10 @@ class Repair(models.Model):
         before_repair = self.filtered(lambda repair: repair.invoice_method == 'b4repair')
         before_repair.write({'state': '2binvoiced'})
         to_confirm = self - before_repair
-        to_confirm_operations = to_confirm.mapped('operations')
+        to_confirm_operations = to_confirm.operations
         to_confirm_operations.write({'state': 'confirmed'})
+        to_confirm_operations.filtered(lambda o: o.type == 'add').move_id._action_confirm(merge=False)
+        to_confirm_operations.filtered(lambda o: o.type == 'add').move_id._action_assign()
         to_confirm.write({'state': 'confirmed'})
         return True
 
@@ -323,6 +433,7 @@ class Repair(models.Model):
         if invoice_to_cancel:
             invoice_to_cancel.button_cancel()
         self.mapped('operations').write({'state': 'cancel'})
+        self.operations.move_id._action_cancel()
         return self.write({'state': 'cancel'})
 
     def action_send_mail(self):
@@ -569,35 +680,7 @@ class Repair(models.Model):
 
             moves = self.env['stock.move']
             for operation in repair.operations:
-                move = Move.create({
-                    'name': repair.name,
-                    'product_id': operation.product_id.id,
-                    'product_uom_qty': operation.product_uom_qty,
-                    'product_uom': operation.product_uom.id,
-                    'partner_id': repair.address_id.id,
-                    'location_id': operation.location_id.id,
-                    'location_dest_id': operation.location_dest_id.id,
-                    'repair_id': repair.id,
-                    'origin': repair.name,
-                    'company_id': repair.company_id.id,
-                })
-
-                # Best effort to reserve the product in a (sub)-location where it is available
-                product_qty = move.product_uom._compute_quantity(
-                    operation.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
-                available_quantity = self.env['stock.quant']._get_available_quantity(
-                    move.product_id,
-                    move.location_id,
-                    lot_id=operation.lot_id,
-                    strict=False,
-                )
-                move._update_reserved_quantity(
-                    product_qty,
-                    available_quantity,
-                    move.location_id,
-                    lot_id=operation.lot_id,
-                    strict=False,
-                )
+                move = operation.move_id
                 # Then, set the quantity done. If the required quantity was not reserved, negative
                 # quant is created in operation.location_id.
                 move._set_quantity_done(operation.product_uom_qty)
@@ -606,7 +689,8 @@ class Repair(models.Model):
                     move.move_line_ids.lot_id = operation.lot_id
 
                 moves |= move
-                operation.write({'move_id': move.id, 'state': 'done'})
+                operation.write({'state': 'done'})
+
             move = Move.create({
                 'name': repair.name,
                 'product_id': repair.product_id.id,
@@ -630,9 +714,11 @@ class Repair(models.Model):
                 'origin': repair.name,
                 'company_id': repair.company_id.id,
             })
+
             consumed_lines = moves.mapped('move_line_ids')
             produced_lines = move.move_line_ids
             moves |= move
+
             moves._action_done()
             produced_lines.write({'consume_line_ids': [(6, 0, consumed_lines.ids)]})
             res[repair.id] = move.id
@@ -693,8 +779,7 @@ class RepairLine(models.Model):
         compute='_compute_location_id', store=True, readonly=False, precompute=True,
         index=True, required=True, check_company=True)
     move_id = fields.Many2one(
-        'stock.move', 'Inventory Move',
-        copy=False, readonly=True)
+        'stock.move', store=True, copy=False)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
         domain="[('product_id','=', product_id), ('company_id', '=', company_id)]", check_company=True)
@@ -706,6 +791,78 @@ class RepairLine(models.Model):
         copy=False, readonly=True, required=True,
         help='The status of a repair line is set automatically to the one of the linked repair order.')
     tracking = fields.Selection(string='Product Tracking', related="product_id.tracking")
+    product_type = fields.Selection(related='product_id.detailed_type')
+    forecast_availability = fields.Float(related="move_id.forecast_availability")
+    reserved_availability = fields.Float(related="move_id.reserved_availability")
+    forecast_expected_date = fields.Datetime(related="move_id.forecast_expected_date")
+    product_qty = fields.Float(related="move_id.product_qty")
+    move_state = fields.Selection(related="move_id.state", string="Stock Move State")
+    schedule_date = fields.Datetime(related='repair_id.schedule_date', readonly=True, copy=False)
+
+    def action_product_forecast_report(self):
+        return self.move_id.action_product_forecast_report()
+
+    @api.model
+    def _get_default_picking_type_id(self, company_id):
+        return self.env['stock.picking.type'].search([
+            ('code', '=', 'repair'),
+            ('warehouse_id.company_id', '=', company_id),
+        ], limit=1).id
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super(RepairLine, self).create(vals_list)
+        for line in lines:
+            line.move_id = self.env['stock.move'].create({
+                'name': line.repair_id.name,
+                'product_id': line.product_id.id,
+                'product_uom_qty': line.product_uom_qty,
+                'product_uom': line.product_uom.id,
+                'partner_id': line.repair_id.address_id.id,
+                'picking_type_id': line._get_default_picking_type_id(self.env.company.id),
+                'location_id': line.location_id.id,
+                'location_dest_id': line.location_dest_id.id,
+                'repair_id': line.repair_id.id,
+                'origin': line.repair_id.name,
+                'company_id': line.repair_id.company_id.id,
+            })
+            if line.repair_id and line.repair_id.state not in ['draft', 'done', 'cancel']:
+                line.write({'state': 'confirmed'})
+                line.move_id._action_confirm(merge=False)
+        return lines
+
+    def unlink(self):
+        for line in self:
+            line.move_id._do_unreserve()
+            line.move_id.unlink()
+        return super(RepairLine, self).unlink()
+
+    def write(self, vals):
+        res = super(RepairLine, self).write(vals)
+        for line in self.filtered(lambda l: l.product_id and l.move_id):
+            data = {}
+            if 'name' in vals:
+                data['name'] = line.repair_id.name
+            if 'product_id' in vals:
+                data['product_id'] = line.product_id.id
+            if 'product_uom_qty' in vals:
+                data['product_uom_qty'] = line.product_uom_qty
+            if 'product_uom' in vals:
+                data['product_uom'] = line.product_uom.id
+            if 'partner_id' in vals:
+                data['partner_id'] = line.repair_id.address_id.id
+            if 'location_id' in vals:
+                data['location_id'] = line.location_id.id
+            if 'location_dest_id' in vals:
+                data['location_dest_id'] = line.location_dest_id.id
+            if 'repair_id' in vals:
+                data['repair_id'] = line.repair_id.id
+            if 'origin' in vals:
+                data['origin'] = line.repair_id.name
+            if 'company_id' in vals:
+                data['company_id'] = line.repair_id.company_id.id
+            line.move_id.write(data)
+        return res
 
     @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'tax_id', 'repair_id.invoice_method')
     def _compute_price_total_and_subtotal(self):
@@ -768,6 +925,8 @@ class RepairLine(models.Model):
                 self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
             else:
                 self.name += '\n' + self.product_id.description_sale
+        if self.tracking == 'serial':
+            self.product_uom_qty = 1
         if self.type != 'remove':
             if partner:
                 fpos = self.env['account.fiscal.position']._get_fiscal_position(partner_invoice, delivery=self.repair_id.address_id)

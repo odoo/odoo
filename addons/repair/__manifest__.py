@@ -39,5 +39,15 @@ The following topics are covered by this module:
     'demo': ['data/repair_demo.xml'],
     'installable': True,
     'application': True,
+    'post_init_hook': '_create_repair_picking_type',
+    'assets': {
+        'web.assets_qweb': [
+            'repair/static/src/xml/forecast_widget.xml',
+        ],
+        'web.assets_backend': [
+            'repair/static/src/js/forecast_widget.js',
+            'repair/static/src/scss/forecast_widget.scss',
+        ],
+    },
     'license': 'LGPL-3',
 }

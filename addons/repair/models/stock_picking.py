@@ -13,6 +13,10 @@ class PickingType(models.Model):
         help="If ticked, you will be able to directly create repair orders from a return.")
     return_type_of_ids = fields.One2many('stock.picking.type', 'return_picking_type_id')
 
+    code = fields.Selection(selection_add=[
+        ('repair', 'Repair')
+    ], ondelete={'repair': 'cascade'})
+
     @api.depends('return_type_of_ids', 'code')
     def _compute_is_repairable(self):
         for picking_type in self:
