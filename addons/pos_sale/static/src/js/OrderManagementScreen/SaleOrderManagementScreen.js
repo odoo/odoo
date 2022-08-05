@@ -92,7 +92,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
               }
               let order_partner = this.env.pos.db.get_partner_by_id(sale_order.partner_id[0])
               if(order_partner){
-                currentPOSOrder.set_client(order_partner);
+                currentPOSOrder.set_partner(order_partner);
               } else {
                 try {
                     await this.env.pos._loadPartners([sale_order.partner_id[0]]);
