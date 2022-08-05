@@ -34,6 +34,34 @@ function openUserProfileAtSecurityTab() {
     }];
 }
 
+/**
+ * Checks that the TOTP button is in the specified state (true = enabled =
+ * can disable, false = disabled = can enable), then closes the profile dialog
+ * if it's one (= hr not installed).
+ *
+ * If no totp state is provided, just checks that the toggle exists.
+ */
+function closeProfileDialog({content, totp_state}) {
+    let trigger;
+    switch (totp_state) {
+    case true: trigger = 'button[name=action_totp_disable]'; break;
+    case false: trigger = 'button[name=action_totp_enable_wizard]'; break;
+    case undefined: trigger = 'button.o_auth_2fa_btn'; break;
+    default: throw new Error(`Invalid totp state ${totp_state}`)
+    }
+
+    return [{
+        content,
+        trigger,
+        run() {
+            const $modal = this.$anchor.parents('.o_dialog_container');
+            if ($modal.length) {
+                $modal.find('button[name=preference_cancel]').click()
+            }
+        }
+    }];
+}
+
 tour.register('totp_tour_setup', {
     test: true,
     url: '/web'
@@ -41,35 +69,30 @@ tour.register('totp_tour_setup', {
     content: "Open totp wizard",
     trigger: 'button[name=action_totp_enable_wizard]',
 }, {
-    content: "Check that we have to enter enhanced security mode",
-    trigger: 'div:contains("enter your password")',
-    run: () => {},
-}, {
-    content: "Input password",
+    content: "Check that we have to enter enhanced security mode and input password",
+    extra_trigger: 'div:contains("enter your password")',
     trigger: '[name=password] input',
-    run: 'text demo', // FIXME: better way to do this?
+    run: 'text demo',
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
 }, {
     content: "Check the wizard has opened",
     trigger: 'li:contains("When requested to do so")',
-    run: () => {}
+    run() {}
 }, {
     content: "Get secret from collapsed div",
     trigger: 'a:contains("Cannot scan it?")',
-    run(helpers) {
+    async run(helpers) {
         const $secret = this.$anchor.closest('div').find('[name=secret] > span');
         const $copyBtn = $secret.find('button');
         $copyBtn.remove();
-        const secret = $secret.text();
-        ajax.jsonRpc('/totphook', 'call', {
-            secret
-        }).then((token) => {
-            helpers._text(helpers._get_action_values('[name=code] input'), token);
-            helpers._click(helpers._get_action_values('button.btn-primary:contains(Activate)'));
-            $('body').addClass('got-token')
+        const token = await ajax.jsonRpc('/totphook', 'call', {
+            secret: $secret.text()
         });
+        helpers.text(token, '[name=code] input');
+        helpers.click('button.btn-primary:contains(Activate)');
+        $('body').addClass('got-token')
     }
 }, {
     content: 'wait for rpc',
@@ -78,11 +101,11 @@ tour.register('totp_tour_setup', {
 },
 ...openRoot(),
 ...openUserProfileAtSecurityTab(),
-{
+...closeProfileDialog({
     content: "Check that the button has changed",
-    trigger: 'button[name=action_totp_disable]',
-    run: () => {}
-}]);
+    totp_state: true,
+}),
+]);
 
 tour.register('totp_login_enabled', {
     test: true,
@@ -107,18 +130,21 @@ tour.register('totp_login_enabled', {
 }, {
     content: "input code",
     trigger: 'input[name=totp_token]',
-    run(helpers) {
-        ajax.jsonRpc('/totphook', 'call', {}).then((token) => {
-            helpers._text(helpers._get_action_values(), token);
-            // FIXME: is there a way to put the button as its own step trigger without
-            //        the tour straight blowing through and not waiting for this?
-            helpers._click(helpers._get_action_values('button:contains("Login")'));
-        });
+    async run(helpers) {
+        // TODO: if tours are ever async-aware the click should get moved out,
+        //       but currently there's no great way to make the tour wait until
+        //       we've retrieved and set the token: `:empty()` is aboutthe text
+        //       content of the HTML element, not the JS value property. We
+        //       could set a class but that's really no better than
+        //       procedurally clicking the button after we've set the input.
+        const token = await ajax.jsonRpc('/totphook', 'call', {});
+        helpers.text(token);
+        helpers.click('button:contains("Login")');
     }
 }, {
     content: "check we're logged in",
     trigger: ".o_user_menu .oe_topbar_name",
-    run: () => {}
+    run() {}
 }]);
 
 tour.register('totp_login_device', {
@@ -147,13 +173,10 @@ tour.register('totp_login_device', {
 }, {
     content: "input code",
     trigger: 'input[name=totp_token]',
-    run(helpers) {
-        ajax.jsonRpc('/totphook', 'call', {}).then((token) => {
-            helpers._text(helpers._get_action_values(), token);
-            // FIXME: is there a way to put the button as its own step trigger without
-            //        the tour straight blowing through and not waiting for this?
-            helpers._click(helpers._get_action_values('button:contains("Login")'));
-        });
+    async run(helpers) {
+        const token = await ajax.jsonRpc('/totphook', 'call', {})
+        helpers.text(token);
+        helpers.click('button:contains("Login")');
     }
 }, {
     content: "check we're logged in",
@@ -179,7 +202,7 @@ tour.register('totp_login_device', {
 },  {
     content: "check we're logged in without 2FA",
     trigger: ".o_user_menu .oe_topbar_name",
-    run: () => {}
+    run() {}
 },
 // now go and disable two-factor authentication would be annoying to do in a separate tour
 // because we'd need to login & totp again as HttpCase.authenticate can't
@@ -189,24 +212,21 @@ tour.register('totp_login_device', {
     content: "Open totp wizard",
     trigger: 'button[name=action_totp_disable]',
 }, {
-    content: "Check that we have to enter enhanced security mode",
-    trigger: 'div:contains("enter your password")',
-    run: () => {},
-}, {
-    content: "Input password",
+    content: "Check that we have to enter enhanced security mode and input password",
+    extra_trigger: 'div:contains("enter your password")',
     trigger: '[name=password] input',
-    run: 'text demo', // FIXME: better way to do this?
+    run: 'text demo',
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
 },
 ...openRoot(),
 ...openUserProfileAtSecurityTab(),
-{
+...closeProfileDialog({
     content: "Check that the button has changed",
-    trigger: 'button[name=action_totp_enable_wizard]',
-    run: () => {}
-}]);
+    totp_state: false
+}),
+]);
 
 tour.register('totp_login_disabled', {
     test: true,
@@ -231,6 +251,8 @@ tour.register('totp_login_disabled', {
 // issues, so go and open the preferences / profile screen to make sure
 // everything settles down
 ...openUserProfileAtSecurityTab(),
+// close the dialog if that makes sense
+...closeProfileDialog({})
 ]);
 
 const columns = {};
@@ -243,14 +265,14 @@ tour.register('totp_admin_disables', {
 }, {
     content: 'Wait for page',
     trigger: '.o_menu_brand:contains("Settings")',
-    run: () => {}
+    run() {}
 }, {
     content: "Open Users menu",
     trigger: '[data-menu-xmlid="base.menu_users"]'
 }, {
     content: "Open Users view",
     trigger: '[data-menu-xmlid="base.menu_action_res_users"]',
-    run: function (helpers) {
+    run(helpers) {
         // funny story: the users view we're trying to reach, sometimes we're
         // already there, but if we re-click the next step executes before the
         // action has the time to re-load, the one after that doesn't, and our
@@ -269,7 +291,7 @@ tour.register('totp_admin_disables', {
 }, {
     content: "Find Demo User",
     trigger: 'td.o_data_cell:contains("demo")',
-    run: function (helpers) {
+    run(helpers) {
         const $titles = this.$anchor.closest('table').find('tr:first th');
         for (let i=0; i<$titles.length; ++i) {
             columns[$titles[i].getAttribute('data-name')] = i;
@@ -285,13 +307,10 @@ tour.register('totp_admin_disables', {
     content: "Select totp remover",
     trigger: 'span.dropdown-item:contains(Disable two-factor authentication)'
 }, { // enhanced security yo
-    content: "Check that we have to enter enhanced security mode",
-trigger: 'div:contains("enter your password")',
-    run: () => {},
-}, {
-    content: "Input password",
+    content: "Check that we have to enter enhanced security mode & input password",
+    extra_trigger: 'div:contains("enter your password")',
     trigger: '[name=password] input',
-    run: 'text admin', // FIXME: better way to do this?
+    run: 'text admin',
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
@@ -301,8 +320,9 @@ trigger: 'div:contains("enter your password")',
 }, {
     content: "go to Account security Tab",
     trigger: "a.nav-link:contains(Account Security)",
-}, {
+}, ...closeProfileDialog({
     content: "check that demo user has been de-totp'd",
-    trigger: "button[name=action_totp_enable_wizard]",
-}])
+    totp_state: false,
+}),
+])
 });
