@@ -22,7 +22,7 @@ class AccountAnalyticLine(models.Model):
         return result
 
     def _domain_project_id(self):
-        domain = [('allow_timesheets', '=', True)]
+        domain = [('allow_timesheets', '=', True), ('company_id', '=', self.env.company.id)]
         if not self.user_has_groups('hr_timesheet.group_timesheet_manager'):
             return expression.AND([domain,
                 ['|', ('privacy_visibility', '!=', 'followers'), ('message_partner_ids', 'in', [self.env.user.partner_id.id])]
@@ -30,9 +30,10 @@ class AccountAnalyticLine(models.Model):
         return domain
 
     def _domain_employee_id(self):
+        domain = [('company_id', '=', self.env.company.id)]
         if not self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
-            return [('user_id', '=', self.env.user.id)]
-        return []
+            return expression.AND([domain, [('user_id', '=', self.env.user.id)]])
+        return domain
 
     def _domain_task_id(self):
         if not self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
