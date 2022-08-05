@@ -265,12 +265,12 @@
                         <label for="pricelist_id" groups="product.group_product_pricelist"/>
                         <div groups="product.group_product_pricelist" class="o_row">
                             <field name="pricelist_id" options="{'no_open':True,'no_create': True}"/>
-                            <button name="update_prices" type="object"
+                            <button name="action_update_prices" type="object"
                                 string=" Update Prices"
                                 help="Recompute all prices based on this pricelist"
                                 class="btn-link mb-1 px-0" icon="fa-refresh"
                                 confirm="This will update all unit prices based on the currently set pricelist."
-                                attrs="{'invisible': ['|', ('show_update_pricelist', '=', False), ('state', 'in', ['sale', 'done','cancel'])]}"/>
+                                attrs="{'invisible': ['|', ('show_update_pricelist', '=', False), ('state', 'in', ['sale', 'done', 'cancel'])]}"/>
                         </div>
                         <field name="company_id" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
