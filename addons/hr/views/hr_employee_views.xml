@@ -10,7 +10,6 @@
                     <field name="name" string="Employee" filter_domain="['|', ('work_email', 'ilike', self), ('name', 'ilike', self)]"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
                     <field name="job_id"/>
-                    <field name="department_id" string="Department"/>
                     <field name="parent_id" string="Manager"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
