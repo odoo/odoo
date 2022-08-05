@@ -1131,7 +1131,7 @@ export class ListRenderer extends Component {
     onCellKeydownEditMode(hotkey, cell, group, record) {
         const { activeActions, cycleOnTab, list } = this.props;
         const row = cell.parentElement;
-        const applyMultiEditBehavior = record.selected && list.model.multiEdit;
+        const applyMultiEditBehavior = record && record.selected && list.model.multiEdit;
 
         if (
             applyMultiEditBehavior &&

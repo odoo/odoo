@@ -12118,6 +12118,33 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "be able to press a key on the keyboard when focusing a column header without crashing",
+        async function (assert) {
+            assert.expect(0);
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="turtles">
+                            <tree editable="bottom">
+                                <field name="turtle_int" />
+                            </tree>
+                        </field>
+                    </form>`,
+                resId: 1,
+            });
+            await clickEdit(target);
+            await click(target.querySelector(".o_data_row .o_data_cell"));
+            target.querySelector(".o_list_renderer .o_column_sortable").focus();
+            triggerHotkey("a");
+            await nextTick();
+        }
+    );
+
     QUnit.test("Check onchange with two consecutive one2one", async function (assert) {
         serverData.models.product.fields.product_partner_ids = {
             string: "User",
