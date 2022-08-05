@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { DROPDOWN } from "@web/core/dropdown/dropdown";
+import { pick } from "@web/core/utils/objects";
 import { debounce as debounceFn } from "@web/core/utils/timing";
 
 const { Component } = owl;
@@ -84,7 +85,8 @@ export class ViewButton extends Component {
         }
         this.env.onClickViewButton({
             clickParams: this.clickParams,
-            record: this.props.record,
+            getResParams: () =>
+                pick(this.props.record, "context", "evalContext", "resModel", "resId", "resIds"),
             beforeExecute: () => {
                 if (this.env[DROPDOWN]) {
                     this.env[DROPDOWN].close();
