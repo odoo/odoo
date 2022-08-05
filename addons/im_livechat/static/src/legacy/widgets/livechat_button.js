@@ -23,22 +23,21 @@ const LivechatButton = Widget.extend({
     },
     async willStart() {
         this.messaging.publicLivechatGlobal.livechatButtonView.update({ widget: this });
-        return this.messaging.publicLivechatGlobal.livechatButtonView.willStart();
     },
     start() {
         this.$el.text(this.messaging.publicLivechatGlobal.livechatButtonView.buttonText);
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.history) {
-            for (const m of this.messaging.publicLivechatGlobal.livechatButtonView.history) {
+        if (this.messaging.publicLivechatGlobal.history) {
+            for (const m of this.messaging.publicLivechatGlobal.history) {
                 this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(m);
             }
             this.messaging.publicLivechatGlobal.livechatButtonView.openChat();
-        } else if (!config.device.isMobile && this.messaging.publicLivechatGlobal.livechatButtonView.rule.action === 'auto_popup') {
+        } else if (!config.device.isMobile && this.messaging.publicLivechatGlobal.rule.action === 'auto_popup') {
             const autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
             if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
                     autoOpenChatTimeout: setTimeout(
                         this.messaging.publicLivechatGlobal.livechatButtonView.openChat,
-                        this.messaging.publicLivechatGlobal.livechatButtonView.rule.auto_popup_timer * 1000,
+                        this.messaging.publicLivechatGlobal.rule.auto_popup_timer * 1000,
                     ),
                 });
             }
@@ -86,7 +85,7 @@ const LivechatButton = Widget.extend({
      */
     _prepareGetSessionParameters() {
         return {
-            channel_id: this.messaging.publicLivechatGlobal.livechatButtonView.channelId,
+            channel_id: this.messaging.publicLivechatGlobal.channelId,
             anonymous_name: this.messaging.publicLivechatGlobal.livechatButtonView.defaultUsername,
             previous_operator_id: this._get_previous_operator_id(),
         };
