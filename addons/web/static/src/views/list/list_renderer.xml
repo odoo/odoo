@@ -81,14 +81,25 @@
                 >
                     <t t-foreach="creates" t-as="create" t-key="create_index">
                         <a
+                            t-if="create.type === 'create'"
                             href="#"
                             role="button"
                             t-att-class="create_index !== 0 ? 'ml16' : ''"
                             t-att-tabindex="props.list.editedRecord ? '-1' : '0'"
                             t-on-click.stop.prevent="() => this.props.onAdd({context: create.context})"
                         >
-                            <t t-esc="create.description"/>
+                            <t t-esc="create.string"/>
                         </a>
+                        <ViewButton
+                            t-if="create.type === 'button'"
+                            className="`${create.className} ${create_index !== 0 ? 'ml16' : ''}`"
+                            clickParams="create.clickParams"
+                            icon="create.icon"
+                            record="props.list"
+                            string="create.string"
+                            title="create.title"
+                            tabindex="props.list.editedRecord ? '-1' : '0'"
+                        />
                     </t>
                 </td>
             </tr>
