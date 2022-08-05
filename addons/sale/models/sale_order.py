@@ -7,6 +7,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import float_is_zero, format_amount, format_date, html_keep_url, is_html_empty
 
@@ -38,7 +39,9 @@ class SaleOrder(models.Model):
     _check_company_auto = True
 
     _sql_constraints = [
-        ('date_order_conditional_required', "CHECK( (state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done') )", "A confirmed sales order requires a confirmation date."),
+        ('date_order_conditional_required',
+         "CHECK((state IN ('sale', 'done') AND date_order IS NOT NULL) OR state NOT IN ('sale', 'done'))",
+         "A confirmed sales order requires a confirmation date."),
     ]
 
     @property
@@ -213,9 +216,9 @@ class SaleOrder(models.Model):
         states=LOCKED_FIELD_STATES,
         copy=True, auto_join=True)
 
-    amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, compute='_amount_all', tracking=5)
-    amount_tax = fields.Monetary(string='Taxes', store=True, compute='_amount_all')
-    amount_total = fields.Monetary(string='Total', store=True, compute='_amount_all', tracking=4)
+    amount_untaxed = fields.Monetary(string="Untaxed Amount", store=True, compute='_compute_amounts', tracking=5)
+    amount_tax = fields.Monetary(string="Taxes", store=True, compute='_compute_amounts')
+    amount_total = fields.Monetary(string="Total", store=True, compute='_compute_amounts', tracking=4)
 
     invoice_count = fields.Integer(string="Invoice Count", compute='_get_invoiced')
     invoice_ids = fields.Many2many(
@@ -409,10 +412,8 @@ class SaleOrder(models.Model):
             order.team_id = cached_teams[key]
 
     @api.depends('order_line.price_subtotal', 'order_line.price_tax', 'order_line.price_total')
-    def _amount_all(self):
-        """
-        Compute the total amounts of the SO.
-        """
+    def _compute_amounts(self):
+        """Compute the total amounts of the SO."""
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             order.amount_untaxed = sum(order_lines.mapped('price_subtotal'))
@@ -461,7 +462,10 @@ class SaleOrder(models.Model):
                 ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
             ])
             return [('id', 'not in', order_ids)]
-        return ['&', ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund')), ('order_line.invoice_lines.move_id', operator, value)]
+        return [
+            ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund')),
+            ('order_line.invoice_lines.move_id', operator, value),
+        ]
 
     @api.depends('state', 'order_line.invoice_status')
     def _get_invoice_status(self):
@@ -564,7 +568,8 @@ class SaleOrder(models.Model):
                            order.company_id.account_use_credit_limit
             if show_warning:
                 updated_credit = order.partner_id.credit + (order.amount_total * order.currency_rate)
-                order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(order, updated_credit)
+                order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
+                    order, updated_credit)
 
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed')
     def _compute_tax_totals(self):
@@ -578,7 +583,10 @@ class SaleOrder(models.Model):
     @api.depends('state')
     def _compute_type_name(self):
         for record in self:
-            record.type_name = _('Quotation') if record.state in ('draft', 'sent', 'cancel') else _('Sales Order')
+            if record.state in ('draft', 'sent', 'cancel'):
+                record.type_name = _("Quotation")
+            else:
+                record.type_name = _("Sales Order")
 
     # portal.mixin override
     def _compute_access_url(self):
@@ -606,12 +614,12 @@ class SaleOrder(models.Model):
     @api.onchange('commitment_date', 'expected_date')
     def _onchange_commitment_date(self):
         """ Warn if the commitment dates is sooner than the expected date """
-        if (self.commitment_date and self.expected_date and self.commitment_date < self.expected_date):
+        if self.commitment_date and self.expected_date and self.commitment_date < self.expected_date:
             return {
                 'warning': {
                     'title': _('Requested date is too soon.'),
                     'message': _("The delivery date is sooner than the expected date."
-                                 "You may be unable to honor the delivery date.")
+                                 " You may be unable to honor the delivery date.")
                 }
             }
 
@@ -661,12 +669,12 @@ class SaleOrder(models.Model):
         for vals in vals_list:
             if 'company_id' in vals:
                 self = self.with_company(vals['company_id'])
-            if vals.get('name', _('New')) == _('New'):
+            if vals.get('name', _("New")) == _("New"):
                 seq_date = fields.Datetime.context_timestamp(
                     self, fields.Datetime.to_datetime(vals['date_order'])
                 ) if 'date_order' in vals else None
                 vals['name'] = self.env['ir.sequence'].next_by_code(
-                    'sale.order', sequence_date=seq_date) or _('New')
+                    'sale.order', sequence_date=seq_date) or _("New")
 
         return super().create(vals_list)
 
@@ -674,14 +682,19 @@ class SaleOrder(models.Model):
         if default is None:
             default = {}
         if 'order_line' not in default:
-            default['order_line'] = [(0, 0, line.copy_data()[0]) for line in self.order_line.filtered(lambda l: not l.is_downpayment)]
+            default['order_line'] = [
+                Command.create(line.copy_data()[0])
+                for line in self.order_line.filtered(lambda l: not l.is_downpayment)
+            ]
         return super().copy_data(default)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):
         for order in self:
             if order.state not in ('draft', 'cancel'):
-                raise UserError(_('You can not delete a sent quotation or a confirmed sales order. You must first cancel it.'))
+                raise UserError(_(
+                    "You can not delete a sent quotation or a confirmed sales order."
+                    " You must first cancel it."))
 
     #=== ACTION METHODS ===#
 
@@ -708,7 +721,7 @@ class SaleOrder(models.Model):
             'default_template_id': mail_template.id if mail_template else None,
             'default_composition_mode': 'comment',
             'mark_so_as_sent': True,
-            'default_email_layout_xmlid': "mail.mail_notification_paynow",
+            'default_email_layout_xmlid': 'mail.mail_notification_paynow',
             'proforma': self.env.context.get('proforma', False),
             'force_email': True,
             'model_description': self.with_context(lang=lang).type_name,
@@ -751,40 +764,25 @@ class SaleOrder(models.Model):
 
     def action_quotation_sent(self):
         if self.filtered(lambda so: so.state != 'draft'):
-            raise UserError(_('Only draft orders can be marked as sent directly.'))
+            raise UserError(_("Only draft orders can be marked as sent directly."))
+
         for order in self:
             order.message_subscribe(partner_ids=order.partner_id.ids)
+
         self.write({'state': 'sent'})
-
-    def _action_confirm(self):
-        """ Implementation of additional mechanism of Sales Order confirmation.
-            This method should be extended when the confirmation should generated
-            other documents. In this method, the SO are in 'sale' state (not yet 'done').
-        """
-        # create an analytic account if at least an expense product
-        for order in self:
-            if any(expense_policy not in [False, 'no'] for expense_policy in order.order_line.mapped('product_id.expense_policy')):
-                if not order.analytic_account_id:
-                    order._create_analytic_account()
-
-        return True
-
-    def _prepare_confirmation_values(self):
-        return {
-            'state': 'sale',
-            'date_order': fields.Datetime.now()
-        }
 
     def action_confirm(self):
         if self._get_forbidden_state_confirm() & set(self.mapped('state')):
             raise UserError(_(
-                'It is not allowed to confirm an order in the following states: %s'
-            ) % (', '.join(self._get_forbidden_state_confirm())))
+                "It is not allowed to confirm an order in the following states: %s",
+                ", ".join(self._get_forbidden_state_confirm()),
+            ))
 
         for order in self:
             if order.partner_id in order.message_partner_ids:
                 continue
             order.message_subscribe([order.partner_id.id])
+
         self.write(self._prepare_confirmation_values())
 
         # Context key 'default_name' is sometimes propagated up to here.
@@ -795,10 +793,28 @@ class SaleOrder(models.Model):
         self.with_context(context)._action_confirm()
         if self.env.user.has_group('sale.group_auto_done_setting'):
             self.action_done()
+
         return True
 
     def _get_forbidden_state_confirm(self):
         return {'done', 'cancel'}
+
+    def _prepare_confirmation_values(self):
+        return {
+            'state': 'sale',
+            'date_order': fields.Datetime.now()
+        }
+
+    def _action_confirm(self):
+        """ Implementation of additional mechanism of Sales Order confirmation.
+            This method should be extended when the confirmation should generated
+            other documents. In this method, the SO are in 'sale' state (not yet 'done').
+        """
+        # create an analytic account if at least an expense product
+        for order in self:
+            if any(expense_policy not in [False, 'no'] for expense_policy in order.order_line.product_id.mapped('expense_policy')):
+                if not order.analytic_account_id:
+                    order._create_analytic_account()
 
     def _send_order_confirmation_mail(self):
         if not self:
@@ -822,7 +838,7 @@ class SaleOrder(models.Model):
             if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
                 tx._set_done()
                 tx.write({'is_post_processed': True})
-        return self.write({'state': 'done'})
+        self.write({'state': 'done'})
 
     def action_unlock(self):
         self.write({'state': 'sale'})
@@ -849,7 +865,7 @@ class SaleOrder(models.Model):
                 'default_template_id': template_id,
                 'default_order_id': self.id,
                 'mark_so_as_canceled': True,
-                'default_email_layout_xmlid': "mail.mail_notification_paynow",
+                'default_email_layout_xmlid': 'mail.mail_notification_paynow',
                 'model_description': self.with_context(lang=lang).type_name,
             }
             return {
@@ -874,12 +890,22 @@ class SaleOrder(models.Model):
             return False
         return any(so.state != 'draft' for so in self)
 
+    def action_preview_sale_order(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'target': 'self',
+            'url': self.get_portal_url(),
+        }
+
     def action_update_taxes(self):
         self.ensure_one()
+
         lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
         lines_to_recompute._compute_tax_id()
         self.show_update_fpos = False
-        if self.partner_id and self.id:
+
+        if self.partner_id:
             self.message_post(body=_(
                 "Product taxes have been recomputed according to fiscal position %s.",
                 self.fiscal_position_id._get_html_link() if self.fiscal_position_id else "",
@@ -929,7 +955,7 @@ class SaleOrder(models.Model):
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'payment_reference': self.reference,
-            'transaction_ids': [(6, 0, self.transaction_ids.ids)],
+            'transaction_ids': [Command.set(self.transaction_ids.ids)],
             'invoice_line_ids': [],
             'company_id': self.company_id.id,
         }
@@ -937,7 +963,7 @@ class SaleOrder(models.Model):
 
     def action_view_invoice(self):
         invoices = self.mapped('invoice_ids')
-        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
+        action = self.env['ir.actions.actions']._for_xml_id('account.action_move_out_invoice_type')
         if len(invoices) > 1:
             action['domain'] = [('id', 'in', invoices.ids)]
         elif len(invoices) == 1:
@@ -1041,16 +1067,16 @@ class SaleOrder(models.Model):
                     # Create a dedicated section for the down payments
                     # (put at the end of the invoiceable_lines)
                     invoice_line_vals.append(
-                        (0, 0, order._prepare_down_payment_section_line(
-                            sequence=invoice_item_sequence,
-                        )),
+                        Command.create(
+                            order._prepare_down_payment_section_line(sequence=invoice_item_sequence)
+                        ),
                     )
                     down_payment_section_added = True
                     invoice_item_sequence += 1
                 invoice_line_vals.append(
-                    (0, 0, line._prepare_invoice_line(
-                        sequence=invoice_item_sequence,
-                    )),
+                    Command.create(
+                        line._prepare_invoice_line(sequence=invoice_item_sequence)
+                    ),
                 )
                 invoice_item_sequence += 1
 
@@ -1147,7 +1173,7 @@ class SaleOrder(models.Model):
         """ Give access button to users and portal customer as portal is integrated
         in sale. Customer and portal group have probably no right to see
         the document so they don't have the access button. """
-        groups = super(SaleOrder, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        groups = super()._notify_get_recipients_groups(msg_vals=msg_vals)
         if not self:
             return groups
 
@@ -1168,13 +1194,13 @@ class SaleOrder(models.Model):
             is_tx_pending = self.get_portal_last_transaction().state == 'pending'
             if self.has_to_be_signed(include_draft=True):
                 if self.has_to_be_paid():
-                    access_opt['title'] = _('View Quotation') if is_tx_pending else _('Sign & Pay Quotation')
+                    access_opt['title'] = _("View Quotation") if is_tx_pending else _("Sign & Pay Quotation")
                 else:
-                    access_opt['title'] = _('Accept & Sign Quotation')
+                    access_opt['title'] = _("Accept & Sign Quotation")
             elif self.has_to_be_paid(include_draft=True) and not is_tx_pending:
-                access_opt['title'] = _('Accept & Pay Quotation')
+                access_opt['title'] = _("Accept & Pay Quotation")
             elif self.state in ('draft', 'sent'):
-                access_opt['title'] = _('View Quotation')
+                access_opt['title'] = _("View Quotation")
 
         # enable followers that have access through portal
         follower_group = next(group for group in groups if group[0] == 'follower')
@@ -1182,9 +1208,9 @@ class SaleOrder(models.Model):
         follower_group[2]['has_button_access'] = True
         access_opt = follower_group[2].setdefault('button_access', {})
         if self.state in ('draft', 'sent'):
-            access_opt['title'] = _('View Quotation')
+            access_opt['title'] = _("View Quotation")
         else:
-            access_opt['title'] = _('View Order')
+            access_opt['title'] = _("View Order")
         access_opt['url'] = self._notify_get_action_link('view', **local_msg_vals)
 
         return groups
@@ -1196,12 +1222,14 @@ class SaleOrder(models.Model):
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
         if self.validity_date:
-            render_context['subtitle'] = _(u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
-                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
-                           date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
-                          )
+            render_context['subtitle'] = _(
+                u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
+                amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
+                date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
+            )
         else:
-            render_context['subtitle'] = format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
+            render_context['subtitle'] = format_amount(
+                self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang'))
         return render_context
 
     def _sms_get_number_fields(self):
@@ -1262,14 +1290,6 @@ class SaleOrder(models.Model):
     def _get_report_base_filename(self):
         self.ensure_one()
         return '%s %s' % (self.type_name, self.name)
-
-    def preview_sale_order(self):
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'self',
-            'url': self.get_portal_url(),
-        }
 
     #=== CORE METHODS OVERRIDES ===#
 
