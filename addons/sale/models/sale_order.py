@@ -1200,12 +1200,12 @@ class SaleOrder(models.Model):
         else:
             access_opt = customer_portal_group[2].setdefault('button_access', {})
             is_tx_pending = self.get_portal_last_transaction().state == 'pending'
-            if self.has_to_be_signed(include_draft=True):
-                if self.has_to_be_paid():
+            if self._has_to_be_signed(include_draft=True):
+                if self._has_to_be_paid():
                     access_opt['title'] = _("View Quotation") if is_tx_pending else _("Sign & Pay Quotation")
                 else:
                     access_opt['title'] = _("Accept & Sign Quotation")
-            elif self.has_to_be_paid(include_draft=True) and not is_tx_pending:
+            elif self._has_to_be_paid(include_draft=True) and not is_tx_pending:
                 access_opt['title'] = _("Accept & Pay Quotation")
             elif self.state in ('draft', 'sent'):
                 access_opt['title'] = _("View Quotation")
@@ -1283,10 +1283,10 @@ class SaleOrder(models.Model):
 
     # PORTAL #
 
-    def has_to_be_signed(self, include_draft=False):
+    def _has_to_be_signed(self, include_draft=False):
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_signature and not self.signature
 
-    def has_to_be_paid(self, include_draft=False):
+    def _has_to_be_paid(self, include_draft=False):
         transaction = self.get_portal_last_transaction()
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
 

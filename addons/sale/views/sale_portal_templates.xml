@@ -129,10 +129,10 @@
                     <t t-set="entries">
                         <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
                             <li class="list-group-item d-grid align-content-start">
-                                <a t-if="sale_order.has_to_be_signed(True)" role="button" class="btn btn-primary mb8" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
-                                    <i class="fa fa-check"/><t t-if="sale_order.has_to_be_paid(True)"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t>
+                                <a t-if="sale_order._has_to_be_signed(True)" role="button" class="btn btn-primary mb8" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#">
+                                    <i class="fa fa-check"/><t t-if="sale_order._has_to_be_paid(True)"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t>
                                 </a>
-                                <a t-elif="sale_order.has_to_be_paid(True)" role="button" id="o_sale_portal_paynow" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#" t-att-class="'mb8 %s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')" >
+                                <a t-elif="sale_order._has_to_be_paid(True)" role="button" id="o_sale_portal_paynow" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#" t-att-class="'mb8 %s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')" >
                                     <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay Now</t>
                                 </a>
                                 <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
@@ -201,7 +201,7 @@
 
                     <!-- modal relative to the actions sign and pay -->
                     <div role="dialog" class="modal fade" id="modalaccept">
-                        <div class="modal-dialog" t-if="sale_order.has_to_be_signed(True)">
+                        <div class="modal-dialog" t-if="sale_order._has_to_be_signed(True)">
                             <form id="accept" method="POST" t-att-data-order-id="sale_order.id" t-att-data-token="sale_order.access_token" class="js_accept_json modal-content js_website_submit_form">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <header class="modal-header">
@@ -231,7 +231,7 @@
                             </form>
                         </div>
 
-                        <div class="modal-dialog" t-if="not sale_order.has_to_be_signed(True) and sale_order.has_to_be_paid(True)">
+                        <div class="modal-dialog" t-if="not sale_order._has_to_be_signed(True) and sale_order._has_to_be_paid(True)">
                             <div class="modal-content">
                                 <header class="modal-header">
                                     <h4 class="modal-title">Validate Order</h4>
@@ -299,7 +299,7 @@
                         <t t-if="message == 'sign_ok' and sale_order.state in ['sale', 'done']">
                             Your order has been confirmed.
                         </t>
-                        <t t-elif="message == 'sign_ok' and sale_order.has_to_be_paid()">
+                        <t t-elif="message == 'sign_ok' and sale_order._has_to_be_paid()">
                             Your order has been signed but still needs to be paid to be confirmed.
                         </t>
                         <t t-else="">Your order has been signed.</t>
@@ -332,11 +332,11 @@
                     </div>
 
                     <!-- bottom actions -->
-                    <div t-if="sale_order.has_to_be_signed(True) or sale_order.has_to_be_paid(True)" class="row justify-content-center text-center d-print-none pt-1 pb-4">
+                    <div t-if="sale_order._has_to_be_signed(True) or sale_order._has_to_be_paid(True)" class="row justify-content-center text-center d-print-none pt-1 pb-4">
 
-                        <t t-if="sale_order.has_to_be_signed(True)">
+                        <t t-if="sale_order._has_to_be_signed(True)">
                             <div class="col-sm-auto mt8">
-                                <a role="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#"><i class="fa fa-check"/><t t-if="sale_order.has_to_be_paid(True)"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t></a>
+                                <a role="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#"><i class="fa fa-check"/><t t-if="sale_order._has_to_be_paid(True)"> Sign &amp; Pay</t><t t-else=""> Accept &amp; Sign</t></a>
                             </div>
                             <div class="col-sm-auto mt8">
                                 <a role="button" class="btn btn-secondary" href="#discussion"><i class="fa fa-comment"/> Feedback</a>
@@ -345,7 +345,7 @@
                                 <a role="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modaldecline" href="#"> <i class="fa fa-times"/> Reject</a>
                             </div>
                         </t>
-                        <div t-elif="sale_order.has_to_be_paid(True)" class="col-sm-auto mt8">
+                        <div t-elif="sale_order._has_to_be_paid(True)" class="col-sm-auto mt8">
                             <a role="button" data-bs-toggle="modal" data-bs-target="#modalaccept" href="#" t-att-class="'%s' % ('btn btn-light' if sale_order.transaction_ids else 'btn btn-primary')">
                                 <i class="fa fa-check"/> <t t-if="not sale_order.signature">Accept &amp; Pay</t><t t-else="">Pay Now</t>
                             </a>
