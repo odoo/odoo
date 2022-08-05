@@ -27,11 +27,11 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
                 'auto_popup_timer': 0,
             },
         });
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({ isTestChatbot: true });
+        this.messaging.publicLivechatGlobal.update({ isTestChatbot: true });
         this.messaging.publicLivechatGlobal.livechatButtonView.update({ testChatbotData: chatbotData.chatbot });
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.update({
+        this.messaging.publicLivechatGlobal.chatbot.update({
             currentStep: insertAndReplace({
-                data: this.messaging.publicLivechatGlobal.livechatButtonView.chatbot.lastWelcomeStep,
+                data: this.messaging.publicLivechatGlobal.chatbot.lastWelcomeStep,
             }),
         });
     },

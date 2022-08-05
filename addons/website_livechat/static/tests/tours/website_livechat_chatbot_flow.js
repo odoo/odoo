@@ -9,7 +9,7 @@ LivechatButton.include({
      * Let us also debounce waiting for more user inputs for only 500ms.
      */
     start: function () {
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({ isWebsiteLivechatChatbotFlow: true });
+        this.messaging.publicLivechatGlobal.update({ isWebsiteLivechatChatbotFlow: true });
 
         this._debouncedChatbotAwaitUserInput = _.debounce(
             this._chatbotAwaitUserInput.bind(this),

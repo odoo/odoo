@@ -20,12 +20,12 @@
     <!-- Extend the base livechat window header to include a button allowing to restart the script -->
     <t t-extend="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
         <t t-jquery="span.o_thread_window_title" t-operation="after">
-            <a t-if="widget.isMobile() &amp;&amp; widget.messaging.publicLivechatGlobal.livechatButtonView.chatbot &amp;&amp; widget.messaging.publicLivechatGlobal.livechatButtonView.chatbot.hasRestartButton"
+            <a t-if="widget.isMobile() &amp;&amp; widget.messaging.publicLivechatGlobal.chatbot &amp;&amp; widget.messaging.publicLivechatGlobal.chatbot.hasRestartButton"
                 href="#" class="o_livechat_chatbot_main_restart fa fa-1x fa-refresh"
                 title="Restart Conversation"/>
         </t>
         <t t-jquery="span.o_thread_window_buttons a.o_thread_window_close" t-operation="before">
-            <a t-if="widget.messaging.publicLivechatGlobal.livechatButtonView.chatbot &amp;&amp; widget.messaging.publicLivechatGlobal.livechatButtonView.chatbot.hasRestartButton"
+            <a t-if="widget.messaging.publicLivechatGlobal.chatbot &amp;&amp; widget.messaging.publicLivechatGlobal.chatbot.hasRestartButton"
                 href="#" class="o_livechat_chatbot_main_restart fa fa-refresh"
                 title="Restart Conversation"/>
         </t>
