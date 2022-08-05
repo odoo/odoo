@@ -118,6 +118,19 @@ class MrpRoutingWorkcenter(models.Model):
                 'res_id': bom_id,
             }
 
+    def copy_existing_operations(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Select Operations to Copy'),
+            'res_model': 'mrp.routing.workcenter',
+            'view_mode': 'tree,form',
+            'domain': ['|', ('bom_id', '=', False), ('bom_id.active', '=', True)],
+            'context' : {
+                'bom_id': self.env.context["bom_id"],
+                'tree_view_ref': 'mrp.mrp_routing_workcenter_copy_to_bom_tree_view',
+            }
+        }
+
     def _skip_operation_line(self, product):
         """ Control if a operation should be processed, can be inherited to add
         custom control.
