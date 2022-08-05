@@ -155,7 +155,7 @@ class CustomerPortal(portal.CustomerPortal):
         }
 
         # Payment values
-        if order_sudo.has_to_be_paid():
+        if order_sudo._has_to_be_paid():
             logged_in = not request.env.user._is_public()
 
             # Make sure that the partner's company matches the sales order's company.
@@ -215,7 +215,7 @@ class CustomerPortal(portal.CustomerPortal):
         except (AccessError, MissingError):
             return {'error': _('Invalid order.')}
 
-        if not order_sudo.has_to_be_signed():
+        if not order_sudo._has_to_be_signed():
             return {'error': _('The order is not in a state requiring customer signature.')}
         if not signature:
             return {'error': _('Signature is missing.')}
@@ -230,7 +230,7 @@ class CustomerPortal(portal.CustomerPortal):
         except (TypeError, binascii.Error) as e:
             return {'error': _('Invalid signature data.')}
 
-        if not order_sudo.has_to_be_paid():
+        if not order_sudo._has_to_be_paid():
             order_sudo.action_confirm()
             order_sudo._send_order_confirmation_mail()
 
@@ -245,7 +245,7 @@ class CustomerPortal(portal.CustomerPortal):
         )
 
         query_string = '&message=sign_ok'
-        if order_sudo.has_to_be_paid(True):
+        if order_sudo._has_to_be_paid(True):
             query_string += '#allow_payment=yes'
         return {
             'force_refresh': True,
@@ -259,7 +259,7 @@ class CustomerPortal(portal.CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        if order_sudo.has_to_be_signed() and decline_message:
+        if order_sudo._has_to_be_signed() and decline_message:
             order_sudo.action_cancel()
             _message_post_helper(
                 'sale.order',
