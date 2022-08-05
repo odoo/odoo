@@ -110,13 +110,13 @@
             <field name="arch" type="xml">
                 <form string="Expenses" class="o_expense_form" js_class="hr_expense_form_view">
                 <header>
-                  <button name="action_submit_expenses" string="Create Report" type="object" class="oe_highlight o_expense_submit" attrs="{'invisible': ['|', '|', ('id', '=', False), ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}" data-hotkey="v"/>
+                  <button name="action_submit_expenses" string="Create Report" type="object" class="oe_highlight o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}" data-hotkey="v"/>
                   <widget name="attach_document" string="Attach Receipt" action="attach_document" attrs="{'invisible': ['|', ('attachment_number', '&lt;', 1), ('id','=',False)]}"/>
                   <widget name="attach_document" string="Attach Receipt" action="attach_document" highlight="1" attrs="{'invisible': ['|',('attachment_number', '&gt;=', 1), ('id','=',False)]}"/>
-                  <button name="action_submit_expenses" string="Create Report" type="object" class="o_expense_submit" attrs="{'invisible': ['|', '|', ('id', '=', False), ('attachment_number', '&gt;=', 1), ('sheet_id', '!=', False)]}" data-hotkey="v"/>
+                  <button name="action_submit_expenses" string="Create Report" type="object" class="o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&gt;=', 1), ('sheet_id', '!=', False)]}" data-hotkey="v"/>
                   <field name="state" widget="statusbar" statusbar_visible="draft,reported,approved,done,refused"/>
                   <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('sheet_id', '=', False)]}" data-hotkey="w"/>
-                  <button name="action_split_wizard" string="Split Expense" type="object" attrs="{'invisible': ['|', '|', ('id', '=', False), ('sheet_id', '!=', False), ('product_has_cost', '=', True)]}"/>
+                  <button name="action_split_wizard" string="Split Expense" type="object" attrs="{'invisible': ['|', ('sheet_id', '!=', False), ('product_has_cost', '=', True)]}"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
