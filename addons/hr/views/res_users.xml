@@ -205,9 +205,24 @@
             <field name="inherit_id" ref="base.view_users_simple_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='mobile']" position="after">
-                    <field name="create_employee" force_save="1" string="Create Employee" invisible="not context.get('allow_create_employee', True)" attrs="{'invisible': [('id', '>', 0)]}"/>
                     <field name="create_employee_id" force_save="1" invisible="1"/>
+                    <field name="create_employee" force_save="1" string="Create Employee" invisible="not context.get('allow_create_employee', True)" attrs="{'invisible': [('create_employee_id', '>', 0)]}"/>
                 </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_simple_form" model="ir.ui.view">
+            <field name="name">view.users.simple.form.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_simple_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <sheet position="after">
+                    <footer>
+                        <button string="Save" special="save" class="btn btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn btn-secondary"/>
+                    </footer>
+                </sheet>
             </field>
         </record>
 
