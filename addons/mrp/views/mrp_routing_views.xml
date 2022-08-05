@@ -31,6 +31,12 @@
                 <xpath expr="//tree" position="attributes">
                     <attribute name="delete">0</attribute>
                 </xpath>
+                <xpath expr="//tree" position="inside">
+                    <control>
+                        <create string="Add a line"/>
+                        <button name="copy_existing_operations" class="btn-link" type="object" string="Copy Existing Operations" context="{'bom_id': parent.id}"/>
+                    </control>
+                </xpath>
                 <xpath expr="//field[@name='name']" position="before">
                     <field name="sequence" widget="handle"/>
                 </xpath>

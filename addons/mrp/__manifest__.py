@@ -72,7 +72,6 @@
             'mrp/static/src/js/mrp_documents_kanban_renderer.js',
             'mrp/static/src/js/mrp_document_kanban_view.js',
             'mrp/static/src/js/mrp_should_consume.js',
-            'mrp/static/src/js/mrp_field_one2many_with_copy.js',
         ],
         'web.qunit_suite_tests': [
             'mrp/static/tests/**/*',

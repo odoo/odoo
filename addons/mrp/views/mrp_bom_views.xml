@@ -110,7 +110,7 @@
                                 <field name="operation_ids"
                                     attrs="{'invisible': [('type','not in',('normal','phantom'))]}"
                                     groups="mrp.group_mrp_routings"
-                                    context="{'bom_id_invisible': True, 'default_bom_id': id, 'tree_view_ref': 'mrp.mrp_routing_workcenter_bom_tree_view'}" widget="mrp_one2many_with_copy"/>
+                                    context="{'bom_id_invisible': True, 'default_bom_id': id, 'tree_view_ref': 'mrp.mrp_routing_workcenter_bom_tree_view'}"/>
                         </page>
                         <page string="By-products"
                             name="by_products"
