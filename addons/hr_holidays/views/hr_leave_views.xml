@@ -41,7 +41,6 @@
         <field name="arch" type="xml">
             <search string="Search Time Off">
                 <field name="employee_id"/>
-                <field name="department_id" operator="child_of"/>
                 <field name="holiday_status_id"/>
                 <field name="name"/>
                 <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>

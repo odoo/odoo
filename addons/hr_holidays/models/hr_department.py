@@ -46,3 +46,27 @@ class Department(models.Model):
             department.leave_to_approve_count = res_leave.get(department.id, 0)
             department.allocation_to_approve_count = res_allocation.get(department.id, 0)
             department.absence_of_today = res_absence.get(department.id, 0)
+
+    def _get_action_context(self):
+        return {
+            'search_default_approve': 1,
+            'search_default_active_employee': 2,
+            'search_default_department_id': self.id,
+            'default_department_id': self.id,
+        }
+
+    def action_open_leave_department(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_action_action_approve_department")
+        action['context'] = {
+            **self._get_action_context(),
+            'search_default_active_time_off': 3,
+            'hide_employee_name': 1,
+            'holiday_status_name_get': False
+        }
+        return action
+
+    def action_open_allocation_department(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_allocation_action_approve_department")
+        action['context'] = self._get_action_context()
+        action['context']['search_default_second_approval'] = 3
+        return action
