@@ -904,7 +904,7 @@ class Post(models.Model):
 
     def _set_viewed(self):
         self.ensure_one()
-        return sql.increment_field_skiplock(self, 'views')
+        return sql.increment_fields_skiplock(self, 'views')
 
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to the post on the website directly """

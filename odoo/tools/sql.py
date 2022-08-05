@@ -5,6 +5,8 @@
 
 import logging
 import psycopg2
+from psycopg2.sql import SQL, Identifier
+
 import odoo.sql_db
 from collections import defaultdict
 from contextlib import closing
@@ -313,25 +315,35 @@ def reverse_order(order):
     return ', '.join(items)
 
 
-def increment_field_skiplock(record, field):
+def increment_fields_skiplock(records, *fields):
     """
-        Increment 'friendly' the [field] of the current [record](s)
+        Increment 'friendly' the given `fields` of the current `records`.
         If record is locked, we just skip the update.
         It doesn't invalidate the cache since the update is not critical.
 
-        :rtype: bool - if field has been incremented or not
+        :param records: recordset to update
+        :param fields: integer fields to increment
+        :returns: whether the specified fields were incremented on any record.
+        :rtype: bool
     """
-    if not record:
+    if not records:
         return False
 
-    assert record._fields[field].type == 'integer'
+    for field in fields:
+        assert records._fields[field].type == 'integer'
 
-    cr = record._cr
-    query = """
-        UPDATE {table} SET {field} = {field} + 1 WHERE id IN (
-            SELECT id from {table} WHERE id in %(ids)s FOR UPDATE SKIP LOCKED
-        ) RETURNING id
-    """.format(table=record._table, field=field)
-    cr.execute(query, {'ids': tuple(record.ids)})
+    query = SQL("""
+        UPDATE {table}
+           SET {sets}
+         WHERE id IN (SELECT id FROM {table} WHERE id = ANY(%(ids)s) FOR UPDATE SKIP LOCKED)
+    """).format(
+        table=Identifier(records._table),
+        sets=SQL(', ').join(map(
+            SQL('{0} = {0} + 1').format,
+            map(Identifier, fields)
+        ))
+    )
 
-    return bool(cr.fetchone())
+    cr = records._cr
+    cr.execute(query, {'ids': records.ids})
+    return bool(cr.rowcount)

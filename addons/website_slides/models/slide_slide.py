@@ -882,7 +882,7 @@ class Slide(models.Model):
             ('partner_id', '=', target_partner.id)
         ])
         if quiz_attempts_inc and existing_sudo:
-            sql.increment_field_skiplock(existing_sudo, 'quiz_attempts_count')
+            sql.increment_fields_skiplock(existing_sudo, 'quiz_attempts_count')
             existing_sudo.invalidate_recordset(['quiz_attempts_count'])
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')

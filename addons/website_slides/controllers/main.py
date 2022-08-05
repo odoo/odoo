@@ -67,9 +67,7 @@ class WebsiteSlides(WebsiteProfile):
         if not slide.channel_id.is_member:
             viewed_slides = request.session.setdefault('viewed_slides', set())
             if slide.id not in viewed_slides:
-                if tools.sql.increment_field_skiplock(slide, 'public_views'):
-                    # Increment total views immediately as compute is not triggered
-                    tools.sql.increment_field_skiplock(slide, 'total_views')
+                if tools.sql.increment_fields_skiplock(slide, 'public_views', 'total_views'):
                     viewed_slides.add(slide.id)
                     request.session.touch()
         else:

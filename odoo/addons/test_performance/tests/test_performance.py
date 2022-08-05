@@ -3,11 +3,14 @@
 
 from collections import defaultdict
 import json
+import logging
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.tests.common import TransactionCase, users, warmup, tagged
-from odoo.tools import mute_logger, json_default
+from odoo.tools import mute_logger, json_default, sql
 from odoo import Command
+
+_logger = logging.getLogger(__name__)
 
 
 class TestPerformance(SavepointCaseWithUserDemo):
@@ -610,3 +613,75 @@ class TestMapped(TransactionCase):
         with self.assertQueryCount(3):
             for rec in recs:
                 rec.line_ids.mapped('value')
+
+
+@tagged('increment_perf')
+class TestIncrementFieldsSkipLock(TransactionCase):
+    """ Test the behavior of the function `increment_fields_skiplock`.
+
+    Note that, per-design, the function will not always update the requested
+    records in case of a (table/row-level) lock. This is reflected in these
+    tests as we make sure to check the integrity of the results whether
+    any record was updated or not.
+    """
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.record = cls.env['test_performance.mozzarella'].create([{
+            'value': 1,
+            'value_plus_one': 2,
+        }])
+        cls.other_record = cls.env['test_performance.mozzarella'].create([{
+            'value': 10,
+            'value_plus_one': 11,
+        }])
+
+    def test_increment_fields_skiplock_one_field(self):
+        """ Test that we can increment the value of a single field of a record
+        with `increment_fields_skiplock` and that it doesn't trigger _compute
+        methods of fields depending on it.
+
+        If the test fails because of changes making that _compute **are**
+        triggered, be sure to also check `increment_fields_skiplock` uses on the
+        codebase when updating this test class.
+        """
+        with self.assertQueryCount(1):
+            did_update = sql.increment_fields_skiplock(self.record, 'value')
+            _logger.info('increment_fields_skiplock did %supdate the field', '' if did_update else 'not ')
+
+        # increment_fields_skiplock does not invalidate the cache
+        self.record.invalidate_recordset()
+
+        with self.assertQueryCount(1):  # Read
+            if did_update:
+                self.assertEqual(self.record.value, 2, "according to increment_fields_skiplock's output, this number should have been incremented.")
+            else:
+                # Making sure the test random locks do not break the test; but updated and the values must be consistent
+                self.assertEqual(self.record.value, 1, "according to increment_fields_skiplock output's, this number should NOT have been incremented.")
+
+            self.assertEqual(self.record.value_plus_one, 2, "This value should not have been incremented, irrespective of the presence of a lock or not.")
+
+        self.assertEqual(self.other_record.value, 10, "other_record should not have been updated.")
+        self.assertEqual(self.other_record.value_plus_one, 11, "other_record should not have been updated.")
+
+    def test_increment_fields_skiplock_multiple_fields(self):
+        """ Test that we can update several fields on the same rows with one request.
+        """
+        with self.assertQueryCount(1):
+            did_update = sql.increment_fields_skiplock(self.record, 'value', 'value_plus_one')
+            _logger.info('increment_fields_skiplock did %supdate the fields', '' if did_update else 'not ')
+
+        # increment_fields_skiplock does not invalidate the cache
+        self.record.invalidate_recordset()
+
+        with self.assertQueryCount(1):  # Read
+            if did_update:
+                self.assertEqual(self.record.value, 2, "according to increment_fields_skiplock's output, this number should have been incremented.")
+                self.assertEqual(self.record.value_plus_one, 3, "according to increment_fields_skiplock's output, this number should have been incremented.")
+            else:  # Making sure the test random locks do not break the test; but updated and the values must be consistent
+                self.assertEqual(self.record.value, 1, "according to increment_fields_skiplock output's, this number should NOT have been incremented.")
+                self.assertEqual(self.record.value_plus_one, 2, "according to increment_fields_skiplock's output, this number should NOT have been incremented.")
+
+        self.assertEqual(self.other_record.value, 10, "other_record should not have been updated.")
+        self.assertEqual(self.other_record.value_plus_one, 11, "other_record should not have been updated.")
