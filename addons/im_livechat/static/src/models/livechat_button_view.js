@@ -7,11 +7,19 @@ import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
-import { get_cookie, Markup, set_cookie, unaccent } from 'web.utils';
+import { get_cookie, set_cookie, unaccent } from 'web.utils';
 
 registerModel({
     name: 'LivechatButtonView',
     identifyingFields: ['publicLivechatGlobalOwner'],
+    lifecycleHooks: {
+        _created() {
+            this.update({ widget: this.env.services.public_livechat_service.mountLivechatButton() });
+        },
+        _willDelete() {
+            this.widget.destroy();
+        },
+    },
     recordMethods: {
         /**
          * @param {Object} data
@@ -54,11 +62,11 @@ registerModel({
              * unnecessary and irrelevant (restart / end messages, any text field values, ...).
              */
             if (
-                this.chatbot &&
-                this.chatbot.currentStep &&
-                this.chatbot.currentStep.data
+                this.messaging.publicLivechatGlobal.chatbot &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
-                this.chatbot.currentStep.data.conversation_closed = true;
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed = true;
                 this.chatbotSaveSession();
             }
             this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
@@ -73,9 +81,9 @@ registerModel({
          */
         chatbotEndScript() {
             if (
-                this.chatbot.currentStep &&
-                this.chatbot.currentStep.data &&
-                this.chatbot.currentStep.data.conversation_closed
+                this.messaging.publicLivechatGlobal.chatbot.currentStep &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed
             ) {
                 // don't touch anything if the user has closed the conversation, let the chat window
                 // handle the display
@@ -94,8 +102,8 @@ registerModel({
          */
         chatbotSaveSession() {
             localStorage.setItem('im_livechat.chatbot.state.uuid_' + this.messaging.publicLivechatGlobal.publicLivechat.uuid, JSON.stringify({
-                '_chatbot': this.chatbot.data,
-                '_chatbotCurrentStep': this.chatbot.currentStep.data,
+                '_chatbot': this.messaging.publicLivechatGlobal.chatbot.data,
+                '_chatbotCurrentStep': this.messaging.publicLivechatGlobal.chatbot.currentStep.data,
             }));
         },
         /**
@@ -118,7 +126,7 @@ registerModel({
                 route: '/chatbot/restart',
                 params: {
                     channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
-                    chatbot_script_id: this.chatbot.scriptId,
+                    chatbot_script_id: this.messaging.publicLivechatGlobal.chatbot.scriptId,
                 },
             });
 
@@ -126,12 +134,12 @@ registerModel({
                 this.widget._chatbotAddMessage(postedMessage);
             }
 
-            this.chatbot.update({ currentStep: clear() });
+            this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: clear() });
             this.chatbotSetIsTyping();
             this.update({
                 chatbotNextStepTimeout: setTimeout(
                     this.widget._chatbotTriggerNextStep.bind(this.widget),
-                    this.chatbot.messageDelay,
+                    this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                 ),
             });
         },
@@ -150,14 +158,14 @@ registerModel({
             if (browserLocalStorage && browserLocalStorage.length) {
                 for (let i = 0; i < browserLocalStorage.length; i++) {
                     const key = browserLocalStorage.key(i);
-                    if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.chatbotSessionCookieKey) {
+                    if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.messaging.publicLivechatGlobal.chatbotSessionCookieKey) {
                         browserLocalStorage.removeItem(key);
                     }
                 }
             }
-            const chatbotState = localStorage.getItem(this.chatbotSessionCookieKey);
+            const chatbotState = localStorage.getItem(this.messaging.publicLivechatGlobal.chatbotSessionCookieKey);
             if (chatbotState) {
-                this.chatbot.update({ currentStep: insertAndReplace({ data: this.localStorageChatbotState._chatbotCurrentStep }) });
+                this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: insertAndReplace({ data: this.messaging.publicLivechatGlobal.localStorageChatbotState._chatbotCurrentStep }) });
             }
         },
         closeChat() {
@@ -210,13 +218,13 @@ registerModel({
                                 'chatbotImageSrc': `/im_livechat/operator/${
                                     this.messaging.publicLivechatGlobal.publicLivechat.operator.id
                                 }/avatar`,
-                                'chatbotName': this.chatbot.name,
+                                'chatbotName': this.messaging.publicLivechatGlobal.chatbot.name,
                                 'isWelcomeMessage': isWelcomeMessage,
                             }))
                         );
                         this.chatWindow.publicLivechatView.widget.scrollToBottom();
                     },
-                    this.chatbot.messageDelay / 3,
+                    this.messaging.publicLivechatGlobal.chatbot.messageDelay / 3,
                 ),
             });
         },
@@ -227,13 +235,6 @@ registerModel({
             await this._sendMessageChatbotBefore();
             await this._sendMessage(message);
             this._sendMessageChatbotAfter();
-        },
-        async willStart() {
-            try {
-                await this._willStart();
-            } finally {
-                await this._willStartChatbot();
-            }
         },
         /**
          * @private
@@ -259,50 +260,11 @@ registerModel({
         },
         /**
          * @private
-         * @returns {integer}
-         */
-        _computeChannelId() {
-            return this.messaging.publicLivechatGlobal.options.channel_id;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeChatbot() {
-            if (this.isTestChatbot) {
-                return insertAndReplace({ data: this.testChatbotData.chatbot });
-            }
-            if (this.chatbotState === 'init') {
-                return insertAndReplace({ data: this.rule.chatbot });
-            }
-            if (this.chatbotState === 'welcome') {
-                return insertAndReplace({ data: this.livechatInit.rule.chatbot });
-            }
-            if (this.chatbotState === 'restore_session' && this.localStorageChatbotState) {
-                return insertAndReplace({ data: this.localStorageChatbotState._chatbot });
-            }
-            return clear();
-        },
-        /**
-         * @private
          * @returns {integer|FieldCommand}
          */
         _computeChatbotMessageDelay() {
-            if (this.isWebsiteLivechatChatbotFlow) {
+            if (this.messaging.publicLivechatGlobal.isWebsiteLivechatChatbotFlow) {
                 return 100;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeChatbotState() {
-            if (this.rule && !!this.rule.chatbot) {
-                return 'init';
-            }
-            if (this.livechatInit && this.livechatInit.rule.chatbot) {
-                return 'welcome';
             }
             return clear();
         },
@@ -363,19 +325,19 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsChatbot() {
-            if (this.isTestChatbot) {
+            if (this.messaging.publicLivechatGlobal.isTestChatbot) {
                 return true;
             }
-            if (this.rule && this.rule.chatbot) {
+            if (this.messaging.publicLivechatGlobal.rule && this.messaging.publicLivechatGlobal.rule.chatbot) {
                 return true;
             }
-            if (this.livechatInit && this.livechatInit.rule.chatbot) {
+            if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
                 return true;
             }
-            if (this.chatbotState === 'welcome') {
+            if (this.messaging.publicLivechatGlobal.chatbotState === 'welcome') {
                 return true;
             }
-            if (this.localStorageChatbotState) {
+            if (this.messaging.publicLivechatGlobal.localStorageChatbotState) {
                 return true;
             }
             return clear();
@@ -386,20 +348,6 @@ registerModel({
          */
         _computeIsOpenChatDebounced() {
             return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeLocalStorageChatbotState() {
-            if (!this.sessionCookie) {
-                return clear();
-            }
-            const data = localStorage.getItem(this.chatbotSessionCookieKey);
-            if (!data) {
-                return clear();
-            }
-            return JSON.parse(data);
         },
         /**
          * @private
@@ -417,15 +365,6 @@ registerModel({
                 return this.messaging.publicLivechatGlobal.chatbotServerUrl;
             }
             return this.messaging.publicLivechatGlobal.serverUrl;
-        },
-        /**
-         * @returns {string|FieldCommand}
-         */
-        _computeChatbotSessionCookieKey() {
-            if (!this.sessionCookie) {
-                return clear();
-            }
-            return 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.sessionCookie).uuid;
         },
         /**
          * @private
@@ -477,7 +416,7 @@ registerModel({
                         publicLivechat: insertAndReplace({ data: livechatData }),
                     });
                     return this.openChatWindow().then(() => {
-                        if (!this.history) {
+                        if (!this.messaging.publicLivechatGlobal.history) {
                             this.widget._sendWelcomeMessage();
                         }
                         this.widget._renderMessages();
@@ -517,9 +456,9 @@ registerModel({
             });
 
             if (
-                this.chatbot &&
-                this.chatbot.currentStep &&
-                this.chatbot.currentStep.data &&
+                this.messaging.publicLivechatGlobal.chatbot &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data &&
                 this.messaging.publicLivechatGlobal.messages &&
                 this.messaging.publicLivechatGlobal.messages.length !== 0
             ) {
@@ -566,22 +505,22 @@ registerModel({
             }
             if (
                 this.isChatbot &&
-                this.chatbot.currentStep &&
-                this.chatbot.currentStep.data
+                this.messaging.publicLivechatGlobal.chatbot.currentStep &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
                 if (
-                    this.chatbot.currentStep.data.chatbot_step_type === 'forward_operator' &&
-                    this.chatbot.currentStep.data.chatbot_operator_found
+                    this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'forward_operator' &&
+                    this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_operator_found
                 ) {
                     return; // operator has taken over the conversation, let them speak
-                } else if (this.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
+                } else if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
                     this.widget._debouncedChatbotAwaitUserInput();
-                } else if (!this.chatbot.shouldEndScript) {
+                } else if (!this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
                     this.chatbotSetIsTyping();
                     this.update({
                         chatbotNextStepTimeout: setTimeout(
                             this.widget._chatbotTriggerNextStep.bind(this.widget),
-                            this.chatbot.messageDelay,
+                            this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                         ),
                     });
                 } else {
@@ -611,98 +550,10 @@ registerModel({
         async _sendMessageChatbotBefore() {
             if (
                 this.isChatbot &&
-                this.chatbot.currentStep &&
-                this.chatbot.currentStep.data
+                this.messaging.publicLivechatGlobal.chatbot.currentStep &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
                 await this.widget._chatbotPostWelcomeMessages();
-            }
-        },
-        async _willStart() {
-            const cookie = get_cookie('im_livechat_session');
-            if (cookie) {
-                const channel = JSON.parse(cookie);
-                const history = await this.messaging.rpc({
-                    route: '/mail/chat_history',
-                    params: { uuid: channel.uuid, limit: 100 },
-                });
-                history.reverse();
-                this.update({ history });
-                for (const message of this.history) {
-                    message.body = Markup(message.body);
-                }
-            } else {
-                const result = await this.messaging.rpc({
-                    route: '/im_livechat/init',
-                    params: { channel_id: this.channelId },
-                });
-                if (!result.available_for_me) {
-                    return Promise.reject();
-                }
-                this.update({ rule: result.rule });
-            }
-            return this.messaging.publicLivechatGlobal.loadQWebTemplate();
-        },
-        /**
-         * This override handles the following use cases:
-         *
-         * - If the chat is started for the first time (first visit of a visitor)
-         *   We register the chatbot configuration and the rest of the behavior is triggered by various
-         *   method overrides ('sendWelcomeMessage', 'sendMessage', ...)
-         *
-         * - If the chat has been started before, but the user did not interact with the bot
-         *   The default behavior is to open an empty chat window, without any messages.
-         *   In addition, we fetch the configuration (with a '/init' call), to see if we have a bot
-         *   configured.
-         *   Indeed we want to trigger the bot script on every page where the associated rule is matched.
-         *
-         * - If we have a non-empty chat history, resume the chat script where the end-user left it by
-         *   fetching the necessary information from the local storage.
-         *
-         * @override
-         */
-        async _willStartChatbot() {
-            if (this.rule && !!this.chatbot) {
-                // noop
-            } else if (this.history !== null && this.history.length === 0) {
-                this.update({
-                    livechatInit: await this.messaging.rpc({
-                        route: '/im_livechat/init',
-                        params: { channel_id: this.channelId },
-                    }),
-                });
-            } else if (this.history !== null && this.history.length !== 0) {
-                const sessionCookie = get_cookie('im_livechat_session');
-                if (sessionCookie) {
-                    this.update({ sessionCookie });
-                    if (localStorage.getItem(this.chatbotSessionCookieKey)) {
-                        this.update({ chatbotState: 'restore_session' });
-                    }
-                }
-            }
-
-            if (this.chatbotState === 'init') {
-                // we landed on a website page where a channel rule is configured to run a chatbot.script
-                // -> initialize necessary state
-                if (this.rule.chatbot_welcome_steps && this.rule.chatbot_welcome_steps.length !== 0) {
-                    this.chatbot.update({
-                        currentStep: insertAndReplace({
-                            data: this.chatbot.lastWelcomeStep,
-                        }),
-                    });
-                }
-            } else if (this.chatbotState === 'welcome') {
-                // we landed on a website page and a chatbot script was initialized on a previous one
-                // however the end-user did not interact with the bot ( :( )
-                // -> remove cookie to force opening the popup again
-                // -> initialize necessary state
-                // -> batch welcome message (see '_sendWelcomeChatbotMessage')
-                set_cookie('im_livechat_auto_popup', '', -1);
-                this.update({ history: clear() });
-                this.update({ rule: this.livechatInit.rule });
-            } else if (this.chatbotState === 'restore_session') {
-                // we landed on a website page and a chatbot script is currently running
-                // -> restore the user's session (see 'chatbotRestoreSession')
-                this.chatbotRestoreSession();
             }
         },
     },
@@ -717,21 +568,7 @@ registerModel({
         buttonTextColor: attr({
             compute: '_computeButtonTextColor',
         }),
-        channelId: attr({
-            compute: '_computeChannelId',
-        }),
-        chatbot: one('Chatbot', {
-            compute: '_computeChatbot',
-            inverse: 'livechatButtonViewOwner',
-            isCausal: true,
-        }),
         chatbotNextStepTimeout: attr(),
-        chatbotSessionCookieKey: attr({
-            compute: '_computeChatbotSessionCookieKey',
-        }),
-        chatbotState: attr({
-            compute: '_computeChatbotState',
-        }),
         chatbotWelcomeMessageTimeout: attr(),
         chatWindow: one('PublicLivechatWindow', {
             inverse: 'livechatButtonViewOwner',
@@ -748,9 +585,6 @@ registerModel({
         }),
         headerBackgroundColor: attr({
             compute: '_computeHeaderBackgroundColor',
-        }),
-        history: attr({
-            default: null,
         }),
         inputPlaceholder: attr({
             compute: '_computeInputPlaceholder',
@@ -770,17 +604,7 @@ registerModel({
         isOpeningChat: attr({
             default: false,
         }),
-        isTestChatbot: attr({
-            default: false,
-        }),
         isTypingTimeout: attr(),
-        isWebsiteLivechatChatbotFlow: attr({
-            default: false,
-        }),
-        livechatInit: attr(),
-        localStorageChatbotState: attr({
-            compute: '_computeLocalStorageChatbotState',
-        }),
         openChatDebounced: attr({
             compute: '_computeOpenChatDebounced',
         }),
@@ -789,11 +613,9 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        rule: attr(),
         serverUrl: attr({
             compute: '_computeServerUrl',
         }),
-        sessionCookie: attr(),
         testChatbotData: attr(),
         titleColor: attr({
             compute: '_computeTitleColor',
