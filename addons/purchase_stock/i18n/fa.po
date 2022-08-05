@@ -100,6 +100,8 @@ msgid ""
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
 msgstr ""
+"بسته به ماژول های نصب شده، این به شما امکان می دهد مسیر محصول را مشخص کنید: "
+"آیا خریداری می شود، تولید می شود، بر اساس سفارش دوباره پر می شود و غیره."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -114,12 +116,12 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "دراپشیپینگ"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr ""
+msgstr "استثنا(هایی) در سفارش(های) خرید رخ داده است:"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -182,6 +184,9 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"حاشیه خطا برای زمان تحویل فروشنده. وقتی سیستم سفارش‌های خرید را برای "
+"سفارش‌دهی مجدد محصولات ایجاد می‌کند، برای مقابله با تأخیرهای غیرمنتظره "
+"فروشنده، آن‌ها چند روز زودتر برنامه‌ریزی می‌شوند."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -191,12 +196,12 @@ msgstr "قاعده حداقل انبارداری"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "تاریخ های تحویل مورد انتظار تا"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
-msgstr ""
+msgstr "انتقال(های) بعدی تحت تاثیر قرار گرفته:"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/account_invoice.py:0
@@ -204,12 +209,12 @@ msgstr ""
 msgid ""
 "Odoo is not able to generate the anglo saxon entries. The total valuation of"
 " %s is zero."
-msgstr ""
+msgstr "Odoo قادر به تولید ورودی های آنگلوساکسون نیست. ارزش کل %s صفر است."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
 msgid "Orderpoint"
-msgstr ""
+msgstr "نقطه سفارش"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_count
@@ -340,7 +345,7 @@ msgstr "گزارش قانون موجودی انبار"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
+msgstr "فیلد فنی مورد استفاده برای نمایش آدرس دراپشیپ"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__propagate_date_minimum_delta
@@ -370,6 +375,9 @@ msgid ""
 " %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
 " Go on the product form and complete the list of vendors."
 msgstr ""
+"هیچ قیمت فروشنده منطبقی برای ایجاد سفارش خرید برای محصول %s وجود ندارد "
+"(فروشنده ای تعریف نشده است، به حداقل مقدار رسیده نیست، تاریخ ها معتبر "
+"نیستند، ...). به فرم محصول بروید و لیست فروشندگان را تکمیل کنید."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -380,11 +388,16 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"این یک مسیر دراپشیپینگ را اضافه می‌کند تا روی محصولات اعمال شود تا از "
+"فروشندگان درخواست کنید که به مشتریان شما تحویل دهند. محصولی که به داپشیپ "
+"ارسال می‌شود، پس از تأیید سفارش فروش، درخواست خرید برای استعلام قیمت ایجاد "
+"می‌کند. این یک جریان بر اساس تقاضا است. آدرس تحویل درخواستی آدرس تحویل مشتری"
+" خواهد بود و نه انبار شما."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
 msgid "This will determine operation type of incoming shipment"
-msgstr ""
+msgstr "این نوع عملیات محموله ورودی را تعیین می کند"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
@@ -427,6 +440,8 @@ msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
+"شما نمی توانید مقدار سفارش داده شده را کمتر از مقدار دریافتی کاهش دهید.\n"
+"ابتدا یک بازگشت ایجاد کنید."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0

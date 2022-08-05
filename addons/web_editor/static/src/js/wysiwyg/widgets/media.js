@@ -1169,7 +1169,7 @@ var VideoWidget = MediaWidget.extend({
             var videoSrc = _.str.sprintf('%s&loop=1', $video.attr('src'));
             $video.attr('src', ytMatch ? _.str.sprintf('%s&playlist=%s', videoSrc, ytMatch[2]) : videoSrc);
         }
-        if (options.hide_controls && (ytMatch || dmMatch)) {
+        if (options.hide_controls && (ytMatch || dmMatch || vimMatch)) {
             $video.attr('src', $video.attr('src') + '&controls=0');
         }
         if (options.hide_fullscreen && ytMatch) {

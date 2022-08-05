@@ -64,13 +64,14 @@
 # Martin Trigaux, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Yann Papouin <ypa@decgroupe.com>, 2021
-# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
+# anthony chaussin <chaussin.anthony@gmail.com>, 2021
 # adrien didenot <adrien.didenot@horanet.com>, 2021
 # Benjamin Stienon <tsb@odoo.com>, 2021
 # Jonathan Castillo <jcs@odoo.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Saad Thaifa <saad.thaifa@gmail.com>, 2021
 # sakodoo <sak@odoo.com>, 2021
+# Logan Gônet <logan.gonet.perso@outlook.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
@@ -85,7 +86,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -6220,6 +6221,16 @@ msgstr ""
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid ""
+"Invoice and credit note repartition should have at least one tax repartition"
+" line."
+msgstr ""
+"La répartition des factures et des avoirs doit comporter au moins une ligne "
+"de répartition des taxes."
+
+#. module: account
+#: code:addons/account/models/account.py:0
+#, python-format
+msgid ""
 "Invoice and credit note repartition should have the same number of lines."
 msgstr ""
 "Les répartitions des factures et des avoirs doivent comporter le même nombre"
@@ -9086,6 +9097,12 @@ msgid "Reconciliation on Bank Statements"
 msgstr "Lettrage de relevés bancaires"
 
 #. module: account
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Record cannot be deleted. Partner used in Accounting"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Record transactions in foreign currencies"
 msgstr "Enregistrer des transactions dans des devises étrangères"
@@ -10213,7 +10230,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_sample_invoice_state
 msgid "State of the onboarding sample invoice step"
-msgstr ""
+msgstr "Statut de étape d'exemple de facture dans la barre de configuration"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement
@@ -11799,6 +11816,8 @@ msgid ""
 "There isn't any journal entry flagged for data inalterability yet for this "
 "journal."
 msgstr ""
+"Il n'y a pas encore d'opération diverse signalée pour l'inaltérabilité des "
+"données pour ce journal."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
@@ -11888,7 +11907,7 @@ msgstr ""
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "This can only be used on journal items"
-msgstr ""
+msgstr "Cela ne peut être utilisé que sur les mouvements comptables"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence_id

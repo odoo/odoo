@@ -3,7 +3,7 @@
     <record id="l10n_in_view_partner_form" model="ir.ui.view">
         <field name="name">l10n.in.res.partner.vat.inherit</field>
         <field name="model">res.partner</field>
-        <field name="priority" eval="100"/>
+        <field name="priority" eval="90"/>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="attributes">
@@ -13,7 +13,7 @@
                 <field name="l10n_in_country_code" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='state_id']" position="attributes">
-                <attribute name="attrs">{'required': ['|', ('l10n_in_country_code','=', 'IN'), ('l10n_in_country_code','=', False)]}</attribute>
+                <attribute name="attrs">{'required': [('l10n_in_country_code','=', 'IN')]}</attribute>
             </xpath>
         </field>
     </record>
