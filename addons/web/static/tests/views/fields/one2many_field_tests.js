@@ -9099,6 +9099,45 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("o2m add an action button control", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 2,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <control>
+                                <create string="Create" context="{}" />
+                                <button string="Action Button" name="do_something" class="btn-link" type="object" context="{'parent_id': parent.id}"/>
+                            </control>
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                if (args.method === "do_something") {
+                    assert.step("do_something");
+                    assert.strictEqual(args.kwargs.context.parent_id, 2);
+                    return true;
+                }
+            },
+        });
+
+        await clickEdit(target);
+        assert.deepEqual(
+            [...target.querySelector(".o_field_x2many_list_row_add").children].map(
+                (el) => el.textContent
+            ),
+            ["Create", "Action Button"]
+        );
+
+        await click(target, ".o_field_x2many_list_row_add button");
+        assert.verifySteps(["do_something"]);
+    });
+
     QUnit.test("o2m add a line custom control create align with handle", async function (assert) {
         await makeView({
             type: "form",

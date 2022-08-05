@@ -415,7 +415,8 @@
         <rng:element name="create">
             <rng:ref name="overload"/>
             <rng:attribute name="string"/>
-            <rng:attribute name="context"/>
+            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
         </rng:element>
     </rng:define>
 
@@ -425,6 +426,7 @@
             <rng:oneOrMore>
                 <rng:choice>
                     <rng:ref name="create"/>
+                    <rng:ref name="button"/>
                 </rng:choice>
             </rng:oneOrMore>
         </rng:element>
