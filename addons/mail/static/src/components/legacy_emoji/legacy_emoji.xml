@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.LegacyEmoji" owl="1">
-        <span class="o_LegacyEmoji p-1 fs-5 cursor-pointer" t-on-click="props.emojiView.emojiListView.onClickEmoji" t-att-title="props.emojiView.emoji.description" t-att-data-source="props.emojiView.emoji.sources[0]" t-att-data-unicode="props.emojiView.emoji.unicode" t-attf-class="{{ className }}" t-ref="root">
+        <span class="o_LegacyEmoji p-1 fs-5 cursor-pointer" t-on-click="props.emojiView.emojiListView.onClickEmoji" t-att-title="props.emojiView.emoji.name" t-att-data-source="props.emojiView.emoji.sources[0]" t-att-data-unicode="props.emojiView.emoji.unicode" t-attf-class="{{ className }}" t-ref="root">
             <t t-esc="props.emojiView.emoji.unicode"/>
         </span>
     </t>

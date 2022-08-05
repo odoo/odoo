@@ -1,107 +1,71 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { many } from '@mail/model/model_field';
+import { attr, many } from '@mail/model/model_field';
+import { insert } from '@mail/model/model_field_command';
+import { emojiCategoriesData, emojisData } from '@mail/models_data/emoji_data';
+import { executeGracefully } from '@mail/utils/utils';
 
 registerModel({
     name: 'EmojiRegistry',
+    lifecycleHooks: {
+        _created() {
+            this._populateFromEmojiData(emojiCategoriesData, emojisData);
+        },
+    },
+    recordMethods: {
+        async _populateFromEmojiData(dataCategories, dataEmojis) {
+            await executeGracefully(dataCategories.map(category => () => {
+                if (!this.exists()) {
+                    return;
+                }
+                const emojiCount = dataEmojis.reduce((acc, emoji) => emoji.category === category.name ? acc + 1 : acc, 0);
+                this.update({
+                    dataCategories: insert({
+                        name: category.name,
+                        title: category.title,
+                        sortId: category.sortId,
+                        emojiCount,
+                    }),
+                });
+            }));
+            this.update({ allEmojiCount: dataEmojis.length }); // Set the total number of emojis to the category before all emojis are processed and created.
+            await executeGracefully(dataEmojis.map(emojiData => () => {
+                if (!this.exists()) {
+                    return;
+                }
+                this.models['Emoji'].insert({
+                    codepoints: emojiData.codepoints,
+                    shortcodes: emojiData.shortcodes,
+                    emoticons: emojiData.emoticons,
+                    name: emojiData.name,
+                    keywords: emojiData.keywords,
+                    emojiDataCategory: { name: emojiData.category },
+                });
+            }));
+        },
+        _sortAllCategories() {
+            return [['smaller-first', 'sortId']];
+        },
+        _sortAllEmojis() {
+            return [['smaller-first', 'codepoints']];
+        }
+    },
     fields: {
-        allEmojis: many('Emoji', {
-            default: [
-                { unicode: "😊", sources: [":)", ":-)", "=)", ":]"], description: ":)" },
-                { unicode: "😃", sources: [":D", ":-D", "=D"], description: ":D" },
-                { unicode: "😆", sources: ["xD", "XD"], description: "xD" },
-                { unicode: "😂", sources: ["x'D"], description: "x'D" },
-                { unicode: "😉", sources: [";)", ";-)"], description: ";)" },
-                { unicode: "😎", sources: ["B)", "8)", "B-)", "8-)"], description: "B)" },
-                { unicode: "😜", sources: [";p", ";P"], description: ";p" },
-                { unicode: "😋", sources: [":p", ":P", ":-p", ":-P", "=P"], description: ":p" },
-                { unicode: "😝", sources: ["xp", "xP"], description: "xp" },
-                { unicode: "😳", sources: ["o_o"], description: "o_o" },
-                { unicode: "😐", sources: [":|", ":-|"], description: ":|" },
-                { unicode: "😕", sources: [":/", ":-/"], description: ":/" },
-                { unicode: "😞", sources: [":("], description: ":(" },
-                { unicode: "😱", sources: [":@"], description: ":@" },
-                { unicode: "😲", sources: [":O", ":-O", ":o", ":-o"], description: ":O" },
-                { unicode: "😨", sources: [":'o"], description: ":'o" },
-                { unicode: "😠", sources: ["3:(", ">:("], description: "3:(" },
-                { unicode: "😈", sources: ["3:)", ">:)"], description: "3:)" },
-                { unicode: "😘", sources: [":*", ":-*"], description: ":*" },
-                { unicode: "😇", sources: ["o:)"], description: "o:)" },
-                { unicode: "😢", sources: [":'("], description: ":'(" },
-                { unicode: "😭", sources: [":'-(", ":\"("], description: ":'-(" },
-                { unicode: "❤️", sources: ["<3", "&lt;3", ":heart"], description: "<3" },
-                { unicode: "💔", sources: ["</3", "&lt;/3"], description: "</3" },
-                { unicode: "😍", sources: [":heart_eyes"], description: ":heart_eyes" },
-                { unicode: "👳", sources: [":turban"], description: ":turban" },
-                { unicode: "👍", sources: [":+1"], description: ":+1" },
-                { unicode: "👎", sources: [":-1"], description: ":-1" },
-                { unicode: "👌", sources: [":ok"], description: ":ok" },
-                { unicode: "💩", sources: [":poop"], description: ":poop" },
-                { unicode: "🙈", sources: [":no_see"], description: ":no_see" },
-                { unicode: "🙉", sources: [":no_hear"], description: ":no_hear" },
-                { unicode: "🙊", sources: [":no_speak"], description: ":no_speak" },
-                { unicode: "🐞", sources: [":bug"], description: ":bug" },
-                { unicode: "😺", sources: [":kitten"], description: ":kitten" },
-                { unicode: "🐻", sources: [":bear"], description: ":bear" },
-                { unicode: "🐌", sources: [":snail"], description: ":snail" },
-                { unicode: "🐗", sources: [":boar"], description: ":boar" },
-                { unicode: "🍀", sources: [":clover"], description: ":clover" },
-                { unicode: "🌹", sources: [":sunflower"], description: ":sunflower" },
-                { unicode: "🔥", sources: [":fire"], description: ":fire" },
-                { unicode: "☀️", sources: [":sun"], description: ":sun" },
-                { unicode: "⛅️", sources: [":partly_sunny"], description: ":partly_sunny" },
-                { unicode: "🌈", sources: [":rainbow"], description: ":rainbow" },
-                { unicode: "☁️", sources: [":cloud"], description: ":cloud" },
-                { unicode: "⚡️", sources: [":zap"], description: ":zap" },
-                { unicode: "⭐️", sources: [":star"], description: ":star" },
-                { unicode: "🍪", sources: [":cookie"], description: ":cookie" },
-                { unicode: "🍕", sources: [":pizza"], description: ":pizza" },
-                { unicode: "🍔", sources: [":hamburger"], description: ":hamburger" },
-                { unicode: "🍟", sources: [":fries"], description: ":fries" },
-                { unicode: "🎂", sources: [":cake"], description: ":cake" },
-                { unicode: "🍰", sources: [":cake_part"], description: ":cake_part" },
-                { unicode: "☕️", sources: [":coffee"], description: ":coffee" },
-                { unicode: "🍌", sources: [":banana"], description: ":banana" },
-                { unicode: "🍣", sources: [":sushi"], description: ":sushi" },
-                { unicode: "🍙", sources: [":rice_ball"], description: ":rice_ball" },
-                { unicode: "🍺", sources: [":beer"], description: ":beer" },
-                { unicode: "🍷", sources: [":wine"], description: ":wine" },
-                { unicode: "🍸", sources: [":cocktail"], description: ":cocktail" },
-                { unicode: "🍹", sources: [":tropical"], description: ":tropical" },
-                { unicode: "🍻", sources: [":beers"], description: ":beers" },
-                { unicode: "👻", sources: [":ghost"], description: ":ghost" },
-                { unicode: "💀", sources: [":skull"], description: ":skull" },
-                { unicode: "👽", sources: [":et", ":alien"], description: ":et" },
-                { unicode: "🎉", sources: [":party"], description: ":party" },
-                { unicode: "🏆", sources: [":trophy"], description: ":trophy" },
-                { unicode: "🔑", sources: [":key"], description: ":key" },
-                { unicode: "📌", sources: [":pin"], description: ":pin" },
-                { unicode: "📯", sources: [":postal_horn"], description: ":postal_horn" },
-                { unicode: "🎵", sources: [":music"], description: ":music" },
-                { unicode: "🎺", sources: [":trumpet"], description: ":trumpet" },
-                { unicode: "🎸", sources: [":guitar"], description: ":guitar" },
-                { unicode: "🏃", sources: [":run"], description: ":run" },
-                { unicode: "🚲", sources: [":bike"], description: ":bike" },
-                { unicode: "⚽️", sources: [":soccer"], description: ":soccer" },
-                { unicode: "🏈", sources: [":football"], description: ":football" },
-                { unicode: "🎱", sources: [":8ball"], description: ":8ball" },
-                { unicode: "🎬", sources: [":clapper"], description: ":clapper" },
-                { unicode: "🎤", sources: [":microphone"], description: ":microphone" },
-                { unicode: "🧀", sources: [":cheese"], description: ":cheese" },
-            ],
-            inverse: 'emojiRegistry',
-        }),
         allCategories: many('EmojiCategory', {
-            default: [
-                { categoryName: "all", allEmojis: ["😊", "😃", "😆", "😂", "😉", "😎", "😜", "😋", "😝", "😳", "😐", "😕", "😞", "😱", "😲", "😨", "😠", "😈", "😘", "😇", "😢", "😭", "❤️", "💔", "😍", "👳", "👍", "👎", "👌", "💩", "🙈", "🙉", "🙊", "🐞", "😺", "🐻", "🐌", "🐗", "🍀", "🌹", "🔥", "☀️", "⛅️", "🌈", "☁️", "⚡️", "⭐️", "🍪", "🍕", "🍔", "🍟", "🎂", "🍰", "☕️", "🍌", "🍣", "🍙", "🍺", "🍷", "🍸", "🍹", "🍻", "🧀", "👻", "💀", "👽", "🎉", "🏆", "🔑", "📌", "📯", "🎵", "🎺", "🎸", "🏃", "🚲", "⚽️", "🏈", "🎱", "🎬", "🎤"].map(unicode => ({ unicode })) },
-                { categoryName: "🤠", allEmojis: ["😊", "😃", "😆", "😂", "😉", "😎", "😜", "😋", "😝", "😳", "😐", "😕", "😞", "😱", "😲", "😨", "😠", "😈", "😘", "😇", "😢", "😭", "❤️", "💔", "😍", "👳", "👍", "👎", "👌", "💩"].map(unicode => ({ unicode })) },
-                { categoryName: "🐿", allEmojis: ["🙈", "🙉", "🙊", "🐞", "😺", "🐻", "🐌", "🐗"].map(unicode => ({ unicode })) },
-                { categoryName: "🌿", allEmojis: ["🍀", "🌹", "🔥", "☀️", "⛅️", "🌈", "☁️", "⚡️", "⭐️"].map(unicode => ({ unicode })) },
-                { categoryName: "🍽", allEmojis: ["🍪", "🍕", "🍔", "🍟", "🎂", "🍰", "☕️", "🍌", "🍣", "🍙", "🍺", "🍷", "🍸", "🍹", "🍻", "🧀"].map(unicode => ({ unicode })) },
-                { categoryName: "📦", allEmojis: ["👻", "💀", "👽", "🎉", "🏆", "🔑", "📌", "📯", "🎵", "🎺", "🎸"].map(unicode => ({ unicode })) },
-                { categoryName: "⚽️", allEmojis: ["🏃", "🚲", "⚽️", "🏈", "🎱", "🎬", "🎤"].map(unicode => ({ unicode })) },
-            ],
+            compute() {
+                return this.dataCategories;
+            },
+            inverse: 'emojiRegistry',
+            sort: '_sortAllCategories',
         }),
+        allEmojiCount: attr({
+            default: 0,
+        }),
+        allEmojis: many('Emoji', {
+            inverse: 'emojiRegistry',
+            sort: '_sortAllEmojis'
+        }),
+        dataCategories: many('EmojiCategory'),
     },
 });

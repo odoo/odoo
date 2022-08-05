@@ -10,12 +10,15 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick(ev) {
-            if (this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction) {
-                this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction.onClickReaction(ev);
+            if (!this.emojiGridItemViewOwner.emojiGridRowViewOwner) {
                 return;
             }
-            if (this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji) {
-                this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(ev);
+            if (this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction) {
+                this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction.onClickReaction(ev);
+                return;
+            }
+            if (this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji) {
+                this.emojiGridItemViewOwner.emojiGridRowViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(ev);
                 return;
             }
         },
@@ -23,12 +26,18 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onMouseenter(ev) {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: true });
         },
         /**
          * @param {MouseEvent} ev
          */
         onMouseleave(ev) {
+            if (!this.exists()) {
+                return;
+            }
             this.update({ isHovered: false });
         },
     },
@@ -37,9 +46,9 @@ registerModel({
             identifying: true,
             inverse: 'emojiViews',
         }),
-        emojiGridView: one('EmojiGridView', {
+        emojiGridItemViewOwner: one('EmojiGridItemView', {
             identifying: true,
-            inverse: 'emojiViews',
+            inverse: 'emojiView',
         }),
         isHovered: attr({
             default: false,

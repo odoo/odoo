@@ -24,7 +24,7 @@ registerModel({
          * @returns {boolean}
          */
         contains(element) {
-            return Boolean(this.component && this.component.root.el.contains(element));
+            return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
         },
         /**
          * @private
