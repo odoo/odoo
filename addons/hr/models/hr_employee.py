@@ -165,10 +165,14 @@ class HrEmployeePrivate(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'res.users',
             'view_mode': 'form',
-            'view_id': self.env.ref('base.view_users_simple_form').id,
+            'view_id': self.env.ref('hr.view_users_simple_form').id,
             'target': 'new',
             'context': {
                 'default_create_employee_id': self.id,
+                'default_name': self.name,
+                'default_phone': self.work_phone,
+                'default_mobile': self.mobile_phone,
+                'default_login': self.work_email,
             }
         }
 
