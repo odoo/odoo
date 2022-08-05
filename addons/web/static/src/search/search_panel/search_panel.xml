@@ -81,7 +81,7 @@
     <t t-foreach="values" t-as="valueId" t-key="valueId">
         <t t-set="value" t-value="section.values.get(valueId)"/>
         <li class="o_search_panel_category_value list-group-item py-1 o_cursor_pointer border-0"
-            t-att-class="isChildList ? 'o_treeEntry ps-4 pr-0' : 'ps-0 pe-2'"
+            t-att-class="isChildList ? 'o_treeEntry ps-4 pe-0' : 'ps-0 pe-2'"
             >
             <header
                 class="list-group-item list-group-item-action d-flex align-items-center p-0 border-0"
