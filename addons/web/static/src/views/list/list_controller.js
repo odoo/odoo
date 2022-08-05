@@ -20,23 +20,27 @@ const { Component, onWillStart, useSubEnv, useEffect, useRef } = owl;
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
-        const clickParams = this.props.clickParams;
-        const resIds = await this.props.getSelectedResIds();
-        const resModel = this.props.resModel;
+        const { clickParams, list } = this.props;
+        const resIds = await list.getResIds(true);
         clickParams.buttonContext = {
             active_domain: this.props.domain,
             // active_id: resIds[0], // FGE TODO
             active_ids: resIds,
-            active_model: resModel,
+            active_model: list.resModel,
         };
 
         this.env.onClickViewButton({
             clickParams,
-            record: { resModel, resIds },
+            getResParams: () => ({
+                context: list.context,
+                evalContext: list.evalContext,
+                resModel: list.resModel,
+                resIds,
+            }),
         });
     }
 }
-ListViewHeaderButton.props = [...ViewButton.props, "resModel", "domain", "getSelectedResIds"];
+ListViewHeaderButton.props = [...ViewButton.props, "list", "domain"];
 
 // -----------------------------------------------------------------------------
 

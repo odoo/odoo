@@ -53,12 +53,11 @@
             <t t-if="nbSelected">
                 <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
                     <ListViewHeaderButton
+                        list="model.root"
                         clickParams="button.clickParams"
                         defaultRank="button.defaultRank"
                         domain="props.domain"
                         icon="button.icon"
-                        getSelectedResIds.bind="getSelectedResIds"
-                        resModel="model.root.resModel"
                         string="button.string"
                         title="button.title"
                     />
