@@ -295,11 +295,11 @@ class QwebTracker():
     @classmethod
     def wrap_compile(cls, method_compile):
         @functools.wraps(method_compile)
-        def _tracked_compile(self, template):
+        def _tracked_compile(self, template, cache=None):
             if not self.env.context.get('profile'):
-                return method_compile(self, template)
+                return method_compile(self, template, cache)
 
-            template_functions, def_name = method_compile(self, template)
+            template_functions, def_name = method_compile(self, template, cache)
             render_template = template_functions[def_name]
 
             def profiled_method_compile(self, values):
