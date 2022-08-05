@@ -8,7 +8,7 @@
             </td>
 
             <td>
-                <t t-if="!props.readonly">
+                <t t-if="!props.isReadonly">
                     <t t-if="['edit', 'disable'].includes(state.value)">
                         <span class="o_tax_group_edit_input">
                             <input
@@ -17,7 +17,8 @@
                                 class="o_field_float
                                 o_field_number o_input"
                                 t-att-disabled="state.value === 'disable'"
-                                t-on-change.prevent="_onChangeTaxValue"/>
+                                t-on-change.prevent="_onChangeTaxValue"
+                                t-on-blur="_onChangeTaxValue"/>
                         </span>
                     </t>
                     <t t-else="">
@@ -56,9 +57,9 @@
                         <TaxGroupComponent
                             currency="currency"
                             taxGroup="taxGroup"
-                            readonly="props.readonly"
+                            isReadonly="readonly"
                             onChangeTaxGroup.bind="_onChangeTaxValueByTaxGroup"
-                            invalidate="invalidate"
+                            invalidate.bind="invalidate"
                         />
                     </t>
                 </t>
