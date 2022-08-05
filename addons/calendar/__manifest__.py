@@ -33,6 +33,7 @@ If you need to manage your meetings, you should install the CRM module.
         'views/calendar_templates.xml',
         'views/calendar_views.xml',
         'views/res_partner_views.xml',
+        'wizard/calendar_configure_external_sync_wizard.xml'
     ],
     'installable': True,
     'application': True,
@@ -48,6 +49,7 @@ If you need to manage your meetings, you should install the CRM module.
             'calendar/static/src/js/calendar_model.js',
             'calendar/static/src/js/calendar_view.js',
             'calendar/static/src/js/services/calendar_notification_service.js',
+            'calendar/static/src/js/configure_external_sync_wizard_form_*.js'
         ],
         'web.qunit_suite_tests': [
             'calendar/static/tests/**/*',

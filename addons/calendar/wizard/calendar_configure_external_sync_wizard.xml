@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="configure_external_sync_wizard_view_form" model="ir.ui.view">
+        <field name="name">calendar.configure.external.sync.wizard.view.form</field>
+        <field name="model">calendar.configure.external.sync.wizard</field>
+        <field name="arch" type="xml">
+            <form js_class="configure_external_sync_wizard">
+                <field name="external_calendar_provider" widget="radio" options="{'horizontal': true}"/>
+                <div class="o_setting_right_pane" attrs="{'invisible': [('external_calendar_provider', '!=', 'google')]}">
+                    <img alt="Google Calendar icon" src="/calendar/static/src/img/google_calendar_40.png" style="height: 40px; margin-right: 5px"/>
+                    <span class="me-1 o_form_label">Google Calendar</span>
+                    <a href="https://www.odoo.com/documentation/master/applications/general/calendars/google/google_calendar_credentials.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                    <div class="text-muted">
+                        Synchronize your calendar with Google Calendar
+                    </div>
+                    <div class="content-group">
+                        <div class="mt16 d-flex">
+                            <label for="cal_google_client_id" string="Client ID" class="col-3 col-lg-3 o_light_label"/>
+                            <field name="cal_google_client_id" nolabel="1" attrs="{'required': [('external_calendar_provider', '=', 'google')]}"/>
+                        </div>
+                        <div class="d-flex">
+                            <label for="cal_google_client_secret" string="Client Secret" class="col-3 col-lg-3 o_light_label"/>
+                            <field name="cal_google_client_secret" password="True" nolabel="1" attrs="{'required': [('external_calendar_provider', '=', 'google')]}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_setting_right_pane" attrs="{'invisible': [('external_calendar_provider', '!=', 'microsoft')]}">
+                    <img alt="Microsoft Outlook icon" src="/calendar/static/src/img/microsoft_calendar_40.png" style="height: 40px; margin-right: 5px"/>
+                    <span class="me-1 o_form_label">Outlook Calendar</span>
+                    <a href="https://www.odoo.com/documentation/master/applications/general/calendars/outlook/outlook_calendar.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                    <div class="text-muted">
+                        Synchronize your calendar with Outlook
+                    </div>
+                    <div class="content-group">
+                        <div class="mt16 d-flex">
+                            <label for="cal_microsoft_client_id" string="Client ID" class="col-3 col-lg-3 o_light_label"/>
+                            <field name="cal_microsoft_client_id" nolabel="1" attrs="{'required': [('external_calendar_provider', '=', 'microsoft')]}"/>
+                        </div>
+                        <div class="d-flex">
+                            <label for="cal_microsoft_client_secret" string="Client Secret" class="col-3 col-lg-3 o_light_label"/>
+                            <field name="cal_microsoft_client_secret" password="True" nolabel="1" attrs="{'required': [('external_calendar_provider', '=', 'microsoft')]}"/>
+                        </div>
+                    </div>
+                </div>
+                <footer>
+                    <a role="button" title="Connect" class="o_calendar_activate_external_cal btn btn-primary" t-on-click="onConnect">Connect</a>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
