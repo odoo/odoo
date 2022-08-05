@@ -5,17 +5,17 @@
         <record id="acquirer_form_adyen" model="ir.ui.view">
             <field name="name">acquirer.form.adyen</field>
             <field name="model">payment.acquirer</field>
-            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="inherit_id" ref="payment_adyen.acquirer_form_adyen"/>
             <field name="arch" type="xml">
                 <xpath expr='//field[@name="adyen_merchant_account"]' position='after'>
                     <field name="adyen_api_key"
-                           attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"
+                           attrs="{'required':[('provider', '=', 'adyen'), ('website_published', '!=', False)]}"
                            password="True"/>
                     <field name="adyen_hmac_key"
-                           attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"
+                           attrs="{'required':[('provider', '=', 'adyen'), ('website_published', '!=', False)]}"
                            password="True"/>
                     <field name="adyen_checkout_api_url"
-                           attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
+                           attrs="{'required':[('provider', '=', 'adyen'), ('website_published', '!=', False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='adyen_skin_code']" position='replace'></xpath>
                 <xpath expr="//field[@name='adyen_skin_hmac_key']" position='replace'></xpath>

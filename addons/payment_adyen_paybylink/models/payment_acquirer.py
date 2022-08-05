@@ -35,8 +35,9 @@ class PaymentAcquirer(models.Model):
         help="The base URL for the Checkout API endpoints",
         required_if_provider='adyen',
     )
-    # We set a default for the now unused key fields rather than making them not required to avoid
-    # the error log at DB init when the ORM tries to set the 'NOT NULL' constraint on those fields.
+    # We set a default for the now unused key fields rather than making them
+    # not required to avoid the error log at DB init when the ORM tries to set
+    # the 'NOT NULL' constraint on those fields.
     adyen_skin_code = fields.Char(default="Do not use this field")
     adyen_skin_hmac_key = fields.Char(default="Do not use this field")
 
@@ -48,9 +49,9 @@ class PaymentAcquirer(models.Model):
 
     def write(self, values):
         self._adyen_trim_api_urls(values)
-        # We set a default for the now unused key fields rather than making them not required to
-        # avoid the error log at DB init when the ORM tries to set the 'NOT NULL' constraint on
-        # those fields.
+        # We set a default for the now unused key fields rather than making
+        # them not required to avoid the error log at DB init when the ORM
+        # tries to set the 'NOT NULL' constraint on those fields.
         values.update(
             adyen_skin_code="Do not use this field",
             adyen_skin_hmac_key="Do not use this field",
@@ -59,7 +60,8 @@ class PaymentAcquirer(models.Model):
 
     @api.model
     def _adyen_trim_api_urls(self, values):
-        """ Remove the version and the endpoint from the url of Adyen API fields.
+        """ Remove the version and the endpoint from the url of Adyen
+        API fields.
 
         :param dict values: The create or write values
         :return: None
@@ -73,26 +75,31 @@ class PaymentAcquirer(models.Model):
     def adyen_form_generate_values(self, values):
         base_url = self.get_base_url()
 
-        payment_amount = self._adyen_convert_amount(values['amount'], values['currency'])
+        payment_amount = self._adyen_convert_amount(
+            values['amount'], values['currency'])
         values['adyen_paybylink_data'] = {
             'reference': values['reference'],
             'amount': {
                 'value': '%d' % payment_amount,
-                'currency': values['currency'] and values['currency'].name or '',
+                'currency': values['currency'] and
+                            values['currency'].name or '',
             },
             'merchantAccount': self.adyen_merchant_account,
             'shopperLocale': values.get('partner_lang', ''),
             'returnUrl': urls.url_join(base_url, '/payment/process'),
-            'shopperEmail': values.get('partner_email') or values.get('billing_partner_email', ''),
+            'shopperEmail': values.get('partner_email') or
+                            values.get('billing_partner_email', ''),
         }
 
         return values
 
     def adyen_get_form_action_url(self):
         """ Override of adyen_get_form_action_url """
-        form_action_url_values = self._context.get('form_action_url_values')
+        form_action_url_values = self._context.get(
+            'form_action_url_values')
         if form_action_url_values:
-            return self._adyen_get_paybylink(form_action_url_values['adyen_paybylink_data'])
+            return self._adyen_get_paybylink(
+                form_action_url_values['adyen_paybylink_data'])
         return False
 
     def _adyen_get_paybylink(self, data):
@@ -103,18 +110,20 @@ class PaymentAcquirer(models.Model):
         )
         return paybylink_response['url']
 
-    def _adyen_make_request(
-        self, url_field_name, endpoint, endpoint_param=None, payload=None, method='POST'
-    ):
+    def _adyen_make_request(self, url_field_name, endpoint,
+                            endpoint_param=None, payload=None, method='POST'):
         """ Make a request to Adyen API at the specified endpoint.
 
         Note: self.ensure_one()
 
-        :param str url_field_name: The name of the field holding the base URL for the request
+        :param str url_field_name: The name of the field holding the base URL
+                                   for the request
         :param str endpoint: The endpoint to be reached by the request
-        :param str endpoint_param: A variable required by some endpoints which are interpolated with
-                                   it if provided. For example, the acquirer reference of the source
-                                   transaction for the '/payments/{}/refunds' endpoint.
+        :param str endpoint_param: A variable required by some endpoints which
+                                   are interpolated with it if provided. For
+                                   example, the acquirer reference of the
+                                   source transaction for the
+                                   '/payments/{}/refunds' endpoint.
         :param dict payload: The payload of the request
         :param str method: The HTTP method of the request
         :return: The JSON-formatted content of the response
@@ -123,9 +132,11 @@ class PaymentAcquirer(models.Model):
         """
 
         def _build_url(_base_url, _version, _endpoint):
-            """ Build an API URL by appending the version and endpoint to a base URL.
+            """ Build an API URL by appending the version and endpoint to a
+            base URL.
 
-            The final URL follows this pattern: `<_base>/V<_version>/<_endpoint>`.
+            The final URL follows this pattern:
+            `<_base>/V<_version>/<_endpoint>`.
 
             :param str _base_url: The base of the url prefixed with `https://`
             :param int _version: The version of the endpoint
@@ -139,20 +150,26 @@ class PaymentAcquirer(models.Model):
 
         self.ensure_one()
 
-        base_url = self[url_field_name]  # Restrict request URL to the stored API URL fields
+        # Restrict request URL to the stored API URL fields
+        base_url = self[url_field_name]
         version = API_ENDPOINT_VERSIONS[endpoint]
-        endpoint = endpoint if not endpoint_param else endpoint.format(endpoint_param)
+        endpoint = (endpoint if not endpoint_param else
+                    endpoint.format(endpoint_param))
         url = _build_url(base_url, version, endpoint)
         headers = {'X-API-Key': self.adyen_api_key}
         try:
-            response = requests.request(method, url, json=payload, headers=headers, timeout=60)
+            response = requests.request(
+                method, url, json=payload, headers=headers, timeout=60)
             response.raise_for_status()
         except requests.exceptions.ConnectionError:
             _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError("Adyen: " + _("Could not establish the connection to the API."))
+            raise ValidationError(
+                "Adyen: " + _("Could not establish the connection to the API."))
         except requests.exceptions.HTTPError as error:
             _logger.exception(
-                "invalid API request at %s with data %s: %s", url, payload, error.response.text
+                "invalid API request at %s with data %s: %s", url,
+                payload, error.response.text
             )
-            raise ValidationError("Adyen: " + _("The communication with the API failed."))
+            raise ValidationError(
+                "Adyen: " + _("The communication with the API failed."))
         return response.json()

@@ -19,10 +19,12 @@ class PaymentTransaction(models.Model):
     @api.model
     def _adyen_form_get_tx_from_data(self, data):
         """ Override of _adyen_form_get_tx_from_data """
-        reference, psp_reference = data.get('merchantReference'), data.get('pspReference')
+        reference = data.get('merchantReference')
+        psp_reference = data.get('pspReference')
         if not reference or not psp_reference:
             error_msg = _(
-                "Adyen: received data with missing reference (%s) or missing pspReference (%s)"
+                "Adyen: received data with missing reference (%s) or "
+                "missing pspReference (%s)"
             ) % (reference, psp_reference)
             _logger.info(error_msg)
             raise ValidationError(error_msg)
@@ -42,8 +44,10 @@ class PaymentTransaction(models.Model):
         return tx
 
     def _adyen_form_get_invalid_parameters(self, data):
-        """ Override of _adyen_form_get_invalid_parameters to disable this method.
+        """ Override of _adyen_form_get_invalid_parameters to disable
+        this method.
 
-        The pay-by-link implementation doesn't need or want to check for invalid parameters.
+        The pay-by-link implementation doesn't need or want to check for
+        invalid parameters.
         """
         return []

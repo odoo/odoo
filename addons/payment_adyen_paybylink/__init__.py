@@ -10,8 +10,8 @@ def _post_init_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     acquirers = env['payment.acquirer'].search([
         ('provider', '=', 'adyen'),
-        ('state', '!=', 'disabled'),
+        ('website_published', '!=', False),
     ])
     acquirers.write({
-        'state': 'disabled',
+        'website_published': False,
     })
