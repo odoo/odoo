@@ -42,4 +42,35 @@ wTourUtils.dragNDrop({
             console.error("The paragraph text selection was lost.");
         }
     },
+}, {
+    content: "Click on the anchor option",
+    trigger: '#oe_snippets .snippet-option-anchor we-button',
+    run() {
+        // The clipboard cannot be accessed from a script.
+        // https://w3c.github.io/editing/docs/execCommand/#dfn-the-copy-command
+        // The execCommand is patched for that step so that ClipboardJS still
+        // sends the 'success' event.
+        const oldExecCommand = document.execCommand;
+        document.execCommand = () => true;
+        this.$anchor[0].click();
+        document.execCommand = oldExecCommand;
+    }
+}, {
+    content: "Check the copied url from the notification toast",
+    trigger: '.o_notification_manager .o_notification_content',
+    run() {
+        const { textContent } = this.$anchor[0];
+        const url = textContent.substring(textContent.indexOf('/'));
+
+        // The url should not target the client action
+        if (url.startsWith('/@')) {
+            console.error('The anchor option should target the frontend');
+        }
+
+        const iframeDocument = document.querySelector('.o_iframe').contentDocument;
+        const snippetId = iframeDocument.querySelector('.s_text_image').id;
+        if (!url || url.indexOf(snippetId) < 0) {
+            console.error('The anchor option does not target the correct snippet.');
+        }
+    },
 }]);
