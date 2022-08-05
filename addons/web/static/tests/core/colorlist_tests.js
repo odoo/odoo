@@ -37,13 +37,14 @@ async function mountComponent(Picker, props) {
 QUnit.module("Components", () => {
     QUnit.module("ColorList");
 
-    QUnit.test("basic rendering", async function (assert) {
+    QUnit.test("basic rendering with forceExpanded props", async function (assert) {
         await mountComponent(ColorList, {
             colors: [0, 9],
+            forceExpanded: true,
         });
 
         assert.containsOnce(target, ".o_colorlist");
-        assert.containsN(target, "button", 2, "two buttons are available");
+        assert.containsN(target, ".o_colorlist button", 2, "two buttons are available");
         const secondBtn = target.querySelectorAll(".o_colorlist button")[1];
         assert.strictEqual(
             secondBtn.attributes.title.value,
@@ -57,11 +58,11 @@ QUnit.module("Components", () => {
         );
     });
 
-    QUnit.test("toggler is available if togglerColor props is given", async function (assert) {
-        const togglerColorId = 0;
+    QUnit.test("color click does not open the list if canToggle props is not given", async function (assert) {
+        const selectedColorId = 0;
         await mountComponent(ColorList, {
             colors: [4, 5, 6],
-            togglerColor: togglerColorId,
+            selectedColor: selectedColorId,
             onColorSelected: (colorId) => assert.step("color #" + colorId + " is selected"),
         });
 
@@ -71,9 +72,29 @@ QUnit.module("Components", () => {
             "button.o_colorlist_toggler",
             "only the toggler button is available"
         );
+
+        await click(target.querySelector(".o_colorlist button"));
+
+        assert.containsOnce(
+            target,
+            "button.o_colorlist_toggler",
+            "button is still visible"
+        );
+    });
+
+    QUnit.test("open the list of colors if canToggle props is given", async function (assert) {
+        const selectedColorId = 0;
+        await mountComponent(ColorList, {
+            canToggle: true,
+            colors: [4, 5, 6],
+            selectedColor: selectedColorId,
+            onColorSelected: (colorId) => assert.step("color #" + colorId + " is selected"),
+        });
+
+        assert.containsOnce(target, ".o_colorlist");
         assert.hasClass(
             target.querySelector(".o_colorlist button"),
-            "o_colorlist_item_color_" + togglerColorId,
+            "o_colorlist_item_color_" + selectedColorId,
             "toggler has the right class"
         );
 
