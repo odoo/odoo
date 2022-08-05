@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-inherit="calendar.CalendarView" t-inherit-mode="extension">
-        <xpath expr="//div[@id='calendar_sync']" position="inside">
-            <button type="button" id="microsoft_sync_pending" class="o_microsoft_sync_button o_microsoft_sync_pending btn btn-secondary btn">
-                <b><i class='fa fa-refresh'/> Outlook</b>
-            </button>
-            <button type="button" id="microsoft_sync_configured" class="me-1 o_microsoft_sync_button o_microsoft_sync_button_configured btn text-bg-primary">
-                <b>
-                    <i id="microsoft_check" class='fa fa-check'/>
-                    <i id="microsoft_stop" class='fa fa-times' style="display: none"/>&amp;nbsp;Outlook
-                </b>
-            </button>
+        <xpath expr="//div[@id='microsoft_calendar_sync']" position="replace">
+            <div id="microsoft_calendar_sync" class="o_calendar_sync">
+                <button type="button" id="microsoft_sync_pending" class="o_microsoft_sync_button o_microsoft_sync_pending btn btn-secondary btn">
+                    <b><i class='fa fa-refresh'/> Outlook</b>
+                </button>
+                <button type="button" id="microsoft_sync_configured" class="me-1 o_microsoft_sync_button o_microsoft_sync_button_configured btn text-bg-primary">
+                    <b>
+                        <i id="microsoft_check" class='fa fa-check'/>
+                        <i id="microsoft_stop" class='fa fa-times' style="display: none"/>&amp;nbsp;Outlook
+                    </b>
+                </button>
+            </div>
         </xpath>
     </t>
 </templates>
