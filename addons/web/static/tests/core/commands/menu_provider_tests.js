@@ -80,7 +80,7 @@ QUnit.test("displays only apps if the search value is '/'", async (assert) => {
     assert.containsOnce(target, ".o_command_category");
     assert.containsN(target, ".o_command", 2);
     assert.deepEqual(
-        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        [...target.querySelectorAll(".o_command_name")].map((el) => el.textContent),
         ["Contact", "Sales"]
     );
 });
@@ -94,7 +94,7 @@ QUnit.test("displays apps and menu items if the search value is not only '/'", a
     assert.containsOnce(target, ".o_command_palette");
     assert.containsN(target, ".o_command", 3);
     assert.deepEqual(
-        [...target.querySelectorAll(".o_command")].map((el) => el.textContent),
+        [...target.querySelectorAll(".o_command_name")].map((el) => el.textContent),
         ["Sales", "Sales / Info", "Sales / Report"]
     );
 });
