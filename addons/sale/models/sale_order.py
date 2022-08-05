@@ -186,10 +186,6 @@ class SaleOrder(models.Model):
         compute='_compute_currency_rate',
         digits=(12, 6),
         store=True, precompute=True)
-    show_update_fpos = fields.Boolean(
-        string="Has Fiscal Position Changed", store=False)     # True if the fiscal position was changed, to display button
-    show_update_pricelist = fields.Boolean(
-        string="Has Pricelist Changed")                        # True if the pricelist was changed
     user_id = fields.Many2one(
         comodel_name='res.users',
         string="Salesperson",
@@ -282,6 +278,13 @@ class SaleOrder(models.Model):
     tax_totals = fields.Binary(compute='_compute_tax_totals')
     terms_type = fields.Selection(related='company_id.terms_type')
     type_name = fields.Char(string="Type Name", compute='_compute_type_name')
+
+    # Remaining ux fields (not computed, not stored)
+
+    show_update_fpos = fields.Boolean(
+        string="Has Fiscal Position Changed", store=False)  # True if the fiscal position was changed
+    show_update_pricelist = fields.Boolean(
+        string="Has Pricelist Changed", store=False)  # True if the pricelist was changed
 
     #=== COMPUTE METHODS ===#
 
