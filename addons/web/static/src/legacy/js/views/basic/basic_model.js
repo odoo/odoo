@@ -3959,6 +3959,9 @@ var BasicModel = AbstractModel.extend({
                 if (fieldValue === null) {
                     return false;
                 }
+                if (fieldName === "id" && !fieldValue) {
+                    return false;
+                }
 
                 if (field.type === 'date' || field.type === 'datetime') {
                     if (fieldValue) {

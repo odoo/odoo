@@ -1940,6 +1940,38 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("field with readonly modifier depending on id", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field" attrs="{'readonly': [('id', '!=', False)]}"/>
+                </form>`,
+        });
+
+        assert.containsOnce(target, ".o_form_editable");
+        assert.containsOnce(target, ".o_field_widget[name=int_field] input");
+        assert.doesNotHaveClass(
+            target.querySelector(".o_field_widget[name=int_field]"),
+            "o_readonly_modifier"
+        );
+
+        await editInput(target, ".o_field_widget[name=int_field] input", "34");
+        await click(target.querySelector(".o_form_button_save"));
+        assert.containsOnce(target, ".o_form_readonly");
+        assert.strictEqual(target.querySelector(".o_field_widget[name=int_field]").innerText, "34");
+
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.containsOnce(target, ".o_form_editable");
+        assert.containsNone(target, ".o_field_widget[name=int_field] input");
+        assert.hasClass(
+            target.querySelector(".o_field_widget[name=int_field]"),
+            "o_readonly_modifier"
+        );
+    });
+
     QUnit.test(
         "readonly attrs on lines are re-evaluated on field change 2",
         async function (assert) {
