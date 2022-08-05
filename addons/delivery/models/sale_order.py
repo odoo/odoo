@@ -134,8 +134,8 @@ class SaleOrder(models.Model):
         return u' {pre}{0}{post}'.format(amount, pre=pre, post=post)
 
     @api.depends('order_line.is_delivery', 'order_line.is_downpayment')
-    def _get_invoice_status(self):
-        super()._get_invoice_status()
+    def _compute_invoice_status(self):
+        super()._compute_invoice_status()
         for order in self:
             if order.invoice_status in ['no', 'invoiced']:
                 continue

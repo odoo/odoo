@@ -406,12 +406,12 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self._get_points_programs() | self._get_reward_programs()
 
-    def _get_invoice_status(self):
+    def _compute_invoice_status(self):
         # Handling of a specific situation: an order contains
         # a product invoiced on delivery and a promo line invoiced
         # on order. We would avoid having the invoice status 'to_invoice'
         # if the created invoice will only contain the promotion line
-        super()._get_invoice_status()
+        super()._compute_invoice_status()
         for order in self:
             if order.invoice_status != 'to invoice':
                 continue
