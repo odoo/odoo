@@ -36,6 +36,7 @@ export class KanbanArchParser extends XMLParser {
         const defaultGroupBy = xmlDoc.getAttribute("default_group_by");
         const limit = xmlDoc.getAttribute("limit");
         const recordsDraggable = archParseBoolean(xmlDoc.getAttribute("records_draggable"), true);
+        const groupsDraggable = archParseBoolean(xmlDoc.getAttribute("groups_draggable"), true);
         const activeActions = {
             ...getActiveActions(xmlDoc),
             groupArchive: archParseBoolean(xmlDoc.getAttribute("archivable"), true),
@@ -144,6 +145,7 @@ export class KanbanArchParser extends XMLParser {
             openAction,
             quickCreateView,
             recordsDraggable,
+            groupsDraggable,
             limit: limit && parseInt(limit, 10),
             progressAttributes,
             cardColorField,
