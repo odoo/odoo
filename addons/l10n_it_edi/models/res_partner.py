@@ -45,7 +45,7 @@ class ResPartner(models.Model):
 
     @api.constrains('l10n_it_codice_fiscale')
     def validate_codice_fiscale(self):
-        p = re.compile(r'^([A-Za-z]{6}[0-9]{2}[A-Za-z]{1}[0-9]{2}[A-Za-z]{1}[0-9]{3}[A-Za-z]{1}$)|([0-9]{11})|(IT[0-9]{11})$')
+        p = re.compile(r'^([A-Za-z]{6}[0-9]{2}[A-Za-z][0-9]{2}[A-Za-z]\w{4}$)|((IT)?[0-9]{11})$')
         for record in self:
             if record.l10n_it_codice_fiscale and not p.match(record.l10n_it_codice_fiscale):
                 raise UserError(_("Invalid Codice Fiscale '%s': should be like 'MRTMTT91D08F205J' for physical person and '12345678901' or 'IT12345678901' for businesses.", record.l10n_it_codice_fiscale))
