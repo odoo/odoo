@@ -7,6 +7,14 @@ import { standardFieldProps } from "../standard_field_props";
 const { Component } = owl;
 
 export class ColorPickerField extends Component {
+    get canToggle() {
+        return this.props.record.activeFields[this.props.name].viewType !== "list";
+    }
+
+    get isExpanded() {
+        return !this.canToggle && !this.props.readonly;
+    }
+
     switchColor(colorIndex) {
         this.props.update(colorIndex);
     }

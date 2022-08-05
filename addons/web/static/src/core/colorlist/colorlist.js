@@ -7,7 +7,7 @@ const { Component, useRef, useState, useExternalListener } = owl;
 export class ColorList extends Component {
     setup() {
         this.colorlistRef = useRef("colorlist");
-        this.state = useState({ isExpanded: false });
+        this.state = useState({ isExpanded: this.props.isExpanded });
         useExternalListener(window, "click", this.onOutsideClick);
     }
     get colors() {
@@ -15,17 +15,21 @@ export class ColorList extends Component {
     }
     onColorSelected(id) {
         this.props.onColorSelected(id);
-        this.state.isExpanded = false;
+        if (!this.props.forceExpanded) {
+            this.state.isExpanded = false;
+        }
     }
     onOutsideClick(ev) {
-        if (this.colorlistRef.el.contains(ev.target)) {
+        if (this.colorlistRef.el.contains(ev.target) || this.props.forceExpanded) {
             return;
         }
         this.state.isExpanded = false;
     }
-    onToggle(focus = true) {
-        this.state.isExpanded = !this.state.isExpanded;
-        if (focus) {
+    onToggle(ev) {
+        if (this.props.canToggle) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            this.state.isExpanded = !this.state.isExpanded;
             this.colorlistRef.el.firstElementChild.focus();
         }
     }
@@ -46,9 +50,15 @@ ColorList.COLORS = [
     _lt("Purple"),
 ];
 ColorList.template = "web.ColorList";
+ColorList.defaultProps = {
+    forceExpanded: false,
+    isExpanded: false,
+}
 ColorList.props = {
+    canToggle: { type: Boolean, optional: true },
     colors: Array,
+    forceExpanded: { type: Boolean, optional: true },
     isExpanded: { type: Boolean, optional: true },
     onColorSelected: Function,
-    togglerColor: { type: Number, optional: true },
+    selectedColor: { type: Number, optional: true },
 };

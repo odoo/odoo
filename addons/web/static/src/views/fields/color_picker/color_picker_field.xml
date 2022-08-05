@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ColorPickerField" owl="1">
-        <ColorList colors="constructor.RECORD_COLORS" onColorSelected.bind="switchColor" togglerColor="props.value || 0"/>
+        <ColorList canToggle="canToggle" colors="constructor.RECORD_COLORS" forceExpanded="isExpanded" onColorSelected.bind="switchColor" selectedColor="props.value || 0"/>
     </t>
 
 </templates>
