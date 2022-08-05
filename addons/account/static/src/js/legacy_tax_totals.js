@@ -159,6 +159,8 @@ class LegacyTaxTotalsComponent extends AbstractFieldOwl {
     }
 
     _computeTotalsFormat() {
+        if (!this.totals.value) // Misc journal entry
+            return;
         let amount_untaxed = this.totals.value.amount_untaxed;
         let amount_tax = 0;
         let subtotals = [];
