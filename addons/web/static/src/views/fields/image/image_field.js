@@ -8,7 +8,8 @@ import { registry } from "@web/core/registry";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, useState } = owl;
+const { Component, useState, onWillUpdateProps } = owl;
+const { DateTime } = luxon;
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",
@@ -22,12 +23,36 @@ function isBinarySize(value) {
     return /^\d+(\.\d*)? [^0-9]+$/.test(value);
 }
 
+/**
+ * Formats a value to be injected in the image's url in order for that url
+ * to be correctly cached and discarded by the browser (the browser caches
+ * fetch requests with the url as key).
+ *
+ * For records, a not-so-bad approximation is to compute that key on the basis
+ * of the record's __last_update field.
+ */
+export function imageCacheKey(value) {
+    if (value instanceof DateTime) {
+        return value.ts;
+    }
+    return "";
+}
+
 export class ImageField extends Component {
     setup() {
         this.notification = useService("notification");
         this.isMobile = isMobileOS();
         this.state = useState({
             isValid: true,
+        });
+
+        this.rawCacheKey = this.props.record.data.__last_update;
+        onWillUpdateProps((nextProps) => {
+            const { record } = this.props;
+            const { record: nextRecord } = nextProps;
+            if (record.resId !== nextRecord.resId || nextRecord.mode === "readonly") {
+                this.rawCacheKey = nextRecord.data.__last_update;
+            }
         });
     }
 
@@ -58,6 +83,7 @@ export class ImageField extends Component {
                     model: this.props.record.resModel,
                     id: this.props.record.resId,
                     field: previewFieldName,
+                    unique: imageCacheKey(this.rawCacheKey),
                 });
             } else {
                 // Use magic-word technique for detecting image type
@@ -102,6 +128,10 @@ ImageField.defaultProps = {
 
 ImageField.displayName = _lt("Image");
 ImageField.supportedTypes = ["binary"];
+
+ImageField.fieldDependencies = {
+    __last_update: { type: "datetime" },
+};
 
 ImageField.extractProps = ({ attrs }) => {
     return {
