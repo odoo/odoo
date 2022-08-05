@@ -3,7 +3,6 @@ odoo.define('microsoft_calendar.CalendarView', function (require) {
 
 var core = require('web.core');
 var Dialog = require('web.Dialog');
-var framework = require('web.framework');
 const CalendarRenderer = require('@calendar/js/calendar_renderer')[Symbol.for("default")].AttendeeCalendarRenderer;
 const CalendarController = require('@calendar/js/calendar_controller')[Symbol.for("default")];
 const CalendarModel = require('@calendar/js/calendar_model')[Symbol.for("default")];
@@ -111,12 +110,8 @@ const MicrosoftCalendarController = CalendarController.include({
 
         return this._restartMicrosoftSynchronization().then(() => {return this.model._syncMicrosoftCalendar();}).then(function (o) {
             if (o.status === "need_auth") {
-                Dialog.alert(self, _t("You will be redirected to Outlook to authorize the access to your calendar."), {
-                    confirm_callback: function() {
-                        framework.redirect(o.url);
-                    },
-                    title: _t('Redirection'),
-                });
+                // allows to configure API keys in modal and will then redirect.
+                self.renderer._configureCalendarProviderSync('microsoft');
             } else if (o.status === "need_config_from_admin") {
                 if (!_.isUndefined(o.action) && parseInt(o.action)) {
                     Dialog.confirm(self, _t("The Outlook Synchronization needs to be configured before you can use it, do you want to do it now?"), {
