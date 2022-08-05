@@ -1,6 +1,37 @@
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,700,700i&display=swap");
+
 .o_configurator_container {
     @include o-position-absolute(0, 0, 0, 0);
     background-color: $white;
+    font-family: "Source Sans Pro", "Roboto", $font-family-sans-serif;
+
+    .container {
+        max-width: map-get($container-max-widths, xl);
+    }
+
+    .small {
+        font-size: 80%;
+    }
+
+    .h4 {
+        font-size: 1.5rem !important;
+    }
+
+    .text-info {
+        color: $o-info !important;
+    }
+
+    .text-warning {
+        color: $o-warning !important;
+    }
+
+    .card {
+        background-color: $white !important;
+
+        .card-body {
+            background-color: rgba($white, 0.9) !important;
+        }
+    }
 
     .o_configurator_screen {
 

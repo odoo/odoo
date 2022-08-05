@@ -8,7 +8,7 @@ import {svgToPNG} from 'website.utils';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
-const { Component, onMounted, reactive, useEnv, useRef, useState, useSubEnv, onWillStart } = owl;
+const { Component, onMounted, reactive, useEnv, useRef, useState, useSubEnv, onWillStart, useEffect } = owl;
 
 const ROUTES = {
     descriptionScreen: 2,
@@ -598,7 +598,7 @@ class Configurator extends Component {
             // Do not use navigate because URL is already updated.
             this.state.currentStep = step;
         });
-        
+
         const initialStep = this.props.action.context.params && this.props.action.context.params.step;
         const store = reactive(new Store(), () => this.updateStorage(store));
 
@@ -627,6 +627,18 @@ class Configurator extends Component {
                 this.updateBrowserUrl();
             });
         });
+
+        useEffect(() => {
+            const rootEl = document.querySelector(':root');
+            const initalFontSize = rootEl.style.fontSize;
+            rootEl.style.fontSize = '16px';
+            return () => {
+                rootEl.style.fontSize = initalFontSize;
+                if (!rootEl.getAttribute('style')) {
+                    rootEl.removeAttribute('style');
+                }
+            };
+        }, () => []);
     }
 
     get pathname() {
