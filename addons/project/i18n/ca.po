@@ -19,6 +19,7 @@
 # Harcogourmet, 2022
 # oscaryuu, 2022
 # CristianCruzParra, 2022
+# Pere Martínez, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: CristianCruzParra, 2022\n"
+"Last-Translator: Pere Martínez, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -305,12 +306,12 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
-msgstr ""
+msgstr "Un cop la tasca estigui llesta, la podrà gravar."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
 msgid "<small class=\"text-muted\">Project - </small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Projecte - </small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -325,7 +326,7 @@ msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Ta
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Profitability</span>"
-msgstr ""
+msgstr "Rendibilitat"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -335,17 +336,18 @@ msgstr "<strong class=\"d-block mb-2\">Annexos</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong class=\"d-block mb-2\">Description</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-2\">Descripció</strong>"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "<strong style=\"font-size: 16px;\">Try the mail gateway</strong>"
 msgstr ""
+"<strong style=\"font-size: 16px;\">Proveu la passarel·la de correu</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Assigned to</strong>"
-msgstr ""
+msgstr "<strong>Assignada a</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -370,12 +372,12 @@ msgstr "<strong>Projecte:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "<strong>Rated by: </strong>"
-msgstr ""
+msgstr "<strong>Valorada per: </strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Reported by</strong>"
-msgstr ""
+msgstr "<strong>Reportada per</strong>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
@@ -444,6 +446,8 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In "
 "Progress - Done</i>"
 msgstr ""
+"Afegeixi columnes per configurar <b>etapes en les seves "
+"tasques</b>.<br/><i>p.e. Nova, En curs, Finalitzada, etc.</i>"
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -460,7 +464,7 @@ msgstr "Avançat"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Agile"
-msgstr ""
+msgstr "Àgil"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
@@ -501,7 +505,7 @@ msgstr "Totes les tasques"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
-msgstr ""
+msgstr "Tots/es els/les usaris/àries interns/es"
 
 #. module: project
 #. openerp-web
@@ -593,7 +597,7 @@ msgstr "Nombre d'adjunts"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachment that don't come from message."
-msgstr ""
+msgstr "Annexe que no prové d'un missatge."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
@@ -607,6 +611,9 @@ msgid ""
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Modifiqueu automàticament l'estat kanban quan el client respongui als comentaris d'aquesta etapa.\n"
+" * Un bon feedback del client actualitzarà l'estat kanban a \"preparat per a la nova etapa\" (punt verd).\n"
+" * Un mitjà o un mal feedback establirà l'estat kanban a \"bloquejat\" (punt vermell).\n"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -706,7 +713,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Choose a <b>task name</b>. (e.g. Website Design, Purchase Goods etc.)"
-msgstr ""
+msgstr "Tria un <b>per la tasca</b>. (p.e. Disseny Web, Compres, etc.)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -755,6 +762,11 @@ msgid ""
 "designs to the task, so that information flow from designers to the workers "
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 msgstr ""
+"Comuniqueu-vos amb els clients sobre temes relatius a la tasca mitjançant la"
+" passarel·la de correu electrònic. Adjunteu-hi dissenys de logotips, de "
+"manera que la informació flueixi des dels dissenyadors fins als treballadors"
+" que imprimeixen la samarreta. Organitzar les prioritats entre ordres %s "
+"fent servir la icona."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -2656,7 +2668,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_project_id
 msgid "Sub-task Project"
-msgstr ""
+msgstr "Sub-tasques de projecte"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_count
