@@ -607,7 +607,7 @@ class IrQWeb(models.AbstractModel):
             return None, None, None
 
     @QwebTracker.wrap_compile
-    def _compile(self, template):
+    def _compile(self, template, cache=None):
         if isinstance(template, etree._Element):
             self = self.with_context(is_t_cache_disabled=True)
             ref = None
@@ -645,7 +645,7 @@ class IrQWeb(models.AbstractModel):
                 raise QWebException("Error when compiling xml template",
                     self, template, code=code, ref=ref) from e
 
-        code_function, def_name = self._load_values(base_key_cache, generate_functions)
+        code_function, def_name = self._load_values(base_key_cache, generate_functions, cache)
 
         globals_dict = self._prepare_globals()
         globals_dict['__builtins__'] = globals_dict # So that unknown/unsafe builtins are never added.
@@ -1642,7 +1642,7 @@ class IrQWeb(models.AbstractModel):
                                     ref, function_name, cached_values = item
                                     t_nocache_function = values['__qweb_loaded_values'].get(function_name)
                                     if not t_nocache_function:
-                                        t_call_template_functions, def_name = self._compile(ref)
+                                        t_call_template_functions, def_name = self._compile(ref, values.get('__qweb_loaded_values'))
                                         t_nocache_function = t_call_template_functions[function_name]
 
                                     nocache_values = values['__qweb_root_values'].copy()
@@ -2139,7 +2139,7 @@ class IrQWeb(models.AbstractModel):
             template = {template}
             if template.isnumeric():
                 template = int(template)
-            t_call_template_functions, def_name = irQweb._compile(template)
+            t_call_template_functions, def_name = irQweb._compile(template, values.get('__qweb_loaded_values'))
             render_template = t_call_template_functions[def_name]
             yield from render_template(irQweb, t_call_values)
             """, level))
@@ -2259,7 +2259,7 @@ class IrQWeb(models.AbstractModel):
                         ref, function_name, cached_values = item
                         t_nocache_function = loaded_values.get(function_name)
                         if not t_nocache_function:
-                            t_call_template_functions, def_name = self._compile(ref)
+                            t_call_template_functions, def_name = self._compile(ref, values.get('__qweb_loaded_values'))
                             t_nocache_function = t_call_template_functions[function_name]
 
                         nocache_values = values['__qweb_root_values'].copy()
