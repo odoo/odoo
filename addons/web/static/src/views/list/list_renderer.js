@@ -78,7 +78,7 @@ export class ListRenderer extends Component {
 
         this.creates = this.props.archInfo.creates.length
             ? this.props.archInfo.creates
-            : [{ description: this.env._t("Add a line") }];
+            : [{ type: "create", string: this.env._t("Add a line") }];
 
         this.cellToFocus = null;
         this.activeRowId = null;

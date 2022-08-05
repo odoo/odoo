@@ -330,9 +330,15 @@
         }
 
         .o_field_x2many_list_row_add, .o_group_field_row_add {
-            a:focus, a:active {
+            a:focus, a:active, button:focus, button:active {
                 color: $link-hover-color;
                 outline: none;
+            }
+
+            button {
+                font-weight: 400;
+                padding: 0;
+                vertical-align: baseline;
             }
         }
     }
