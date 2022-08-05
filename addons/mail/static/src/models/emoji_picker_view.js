@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
+import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'EmojiPickerView',
@@ -20,9 +20,16 @@ registerModel({
             required: true,
             isCausal: true,
         }),
+        emojiSearchBarView: one('EmojiSearchBarView', {
+            default: {},
+            inverse: 'emojiPickerView',
+            readonly: true,
+            isCausal: true,
+        }),
         popoverViewOwner: one('PopoverView', {
             identifying: true,
             inverse: 'emojiPickerView',
         }),
+        component: attr(),
     },
 });

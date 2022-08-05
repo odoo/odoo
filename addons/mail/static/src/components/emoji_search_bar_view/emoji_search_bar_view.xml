@@ -1,0 +1,14 @@
+
+<templates xml:space="preserve">
+
+    <t t-name="mail.EmojiSearchBarView" owl="1">
+        <div class="o_EmojiSearchBarView overflow-auto d-flex flex-shrink-0 p-2 flex-column" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_EmojiSearchBarView_inputContainer d-flex flex-grow-1 align-items-center">
+                <input class="o_EmojiSearchBarView_searchInput border-0 overflow-auto flex-fill" t-att-class="{ 'opacity-50': !emojiSearchBarView.isFocused }" t-att-placeholder="emojiSearchBarView.placeholder" t-on-focusin="emojiSearchBarView.onFocusinInput" t-on-focusout="emojiSearchBarView.onFocusoutInput" t-on-input="emojiSearchBarView.onInput" t-ref="input"/>
+                <i class="o_EmojiSearchBarView_icon oi oi-search" t-att-class="{ 'opacity-25': !emojiSearchBarView.isFocused, 'o-isFocused': emojiSearchBarView.isFocused }" title="Search..." role="img" aria-label="Search..."/>
+            </div>
+            <hr class="o_EmojiSearchBarView_inputBar my-1" t-att-class="{ 'o-isFocused opacity-75': emojiSearchBarView.isFocused }"/>
+        </div>
+    </t>
+
+</templates>
