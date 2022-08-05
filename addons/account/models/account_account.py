@@ -779,14 +779,14 @@ class AccountGroup(models.Model):
         return result
 
     @api.model
-    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+    def _name_search_domain(self, name, args=None, operator='ilike'):
         args = args or []
         if operator == 'ilike' and not (name or '').strip():
             domain = []
         else:
             criteria_operator = ['|'] if operator not in expression.NEGATIVE_TERM_OPERATORS else ['&', '!']
             domain = criteria_operator + [('code_prefix_start', '=ilike', name + '%'), ('name', operator, name)]
-        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        return expression.AND([domain, args])
 
     @api.constrains('code_prefix_start', 'code_prefix_end')
     def _constraint_prefix_overlap(self):

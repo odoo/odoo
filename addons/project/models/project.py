@@ -2628,11 +2628,11 @@ class ProjectTags(models.Model):
         return super().search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)
 
     @api.model
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+    def _name_search_domain(self, name='', args=None, operator='ilike'):
         domain = args
         if 'project_id' in self.env.context:
             domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
-        return super()._name_search(name, domain, operator, limit, name_get_uid)
+        return super()._name_search_domain(name, domain, operator)
 
     @api.model
     def name_create(self, name):

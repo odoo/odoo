@@ -14,10 +14,10 @@ class EtaActivityType(models.Model):
     code = fields.Char(required=True)
 
     @api.model
-    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+    def _name_search_domain(self, name='', args=None, operator='ilike'):
         args = args or []
         if operator == 'ilike' and not(name or '').strip():
             domain = []
         else:
             domain = ['|', ('name', operator, name), ('code', operator, name)]
-        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        return expression.AND([domain, args])
