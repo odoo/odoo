@@ -20,6 +20,7 @@ import {
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { FieldOne2Many } from "web.relational_fields";
+import { FieldChar as LegacyFieldChar } from "web.basic_fields";
 import * as legacyFieldRegistry from "web.field_registry";
 import { toggleActionMenu, toggleGroupByMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -35,6 +36,8 @@ import { scrollerService } from "@web/core/scroller_service";
 import BasicModel from "web.BasicModel";
 import { localization } from "@web/core/l10n/localization";
 import { SIZES } from "@web/core/ui/ui_service";
+
+import * as legacyCore from "web.core";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -8026,6 +8029,103 @@ QUnit.module("Views", (hooks) => {
             `search_read translations args: [] ; kwargs: {"context":{"lang":"en","uid":7,"tz":"taht"},"domain":[["res_id","=",1],["name","=","partner_type,foo"],["lang","in",["CUST","CUST2"]]],"fields":["lang","src","value"]}`,
         ]);
 
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal-title").textContent, "Translate: foo");
+    });
+
+    QUnit.test("ask to save new record before opening translate dialog", async function (assert) {
+        serverData.models.partner.fields.foo.translate = true;
+
+        patchWithCleanup(localization, {
+            multiLang: true,
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo"/>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+                if (route === "/web/dataset/call_button") {
+                    return { context: {}, domain: [] };
+                }
+                if (args.method === "get_installed") {
+                    return [
+                        ["CUST", "custom lang"],
+                        ["CUST2", "second custom"],
+                    ];
+                }
+            },
+        });
+
+        assert.verifySteps(["get_views", "onchange"]);
+        assert.containsOnce(target, ".o_form_editable");
+        await click(target, ".o_field_translate.btn-link");
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal-title").textContent, "Warning");
+
+        await click(target.querySelectorAll(".modal-footer button")[1]); // cancel
+        assert.verifySteps([]);
+
+        await click(target, ".o_field_translate.btn-link");
+        await click(target.querySelectorAll(".modal-footer button")[0]); // save
+        assert.verifySteps(["create", "read", "translate_fields", "get_installed", "search_read"]);
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal-title").textContent, "Translate: foo");
+    });
+
+    QUnit.test("legacy field support translation dialog", async (assert) => {
+        serverData.models.partner.fields.foo.translate = true;
+
+        patchWithCleanup(legacyCore._t.database, {
+            multi_lang: true,
+            parameters: {
+                code: "CUST",
+            },
+        });
+
+        const myChar = LegacyFieldChar.extend({
+            async _render() {
+                // DIY because the compatibility layer doesn't support
+                // legacy widget having multiple nodes in their this.$el.
+                await this._super(...arguments);
+                const div = document.createElement("div");
+                const $div = $(div).append(this.$el);
+                this.setElement($div);
+            },
+        });
+
+        legacyFieldRegistry.add("legacy_char", myChar);
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `
+                <form>
+                    <field name="foo" widget="legacy_char"/>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+                if (route === "/web/dataset/call_button") {
+                    return { context: {}, domain: [] };
+                }
+                if (args.method === "get_installed") {
+                    return [
+                        ["CUST", "custom lang"],
+                        ["CUST2", "second custom"],
+                    ];
+                }
+            },
+        });
+        assert.verifySteps(["get_views", "read"]);
+        await clickEdit(target);
+        await click(target, ".o_field_legacy_char .o_field_translate.btn-link");
+        assert.verifySteps(["translate_fields", "get_installed", "search_read"]);
         assert.containsOnce(target, ".modal");
         assert.strictEqual(target.querySelector(".modal-title").textContent, "Translate: foo");
     });

@@ -8,6 +8,7 @@ import { ComponentAdapter } from "web.OwlCompatibility";
 import viewUtils from "web.viewUtils";
 import { useWowlService } from "@web/legacy/utils";
 import { RPCError } from "@web/core/network/rpc_service";
+import { useTranslationDialog } from "@web/views/fields/translation_button";
 
 const { Component, useEffect, xml } = owl;
 const fieldRegistry = registry.category("fields");
@@ -22,6 +23,7 @@ const legacyFieldTemplate = xml`
 class FieldAdapter extends ComponentAdapter {
     setup() {
         super.setup();
+        this.translationDialog = useTranslationDialog();
         this.wowlEnv = this.env;
         this.env = Component.env;
         this.orm = useWowlService("orm");
