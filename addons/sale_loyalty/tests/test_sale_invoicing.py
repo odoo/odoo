@@ -49,7 +49,7 @@ class TestSaleInvoicing(TestSaleCouponCommon):
         invoiceable_lines = order._get_invoiceable_lines()
         # Product was not delivered, we cannot invoice
         # the product line nor the promotion line
-        order._get_invoice_status()
+        order._compute_invoice_status()
         self.assertEqual(order.invoice_status, 'no')
         self.assertEqual(len(invoiceable_lines), 0)
         with self.assertRaises(UserError):
@@ -57,7 +57,7 @@ class TestSaleInvoicing(TestSaleCouponCommon):
 
         order.order_line[0].qty_delivered = 1
         # Product is delivered, the two lines can be invoiced.
-        order._get_invoice_status()
+        order._compute_invoice_status()
         self.assertEqual(order.invoice_status, 'to invoice')
         invoiceable_lines = order._get_invoiceable_lines()
         self.assertEqual(order.order_line, invoiceable_lines)
