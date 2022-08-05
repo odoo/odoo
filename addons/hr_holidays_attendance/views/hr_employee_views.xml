@@ -58,12 +58,7 @@
             <!-- Merge invisible attr of both module -->
             <xpath expr="//div[@id='hr_presence_status']" position="attributes">
                 <attribute name="attrs">
-                    {'invisible': ['|', '|', '|',
-                        ('is_absent', '=', True),
-                        ('hr_presence_state', '=', 'absent'),
-                        ('attendance_state', '=', 'checked_in'),
-                        ('id', '=', False),
-                    ]}
+                    {'invisible': False}
                 </attribute>
             </xpath>
         </field>
