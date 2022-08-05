@@ -67,11 +67,11 @@
                             <h1 class="d-flex">
                                 <field name="name" placeholder="Employee's Name" required="True" style="font-size: min(4vw, 2.6rem);" />
                                 <div class="d-flex align-items-end fs-6" style="height: min(4vw, 2.6rem); padding-bottom: 1px;">
-                                    <div id="hr_presence_status" attrs="{'invisible': ['|', ('last_activity', '=', False), ('user_id', '=', False)]}" class="ms-1">
+                                    <div id="hr_presence_status" class="ms-1">
                                         <!-- Employee is present/connected and it is normal according to his work schedule  -->
                                         <small role="img" class="fa fa-fw fa-circle text-success o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_present')]}" aria-label="Present" title="Present"/>
                                         <!-- Employee is not present and it is normal according to his work schedule -->
-                                        <small role="img" class="fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'present_absent')]}" aria-label="Absent" title="Absent" name="presence_absent"/>
+                                        <small role="img" class="fa fa-fw fa-circle-o text-muted o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_absent')]}" aria-label="Absent" title="Absent" name="presence_absent"/>
                                         <!-- Employee is connected but according to his work schedule, he should not work for now  -->
                                         <small role="img" class="fa fa-fw fa-circle-o text-success o_button_icon hr_presence align-middle" attrs="{'invisible': [('hr_icon_display', '!=', 'presence_absent_active')]}" aria-label="Present but not active" title="Present but not active" name="presence_absent_active"/>
                                         <!-- Employee is not here but according to his work schedule, he should be connected -->
