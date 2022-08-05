@@ -67,7 +67,7 @@ class TestEventBoothSale(TestEventBoothSaleWData):
                          "Total amount should be the sum of the booths prices with 10% taxes ($40.0 + $4.0)")
 
         self.event_booth_category_1.write({'price': 100.0})
-        sale_order.update_prices()
+        sale_order._recompute_prices()
 
         self.assertNotEqual(self.booth_1.price, self.event_booth_product.list_price,
                             "Booth price should be different from product price.")

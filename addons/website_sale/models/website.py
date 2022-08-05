@@ -394,7 +394,7 @@ class Website(models.Model):
         if update_pricelist:
             request.session['website_sale_current_pl'] = pricelist_id
             sale_order_sudo.write({'pricelist_id': pricelist_id})
-            sale_order_sudo.update_prices()
+            sale_order_sudo._recompute_prices()
 
         return sale_order_sudo
 

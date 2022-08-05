@@ -280,7 +280,7 @@ class TestSaleOrder(SaleManagementCommon):
         self.sale_order.write({
             'pricelist_id': self.discount_included_price_list.id,
         })
-        self.sale_order.update_prices()
+        self.sale_order._recompute_prices()
 
         self.assertEqual(
             self.sale_order.sale_order_option_ids[0].price_unit,
@@ -296,7 +296,7 @@ class TestSaleOrder(SaleManagementCommon):
         self.sale_order.write({
             'pricelist_id': self.discount_excluded_price_list.id,
         })
-        self.sale_order.update_prices()
+        self.sale_order._recompute_prices()
 
         self.assertEqual(
             self.sale_order.sale_order_option_ids[0].price_unit,

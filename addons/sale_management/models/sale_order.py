@@ -118,9 +118,9 @@ class SaleOrder(models.Model):
                 order.sale_order_template_id.mail_template_id.send_mail(order.id)
         return res
 
-    def update_prices(self):
-        super().update_prices()
-        # Special case: we want to overwrite the existing discount on update_prices call
+    def _recompute_prices(self):
+        super()._recompute_prices()
+        # Special case: we want to overwrite the existing discount on _recompute_prices call
         # i.e. to make sure the discount is correctly reset
         # if pricelist discount_policy is different than when the price was first computed.
         self.sale_order_option_ids.discount = 0.0
