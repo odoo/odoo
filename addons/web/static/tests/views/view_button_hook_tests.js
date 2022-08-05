@@ -46,17 +46,16 @@ QUnit.module("UseViewButton tests", (hooks) => {
             }
 
             onClick() {
-                const record = {
+                const getResParams = () => ({
                     resIds: [3],
                     resId: 3,
-                    load: () => {},
-                };
+                });
                 const clickParams = {};
                 const beforeExecute = () => {
                     assert.step("beforeExecuteAction on handler");
                     return executeInHandler;
                 };
-                this.env.onClickViewButton({ beforeExecute, record, clickParams });
+                this.env.onClickViewButton({ beforeExecute, getResParams, clickParams });
             }
         }
         MyComponent.template = xml`<div t-ref="root" t-on-click="onClick" class="myComponent">Some text</div>`;

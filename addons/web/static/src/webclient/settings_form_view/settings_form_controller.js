@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useAutofocus } from "@web/core/utils/hooks";
+import { pick } from "@web/core/utils/objects";
 import { formView } from "@web/views/form/form_view";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { SettingsConfirmationDialog } from "./settings_confirmation_dialog";
@@ -91,7 +92,8 @@ export class SettingsFormController extends formView.Controller {
                 name: "execute",
                 type: "object",
             },
-            record: this.model.root,
+            getResParams: () =>
+                pick(this.model.root, "context", "evalContext", "resModel", "resId", "resIds"),
         });
     }
 
@@ -101,7 +103,8 @@ export class SettingsFormController extends formView.Controller {
                 name: "cancel",
                 type: "object",
             },
-            record: this.model.root,
+            getResParams: () =>
+                pick(this.model.root, "context", "evalContext", "resModel", "resId", "resIds"),
         });
     }
 }

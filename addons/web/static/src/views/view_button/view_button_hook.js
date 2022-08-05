@@ -37,7 +37,7 @@ export function useViewButtons(model, ref, options = {}) {
             return true;
         });
     useSubEnv({
-        async onClickViewButton({ clickParams, record, beforeExecute }) {
+        async onClickViewButton({ clickParams, getResParams, beforeExecute }) {
             const manuallyDisabledButtons = disableButtons(getEl());
 
             async function execute() {
@@ -51,15 +51,13 @@ export function useViewButtons(model, ref, options = {}) {
                     enableButtons(getEl(), manuallyDisabledButtons);
                     return;
                 }
-                const resId = record.resId;
-                const resIds = record.resIds || model.resIds;
+                const params = getResParams();
+                const resId = params.resId;
+                const resIds = params.resIds || model.resIds;
                 let buttonContext = {};
                 if (clickParams.context) {
                     if (typeof clickParams.context === "string") {
-                        const valuesForEval = Object.assign({}, record.evalContext, {
-                            active_id: resId,
-                            active_ids: resIds,
-                        });
+                        const valuesForEval = Object.assign({}, params.evalContext);
                         buttonContext = evaluateExpr(clickParams.context, valuesForEval);
                     } else {
                         buttonContext = clickParams.context;
@@ -69,13 +67,13 @@ export function useViewButtons(model, ref, options = {}) {
                     Object.assign(buttonContext, clickParams.buttonContext);
                 }
                 const doActionParams = Object.assign({}, clickParams, {
-                    resModel: record.resModel || model.resModel,
+                    resModel: params.resModel || model.resModel,
                     resId,
                     resIds,
-                    context: record.context || {}, //LPE FIXME new Context(payload.env.context).eval();
+                    context: params.context || {}, //LPE FIXME new Context(payload.env.context).eval();
                     buttonContext,
                     onClose: async () => {
-                        const reload = options.reload || (() => record.model.root.load());
+                        const reload = options.reload || (() => model.root.load());
                         await reload();
                         comp.render(true); // FIXME WOWL reactivity
                     },

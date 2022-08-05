@@ -17,28 +17,24 @@ export class ExpenseFormController extends FormController {
         const t = this.env._t;
         const previousOnClickViewButton = this.env.onClickViewButton;
         useSubEnv({
-            async onClickViewButton({ clickParams, record}) {
-                if (clickParams.name === "action_submit_expenses") {
-                    if (record.data.duplicate_expense_ids.count) {
-                        dialogService.add(ConfirmationDialog, {
-                            body: t("An expense of same category, amount and date already exists."),
-                            confirm: async () => {
-                                orm.call(
-                                    'hr.expense',
-                                    'action_approve_duplicates',
-                                    [record.data.id],
-                                );
-                                previousOnClickViewButton({ clickParams, record});
-                            },
-                            cancel: () => {},
-                        });
-                    } else {
-                        previousOnClickViewButton({ clickParams, record});
-                    }
+            async onClickViewButton(params) {
+                const record = this.model.root;
+                if (
+                    params.clickParams.name === "action_submit_expenses" &&
+                    record.data.duplicate_expense_ids.count
+                ) {
+                    dialogService.add(ConfirmationDialog, {
+                        body: t("An expense of same category, amount and date already exists."),
+                        confirm: async () => {
+                            orm.call("hr.expense", "action_approve_duplicates", [record.resId]);
+                            previousOnClickViewButton(params);
+                        },
+                        cancel: () => {},
+                    });
                 } else {
-                    previousOnClickViewButton({ clickParams, record});
+                    previousOnClickViewButton(params);
                 }
-            }
+            },
         });
     }
 }
@@ -48,4 +44,4 @@ export const ExpenseFormView = {
     Controller: ExpenseFormController,
 };
 
-registry.category("views").add('hr_expense_form_view', ExpenseFormView);
+registry.category("views").add("hr_expense_form_view", ExpenseFormView);

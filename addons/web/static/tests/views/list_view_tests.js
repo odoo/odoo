@@ -765,6 +765,9 @@ QUnit.module("Views", (hooks) => {
                         </header>
                         <field name="foo" />
                     </tree>`,
+                context: {
+                    paf: "pif",
+                },
             });
             patchWithCleanup(list.env.services.action, {
                 doActionButton: async (params) => {
@@ -784,7 +787,12 @@ QUnit.module("Views", (hooks) => {
 
                     assert.strictEqual(resModel, "foo");
                     assert.deepEqual([...resIds], [1]);
-                    assert.strictEqual(JSON.stringify(context), "{}");
+                    assert.deepEqual(context, {
+                        lang: "en",
+                        paf: "pif",
+                        tz: "taht",
+                        uid: 7,
+                    });
                 },
             });
             await click(
@@ -835,7 +843,11 @@ QUnit.module("Views", (hooks) => {
                         active_model: "foo",
                     });
 
-                    assert.strictEqual(JSON.stringify(context), "{}");
+                    assert.deepEqual(context, {
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                    });
                     assert.strictEqual(resModel, "foo");
                     assert.deepEqual([...resIds], [1, 2, 3, 4]);
                 },

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { pick } from "@web/core/utils/objects";
 
 const { Component } = owl;
 
@@ -13,9 +14,10 @@ class RedirectField extends Component {
         this.env.onClickViewButton({
             clickParams: {
                 type: "object",
-                name: "open_website_url"
+                name: "open_website_url",
             },
-            record: this.props.record,
+            getResParams: () =>
+                pick(this.props.record, "context", "evalContext", "resModel", "resId", "resIds"),
         });
     }
 }
