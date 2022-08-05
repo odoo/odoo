@@ -10,7 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 import { Field } from "@web/views/fields/field";
-import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
+import { fileTypeMagicWordMap, imageCacheKey } from "@web/views/fields/image/image_field";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
@@ -82,7 +82,12 @@ function getImageSrcFromRecordInfo(record, model, field, idOrIds, placeholder) {
         return placeholder;
     } else {
         // Else: fetches the image related to the given id.
-        return url("/web/image", { model, field, id });
+        return url("/web/image", {
+            model,
+            field,
+            id,
+            unique: imageCacheKey(record.data.__last_update),
+        });
     }
 }
 

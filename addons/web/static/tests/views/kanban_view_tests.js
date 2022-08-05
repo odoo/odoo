@@ -8403,7 +8403,10 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("test displaying image (__last_update field)", async (assert) => {
         // the presence of __last_update field ensures that the image is reloaded when necessary
-        assert.expect(1);
+        assert.expect(2);
+
+        const rec = serverData.models.partner.records.find((r) => r.id === 1);
+        rec.__last_update = "2022-08-05 08:37:00";
 
         await makeView({
             type: "kanban",
@@ -8421,7 +8424,17 @@ QUnit.module("Views", (hooks) => {
                     assert.deepEqual(kwargs.fields, ["id", "__last_update"]);
                 }
             },
+            domain: [["id", "in", [1]]],
         });
+
+        assert.ok(
+            target
+                .querySelector(".o_kanban_record:not(.o_kanban_ghost) img")
+                .dataset.src.endsWith(
+                    "/web/image?model=partner&field=image&id=1&unique=1659688620000"
+                ),
+            "image src is the preview image given in option"
+        );
     });
 
     QUnit.test("test displaying image (binary & placeholder)", async (assert) => {
@@ -8521,12 +8534,12 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(
             target,
-            'img[data-src*="/web/image"][data-src$="&id=1"]',
+            'img[data-src*="/web/image"][data-src$="&id=1&unique="]',
             "image url should contain id of set partner_id"
         );
         assert.containsOnce(
             target,
-            'img[data-src*="/web/image"][data-src$="&id="]',
+            'img[data-src*="/web/image"][data-src$="&id=&unique="]',
             "image url should contain an empty id if partner_id is not set"
         );
     });
@@ -10897,14 +10910,16 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                "<kanban>" +
-                '<templates><t t-name="kanban-box">' +
-                "<div>" +
-                '<field name="int_field"/>' +
-                "</div>" +
-                "</t></templates>" +
-                "</kanban>",
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="int_field"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
             groupBy: ["product_id"],
         });
 
