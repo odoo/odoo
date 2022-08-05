@@ -247,6 +247,9 @@ export class FormController extends Component {
     }
 
     beforeUnload() {
+        if (!this.props.saveBeforeUnload) {
+            return;
+        }
         return this.model.root.urgentSave();
     }
 
@@ -461,8 +464,10 @@ FormController.props = {
     buttonTemplate: String,
     preventCreate: { type: Boolean, optional: true },
     preventEdit: { type: Boolean, optional: true },
+    saveBeforeUnload: { type: Boolean, optional: true },
 };
 FormController.defaultProps = {
     preventCreate: false,
     preventEdit: false,
+    saveBeforeUnload: true,
 };

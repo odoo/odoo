@@ -30,6 +30,7 @@ export class FormViewDialog extends Component {
             viewId: this.props.viewId || false,
             preventCreate: this.props.preventCreate,
             preventEdit: this.props.preventEdit,
+            saveBeforeUnload: this.props.saveBeforeUnload,
             discardRecord: () => {
                 this.props.close();
             },
@@ -116,11 +117,13 @@ FormViewDialog.props = {
     preventEdit: { type: Boolean, optional: true },
     isToMany: { type: Boolean, optional: true },
     size: { type: String, optional: true },
+    saveBeforeUnload: { type: Boolean, optional: true },
 };
 FormViewDialog.defaultProps = {
     onRecordSaved: () => {},
     preventCreate: false,
     preventEdit: false,
     isToMany: false,
+    saveBeforeUnload: true,
 };
 FormViewDialog.template = "web.FormViewDialog";
