@@ -115,7 +115,7 @@ class SaleOrder(models.Model):
             self._compute_pricelist_id()
 
         if update_pricelist or previous_pricelist_id != self.pricelist_id.id:
-            self.update_prices()
+            self._recompute_prices()
 
     def _cart_update(self, product_id, line_id=None, add_qty=0, set_qty=0, **kwargs):
         """ Add or set product quantity, add_qty can be negative """

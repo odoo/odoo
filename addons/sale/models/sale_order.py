@@ -914,22 +914,27 @@ class SaleOrder(models.Model):
                 self.fiscal_position_id._get_html_link() if self.fiscal_position_id else "",
             ))
 
-    def update_prices(self):
+    def action_update_prices(self):
         self.ensure_one()
+
+        self._recompute_prices()
+
+        if self.pricelist_id:
+            self.message_post(body=_(
+                "Product prices have been recomputed according to pricelist %s.",
+                self.pricelist_id._get_html_link(),
+            ))
+
+    def _recompute_prices(self):
         lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
         lines_to_recompute.invalidate_recordset(['pricelist_item_id'])
         lines_to_recompute._compute_price_unit()
-        # Special case: we want to overwrite the existing discount on update_prices call
+        # Special case: we want to overwrite the existing discount on _recompute_prices call
         # i.e. to make sure the discount is correctly reset
         # if pricelist discount_policy is different than when the price was first computed.
         lines_to_recompute.discount = 0.0
         lines_to_recompute._compute_discount()
         self.show_update_pricelist = False
-        if self.partner_id and self.id:
-            self.message_post(body=_(
-                "Product prices have been recomputed according to pricelist %s.",
-                self.pricelist_id._get_html_link(),
-            ))
 
     # INVOICING #
 
