@@ -1,7 +1,16 @@
 /** @odoo-module **/
 
-import { click, getFixture, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
+import {
+    click,
+    getFixture,
+    nextTick,
+    triggerEvent,
+    clickEdit,
+    clickSave,
+    editInput,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { pagerNext } from "@web/../tests/search/helpers";
 
 const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -25,6 +34,7 @@ QUnit.module("Fields", (hooks) => {
                             relation: "partner_type",
                             searchable: true,
                         },
+                        foo: { type: "char" },
                         document: { string: "Binary", type: "binary" },
                     },
                     records: [
@@ -82,7 +92,7 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner/read") {
                     assert.deepEqual(
                         args[1],
-                        ["document", /*"__last_update",*/ "display_name"],
+                        ["__last_update", "document", "display_name"],
                         "The fields document, display_name and __last_update should be present when reading an image"
                     );
                 }
@@ -315,6 +325,7 @@ QUnit.module("Fields", (hooks) => {
         "ImageField displays the right images with zoom and preview_image options",
         async function (assert) {
             serverData.models.partner.records[0].document = "3 kb";
+            serverData.models.partner.records[0].__last_update = "2022-08-05 08:37:00";
 
             await makeView({
                 type: "form",
@@ -330,7 +341,7 @@ QUnit.module("Fields", (hooks) => {
             assert.ok(
                 JSON.parse(
                     target.querySelector(".o_field_image img").dataset["tooltipInfo"]
-                ).url.endsWith("/web/image?model=partner&id=1&field=document"),
+                ).url.endsWith("/web/image?model=partner&id=1&field=document&unique=1659688620000"),
                 "tooltip show the full image from the field value"
             );
             assert.strictEqual(
@@ -341,7 +352,9 @@ QUnit.module("Fields", (hooks) => {
             assert.ok(
                 target
                     .querySelector(".o_field_image img")
-                    .dataset.src.endsWith("/web/image?model=partner&id=1&field=document_preview"),
+                    .dataset.src.endsWith(
+                        "/web/image?model=partner&id=1&field=document_preview&unique=1659688620000"
+                    ),
                 "image src is the preview image given in option"
             );
         }
@@ -447,5 +460,94 @@ QUnit.module("Fields", (hooks) => {
             "o_field_invalid",
             "image field should be displayed as invalid"
         );
+    });
+
+    QUnit.test("unique in url doesn't change on onchange", async (assert) => {
+        serverData.models.partner.onchanges = {
+            foo: () => {},
+        };
+
+        const rec = serverData.models.partner.records.find((rec) => rec.id === 1);
+        rec.document = "3 kb";
+        rec.__last_update = "2022-08-05 08:37:00";
+
+        await makeView({
+            resId: 1,
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" />
+                    <field name="document" widget="image" required="1" />
+                </form>`,
+            mockRPC(route, { method, args }) {
+                assert.step(method);
+                if (method === "onchange") {
+                    return {
+                        value: {
+                            __last_update: "", // actual return of the server
+                        },
+                    };
+                }
+                if (method === "write") {
+                    args[1].__last_update = "2022-08-05 09:37:00";
+                }
+            },
+        });
+
+        function getUnique(target) {
+            const src = target.dataset.src;
+            return new URL(src).searchParams.get("unique");
+        }
+
+        assert.verifySteps(["get_views", "read"]);
+        assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659688620000");
+
+        await clickEdit(target);
+        assert.verifySteps([]);
+        // same unique as before
+        assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659688620000");
+
+        await editInput(target, ".o_field_widget[name='foo'] input", "grrr");
+        assert.verifySteps(["onchange"]);
+        // also same unique
+        assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659688620000");
+
+        await clickSave(target);
+        assert.verifySteps(["write", "read"]);
+        // different unique: the record has been written
+        assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659692220000");
+    });
+
+    QUnit.test("unique in url change on record change", async (assert) => {
+        const rec = serverData.models.partner.records.find((rec) => rec.id === 1);
+        rec.document = "3 kb";
+        rec.__last_update = "2022-08-05 08:37:00";
+
+        const rec2 = serverData.models.partner.records.find((rec) => rec.id === 2);
+        rec2.document = "3 kb";
+        rec2.__last_update = "2022-08-05 09:37:00";
+
+        await makeView({
+            resIds: [1, 2],
+            resId: 1,
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="document" widget="image" required="1" />
+                </form>`,
+        });
+
+        function getUnique(target) {
+            const src = target.dataset.src;
+            return new URL(src).searchParams.get("unique");
+        }
+
+        assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659688620000");
+        await pagerNext(target);
+        assert.strictEqual(getUnique(target.querySelector(".o_field_image img")), "1659692220000");
     });
 });
