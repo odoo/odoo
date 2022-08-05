@@ -31,7 +31,6 @@
                 <separator/>
                 <filter string="My Allocations" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
                 <separator/>
-                <field name="department_id" operator="child_of"/>
                 <field name="holiday_status_id"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"

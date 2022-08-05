@@ -941,7 +941,7 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.expense_number = result.get(sheet.id, 0)
 
-    @api.depends('employee_id')
+    @api.depends('employee_id', 'employee_id.department_id')
     def _compute_from_employee_id(self):
         for sheet in self:
             sheet.address_id = sheet.employee_id.sudo().address_home_id

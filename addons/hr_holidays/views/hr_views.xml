@@ -7,7 +7,7 @@
        <field name="view_mode">kanban,tree,form</field>
        <field name="context">{
            'search_default_is_absent': 1,
-           'searchpanel_default_department_id': active_id,
+           'search_default_department_id': active_id,
            'default_department_id': active_id}
        </field>
        <field name="search_view_id" ref="hr.view_employee_filter"/>
@@ -33,14 +33,14 @@
                     <t groups="hr_holidays.group_hr_holidays_user">
                         <div t-if="record.leave_to_approve_count.raw_value > 0" class="row ml16">
                             <div class="col">
-                                <a name="%(hr_leave_action_action_approve_department)d" type="action">
+                                <a name="action_open_leave_department" type="object">
                                     <field name="leave_to_approve_count"/> Time Off Requests
                                 </a>
                             </div>
                         </div>
                         <div t-if="record.allocation_to_approve_count.raw_value > 0" class="row ml16">
                             <div class="col">
-                                <a name="%(hr_leave_allocation_action_approve_department)d" type="action">
+                                <a name="action_open_allocation_department" type="object">
                                     <field name="allocation_to_approve_count"/> Allocation Requests
                                 </a>
                             </div>
