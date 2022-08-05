@@ -87,6 +87,10 @@ class ProductTemplate(models.Model):
         }
         return action
 
+    def action_compute_bom_days(self):
+        templates = self.filtered(lambda t: t.bom_count > 0)
+        if templates:
+            return templates.mapped('product_variant_id').action_compute_bom_days()
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -280,6 +284,15 @@ class ProductProduct(models.Model):
             res['context']['single_product'] = False
             res['context'].pop('default_product_tmpl_id', None)
         return res
+
+    def action_compute_bom_days(self):
+        bom_by_products = self.env['mrp.bom']._bom_find(self)
+        company_id = self.env.context.get('default_company_id', self.env.company.id)
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1)
+        for product in self:
+            bom_data = self.env['report.mrp.report_bom_structure'].with_context(minimized=True)._get_bom_data(bom_by_products[product], warehouse, product, ignore_stock=True)
+            availability_delay = bom_data.get('resupply_avail_delay')
+            product.days_to_prepare_mo = availability_delay - bom_data.get('lead_time', 0) if availability_delay else 0
 
     def _match_all_variant_values(self, product_template_attribute_value_ids):
         """ It currently checks that all variant values (`product_template_attribute_value_ids`)
