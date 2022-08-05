@@ -16,9 +16,6 @@
             &_hotkey {
                 align-items: center;
                 justify-content: space-between;
-            }
-
-            &_hotkey, &_left {
                 background-color: inherit;
                 padding: 0.5rem 1.3em;
                 display: flex;
@@ -26,6 +23,10 @@
                     position: relative;
                     top: 0.4em;
                 }
+            }
+            a {
+                text-decoration: none;
+                color: inherit;
             }
         }
 
@@ -41,10 +42,14 @@
     }
     .o_command{
         cursor: pointer;
-        .test-ellipsis {
+        .text-ellipsis {
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
+        }
+        .o_command_focus {
+            white-space: nowrap;
+            opacity: 0.9;
         }
     }
 }

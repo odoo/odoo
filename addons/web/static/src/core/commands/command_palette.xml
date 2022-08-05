@@ -18,17 +18,26 @@
             <div class="o_command_category px-0">
               <t t-foreach="category.commands" t-as="command" t-key="command.keyId">
                 <t t-set="commandIndex" t-value="state.commands.indexOf(command)"/>
-                <div t-attf-id="o_command_{{commandIndex}}" class="o_command" t-att-class="{ focused: state.selectedCommand === command }" t-on-click="() => this.onCommandClicked(commandIndex)" t-on-mouseenter="() => this.onCommandMouseEnter(commandIndex)" t-on-close="() => this.props.closeMe()">
-                  <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="state.searchValue" t-props="command.props" executeCommand="() => this.executeCommand(command)">
-                    <t t-set-slot="name">
-                      <span class="o_command_name">
-                        <t t-foreach="command.splitName" t-as="name" t-key="name_index">
-                          <b t-if="name_index % 2" t-out="name" class="text-primary"/>
-                          <t t-else="" t-out="name"/>
-                        </t>
-                      </span>
+                <div t-attf-id="o_command_{{commandIndex}}" class="o_command"
+                  t-att-class="{ focused: state.selectedCommand === command }"
+                  t-on-click="(event) => this.onCommandClicked(event, commandIndex)"
+                  t-on-mouseenter="() => this.onCommandMouseEnter(commandIndex)"
+                  t-on-close="() => this.props.closeMe()">
+                  <a t-att-href="command.href">
+                    <t t-component="command.Component || DefaultCommandItem" name="command.name" searchValue="state.searchValue" t-props="command.props" executeCommand="() => this.executeCommand(command)">
+                      <t t-set-slot="name">
+                        <span class="o_command_name text-ellipsis" t-att-title="command.name">
+                          <t t-foreach="command.splitName" t-as="name" t-key="name_index">
+                            <b t-if="name_index % 2" t-out="name" class="text-primary"/>
+                            <t t-else="" t-out="name"/>
+                          </t>
+                        </span>
+                      </t>
+                      <t t-set-slot="focusMessage">
+                          <small t-if="!isMobileOS and command.href and state.selectedCommand === command" class="o_command_focus text-muted"><kbd>⏎</kbd> to open, <kbd><t t-if="isMacOS">CMD</t><t t-else="">CTRL</t></kbd>+<kbd>⏎</kbd> to open in new tab</small>
+                      </t>
                     </t>
-                  </t>
+                  </a>
                 </div>
               </t>
             </div>
