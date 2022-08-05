@@ -35,6 +35,7 @@
             <button type="button" class="btn btn-primary o_upload_media_button" t-on-click="onClickUpload">
                 <t t-esc="props.uploadText"/>
             </button>
+            <i t-if="props.isImageOptimizationDisabled" class="fa fa-warning text-warning mt-3 ms-2" title="Automatic image optimization is disabled"/>
         </div>
     </div>
 </t>
@@ -58,7 +59,8 @@
             search="(needle) => this.search(needle)"
             useMediaLibrary="props.useMediaLibrary"
             validateUrl="validateUrl"
-            multiSelect="props.multiSelect"/>
+            multiSelect="props.multiSelect"
+            isImageOptimizationDisabled="isImageOptimizationDisabled"/>
         <t t-call="{{ constructor.attachmentsListTemplate }}"/>
         <div name="load_more_attachments" class="mt-4 text-center mx-auto o_we_load_more">
             <button t-if="canLoadMore" class="btn btn-primary o_load_more" type="button" t-on-click="loadMore">Load more...</button>

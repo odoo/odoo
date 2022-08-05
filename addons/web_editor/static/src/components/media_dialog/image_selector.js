@@ -4,7 +4,7 @@ import { useService } from '@web/core/utils/hooks';
 import { getCSSVariableValue, DEFAULT_PALETTE } from 'web_editor.utils';
 import { Attachment, FileSelector, IMAGE_MIMETYPES, IMAGE_EXTENSIONS } from './file_selector';
 
-const { useRef, useState, useEffect } = owl;
+const { useRef, useState, useEffect, onWillStart } = owl;
 
 export class AutoResizeImage extends Attachment {
     setup() {
@@ -58,6 +58,9 @@ export class ImageSelector extends FileSelector {
         this.MIN_ROW_HEIGHT = 128;
 
         this.fileMimetypes = IMAGE_MIMETYPES.join(',');
+        onWillStart(async () => {
+            this.isImageOptimizationDisabled = await this.isImageOptimizationDisabled();
+        });
     }
 
     get canLoadMore() {
@@ -105,6 +108,10 @@ export class ImageSelector extends FileSelector {
         const { isValidUrl, path } = super.validateUrl(...args);
         const isValidFileFormat = IMAGE_EXTENSIONS.some(format => path.endsWith(format));
         return { isValidFileFormat, isValidUrl };
+    }
+
+    async isImageOptimizationDisabled() {
+        return await this.rpc('/web_editor/is_image_optimization_disabled');
     }
 
     isInitialMedia(attachment) {

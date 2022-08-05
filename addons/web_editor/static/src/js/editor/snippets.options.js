@@ -5361,6 +5361,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     async willStart() {
         const _super = this._super.bind(this);
+        this.optimizationDisabled = await this._rpc({
+            route: '/web_editor/is_image_optimization_disabled',
+        });
         await this._initializeImage();
         return _super(...arguments);
     },
@@ -5641,7 +5644,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @returns {Boolean}
      */
     _isImageSupportedForProcessing(img, strict = false) {
-        return isImageSupportedForProcessing(this._getImageMimetype(img), strict);
+        return isImageSupportedForProcessing(this._getImageMimetype(img), strict)
+            && !this.optimizationDisabled;
     },
     /**
      * @override

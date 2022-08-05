@@ -3,6 +3,7 @@
 import base64
 import binascii
 import io
+import odoo
 
 from PIL import Image, ImageOps
 # We can preload Ico too because it is considered safe
@@ -117,6 +118,14 @@ class ImageProcess():
         :return: image
         :rtype: bytes or False
         """
+        dbname = odoo.tools.config['db_name']
+        registry = odoo.registry(dbname)
+        if registry.ready:
+            with registry.cursor() as cr:
+                uid = odoo.SUPERUSER_ID
+                env = odoo.api.Environment(cr, uid, {})
+                if env['ir.config_parameter'].sudo().get_param('base.no_image_quality_optimization'):
+                    return self.source
         if not self.image:
             return self.source
 

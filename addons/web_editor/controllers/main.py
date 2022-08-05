@@ -666,6 +666,11 @@ class Web_Editor(http.Controller):
             ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
         ])
 
+    @http.route(['/web_editor/is_image_optimization_disabled'], type='json', auth="user", website=True)
+    def is_image_optimization_disabled(self, **params):
+        config_param = request.env['ir.config_parameter'].sudo().get_param('base.no_image_quality_optimization')
+        return True if config_param else False
+
     @http.route(['/web_editor/media_library_search'], type='json', auth="user", website=True)
     def media_library_search(self, **params):
         ICP = request.env['ir.config_parameter'].sudo()
