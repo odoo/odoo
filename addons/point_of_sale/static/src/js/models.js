@@ -2499,6 +2499,16 @@ exports.Orderline = Backbone.Model.extend({
             return this.get_base_price();
         }
     },
+    get_taxed_lst_unit_price: function(){
+        var lst_price = this.get_lst_price();
+        if (this.pos.config.iface_tax_included === 'total') {
+            var product =  this.get_product();
+            var taxes_ids = product.taxes_id;
+            var product_taxes = this.get_taxes_after_fp(taxes_ids);
+            return this.compute_all(product_taxes, lst_price, 1, this.pos.currency.rounding).total_included;
+        }
+        return lst_price;
+    },
     get_price_without_tax: function(){
         return this.get_all_prices().priceWithoutTax;
     },

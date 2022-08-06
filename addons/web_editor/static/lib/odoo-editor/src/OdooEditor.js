@@ -3023,10 +3023,10 @@ export class OdooEditor extends EventTarget {
         const sel = this.document.getSelection();
         const files = getImageFiles(ev.clipboardData);
         const clipboardHtml = ev.clipboardData.getData('text/html');
-        if (files.length) {
-            this.addImagesFiles(files);
-        } else if (clipboardHtml) {
+        if (clipboardHtml) {
             this.execCommand('insertHTML', this._prepareClipboardData(clipboardHtml));
+        } else if (files.length) {
+            this.addImagesFiles(files);
         } else {
             const text = ev.clipboardData.getData('text/plain');
             const splitAroundUrl = text.split(URL_REGEX);

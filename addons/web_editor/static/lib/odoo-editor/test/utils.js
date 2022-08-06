@@ -460,17 +460,41 @@ export async function createLink(editor, content) {
 }
 
 export async function insertText(editor, text) {
-    // We create and dispatch an event to mock the insert Text.
-    // Unfortunatly those Event are flagged `isTrusted: false`.
-    // So we have no choice and need to detect them inside the Editor.
-    // But it's the closest to real Browser we can go.
-    var event = new InputEvent('input', {
-        inputType: 'insertText',
-        data: text,
-        bubbles: true,
-        cancelable: true,
-    });
-    editor.editable.dispatchEvent(event);
+    // Create and dispatch events to mock text insertion. Unfortunatly, the
+    // events will be flagged `isTrusted: false` by the browser, requiring
+    // the editor to detect them since they would not trigger the default
+    // browser behavior otherwise.
+    for (const char of text) {
+        // KeyDownEvent is required to trigger deleteRange.
+        const keyDownEvent = new KeyboardEvent('keydown', {
+            key: char,
+            bubbles: true,
+            cancelable: true,
+        });
+        editor.editable.dispatchEvent(keyDownEvent);
+        // KeyPressEvent is not required but is triggered like in the browser.
+        const keyPressEvent = new KeyboardEvent('keypress', {
+            key: char,
+            bubbles: true,
+            cancelable: true,
+        });
+        editor.editable.dispatchEvent(keyPressEvent);
+        // InputEvent is required to simulate the insert text.
+        const inputEvent = new InputEvent('input', {
+            inputType: 'insertText',
+            data: char,
+            bubbles: true,
+            cancelable: true,
+        });
+        editor.editable.dispatchEvent(inputEvent);
+        // KeyUpEvent is not required but is triggered like the browser would.
+        const keyUpEvent = new KeyboardEvent('keyup', {
+            key: char,
+            bubbles: true,
+            cancelable: true,
+        });
+        editor.editable.dispatchEvent(keyUpEvent);
+    }
 }
 
 export function undo(editor) {

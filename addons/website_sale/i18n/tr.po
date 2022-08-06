@@ -17,20 +17,20 @@
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
-# abc Def <hdogan1974@gmail.com>, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2021
 # Saban Yildiz <sabany@projetgrup.com>, 2021
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # Halil, 2022
+# abc Def <hdogan1974@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Halil, 2022\n"
+"Last-Translator: abc Def <hdogan1974@gmail.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1936,9 +1936,8 @@ msgstr "Sepetim"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-#: model_terms:ir.ui.view,arch_db:website_sale.sort
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name"
 msgstr "Adı"
 
@@ -3169,6 +3168,12 @@ msgid "The #1"
 msgstr "# 1"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Erişim belirteci geçersiz."
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3195,6 +3200,12 @@ msgid ""
 msgstr ""
 "Burada seçilen mod, oluşturulan ancak halihazırda mevcut olan ürünler için "
 "olmayan tüm yeni ürünlerin faturalandırma politikası olarak geçerlidir."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The order has been canceled."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids

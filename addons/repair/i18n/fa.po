@@ -4,13 +4,10 @@
 # 
 # Translators:
 # Hamid Reza Kaveh <hamidrkp@riseup.net>, 2022
-# saeed raesi <saeed.raesi2020@gmail.com>, 2022
-# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2022
-# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2022
 # Hamid Darabi, 2022
+# Far Har <fhari1234@gmail.com>, 2022
 # Martin Trigaux, 2022
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2022
-# Far Har <fhari1234@gmail.com>, 2022
 # Hamed Mohammadi <hamed@dehongi.com>, 2022
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2022
 # Hanna Kheradroosta, 2022
@@ -58,12 +55,19 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* وضعیت \"پیش نویس\" زمانی استفاده می شود که کاربر سفارش تعمیر جدید و تایید نشده ای را رمزگذاری می کند.\n"
+"* وضعیت \"تأیید شده\" زمانی استفاده می شود که کاربر سفارش تعمیر را تایید کند.\n"
+"* وضعیت \"آماده برای تعمیر\" برای شروع تعمیر استفاده می شود، کاربر فقط پس از تایید سفارش تعمیر می تواند تعمیر را شروع کند.\n"
+"* وضعیت \"در حال تعمیر\" زمانی استفاده می شود که تعمیر در حال انجام است.\n"
+"* از وضعیت \"فاکتور می شود\" برای ایجاد فاکتور قبل یا بعد از انجام تعمیر استفاده می شود.\n"
+"* وضعیت \"انجام شد\" پس از اتمام تعمیر تنظیم می شود.\n"
+"* هنگامی که کاربر سفارش تعمیر را لغو می کند از وضعیت \"لغو\" استفاده می شود."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
-msgstr ""
+msgstr ": مقدار ناکافی برای تعمیر"
 
 #. module: repair
 #: model:mail.template,body_html:repair.mail_template_repair_quotation
@@ -159,7 +163,7 @@ msgstr "? این ممکن است منجر به ناهماهنگی در موجو�
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
 msgid "Action Needed"
-msgstr "عملیات مورد نیاز است"
+msgstr "اقدام مورد نیاز است"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_ids
@@ -169,7 +173,7 @@ msgstr "فعالیت‌ها"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "دکوراسیون استثنا فعالیت"
+msgstr "دکوراسیون استثنایی فعالیت"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
@@ -189,12 +193,12 @@ msgstr "افزودن"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes."
-msgstr ""
+msgstr "افزودن یادداشت های داحلی"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add quotation notes."
-msgstr ""
+msgstr "افزودن یادداشت پیش‌فاکتور"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__after_repair
@@ -225,14 +229,14 @@ msgstr "لغو تعمیر"
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__cancel
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__cancel
 msgid "Cancelled"
-msgstr "لغوشده"
+msgstr "لغو شد"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_category_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_uom_category_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_uom_category_id
 msgid "Category"
-msgstr "دسته‌بندی"
+msgstr "دسته بندی"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
@@ -240,6 +244,8 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"شریکی را انتخاب کنید که سفارش برای او فاکتور و تحویل داده شود. می‌توانید "
+"شریکی را با نام، TIN، ایمیل یا مرجع داخلی پیدا کنید."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -279,8 +285,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"تبدیل بین واحدهای اندازه گیری تنها در صورتی امکان پذیر است که متعلق به یک "
-"دسته باشند. تبدیل بر اساس نسبت ها انجام می شود."
+"تبدیل بین واحدهای اندازه گیری تنها در صورتی می تواند رخ دهد که به یک دسته "
+"تعلق داشته باشند. تبدیل بر اساس نسبت ها انجام خواهد شد."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
@@ -289,6 +295,8 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"سطر لیست قیمتی مطابق با این محصول و مقدار پیدا نشد.\n"
+"شما باید یا محصول، مقدار یا لیست قیمت را تغییر دهید."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -299,12 +307,12 @@ msgstr "ایجاد فاکتور"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr ""
+msgstr "ایجاد فاکتور انبوه (تعمیر)"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
 msgid "Create a new tag"
-msgstr "ایجاد یک برچسب جدید"
+msgstr "یک برچسب جدید ایجاد کنید"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.act_repair_invoice
@@ -320,7 +328,7 @@ msgstr "ایجاد فاکتورها"
 #: model:ir.model.fields,field_description:repair.field_repair_tags__create_uid
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__create_uid
 msgid "Created by"
-msgstr "ایجادشده توسط"
+msgstr "ایجاد شده توسط"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__create_date
@@ -360,7 +368,7 @@ msgstr "نشانی تحویل"
 #: model:ir.model.fields,field_description:repair.field_repair_line__name
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Description"
-msgstr "توضیحات"
+msgstr "توصیف"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_dest_id
@@ -380,12 +388,12 @@ msgstr "نام نمایشی"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "Do you confirm you want to repair"
-msgstr ""
+msgstr "آیا تأیید می کنید که می خواهید تعمیر کنید؟"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr ""
+msgstr "آیا واقعا می خواهید فاکتور(های) را ایجاد کنید؟"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__done
@@ -401,7 +409,7 @@ msgstr "پیشنویس"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid ""
 "Draft invoices for this order will be cancelled. Do you confirm the action?"
-msgstr ""
+msgstr "پیش نویس فاکتورهای این سفارش لغو می شود. آیا اقدام را تایید می کنید؟"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -433,7 +441,7 @@ msgstr "دنبال‌کنندگان"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "دنبال کنندگان (طرف حساب ها)"
+msgstr "پیروان (شرکاء)"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
@@ -448,12 +456,12 @@ msgstr "فعالیتهای آینده"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Group By"
-msgstr "گروه بندی بر مبنای"
+msgstr "گروه‌بندی برمبنای"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__group
 msgid "Group by partner invoice address"
-msgstr ""
+msgstr "گروه بر اساس آدرس فاکتور شریک"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__has_message
@@ -483,24 +491,25 @@ msgstr "آیکون"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "آیکون برای نشان دادن یک فعالیت استثنایی."
+msgstr "آیکونی برای نشان دادن یک فعالیت استثنایی."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction
 #: model:ir.model.fields,help:repair.field_repair_order__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "در صورت علامت‌گذاری، پیام‌های جدید نیاز به توجه شما دارند."
+msgstr ""
+"اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "در صورت بررسی ، برخی پیام ها خطای تحویل دارند."
+msgstr "اگر علامت زده شود، برخی از پیام ها دارای خطای تحویل هستند."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__priority
 msgid "Important repair order"
-msgstr ""
+msgstr "سفارش تعمیر مهم"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -509,6 +518,8 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
+"در یک سفارش تعمیر، می‌توانید اجزایی را که حذف، اضافه یا جایگزین می‌کنید\n"
+"                 و همچنین زمانی را که برای عملیات مختلف صرف کرده‌اید ثبت کنید."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
@@ -523,7 +534,7 @@ msgstr "انتقال انبارداری"
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_move_lines
 msgid "Inventory Moves"
-msgstr "انتقال انبارداری"
+msgstr "انتقالات انبارداری"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_id
@@ -544,7 +555,7 @@ msgstr "روش فاکتور"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_state
 msgid "Invoice State"
-msgstr ""
+msgstr "وضعیت فاکتور"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -583,12 +594,12 @@ msgstr "دنبال می کند"
 #. module: repair
 #: model:ir.model,name:repair.model_account_move
 msgid "Journal Entry"
-msgstr "ورودی روزنامه"
+msgstr "داده روزنامه"
 
 #. module: repair
 #: model:ir.model,name:repair.model_account_move_line
 msgid "Journal Item"
-msgstr "آیتم سند"
+msgstr "آیتم روزنامه"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee____last_update
@@ -608,7 +619,7 @@ msgstr "آخرین تغییر در"
 #: model:ir.model.fields,field_description:repair.field_repair_tags__write_uid
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__write_uid
 msgid "Last Updated by"
-msgstr "آخرین به‌روز‌رسانی توسط"
+msgstr "آخرین تغییر توسط"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__write_date
@@ -623,7 +634,7 @@ msgstr "آخرین به روز رسانی در"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Late Activities"
-msgstr "فعالیتهای دیر شده"
+msgstr "فعالیتهای اخیر"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
@@ -636,7 +647,7 @@ msgstr "مکان"
 #: model:ir.model.fields,field_description:repair.field_repair_line__lot_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
-msgstr "لات/سریال"
+msgstr "سری/سریال"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
@@ -656,12 +667,12 @@ msgstr "پیام‌ها"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__move_id
 msgid "Move"
-msgstr "انتقال"
+msgstr "جابجایی"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__move_id
 msgid "Move created by the repair order"
-msgstr ""
+msgstr "انتقال ایجاد شده توسط سفارش تعمیر"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__my_activity_date_deadline
@@ -676,7 +687,7 @@ msgstr "رویداد تقویم فعالیت بعدی"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "آخرین موعد فعالیت بعدی"
+msgstr "موعد فعالیت بعدی"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_summary
@@ -703,24 +714,24 @@ msgstr "حسابی برای محصول،  \"%s\" تعریف نشده است."
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No pricelist found."
-msgstr ""
+msgstr "لیست قیمتی پیدا نشد"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No product defined on fees."
-msgstr ""
+msgstr "هیچ محصولی با کارمزد تعریف نشده است."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid "No repair order found. Let's create one!"
-msgstr ""
+msgstr "سفارش تعمیر پیدا نشد بیایید یکی ایجاد کنیم!"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No valid pricelist line found."
-msgstr ""
+msgstr "هیچ سطر لیست قیمت معتبری یافت نشد."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
@@ -730,7 +741,7 @@ msgstr "عادی"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
 msgid "Number of Actions"
-msgstr "تعداد عملیات"
+msgstr "تعداد اقدامات"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
@@ -740,12 +751,12 @@ msgstr "تعداد خطاها"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "تعداد پیام ها که نیاز به اقدام دارد"
+msgstr "تعداد پیام ها که نیاز به عمل"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "تعداد پیام‌های با خطای تحویل"
+msgstr "تعداد پیام های دارای خطای تحویل"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_unread_counter
@@ -756,7 +767,7 @@ msgstr "تعداد پیام‌های خوانده نشده"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Only draft repairs can be confirmed."
-msgstr ""
+msgstr "فقط تعمیرات پیش نویس قابل تایید است."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__fees_lines
@@ -774,7 +785,7 @@ msgstr "قطعه‌ها"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Please define an accounting sales journal for the company %s (%s)."
-msgstr "لطفا روزنامه حسابداری فروش برای شرکت تعریف کنید %s (%s)."
+msgstr "لطفا یک روزنامه فروش حسابداری برای شرکت %s (%s) تعریف کنید."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -789,7 +800,7 @@ msgstr "لیست قیمت"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__pricelist_id
 msgid "Pricelist of the selected partner."
-msgstr ""
+msgstr "لیست قیمت شریک انتخابی"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -812,7 +823,7 @@ msgstr "محصول"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Product Moves"
-msgstr "انتقال محصولات"
+msgstr "انتقالات محصول"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__product_qty
@@ -823,7 +834,7 @@ msgstr "تعداد محصول"
 #: model:ir.model.fields,field_description:repair.field_repair_line__tracking
 #: model:ir.model.fields,field_description:repair.field_repair_order__tracking
 msgid "Product Tracking"
-msgstr ""
+msgstr "ردیابی محصول"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom
@@ -840,7 +851,7 @@ msgstr "محصول برای تعمیر"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__lot_id
 msgid "Products repaired are all belonging to this lot"
-msgstr ""
+msgstr "محصولات تعمیر شده همه متعلق به این سری ساخت هستند"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
@@ -855,12 +866,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Quantity"
-msgstr "مقدار"
+msgstr "تعداد"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__draft
 msgid "Quotation"
-msgstr "پیش‌فاکتور"
+msgstr "پیش فاکتور"
 
 #. module: repair
 #: model:ir.actions.report,name:repair.action_report_repair_order
@@ -871,7 +882,7 @@ msgstr "پیش فاکتور / سفارش"
 #: model:ir.model.fields,field_description:repair.field_repair_order__quotation_notes
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Quotation Notes"
-msgstr ""
+msgstr "یادداشت های پیش فاکتور"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -905,17 +916,17 @@ msgstr "تعمیر"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__description
 msgid "Repair Description"
-msgstr ""
+msgstr "توضیحات تعمیر"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
 msgid "Repair Fee"
-msgstr ""
+msgstr "هزینه تعمیر"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
 msgid "Repair Fees"
-msgstr ""
+msgstr "هزینه های تعمیر"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_line_ids
@@ -925,12 +936,12 @@ msgstr "سطر تعمیر"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_line
 msgid "Repair Line (parts)"
-msgstr ""
+msgstr "سطر تعمیر (قطعات)"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Repair Notes"
-msgstr ""
+msgstr "یادداشت های تعمیر"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
@@ -948,7 +959,7 @@ msgstr "سفارش تعمیر #:"
 #: model:ir.model.fields,field_description:repair.field_repair_fee__repair_id
 #: model:ir.model.fields,field_description:repair.field_repair_line__repair_id
 msgid "Repair Order Reference"
-msgstr ""
+msgstr "مرجع سفارش تعمیر"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_graph
@@ -963,12 +974,12 @@ msgstr "سفارشات تعمیر"
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_tag
 msgid "Repair Orders Tags"
-msgstr ""
+msgstr "برچسب های سفارشات تعمیر"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Quotation #:"
-msgstr ""
+msgstr "پیش فاکتور تعمیر #:"
 
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
@@ -990,42 +1001,42 @@ msgstr ""
 #: model:ir.model,name:repair.model_repair_tags
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
 msgid "Repair Tags"
-msgstr ""
+msgstr "برچسب های تعمیر"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
-msgstr ""
+msgstr "برای بازنشانی به پیش نویس، تعمیر باید لغو شود."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "تعمیر باید قبل از شروع تعمیر تایید شود."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
-msgstr ""
+msgstr "تعمیر باید تعمیر شود تا محصول جابجا شود."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "برای پایان دادن به تعمیر، تعمیر باید \"در حال تعمیر\" باشد."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_production_lot__repair_order_count
 msgid "Repair order count"
-msgstr ""
+msgstr "تعداد سفارش تعمیر"
 
 #. module: repair
 #: code:addons/repair/models/stock_production_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
-msgstr ""
+msgstr "سفارشات تعمیر از %s"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -1073,7 +1084,7 @@ msgstr "سفارش فروش"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "سفارش فروشی که از آن محصول مورد تعمیر می آید."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
@@ -1083,7 +1094,7 @@ msgstr "تاریخ برنامه ریزی شده"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr ""
+msgstr "جستجوی سفارشات تعمیر"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__invoice_method
@@ -1092,22 +1103,25 @@ msgid ""
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
+"انتخاب \"قبل از تعمیر\" یا \"پس از تعمیر\" به شما امکان می دهد به ترتیب قبل "
+"یا بعد از انجام تعمیر فاکتور ایجاد کنید. \"بدون فاکتور\" به این معنی است که "
+"شما نمی خواهید برای این سفارش تعمیر فاکتور ایجاد کنید."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Send Quotation"
-msgstr ""
+msgstr "ارسال پیش‌فاکتور"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
-msgstr ""
+msgstr "شماره سریال برای سطرهای عملیاتی با محصولات: %s مورد نیاز است"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Set to Draft"
-msgstr "تبدیل به پیش‌نویس"
+msgstr "تبدیل به پیشنویس"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1139,10 +1153,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"وضعیت بر اساس فعالیت\n"
-"Overdue: Due date is already passed\n"
-"امروز:تاریخ فعالیت امروز است\n"
-"برنامه‌ریزی شده: برنامه‌های آینده."
+"وضعیت بر اساس فعالیت ها\n"
+"سررسید: تاریخ سررسید گذشته است\n"
+"امروز: تاریخ فعالیت امروز است\n"
+"برنامه ریزی شده: فعالیت های آینده."
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
@@ -1189,7 +1203,7 @@ msgstr "مالیات ها"
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_order_name
 msgid "The name of the Repair Order must be unique!"
-msgstr ""
+msgstr "نام سفارش تعمیر باید منحصر به فرد باشد!"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1198,23 +1212,25 @@ msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
 msgstr ""
+"واحد اندازه گیری محصولی که انتخاب کردید دارای دسته بندی متفاوتی نسبت به واحد"
+" اندازه گیری محصول است."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_line__state
 msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
-msgstr ""
+msgstr "وضعیت سطر تعمیر به طور خودکار روی سفارش تعمیر لینک شده تنظیم می شود."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr ""
+msgstr "این مکانی است که محصول مورد نظر برای تعمیر در آن قرار دارد."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__2binvoiced
 msgid "To be Invoiced"
-msgstr ""
+msgstr "فاکتور شود"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1226,7 +1242,7 @@ msgstr "فعالیتها امروز"
 #: model:ir.model.fields,field_description:repair.field_repair_line__price_total
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_total
 msgid "Total"
-msgstr "جمع کل"
+msgstr "جمع کل:"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1246,7 +1262,7 @@ msgstr "نوع"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "نوع فعالیت استثنایی روی رکورد."
+msgstr "نوع فعالیت استثنا در رکورد."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
@@ -1276,12 +1292,12 @@ msgstr "واحد ها"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
 msgid "Unread Messages"
-msgstr "پیام‌های خوانده‌‌نشده"
+msgstr "پیام های ناخوانده"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "شمارنده پیام‌های خوانده‌ نشده"
+msgstr "شمارنده پیام‌های خوانده‌نشده"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
@@ -1291,12 +1307,12 @@ msgstr "مبلغ بدون مالیات"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Untaxed amount"
-msgstr ""
+msgstr "مبلغ بدون مالیات"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "UoM"
-msgstr "واحد"
+msgstr "واحد اندازه گیری"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__1
@@ -1306,7 +1322,7 @@ msgstr "فوری"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
-msgstr ""
+msgstr "هشدار به مقدار ناکافی تعمیر"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1328,7 +1344,7 @@ msgstr "پیام‌های وب‌سایت"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__website_message_ids
 msgid "Website communication history"
-msgstr "تاریخچه ارتباطات با وبسایت"
+msgstr "تاریخچه ارتباط با وبسایت"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1337,6 +1353,8 @@ msgid ""
 "You can not delete a repair order once it has been confirmed. You must first"
 " cancel it."
 msgstr ""
+"پس از تأیید سفارش تعمیر، نمی توانید آن را حذف کنید. ابتدا باید آن را لغو "
+"کنید."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1345,12 +1363,14 @@ msgid ""
 "You can not delete a repair order which is linked to an invoice which has "
 "been posted once."
 msgstr ""
+"شما نمی توانید یک سفارش تعمیر را که به فاکتوری لینک شده است که یک بار ارسال "
+"شده است، حذف کنید."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You can not enter negative quantities."
-msgstr "شما نمی توانید تعداد منفی وارد کنید."
+msgstr "شما نمی توانید مقادیر منفی را وارد کنید."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
@@ -1359,17 +1379,19 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
+"شما باید یک لیست قیمت را در فرم تعمیر انتخاب کنید!\n"
+"  لطفا قبل از انتخاب محصول یکی را تنظیم کنید."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr ""
+msgstr "شما باید آدرس فاکتور را در فرم تعمیر انتخاب کنید."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "from location"
-msgstr "از مکان"
+msgstr "از محل"
 
 #. module: repair
 #: model:mail.template,report_name:repair.mail_template_repair_quotation

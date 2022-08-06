@@ -441,6 +441,8 @@ class HolidaysAllocation(models.Model):
                         nextcall = min(nextcall, current_level_last_date)
                 days_added_per_level[current_level] += allocation._process_accrual_plan_level(
                     current_level, period_start, allocation.lastcall, period_end, allocation.nextcall)
+                if current_level.maximum_leave > 0 and sum(days_added_per_level.values()) > current_level.maximum_leave:
+                    days_added_per_level[current_level] -= sum(days_added_per_level.values()) - current_level.maximum_leave
                 allocation.lastcall = allocation.nextcall
                 allocation.nextcall = nextcall
             if days_added_per_level:
