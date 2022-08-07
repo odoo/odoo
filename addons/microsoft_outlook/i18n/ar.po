@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 #   * microsoft_outlook
 # 
+# Translators:
+# Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-31 13:54+0000\n"
 "PO-Revision-Date: 2022-04-19 13:25+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,6 +26,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        ربط حساب Outlook الخاص بك "
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -28,6 +35,8 @@ msgid ""
 "<i class=\"fa fa-cog\"/>\n"
 "                        Edit Settings"
 msgstr ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        تحرير الإعدادات "
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -36,43 +45,46 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                       رمز Outlook صالح\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Outlook Credentials</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">بيانات اعتماد Outlook</span> "
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
-msgstr ""
+msgstr "وقع خطأ أثناء جلب رمز الوصول. %s "
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
+msgstr "رابط المصادقة "
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Client ID"
-msgstr ""
+msgstr "معرف العميل "
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Client Secret"
-msgstr ""
+msgstr "سر العميل"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "تهيئة الإعدادات "
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
 msgid "Go back to your mail server"
-msgstr ""
+msgstr "العودة إلى خادم بريدك "
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
@@ -81,73 +93,75 @@ msgid ""
 "Incorrect Connection Security for Outlook mail server %r. Please set it to "
 "\"TLS (STARTTLS)\"."
 msgstr ""
+"أمان الاتصال غير صالح لخادم بريد Outlook الإلكتروني %r. يرجى تعيينه لـ \"TLS"
+" (STARTTLS)\". "
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__is_microsoft_outlook_configured
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
-msgstr ""
+msgstr "تمت تهيئة بيانات اعتماد Outlook "
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
 msgid "Mail Server"
-msgstr ""
+msgstr "خادم البريد الإلكتروني "
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
 msgid "Microsoft Outlook Mixin"
-msgstr ""
+msgstr "مجموعة مخصصات Microsoft Outlook "
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
-msgstr ""
+msgstr "وحده المدير بوسعه ربط خادم بريد Outlook. "
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
 msgid "Outlook"
-msgstr ""
+msgstr "Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr ""
+msgstr "رمز وصول Outlook "
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_access_token_expiration
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "الطابع الزمني لانتهاء صلاحية رمز وصول Outlook "
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__use_microsoft_outlook_service
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__use_microsoft_outlook_service
 msgid "Outlook Authentication"
-msgstr ""
+msgstr "مصادقة Outlook "
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_identifier
 msgid "Outlook Client Id"
-msgstr ""
+msgstr "معرف عميل Outlook "
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr ""
+msgstr "سر عميل Outlook "
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_refresh_token
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr ""
+msgstr "رمز تحديث Outlook "
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please configure your Outlook credentials."
-msgstr ""
+msgstr "يرجى تهيئة بيانات اعتماد Otlook الخاصة بك. "
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
@@ -156,17 +170,19 @@ msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
+"يرجى ترك حقل كلمة السر فارغاً لخادم بريد Outlook الإلكتروني %r. لا تتطلب "
+"عملية المصادقة ذلك "
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please login your Outlook mail server before using it."
-msgstr ""
+msgstr "يرجى تسجيل الدخول إلى خادم بريد Outlook الخاص بك قبل استخدامه. "
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Send and receive email with your Outlook account."
-msgstr ""
+msgstr "قم بإرسال واستلام رسائل البريد الإلتروني باستخدام حسابك على Outlook. "
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -174,15 +190,17 @@ msgid ""
 "Setup your Outlook API credentials in the general settings to link a Outlook"
 " account."
 msgstr ""
+"قم بضبط بيانات اعتماد الواجهة البرمجية للتطبيق لـ Outlook في الإعدادات "
+"العامة لربط حساب Outlook. "
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,help:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,help:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "The URL to generate the authorization code from Outlook"
-msgstr ""
+msgstr "رابط URL لإنشاء رمز المصادقة من Outlook "
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Unknown error."
-msgstr ""
+msgstr "خطأ غير معروف. "

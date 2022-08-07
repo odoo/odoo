@@ -20,6 +20,12 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_slides_survey
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+#, python-format
+msgid "- %s (Courses - %s)"
+msgstr ""
+
+#. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
 msgid ""
 "<br/>\n"
@@ -422,8 +428,8 @@ msgstr "Certificación de prueba"
 #: code:addons/website_slides_survey/models/survey_survey.py:0
 #, python-format
 msgid ""
-"The Certification '%(certification_name)s' cannot be deleted because it is "
-"still being used by the Course(s) '%(courses_names)s'"
+"Any Survey listed below is currently used as a Course Certification and cannot be deleted:\n"
+"%s"
 msgstr ""
 
 #. module: website_slides_survey

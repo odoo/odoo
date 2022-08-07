@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # 	* account_tax_python
 # 
+# Translators:
+# Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,12 +34,21 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- مجموعة من الضرائب: تم تعيين الضريبة من الضرائب الفرعية.\n"
+"- ثابتة: يبقى مبلغ الضريبة ثابتاً مهما كان السعر.\n"
+"- نسبة من السعر: مبلغ الضريبةهو % من السعر:\n"
+"مثال: 100 * (1 + 10%) = 110 (غير مشمول في السعر)\n"
+"مثال: 110 / (1 + 10%) = 100 (مشمول في السعر)\n"
+"- نسبة من السعر شامل الضريبة: مبلغ الضريبة هو جزء من السعر:\n"
+"مثال: 180 / (1 - 10%) = 200 (غير مشمول في السعر)\n"
+"مثال: 200 * (1 - 10%) = 180 (مشمول في السعر)"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
-msgstr ""
+msgstr "كود قابل للتطبيق"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
@@ -48,6 +62,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"قم باحتساب مبلغ الضريبة بإعداد المتغير 'النتيجة'.\n"
+"\n"
+":param base_amount: float, المبلغ الفعلي الذي ستطبق عليه الضريبة\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -60,6 +82,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"احتساب مقدار الضريبة بإعداد المتغير 'result'.\n"
+"\n"
+":param base_amount: float, المبلغ الفعلي الذي ستطبق عليه الضريبة\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -72,6 +101,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"تحديد ما إذا كانت الضريبة ستُطبق من خلال ضبط قيمة المتغير 'result' بإحدى القيمتين صحيح أو خطأ.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param company: res.company recordset singleton\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -83,6 +119,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
+"تحديد ما إذا كانت الضريبة ستُطبق من خلال ضبط قيمة المتغير 'result' بإحدى القيمتين صحيح أو خطأ.\n"
+"\n"
+":param price_unit: float\n"
+":param quantity: float\n"
+":param product: product.product recordset singleton or None\n"
+":param partner: res.partner recordset singleton or None"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
@@ -90,20 +132,20 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
-msgstr ""
+msgstr "كود بايثون"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
-msgstr ""
+msgstr "الضريبة"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
-msgstr ""
+msgstr "حساب الضريبة"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
-msgstr ""
+msgstr "قوالب للضرائب "

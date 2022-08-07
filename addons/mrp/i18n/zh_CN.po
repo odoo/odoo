@@ -41,6 +41,7 @@
 # xu aaron, 2021
 # Martin Trigaux, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -48,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:57+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3068,6 +3069,8 @@ msgid ""
 "multiplied by two. However, note that both time before and after production "
 "will only be counted once. "
 msgstr ""
+"此工作中心可并行（同时）生产的件数（以产品计量单位计）。 例如：产能为 5，需要生产 10 台，则 BOM 上列出的操作时间将乘以 2。 "
+"但是请注意，生产前后的时间都只会计算一次。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
@@ -3075,7 +3078,7 @@ msgid ""
 "This should be the smallest quantity that this product can be produced in. "
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate. "
-msgstr ""
+msgstr "这应该是该产品可以生产的最小数.。如果 BOM 包含工序，请确保工作中心产能准确。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4579,7 +4582,7 @@ msgstr "这是附加到记录ID。"
 msgid ""
 "The selected serial number does not correspond to the one used in the "
 "manufacturing order, please select another one."
-msgstr ""
+msgstr "选择的序列号与制造订单中使用的序列号不对应，请选择另一个序列号."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0

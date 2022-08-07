@@ -2,12 +2,18 @@
 # This file contains the translation of the following modules:
 # 	* pos_hr
 # 
+# Translators:
+# Martin Trigaux, 2022
+# Farid Fox, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
 "PO-Revision-Date: 2019-03-20 14:58+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -18,21 +24,21 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
-msgstr ""
+msgstr "<span class=\"o_form_label oe_edit_only\">الموظفون المسموح لهم</span> "
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_form_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
 msgid "Cashier"
-msgstr ""
+msgstr "أمين الصندوق "
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Change Cashier"
-msgstr ""
+msgstr "تغيير أمين الصندوق "
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -40,44 +46,46 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__employee_id
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_report_pos_order_search_inherit
 msgid "Employee"
-msgstr ""
+msgstr "الموظف"
 
 #. module: pos_hr
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr ""
+msgstr "الموظف: %s - تهيئة نقطة البيع: %s \n"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
 msgid "Employees with access"
-msgstr ""
+msgstr "موظفون لديهم صلاحيات الوصول"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
 msgid "If left empty, all employees can log in to the PoS session"
 msgstr ""
+"إذا تم تركه فارغاً، سيتمكن كافة الموظفين من تسجيل الدخول إلى جلسات نقطة "
+"البيع "
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Incorrect Password"
-msgstr ""
+msgstr "كلمة المرور غير صحيحة"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Log in to"
-msgstr ""
+msgstr "تسجيل الدخول إلى"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
 #, python-format
 msgid "Password ?"
-msgstr ""
+msgstr "كلمة المرور؟"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
@@ -85,40 +93,41 @@ msgid ""
 "Person who uses the cash register. It can be a reliever, a student or an "
 "interim employee."
 msgstr ""
+"الشخص الذي يستخدم صندوق تسجيل النقد. قد يكون البائع أو طالب أو موظف متدرب."
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "تهيئة نقطة البيع "
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_order
 msgid "Point of Sale Orders"
-msgstr ""
+msgstr "طلبات نقطة البيع "
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr ""
+msgstr "تقرير طلبات نقطة البيع "
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_session
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "جلسة نقطة البيع"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Scan your badge"
-msgstr ""
+msgstr "مسح شارتك"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Select Cashier"
-msgstr ""
+msgstr "تحديد أمين الصندوق "
 
 #. module: pos_hr
 #: code:addons/pos_hr/models/hr_employee.py:0
@@ -127,17 +136,19 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
+"لا يمكنك حذف موظف قد يكون مستخدَماً في جلسة نقطة بيع نشطة. قم بإغلاق الجلسة "
+"(الجلسات) أولاً: \n"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "or"
-msgstr ""
+msgstr "أو"
 
 #. module: pos_hr
 #. openerp-web
 #: code:addons/pos_hr/static/src/xml/CashierName.xml:0
 #, python-format
 msgid "selectCashier"
-msgstr ""
+msgstr "تحديد أمين الصندوق "

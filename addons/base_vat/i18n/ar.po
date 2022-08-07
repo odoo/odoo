@@ -2,12 +2,17 @@
 # This file contains the translation of the following modules:
 # 	* base_vat
 # 
+# Translators:
+# Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,31 +27,34 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"القيم المحددة هنا خاصة "
+"بالشركة فقط. \" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "<span class=\"o_vat_label\">VAT</span>"
-msgstr ""
+msgstr "<span class=\"o_vat_label\">ضريبة القيمة المضافة</span>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "الشركات "
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "تهيئة الإعدادات "
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "جهة اتصال "
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr ""
+msgstr "الوضع المالي "
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -54,6 +62,8 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
+"إذا تم تحديد هذا المربع، لن تتمكن من حفظ جهة اتصال إذا تعذر التحقق من رقم "
+"الضريبة الخاص بها من قِبَل خدمة VIES الأوروبية. "
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vat
@@ -62,6 +72,8 @@ msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
 msgstr ""
+"رقم التعريف الضريبي. قم بإكماله إذا كانت جهة الاتصال تخضع للضرائب الحكومية. "
+"يُستخدم في بعض المستندات القانونية."
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -70,6 +82,8 @@ msgid ""
 "The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"يبدو أن رقم الضريبة [%(wrong_vat)s] لـ %(record_label)s غير صالح. \n"
+"ملاحظة: الصيغة المتوقعة هي %(expected_format)s "
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -79,6 +93,8 @@ msgid ""
 "VAT validation check or did not respect the expected format "
 "%(expected_format)s."
 msgstr ""
+"يبدو أن رقم الضريبة [%(wrong_vat)s] لـ %(record_label)s لم يتخط فحص تصديق "
+"ضريبة VIES أو لم يلتزم بالصيغة المتوقعة %(expected_format)s. "
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
@@ -87,38 +103,40 @@ msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
 msgstr ""
+"لا تطابق الدولة التي تم رصدها لرقم ضريبة هذه المنطقة الدولة التي تم تعيينها "
+"لهذا الوضع الضريبي. "
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "VAT"
-msgstr ""
+msgstr "ضريبة القيمة المضافة"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vat
 msgid "VAT/Tax ID"
-msgstr ""
+msgstr "الضريبة/معرف الضريبة "
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "التحقق من أرقام الضريبة "
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "التحقق من أرقام قيمة الضريبة المضافة باستخدام خدمة VIES الأوروبية "
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
-msgstr ""
+msgstr "الوضع المالي [%s] "
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "الشريك [%s] "

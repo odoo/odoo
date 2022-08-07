@@ -3,37 +3,63 @@
 # 	* base_address_extended
 # 
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2019
-# Martin Trigaux, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
+# Daniel & Delphine <dd2013@leschoupinous.net>, 2017
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2018
+# Martin Trigaux, 2022
+# Alexandra Jubert, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
+"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_address_extended
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "<span> - </span>"
+msgstr "<span> - </span>"
+
+#. module: base_address_extended
+#: model:ir.model.fields,help:base_address_extended.field_res_country__enforce_cities
+#: model:ir.model.fields,help:base_address_extended.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,help:base_address_extended.field_res_users__country_enforce_cities
 msgid ""
-"Change how the system computes the full street field based on the different "
-"street subfields"
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
 msgstr ""
-"Modifier la façon dont le système calcule le champ relatif à la rue complète"
-" en fonction des différents champs secondaires relatifs à la rue"
+"Cochez cette case afin de s'assurer que chaque adresse ait une \"Ville\" "
+"sélectionnée dans la liste des villes du pays."
 
 #. module: base_address_extended
-#: model:ir.model,name:base_address_extended.model_res_company
-msgid "Companies"
-msgstr "Sociétés"
+#: model:ir.actions.act_window,name:base_address_extended.action_res_city_tree
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_city_extended_form
+msgid "Cities"
+msgstr "Villes"
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_city
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_city_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_tree
+msgid "City"
+msgstr "Ville"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__city_id
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__city_id
+msgid "City ID"
+msgstr "ID de la ville"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_partner
@@ -42,8 +68,36 @@ msgstr "Contact"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_country
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__country_id
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
 msgid "Country"
 msgstr "Pays"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__display_name
+msgid "Display Name"
+msgstr "Nom affiché"
+
+#. module: base_address_extended
+#: model_terms:ir.actions.act_window,help:base_address_extended.action_res_city_tree
+msgid ""
+"Display and manage the list of all cities that can be assigned to\n"
+"                your partner records. Note that an option can be set on each country separately\n"
+"                to enforce any address of it to have a city in this list."
+msgstr ""
+"Affichez et gérez la liste de toutes les villes qui peuvent être associées\n"
+" à vos partenaires. Notez qu'une option peut être configurée indépendamment pour chaque pays\n"
+" pour faire en sorte qu'une adresse correspondante présente une ville dans cette liste."
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
@@ -52,28 +106,16 @@ msgid "Door"
 msgstr "Porte"
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
-msgid "Door Number"
-msgstr "Numéro de porte"
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Door #"
+msgstr "Porte #"
 
 #. module: base_address_extended
-#: model:ir.model.fields,help:base_address_extended.field_res_country__street_format
-msgid ""
-"Format to use for streets belonging to this country.\n"
-"\n"
-"You can use the python-style string pattern with all the fields of the street (for example, use '%(street_name)s, %(street_number)s' if you want to display the street name, followed by a comma and the house number)\n"
-"%(street_name)s: the name of the street\n"
-"%(street_number)s: the house number\n"
-"%(street_number2)s: the door number"
-msgstr ""
-"Format à utiliser pour les rues de ce pays.\n"
-"\n"
-"Vous pouvez utiliser le modèle de chaîne de type python avec tous les champs associés à la rue (par exemple, utilisez « %(street_name)s, %(street_number)s » si vous souhaitez afficher le nom de la rue, suivie d'une virgule et le numéro du logement)\n"
-"%(street_name)s : nom de la rue\n"
-"%(street_number)s : numéro du logement\n"
-"%(street_number2)s : numéro de la porte"
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__enforce_cities
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__country_enforce_cities
+msgid "Enforce Cities"
+msgstr "Appliquer les villes"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -82,39 +124,73 @@ msgid "House"
 msgstr "Maison"
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
-#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
-msgid "House Number"
-msgstr "Numéro de maison"
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "House #"
+msgstr "Maison #"
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
-msgid "Street Format"
-msgstr "Format de rue"
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__id
+msgid "ID"
+msgstr "ID"
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city____last_update
+msgid "Last Modified on"
+msgstr "Dernière modification le"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_uid
+msgid "Last Updated by"
+msgstr "Mis à jour par"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__write_date
+msgid "Last Updated on"
+msgstr "Mis à jour le"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_city_filter
+msgid "Search City"
+msgstr "Rechercher un ville"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__state_id
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "State"
+msgstr "État"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Street"
+msgstr "Rue"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Street 2..."
+msgstr "Rue 2..."
+
+#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
 msgid "Street Name"
 msgstr "Nom de la Rue"
 
 #. module: base_address_extended
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
-msgid "Street Name..."
-msgstr "Nom de la rue..."
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "Street..."
+msgstr "Rue..."
 
 #. module: base_address_extended
-#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
-msgid "Street format..."
-msgstr "Format de rue…"
+#: model_terms:ir.ui.view,arch_db:base_address_extended.address_street_extended_form
+msgid "ZIP"
+msgstr "Code postal"
 
 #. module: base_address_extended
-#: code:addons/base_address_extended/models/base_address_extended.py:64
-#: code:addons/base_address_extended/models/base_address_extended.py:112
-#, python-format
-msgid "Unrecognized field %s in street format."
-msgstr "Champ %s non reconnu dans le format de rue."
+#: model:ir.model.fields,field_description:base_address_extended.field_res_city__zipcode
+msgid "Zip"
+msgstr "Code postal"

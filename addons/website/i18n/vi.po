@@ -17,6 +17,7 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Vo Thanh Thuy, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Thin Tran <trvathin@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:06+0000\n"
 "PO-Revision-Date: 2016-08-05 13:11+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022\n"
+"Last-Translator: Thin Tran <trvathin@gmail.com>, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3639,7 +3640,7 @@ msgstr "Chỉ dẫn"
 #: model:ir.cron,cron_name:website.website_disable_unused_snippets_assets
 #: model:ir.cron,name:website.website_disable_unused_snippets_assets
 msgid "Disable unused snippets assets"
-msgstr ""
+msgstr "Tắt các snippets assets không sử dụng"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -4844,6 +4845,18 @@ msgid "Google Search Console"
 msgstr "Google Search Console"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -5637,12 +5650,18 @@ msgid "Is not equal to"
 msgstr "Không bằng"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Is not set"
 msgstr "Không được đặt"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Is set"
 msgstr "Được đặt"
 
@@ -6638,6 +6657,15 @@ msgstr "Network Advertising Initiative opt-out page"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Networks"
 msgstr "Mạng"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -9181,6 +9209,13 @@ msgid "There is no data currently available."
 msgstr "Hiện chưa có dữ liệu nào."
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "There is no field available for this option."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_collapse
 msgid ""
 "These terms of service (\"Terms\", \"Agreement\") are an agreement between "
@@ -9324,6 +9359,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "This view arch has been modified"
 msgstr "Dạng xem kiến trúc này đã được sửa đổi"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -11036,6 +11080,12 @@ msgstr "bảng tin eCommerce"
 #: model:website.configurator.feature,name:website.feature_module_elearning
 msgid "eLearning"
 msgstr "eLearning"
+
+#. module: website
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "email"
+msgstr "email"
 
 #. module: website
 #. openerp-web

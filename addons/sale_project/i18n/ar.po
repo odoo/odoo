@@ -2,12 +2,19 @@
 # This file contains the translation of the following modules:
 # 	* sale_project
 # 
+# Translators:
+# Mustafa Rawi <mustafa@cubexco.com>, 2022
+# MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2022
+# Martin Trigaux, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:58+0000\n"
 "PO-Revision-Date: 2020-02-13 10:47+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +29,9 @@ msgid ""
 "                            Invoices\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            الفواتير\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -30,6 +40,9 @@ msgid ""
 "                            Vendor Bills\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            فواتير المورّد\n"
+"                        </span>"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -40,6 +53,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"حسب تهيئة المنتج، يمكن حساب الكمية التي تم توصيلها تلقائياً بإحدى الطرق التالية:\n"
+"  - يدوياً: تُحسب الكمية يدوياً في البند\n"
+"  - تحليلياً من النفقات: تكون الكمية هي مجموع الكمية من النفقات المُرحلة\n"
+"  - الجداول الزمنية: تكون الكمية هي مجموع الساعات المستغرقة لإجراء المهام المرتبطة ببند المبيعات\n"
+"  - حركات المخزون: تأتي الكمية من عمليات الانتقاء المؤكدة\n"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_policy__delivered_manual
@@ -49,41 +67,41 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_policy__delivered_milestones
 msgid "Based on Milestones"
-msgstr ""
+msgstr "بناءً على مؤشرات التقدم "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
 msgid "Billable"
-msgstr ""
+msgstr "قابل للفوترة "
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Create Invoice"
-msgstr ""
+msgstr "إنشاء فاتورة"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "الإنشاء عند الطلب "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__project_partner_id
 msgid "Customer"
-msgstr ""
+msgstr "العميل"
 
 #. module: sale_project
 #. openerp-web
 #: code:addons/sale_project/static/src/right_panel/project_right_panel.xml:0
 #, python-format
 msgid "Delivered"
-msgstr ""
+msgstr "تم التوصيل "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__sale_line_name
 msgid "Description"
-msgstr ""
+msgstr "الوصف"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
@@ -93,22 +111,22 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
 msgid "Display project"
-msgstr ""
+msgstr "عرض المشروع "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
 msgid "Generated Project"
-msgstr ""
+msgstr "المشروع المُنشأ "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__task_id
 msgid "Generated Task"
-msgstr ""
+msgstr "المهمة المُنشأة "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr ""
+msgstr "يحتوي على أمر بيع لفوترته "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_with_nothing_to_invoice
@@ -118,13 +136,13 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__invoice_count
 msgid "Invoice Count"
-msgstr ""
+msgstr "عدد الفواتير"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
+msgstr "قم بفوترة الكميات المطلوبة بمجرد أن يتم بيع الخدمة. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -220,43 +238,43 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_project_milestone__allow_billable
 #: model:ir.model.fields,help:sale_project.field_project_project__allow_billable
 msgid "Invoice your time and material from tasks."
-msgstr ""
+msgstr "قم بفوترة وقتك والمواد من المهام. "
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoice your time and material to customers"
-msgstr ""
+msgstr "قم بفوترة وقتك وموادك إلى عملائك "
 
 #. module: sale_project
 #. openerp-web
 #: code:addons/sale_project/static/src/right_panel/project_right_panel.xml:0
 #, python-format
 msgid "Invoiced"
-msgstr ""
+msgstr "مفوتر"
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Invoices"
-msgstr ""
+msgstr "الفواتير"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "سياسة الفوترة"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
 msgid "Is a Service"
-msgstr ""
+msgstr "خدمة"
 
 #. module: sale_project
 #. openerp-web
 #: code:addons/sale_project/static/src/right_panel/project_right_panel.xml:0
 #, python-format
 msgid "Load more"
-msgstr ""
+msgstr "تحميل المزيد"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
@@ -266,33 +284,36 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"تعيين الكمية يدوياً في الطلب: يتم احتساب الفاتورة حسب الكمية المُدخلة يدوياً، دون إنشاء حساب تحليلي.\n"
+"الجداول الزمنية على العقود: تُحتسب الفاتورة حسب الساعات المتتبعة في الجداول الزمنية ذات الصلة.\n"
+"إنشاء مهمة وتتبع الساعات: إنشاء مهمة عند تصديق أمر البيع وتتبع ساعات العمل. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Materials"
-msgstr ""
+msgstr "المواد"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "طريقة تحديث الكمية التي قد تم توصيلها "
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__sale_order_line__qty_delivered_method__milestones
 msgid "Milestones"
-msgstr ""
+msgstr "مؤشرات التقدم "
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "جديد"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "No Sales Order"
-msgstr ""
+msgstr "لا يوجد أمر مبيعات"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
@@ -302,12 +323,12 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
 msgid "Nothing"
-msgstr ""
+msgstr "لا شيء "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "عدد المشاريع "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
@@ -316,12 +337,14 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"في تأكيد أمر البيع، بإمكان هذا المنتج إنشاء مشروع و/أو مهمة.         من خلالها، بإمكانك تتبع الخدمات التي تبيعها.\n"
+"         'في مشروع أمر البيع': سوف يستخدم المشروع المهيأ لأمر البيع إذا كان محدداً أو الاستعانة مجدداً بإنشاء         مشروع جديد بناءً على القالب المحدد. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Services"
-msgstr ""
+msgstr "خدمات أخرى"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
@@ -333,17 +356,17 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_policy__ordered_prepaid
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "مدفوع مسبقاً/سعر ثابت "
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "المنتج"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "قالب المنتج"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -352,17 +375,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_id
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
 msgid "Project"
-msgstr ""
+msgstr "المشروع"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "المشروع والمهمة "
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "مؤشر تقدم المشروع "
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
@@ -373,17 +396,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
 msgid "Project Template"
-msgstr ""
+msgstr "قالب المشروع"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__project_id
 msgid "Project generated by the sales order item"
-msgstr ""
+msgstr "المشروع الناشئ عن عنصر أمر المبيعات"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "أمر البيع الخاص بالمشروع "
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
@@ -391,12 +414,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 #, python-format
 msgid "Projects"
-msgstr ""
+msgstr "المشاريع "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_ids
 msgid "Projects used in this sales order."
-msgstr ""
+msgstr "المشاريع المستخدمة في أمر المبيعات هذا. "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
@@ -412,19 +435,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:sale_project.project_task_view_search
 msgid "Sale Order"
-msgstr ""
+msgstr "أمر البيع"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "عدد أوامر البيع"
 
 #. module: sale_project
 #. openerp-web
 #: code:addons/sale_project/static/src/right_panel/project_right_panel.xml:0
 #, python-format
 msgid "Sales"
-msgstr ""
+msgstr "المبيعات"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -436,12 +459,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 #, python-format
 msgid "Sales Order"
-msgstr ""
+msgstr "أمر المبيعات "
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 msgid "Sales Order Id"
-msgstr ""
+msgstr "مُعرّف أمر البيع "
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -453,7 +476,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 #, python-format
 msgid "Sales Order Item"
-msgstr ""
+msgstr "عنصر أمر المبيعات"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
@@ -466,6 +489,8 @@ msgid ""
 "Sales Order Item to which the time spent on this task will be added, in "
 "order to be invoiced to your customer."
 msgstr ""
+"عنصر أمر البيع الذي سوف تتم إضافة الوقت المقضي في هذه المهمة إليه، حتى تتم "
+"فوترته لعميلك. "
 
 #. module: sale_project
 #. openerp-web
@@ -473,26 +498,26 @@ msgstr ""
 #: code:addons/sale_project/static/src/right_panel/project_right_panel.xml:0
 #, python-format
 msgid "Sales Order Items"
-msgstr ""
+msgstr "عناصر أمر البيع "
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "بند أمر البيع "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__is_service
 msgid ""
 "Sales Order item should generate a task and/or a project, depending on the "
 "product settings."
-msgstr ""
+msgstr "يجب أن ينتج عنصر أمر المبيعات مهمة و/أو مشروع، حسب إعدادات المنتج."
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 #, python-format
 msgid "Sales Orders"
-msgstr ""
+msgstr "أوامر البيع"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
@@ -502,35 +527,38 @@ msgid ""
 "sale order item defined, and if the employee is not in the 'Employee/Sales "
 "Order Item Mapping' of the project."
 msgstr ""
+"عنصر أمر المبيعات الذي يرتبط به المشروع. قم بربط قيد الجداول الزمنية بعنصر "
+"أمر المبيعات المحدد في المشروع. يُطبّق فقط على المهام التي لا تحتوي على عنصر"
+" أمر البيع، وإذا لم يكن الموظف في 'تخطيط الموظف/عنصر أمر المبيعات' للمشروع. "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr ""
+msgstr "أمر البيع الذي يرتبط به هذا المشروع. "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "أمر البيع الذي ترتبط به هذه المهمة. "
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "البحث في الفاتورة"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "البحث في أمر البيع "
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "البحث في عنصر أمر البيع "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -539,6 +567,8 @@ msgid ""
 "Select a billable project on which tasks can be created. This setting must "
 "be set for each company."
 msgstr ""
+"قم بتحديد مشروع قابل للفوترة يمكن إنشاء المهام فيه. يجب تعيين هذه الإعدادات "
+"لكل شركة. "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_template_id
@@ -547,30 +577,32 @@ msgid ""
 "Select a billable project to be the skeleton of the new created project when"
 " selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
+"قم بتحديد مشروع قابل للفوترة ليكون هيكل المشروع الجديد الذي تم إنشاؤه عند "
+"بيع المنتج الحالي. سوف يتم استنساخ مراحله ومهامه. "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr ""
+msgstr "قم بتحديد مشروع غير قابل للفوترة يمكن إنشاء المهام عليه. "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_policy
 msgid "Service Invoicing Policy"
-msgstr ""
+msgstr "سياسة فوترة الخدمة"
 
 #. module: sale_project
 #. openerp-web
 #: code:addons/sale_project/static/src/right_panel/project_right_panel.xml:0
 #, python-format
 msgid "Sold"
-msgstr ""
+msgstr "المبيعات "
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_global_project
 msgid "Task"
-msgstr ""
+msgstr "المهمة"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order_line.py:0
@@ -581,28 +613,28 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "تكرار المهمة "
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__task_id
 msgid "Task generated by the sales order item"
-msgstr ""
+msgstr "المهمة الناشئة عن عنصر أمر المبيعات"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_count
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Tasks"
-msgstr ""
+msgstr "المهام"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "تحليل المهام"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_ids
 msgid "Tasks associated to this sale"
-msgstr ""
+msgstr "المهام المرتبطة بهذا البيع "
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -610,7 +642,7 @@ msgstr ""
 msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
-msgstr ""
+msgstr "يجب ألا يكون للمنتج %s مشروع عام بما أنه سوف يقوم بإنشاء مشروع. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -619,6 +651,7 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"يجب ألا يكون للمنتج %s مشروع أو قالب مشروع بما أنه لن يقوم بإنشاء مشروع. "
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -627,6 +660,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"يجب ألا يكون للمنتج %s قالب مشروع بما أنه سوف يقوم بإنشاء مهمة في مشروع عام."
+" "
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order_line.py:0
@@ -637,25 +672,25 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
 msgid "To invoice"
-msgstr ""
+msgstr "بانتظار الفوترة"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_type
 msgid "Track Service"
-msgstr ""
+msgstr "تتبع الخدمة"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__vendor_bill_count
 msgid "Vendor Bill Count"
-msgstr ""
+msgstr "عدد فواتير المورّد "
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Vendor Bills"
-msgstr ""
+msgstr "فواتير المورّد "
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
@@ -664,3 +699,5 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"لا يمكنك ربط عنصر الطلب %(order_id)s - %(product_id)s بهذه المهمة لأنها نفقة"
+" تمت إعادة فوترتها. "

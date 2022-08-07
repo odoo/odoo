@@ -9,8 +9,8 @@
 # Cozmin Candea <office@terrabit.ro>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:06+0000\n"
 "PO-Revision-Date: 2016-08-05 13:14+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2022\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1426,6 +1426,12 @@ msgid "Extra Variant Media"
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Featured"
+msgstr "Recomandate"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "FedEx"
@@ -1784,6 +1790,12 @@ msgid "Name"
 msgstr "Nume"
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Name (A-Z)"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__name_short
 msgid "Name Short"
 msgstr "Nume scurt"
@@ -1799,6 +1811,12 @@ msgstr "Produs nou"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.new_ribbon
 msgid "New!"
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Newest Arrivals"
 msgstr ""
 
 #. module: website_sale
@@ -2176,6 +2194,18 @@ msgstr "Anul precedent"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 msgid "Price"
 msgstr "Preț"
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Price - High to Low"
+msgstr "Preț - de la mare la mic"
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Price - Low to High"
+msgstr "Preț - de la mic la mare"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
@@ -3034,6 +3064,12 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3061,6 +3097,12 @@ msgid ""
 msgstr ""
 "Modul selectat aici se aplică ca politică de facturare oricărui produs nou "
 "creat, dar nu și pentru produselor deja existente."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The order has been canceled."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids

@@ -16,7 +16,6 @@
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Levent Karakaş <levent@mektup.at>, 2021
-# abc Def <hdogan1974@gmail.com>, 2021
 # Saban Yildiz <sabany@projetgrup.com>, 2021
 # Buket Şeker <buket_skr@hotmail.com>, 2022
 # Umur Akın <umura@projetgrup.com>, 2022
@@ -26,6 +25,7 @@
 # Martin Trigaux, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # Halil, 2022
+# abc Def <hdogan1974@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:06+0000\n"
 "PO-Revision-Date: 2016-08-05 13:14+0000\n"
-"Last-Translator: Halil, 2022\n"
+"Last-Translator: abc Def <hdogan1974@gmail.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1456,6 +1456,12 @@ msgid "Extra Variant Media"
 msgstr "Ekstra Varyant Medya"
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Featured"
+msgstr "Öne çıkan"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "FedEx"
@@ -1810,6 +1816,12 @@ msgid "Name"
 msgstr "İsim"
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Name (A-Z)"
+msgstr "Adı (A'dan > Z'ye)"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__name_short
 msgid "Name Short"
 msgstr "Kısa İsim"
@@ -1826,6 +1838,12 @@ msgstr "Yeni Ürün"
 #: model:product.ribbon,html:website_sale.new_ribbon
 msgid "New!"
 msgstr "Yeni!"
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Newest Arrivals"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
@@ -2202,6 +2220,18 @@ msgstr "Geçen Yıl"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 msgid "Price"
 msgstr "Fiyat"
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Price - High to Low"
+msgstr "Fiyat - Yüksekten Düşüğe"
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Price - Low to High"
+msgstr "Fiyat - Düşükten Yükseğe"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
@@ -3057,6 +3087,12 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Erişim belirteci geçersiz."
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3083,6 +3119,12 @@ msgid ""
 msgstr ""
 "Seçilen mod, herhangi yeni oluşturulan bir ürünün fatura politikası olarak "
 "burada uygulanır, ancak çoktan var olan ürünlere uygulanmaz."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The order has been canceled."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids

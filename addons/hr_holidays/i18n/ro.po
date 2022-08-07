@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Iulian Cutui <iulian.cutui@gmail.com>, 2018
-# Cozmin Candea <office@terrabit.ro>, 2018
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
 # Martin Trigaux, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2022
+# Cozmin Candea <office@terrabit.ro>, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:06+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2022\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2022\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,13 +120,13 @@ msgstr "%s (copie)"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "%s (from %s to %s)"
-msgstr ""
+msgstr "%s (de la %s la %s)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 #, python-format
 msgid "%s (from %s to No Limit)"
-msgstr ""
+msgstr "%s (de la %s la fără limită)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -156,7 +156,7 @@ msgstr "%s În Concediu : %.2f ora(e)"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s: Time Off"
-msgstr ""
+msgstr "%s: Concediu"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -522,13 +522,13 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<i class=\"fa fa-thumbs-up\"/> Approve"
-msgstr ""
+msgstr "<i class=\"fa fa-thumbs-up\"/> Aprobă"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<i class=\"fa fa-times\"/> Refuse"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/> Refuză"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -637,12 +637,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Allocations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Alocări</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Libere</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -1155,7 +1155,7 @@ msgstr "Concediu Aprobat"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__officer
 msgid "Approved by Time Off Officer"
-msgstr ""
+msgstr "Aprobat de ofițerul de timp liber"
 
 #. module: hr_holidays
 #. openerp-web
@@ -1700,7 +1700,7 @@ msgstr "Nume afișat"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Display Option"
-msgstr ""
+msgstr "Opțiuni afișare"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_calendar_meeting
@@ -1793,7 +1793,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__employee_requests
 msgid "Employee Requests"
-msgstr ""
+msgstr "Cererile angajaților"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__category_id
@@ -2714,7 +2714,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__no
 msgid "No validation needed"
-msgstr ""
+msgstr "Nu este necesară validarea"
 
 #. module: hr_holidays
 #. openerp-web
@@ -2727,7 +2727,7 @@ msgstr "Fără"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__no
 msgid "Not Allowed"
-msgstr ""
+msgstr "Nu este permis"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__nov
@@ -2983,7 +2983,7 @@ msgstr "Public"
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
 msgid "Public Holidays"
-msgstr ""
+msgstr "Sărbători legale"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3108,7 +3108,7 @@ msgstr "Cerere (Zile/Ore)"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__requires_allocation
 msgid "Requires allocation"
-msgstr ""
+msgstr "Necesare alocare"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.resource_calendar_global_leaves_action_from_calendar
@@ -3128,7 +3128,7 @@ msgstr "Timpul Lucru Resurse"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_id
 msgid "Responsible Time Off Officer"
-msgstr ""
+msgstr "Ofițer responsabil de timp liber "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id

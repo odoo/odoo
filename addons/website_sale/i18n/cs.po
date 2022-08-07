@@ -8,12 +8,12 @@
 # Chris <krystof.reklamy13@gmail.com>, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2021
 # Michal Veselý <michal@veselyberanek.net>, 2021
-# trendspotter <jirka.p@volny.cz>, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Martin Trigaux, 2022
 # Damian Brencic <brencicdamian12313@gmail.com>, 2022
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022
+# trendspotter <jirka.p@volny.cz>, 2022
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:06+0000\n"
 "PO-Revision-Date: 2016-08-05 13:14+0000\n"
-"Last-Translator: Jaroslav Helemik Nemec <nemec@helemik.cz>, 2022\n"
+"Last-Translator: trendspotter <jirka.p@volny.cz>, 2022\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1421,6 +1421,12 @@ msgid "Extra Variant Media"
 msgstr "Varianta produktu navíc"
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Featured"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "FedEx"
@@ -1777,6 +1783,12 @@ msgid "Name"
 msgstr "Název"
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Name (A-Z)"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__name_short
 msgid "Name Short"
 msgstr "Krátký název"
@@ -1793,6 +1805,12 @@ msgstr "Nový produkt"
 #: model:product.ribbon,html:website_sale.new_ribbon
 msgid "New!"
 msgstr "Novinka!"
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Newest Arrivals"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
@@ -2169,6 +2187,18 @@ msgstr "Minulý rok"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 msgid "Price"
 msgstr "Cena"
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Price - High to Low"
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Price - Low to High"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
@@ -3025,6 +3055,12 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr "Přístupový token je neplatný."
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3051,6 +3087,12 @@ msgid ""
 msgstr ""
 "Zde zvolený režim platí jako fakturační politika pro každý nový vytvořený "
 "produkt, ale nikoli pro již existující produkty."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The order has been canceled."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
