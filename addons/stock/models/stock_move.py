@@ -1953,7 +1953,8 @@ class StockMove(models.Model):
                 ('product_id', '=', move.product_id.id),
                 ('trigger', '=', 'auto'),
                 ('location_id', 'parent_of', move.location_id.id),
-                ('company_id', '=', move.company_id.id)
+                ('company_id', '=', move.company_id.id),
+                '!', ('location_id', 'parent_of', move.location_dest_id.id),
             ], limit=1)
             if orderpoint:
                 orderpoints_by_company[orderpoint.company_id] |= orderpoint

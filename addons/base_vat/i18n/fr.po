@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -84,6 +84,8 @@ msgid ""
 "The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"Le numéro de TVA [%(wrong_vat)s] pour %(record_label)s ne semble pas être valide. \n"
+"Note : le format attendu est %(expected_format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -93,6 +95,9 @@ msgid ""
 "VAT validation check or did not respect the expected format "
 "%(expected_format)s."
 msgstr ""
+"Le numéro de TVA [%(wrong_vat)s] de %(record_label)s a soit échoué au "
+"contrôle de validation de la TVA de VIES, soit ne respecte pas le format "
+"attendu %(expected_format)s."
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
@@ -101,6 +106,8 @@ msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
 msgstr ""
+"Le pays détecté pour ce numéro de TVA étranger ne correspond pas à celui "
+"défini sur cette position fiscale."
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
@@ -135,4 +142,4 @@ msgstr "Position fiscale [%s]"
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "partenaire [%s]"

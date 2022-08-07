@@ -8,6 +8,7 @@
 # xu aaron, 2021
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
-"* 草稿：尚未确认MO。\n"
+" * 草稿：尚未确认MO。\n"
 "* 已确认：已确认MO，将触发库存规则和组件的重订购规则。\n"
 "* 进行中：生产已经开始（MO或WO）。\n"
 "* 关闭：生产完成后，必须关闭MO。\n"
@@ -44,12 +45,12 @@ msgstr ""
 #: code:addons/mrp/models/stock_rule.py:0
 #, python-format
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
-msgstr "<br/><br/>组件将取自<b>%s</b>"
+msgstr "<br/><br/>组件将取自<b>%s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
 msgid " When all components are available"
-msgstr "当所有组件都可用时"
+msgstr " 当所有组件都可用时"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
@@ -253,7 +254,7 @@ msgstr "<span class=\"o_stat_text\">效能</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Routing<br/>Performance</span>"
-msgstr "<span class=\"o_stat_text\">工艺<br/>效能  </span>  "
+msgstr "<span class=\"o_stat_text\">工艺<br/>效能  </span> "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1085,7 +1086,7 @@ msgstr "组件"
 msgid ""
 "Component Lots must be unique for mass production. Please review reservation"
 " for:\n"
-msgstr ""
+msgstr "对于批量生产，组件批次必须是唯一的。 请查看以下预订:\n"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
@@ -2610,7 +2611,7 @@ msgstr "制造"
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
 #, python-format
 msgid "Manufacturing Lead Time"
-msgstr "制造前置时间 "
+msgstr "制造交付时间"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manu_type_id
@@ -2988,6 +2989,8 @@ msgid ""
 "multiplied by two. However, note that both time before and after production "
 "will only be counted once. "
 msgstr ""
+"此工作中心可并行（同时）生产的件数（以产品计量单位计）。 例如：产能为 5，需要生产 10 台，则 BOM 上列出的操作时间将乘以 2。 "
+"但是请注意，生产前后的时间都只会计算一次。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
@@ -2995,7 +2998,7 @@ msgid ""
 "This should be the smallest quantity that this product can be produced in. "
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate. "
-msgstr ""
+msgstr "这应该是该产品可以生产的最小数.。如果产品清单包含工序，请确保工作中心产能准确。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -3946,7 +3949,7 @@ msgstr "安全提前时间"
 #: model:ir.model.fields,help:mrp.field_res_company__manufacturing_lead
 #: model:ir.model.fields,help:mrp.field_res_config_settings__manufacturing_lead
 msgid "Security days for each manufacturing operation."
-msgstr "每个制造作业的确保天数"
+msgstr "每个制造作业的确保天数."
 
 #. module: mrp
 #. openerp-web
@@ -4105,7 +4108,7 @@ msgstr "一些工单已经完成，您不能取消该制造订单的计划。"
 msgid ""
 "Some work orders have already started, you cannot unplan this manufacturing "
 "order."
-msgstr "一些工单已经开始，您不能取消该制造订单的计划。    "
+msgstr "一些工单已经开始，您不能取消该制造订单的计划."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -4318,7 +4321,7 @@ msgstr "技术领域的订单移动"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__is_user_working
 msgid "Technical field indicating whether the current user is working. "
-msgstr "表示当前用户是否正在工作的技术字段。"
+msgstr "表示当前用户是否正在工作的技术字段。 "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
@@ -4362,7 +4365,7 @@ msgstr "技术: 仅用于视图和域."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__working_state
 msgid "Technical: used in views only"
-msgstr "技术: 仅用于视图."
+msgstr "技术: 仅用于视图"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_state
@@ -4397,7 +4400,7 @@ msgstr "选择的计量单位跟产品表单的计量单位在不同的类别。
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "The Workorder (%s) cannot be started twice!"
-msgstr "工单 (%s) 无法启动两次"
+msgstr "工单 (%s) 无法启动两次!"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -4494,7 +4497,7 @@ msgstr "这是附加到记录ID。"
 msgid ""
 "The selected serial number does not correspond to the one used in the "
 "manufacturing order, please select another one."
-msgstr ""
+msgstr "选择的序列号与制造订单中使用的序列号不对应，请选择另一个序列号."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4515,7 +4518,7 @@ msgstr "用于组件%(component)s的序列号%(number)s已经消耗"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_tag_tag_name_unique
 msgid "The tag name must be unique."
-msgstr "标签必须唯一!"
+msgstr "标签必须唯一."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
@@ -5001,7 +5004,7 @@ msgstr "上传"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Upload your PDF file."
-msgstr "上传PDF文件"
+msgstr "上传PDF文件."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__1
@@ -5349,7 +5352,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
-msgstr "工单进行中。点击阻塞工作中心"
+msgstr "工单进行中。点击阻塞工作中心."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
@@ -5397,7 +5400,7 @@ msgstr "工作中心状态"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Workcenter blocked, click to unblock."
-msgstr "工作中心已阻塞，点击解除阻塞"
+msgstr "工作中心已阻塞，点击解除阻塞."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_calendar_id
@@ -5407,7 +5410,7 @@ msgstr "工作时间"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__working_user_ids
 msgid "Working user on this work order."
-msgstr "在此工单工作的用户"
+msgstr "在此工单工作的用户."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet
@@ -5544,7 +5547,7 @@ msgstr ""
 msgid ""
 "You have already processed %(quantity)s. Please input a quantity higher than"
 " %(minimum)s "
-msgstr "您已经处理了 %(quantity)s. 请输入比 %(minimum)s 更高的数量"
+msgstr "您已经处理了 %(quantity)s. 请输入比 %(minimum)s 更高的数量 "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -5646,7 +5649,7 @@ msgstr "组件"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "copy paste a list and/or use Generate"
-msgstr "复制粘贴列表和/或使用 \"生成\"。"
+msgstr "复制粘贴列表和/或使用 \"生成\""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
