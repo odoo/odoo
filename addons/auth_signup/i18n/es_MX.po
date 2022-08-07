@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
@@ -782,12 +782,12 @@ msgstr "Token de acceso inválido"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr "Deje que sus clientes inicien sesión para ver sus documentos"
+msgstr "Permita que sus clientes inicien sesión para ver sus documentos"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
-msgstr "Nunca se conecta"
+msgstr "Nunca se conectó"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -808,12 +808,12 @@ msgstr "Contraseña"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr "Restablecer contraseña"
+msgstr "Se restableció la contraseña"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr "Restablecer contraseña"
+msgstr "Se restableció la contraseña"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -936,7 +936,7 @@ msgstr ""
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "The form was not properly filled in."
-msgstr "No se llenó el formulario de forma correcta. "
+msgstr "No se completó el formulario de forma correcta. "
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
@@ -970,7 +970,7 @@ msgstr "Usuarios: notificar sobre usuarios no registrados"
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr "¡Bienvenido {{ object.company_id.name }}!"
+msgstr "¡Bienvenido a {{ object.company_id.name }}!"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
@@ -992,7 +992,7 @@ msgstr "Su nombre"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
-msgstr "Ej. John Doe"
+msgstr "Por ejemplo, Juan Pérez"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
@@ -1001,4 +1001,4 @@ msgid ""
 "to connect to Odoo"
 msgstr ""
 "{{ object.create_uid.name }} de {{ object.company_id.name }} le invita a "
-"conectarse con Odoo"
+"conectarse a Odoo"

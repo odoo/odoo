@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_gamification
 #: model_terms:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
@@ -37,7 +37,7 @@ msgid ""
 "All employee badges, linked to the employee either directly or through the "
 "user"
 msgstr ""
-"Todas las insignias del empleado, vinculadas a él ya sea directamente o a "
+"Todas las insignias del empleado vinculadas a él, ya sea directamente o a "
 "través del usuario"
 
 #. module: hr_gamification
@@ -49,7 +49,7 @@ msgid ""
 msgstr ""
 "Asigne una lista de metas a los usuarios elegidos para evaluarlos.\n"
 "                    El desafío puede usar un periodo (semanal, mensual...) para la creación automática de metas.\n"
-"                    Las metas son creadas para los usuarios específicos o miembros de un grupo."
+"                    Las metas se crean para los usuarios especificados o los miembros de un grupo."
 
 #. module: hr_gamification
 #: model:ir.model.fields,field_description:hr_gamification.field_res_users__badge_ids
@@ -63,7 +63,7 @@ msgstr "Insignias"
 msgid ""
 "Badges are rewards of good work. Give them to people you believe deserve it."
 msgstr ""
-"Las insignias son premios al buen trabajo. Otorguelas a aquellas personas "
+"Las insignias son premios al buen trabajo. Otórguelas a aquellas personas "
 "que cree que las merecen."
 
 #. module: hr_gamification
@@ -71,7 +71,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_base__direct_badge_ids
 #: model:ir.model.fields,help:hr_gamification.field_hr_employee_public__direct_badge_ids
 msgid "Badges directly linked to the employee"
-msgstr "Insignias directamente relacionadas con el empleado"
+msgstr "Insignias vinculadas directamente al empleado"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_hr_employee_base
@@ -130,7 +130,7 @@ msgstr "Insignias del empleado"
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_base__goal_ids
 #: model:ir.model.fields,field_description:hr_gamification.field_hr_employee_public__goal_ids
 msgid "Employee HR Goals"
-msgstr "Objetivos de RRHH del empleado"
+msgstr "Metas RR. HH. del empleado"
 
 #. module: hr_gamification
 #: model:ir.model,name:hr_gamification.model_gamification_badge
@@ -228,7 +228,7 @@ msgstr "Usuarios"
 #. module: hr_gamification
 #: model_terms:ir.ui.view,arch_db:hr_gamification.view_badge_wizard_reward
 msgid "What are you thankful for?"
-msgstr "¿Qué agradece?"
+msgstr "¿De qué está agradecido?"
 
 #. module: hr_gamification
 #: code:addons/hr_gamification/wizard/gamification_badge_user_wizard.py:0
