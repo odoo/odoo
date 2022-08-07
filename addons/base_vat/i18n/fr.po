@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2022-06-17 09:49+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,6 +83,8 @@ msgid ""
 "The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"Le numéro de TVA [%(wrong_vat)s] pour %(record_label)s ne semble pas être valide. \n"
+"Note : le format attendu est %(expected_format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -91,6 +94,9 @@ msgid ""
 "VAT validation check or did not respect the expected format "
 "%(expected_format)s."
 msgstr ""
+"Le numéro de TVA [%(wrong_vat)s] de %(record_label)s a soit échoué au "
+"contrôle de validation de la TVA de VIES, soit ne respecte pas le format "
+"attendu %(expected_format)s."
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
@@ -99,6 +105,8 @@ msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
 msgstr ""
+"Le pays détecté pour ce numéro de TVA étranger ne correspond pas à celui "
+"défini sur cette position fiscale."
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
@@ -133,4 +141,4 @@ msgstr "Position fiscale [%s]"
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "partenaire [%s]"
