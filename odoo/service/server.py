@@ -1220,12 +1220,11 @@ def _reexec(updated_modules=None):
     """reexecute openerp-server process with (nearly) the same arguments"""
     if odoo.tools.osutil.is_running_as_nt_service():
         subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
-    exe = os.path.basename(sys.executable)
     args = stripped_sys_argv()
     if updated_modules:
         args += ["-u", ','.join(updated_modules)]
-    if not args or args[0] != exe:
-        args.insert(0, exe)
+    if not args or args[0] != sys.executable:
+        args.insert(0, sys.executable)
     # We should keep the LISTEN_* environment variabled in order to support socket activation on reexec
     os.execve(sys.executable, args, os.environ)
 
