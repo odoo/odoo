@@ -259,14 +259,15 @@ class EventTrackController(http.Controller):
             if track.location_id not in locations_by_days[track_day]:
                 locations_by_days[track_day].append(track.location_id)
 
-        for locations in locations_by_days.values():
-            locations.sort(key=lambda location: location.id if location else 0)
+        for used_locations in locations_by_days.values():
+            used_locations.sort(key=lambda location: location.id if location else 0)
 
         return {
             'days': days,
             'tracks_by_days': tracks_by_days,
             'locations_by_days': locations_by_days,
             'time_slots': global_time_slots_by_day,
+            'locations': locations  # TODO: clean me in master, kept for retro-compatibility
         }
 
     def _get_locale_time(self, dt_time, lang_code):
