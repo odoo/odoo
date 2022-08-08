@@ -38,6 +38,13 @@ registerModel({
             this.message.markAsRead();
         },
         /**
+         * @private
+         * @param {MouseEvent} ev
+         */
+        onClickMarkAsUnread(ev) {
+            this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel.markMessageAsUnread(this.message);
+        },
+        /**
          * Handles click on the reaction icon.
          */
         onClickActionReaction() {
@@ -130,6 +137,16 @@ registerModel({
          * @private
          * @returns {boolean}
          */
+        _computeHasMarkAsUnreadIcon() {
+            return Boolean(
+                this.messageView && this.messageView.messageListViewMessageViewItemOwner &&
+                this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread
+            ) && this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.model === 'mail.channel';
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeHasReplyIcon() {
             return Boolean(
                 this.messaging && this.messaging.inbox &&
@@ -166,6 +183,9 @@ registerModel({
          */
         hasMarkAsReadIcon: attr({
             compute: '_computeHasMarkAsReadIcon',
+        }),
+        hasMarkAsUnreadIcon: attr({
+            compute: '_computeHasMarkAsUnreadIcon',
         }),
         /**
          * Determines whether this message action list has a reply icon.

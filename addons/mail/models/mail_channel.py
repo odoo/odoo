@@ -1174,6 +1174,24 @@ class Channel(models.Model):
             'memberCount': count,
         }
 
+    def mark_as_unread(self, first_unread_message_id):
+        self.ensure_one()
+        last_read_message = self.env['mail.message'].search([
+            ('res_id', '=', self.id),
+            ('model', '=', 'mail.channel'),
+            ('id', '<', first_unread_message_id),
+        ], order='id desc', limit=1)
+        member = self.env['mail.channel.member'].search([
+            ('channel_id', '=', self.id),
+            ('partner_id', '=', self.env.user.partner_id.id),
+        ], limit=1)
+        member.write({'seen_message_id': last_read_message.id})
+        self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.channel.member/seen', {
+            'channel_id': self.id,
+            'last_message_id': last_read_message.id,
+            'partner_id': self.env.user.partner_id.id,
+        })
+
     def _get_avatar_cache_key(self):
         if not self.avatar_128:
             return 'no-avatar'

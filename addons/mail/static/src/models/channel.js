@@ -22,6 +22,16 @@ registerModel({
             }
             this.update(channelData);
         },
+        async markMessageAsUnread(message) {
+            await this.messaging.rpc({
+                model: 'mail.channel',
+                method: 'mark_as_unread',
+                args: [[this.id]],
+                kwargs: {
+                    first_unread_message_id: message.id,
+                },
+            });
+        },
         /**
          * @private
          * @returns {boolean}
