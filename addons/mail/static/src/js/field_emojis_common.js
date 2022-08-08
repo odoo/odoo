@@ -131,6 +131,13 @@ var FieldEmojiCommon = {
         } else {
             this.$emojisIcon.hide();
         }
+    },
+
+    destroy() {
+        this._super(...arguments);
+        if (this.$emojisIcon) {
+            this.$emojisIcon.remove();
+        }
     }
 };
 
