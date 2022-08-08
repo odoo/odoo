@@ -184,3 +184,80 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(self.auto_promo_program_next.pos_order_count, 2)
         self.assertEqual(self.code_promo_program.pos_order_count, 2)
         self.assertEqual(self.coupon_program.pos_order_count, 3)
+
+    def test_pos_coupon_tour_max_amount(self):
+        """PoS Coupon Basic Tour"""
+
+        self.promo_product = self.env["product.product"].create(
+            {
+                "name": "Promo Product",
+                "type": "service",
+                "list_price": 30,
+                "available_in_pos": True,
+            }
+        )
+        tax01 = self.env["account.tax"].create({
+            "name": "C01 Tax",
+            "amount": "0.00",
+        })
+        tax02 = self.env["account.tax"].create({
+            "name": "C02 Tax",
+            "amount": "0.00",
+        })
+
+        self.productA = self.env["product.product"].create(
+            {
+                "name": "Product A",
+                "type": "product",
+                "list_price": 15,
+                "available_in_pos": True,
+                "taxes_id": [(6, 0, [tax01.id])],
+            }
+        )
+
+        #create another product with different taxes_id
+        self.productB = self.env["product.product"].create(
+            {
+                "name": "Product B",
+                "type": "product",
+                "list_price": 25,
+                "available_in_pos": True,
+                "taxes_id": [(6, 0, [tax02.id])]
+            }
+        )
+
+        # create a promo program
+        self.promo_program_max_amount = self.env["coupon.program"].create(
+            {
+                "name": "Promo Program - Max Amount",
+                "program_type": "promotion_program",
+                "rule_products_domain": '[["product_variant_ids","=","Promo Product"]]',
+                "discount_max_amount": 40,
+                "reward_type": "discount",
+                "promo_code_usage": "no_code_needed",
+                "discount_type": "percentage",
+                "discount_percentage": 100,
+                "discount_apply_on": "specific_products",
+                "discount_specific_product_ids": (
+                    self.productA | self.productB
+                ).ids,
+            }
+        )
+
+        with Form(self.main_pos_config) as pos_config:
+            pos_config.tax_regime_selection = False
+            pos_config.use_pricelist = False
+            pos_config.pricelist_id = self.env["product.pricelist"].create(
+                {"name": "PoS Default Pricelist",}
+            )
+            pos_config.use_coupon_programs = True
+            pos_config.coupon_program_ids.add(self.coupon_program)
+            pos_config.coupon_program_ids.add(self.promo_program_max_amount)
+
+        self.main_pos_config.open_session_cb(check_coa=False)
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosCouponTour3",
+            login="accountman",
+        )
