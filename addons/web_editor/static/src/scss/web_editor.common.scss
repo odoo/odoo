@@ -884,6 +884,20 @@ section, .oe_img_bg, [data-oe-shape-data] {
     }
 }
 
+// Background Images
+.oe_img_bg {
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &.o_bg_img_opt_repeat {
+        background-size: auto;
+        background-repeat: repeat;
+    }
+    &.o_bg_img_center {
+        background-position: center;
+    }
+}
+
 // Gradient
 // TODO should be in the editor lib since it is handled there... but could not
 // find the right place for it.
