@@ -123,7 +123,8 @@ class Warehouse(models.Model):
             vals[field_name] = self.env['stock.location'].with_context(active_test=False).create(values).id
 
         # actually create WH
-        warehouse = super(Warehouse, self).create(vals)
+        wh = super(Warehouse, self).create(vals)
+        warehouse = wh.with_context(active_test=False)
         # create sequences and operation types
         new_vals = warehouse._create_or_update_sequences_and_picking_types()
         warehouse.write(new_vals)  # TDE FIXME: use super ?
@@ -143,7 +144,7 @@ class Warehouse(models.Model):
 
         self._check_multiwarehouse_group()
 
-        return warehouse
+        return wh
 
     def write(self, vals):
         if 'company_id' in vals:
