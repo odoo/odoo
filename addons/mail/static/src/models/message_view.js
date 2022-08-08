@@ -337,7 +337,8 @@ registerModel({
                         ) ||
                         (
                             this.messageListViewMessageViewItemOwner &&
-                            this.messageListViewMessageViewItemOwner.messageListViewOwner.thread.channel_type === 'chat'
+                            this.messageListViewMessageViewItemOwner.messageListViewOwner.thread.channel &&
+                            this.messageListViewMessageViewItemOwner.messageListViewOwner.thread.channel.channel_type === 'chat'
                         )
                     )
                 )

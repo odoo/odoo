@@ -9,7 +9,7 @@ patchRecordMethods('ComposerView', {
      * @override
      */
     _computeDropZoneView() {
-        if (this.composer.thread && this.composer.thread.channel_type === 'livechat') {
+        if (this.composer.thread && this.composer.thread.channel && this.composer.thread.channel.channel_type === 'livechat') {
             return clear();
         }
         return this._super();

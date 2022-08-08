@@ -22,7 +22,7 @@ addRecordMethods('Thread', {
      * @returns {FieldCommand}
      */
     _computeMessagingAsPinnedLivechat() {
-        if (!this.messaging || this.channel_type !== 'livechat' || !this.isPinned) {
+        if (!this.messaging || !this.channel || this.channel.channel_type !== 'livechat' || !this.isPinned) {
             return clear();
         }
         return replace(this.messaging);
@@ -81,7 +81,7 @@ patchRecordMethods('Thread', {
      * @override
      */
     getMemberName(partner) {
-        if (this.channel_type === 'livechat' && partner.livechat_username) {
+        if (this.channel && this.channel.channel_type === 'livechat' && partner.livechat_username) {
             return partner.livechat_username;
         }
         return this._super(partner);
@@ -90,7 +90,7 @@ patchRecordMethods('Thread', {
      * @override
      */
     _computeCorrespondent() {
-        if (this.channel_type === 'livechat') {
+        if (this.channel && this.channel.channel_type === 'livechat') {
             // livechat correspondent never change: always the public member.
             return;
         }
@@ -100,7 +100,7 @@ patchRecordMethods('Thread', {
      * @override
      */
     _computeDisplayName() {
-        if (this.channel_type === 'livechat' && this.correspondent) {
+        if (this.channel && this.channel.channel_type === 'livechat' && this.correspondent) {
             if (this.correspondent.country) {
                 return `${this.correspondent.nameOrDisplayName} (${this.correspondent.country.name})`;
             }
@@ -112,7 +112,7 @@ patchRecordMethods('Thread', {
      * @override
      */
     _computeHasInviteFeature() {
-        if (this.channel_type === 'livechat') {
+        if (this.channel && this.channel.channel_type === 'livechat') {
             return true;
         }
         return this._super();
@@ -121,7 +121,7 @@ patchRecordMethods('Thread', {
      * @override
      */
     _computeHasMemberListFeature() {
-        if (this.channel_type === 'livechat') {
+        if (this.channel && this.channel.channel_type === 'livechat') {
             return true;
         }
         return this._super();
@@ -130,15 +130,17 @@ patchRecordMethods('Thread', {
      * @override
      */
     _computeIsChatChannel() {
-        return this.channel_type === 'livechat' || this._super();
+        if (this.channel && this.channel.channel_type === 'livechat') {
+            return true;
+        }
+        return this._super();
     },
     /**
      * @override
      */
     _getDiscussSidebarCategory() {
-        switch (this.channel_type) {
-            case 'livechat':
-                return this.messaging.discuss.categoryLivechat;
+        if (this.channel.channel_type === 'livechat') {
+            return this.messaging.discuss.categoryLivechat;
         }
         return this._super();
     }

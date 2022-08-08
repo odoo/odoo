@@ -164,10 +164,7 @@ registerModel({
             last_message_id,
             partner_id,
         }) {
-            const channel = this.messaging.models['Thread'].findFromIdentifyingData({
-                id: channelId,
-                model: 'mail.channel',
-            });
+            const channel = this.messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
             if (!channel) {
                 // for example seen from another browser, the current one has no
                 // knowledge of the channel
@@ -180,11 +177,11 @@ registerModel({
             this.messaging.models['ThreadPartnerSeenInfo'].insert({
                 lastFetchedMessage: insert({ id: last_message_id }),
                 partner: insertAndReplace({ id: partner_id }),
-                thread: replace(channel),
+                thread: replace(channel.thread),
             });
             this.messaging.models['MessageSeenIndicator'].insert({
                 message: insertAndReplace({ id: last_message_id }),
-                thread: replace(channel),
+                thread: replace(channel.thread),
             });
         },
         /**
@@ -195,13 +192,13 @@ registerModel({
          * @param {boolean} [payload.open_chat_window] if true, will pin the channel
          */
         _handleNotificationChannelJoined({ channel: channelData, invited_by_user_id: invitedByUserId, open_chat_window: openChatWindow }) {
-            const channel = this.messaging.models['Thread'].insert(this.messaging.models['Thread'].convertData(channelData));
+            const thread = this.messaging.models['Thread'].insert(this.messaging.models['Thread'].convertData(channelData));
             if (this.messaging.currentUser && invitedByUserId !== this.messaging.currentUser.id) {
                 // Current user was invited by someone else.
                 this.messaging.notify({
                     message: sprintf(
                         this.env._t("You have been invited to #%s"),
-                        channel.displayName
+                        thread.displayName
                     ),
                     type: 'info',
                 });
@@ -209,8 +206,8 @@ registerModel({
 
             if (openChatWindow) {
                 // open chat upon being invited (if it was not already opened or folded)
-                if (channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.chatWindow) {
-                    this.messaging.chatWindowManager.openThread(channel);
+                if (thread.channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !thread.chatWindow) {
+                    this.messaging.chatWindowManager.openThread(thread);
                 }
             }
         },
@@ -238,10 +235,7 @@ registerModel({
          * @param {Object} payload.messageData
          */
         async _handleNotificationChannelMessage({ id: channelId, message: messageData }) {
-            let channel = this.messaging.models['Thread'].findFromIdentifyingData({
-                id: channelId,
-                model: 'mail.channel',
-            });
+            let channel = this.messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
             if (!channel && this.messaging.isCurrentUserGuest) {
                 return; // guests should not receive messages for channels they don't know, and they can't make the channel_info RPC
             }
@@ -257,10 +251,10 @@ registerModel({
                 if (!this.exists()) {
                     return;
                 }
-                channel = res[0];
+                channel = res[0].channel;
             }
-            if (!channel.isPinned) {
-                channel.pin();
+            if (!channel.thread.isPinned) {
+                channel.thread.pin();
             }
 
             const message = this.messaging.models['Message'].insert(convertedData);
@@ -274,26 +268,26 @@ registerModel({
             // Chat from OdooBot is considered disturbing and should only be
             // shown on the menu, but no notification and no thread open.
             const isChatWithOdooBot = (
-                channel.correspondent &&
-                channel.correspondent === this.messaging.partnerRoot
+                channel.thread.correspondent &&
+                channel.thread.correspondent === this.messaging.partnerRoot
             );
             if (!isChatWithOdooBot) {
                 const isOdooFocused = this.env.services['presence'].isOdooFocused();
                 // Notify if out of focus
-                if (!isOdooFocused && channel.isChatChannel) {
+                if (!isOdooFocused && channel.thread.isChatChannel) {
                     this._notifyNewChannelMessageWhileOutOfFocus({
                         channel,
                         message,
                     });
                 }
-                if (channel.model === 'mail.channel' && channel.channel_type !== 'channel' && !this.messaging.currentGuest) {
+                if (channel.channel_type !== 'channel' && !this.messaging.currentGuest) {
                     // disabled on non-channel threads and
                     // on `channel` channels for performance reasons
-                    channel.markAsFetched();
+                    channel.thread.markAsFetched();
                 }
                 // open chat on receiving new message if it was not already opened or folded
-                if (channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.chatWindow) {
-                    this.messaging.chatWindowManager.openThread(channel);
+                if (channel.channel_type !== 'channel' && !this.messaging.device.isSmall && !channel.thread.chatWindow) {
+                    this.messaging.chatWindowManager.openThread(channel.thread);
                 }
             }
         },
@@ -312,10 +306,7 @@ registerModel({
             last_message_id,
             partner_id,
         }) {
-            const channel = this.messaging.models['Thread'].findFromIdentifyingData({
-                id: channelId,
-                model: 'mail.channel',
-            });
+            const channel = this.messaging.models['Channel'].findFromIdentifyingData({ id: channelId });
             if (!channel) {
                 // for example seen from another browser, the current one has no
                 // knowledge of the channel
@@ -329,15 +320,15 @@ registerModel({
                 this.messaging.models['ThreadPartnerSeenInfo'].insert({
                     lastSeenMessage: replace(lastMessage),
                     partner: insertAndReplace({ id: partner_id }),
-                    thread: replace(channel),
+                    thread: replace(channel.thread),
                 });
                 this.messaging.models['MessageSeenIndicator'].insert({
                     message: replace(lastMessage),
-                    thread: replace(channel),
+                    thread: replace(channel.thread),
                 });
             }
             if (this.messaging.currentPartner && this.messaging.currentPartner.id === partner_id) {
-                channel.update({
+                channel.thread.update({
                     lastSeenByCurrentPartnerMessageId: last_message_id,
                     pendingSeenMessageId: undefined,
                 });
@@ -639,7 +630,7 @@ registerModel({
         /**
          * @private
          * @param {Object} param0
-         * @param {Thread} param0.channel
+         * @param {Channel} param0.channel
          * @param {Message} param0.message
          */
         _notifyNewChannelMessageWhileOutOfFocus({ channel, message }) {
@@ -655,9 +646,9 @@ registerModel({
                     // from component
                     const channelIcon = renderToString('mail.ThreadIcon', {
                         env: this.env,
-                        thread: channel,
+                        thread: channel.thread,
                     });
-                    const channelName = channel.displayName;
+                    const channelName = channel.thread.displayName;
                     const channelNameWithIcon = channelIcon + channelName;
                     notificationTitle = sprintf(
                         this.env._t("%s from %s"),

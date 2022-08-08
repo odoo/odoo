@@ -51,13 +51,13 @@ registerModel({
         },
         /**
          * @private
-         * @returns {DiscussSidebarCategoryItem|undefined}
+         * @returns {FieldCommand}
          */
         _computeActiveItem() {
-            const thread = this.messaging.discuss.thread;
-            if (thread && this.supportedChannelTypes.includes(thread.channel_type)) {
+            const channel = this.messaging.discuss.thread && this.messaging.discuss.thread.channel;
+            if (channel && this.supportedChannelTypes.includes(channel.channel_type)) {
                 return insertAndReplace({
-                    channel: replace(thread),
+                    thread: replace(channel.thread),
                     category: replace(this),
                 });
             }
@@ -109,7 +109,7 @@ registerModel({
             if (searchValue) {
                 const qsVal = searchValue.toLowerCase();
                 categoryItems = categoryItems.filter(categoryItem => {
-                    const nameVal = categoryItem.channel.displayName.toLowerCase();
+                    const nameVal = categoryItem.thread.displayName.toLowerCase();
                     return nameVal.includes(qsVal);
                 });
             }
@@ -238,16 +238,16 @@ registerModel({
             switch (this.sortComputeMethod) {
                 case 'name':
                     return [
-                        ['truthy-first', 'channel'],
-                        ['truthy-first', 'channel.displayName'],
-                        ['case-insensitive-asc', 'channel.displayName'],
+                        ['truthy-first', 'thread'],
+                        ['truthy-first', 'thread.displayName'],
+                        ['case-insensitive-asc', 'thread.displayName'],
                         ['smaller-first', 'channel.id'],
                     ];
                 case 'last_action':
                     return [
-                        ['truthy-first', 'channel'],
-                        ['truthy-first', 'channel.lastInterestDateTime'],
-                        ['most-recent-first', 'channel.lastInterestDateTime'],
+                        ['truthy-first', 'thread'],
+                        ['truthy-first', 'thread.lastInterestDateTime'],
+                        ['most-recent-first', 'thread.lastInterestDateTime'],
                         ['greater-first', 'channel.id'],
                     ];
             }
