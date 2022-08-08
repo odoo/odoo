@@ -18,8 +18,9 @@
                 <filter name="filter_date_deadline" date="date_deadline"/>
                 <filter name="filter_date_assign" date="date_assign"/>
                 <filter string="Last Month" invisible="1" name="last_month" domain="[('date','&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
-                <filter string="Open tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
-                <filter string="Late Milestones" name="late_milestone" domain="[('is_closed', '=', False), ('has_late_and_unreached_milestone', '=', True)]" groups="project.group_project_milestone"/>
+                <separator/>
+                <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
+                <filter string="Closed Tasks" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Date" name="date" context="{'group_by': 'date'}" />
                     <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}" invisible="1"/>

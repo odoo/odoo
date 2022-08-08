@@ -26,9 +26,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
                                 string='Assignees', readonly=True)
 
-    # Fake field required as used in the filters. It will however be managed through the `project.task` model.
-    has_late_and_unreached_milestone = fields.Boolean(readonly=True)
-
     # This variable is used in order to distinguish conditions that can be set on `project.task` and thus being used
     # at a lower level than the "usual" query made by the `read_group_raw`. Indeed, the domain applied on those fields
     # will be performed on a `CTE` that will be later use in the `SQL` in order to limit the subset of data that is used
@@ -36,7 +33,6 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
     task_specific_fields = [
         'date_assign',
         'date_deadline',
-        'has_late_and_unreached_milestone',
         'is_closed',
         'milestone_id',
         'partner_id',
