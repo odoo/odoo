@@ -122,6 +122,14 @@
 
             <div class="before-footer" />
 
+            <div t-if="receipt.pos_qr_code">
+                <br /><br />
+                <div class="pos-receipt-order-data">
+                    Scan me to request an invoice for your purchase.
+                </div>
+                <img id="posqrcode" t-att-src="receipt.pos_qr_code" class="pos-receipt-logo"/>
+            </div>
+
             <!-- Footer -->
             <div t-if="receipt.footer_html"  class="pos-receipt-center-align">
                 <t t-out="receipt.footer_html" />
