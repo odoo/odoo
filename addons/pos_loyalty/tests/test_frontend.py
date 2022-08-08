@@ -343,3 +343,74 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         reward_orderline = self.main_pos_config.current_session_id.order_ids[-1].lines.filtered(lambda line: line.is_reward_line)
         self.assertEqual(len(reward_orderline.ids), 0, msg='Reference: Order4_no_reward. Last order should have no reward line.')
+
+    def test_pos_loyalty_tour_max_amount(self):
+        """Test the loyalty program with a maximum amount and product with different taxe."""
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        self.promo_product = self.env["product.product"].create(
+            {
+                "name": "Promo Product",
+                "type": "service",
+                "list_price": 30,
+                "available_in_pos": True,
+            }
+        )
+        tax01 = self.env["account.tax"].create({
+            "name": "C01 Tax",
+            "amount": "0.00",
+        })
+        tax02 = self.env["account.tax"].create({
+            "name": "C02 Tax",
+            "amount": "0.00",
+        })
+
+        self.productA = self.env["product.product"].create(
+            {
+                "name": "Product A",
+                "type": "product",
+                "list_price": 15,
+                "available_in_pos": True,
+                "taxes_id": [(6, 0, [tax01.id])],
+            }
+        )
+
+        # create another product with different taxes_id
+        self.productB = self.env["product.product"].create(
+            {
+                "name": "Product B",
+                "type": "product",
+                "list_price": 25,
+                "available_in_pos": True,
+                "taxes_id": [(6, 0, [tax02.id])]
+            }
+        )
+
+        self.env['loyalty.program'].create({
+            'name': 'Promo Program - Max Amount',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_domain': '[["product_variant_ids.name","=","Promo Product"]]',
+                'reward_point_mode': 'unit',
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount_product_ids': (self.productA | self.productB).ids,
+                'required_points': 1,
+                'discount': 100,
+                'discount_mode': 'percent',
+                'discount_applicability': 'specific',
+                'discount_max_amount': 40,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyTour3",
+            login="accountman",
+        )
