@@ -169,4 +169,24 @@
             </div>
         </div>
     </template>
+
+    <!-- Get the fields set in required_fields and display them as form elements. Doesn't create the form itself. -->
+    <template id="portal_invoice_required_fields_form">
+        <t t-foreach="required_fields" t-as="required_field">
+            <div t-attf-class="mb-3 #{error.get(required_field.name) and 'o_has_error' or ''} col-xl-6">
+                <!-- select by default the value passed in the data or corresponding to the "default" attribute on the field -->
+                <t t-set="field_info" t-value="env[required_field.model]._fields[required_field.name]"/>
+                <t t-set="default_value" t-value="extra_field_values.get(field_prefix + required_field.name) or field_info.default and field_info.default(required_field.model)"/>
+                <t t-if="required_field.ttype == 'selection'">
+                    <label class="col-form-label" t-att-for="field_prefix + required_field.name"><t t-out="required_field.field_description"/></label>
+                    <select class="form-select" t-att-name="field_prefix + required_field.name" required="required">
+                        <option t-att-selected="not default_value" disabled="disabled" value=""><t t-out="'Select the %s ...' % required_field.field_description.lower()"/></option>
+                        <t t-foreach="required_field.selection_ids" t-as="selection">
+                            <option t-att-selected="default_value and default_value == selection.value" t-att-value="selection.value"><t t-out="selection.name"/></option>
+                        </t>
+                    </select>
+                </t>
+            </div>
+        </t>
+    </template>
 </odoo>

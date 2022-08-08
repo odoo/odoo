@@ -1609,6 +1609,7 @@ class PosSession(models.Model):
             fiscal_position['fiscal_position_taxes_by_id'] = {tax_id: fiscal_position_by_id[tax_id] for tax_id in fiscal_position['tax_ids']}
 
         loaded_data['attributes_by_ptal_id'] = self._get_attributes_by_ptal_id()
+        loaded_data['base_url'] = self.get_base_url()
 
     @api.model
     def _pos_ui_models_to_load(self):
@@ -1646,7 +1647,7 @@ class PosSession(models.Model):
                 'domain': [('id', '=', self.company_id.id)],
                 'fields': [
                     'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id',
-                    'country_id', 'state_id', 'tax_calculation_rounding_method', 'nomenclature_id'
+                    'country_id', 'state_id', 'tax_calculation_rounding_method', 'nomenclature_id', 'point_of_sale_use_ticket_qr_code',
                 ],
             }
         }

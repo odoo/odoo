@@ -9,7 +9,7 @@ var field_utils = require('web.field_utils');
 var time = require('web.time');
 var utils = require('web.utils');
 var { Gui } = require('point_of_sale.Gui');
-const { batched } = require("point_of_sale.utils");
+const { batched, uuidv4 } = require("point_of_sale.utils");
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -208,6 +208,7 @@ class PosGlobalState extends PosModel {
         this.payment_methods = loadedData['pos.payment.method'];
         this._loadPosPaymentMethod();
         this.fiscal_positions = loadedData['account.fiscal.position'];
+        this.base_url = loadedData['base_url'];
         await this._loadFonts();
         await this._loadPictures();
     }
@@ -2226,6 +2227,7 @@ class Order extends PosModel {
             this.init_from_JSON(options.json);
         } else {
             this.sequence_number = this.pos.pos_session.sequence_number++;
+            this.access_token = uuidv4();  // unique uuid used to identify the authenticity of the request from the QR code.
             this.uid  = this.generate_unique_id();
             this.name = _.str.sprintf(_t("Order %s"), this.uid);
             this.validation_date = undefined;
@@ -2322,9 +2324,9 @@ class Order extends PosModel {
         this.amount_return = json.amount_return;
         this.account_move = json.account_move;
         this.backendId = json.id;
-        this.isFromClosedSession = json.is_session_closed;
         this.is_tipped = json.is_tipped || false;
         this.tip_amount = json.tip_amount || 0;
+        this.access_token = json.access_token || '';
     }
     export_as_JSON() {
         var orderLines, paymentLines;
@@ -2357,6 +2359,7 @@ class Order extends PosModel {
             to_ship: this.to_ship ? this.to_ship : false,
             is_tipped: this.is_tipped || false,
             tip_amount: this.tip_amount || 0,
+            access_token: this.access_token || '',
         };
         if (!this.is_paid && this.user_id) {
             json.user_id = this.user_id;
@@ -2449,6 +2452,7 @@ class Order extends PosModel {
                 logo:  this.pos.company_logo_base64,
             },
             currency: this.pos.currency,
+            pos_qr_code: this._get_qr_code_data(),
         };
 
         if (is_html(this.pos.config.receipt_header)){
@@ -3199,6 +3203,17 @@ class Order extends PosModel {
             return this.get_paymentlines().length != 0;
         } else {
             return true;
+        }
+    }
+    _get_qr_code_data() {
+        if (this.pos.company.point_of_sale_use_ticket_qr_code) {
+            const codeWriter = new window.ZXing.BrowserQRCodeSvgWriter();
+            // Use the unique access token to ensure the authenticity of the request. Use the order reference as a second check just in case.
+            const address = `${this.pos.base_url}/pos/ticket/validate?access_token=${this.access_token}`
+            let qr_code_svg = new XMLSerializer().serializeToString(codeWriter.write(address, 150, 150));
+            return "data:image/svg+xml;base64,"+ window.btoa(qr_code_svg);
+        } else {
+            return false;
         }
     }
 }
