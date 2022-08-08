@@ -225,7 +225,7 @@
                         <div class="row mt16 o_settings_container" id="pos_pricing_section">
                             <div class="col-12 col-lg-6 o_setting_box" id="multiple_prices_setting">
                                 <div class="o_setting_left_pane">
-                                    <field name="pos_use_pricelist"/>
+                                    <field name="pos_use_pricelist" attrs="{'readonly': [('pos_has_active_session','=', True)]}"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="pos_use_pricelist" string="Flexible Pricelists" />
