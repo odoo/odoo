@@ -256,23 +256,23 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasCallFeature() {
-            const typesOfChannelWithCallFeature = new Set([
+            const typesOfChannelWithCallFeature = [
                 'channel',
                 'chat',
                 'group',
-            ]);
-            return typesOfChannelWithCallFeature.has(this.channel_type);
+            ];
+            return typesOfChannelWithCallFeature.includes(this.channel_type);
         },
         /**
          * @private
          * @returns {boolean}
          */
         _computeHasMemberListFeature() {
-            const typesOfChannelWithMemberListFeature = new Set([
+            const typesOfChannelWithMemberListFeature = [
                 'channel',
                 'group',
-            ]);
-            return typesOfChannelWithMemberListFeature.has(this.channel_type);
+            ];
+            return typesOfChannelWithMemberListFeature.includes(this.channel_type);
         },
         /**
          * @private
@@ -303,11 +303,11 @@ registerModel({
         * @returns {boolean}
         */
         _computeIsDescriptionEditable() {
-            const typesOfChannelWithEditableDescription = new Set([
+            const typesOfChannelWithEditableDescription = [
                 'channel',
                 'group',
-            ]);
-            return typesOfChannelWithEditableDescription.has(this.channel_type);
+            ];
+            return typesOfChannelWithEditableDescription.includes(this.channel_type);
         },
         /**
          * @private
@@ -334,12 +334,12 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsRenamable() {
-            const typesOfRenamableChannel = new Set([
+            const typesOfRenamableChannel = [
                 'channel',
                 'chat',
                 'group',
-            ]);
-            return typesOfRenamableChannel.has(this.channel_type);
+            ];
+            return typesOfRenamableChannel.includes(this.channel_type);
         },
         /**
          * @private
