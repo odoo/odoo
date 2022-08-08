@@ -305,6 +305,24 @@ QUnit.module('convert_inline', {}, function () {
                 .replace(/<tr><td[^>]*>(\(2, 0\))<\/td>/, '<img><tr><td><strong class="b">$1</strong></td>'),
             "should have converted a list group structure into a table");
     });
+    QUnit.test('convert a grid with offsets to a table', async function (assert) {
+        assert.expect(2);
+
+        let $editable = $('<div><div class="container"><div class="row"><div class="col-6 offset-4">(0, 0)</div></div></div>');
+        convertInline.bootstrapToTable($editable);
+        assert.strictEqual($editable.html(),
+            getTableHtml([[[4, 33.33, ''], [6, 50, '(0, 0)'], [2, 16.67, '']]]),
+            "should have converted a column with an offset to two columns, then completed the column");
+
+        $editable = $('<div><div class="container"><div class="row"><div class="col-6 offset-4">(0, 0)</div><div class="col-6 offset-1">(0, 1)</div></div></div>');
+        convertInline.bootstrapToTable($editable);
+        assert.strictEqual($editable.html(),
+            getTableHtml([
+                [[4, 33.33, ''], [6, 50, '(0, 0)'], [1, 8.33, ''], [1, 8.33, '']],
+                [[6, 50, '(0, 1)'], [6, 50, '']],
+            ]),
+            "should have converted a column with an offset to two columns, then completed the column (overflowing)");
+    });
 
     QUnit.module('Normalize styles');
     // Test normalizeColors, normalizeRem and formatTables
