@@ -1002,6 +1002,36 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("save a record with an invisible required field ", async function (assert) {
+        serverData.models.foo.fields.foo.required = true;
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo" invisible="1"/>
+                    <field name="int_field"/>
+                </tree>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+                if (args.method === "create") {
+                    assert.deepEqual(args.args, [{ int_field: 1 }]);
+                }
+            },
+        });
+        assert.containsN(target, ".o_data_row", 4);
+        assert.verifySteps(["get_views", "web_search_read"]);
+
+        await click(target.querySelector(".o_list_button_add"));
+        await editInput(target, "[name='int_field'] input", 1);
+        await click(target, ".o_list_view");
+        assert.containsN(target, ".o_data_row", 5);
+        assert.strictEqual(target.querySelector(".o_data_row [name='int_field']").textContent, "1");
+        assert.verifySteps(["onchange", "create", "read"]);
+    });
+
     QUnit.test("boolean field has no title (data-tooltip)", async function (assert) {
         await makeView({
             type: "list",

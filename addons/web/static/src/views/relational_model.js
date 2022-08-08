@@ -503,7 +503,9 @@ export class Record extends DataPoint {
     }
 
     get dirtyFields() {
-        if (!this.isDirty) return [];
+        if (!this.isDirty) {
+            return [];
+        }
         return this._changes.map((change) => this.activeFields[change]);
     }
 
@@ -569,7 +571,11 @@ export class Record extends DataPoint {
     _checkValidity() {
         for (const fieldName in this._requiredFields) {
             const fieldType = this.fields[fieldName].type;
-            if (!evalDomain(this._requiredFields[fieldName], this.evalContext)) {
+            const activeField = this.activeFields[fieldName];
+            if (
+                !evalDomain(this._requiredFields[fieldName], this.evalContext) ||
+                (activeField && activeField.alwaysInvisible)
+            ) {
                 this._removeInvalidFields([fieldName]);
                 continue;
             }

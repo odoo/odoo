@@ -351,7 +351,11 @@ export class Record extends DataPoint {
         for (const fieldName in this.activeFields) {
             const fieldType = this.fields[fieldName].type;
             if (fieldName in this._requiredFields) {
-                if (!evalDomain(this._requiredFields[fieldName], this.evalContext)) {
+                const activeField = this.activeFields[fieldName];
+                if (
+                    !evalDomain(this._requiredFields[fieldName], this.evalContext) ||
+                    (activeField && activeField.alwaysInvisible)
+                ) {
                     this._removeInvalidFields([fieldName]);
                     continue;
                 }
