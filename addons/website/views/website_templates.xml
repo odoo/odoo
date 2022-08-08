@@ -176,6 +176,23 @@
                 <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" autocomplete="off" t-att-name="optionName" t-att-value="main_object[optionName]"/>
             </t>
         </t>
+        <div groups="base.group_user" class="o_frontend_to_backend_nav position-fixed d-none">
+            <svg class="o_frontend_to_backend_icon position-absolute" width="24px" height="24px"
+                 viewBox="-7 -7 24 24" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin">
+                <path fill="#FFF" d="M8 8V1a1 1 0 1 1 2 0v8a1 1 0 0 1-1 1H1a1 1 0 1 1 0-2h7z"/>
+            </svg>
+            <div class="o_frontend_to_backend_buttons d-flex">
+                <a href="#" title="Go to your Odoo Apps" class="o_frontend_to_backend_apps_btn fa fa-th d-flex align-items-center justify-content-center text-decoration-none" data-bs-toggle="dropdown"/>
+                <div class="dropdown-menu o_frontend_to_backend_apps_menu" role="menu">
+                    <a role="menuitem" class="dropdown-item" t-esc="menu['name']"
+                       t-as="menu" t-foreach="env['ir.ui.menu'].load_menus_root()['children']"
+                       t-attf-href="/web#menu_id=#{menu['id']}&amp;action=#{menu['action'] and menu['action'].split(',')[1] or ''}"/>
+                </div>
+                <a groups="website.group_website_publisher" href="#" title="Edit this content" class="o_frontend_to_backend_edit_btn px-3 d-flex align-items-center justify-content-center text-decoration-none">
+                    <i class="fa fa-pencil me-1"/>Edit
+                </a>
+            </div>
+        </div>
     </xpath>
     <xpath expr="//div[@id='wrapwrap']" position="attributes">
         <attribute name="t-attf-class" add="#{'o_header_overlay' if 'header_overlay' in main_object and main_object.header_overlay else ''}" separator=" "/>
