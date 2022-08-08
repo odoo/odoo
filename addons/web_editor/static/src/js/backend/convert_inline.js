@@ -171,7 +171,7 @@ function bootstrapToTable($editable) {
             // 1. Replace generic "col" classes with specific "col-n", computed
             //    by sharing the available space between them.
             const flexColumns = bootstrapColumns.filter(column => !/\d/.test(column.className.match(RE_COL_MATCH)[0] || '0'));
-            const colTotalSize = bootstrapColumns.map(child => _getColumnSize(child)).reduce((a, b) => a + b, 0);
+            const colTotalSize = bootstrapColumns.map(child => _getColumnSize(child) + _getColumnOffsetSize(child)).reduce((a, b) => a + b, 0);
             const colSize = Math.max(1, Math.round((12 - colTotalSize) / flexColumns.length));
             for (const flexColumn of flexColumns) {
                 flexColumn.classList.remove(flexColumn.className.match(RE_COL_MATCH)[0].trim());
@@ -179,12 +179,26 @@ function bootstrapToTable($editable) {
             }
 
             // 2. Create and fill up the row(s) with grid(s).
+            // Create new, empty columns for column offsets.
+            let columnIndex = 0;
+            for (const bootstrapColumn of [...bootstrapColumns]) {
+                const offsetSize = _getColumnOffsetSize(bootstrapColumn);
+                if (offsetSize) {
+                    const newColumn = document.createElement('div');
+                    newColumn.classList.add(`col-${offsetSize}`);
+                    bootstrapColumn.classList.remove(bootstrapColumn.className.match(RE_OFFSET_MATCH)[0].trim());
+                    bootstrapColumn.before(newColumn);
+                    bootstrapColumns.splice(columnIndex, 0, newColumn);
+                    columnIndex++;
+                }
+                columnIndex++;
+            }
             let grid = _createColumnGrid();
             let gridIndex = 0;
             let currentRow = tr.cloneNode();
             tr.after(currentRow);
             let currentCol;
-            let columnIndex = 0;
+            columnIndex = 0;
             for (const bootstrapColumn of bootstrapColumns) {
                 const columnSize = _getColumnSize(bootstrapColumn);
                 if (gridIndex + columnSize < 12) {
@@ -881,7 +895,6 @@ function _createTable(attributes = []) {
  * its Bootstrap classes.
  *
  * @see RE_COL_MATCH
- * @see RE_OFFSET_MATCH
  * @param {Element} column
  * @returns {number}
  */
@@ -889,10 +902,21 @@ function _getColumnSize(column) {
     const colMatch = column.className.match(RE_COL_MATCH);
     const colOptions = colMatch[2] && colMatch[2].substr(1).split('-');
     const colSize = colOptions && (colOptions.length === 2 ? +colOptions[1] : +colOptions[0]) || 0;
+    return colSize;
+}
+/**
+ * Take a Bootstrap grid column element and return its offset size, computed by
+ * using its Bootstrap classes.
+ *
+ * @see RE_OFFSET_MATCH
+ * @param {Element} column
+ * @returns {number}
+ */
+function _getColumnOffsetSize(column) {
     const offsetMatch = column.className.match(RE_OFFSET_MATCH);
     const offsetOptions = offsetMatch && offsetMatch[2] && offsetMatch[2].substr(1).split('-');
     const offsetSize = offsetOptions && (offsetOptions.length === 2 ? +offsetOptions[1] : +offsetOptions[0]) || 0;
-    return colSize + offsetSize;
+    return offsetSize;
 }
 /**
  * Return the CSS rules which applies on an element, tweaked so that they are
