@@ -5,16 +5,18 @@
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
     </template>
 
-    <template id="report_invoice" inherit_id="account.report_invoice">
-        <t t-call="account.report_invoice_document" position="attributes">
-            <attribute name="t-call">#{ o._get_name_invoice_report('account.report_invoice_document') }</attribute>
-        </t>
+     <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document_with_payments"]' position="replace">
+            <t t-if="o._get_name_invoice_report('account.report_invoice_document') == 'account.report_invoice_document'"
+               t-call="account.report_invoice_document" t-lang="lang"/>
+        </xpath>
     </template>
 
-    <template id="report_invoice_with_payments" inherit_id="account.report_invoice_with_payments">
-        <t t-call="account.report_invoice_document_with_payments" position="attributes">
-            <attribute name="t-call">#{ o._get_name_invoice_report('account.report_invoice_document_with_payments') }</attribute>
-        </t>
+     <template id="report_invoice_with_payments" inherit_id="account.report_invoice_with_payments">
+        <xpath expr='//t[@t-call="account.report_invoice_document_with_payments"]' position="replace">
+            <t t-if="o._get_name_invoice_report('account.report_invoice_document_with_payments') == 'account.report_invoice_document_with_payments'"
+               t-call="account.report_invoice_document" t-lang="lang"/>
+        </xpath>
     </template>
 
 </odoo>

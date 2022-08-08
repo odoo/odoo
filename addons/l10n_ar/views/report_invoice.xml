@@ -445,4 +445,18 @@
 
     </template>
 
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document_with_payments"]' position="replace">
+            <t t-if="o._get_name_invoice_report('account.report_invoice_document') == 'l10n_ar.report_invoice_document'"
+               t-call="l10n_ar.report_invoice_document" t-lang="lang"/>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_with_payments" inherit_id="account.report_invoice_with_payments">
+        <xpath expr='//t[@t-call="account.report_invoice_document_with_payments"]' position="after">
+            <t t-if="o._get_name_invoice_report('account.report_invoice_document_with_payments') == 'l10n_ar.report_invoice_document_with_payments'"
+               t-call="l10n_ar.report_invoice_document" t-lang="lang"/>
+        </xpath>
+    </template>
+
 </odoo>
