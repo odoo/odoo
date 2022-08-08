@@ -688,11 +688,14 @@ class TestVariantsImages(common.TestProductCommon):
         self.assertEqual(len(set(images)), 4)
         variant_no_image = self.variants[0]
         old_last_update = variant_no_image['__last_update']
+        print('old_last_update= ', old_last_update)
+        print('variant= ', self.variants[0])
 
         self.assertFalse(variant_no_image.image_1920)
         self.template.image_1920 = image_black
         self.template.write({'write_date': datetime.now()})
         new_last_update = variant_no_image['__last_update']
+        print('new_last_update= ', new_last_update)
 
         # the first has no image variant, all the others do
         self.assertFalse(variant_no_image.image_variant_1920)
