@@ -59,7 +59,7 @@ export class Notebook extends Component {
         this.anchorTarget = null;
         this.pages = this.computePages(this.props);
         this.state = useState({ currentPage: null });
-        this.state.currentPage = this.props.defaultPage || this.computeActivePage();
+        this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
         const onAnchorClicked = this.onAnchorClicked.bind(this);
         this.env.bus.addEventListener("SCROLLER:ANCHOR_LINK_CLICKED", onAnchorClicked);
         useEffect(
@@ -74,8 +74,10 @@ export class Notebook extends Component {
             () => [this.state.currentPage]
         );
         onWillUpdateProps((nextProps) => {
+            const activateDefault =
+                this.props.defaultPage !== nextProps.defaultPage || !this.defaultVisible;
             this.pages = this.computePages(nextProps);
-            this.state.currentPage = this.computeActivePage();
+            this.state.currentPage = this.computeActivePage(nextProps.defaultPage, activateDefault);
         });
         onWillDestroy(() => {
             this.env.bus.removeEventListener("SCROLLER:ANCHOR_LINK_CLICKED", onAnchorClicked);
@@ -131,15 +133,27 @@ export class Notebook extends Component {
         return pages;
     }
 
-    computeActivePage() {
+    computeActivePage(defaultPage, activateDefault) {
         if (!this.pages.length) {
             return null;
         }
-        const current = this.state.currentPage;
-        if (!current || (current && !this.pages.find((e) => e[0] === current)[1].isVisible)) {
-            const candidate = this.pages.find((v) => v[1].isVisible);
-            return candidate ? candidate[0] : null;
+        const pages = this.pages.filter((e) => e[1].isVisible).map((e) => e[0]);
+
+        if (defaultPage) {
+            if (!pages.includes(defaultPage)) {
+                this.defaultVisible = false;
+            } else {
+                this.defaultVisible = true;
+                if (activateDefault) {
+                    return defaultPage;
+                }
+            }
         }
+        const current = this.state.currentPage;
+        if (!current || (current && !pages.includes(current))) {
+            return pages[0];
+        }
+
         return current;
     }
 }
