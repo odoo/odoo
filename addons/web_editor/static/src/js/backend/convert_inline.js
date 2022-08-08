@@ -187,13 +187,13 @@ function bootstrapToTable($editable) {
                 if (gridIndex + columnSize < 12) {
                     currentCol = grid[gridIndex];
                     _applyColspan(currentCol, columnSize);
+                    gridIndex += columnSize;
                     if (columnIndex === bootstrapColumns.length - 1) {
                         // We handled all the columns but there is still space
                         // in the row. Insert the columns and fill the row.
-                        grid[gridIndex].setAttribute('colspan', 12 - gridIndex);
+                        _applyColspan(grid[gridIndex], 12 - gridIndex);
                         currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
                     }
-                    gridIndex += columnSize;
                 } else if (gridIndex + columnSize === 12) {
                     // Finish the row.
                     currentCol = grid[gridIndex];
@@ -224,10 +224,8 @@ function bootstrapToTable($editable) {
                     if (columnIndex === bootstrapColumns.length - 1 && gridIndex < 12) {
                         // We handled all the columns but there is still space
                         // in the row. Insert the columns and fill the row.
-                        grid[gridIndex].setAttribute('colspan', 12 - gridIndex);
-                        currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
-                        // Adapt width to colspan.
                         _applyColspan(grid[gridIndex], 12 - gridIndex);
+                        currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
                     }
                 }
                 if (currentCol) {
