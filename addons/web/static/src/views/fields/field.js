@@ -196,6 +196,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
     const widget = node.getAttribute("widget");
     const fields = models[modelName];
     const field = fields[name];
+    const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
     const fieldInfo = {
         name,
         viewType,
@@ -203,7 +204,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         domain: node.getAttribute("domain") || "[]",
         string: node.getAttribute("string") || field.string,
         widget,
-        modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
+        modifiers,
         onChange: archParseBoolean(node.getAttribute("on_change")),
         FieldComponent: getFieldClassFromRegistry(fields[name].type, widget, viewType, jsClass),
         forceSave: archParseBoolean(node.getAttribute("force_save")),
@@ -212,6 +213,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         props: {},
         rawAttrs: {},
         options: evaluateExpr(node.getAttribute("options") || "{}"),
+        alwaysInvisible: modifiers.invisible === true || modifiers.column_invisible === true,
     };
     for (const attribute of node.attributes) {
         if (attribute.name in Field.forbiddenAttributeNames) {
