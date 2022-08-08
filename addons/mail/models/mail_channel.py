@@ -765,6 +765,10 @@ class Channel(models.Model):
             if self.env.user and self.env.user.partner_id and member.partner_id == self.env.user.partner_id:
                 member_of_current_user_by_channel[member.channel_id] = member
         for channel in self:
+            channel_data = {
+                'channel_type': channel.channel_type,
+                'id': channel.id,
+            }
             info = {
                 'avatarCacheKey': channel._get_avatar_cache_key(),
                 'id': channel.id,
@@ -774,7 +778,6 @@ class Channel(models.Model):
                 'uuid': channel.uuid,
                 'state': 'open',
                 'is_minimized': False,
-                'channel_type': channel.channel_type,
                 'public': channel.public,
                 'group_based_subscription': bool(channel.group_ids),
                 'create_uid': channel.create_uid.id,
@@ -819,6 +822,8 @@ class Channel(models.Model):
                 'invitedMembers': [('insert', invited_members_by_channel[channel].mail_channel_member_format())],
                 'rtcSessions': [('insert', rtc_sessions_by_channel.get(channel, []))],
             })
+
+            info['channel'] = [('insert-and-replace', channel_data)]
 
             channel_infos.append(info)
         return channel_infos

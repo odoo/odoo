@@ -29,7 +29,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickInvite(ev) {
-            if (this.thread.channel_type === 'chat') {
+            if (this.thread.channel.channel_type === 'chat') {
                 const partners_to = [...new Set([
                     this.messaging.currentPartner.id,
                     ...this.thread.members.map(member => member.id),
@@ -182,10 +182,10 @@ registerModel({
          * @returns {string}
          */
         _computeInviteButtonText() {
-            if (!this.thread) {
+            if (!this.thread || !this.thread.channel) {
                 return clear();
             }
-            switch (this.thread.channel_type) {
+            switch (this.thread.channel.channel_type) {
                 case 'chat':
                     return this.env._t("Create group chat");
                 case 'group':

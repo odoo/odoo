@@ -90,6 +90,7 @@ registerModel({
             inverse: 'channel',
             isCausal: true,
         }),
+        channel_type: attr(),
         id: attr({
             readonly: true,
             required: true,

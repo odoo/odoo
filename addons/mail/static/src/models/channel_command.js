@@ -70,7 +70,7 @@ registerModel({
          * @returns {[ChannelCommand[], ChannelCommand[]]}
          */
         searchSuggestions(searchTerm, { thread } = {}) {
-            if (thread.model !== 'mail.channel') {
+            if (!thread.channel) {
                 // channel commands are channel specific
                 return [[]];
             }
@@ -80,7 +80,7 @@ registerModel({
                     return false;
                 }
                 if (command.channel_types) {
-                    return command.channel_types.includes(thread.channel_type);
+                    return command.channel_types.includes(thread.channel.channel_type);
                 }
                 return true;
             })];

@@ -1000,6 +1000,10 @@ patch(MockServer.prototype, 'mail', {
                 ['is_read', '=', false],
                 ['mail_message_id', 'in', messages.map(message => message.id)],
             ]).length;
+            const channelData = {
+                channel_type: channel.channel_type,
+                id: channel.id,
+            };
             const res = Object.assign({}, channel, {
                 last_message_id: lastMessageId,
                 members: [...this._mockResPartnerMailPartnerFormat(partnerIds).values()],
@@ -1031,6 +1035,7 @@ patch(MockServer.prototype, 'mail', {
                     res['rtc_inviting_session'] = { 'id': memberOfCurrentUser.rtc_inviting_session_id };
                 }
             }
+            res.channel = [['insert-and-replace', channelData]];
             return res;
         });
     },

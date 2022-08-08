@@ -12,7 +12,8 @@ patchRecordMethods('MessageActionList', {
         if (
             this.message &&
             this.message.originThread &&
-            this.message.originThread.channel_type === 'livechat'
+            this.message.originThread.channel &&
+            this.message.originThread.channel.channel_type === 'livechat'
         ) {
             return false;
         }

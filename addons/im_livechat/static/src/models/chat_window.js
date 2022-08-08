@@ -11,8 +11,8 @@ patchRecordMethods('ChatWindow', {
     close({ notifyServer } = {}) {
         if (
             this.thread &&
-            this.thread.model === 'mail.channel' &&
-            this.thread.channel_type === 'livechat' &&
+            this.thread.channel &&
+            this.thread.channel.channel_type === 'livechat' &&
             this.thread.cache.isLoaded &&
             this.thread.messages.length === 0
         ) {
