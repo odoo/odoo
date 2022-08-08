@@ -52,6 +52,19 @@ class TestStockCommon(common.TestProductCommon):
             'location_id': cls.warehouse_1.lot_stock_id.id,
         })
 
+        # Partner
+        cls.partner_1 = cls.env['res.partner'].create({
+            'name': 'Julia Agrolait',
+            'email': 'julia@agrolait.example.com',
+        })
+
+        # Product
+        cls.product_3 = cls.env['product.product'].create({
+            'name': 'Stone',  # product_3
+            'uom_id': cls.uom_dozen.id,
+            'uom_po_id': cls.uom_dozen.id,
+        })
+
         # Existing data
         cls.existing_inventories = cls.env['stock.quant'].search([('inventory_quantity', '!=', 0.0)])
         cls.existing_quants = cls.env['stock.quant'].search([])

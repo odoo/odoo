@@ -219,6 +219,12 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(set((test_bom_2 | self.bom_2).ids), set([b[0].id for b in boms]))
         self.assertEqual(set((test_bom_2_l1 | test_bom_2_l4 | self.bom_2.bom_line_ids).ids), set([l[0].id for l in lines]))
 
+        self.product_9, self.product_10 = self.env['product.product'].create([{
+            'name': 'Paper',  # product_9
+        }, {
+            'name': 'Stone',  # product_10
+        }])
+
         #check recursion
         test_bom_3 = self.env['mrp.bom'].create({
             'product_id': self.product_9.id,
