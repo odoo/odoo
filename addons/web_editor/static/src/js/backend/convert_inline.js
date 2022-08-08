@@ -121,6 +121,9 @@ function bootstrapToTable($editable) {
     // These containers from the mass mailing masonry snippet require full
     // height contents, which is only possible if the table itself has a set
     // height. We also need to restyle it because of the change in structure.
+    for(const masonryTopInnerContainer of editable.querySelectorAll('.s_masonry_block > .container')) {
+        masonryTopInnerContainer.style.setProperty('height', '100%');
+    }
     for (const masonryGrid of editable.querySelectorAll('.o_masonry_grid_container')) {
         masonryGrid.style.setProperty('padding', 0);
         for (const fakeTable of [...masonryGrid.children].filter(c => c.classList.contains('o_fake_table'))) {
