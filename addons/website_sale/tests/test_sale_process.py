@@ -206,6 +206,8 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
 
             # 2. Logged in user, edit billing
             self.default_address_values['partner_id'] = self.demo_partner.id
+            # Name cannot be changed if there are issued invoices
+            self.default_address_values['name'] = self.demo_partner.name
             self.WebsiteSaleController.address(**self.default_address_values)
             self.assertEqual(self.demo_partner.company_id, self.company_c, "Logged in user edited billing (the partner itself) should not get its company modified.")
 
