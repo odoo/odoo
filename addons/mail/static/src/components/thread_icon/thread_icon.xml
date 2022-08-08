@@ -4,7 +4,7 @@
     <t t-name="mail.ThreadIcon" owl="1">
         <t t-if="thread">
             <div class="o_ThreadIcon d-flex justify-content-center flex-shrink-0" t-attf-class="{{ className }}" t-ref="root" name="root">
-                <t t-if="thread.channel_type === 'channel'">
+                <t t-if="thread.channel and thread.channel.channel_type === 'channel'">
                     <t t-if="thread.public === 'private'">
                         <div class="o_ThreadIcon_channelPrivate fa fa-fw fa-lock" title="Private channel"/>
                     </t>
@@ -15,7 +15,7 @@
                         <div class="o_ThreadIcon_channelGroups fa fa-fw fa-hashtag" title="Selected group of users"/>
                     </t>
                 </t>
-                <t t-elif="thread.channel_type === 'chat' and thread.correspondent">
+                <t t-elif="thread.channel and thread.channel.channel_type === 'chat' and thread.correspondent">
                     <t t-if="thread.orderedOtherTypingMembers.length > 0">
                         <ThreadTypingIcon
                             className="'o_ThreadIcon_typing flex-grow-1'"
@@ -39,7 +39,7 @@
                         <div class="o_ThreadIcon_noImStatus fa fa-fw fa-question-circle" title="No IM status available"/>
                     </t>
                 </t>
-                <t t-elif="thread.channel_type === 'group'">
+                <t t-elif="thread.channel and thread.channel.channel_type === 'group'">
                     <div class="o_ThreadIcon fa fa-fw fa-users" title="Grouped Chat"/>
                 </t>
                 <t t-elif="thread.model === 'mail.box'">

@@ -143,8 +143,8 @@ registerModel({
                 return;
             }
             thread.open();
-            if (this.messaging.device.isSmall && thread.channel_type) {
-                this.update({ activeMobileNavbarTabId: thread.channel_type });
+            if (this.messaging.device.isSmall && thread.channel && thread.channel.channel_type) {
+                this.update({ activeMobileNavbarTabId: thread.channel.channel_type });
             }
         },
         /**

@@ -364,10 +364,13 @@ registerModel({
         },
         /**
          * @private
-         * @returns {boolean}
+         * @returns {boolean|FieldCommand}
          */
         _computeHasCallButtons() {
-            return Boolean(this.thread) && this.thread.rtcSessions.length === 0 && ['channel', 'chat', 'group'].includes(this.thread.channel_type);
+            if (!this.thread || !this.thread.channel) {
+                return clear();
+            }
+            return this.thread.rtcSessions.length === 0 && ['channel', 'chat', 'group'].includes(this.thread.channel.channel_type);
         },
         /**
          * @private
@@ -581,8 +584,8 @@ registerModel({
          * Determines whether the buttons to start a RTC call should be displayed.
          */
         hasCallButtons: attr({
-            default: false,
             compute: '_computeHasCallButtons',
+            default: false,
         }),
         hasCloseAsBackButton: attr({
             compute: '_computeHasCloseAsBackButton',

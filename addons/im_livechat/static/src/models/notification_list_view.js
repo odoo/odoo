@@ -11,9 +11,9 @@ patchRecordMethods('NotificationListView', {
     _computeFilteredThreads() {
         if (this.filter === 'livechat') {
             return replace(this.messaging.models['Thread'].all(thread =>
-                thread.channel_type === 'livechat' &&
-                thread.isPinned &&
-                thread.model === 'mail.channel'
+                thread.channel &&
+                thread.channel.channel_type === 'livechat' &&
+                thread.isPinned
             ));
         }
         return this._super();

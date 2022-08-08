@@ -1182,7 +1182,7 @@ registerModel({
                         return false;
                     }
                     if (command.channel_types) {
-                        return command.channel_types.includes(this.composer.thread.channel_type);
+                        return Boolean(this.composer.thread.channel) && command.channel_types.includes(this.composer.thread.channel.channel_type);
                     }
                     return true;
                 });
