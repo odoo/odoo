@@ -15,6 +15,9 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="stock.view_stock_move_operations" />
             <field name="arch" type="xml">
+                <field name="move_line_ids" position="attributes">
+                    <attribute name="context">{'tree_view_ref': 'stock.view_stock_move_line_operation_tree_finished', 'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}</attribute>
+                </field>
                 <xpath expr="//label[@for='product_uom_qty']" position="attributes">
 		    <attribute name="string">Total To Consume</attribute>
                 </xpath>
@@ -43,9 +46,11 @@
             </field>
         </record>
 
+        <!-- TODO MASTER: rename into view_stock_move_line_operation_tree_raw -->
         <record id="view_stock_move_line_operation_tree_finished" model="ir.ui.view">
             <field name="name">stock.move.line.operation.tree.finished</field>
             <field name="model">stock.move.line</field>
+            <field name="mode">primary</field>
             <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='lot_id']" position="attributes">
