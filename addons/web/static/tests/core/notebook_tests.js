@@ -2,7 +2,7 @@
 
 import { Notebook } from "@web/core/notebook/notebook";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
-import { click, getFixture, mount } from "@web/../tests/helpers/utils";
+import { click, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 
 const { Component, xml } = owl;
 let target;
@@ -139,11 +139,12 @@ QUnit.module("Components", (hooks) => {
 
         await mount(Parent, target, { env });
         assert.containsOnce(target, "div.o_notebook");
-        assert.containsNone(
-            target,
-            ".o_notebook_headers .nav-item a.active",
-            "no tab is selected as the default page is not visible"
+        assert.strictEqual(
+            target.querySelector(".o_notebook_headers .nav-item a.active").textContent,
+            "About",
+            "The first page is selected"
         );
+
         assert.containsN(
             target,
             ".o_notebook_headers a.nav-link",
@@ -152,7 +153,7 @@ QUnit.module("Components", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(".tab-pane.active").firstElementChild.textContent,
-            "Oooops",
+            "About the bird",
             "third page content is displayed by the notebook"
         );
     });
@@ -290,5 +291,47 @@ QUnit.module("Components", (hooks) => {
         assert.ok(firstPage instanceof HTMLElement);
 
         assert.notEqual(firstPage, secondPage);
+    });
+
+    QUnit.test("defaultPage recomputed when isVisible is dynamic", async (assert) => {
+        let defaultPageVisible = false;
+        class Parent extends Component {
+            get defaultPageVisible() {
+                return defaultPageVisible;
+            }
+        }
+        Parent.components = { Notebook };
+        Parent.template = xml`
+        <Notebook defaultPage="'3'">
+            <t t-set-slot="1" title="'page1'" isVisible="true">
+                <div class="page1" />
+            </t>
+             <t t-set-slot="2" title="'page2'" isVisible="true">
+                <div class="page2" />
+            </t>
+             <t t-set-slot="3" title="'page3'" isVisible="defaultPageVisible">
+                <div class="page3" />
+            </t>
+        </Notebook>`;
+
+        const env = await makeTestEnv();
+        const parent = await mount(Parent, target, { env });
+        assert.containsOnce(target, ".page1");
+        assert.strictEqual(target.querySelector(".nav-link.active").textContent, "page1");
+
+        defaultPageVisible = true;
+        parent.render(true);
+        await nextTick();
+        assert.containsOnce(target, ".page3");
+        assert.strictEqual(target.querySelector(".nav-link.active").textContent, "page3");
+
+        await click(target.querySelectorAll(".nav-link")[1]);
+        assert.containsOnce(target, ".page2");
+        assert.strictEqual(target.querySelector(".nav-link.active").textContent, "page2");
+
+        parent.render(true);
+        await nextTick();
+        assert.containsOnce(target, ".page2");
+        assert.strictEqual(target.querySelector(".nav-link.active").textContent, "page2");
     });
 });
