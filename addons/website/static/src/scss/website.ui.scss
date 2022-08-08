@@ -20,16 +20,29 @@ $-mini-nav-size: 40px;
         cursor: pointer;
     }
 
-    &::before, .o_frontend_to_backend_icon, .o_frontend_to_backend_apps_btn, .o_frontend_to_backend_edit_btn {
+    &::before, .o_frontend_to_backend_icon, .o_frontend_to_backend_buttons {
         transform-origin: top left;
-        transition: transform 400ms ease 0s;
+        transition: transform 400ms ease 1s;
     }
 
-    .o_frontend_to_backend_apps_btn, .o_frontend_to_backend_edit_btn {
-        min-width: $-mini-nav-size;
-        height: $-mini-nav-size;
-        color: #FFFFFF;
+    .o_frontend_to_backend_buttons {
+        transition-duration: 800ms;
+    }
+
+    .o_frontend_to_backend_buttons {
         transform: translateX(-250%) scaleX(0.5);
+
+        > a {
+            min-width: $-mini-nav-size;
+            height: $-mini-nav-size;
+            color: #FFFFFF;
+        }
+    }
+
+    .o_frontend_to_backend_apps_menu {
+        font-size: $o-font-size-base * ($o-root-font-size / 14px);
+        max-height: 70vh;
+        overflow: auto;
     }
 
     @each $-name, $-color in ('edit': $o-enterprise-primary-color, 'apps': $o-enterprise-color) {
@@ -45,10 +58,14 @@ $-mini-nav-size: 40px;
     &:hover {
         &:before, .o_frontend_to_backend_icon {
             transform: scale(.3);
+            transition-delay: 0ms;
+            transition-duration: 400ms;
         }
 
-        .o_frontend_to_backend_apps_btn, .o_frontend_to_backend_edit_btn {
+        .o_frontend_to_backend_buttons {
             transform: translateX(0);
+            transition-delay: 0ms;
+            transition-duration: 400ms;
         }
     }
 }
