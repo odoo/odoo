@@ -381,7 +381,7 @@ QUnit.module("Tooltip service", (hooks) => {
         await nextTick();
     });
 
-    QUnit.test("touch rendering", async (assert) => {
+    QUnit.test("touch rendering - hold-to-show", async (assert) => {
         class MyComponent extends Component {}
         MyComponent.template = xml`<button data-tooltip="hello">Action</button>`;
         let simulateTimeout;
@@ -412,6 +412,43 @@ QUnit.module("Tooltip service", (hooks) => {
         assert.containsOnce(target, ".o_popover_container .o_popover");
         simulateInterval();
         await nextTick();
+        assert.containsNone(target, ".o_popover_container .o_popover");
+    });
+
+    QUnit.test("touch rendering - tap-to-show", async (assert) => {
+        class MyComponent extends Component {}
+        MyComponent.template = xml`<button data-tooltip="hello" data-tooltip-touch-tap-to-show="true">Action</button>`;
+        let simulateTimeout;
+        const mockSetTimeout = (fn) => {
+            simulateTimeout = fn;
+        };
+        let simulateInterval;
+        const mockSetInterval = (fn) => {
+            simulateInterval = fn;
+        };
+        const mockOnTouchStart = () => {};
+        await makeParent(MyComponent, { mockSetTimeout, mockSetInterval, mockOnTouchStart });
+
+        assert.containsNone(target, ".o_popover_container .o_popover");
+        await triggerEvent(target, "button[data-tooltip]", "touchstart");
+        await nextTick();
+        assert.containsNone(target, ".o_popover_container .o_popover");
+
+        simulateTimeout();
+        await nextTick();
+        assert.containsOnce(target, ".o_popover_container .o_popover");
+        assert.strictEqual(
+            target.querySelector(".o_popover_container .o_popover").innerText,
+            "hello"
+        );
+
+        await triggerEvent(target, "button[data-tooltip]", "touchend");
+        assert.containsOnce(target, ".o_popover_container .o_popover");
+        simulateInterval();
+        await nextTick();
+        assert.containsOnce(target, ".o_popover_container .o_popover");
+
+        await triggerEvent(target, "button[data-tooltip]", "touchstart");
         assert.containsNone(target, ".o_popover_container .o_popover");
     });
 });

@@ -23,6 +23,10 @@ const { whenReady } = owl;
  * The opening delay can be modified with the "data-tooltip-delay" attribute (default: 400):
  *   <button data-tooltip="This is a tooltip" data-tooltip-delay="0">Do something</button>
  *
+ * The default behaviour on touch devices to open the tooltip can be modified from "hold-to-show"
+ * to "tap-to-show" "with the data-tooltip-touch-tap-to-show" attribute:
+ *  <button data-tooltip="This is a tooltip" data-tooltip-touch-tap-to-show="true">Do something</button>
+ *
  * For advanced tooltips containing dynamic and/or html content, the
  * "data-tooltip-template" and "data-tooltip-info" attributes can be used.
  * For example, let's suppose the following qweb template:
@@ -188,12 +192,20 @@ export const tooltipService = {
             if (hasTouch()) {
                 document.body.addEventListener("touchstart", onTouchStart);
 
-                document.body.addEventListener("touchend", () => {
-                    touchPressed = false;
+                document.body.addEventListener("touchend", (ev) => {
+                    if (ev.target.matches("[data-tooltip], [data-tooltip-template]")) {
+                        if (!ev.target.dataset.tooltipTouchTapToShow) {
+                            touchPressed = false;
+                        }
+                    }
                 });
 
-                document.body.addEventListener("touchcancel", () => {
-                    touchPressed = false;
+                document.body.addEventListener("touchcancel", (ev) => {
+                    if (ev.target.matches("[data-tooltip], [data-tooltip-template]")) {
+                        if (!ev.target.dataset.tooltipTouchTapToShow) {
+                            touchPressed = false;
+                        }
+                    }
                 });
 
                 return;
