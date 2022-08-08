@@ -3629,3 +3629,15 @@ class AccountMove(models.Model):
         Down-payments can be created from a sale order. This method is overridden in the sale order module.
         '''
         return False
+
+    @api.model
+    def get_invoice_localisation_fields_required_to_invoice(self, country_id):
+        """ Returns the list of fields that needs to be filled when creating an invoice for the selected country.
+        This is required for some flows that would allow a user to request an invoice from the portal.
+        Using these, we can get their information and dynamically create form inputs based for the fields required legally for the company country_id.
+        The returned fields must be of type ir.model.fields in order to handle translations
+
+        :param country_id: The country for which we want the fields.
+        :return: an array of ir.model.fields for which the user should provide values.
+        """
+        return []

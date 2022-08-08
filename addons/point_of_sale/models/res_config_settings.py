@@ -100,6 +100,7 @@ class ResConfigSettings(models.TransientModel):
     pos_tip_product_id = fields.Many2one('product.product', string='Tip Product', compute='_compute_pos_tip_product_id', readonly=False, store=True)
     pos_use_pricelist = fields.Boolean(related='pos_config_id.use_pricelist', readonly=False)
     pos_warehouse_id = fields.Many2one(related='pos_config_id.warehouse_id', readonly=False, string="Warehouse (PoS)")
+    point_of_sale_use_ticket_qr_code = fields.Boolean(related='company_id.point_of_sale_use_ticket_qr_code', readonly=False)
 
     @api.model_create_multi
     def create(self, vals_list):

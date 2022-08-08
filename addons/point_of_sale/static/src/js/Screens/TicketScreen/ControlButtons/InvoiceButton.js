@@ -21,8 +21,6 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
             } else {
                 return this.isAlreadyInvoiced
                     ? this.env._t('Reprint Invoice')
-                    : this.props.order.isFromClosedSession
-                    ? this.env._t('Cannot Invoice')
                     : this.env._t('Invoice');
             }
         }
@@ -59,19 +57,9 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
 
             const orderId = order.backendId;
 
-            // Part 0.1. If already invoiced, print the invoice.
+            // Part 0. If already invoiced, print the invoice.
             if (this.isAlreadyInvoiced) {
                 await this._downloadInvoice(orderId);
-                return;
-            }
-
-            // Part 0.2. Check if order belongs to an active session.
-            // If not, do not allow invoicing.
-            if (order.isFromClosedSession) {
-                this.showPopup('ErrorPopup', {
-                    title: this.env._t('Session is closed'),
-                    body: this.env._t('Cannot invoice order from closed session.'),
-                });
                 return;
             }
 

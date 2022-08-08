@@ -43,6 +43,7 @@
         'views/point_of_sale_dashboard.xml',
         'views/report_invoice.xml',
         'views/res_config_settings_views.xml',
+        'views/pos_ticket_view.xml',
     ],
     'demo': [
         'data/point_of_sale_demo.xml',
@@ -121,6 +122,7 @@
             'point_of_sale/static/lib/**/*.js',
             'web_editor/static/lib/html2canvas.js',
             'point_of_sale/static/src/js/**/*.js',
+            'web/static/lib/zxing-library/zxing-library.js',
         ],
         # This bundle contains the code responsible for starting the POS UI.
         # It is practically the entry point.
