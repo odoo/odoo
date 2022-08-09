@@ -798,6 +798,7 @@ class StockMoveLine(models.Model):
                     'qty_done': False,
                     'qty_ordered': qty_ordered,
                     'product_uom': uom.name,
+                    'product_uom_rec': uom,
                     'product': empty_move.product_id,
                 }
             else:
