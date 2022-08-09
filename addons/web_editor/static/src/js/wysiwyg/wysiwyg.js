@@ -1871,8 +1871,8 @@ const Wysiwyg = Widget.extend({
                 },
             },
             {
-                groupName: _t('Basic blocks'),
-                title: _t('Signature'),
+                category: _t('Basic blocks'),
+                name: _t('Signature'),
                 description: _t('Insert your signature.'),
                 fontawesome: 'fa-pencil-square-o',
                 callback: async () => {
