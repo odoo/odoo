@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { TEST_USER_IDS } from '@mail/../tests/helpers/test_utils';
+import { TEST_USER_IDS } from '@bus/../tests/helpers/test_constants';
 import {
     addFakeModel,
     addModelNamesToFetch,
     insertModelFields,
     insertRecords
-} from '@mail/../tests/helpers/model_definitions_helpers';
+} from '@bus/../tests/helpers/model_definitions_helpers';
 
 //--------------------------------------------------------------------------
 // Models

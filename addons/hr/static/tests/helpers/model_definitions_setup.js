@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { addFakeModel, addModelNamesToFetch } from '@mail/../tests/helpers/model_definitions_helpers';
+import { addFakeModel, addModelNamesToFetch } from '@bus/../tests/helpers/model_definitions_helpers';
 
 addModelNamesToFetch(['hr.employee.public']);
 
