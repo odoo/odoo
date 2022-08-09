@@ -121,7 +121,10 @@ export class Field extends Component {
         const modifiers = fieldInfo.modifiers || {};
         const required = evalDomain(modifiers.required, evalContext);
         const readonlyFromModifiers = evalDomain(modifiers.readonly, evalContext);
-        const readonlyFromViewMode = !this.props.record.isInEdition;
+        const readonlyFromRecord = !record.isInEdition;
+        const readonlyFromViewMode = record.model.root
+            ? !record.model.root.isInEdition
+            : readonlyFromRecord;
         const emptyRequiredValue = required && !this.props.value;
 
         // Decoration props
@@ -166,7 +169,7 @@ export class Field extends Component {
             },
             value: this.props.record.data[this.props.name],
             decorations: decorationMap,
-            readonly: readonlyFromViewMode || readonlyFromModifiers || false,
+            readonly: readonlyFromRecord || readonlyFromModifiers || false,
             ...propsFromAttrs,
             ...props,
             type: field.type,
