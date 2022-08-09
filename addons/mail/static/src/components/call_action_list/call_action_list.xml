@@ -47,19 +47,21 @@
                                 <i class="fa fa-video-camera fa-stack-1x" t-att-class="{ 'fa-lg': !callActionListView.isSmall, 'text-success': messaging.rtc.sendUserVideo }"/>
                             </div>
                         </button>
-                        <button class="o_CallActionList_button o_CallActionList_videoButton btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
-                            t-att-class="{
-                                'o-isActive': messaging.rtc.sendDisplay,
-                                'o-isSmall p-2': callActionListView.isSmall,
-                                'p-3': !callActionListView.isSmall,
-                            }"
-                            t-att-aria-label="callActionListView.screenSharingButtonTitle"
-                            t-att-title="callActionListView.screenSharingButtonTitle"
-                            t-on-click="callActionListView.onClickScreen">
-                            <div class="o_CallActionList_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': callActionListView.isSmall }">
-                                <i class="fa fa-desktop fa-stack-1x" t-att-class="{ 'fa-lg': !callActionListView.isSmall, 'text-success': messaging.rtc.sendDisplay }"/>
-                            </div>
-                        </button>
+                        <t t-if="!env.device.isMobileDevice">
+                            <button class="o_CallActionList_button o_CallActionList_videoButton btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
+                                t-att-class="{
+                                    'o-isActive': messaging.rtc.sendDisplay,
+                                    'o-isSmall p-2': callActionListView.isSmall,
+                                    'p-3': !callActionListView.isSmall,
+                                }"
+                                t-att-aria-label="callActionListView.screenSharingButtonTitle"
+                                t-att-title="callActionListView.screenSharingButtonTitle"
+                                t-on-click="callActionListView.onClickScreen">
+                                <div class="o_CallActionList_buttonIconWrapper fa-stack" t-att-class="{ 'o-isSmall': callActionListView.isSmall }">
+                                    <i class="fa fa-desktop fa-stack-1x" t-att-class="{ 'fa-lg': !callActionListView.isSmall, 'text-success': messaging.rtc.sendDisplay }"/>
+                                </div>
+                            </button>
+                        </t>
                         <Popover position="'top'" popoverClass="'o_CallActionList_popover'">
                             <button class="o_CallActionList_button btn d-flex m-1 border-0 rounded-circle bg-800 shadow-none"
                                 aria-label="More"
