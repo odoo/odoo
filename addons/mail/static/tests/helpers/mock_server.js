@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { getPyEnv, TEST_USER_IDS } from '@mail/../tests/helpers/test_utils';
+// ensure bus mock server is loaded first.
+import '@bus/../tests/helpers/mock_server';
 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
@@ -11,12 +12,10 @@ import { date_to_str, datetime_to_str } from 'web.time';
 patch(MockServer.prototype, 'mail', {
     init({ models }) {
         this._super(...arguments);
-        Object.assign(this, TEST_USER_IDS);
 
         if (this.currentPartnerId && models && 'res.partner' in models) {
             this.currentPartner = this.getRecords('res.partner', [['id', '=', this.currentPartnerId]])[0];
         }
-        MockServer.currentMockServer = this;
         // creation of the ir.model.fields records, required for tracked fields
         for (const modelName in models) {
             const fieldNamesToFields = models[modelName].fields;
@@ -26,12 +25,6 @@ patch(MockServer.prototype, 'mail', {
                 }
             }
         }
-    },
-    /**
-     * @override
-     */
-    async setup() {
-        this.pyEnv = await getPyEnv();
     },
     /**
      * @override
