@@ -628,6 +628,9 @@ function parseMonetary(value, field, options) {
         }
         currency = session.get_currency(currency_id);
     }
+    if (!currency) {
+        return parseFloat(value);
+    }
     if (!value.includes(currency.symbol)) {
         throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
     }
