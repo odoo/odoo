@@ -4,6 +4,7 @@
 import logging
 import re
 from collections import defaultdict
+from bs4 import BeautifulSoup
 
 from binascii import Error as binascii_error
 
@@ -843,12 +844,18 @@ class Message(models.Model):
             tracking_value_ids = []
             for tracking in message_sudo.tracking_value_ids:
                 groups = tracking.field_groups
+                old_value = tracking.get_old_display_value()[0]
+                new_value = tracking.get_new_display_value()[0]
+                if old_value and bool(BeautifulSoup(str(old_value), "html.parser").find()):
+                    old_value = BeautifulSoup(old_value).get_text()
+                if new_value and bool(BeautifulSoup(str(new_value), "html.parser").find()):
+                    new_value = BeautifulSoup(new_value).get_text()
                 if not groups or self.env.is_superuser() or self.user_has_groups(groups):
                     tracking_value_ids.append({
                         'id': tracking.id,
                         'changed_field': tracking.field_desc,
-                        'old_value': tracking.get_old_display_value()[0],
-                        'new_value': tracking.get_new_display_value()[0],
+                        'old_value': old_value,
+                        'new_value': new_value,
                         'field_type': tracking.field_type,
                         'currency_id': tracking.currency_id.id,
                     })
