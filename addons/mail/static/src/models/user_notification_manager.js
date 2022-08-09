@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
+import { clear } from "@mail/model/model_field_command";
 
 import { url } from '@web/core/utils/urls';
 
@@ -48,6 +49,9 @@ registerModel({
          * @returns {HTMLAudioElement}
          */
         _computeAudio() {
+            if (!this.canPlayAudio) {
+                return clear();
+            }
             const audioElement = new Audio();
             audioElement.src = audioElement.canPlayType("audio/ogg; codecs=vorbis")
                 ? url('/mail/static/src/audio/ting.ogg')
