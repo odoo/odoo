@@ -12369,4 +12369,36 @@ QUnit.module("Fields", (hooks) => {
 
         await clickSave(target);
     });
+
+    QUnit.test("toggle boolean in o2m with the formView in edition", async function (assert) {
+        serverData.models.partner.onchanges = {
+            turtles: () => {},
+        };
+        serverData.models.turtle.onchanges = {
+            turtle_bar: () => {},
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree>
+                            <field name="turtle_bar" widget="boolean_toggle"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                assert.step(args.method + " " + args.model);
+            },
+        });
+        await clickEdit(target);
+        assert.verifySteps(["get_views partner", "read partner", "read turtle"]);
+
+        await click(target, ".o_boolean_toggle");
+        assert.verifySteps(["onchange turtle", "onchange partner"]);
+    });
 });
