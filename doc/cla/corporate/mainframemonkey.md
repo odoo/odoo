@@ -15,3 +15,5 @@ List of contributors:
 Yenthe Van Ginneken yenthe@mainframemonkey.com https://github.com/Yenthe666
 
 Ward Marissen ward@mainframemonkey.com https://github.com/wardm95
+
+Swapnesh Shah swapnesh@mainframemonkey.com https://github.com/sswapnesh
