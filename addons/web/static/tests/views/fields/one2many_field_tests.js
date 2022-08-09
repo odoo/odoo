@@ -12325,4 +12325,48 @@ QUnit.module("Fields", (hooks) => {
             assert.containsN(target, ".o_list_renderer tbody tr", 4);
         }
     );
+
+    QUnit.test("one2many can delete a new record", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <kanban>
+                            <field name="foo"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click_edit"><t t-esc="record.foo.value"/></div>
+                                </t>
+                            </templates>
+                        </kanban>
+                        <form>
+                            <field name="foo" />
+                        </form>
+                    </field>
+                </form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "write") {
+                    assert.step("write"); // should not happen
+                }
+            },
+        });
+        await clickEdit(target);
+        assert.containsNone(target, ".o_kanban_record:not(.o_kanban_ghost)");
+
+        await click(target, ".o-kanban-button-new");
+        await clickSave(target.querySelector(".modal"));
+        assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
+
+        await click(target, ".o_kanban_record:not(.o_kanban_ghost)");
+        assert.containsOnce(target, ".modal .o_btn_remove");
+
+        await click(target, ".modal .o_btn_remove");
+        assert.containsNone(target, ".o_kanban_record:not(.o_kanban_ghost)");
+
+        await clickSave(target);
+    });
 });
