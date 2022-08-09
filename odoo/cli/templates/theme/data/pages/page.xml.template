@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="view_demo" model="theme.ir.ui.view">
+    <field name="name">Demo</field>
+    <field name="key">{{name}}.view_demo</field>
+    <field name="type">qweb</field>
+    <field name="arch" type="xml">
+        <t name="Demo" t-name="{{name}}.demo">
+
+            <t t-set="additional_title" t-value="'Demo'"/>
+
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+
+                    <!-- Content -->
+
+                </div>
+            </t>
+        </t>
+    </field>
+</record>
+
+<record id="page_demo" model="theme.website.page">
+    <field name="view_id" ref="{{name}}.view_demo"/>
+    <field name="is_published" eval="True"/>
+    <field name="url">/demo</field>
+</record>
+
+</odoo>
