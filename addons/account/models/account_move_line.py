@@ -572,7 +572,7 @@ class AccountMoveLine(models.Model):
                 line.balance = (
                     line.balance
                     or line.debit - line.credit
-                    or -sum((line.move_id.line_ids - line).mapped('balance'), start=0)
+                    or -sum((line.move_id.line_ids - line).mapped('balance'))
                 )
             else:
                 line.balance = False
