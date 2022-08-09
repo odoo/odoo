@@ -1378,6 +1378,24 @@ class ComputeMember(models.Model):
             member.container_id = container.search([('name', '=', member.name)], limit=1)
 
 
+class User(models.Model):
+    _name = _description = 'test_new_api.user'
+
+    group_ids = fields.Many2many('test_new_api.group')
+    group_count = fields.Integer(compute='_compute_group_count', store=True)
+
+    @api.depends('group_ids')
+    def _compute_group_count(self):
+        for user in self:
+            user.group_count = len(user.group_ids)
+
+
+class Group(models.Model):
+    _name = _description = 'test_new_api.group'
+
+    user_ids = fields.Many2many('test_new_api.user')
+
+
 class ComputeEditable(models.Model):
     _name = _description = 'test_new_api.compute_editable'
 
