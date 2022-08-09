@@ -100,7 +100,7 @@
                                     </td>
                                     <td t-if="has_product_barcode" width="15%" class="text-center">
                                         <t t-if="raw_line.product_id.barcode">
-                                            <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px'}"/>
+                                            <div t-field="raw_line.product_id.barcode" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px'}"/>
                                         </t>
                                     </td>
                                 </tr>
