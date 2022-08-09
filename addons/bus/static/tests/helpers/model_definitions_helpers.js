@@ -2,7 +2,7 @@
 
 import { registry } from '@web/core/registry';
 
-const modelDefinitionsRegistry = registry.category('mail.model.definitions');
+const modelDefinitionsRegistry = registry.category('bus.model.definitions');
 const customModelFieldsRegistry = modelDefinitionsRegistry.category('fieldsToInsert');
 const recordsToInsertRegistry = modelDefinitionsRegistry.category('recordsToInsert');
 const fakeModelsRegistry = modelDefinitionsRegistry.category('fakeModels');

@@ -48,3 +48,9 @@ class BusController(Controller):
         headers = [('Content-Type', 'application/json'),
                    ('Cache-Control', 'no-store')]
         return request.make_response(data, headers)
+
+    @route('/bus/get_model_definitions', methods=['POST'], type='http', auth='user')
+    def get_model_definitions(self, model_names_to_fetch, **kwargs):
+        return request.make_response(json.dumps(
+            request.env['ir.model']._get_model_definitions(json.loads(model_names_to_fetch)),
+        ))

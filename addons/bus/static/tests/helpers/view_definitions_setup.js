@@ -2,7 +2,7 @@
 
 import { registry } from '@web/core/registry';
 
-const viewArchsRegistry = registry.category('mail.view.archs');
+const viewArchsRegistry = registry.category('bus.view.archs');
 const activityArchsRegistry = viewArchsRegistry.category('activity');
 const formArchsRegistry = viewArchsRegistry.category('form');
 const kanbanArchsRegistry = viewArchsRegistry.category('kanban');
