@@ -270,6 +270,8 @@ class PurchaseOrderLine(models.Model):
                         ):
                             if move.to_refund:
                                 total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+                            elif move.location_id.usage == 'internal':
+                                total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                         else:
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
                 line.qty_received = total
