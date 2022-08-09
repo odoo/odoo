@@ -66,36 +66,52 @@ class SharedCacheStat:
             self._time_get[self._time_get_count.value % self.NB_TIME_SAVE] = end
             self._time_get_count.value += 1
 
+class ReadPreferringWriteLock:
+    def __init__(self):
+        self._read_counter = RawValue(c_int32, 0)
+        self._read_counter_lock = Lock()
+        self._write_lock = Lock()
 
-class LockIdentify:
-    """
-    Lock where the pid process is saved into a Shared Value after that the process acquires the lock.
-    It is to be able to release the lock from another Process (parent process) when the process
-    is killed (the Lock is not release automatically in that case).
-    """
-    def __init__(self) -> None:
-        self._lock = Lock()
-        self._pid = RawValue(c_int64, -1)  # Shared Value to save the pid of the current process using Lock
+    def _read_acquire(self):
+        with self._read_counter_lock:
+            self._read_counter.value += 1
+            if self._read_counter.value == 1:
+                self._write_lock.acquire()
+
+    def _read_release(self):
+        with self._read_counter_lock:
+            self._read_counter.value -= 1
+            if self._read_counter.value == 0:
+                self._write_lock.release()
+
+    def _write_acquire(self):
+        self._write_lock.acquire()
+
+    def _write_release(self):
+        self._write_lock.release()
+
+    @contextmanager
+    def read_acquire(self):
+        self._read_acquire()
+        try:
+            yield
+        finally:
+            self._read_release()
 
     def __enter__(self):
-        # TODO: Maybe we should make the pid a lazy property + hook before fork
-        pid = os.getpid() # Make the call before to minimize the Critical Spot
-
         # CRITICAL SPOT: if the process is killed after it acquired
         # but before setting the pid, the _lock is locked without knowing
         # which process took it, then the PreforkServer cannot release it.
         # See `force_release_if_mandatory` where there is a partial solution to this
-        self._lock.acquire()
-        self._pid.value = pid
+        self._write_acquire()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         # CRITICAL SPOT: if the process is killed after resetting the pid
         # but before releasing, the _lock is locked without knowing
         # which process took it, then the PreforkServer cannot release it.
         # See `force_release_if_mandatory` where there is a partial solution for this
-        self._pid.value = -1
         try:
-            self._lock.release()
+            self._write_release()
         except ValueError:
             # On the worst case of the worst case, if we have a ValueError ("release" an already released lock), it seems
             # that no other process has used the lock between (or it already finished)
@@ -107,14 +123,7 @@ class LockIdentify:
 
         :param int pid: pid of a killed (mandatory) process
         """
-        # TODO: it still not a completely safe solution (IMO, there isn't any a complete solution)
-        have_lock = self._lock.acquire(block=False)
-        # Read _pid outside locking section seems "wrong", but we only use it to compare equality,
-        # then the change to get a bad value and take the wrong decision is very "small" (or "inexistant", not sure)
-        if not have_lock and self._pid.value == pid:
-            _logger.info("Force the release of SM lock for pid=%s", pid)
-            self._pid.value = -1
-            self._lock.release()
+        pass  # TODO: No recovery in RW lock
 
 class _Entry(Structure):
     """
@@ -160,7 +169,7 @@ class SharedMemoryLRU:
         _logger.info("Create Shared Memory of %d entries with %d bytes of data", nb_entry, byte_size)
 
         # The lock to ensure that only one process at a time can access the critical section
-        self._lock = LockIdentify()
+        self._lock = ReadPreferringWriteLock()
         # The Raw Shared Memory, will contain only data (key, value)
         self._sm = SharedMemory(size=byte_size, create=True)
 
@@ -172,10 +181,6 @@ class SharedMemoryLRU:
         # bigger it is, more there are hash conflict, and then slow down the `_lookup` but decrease the memory cost
         self._max_length = int(nb_entry * self.USABLE_FRACTION)
 
-        # Allow to know if the Shared Memory is corrupted (`_check_consistence`)
-        # TODO: still useful with the new way to release the lock:
-        # If we force the lock release we can assume that it isn't consistent and delete everything ?
-        self._consistent = RawValue(c_bool, True)
         # root, length, free_len (see property below)
         self._head = RawArray(c_int32, [-1, 0, 1])
         # Hash and the linked list information for each entry index
@@ -190,6 +195,7 @@ class SharedMemoryLRU:
         self._data = self._sm.buf
         # Stat of the Shared Cache, should be call/modify inside the lock
         self._stats = SharedCacheStat()
+        self._counter_touch = 0
 
 
     _root = property(lambda self: self._head[0], lambda self, x: self._head.__setitem__(0, x))
@@ -205,9 +211,9 @@ class SharedMemoryLRU:
 
     def is_alive(self):
         """ Check that the Shared Cache is still 'alive' """
-        acquired = self._lock._lock.acquire(timeout=0.5)
+        acquired = self._lock._write_lock.acquire(timeout=0.5)
         if acquired:
-            self._lock._lock.release()
+            self._lock._write_lock.release()
         return acquired
 
     def clear(self):
@@ -278,16 +284,6 @@ class SharedMemoryLRU:
         self._entry_table[:] = [(0, -1, -1)] * self._size
         self._data_idx[:] = [(-1, -1)] * self._size
         self._data_free[0] = (0, self._sm.size)
-        self._consistent.value = True
-
-    def _check_consistence(self):
-        """ Check that the latest change of the SharedMemory was consistent
-
-        ! Need lock !
-        """
-        if not self._consistent.value:
-            _logger.info("Shared Memory not consistent, clean it")
-            self._clear()
 
     def _defrag(self):
         """
@@ -494,27 +490,31 @@ class SharedMemoryLRU:
         :return: The value unmarshalled
         """
         with self._stats.time_register_get():
+            make_touch = False
             hash_ = hash(key)
-            with self._lock:
-                self._check_consistence()
+            with self._lock.read_acquire():
                 index, entry, val = self._lookup(key, hash_)
                 if val is None:
                     self._stats.miss()
                     raise KeyError(f"{key} does not exist")
                 self._stats.hit()
 
-                self._consistent.value = False
-                if self._root != index:
-                    # Pop me from my previous location
-                    self._entry_table[entry.prev].next = entry.next
-                    self._entry_table[entry.next].prev = entry.prev
-                    # Put me in front
-                    entry.next = self._root
-                    entry.prev = self._entry_table[self._root].prev
-                    self._entry_table[self._entry_table[self._root].prev].next = index
-                    self._entry_table[self._root].prev = index
-                    self._root = index
-                self._consistent.value = True
+                self._counter_touch += 1
+                if self._counter_touch % 7 == 0 and self._root != index:
+                    make_touch = True
+            if make_touch:
+                with self._lock:
+                    index, entry, val = self._lookup(key, hash_)  # Extra lookup because I came out of the lock
+                    if val:  # Someone have maybe tae the lock before and kick me off
+                        # Pop me from my previous location
+                        self._entry_table[entry.prev].next = entry.next
+                        self._entry_table[entry.next].prev = entry.prev
+                        # Put me in front
+                        entry.next = self._root
+                        entry.prev = self._entry_table[self._root].prev
+                        self._entry_table[self._entry_table[self._root].prev].next = index
+                        self._entry_table[self._root].prev = index
+                        self._root = index
             return val
 
     def __setitem__(self, key, value):
@@ -525,9 +525,7 @@ class SharedMemoryLRU:
                 raise MemoryError(f"The object of size {len(data)} is too large to put in the Shared Memory (max {self._max_size_one_data} bytes by entry)")
 
             with self._lock:
-                self._check_consistence()
                 index, entry, val = self._lookup(key, hash_)
-                self._consistent.value = False
 
                 if val is not None:
                     self._stats.overwrite(val == value)
@@ -557,12 +555,10 @@ class SharedMemoryLRU:
 
                 if self._length > self._max_length:
                     self._lru_pop()  # Make it after to avoid modifying index
-                self._consistent.value = True
 
     def __delitem__(self, key):
         hash_ = hash(key)
         with self._lock:
-            self._check_consistence()
             index, entry, val = self._lookup(key, hash_)
             if val is None:
                 raise KeyError(f"{key} doesn't not exist, cannot delete it")
