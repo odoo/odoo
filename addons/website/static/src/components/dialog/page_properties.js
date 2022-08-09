@@ -203,6 +203,7 @@ PagePropertiesDialog.defaultProps = {
     ...FormViewDialog.defaultProps,
     resModel: 'website.page',
     title: _t("Page Properties"),
+    size: 'md',
     context: {
         form_view_ref: 'website.website_page_properties_view_form',
     },
