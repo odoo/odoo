@@ -201,7 +201,6 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         name,
         viewType,
         context: node.getAttribute("context") || "{}",
-        domain: node.getAttribute("domain") || "[]",
         string: node.getAttribute("string") || field.string,
         help: node.getAttribute("help"),
         widget,
@@ -216,6 +215,9 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         options: evaluateExpr(node.getAttribute("options") || "{}"),
         alwaysInvisible: modifiers.invisible === true || modifiers.column_invisible === true,
     };
+    if (node.getAttribute("domain")) {
+        fieldInfo.domain = node.getAttribute("domain");
+    }
     for (const attribute of node.attributes) {
         if (attribute.name in Field.forbiddenAttributeNames) {
             throw new Error(Field.forbiddenAttributeNames[attribute.name]);
