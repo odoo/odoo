@@ -131,3 +131,6 @@ class Department(models.Model):
         action = self.env['ir.actions.actions']._for_xml_id('hr.hr_plan_action')
         action['context'] = {'default_department_id': self.id, 'search_default_department_id': self.id}
         return action
+
+    def get_children_department_ids(self):
+        return self.env['hr.department'].search([('id', 'child_of', self.ids)])

@@ -265,3 +265,35 @@ class HrEmployee(models.Model):
                 'employee_id': self.ids,
             },
         }
+
+    def get_stress_days(self, start_date, end_date):
+        all_days = {}
+
+        self = self or self.env.user.employee_id
+
+        stress_days = self._get_stress_days(start_date, end_date)
+        for stress_day in stress_days:
+            num_days = (stress_day.end_date - stress_day.start_date).days
+            for d in range(num_days + 1):
+                all_days[str(stress_day.start_date + relativedelta(days=d))] = stress_day.color
+
+        return all_days
+
+    def _get_stress_days(self, start_date, end_date):
+        stress_days = self.env['hr.leave.stress.day'].search([
+            ('start_date', '>=', start_date),
+            ('end_date', '<=', end_date),
+            '|',
+                ('resource_calendar_id', '=', False),
+                ('resource_calendar_id', 'in', self.resource_calendar_id.ids),
+        ])
+
+        # a user with hr_holidays permissions will be able to see all stress days from his calendar
+        is_leave_user = self == self.env.user.employee_id and self.user_has_groups('hr_holidays.group_hr_holidays_user')
+
+        if not is_leave_user and stress_days.department_ids:
+            stress_days = stress_days.filtered(lambda sd:\
+                not sd.department_ids\
+                or self.department_id and not set(self.department_id.ids).isdisjoint(sd.department_ids.get_children_department_ids().ids))
+
+        return stress_days
