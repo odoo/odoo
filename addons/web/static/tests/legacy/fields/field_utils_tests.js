@@ -261,7 +261,7 @@ QUnit.test('parse integer', function(assert) {
 });
 
 QUnit.test('parse monetary', function(assert) {
-    assert.expect(13);
+    assert.expect(15);
     var originalCurrencies = session.currencies;
     const originalParameters = _.clone(core._t.database.parameters);
     session.currencies = {
@@ -293,11 +293,13 @@ QUnit.test('parse monetary', function(assert) {
     const nbsp = '\u00a0';
     _.extend(core._t.database.parameters, {
         grouping: [3, 0],
-        decimal_point: ',',
+        decimal_point: '.',
         thousands_sep: nbsp,
     });
     assert.strictEqual(fieldUtils.parse.monetary(`1${nbsp}000.00${nbsp}€`, {}, {currency_id: 1}), 1000);
     assert.strictEqual(fieldUtils.parse.monetary(`$${nbsp}1${nbsp}000.00`, {}, {currency_id: 3}), 1000);
+    assert.strictEqual(fieldUtils.parse.monetary(`1${nbsp}000.00`), 1000);
+    assert.strictEqual(fieldUtils.parse.monetary(`1${nbsp}000${nbsp}000.00`), 1000000);
 
     session.currencies = originalCurrencies;
     core._t.database.parameters = originalParameters;
