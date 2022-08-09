@@ -7486,6 +7486,141 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("asynchronous tooltips when grouped", async (assert) => {
+        assert.expect(10);
+        serviceRegistry.add("tooltip", tooltipService);
+        const prom = makeDeferred();
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban default_group_by="product_id">
+                    <field name="bar"/>
+                    <field name="product_id"  options='{"group_by_tooltip": {"name": "Name"}}'/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            async mockRPC(route, args) {
+                if (route === "/web/dataset/call_kw/product/read") {
+                    await prom;
+                }
+            },
+        });
+
+        assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
+        assert.containsN(target, ".o_column_title", 2);
+        assert.strictEqual(
+            target
+                .querySelectorAll(".o_kanban_header_title")[0]
+                .getAttribute("data-tooltip-template"),
+            null
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_kanban_header_title")[0].getAttribute("data-tooltip-info"),
+            null
+        );
+        assert.strictEqual(
+            target
+                .querySelectorAll(".o_kanban_header_title")[1]
+                .getAttribute("data-tooltip-template"),
+            null
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_kanban_header_title")[1].getAttribute("data-tooltip-info"),
+            null
+        );
+        prom.resolve();
+        await nextTick();
+
+        assert.strictEqual(
+            target
+                .querySelectorAll(".o_kanban_header_title")[0]
+                .getAttribute("data-tooltip-template"),
+            "web.KanbanGroupTooltip"
+        );
+        assert.strictEqual(
+            target
+                .querySelectorAll(".o_kanban_header_title")[1]
+                .getAttribute("data-tooltip-template"),
+            "web.KanbanGroupTooltip"
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_kanban_header_title")[0].getAttribute("data-tooltip-info"),
+            '{"entries":[{"title":"Name","value":"hello"}]}'
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_kanban_header_title")[1].getAttribute("data-tooltip-info"),
+            '{"entries":[{"title":"Name","value":"xmo"}]}'
+        );
+    });
+
+    QUnit.test("concurrency asynchronous tooltips when grouped", async (assert) => {
+        assert.expect(2);
+        serviceRegistry.add("tooltip", tooltipService);
+        const prom = makeDeferred();
+        let rpcCount = 0;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban default_group_by="product_id">
+                    <field name="bar"/>
+                    <field name="product_id"  options='{"group_by_tooltip": {"name": "Name"}}'/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            searchViewArch: `
+            <search>
+                <filter name="product_id" string="product" context="{'group_by': 'product_id', 'group_by_tooltip': {'name': 'Name'}}}"/>
+            </search>
+            `,
+            async mockRPC(route, args) {
+                if (route === "/web/dataset/call_kw/product/read") {
+                    if (rpcCount++ == 0) {
+                        await prom;
+                    } else {
+                        return [
+                            {
+                                id: 3,
+                                display_name: "hello",
+                                name: "hello",
+                            },
+                            {
+                                id: 5,
+                                display_name: "xmo",
+                                name: "xm",
+                            },
+                        ];
+                    }
+                }
+            },
+        });
+
+        // The first tooltip rpc request is blocked and user changes the group by
+        await click(target, ".o_group_by_menu > .dropdown-toggle");
+        await click(target, ".o_group_by_menu > div > span");
+        // The first tooltip request arrives after the second request
+        prom.resolve();
+        await nextTick();
+
+        assert.strictEqual(
+            target.querySelectorAll(".o_kanban_header_title")[0].getAttribute("data-tooltip-info"),
+            '{"entries":[{"title":"Name","value":"hello"}]}'
+        );
+        assert.strictEqual(
+            target.querySelectorAll(".o_kanban_header_title")[1].getAttribute("data-tooltip-info"),
+            '{"entries":[{"title":"Name","value":"xm"}]}'
+        );
+    });
+
     QUnit.test("move a record then put it again in the same column", async (assert) => {
         serverData.models.partner.records = [];
 

@@ -508,7 +508,7 @@ export class KanbanRenderer extends Component {
     }
 
     tooltipAttributes(group) {
-        if (!group.tooltip) {
+        if (!group.tooltip.length) {
             return {};
         }
         return {
