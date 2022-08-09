@@ -820,6 +820,44 @@ class TestFields(TransactionCaseWithUserDemo):
         records[1].foo = "assign"
         self.env.flush_all()
 
+    def test_17_compute_depends_on_many2many(self):
+        user1, user2, user3 = self.env['test_new_api.user'].create([{}, {}, {}])
+        group = self.env['test_new_api.group'].create({'user_ids': [Command.link(user1.id)]})
+        self.env.flush_all()
+
+        field = type(user1).group_count
+        self.assertFalse(self.env.records_to_compute(field))
+
+        # should mark user2 and user3 to compute only
+        group.write({'user_ids': [Command.link(user1.id), Command.link(user2.id), Command.link(user3.id)]})
+        self.assertEqual(self.env.records_to_compute(field), user2 + user3)
+
+        # should mark user2 to compute only
+        self.env.flush_all()
+        group.write({'user_ids': [Command.unlink(user2.id)]})
+        self.assertEqual(self.env.records_to_compute(field), user2)
+
+        # should mark user2 and user3 to compute only
+        self.env.flush_all()
+        group.write({'user_ids': [Command.set([user1.id, user2.id])]})
+        self.assertEqual(self.env.records_to_compute(field), user2 + user3)
+
+        # should mark user3 to compute only
+        self.env.flush_all()
+        user3.write({'group_ids': [Command.link(group.id)]})
+        self.assertEqual(self.env.records_to_compute(field), user3)
+
+        # similar with new records, but only check recomputation
+        user1 = self.env['test_new_api.user'].new({})
+        user2 = self.env['test_new_api.user'].new({})
+        group = self.env['test_new_api.group'].new({'user_ids': [user1.id]})
+        self.assertEqual(user1.group_count, 1)
+        self.assertEqual(user2.group_count, 0)
+
+        group.user_ids += user2
+        self.assertEqual(user1.group_count, 1)
+        self.assertEqual(user2.group_count, 1)
+
     def test_20_float(self):
         """ test rounding of float fields """
         record = self.env['test_new_api.mixed'].create({})
