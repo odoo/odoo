@@ -100,7 +100,7 @@ function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env) {
         }
         Widget = Widget || fieldRegistry.get("abstract");
         let domain;
-        if (fieldDescr.domain && fieldDescr.domain.toString() !== "[]") {
+        if (fieldDescr.domain) {
             domain = fieldDescr.domain.toString();
         }
         let mode = fieldDescr.viewMode;

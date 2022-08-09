@@ -4042,6 +4042,33 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(document.body, ".modal", "there should not be a confirm modal");
     });
 
+    QUnit.test("Domain: allow empty domain on fieldInfo", async function (assert) {
+        assert.expect(1);
+        serverData.models.partner.fields.product_id.domain = "[('display_name', '=', name)]";
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <field name="product_id" widget="statusbar" domain="[]"></field>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"></field>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "search_read") {
+                    assert.strictEqual(JSON.stringify(args.kwargs.domain), "[]");
+                }
+            },
+        });
+    });
+
     QUnit.test("discard form with specialdata", async function (assert) {
         await makeView({
             type: "form",
@@ -11643,7 +11670,8 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(target, ".o_form_editable");
             assert.containsOnce(target, ".o_form_button_save");
             assert.containsOnce(target, ".o_form_button_cancel");
-        });
+        }
+    );
 
     QUnit.test("save a form view with an invisible required field", async function (assert) {
         serverData.models.partner.fields.text = { string: "Text", type: "char", required: 1 };
