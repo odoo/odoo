@@ -80,6 +80,60 @@ class AccountMove(models.Model):
         """
         return len(self.commercial_partner_id.l10n_it_pa_index or '') == 6
 
+    def _l10n_it_edi_prepare_fatturapa_line_details(self, rc_refund=False):
+        """ Returns a list of dictionaries passed to the template for the invoice lines (DettaglioLinee)
+        """
+        invoice_lines = []
+        lines = self.invoice_line_ids.filtered(lambda l: not l.display_type in ('line_note', 'line_section'))
+        for num, line in enumerate(lines):
+            # In the case of reverse charge refund, the values for the unit price and total price should be negative
+            price_subtotal = line.price_subtotal if not rc_refund else -line.price_subtotal
+
+            # Unit price
+            unit_price = 0
+            if line.quantity and line.discount != 100.0:
+                unit_price = price_subtotal / ((1 - (line.discount or 0.0) / 100.0) * line.quantity)
+            else:
+                unit_price = line.price_unit
+
+            line_dict = {
+                'line': line,
+                'line_number': num + 1,
+                'description': line.name or 'NO NAME',
+                'unit_price': unit_price,
+                'subtotal_price': price_subtotal,
+            }
+            invoice_lines.append(line_dict)
+        return invoice_lines
+
+    def _l10n_it_edi_prepare_fatturapa_tax_details(self, tax_details, rc_refund=False):
+        """ Returns a list of dictionaries passed to the template for the invoice lines (DatiRiepilogo)
+        """
+        # Constraints within the edi make local rounding on price included taxes a problem.
+        # To solve this there is a <Arrotondamento> or 'rounding' field, such that:
+        #   taxable base = sum(taxable base for each unit) + Arrotondamento
+        for _tax_name, tax_dict in tax_details['tax_details'].items():
+            base_amount_currency = tax_dict['base_amount_currency']
+            tax_amount_currency = tax_dict['tax_amount_currency']
+            tax_rate = tax_dict['tax'].amount
+            if tax_dict['tax'].price_include and tax_dict['tax'].amount_type == 'percent':
+                expected_base_amount_currency = tax_amount_currency * 100 / tax_rate if tax_rate else False
+                if expected_base_amount_currency and float_compare(base_amount_currency, expected_base_amount_currency, 2):
+                    tax_dict['rounding'] = base_amount_currency - (tax_amount_currency  * 100 / tax_rate)
+                    tax_dict['base_amount_currency'] = base_amount_currency - tax_dict['rounding']
+
+        tax_lines = []
+        for _tax_name, tax_dict in tax_details['tax_details'].items():
+            tax = tax_dict['tax']
+            tax_line_dict = {
+                'tax': tax,
+                'rounding': tax_dict.get('rounding', False),
+                'base_amount': abs(tax_dict['base_amount_currency']) if not rc_refund else tax_dict['base_amount_currency'],
+                'tax_amount': abs(tax_dict['tax_amount_currency']) if not rc_refund else tax_dict['tax_amount_currency'],
+            }
+            tax_lines.append(tax_line_dict)
+        return tax_lines
+
     def _prepare_fatturapa_export_values(self):
         self.ensure_one()
 
@@ -145,21 +199,9 @@ class AccountMove(models.Model):
         pdf = base64.b64encode(pdf).decode()
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
-        # Constraints within the edi make local rounding on price included taxes a problem.
-        # To solve this there is a <Arrotondamento> or 'rounding' field, such that:
-        #   taxable base = sum(taxable base for each unit) + Arrotondamento
         tax_details = self._prepare_edi_tax_details(
             filter_to_apply=lambda l: l['tax_repartition_line_id'].factor_percent >= 0
         )
-        for _tax_name, tax_dict in tax_details['tax_details'].items():
-            base_amount = tax_dict['base_amount_currency']
-            tax_amount = tax_dict['tax_amount_currency']
-            tax_rate = tax_dict['tax'].amount
-            if tax_dict['tax'].price_include and tax_dict['tax'].amount_type == 'percent':
-                expected_base_amount = tax_amount * 100 / tax_rate if tax_rate else False
-                if expected_base_amount and float_compare(base_amount, expected_base_amount, 2):
-                    tax_dict['rounding'] = base_amount - (tax_amount * 100 / tax_rate)
-                    tax_dict['base_amount_currency'] = base_amount - tax_dict['rounding']
 
         company = self.company_id
         partner = self.commercial_partner_id
@@ -181,6 +223,9 @@ class AccountMove(models.Model):
             document_total += sum([abs(v['tax_amount_currency']) for k, v in tax_details['tax_details'].items()])
             if rc_refund:
                 document_total = -abs(document_total)
+
+        invoice_lines = self._l10n_it_edi_prepare_fatturapa_line_details(rc_refund)
+        tax_lines = self._l10n_it_edi_prepare_fatturapa_tax_details(tax_details, rc_refund)
 
         # Create file content.
         template_values = {
@@ -219,6 +264,8 @@ class AccountMove(models.Model):
             'get_vat_country': get_vat_country,
             'in_eu': in_eu,
             'rc_refund': rc_refund,
+            'invoice_lines': invoice_lines,
+            'tax_lines': tax_lines,
         }
         return template_values
 
