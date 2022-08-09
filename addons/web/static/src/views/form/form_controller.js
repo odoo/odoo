@@ -335,6 +335,7 @@ export class FormController extends Component {
     async create() {
         this.disableButtons();
         await this.model.load({ resId: null });
+        await this.model.root.switchMode("edit");
     }
 
     async save(params = {}) {
