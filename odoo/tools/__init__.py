@@ -24,3 +24,4 @@ from .convert import *
 from . import osutil
 from .js_transpiler import transpile_javascript, is_odoo_module, URL_RE, ODOO_MODULE_RE
 from .sourcemap_generator import SourceMapGenerator
+from .threading import execute_callable_from_generator, execute_callable_from_sub_generator
