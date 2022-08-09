@@ -403,7 +403,7 @@ class AccountEdiFormat(models.Model):
             })
         if saler_buyer.get("buyer_details") != saler_buyer.get("ship_to_details"):
             json_payload.update({
-                "ShipDtls": self._get_l10n_in_edi_partner_details(saler_buyer.get("ship_to_details"))
+                "ShipDtls": self._get_l10n_in_edi_partner_details(saler_buyer.get("ship_to_details"), is_overseas=is_overseas)
             })
         if is_overseas:
             json_payload.update({
