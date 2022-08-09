@@ -485,7 +485,7 @@ class StockMoveLine(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for ml in self:
             # Unlinking a move line should unreserve.
-            if not float_is_zero(ml.reserved_qty, precision_digits=precision) and not ml.move_id._should_bypass_reservation(ml.location_id):
+            if not float_is_zero(ml.reserved_qty, precision_digits=precision) and ml.move_id and not ml.move_id._should_bypass_reservation(ml.location_id):
                 self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.reserved_qty, lot_id=ml.lot_id, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
         moves = self.mapped('move_id')
         res = super(StockMoveLine, self).unlink()
