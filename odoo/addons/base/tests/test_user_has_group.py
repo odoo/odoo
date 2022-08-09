@@ -174,8 +174,11 @@ class TestHasGroup(TransactionCase):
             'groups_id': [(6, 0, [grp_test.id])]
         })
 
-        with self.assertRaises(ValidationError):
-            grp_test.write({'implied_ids': [(4, self.grp_portal.id)]})
+        # JobRad customization: The write statement would typically
+        # raise a validation error. For performance reasons, JobRad has
+        # deactivated the validation.
+        # with self.assertRaises(ValidationError):
+        #     grp_test.write({'implied_ids': [(4, self.grp_portal.id)]})
 
     def test_demote_user(self):
         """When a user is demoted to the status of portal/public,
