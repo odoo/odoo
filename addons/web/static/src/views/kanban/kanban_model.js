@@ -8,6 +8,7 @@ import {
     Group,
     RelationalModel,
 } from "@web/views/relational_model";
+import { KeepLast } from "@web/core/utils/concurrency";
 
 /**
  * @typedef ProgressBar
@@ -68,6 +69,7 @@ class KanbanGroup extends Group {
         /** @type {ProgressBar[]} */
         this.progressBars = this._generateProgressBars();
         this.progressValue = markRaw(state.progressValue || { active: null });
+        this.tooltip = [];
 
         this.model.transaction.register({
             onStart: () => ({
@@ -171,37 +173,35 @@ class KanbanGroup extends Group {
     }
 
     async load() {
-        const proms = [];
-        proms.push(super.load());
+        this.loadTooltip();
+        await super.load();
+    }
+
+    /**
+     * Requests the groups tooltips to the server and store them in this.tooltip
+     *
+     * @returns {Promise<void>}
+     */
+    async loadTooltip() {
         const groupName = this.groupByField.name;
         if (
             this.groupByField.type === "many2one" &&
             this.value &&
             groupName in this.model.tooltipInfo
         ) {
+            this.tooltipKeepLast = this.tooltipKeepLast || new KeepLast();
             const resModel = this.groupByField.relation;
             const tooltipInfo = this.model.tooltipInfo[groupName];
             const fieldNames = Object.keys(tooltipInfo);
             // This read will be batched for all groups
-            const readProm = this.model.orm.read(
-                resModel,
-                [this.value],
-                ["display_name", ...fieldNames]
+            const [values] = await this.tooltipKeepLast.add(
+                this.model.orm.silent.read(resModel, [this.value], ["display_name", ...fieldNames])
             );
-            proms.push(readProm);
-            const [values] = await readProm;
-            this.tooltip = null;
-            for (const fieldName of fieldNames) {
-                if (values[fieldName]) {
-                    this.tooltip = this.tooltip || [];
-                    this.tooltip.push({
-                        title: tooltipInfo[fieldName],
-                        value: values[fieldName],
-                    });
-                }
-            }
+            this.tooltip = fieldNames
+                .filter((fieldName) => values[fieldName])
+                .map((fieldName) => ({ title: tooltipInfo[fieldName], value: values[fieldName] }));
+            this.model.notify();
         }
-        await Promise.all(proms);
     }
 
     /**
