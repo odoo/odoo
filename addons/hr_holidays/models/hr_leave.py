@@ -473,13 +473,9 @@ class HolidaysRequest(models.Model):
         date_from, date_to = min(self.mapped('date_from')), max(self.mapped('date_to'))
         resource_calendar_id = self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
         if date_from and date_to:
-            stress_days = self.env['hr.leave.stress.day'].search([
-                ('start_date', '<=', date_to.date()),
-                ('end_date', '>=', date_from.date()),
-                '|',
-                    ('resource_calendar_id', '=', False),
-                    ('resource_calendar_id', 'in', resource_calendar_id.ids),
-            ])
+            stress_days = self.employee_id._get_stress_days(
+                date_from.date(),
+                date_to.date())
 
             for leave in self:
                 domain = [

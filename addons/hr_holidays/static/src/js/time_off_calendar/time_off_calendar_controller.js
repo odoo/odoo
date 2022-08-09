@@ -106,10 +106,17 @@ export const TimeOffCalendarController = CalendarController.extend({
 
     _update() {
         return this._super(...arguments).then(() => {
+            const request_args = [
+                this.res_id,
+                this.model.data.start_date,
+                this.model.data.end_date,
+            ]
+            if (this.context.employee_id)
+                request_args[0] = this.context.employee_id;
             this._rpc({
-                model: 'hr.leave.stress.day',
+                model: 'hr.employee',
                 method: 'get_stress_days',
-                args: [this.model.data.start_date, this.model.data.end_date],
+                args: request_args,
                 context: this.context,
             }).then((stressDays) => {
                 this.$el.find('td.fc-day').toArray().forEach((td) => {
