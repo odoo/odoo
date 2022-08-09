@@ -13,6 +13,9 @@
                     <button class="btn btn-primary o_form_button_save" t-on-click="save" data-hotkey="c">Save &amp; Close</button>
                     <button class="btn btn-primary o_form_button_save_new" t-on-click="saveAndNew" data-hotkey="n">Save &amp; New</button>
                     <button class="btn btn-secondary o_form_button_cancel" t-on-click="discard" data-hotkey="j">Discard</button>
+                    <t t-if="props.delete">
+                        <button class="btn btn-secondary o_btn_remove" t-on-click="remove" data-hotkey="k">Remove</button>
+                    </t>
                 </t>
                 <t t-elif="record.isInEdition">
                     <button class="btn btn-primary o_form_button_save" t-on-click="save" data-hotkey="c">Save</button>
