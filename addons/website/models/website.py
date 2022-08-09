@@ -15,7 +15,12 @@ from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
 
+<<<<<<< HEAD
 from odoo import api, fields, models, tools, http, release, registry
+=======
+from odoo import api, fields, models, tools, http
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+>>>>>>> a05a02d4815f... temp
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import get_unaccent_sql_wrapper, similarity_score, text_from_html
@@ -253,6 +258,7 @@ class Website(models.Model):
         if 'favicon' in vals:
             vals['favicon'] = tools.image_process(vals['favicon'], size=(256, 256), crop='center', output_format='ICO')
 
+<<<<<<< HEAD
     @api.model
     def _handle_domain(self, vals):
         if 'domain' in vals and vals['domain']:
@@ -267,6 +273,14 @@ class Website(models.Model):
             raise UserError(_('You must keep at least one website.'))
 
     def unlink(self):
+=======
+    def unlink(self):
+        if not self.env.context.get(MODULE_UNINSTALL_FLAG, False):
+            website = self.search([('id', 'not in', self.ids)], limit=1)
+            if not website:
+                raise UserError(_('You must keep at least one website.'))
+
+>>>>>>> a05a02d4815f... temp
         # Do not delete invoices, delete what's strictly necessary
         attachments_to_unlink = self.env['ir.attachment'].search([
             ('website_id', 'in', self.ids),
