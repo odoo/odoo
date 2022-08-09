@@ -84,6 +84,9 @@ class ReadPreferringWriteLock:
             if self._read_counter.value == 0:
                 self._write_lock.release()
 
+    def _write_available_acquire(self):
+        return self._write_lock.acquire(block=False)
+
     def _write_acquire(self):
         self._write_lock.acquire()
 
@@ -195,6 +198,7 @@ class SharedMemoryLRU:
         self._data = self._sm.buf
         # Stat of the Shared Cache, should be call/modify inside the lock
         self._stats = SharedCacheStat()
+        self._counter_should_touch = 0
         self._counter_touch = 0
 
 
@@ -490,7 +494,6 @@ class SharedMemoryLRU:
         :return: The value unmarshalled
         """
         with self._stats.time_register_get():
-            make_touch = False
             hash_ = hash(key)
             with self._lock.read_acquire():
                 index, entry, val = self._lookup(key, hash_)
@@ -499,22 +502,22 @@ class SharedMemoryLRU:
                     raise KeyError(f"{key} does not exist")
                 self._stats.hit()
 
-                self._counter_touch += 1
-                if self._counter_touch % 7 == 0 and self._root != index:
-                    make_touch = True
-            if make_touch:
-                with self._lock:
-                    index, entry, val = self._lookup(key, hash_)  # Extra lookup because I came out of the lock
-                    if val:  # Someone have maybe tae the lock before and kick me off
-                        # Pop me from my previous location
-                        self._entry_table[entry.prev].next = entry.next
-                        self._entry_table[entry.next].prev = entry.prev
-                        # Put me in front
-                        entry.next = self._root
-                        entry.prev = self._entry_table[self._root].prev
-                        self._entry_table[self._entry_table[self._root].prev].next = index
-                        self._entry_table[self._root].prev = index
-                        self._root = index
+                if self._root != index:
+                    self._counter_should_touch += 1
+                    with self._lock._read_counter_lock:
+                        if self._lock._read_counter.value == 1:  # I have the write lock for myself and I lock _read_counter to avoid any intrusion
+                            self._counter_touch += 1
+                            # Pop me from my previous location
+                            self._entry_table[entry.prev].next = entry.next
+                            self._entry_table[entry.next].prev = entry.prev
+                            # Put me in front
+                            entry.next = self._root
+                            entry.prev = self._entry_table[self._root].prev
+                            self._entry_table[self._entry_table[self._root].prev].next = index
+                            self._entry_table[self._root].prev = index
+                            self._root = index
+            if self._counter_should_touch == 2000:
+                print(f"TOUCH : {self._counter_touch} on {self._counter_should_touch}")
             return val
 
     def __setitem__(self, key, value):
