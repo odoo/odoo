@@ -1393,6 +1393,10 @@ class DynamicList extends DataPoint {
     // Getters
     // -------------------------------------------------------------------------
 
+    get isInEdition() {
+        return !!this.editedRecord;
+    }
+
     get currentParams() {
         return JSON.stringify([this.domain, this.groupBy]);
     }
