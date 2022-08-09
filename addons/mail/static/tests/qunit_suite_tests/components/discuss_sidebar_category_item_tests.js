@@ -22,7 +22,7 @@ QUnit.test('channel - avatar: should have correct avatar', async function (asser
     await openDiscuss();
 
     const channelItem = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
     `);
     assert.strictEqual(
         channelItem.querySelectorAll(`:scope .o_DiscussSidebarCategoryItem_image`).length,
@@ -48,7 +48,7 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
 
     assert.strictEqual(
         document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
         .o_DiscussSidebarCategoryItem_image`).dataset.src,
         `/web/image/mail.channel/${mailChannelId1}/avatar_128?unique=101010`,
     );
@@ -65,7 +65,7 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
 
     assert.strictEqual(
         document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
         .o_DiscussSidebarCategoryItem_image`).dataset.src,
         `/web/image/mail.channel/${mailChannelId1}/avatar_128?unique=${newCacheKey}`,
     );
@@ -88,7 +88,7 @@ QUnit.test('chat - avatar: should have correct avatar', async function (assert) 
     await openDiscuss();
 
     const chatItem = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
     `);
     assert.strictEqual(
         chatItem.querySelectorAll(`:scope .o_DiscussSidebarCategoryItem_image`).length,
@@ -128,19 +128,19 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
     const { click, openDiscuss } = await start();
     await openDiscuss();
 
-    const initialChats = document.querySelectorAll('.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem');
+    const initialChats = document.querySelectorAll('.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
         initialChats.length,
         2,
         "should have 2 livechat items"
     );
     assert.strictEqual(
-        parseInt(initialChats[0].dataset.threadId),
+        Number(initialChats[0].dataset.channelId),
         mailChannelId2,
         "first livechat should be the one with the more recent last activity time"
     );
     assert.strictEqual(
-        parseInt(initialChats[1].dataset.threadId),
+        Number(initialChats[1].dataset.channelId),
         mailChannelId1,
         "second chat should be the one with the less recent last activity time"
     );
@@ -149,19 +149,19 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
     await afterNextRender(() => initialChats[1].click());
     await afterNextRender(() => document.execCommand('insertText', false, "Blabla"));
     await click('.o_Composer_buttonSend');
-    const newChats = document.querySelectorAll('.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem');
+    const newChats = document.querySelectorAll('.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
         newChats.length,
         2,
         "should have 2 chat items"
     );
     assert.strictEqual(
-        parseInt(newChats[0].dataset.threadId),
+        Number(newChats[0].dataset.channelId),
         mailChannelId1,
         "first chat should be the one with the more recent last activity time"
     );
     assert.strictEqual(
-        parseInt(newChats[1].dataset.threadId),
+        Number(newChats[1].dataset.channelId),
         mailChannelId2,
         "second chat should be the one with the less recent last activity time"
     );

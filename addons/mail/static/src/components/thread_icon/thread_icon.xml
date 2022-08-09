@@ -15,7 +15,7 @@
                         <div class="o_ThreadIcon_channelGroups fa fa-fw fa-hashtag" title="Selected group of users"/>
                     </t>
                 </t>
-                <t t-elif="thread.channel and thread.channel.channel_type === 'chat' and thread.correspondent">
+                <t t-elif="thread.channel and thread.channel.channel_type === 'chat' and thread.channel.correspondent">
                     <t t-if="thread.orderedOtherTypingMembers.length > 0">
                         <ThreadTypingIcon
                             className="'o_ThreadIcon_typing flex-grow-1'"
@@ -23,16 +23,16 @@
                             title="thread.typingStatusText"
                         />
                     </t>
-                    <t t-elif="thread.correspondent.im_status === 'online'">
+                    <t t-elif="thread.channel.correspondent.im_status === 'online'">
                         <div class="o_ThreadIcon_online fa fa-fw fa-circle" title="Online"/>
                     </t>
-                    <t t-elif="thread.correspondent.im_status === 'offline'">
+                    <t t-elif="thread.channel.correspondent.im_status === 'offline'">
                         <div class="o_ThreadIcon_offline fa fa-fw fa-circle-o" title="Offline"/>
                     </t>
-                    <t t-elif="thread.correspondent.im_status === 'away'">
+                    <t t-elif="thread.channel.correspondent.im_status === 'away'">
                         <div class="o_ThreadIcon_away fa fa-fw fa-circle text-warning" title="Away"/>
                     </t>
-                    <t t-elif="thread.correspondent === messaging.partnerRoot">
+                    <t t-elif="thread.channel.correspondent === messaging.partnerRoot">
                         <div class="o_ThreadIcon_online fa fa-fw fa-heart" title="Bot"/>
                     </t>
                     <t t-else="" name="noImStatusCondition">

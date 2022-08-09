@@ -130,10 +130,10 @@ registerModel({
         _computeThreadPreviewViews() {
             return this.filteredThreads
                 .sort((t1, t2) => {
-                    if (t1.localMessageUnreadCounter > 0 && t2.localMessageUnreadCounter === 0) {
+                    if (t1.channel.localMessageUnreadCounter > 0 && t2.channel.localMessageUnreadCounter === 0) {
                         return -1;
                     }
-                    if (t1.localMessageUnreadCounter === 0 && t2.localMessageUnreadCounter > 0) {
+                    if (t1.channel.localMessageUnreadCounter === 0 && t2.channel.localMessageUnreadCounter > 0) {
                         return 1;
                     }
                     if (t1.lastMessage && t2.lastMessage) {
