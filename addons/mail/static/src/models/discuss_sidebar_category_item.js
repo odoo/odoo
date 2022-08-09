@@ -14,16 +14,13 @@ registerModel({
          * @returns {string|FieldCommand}
          */
         _computeAvatarUrl() {
-            if (!this.channel) {
-                return clear();
-            }
             switch (this.channel.channel_type) {
                 case 'channel':
                 case 'group':
-                    return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.thread.avatarCacheKey}`;
+                    return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
                 case 'chat':
-                    if (this.thread.correspondent) {
-                        return this.thread.correspondent.avatarUrl;
+                    if (this.channel.correspondent) {
+                        return this.channel.correspondent.avatarUrl;
                     }
             }
             return '/mail/static/src/img/smiley/avatar.jpg';
@@ -33,7 +30,7 @@ registerModel({
          * @returns {integer|FieldCommand}
          */
         _computeCategoryCounterContribution() {
-            if (!this.channel) {
+            if (!this.thread) {
                 return clear();
             }
             switch (this.channel.channel_type) {
@@ -41,7 +38,7 @@ registerModel({
                     return this.thread.message_needaction_counter > 0 ? 1 : 0;
                 case 'chat':
                 case 'group':
-                    return this.thread.localMessageUnreadCounter > 0 ? 1 : 0;
+                    return this.channel.localMessageUnreadCounter > 0 ? 1 : 0;
             }
         },
         /**
@@ -49,7 +46,7 @@ registerModel({
          * @returns {integer|FieldCommand}
          */
         _computeCounter() {
-            if (!this.channel) {
+            if (!this.thread) {
                 return clear();
             }
             switch (this.channel.channel_type) {
@@ -57,7 +54,7 @@ registerModel({
                     return this.thread.message_needaction_counter;
                 case 'chat':
                 case 'group':
-                    return this.thread.localMessageUnreadCounter;
+                    return this.channel.localMessageUnreadCounter;
             }
         },
         /**
@@ -65,7 +62,7 @@ registerModel({
          * @returns {boolean|FieldCommand}
          */
         _computeHasLeaveCommand() {
-            if (!this.channel) {
+            if (!this.thread) {
                 return clear();
             }
             return (
@@ -86,10 +83,7 @@ registerModel({
          * @returns {boolean|FieldCommand}
          */
         _computeHasUnpinCommand() {
-            if (!this.channel) {
-                return clear();
-            }
-            return this.channel.channel_type === 'chat' && !this.thread.localMessageUnreadCounter;
+            return this.channel.channel_type === 'chat' && !this.channel.localMessageUnreadCounter;
         },
         /**
          * @private
@@ -103,14 +97,14 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsUnread() {
-            return this.thread.localMessageUnreadCounter > 0;
+            return this.channel.localMessageUnreadCounter > 0;
         },
         /**
          * @private
          * @returns {boolean|FieldCommand}
          */
         _computeHasThreadIcon() {
-            if (!this.channel) {
+            if (!this.thread) {
                 return clear();
             }
             switch (this.channel.channel_type) {
@@ -236,7 +230,8 @@ registerModel({
             compute: '_computeCategoryCounterContribution',
         }),
         channel: one('Channel', {
-            related: 'thread.channel',
+            identifying: true,
+            inverse: 'discussSidebarCategoryItem',
         }),
         /**
          * Amount of unread/action-needed messages
@@ -284,8 +279,7 @@ registerModel({
          * The related thread.
          */
         thread: one('Thread', {
-            identifying: true,
-            inverse: 'discussSidebarCategoryItem',
+            related: 'channel.thread'
         }),
     },
 });

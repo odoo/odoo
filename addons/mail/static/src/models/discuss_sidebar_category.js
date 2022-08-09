@@ -50,14 +50,14 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand}
+         * @returns {Object|FieldCommand}
          */
         _computeActiveItem() {
             const channel = this.messaging.discuss.activeThread && this.messaging.discuss.activeThread.channel;
             if (channel && this.supportedChannelTypes.includes(channel.channel_type)) {
                 return {
-                    thread: channel.thread,
                     category: this,
+                    channel,
                 };
             }
             return clear();
@@ -108,7 +108,7 @@ registerModel({
             if (searchValue) {
                 const qsVal = searchValue.toLowerCase();
                 categoryItems = categoryItems.filter(categoryItem => {
-                    const nameVal = categoryItem.thread.displayName.toLowerCase();
+                    const nameVal = categoryItem.channel.displayName.toLowerCase();
                     return nameVal.includes(qsVal);
                 });
             }

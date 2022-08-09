@@ -107,7 +107,7 @@ registerModel({
                         case 'mail.channel/legacy_insert':
                             return this.messaging.models['Thread'].insert(this.messaging.models['Thread'].convertData({ model: 'mail.channel', ...message.payload }));
                         case 'mail.channel/insert':
-                            return this._handleNotificationChannelUpdate(message.payload);
+                            return this.messaging.models['Channel'].insert(message.payload);
                         case 'mail.guest/insert':
                             return this.messaging.models['Guest'].insert(message.payload);
                         case 'mail.message/insert':
@@ -120,6 +120,8 @@ registerModel({
                             return this._handleNotificationRtcSessionUpdate(message.payload);
                         case 'mail.channel.rtc.session/ended':
                             return this._handleNotificationRtcSessionEnded(message.payload);
+                        case 'mail.thread/insert':
+                            return this.messaging.models['Thread'].insert(message.payload);
                         case 'res.users.settings/insert':
                             return this.messaging.models['res.users.settings'].insert(message.payload);
                         case 'res.users.settings.volumes/insert':
@@ -265,8 +267,8 @@ registerModel({
             // Chat from OdooBot is considered disturbing and should only be
             // shown on the menu, but no notification and no thread open.
             const isChatWithOdooBot = (
-                channel.thread.correspondent &&
-                channel.thread.correspondent === this.messaging.partnerRoot
+                channel.correspondent &&
+                channel.correspondent === this.messaging.partnerRoot
             );
             if (!isChatWithOdooBot) {
                 const isOdooFocused = this.env.services['presence'].isOdooFocused();
@@ -369,13 +371,6 @@ registerModel({
                 }
                 channel.unregisterOtherMemberTypingMember(partner);
             }
-        },
-        /**
-         * @private
-         * @param {Object} channelData
-         */
-        _handleNotificationChannelUpdate(channelData) {
-            this.messaging.models['Thread'].insert({ model: 'mail.channel', ...channelData });
         },
         /**
          * @private

@@ -430,14 +430,10 @@ QUnit.test('sidebar: basic channel rendering', async function (assert) {
         "should have one channel item");
     let channel = document.querySelector(`
         .o_DiscussSidebar_categoryChannel
-        .o_DiscussSidebarCategory_item
+        .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
     `);
-    assert.containsOnce(
-        document.body,
-        `
-            .o_DiscussSidebar_categoryChannel
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
-        `,
+    assert.ok(
+        channel,
         'channel 1 should be in sidebar'
     );
     assert.notOk(
@@ -557,7 +553,7 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_categoryChannel
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
         `).length,
         1,
         "should have channel 1"
@@ -565,18 +561,18 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_categoryChannel
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId2}"]
         `).length,
         1,
         "should have channel 2"
     );
     const channel1 = document.querySelector(`
         .o_DiscussSidebar_categoryChannel
-        .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
     `);
     const channel2 = document.querySelector(`
         .o_DiscussSidebar_categoryChannel
-        .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId2}"]
     `);
     assert.ok(
         channel1.querySelectorAll(`:scope .o_ThreadIcon_channelPublic`).length,
@@ -610,7 +606,7 @@ QUnit.test('sidebar: basic chat rendering', async function (assert) {
         "should have one chat item"
     );
     const chat = document.querySelector(`
-        .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
     `);
     assert.ok(chat, "should have channel 1 in the sidebar");
     assert.strictEqual(
@@ -734,7 +730,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_categoryChat
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
         `).length,
         1,
         "should have Partner 1"
@@ -742,7 +738,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_categoryChat
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId2}"]
         `).length,
         1,
         "should have Partner 2"
@@ -750,22 +746,22 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_DiscussSidebar_categoryChat
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId3}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId3}"]
         `).length,
         1,
         "should have Partner 3"
     );
     const chat1 = document.querySelector(`
         .o_DiscussSidebar_categoryChat
-        .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
     `);
     const chat2 = document.querySelector(`
         .o_DiscussSidebar_categoryChat
-        .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId2}"]
     `);
     const chat3 = document.querySelector(`
         .o_DiscussSidebar_categoryChat
-        .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId3}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId3}"]
     `);
     assert.strictEqual(
         chat1.querySelectorAll(`:scope .o_ThreadIcon_offline`).length,
@@ -846,7 +842,7 @@ QUnit.test('default thread rendering', async function (assert) {
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
         `).length,
         1,
         "should have channel 1 in the sidebar"
@@ -926,11 +922,11 @@ QUnit.test('default thread rendering', async function (assert) {
     );
 
     await click(`
-        .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
     `);
     assert.ok(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
         `).classList.contains('o-active'),
         "channel 20 should be active thread"
     );
@@ -1820,7 +1816,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
         func: openDiscuss,
         message: "should wait until channel 1 scrolled to its last message",
         predicate: ({ thread }) => {
-            return thread && thread.model === 'mail.channel' && thread.id === mailChannelId1;
+            return thread && thread.channel && thread.channel.id === mailChannelId1;
         },
     });
     assert.strictEqual(
@@ -1844,7 +1840,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
         func: () => document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0,
         message: "should wait until channel 1 changed its scroll position to top",
         predicate: ({ thread }) => {
-            return thread && thread.model === 'mail.channel' && thread.id === mailChannelId1;
+            return thread && thread.channel && thread.channel.id === mailChannelId1;
         },
     }));
     assert.strictEqual(
@@ -1863,7 +1859,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
             // select channel 2
             document.querySelector(`
                 .o_DiscussSidebar_categoryChannel
-                .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
+                .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId2}"]
             `).click();
         },
         message: "should wait until channel 2 scrolled to its last message",
@@ -1871,8 +1867,8 @@ QUnit.test('restore thread scroll position', async function (assert) {
             const messageList = document.querySelector('.o_ThreadView_messageList');
             return (
                 thread &&
-                thread.model === 'mail.channel' &&
-                thread.id === mailChannelId2 &&
+                thread.channel &&
+                thread.channel.id === mailChannelId2 &&
                 isScrolledToBottom(messageList)
             );
         },
@@ -1891,15 +1887,15 @@ QUnit.test('restore thread scroll position', async function (assert) {
             // select channel 1
             document.querySelector(`
                 .o_DiscussSidebar_categoryChannel
-                .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+                .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
             `).click();
         },
         message: "should wait until channel 1 restored its scroll position",
         predicate: ({ scrollTop, thread }) => {
             return (
                 thread &&
-                thread.model === 'mail.channel' &&
-                thread.id === mailChannelId1 &&
+                thread.channel &&
+                thread.channel.id === mailChannelId1 &&
                 scrollTop === 0
             );
         },
@@ -1916,7 +1912,7 @@ QUnit.test('restore thread scroll position', async function (assert) {
             // select channel 2
             document.querySelector(`
                 .o_DiscussSidebar_categoryChannel
-                .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
+                .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId2}"]
             `).click();
         },
         message: "should wait until channel 2 recovered its scroll position (to bottom)",
@@ -1924,8 +1920,8 @@ QUnit.test('restore thread scroll position', async function (assert) {
             const messageList = document.querySelector('.o_ThreadView_messageList');
             return (
                 thread &&
-                thread.model === 'mail.channel' &&
-                thread.id === mailChannelId2 &&
+                thread.channel &&
+                thread.channel.id === mailChannelId2 &&
                 isScrolledToBottom(messageList)
             );
         },
@@ -1973,14 +1969,14 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebar_categoryChannel
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
         `).classList.contains('o-active'),
         "channel 'General' should be active"
     );
     assert.notOk(
         document.querySelector(`
             .o_DiscussSidebar_categoryChat
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId2}"]
         `).classList.contains('o-active'),
         "Chat 'Demo' should not be active"
     );
@@ -2009,14 +2005,14 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
     assert.notOk(
         document.querySelector(`
             .o_DiscussSidebar_categoryChannel
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]
         `).classList.contains('o-active'),
         "channel 'General' should become inactive after author redirection"
     );
     assert.ok(
         document.querySelector(`
             .o_DiscussSidebar_categoryChat
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId2}"]
         `).classList.contains('o-active'),
         "chat 'Demo' should become active after author redirection"
     );
@@ -2068,9 +2064,7 @@ QUnit.test('sidebar quick search', async function (assert) {
         "should have filtered to a single channel item"
     );
     assert.strictEqual(
-        parseInt(document.querySelector(`
-            .o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item
-        `).dataset.threadId),
+        Number(document.querySelector(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item`).dataset.channelId),
         pyEnv['mail.channel'].search([['name', '=', 'channel12']])[0],
         "should have filtered to a single channel (channel12)"
     );
@@ -2134,7 +2128,7 @@ QUnit.test('basic top bar rendering', async function (assert) {
     );
 
     await click(`
-        .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
     `);
     assert.strictEqual(
         document.querySelector(`
@@ -2195,7 +2189,7 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
     );
     assert.strictEqual(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
             .o_DiscussSidebarCategoryItem_counter
         `).textContent,
         "2",
@@ -2225,7 +2219,7 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
             .o_DiscussSidebarCategoryItem_counter
         `).length,
         0,
@@ -2423,17 +2417,17 @@ QUnit.test('composer state: text save and restore', async function (assert) {
     await openDiscuss();
     // Write text in composer for #general
     await insertText('.o_ComposerTextInput_textarea', "A message");
-    await click(`.o_DiscussSidebarCategoryItem[data-thread-name="Special"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-channel-name="Special"]`);
     await insertText('.o_ComposerTextInput_textarea', "An other message");
     // Switch back to #general
-    await click(`.o_DiscussSidebarCategoryItem[data-thread-name="General"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-channel-name="General"]`);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "A message",
         "should restore the input text"
     );
 
-    await click(`.o_DiscussSidebarCategoryItem[data-thread-name="Special"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-channel-name="Special"]`);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "An other message",
@@ -2796,12 +2790,12 @@ QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]`,
         "should have discuss sidebar item with the channel"
     );
     assert.hasClass(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
         `),
         'o-unread',
         "sidebar item of channel 1 should be unread"
@@ -2811,21 +2805,21 @@ QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
         func: () => {
             document.querySelector(`
-                .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+                .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
             `).click();
         },
         message: "should wait until last seen by current partner message id changed",
         predicate: ({ thread }) => {
             return (
-                thread.id === mailChannelId1 &&
-                thread.model === 'mail.channel' &&
+                thread.channel &&
+                thread.channel.id === mailChannelId1 &&
                 thread.lastSeenByCurrentPartnerMessageId === mailMessageId1
             );
         },
     }));
     assert.doesNotHaveClass(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
         `),
         'o-unread',
         "sidebar item of channel 1 should not longer be unread"
@@ -3550,27 +3544,27 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_DiscussSidebarCategory_item[data-thread-name="General"]
+            .o_DiscussSidebarCategoryItem[data-channel-name="General"]
         `).length,
         1,
         "should have channel 'General' in the sidebar"
     );
     assert.notOk(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-name="General"]
+            .o_DiscussSidebarCategoryItem[data-channel-name="General"]
         `).classList.contains('o-active'),
         "channel 'General' should not be active initially"
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_DiscussSidebarCategory_item[data-thread-name="Demo User"]
+            .o_DiscussSidebarCategoryItem[data-channel-name="Demo User"]
         `).length,
         1,
         "should have chat 'Demo User' in the sidebar"
     );
     assert.notOk(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-name="Demo User"]
+            .o_DiscussSidebarCategoryItem[data-channel-name="Demo User"]
         `).classList.contains('o-active'),
         "chat 'Demo User' should not be active initially"
     );
@@ -3580,10 +3574,10 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
         "there should be no composer when active thread of discuss is mailbox 'Inbox'"
     );
 
-    await click(`.o_DiscussSidebarCategory_item[data-thread-name="General"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-channel-name="General"]`);
     assert.ok(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-name="General"]
+            .o_DiscussSidebarCategoryItem[data-channel-name="General"]
         `).classList.contains('o-active'),
         "channel 'General' should become active after selecting it from the sidebar"
     );
@@ -3604,10 +3598,10 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
         "composer of channel 'General' should no longer focused on click away"
     );
 
-    await click(`.o_DiscussSidebarCategory_item[data-thread-name="Demo User"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-channel-name="Demo User"]`);
     assert.ok(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-name="Demo User"]
+            .o_DiscussSidebarCategory_item[data-channel-name="Demo User"]
         `).classList.contains('o-active'),
         "chat 'Demo User' should become active after selecting it from the sidebar"
     );
@@ -3669,8 +3663,8 @@ QUnit.test('mark channel as seen if last message is visible when switching chann
         message: "should wait until channel 2 loaded its messages initially",
         predicate: ({ hint, threadViewer }) => {
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === mailChannelId2 &&
+                threadViewer.thread.channel &&
+                threadViewer.thread.channel.id === mailChannelId2 &&
                 hint.type === 'messages-loaded'
             );
         },
@@ -3679,21 +3673,21 @@ QUnit.test('mark channel as seen if last message is visible when switching chann
         eventName: 'o-thread-last-seen-by-current-partner-message-id-changed',
         func: () => {
             document.querySelector(`
-                .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+                .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
             `).click();
         },
         message: "should wait until last seen by current partner message id changed",
         predicate: ({ thread }) => {
             return (
-                thread.id === mailChannelId1 &&
-                thread.model === 'mail.channel' &&
+                thread.channel &&
+                thread.channel.id === mailChannelId1 &&
                 thread.lastSeenByCurrentPartnerMessageId === mailMessageId1
             );
         },
     }));
     assert.doesNotHaveClass(
         document.querySelector(`
-            .o_DiscussSidebarCategory_item[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+            .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
         `),
         'o-unread',
         "sidebar item of channel 1 should no longer be unread"

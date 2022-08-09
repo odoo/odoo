@@ -43,7 +43,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
         "should have a channel group named 'Livechat'"
     );
     const livechat = groupLivechat.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
     `);
     assert.ok(
         livechat,
@@ -273,30 +273,22 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
             livechat_operator_id: pyEnv.currentPartnerId,
         },
     ]);
-    const { messaging, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss();
-    const livechat11 = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    const livechat12 = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId2,
-        model: 'mail.channel',
-    });
-    const initialLivechats = document.querySelectorAll('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategoryItem');
+    const initialLivechats = document.querySelectorAll('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
         initialLivechats.length,
         2,
         "should have 2 livechat items"
     );
     assert.strictEqual(
-        parseInt(initialLivechats[0].dataset.threadId),
-        livechat12.id,
+        Number(initialLivechats[0].dataset.channelId),
+        mailChannelId2,
         "first livechat should be the one with the more recent last activity time"
     );
     assert.strictEqual(
-        parseInt(initialLivechats[1].dataset.threadId),
-        livechat11.id,
+        Number(initialLivechats[1].dataset.channelId),
+        mailChannelId1,
         "second livechat should be the one with the less recent last activity time"
     );
 
@@ -305,20 +297,20 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
     await afterNextRender(() => document.execCommand('insertText', false, "Blabla"));
     await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
 
-    const newLivechats = document.querySelectorAll('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategoryItem');
+    const newLivechats = document.querySelectorAll('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategory_item');
     assert.strictEqual(
         newLivechats.length,
         2,
         "should have 2 livechat items"
     );
     assert.strictEqual(
-        parseInt(newLivechats[0].dataset.threadId),
-        livechat11.id,
+        Number(newLivechats[0].dataset.channelId),
+        mailChannelId1,
         "first livechat should be the one with the more recent last activity time"
     );
     assert.strictEqual(
-        parseInt(newLivechats[1].dataset.threadId),
-        livechat12.id,
+        Number(newLivechats[1].dataset.channelId),
+        mailChannelId2,
         "second livechat should be the one with the less recent last activity time"
     );
 });

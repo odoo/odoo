@@ -136,7 +136,7 @@ QUnit.test('livechat - states: close manually by clicking the title', async func
 
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`
     );
 
     // fold the livechat category
@@ -148,7 +148,7 @@ QUnit.test('livechat - states: close manually by clicking the title', async func
     );
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         "Category livechat should be closed and the content should be invisible"
     );
 });
@@ -175,7 +175,7 @@ QUnit.test('livechat - states: open manually by clicking the title', async funct
 
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`
     );
 
     // open the livechat category
@@ -187,8 +187,8 @@ QUnit.test('livechat - states: open manually by clicking the title', async funct
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
-        "Category livechat should be closed and the content should be invisible"
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
+        "Category livechat should be open and the content should be visible"
     );
 });
 
@@ -314,7 +314,7 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`
     );
 
     await afterNextRender(() => {
@@ -325,7 +325,7 @@ QUnit.test('livechat - states: close from the bus', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         "Category livechat should be closed and the content should be invisible"
     );
 });
@@ -352,7 +352,7 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
 
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`
     );
 
     await afterNextRender(() => {
@@ -363,13 +363,13 @@ QUnit.test('livechat - states: open from the bus', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
-        "Category livechat should be closed and the content should be invisible"
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
+        "Category livechat should be open and the content should be visible"
     );
 });
 
 
-QUnit.test('livechat - states: category item should be invisible if the catgory is closed', async function (assert) {
+QUnit.test('livechat - states: category item should be invisible if the category is closed', async function (assert) {
     assert.expect(2);
 
     const pyEnv = await startServer();
@@ -387,7 +387,7 @@ QUnit.test('livechat - states: category item should be invisible if the catgory 
 
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`
     );
 
     await afterNextRender(() =>
@@ -399,7 +399,7 @@ QUnit.test('livechat - states: category item should be invisible if the catgory 
 
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         "inactive item should be invisible if the category is folded"
     );
 });
@@ -422,12 +422,10 @@ QUnit.test('livechat - states: the active category item should be visble even if
 
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`
     );
 
-    const livechat = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
-    `);
+    const livechat = document.querySelector(`.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`);
     await afterNextRender(() => {
         livechat.click();
     });
@@ -442,8 +440,8 @@ QUnit.test('livechat - states: the active category item should be visble even if
 
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
-        'the active livechat item should remain even if the category is folded'
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
+        'the active livechat item should remain open even if the category is folded'
     );
 });
 

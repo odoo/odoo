@@ -7,7 +7,6 @@ import { clear } from '@mail/model/model_field_command';
 import '@mail/models/thread';
 
 addFields('Thread', {
-    livechatCorrespondent: one('Partner'),
     /**
      * If set, current thread is a livechat.
      */
@@ -65,11 +64,11 @@ patchModelMethods('Thread', {
                     { id: this.messaging.models['Partner'].getNextPublicId() }
                 );
                 data2.members.push(partnerData);
-                data2.livechatCorrespondent = partnerData;
+                data2.channel.livechatCorrespondent = partnerData;
             } else {
                 const partnerData = this.messaging.models['Partner'].convertData(data.livechat_visitor);
                 data2.members.push(partnerData);
-                data2.livechatCorrespondent = partnerData;
+                data2.channel.livechatCorrespondent = partnerData;
             }
         }
         return data2;
@@ -85,27 +84,6 @@ patchRecordMethods('Thread', {
             return partner.livechat_username;
         }
         return this._super(partner);
-    },
-    /**
-     * @override
-     */
-    _computeCorrespondent() {
-        if (this.channel && this.channel.channel_type === 'livechat') {
-            return this.livechatCorrespondent || clear();
-        }
-        return this._super();
-    },
-    /**
-     * @override
-     */
-    _computeDisplayName() {
-        if (this.channel && this.channel.channel_type === 'livechat' && this.correspondent) {
-            if (this.correspondent.country) {
-                return `${this.correspondent.nameOrDisplayName} (${this.correspondent.country.name})`;
-            }
-            return this.correspondent.nameOrDisplayName;
-        }
-        return this._super();
     },
     /**
      * @override
@@ -134,13 +112,4 @@ patchRecordMethods('Thread', {
         }
         return this._super();
     },
-    /**
-     * @override
-     */
-    _getDiscussSidebarCategory() {
-        if (this.channel.channel_type === 'livechat') {
-            return this.messaging.discuss.categoryLivechat;
-        }
-        return this._super();
-    }
 });

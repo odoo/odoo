@@ -240,7 +240,7 @@ registerModel({
             );
             let amount = 0;
             for (const chatWindow of allHiddenWithThread) {
-                if (chatWindow.thread.localMessageUnreadCounter > 0) {
+                if (chatWindow.thread.channel.localMessageUnreadCounter > 0) {
                     amount++;
                 }
             }
