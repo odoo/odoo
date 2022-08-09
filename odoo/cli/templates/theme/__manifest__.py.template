@@ -1,24 +1,56 @@
+# -*- encoding: utf-8 -*-
+
 {
-    # Theme information
-    'name': "{{name}}",
-    'description': """
-    """,
+    'name': '{{name}}',
+    # TODO: name / technical_name
     'category': 'Theme',
-    'version': '0.1',
-    'depends': ['website'],
+    'sequence': 10,
+    'summary': '',
+    'author': '',
+    'website': '',
+    'version': '',
+    'depends': [
+        'website',
+        #'{{module}}',
+    ],
 
-    # templates
     'data': [
-        'views/options.xml',
-        'views/snippets.xml',
+        'data/presets.xml',
+        'data/menu.xml',
+        'data/images.xml',
+        # TODO:
+        #'data/shapes.xml',
+
+        'data/pages/home.xml',
+        'data/pages/page.xml',
+
+        'views/snippets/options.xml',
+        'views/snippets/s_demo.xml',
+
+        'views/website_templates.xml',
+
+        # TODO: provide a list of website_* apps to customize as well (e.g. website_sale, website_events,...)
+        #'views/{{module}}_templates.xml',
+
     ],
 
-    # demo pages
-    'demo': [
-        'demo/pages.xml',
-    ],
+    'assets': {
+        'web._assets_primary_variables': [
+            '{{name}}/static/src/scss/primary_variables.scss',
+        ],
+        'web._assets_frontend_helpers': [
+            ('prepend', '{{name}}/static/src/scss/bootstrap_overridden.scss'),
+        ],
+        'web.assets_frontend': [
+            '{{name}}/static/src/js/theme.js',
+            '{{name}}/static/src/scss/theme.scss',
 
-    # Your information
-    'author': "My Company",
-    'website': "https://www.yourcompany.com",
+            '{{name}}/static/src/snippets/options.scss',
+            '{{name}}/static/src/snippets/s_demo/000.scss',
+            '{{name}}/static/src/snippets/s_demo/000.js',
+            '{{name}}/static/src/snippets/s_demo/options.js',
+        ],
+    },
+
+    'license': 'OEEL-1',
 }

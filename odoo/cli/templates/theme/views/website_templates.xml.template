@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- HEADER -->
+
+<template id="template_header_opt" inherit_id="website.snippet_options" name="Theme Header - Option">
+    <xpath expr="//we-select[@data-variable='header-template']" position="inside">
+        <we-button title="Theme"
+            data-customize-website-views="{{name}}.template_header"
+            data-customize-website-variable="'{{name}}'"
+            data-img="/{{name}}/static/src/img/wbuilder/template_header_opt.svg"/>
+    </xpath>
+</template>
+
+<record id="template_header" model="ir.ui.view">
+    <field name="name">{{name}} Header</field>
+    <field name="type">qweb</field>
+    <field name="key">website_{{name}}.header</field>
+    <field name="priority">16</field>
+    <field name="inherit_id" ref="website.layout"/>
+    <field name="mode">extension</field>
+    <field name="arch" type="xml">
+        <xpath expr="//header//nav" position="replace">
+            <!-- Static Content -->
+            <!-- Components -->
+            <!-- Editable areas -->
+        </xpath>
+    </field>
+</record>
+
+
+<!-- FOOTER -->
+
+<template id="template_footer_opt" inherit_id="website.snippet_options" name="Theme Footer - Option">
+    <xpath expr="//we-select[@data-variable='footer-template']" position="inside">
+        <we-button title="Theme"
+            data-customize-website-views="{{name}}.template_footer"
+            data-customize-website-variable="'{{name}}'"
+            data-img="/{{name}}/static/src/img/wbuilder/template_footer_opt.svg"/>
+    </xpath>
+</template>
+
+<record id="template_footer" model="ir.ui.view">
+    <field name="name">{{name}} Footer</field>
+    <field name="type">qweb</field>
+    <field name="key">website_{{name}}.footer</field>
+    <field name="priority">16</field>
+    <field name="inherit_id" ref="website.layout"/>
+    <field name="mode">extension</field>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+                <!-- Content -->
+            </div>
+        </xpath>
+    </field>
+</record>
+
+</odoo>

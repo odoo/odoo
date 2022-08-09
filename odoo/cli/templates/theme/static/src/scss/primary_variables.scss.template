@@ -1,0 +1,71 @@
+// WEBSITE BUILDER
+// https://github.com/odoo/odoo/blob/15.0/addons/website/static/src/scss/primary_variables.scss#L1950
+
+$o-website-values-palettes: (
+    (
+        // Colors
+        'color-palettes-name':              '{{name}}',
+
+        // Fonts
+        'font':                             'Source Sans Pro',
+
+        // Header
+        //'header-template':                  '{{name}}',
+
+        // Footer
+        //'footer-template':                  '{{name}}',
+    ),
+);
+
+
+// FONTS
+// https://github.com/odoo/odoo/blob/15.0/addons/website/static/src/scss/primary_variables.scss#L2044
+
+$o-theme-font-configs: (
+    'Source Sans Pro': (
+        'family':                           ('Source Sans Pro', sans-serif),
+        'url':                              'Source+Sans+Pro:300,400,400i,600',
+        'properties' : (
+            'base': (
+                'font-size-base':           1rem,
+            ),
+        ),
+    ),
+);
+
+
+// COLORS
+// https://github.com/odoo/odoo/blob/15.0/addons/web_editor/static/src/scss/web_editor.variables.scss#L541
+// https://github.com/odoo/odoo/blob/15.0/addons/website/static/src/scss/primary_variables.scss#L2
+
+$o-color-palettes: map-merge($o-color-palettes,
+    (
+        '{{name}}': (
+            'o-color-1':                    #36979C,
+            'o-color-2':                    #685563,
+            'o-color-3':                    #F6F6F6,
+            'o-color-4':                    #FFFFFF,
+            'o-color-5':                    #383E45,
+
+            'menu':                         1,
+            'footer':                       1,
+            'copyright':                    1,
+        ),
+    )
+);
+
+$o-selected-color-palettes-names: append($o-selected-color-palettes-names, '{{name}}');
+
+
+// Shapes
+
+// $o-bg-shapes: map-merge($o-bg-shapes,
+//     (
+//         'illustration': map-merge(
+//             map-get($o-bg-shapes, 'illustration') or (),
+//             (
+//                 'category/01': ('position': center center, 'size': auto 100%, 'colors': (1), 'repeat-y': false),
+//             ),
+//         ),
+//     )
+// );

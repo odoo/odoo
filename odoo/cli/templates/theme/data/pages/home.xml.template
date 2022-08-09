@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="view_home" model="theme.ir.ui.view">
+    <field name="name">Home</field>
+    <field name="key">{{name}}.view_home</field>
+    <field name="type">qweb</field>
+    <field name="arch" type="xml">
+        <t name="Home" t-name="{{name}}.home">
+
+            <t t-set="additional_title" t-value="'Home'"/>
+
+            <t t-call="website.layout">
+                <div id="wrap" class="oe_structure">
+
+                    <!-- Content -->
+
+                </div>
+            </t>
+        </t>
+    </field>
+</record>
+
+<record id="page_home" model="theme.website.page">
+    <field name="view_id" ref="{{name}}.view_home"/>
+    <field name="is_published" eval="True"/>
+    <field name="url">/</field>
+</record>
+
+</odoo>
