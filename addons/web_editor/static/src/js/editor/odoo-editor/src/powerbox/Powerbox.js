@@ -89,6 +89,18 @@ export class Powerbox {
      * @param {Array<{name: string, priority: number}} [categories=this.categories]
      */
     open(commands=this.commands, categories=this.categories) {
+        commands = (commands || []).map(command => ({
+            ...command,
+            category: command.category || '',
+            name: command.name || '',
+            priority: command.priority || 0,
+            description: command.description || '',
+            callback: command.callback || (() => {}),
+        }));
+        categories = (categories || []).map(category => ({
+            name: category.name || '',
+            priority: category.priority || 0,
+        }));
         const order = (a, b) => b.priority - a.priority || a.name.localeCompare(b.name);
         if (this.onOpen) {
             this.onOpen();
