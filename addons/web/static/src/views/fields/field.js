@@ -202,6 +202,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         context: node.getAttribute("context") || "{}",
         domain: node.getAttribute("domain") || "[]",
         string: node.getAttribute("string") || field.string,
+        help: node.getAttribute("help"),
         widget,
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         onChange: archParseBoolean(node.getAttribute("on_change")),

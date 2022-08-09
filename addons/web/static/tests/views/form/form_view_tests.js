@@ -11544,4 +11544,21 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(target, ".o_form_button_cancel");
         }
     );
+
+    QUnit.test("help on field as precedence over field's declaration -- form", async (assert) => {
+        serverData.models.partner.fields.foo.help = "pythonHelp";
+        patchWithCleanup(odoo, { debug: "1" });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            arch: `<form><sheet><field name="foo" help="xmlHelp" /></sheet></form>`,
+            serverData,
+        });
+
+        assert.strictEqual(
+            JSON.parse(target.querySelector(".o_field_widget").dataset.tooltipInfo).field.help,
+            "xmlHelp"
+        );
+    });
 });
