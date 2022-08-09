@@ -1195,7 +1195,7 @@ class TestWorkOrderProcess(TestMrpCommon):
         wo.button_start()
         self.assertAlmostEqual(wo.date_start, datetime.now(), delta=timedelta(seconds=10))
         self.assertAlmostEqual(wo.date_planned_start, datetime.now(), delta=timedelta(seconds=10))
-        self.assertAlmostEqual(wo.date_planned_finished, datetime.now(), delta=timedelta(seconds=10))
+        self.assertAlmostEqual(wo.date_planned_finished, wo._calculate_date_planned_finished(wo.date_start), delta=timedelta(seconds=10))
 
     def test_planning_7(self):
         """ set the workcenter capacity to 10. Produce a dozen of product tracked by
@@ -1216,6 +1216,65 @@ class TestWorkOrderProcess(TestMrpCommon):
         mo.button_plan()
         wo = mo.workorder_ids
         self.assertEqual(wo.duration_expected, 120)
+
+    def test_planning_8(self):
+        """ Plan a workorder and move it on the planning, the workorder duration
+        should always be consistent with the planned start and finish date"""
+        self.planning_bom.routing = self.env.ref("mrp.mrp_routing_0")
+        self.env['mrp.workcenter'].search([]).write({'tz': 'UTC'})
+        self.env['resource.calendar'].search([]).write({'tz': 'UTC'})
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        self.planning_bom.routing_id.operation_ids.time_cycle_manual = 120.0
+        mo_form.bom_id = self.planning_bom
+        mo_form.product_qty = 1
+        mo_form.date_start_wo = datetime(2022, 8, 8, 11, 0, 0, 0)
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+        wo = mo.workorder_ids
+        wc = wo.workcenter_id
+        self.assertEqual(wo.date_planned_start, datetime(2022, 8, 8, 11, 0, 0, 0),
+                         "Date planned start should not have changed")
+        self.assertEqual(wo.duration_expected, (120.0 * 100 / wc.time_efficiency) + wc.time_start + wc.time_stop,
+                         "Duration expected should be the sum of the time_cycle (taking the workcenter efficiency into account), the time_start and time_stop")
+        self.assertEqual(wo.date_planned_finished, wo.date_planned_start + timedelta(minutes=wo.duration_expected+60),
+                         "Date planned finished should take into consideration the midday break")
+        duration_expected = wo.duration_expected
+
+        # Move the workorder in the planning so that it doesn't span across the midday break
+        wo.write({'date_planned_start': datetime(2022, 8, 8, 9, 0, 0, 0), 'date_planned_finished': datetime(2022, 8, 8, 12, 45, 0, 0)})
+        self.assertEqual(wo.date_planned_start, datetime(2022, 8, 8, 9, 0, 0, 0),
+                         "Date planned start should have changed")
+        self.assertEqual(wo.duration_expected, duration_expected,
+                         "Duration expected should not have changed")
+        self.assertEqual(wo.date_planned_finished, wo.date_planned_start + timedelta(minutes=duration_expected),
+                         "Date planned finished should have been recomputed to be consistent with the workorder duration")
+        date_planned_finished = wo.date_planned_finished
+
+        # Extend workorder one hour to the left
+        wo.write({'date_planned_start': datetime(2022, 8, 8, 8, 0, 0, 0)})
+        self.assertEqual(wo.date_planned_start, datetime(2022, 8, 8, 8, 0, 0, 0),
+                         "Date planned start should have changed")
+        self.assertEqual(wo.duration_expected, duration_expected + 60,
+                         "Duration expected should have been extended by one hour")
+        self.assertEqual(wo.date_planned_finished, date_planned_finished,
+                         "Date planned finished should not have changed")
+        self.assertEqual(wo.date_planned_finished, wo.date_planned_start + timedelta(minutes=wo.duration_expected),
+                         "Date planned finished should be consistent with the workorder duration")
+        duration_expected = wo.duration_expected
+
+        # Extend workorder 2 hours to the right (span across the midday break)
+        wo.write({'date_planned_finished': datetime(2022, 8, 8, 13, 45, 0, 0)})
+        self.assertEqual(wo.date_planned_start, datetime(2022, 8, 8, 8, 0, 0, 0),
+                         "Date planned start should not have changed")
+        self.assertEqual(wo.duration_expected, duration_expected + 60,
+                         "Duration expected should have been extended by one hour")
+        self.assertEqual(wo.date_planned_finished, datetime(2022, 8, 8, 13, 45, 0, 0),
+                         "Date planned finished should have changed")
+        self.assertEqual(wo.date_planned_finished, wo.date_planned_start + timedelta(minutes=wo.duration_expected+60),
+                         "Date planned finished should be consistent with the workorder duration")
+
 
     def test_plan_unplan_date(self):
         """ Testing planning a workorder then cancel it and then plan it again.
