@@ -3,6 +3,7 @@
 import { busService } from "@bus/services/bus_service";
 import { presenceService } from "@bus/services/presence_service";
 import { multiTabService } from "@bus/multi_tab_service";
+import { getPyEnv } from '@bus/../tests/helpers/mock_python_environment';
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { calendarNotificationService } from "@calendar/js/services/calendar_notification_service";
@@ -13,7 +14,6 @@ import { registry } from "@web/core/registry";
 const serviceRegistry = registry.category("services");
 
 QUnit.module("Calendar Notification", (hooks) => {
-    let legacyServicesRegistry;
     let target;
     hooks.beforeEach(() => {
         target = getFixture();
@@ -34,30 +34,7 @@ QUnit.module("Calendar Notification", (hooks) => {
         async (assert) => {
             assert.expect(5);
 
-            let pollNumber = 0;
             const mockRPC = (route, args) => {
-                if (route === "/longpolling/poll") {
-                    if (pollNumber > 0) {
-                        return new Promise(() => {}); // let it hang to avoid further calls
-                    }
-                    pollNumber++;
-                    return Promise.resolve([
-                        {
-                            id: "prout",
-                            message: {
-                                type: "calendar.alarm",
-                                payload: [{
-                                    alarm_id: 1,
-                                    event_id: 2,
-                                    title: "Meeting",
-                                    message: "Very old meeting message",
-                                    timer: 20 * 60,
-                                    notify_at: "1978-04-14 12:45:00",
-                                }],
-                            },
-                        },
-                    ]);
-                }
                 if (route === "/calendar/notify") {
                     return Promise.resolve([]);
                 }
@@ -66,12 +43,16 @@ QUnit.module("Calendar Notification", (hooks) => {
                     return Promise.resolve(true);
                 }
             };
-
-            await createWebClient({
-                legacyParams: { serviceRegistry: legacyServicesRegistry },
-                mockRPC,
-            });
-
+            await createWebClient({ mockRPC });
+            const pyEnv = await getPyEnv();
+            pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "calendar.alarm", [{
+                "alarm_id": 1,
+                "event_id": 2,
+                "title": "Meeting",
+                "message": "Very old meeting message",
+                "timer": 20 * 60,
+                "notify_at": "1978-04-14 12:45:00",
+            }]);
             await nextTick();
 
             assert.containsOnce(target, ".o_notification_body");
@@ -92,30 +73,7 @@ QUnit.module("Calendar Notification", (hooks) => {
         async (assert) => {
             assert.expect(5);
 
-            let pollNumber = 0;
             const mockRPC = (route, args) => {
-                if (route === "/longpolling/poll") {
-                    if (pollNumber > 0) {
-                        return new Promise(() => {}); // let it hang to avoid further calls
-                    }
-                    pollNumber++;
-                    return Promise.resolve([
-                        {
-                            id: "prout",
-                            message: {
-                                type: "calendar.alarm",
-                                payload: [{
-                                    alarm_id: 1,
-                                    event_id: 2,
-                                    title: "Meeting",
-                                    message: "Very old meeting message",
-                                    timer: 20 * 60,
-                                    notify_at: "1978-04-14 12:45:00",
-                                }],
-                            },
-                        },
-                    ]);
-                }
                 if (route === "/calendar/notify") {
                     return Promise.resolve([]);
                 }
@@ -137,11 +95,16 @@ QUnit.module("Calendar Notification", (hooks) => {
             };
             serviceRegistry.add("action", fakeActionService, { force: true });
 
-            await createWebClient({
-                legacyParams: { serviceRegistry: legacyServicesRegistry },
-                mockRPC,
-            });
-
+            await createWebClient({ mockRPC });
+            const pyEnv = await getPyEnv();
+            pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "calendar.alarm", [{
+                "alarm_id": 1,
+                "event_id": 2,
+                "title": "Meeting",
+                "message": "Very old meeting message",
+                "timer": 20 * 60,
+                "notify_at": "1978-04-14 12:45:00",
+            }]);
             await nextTick();
 
             assert.containsOnce(target, ".o_notification_body");
@@ -162,30 +125,7 @@ QUnit.module("Calendar Notification", (hooks) => {
         async (assert) => {
             assert.expect(4);
 
-            let pollNumber = 0;
             const mockRPC = (route, args) => {
-                if (route === "/longpolling/poll") {
-                    if (pollNumber > 0) {
-                        return new Promise(() => {}); // let it hang to avoid further calls
-                    }
-                    pollNumber++;
-                    return Promise.resolve([
-                        {
-                            message: {
-                                id: "prout",
-                                type: "calendar.alarm",
-                                payload: [{
-                                    alarm_id: 1,
-                                    event_id: 2,
-                                    title: "Meeting",
-                                    message: "Very old meeting message",
-                                    timer: 20 * 60,
-                                    notify_at: "1978-04-14 12:45:00",
-                                }],
-                            },
-                        },
-                    ]);
-                }
                 if (route === "/calendar/notify") {
                     return Promise.resolve([]);
                 }
@@ -195,11 +135,16 @@ QUnit.module("Calendar Notification", (hooks) => {
                 }
             };
 
-            await createWebClient({
-                legacyParams: { serviceRegistry: legacyServicesRegistry },
-                mockRPC,
-            });
-
+            await createWebClient({ mockRPC });
+            const pyEnv = await getPyEnv();
+            pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "calendar.alarm", [{
+                "alarm_id": 1,
+                "event_id": 2,
+                "title": "Meeting",
+                "message": "Very old meeting message",
+                "timer": 20 * 60,
+                "notify_at": "1978-04-14 12:45:00",
+            }]);
             await nextTick();
 
             assert.containsOnce(target, ".o_notification_body");
