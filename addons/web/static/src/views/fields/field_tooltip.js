@@ -20,7 +20,7 @@ export function getTooltipInfo(params) {
         field: {
             label: params.field.string,
             name: params.field.name,
-            help: params.help || params.field.help,
+            help: params.fieldInfo.help !== null ? params.fieldInfo.help : params.field.help,
             type: params.field.type,
             widget: params.fieldInfo.widget,
             widgetDescription,
