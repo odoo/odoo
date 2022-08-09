@@ -803,7 +803,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 if not (field is self and not index):
                     yield tuple(field_seq)
 
-                if field.type in ('one2many', 'many2many'):
+                if field.type == 'one2many':
                     for inv_field in Model.pool.field_inverses[field]:
                         yield tuple(field_seq) + (inv_field,)
 
@@ -4822,6 +4822,9 @@ class Many2many(_RelationalMulti):
         for record in records:
             cache.set(record, self, tuple(new_relation[record.id]))
 
+        # determine the corecords for which the relation has changed
+        modified_corecord_ids = set()
+
         # process pairs to add (beware of duplicates)
         pairs = [(x, y) for x, ys in new_relation.items() for y in ys - old_relation[x]]
         if pairs:
@@ -4835,6 +4838,7 @@ class Many2many(_RelationalMulti):
             y_to_xs = defaultdict(set)
             for x, y in pairs:
                 y_to_xs[y].add(x)
+                modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
                 domain = invf.get_domain_list(comodel)
                 valid_ids = set(records.filtered_domain(domain)._ids)
@@ -4855,6 +4859,7 @@ class Many2many(_RelationalMulti):
             y_to_xs = defaultdict(set)
             for x, y in pairs:
                 y_to_xs[y].add(x)
+                modified_corecord_ids.add(y)
 
             if self.store:
                 # express pairs as the union of cartesian products:
@@ -4882,6 +4887,16 @@ class Many2many(_RelationalMulti):
                         cache.set(corecord, invf, ids1)
                     except KeyError:
                         pass
+
+        if modified_corecord_ids:
+            # trigger the recomputation of fields that depend on the inverse
+            # fields of self on the modified corecords
+            corecords = comodel.browse(modified_corecord_ids)
+            corecords.modified([
+                invf.name
+                for invf in model.pool.field_inverses[self]
+                if invf.model_name == self.comodel_name
+            ])
 
         return records.filtered(
             lambda record: new_relation[record.id] != old_relation[record.id]
@@ -4942,6 +4957,9 @@ class Many2many(_RelationalMulti):
         for record in records:
             cache.set(record, self, tuple(new_relation[record.id]))
 
+        # determine the corecords for which the relation has changed
+        modified_corecord_ids = set()
+
         # process pairs to add (beware of duplicates)
         pairs = [(x, y) for x, ys in new_relation.items() for y in ys - old_relation[x]]
         if pairs:
@@ -4949,6 +4967,7 @@ class Many2many(_RelationalMulti):
             y_to_xs = defaultdict(set)
             for x, y in pairs:
                 y_to_xs[y].add(x)
+                modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
                 domain = invf.get_domain_list(comodel)
                 valid_ids = set(records.filtered_domain(domain)._ids)
@@ -4970,6 +4989,7 @@ class Many2many(_RelationalMulti):
             y_to_xs = defaultdict(set)
             for x, y in pairs:
                 y_to_xs[y].add(x)
+                modified_corecord_ids.add(y)
             for invf in records.pool.field_inverses[self]:
                 for y, xs in y_to_xs.items():
                     corecord = comodel.browse([y])
@@ -4979,6 +4999,16 @@ class Many2many(_RelationalMulti):
                         cache.set(corecord, invf, ids1)
                     except KeyError:
                         pass
+
+        if modified_corecord_ids:
+            # trigger the recomputation of fields that depend on the inverse
+            # fields of self on the modified corecords
+            corecords = comodel.browse(modified_corecord_ids)
+            corecords.modified([
+                invf.name
+                for invf in model.pool.field_inverses[self]
+                if invf.model_name == self.comodel_name
+            ])
 
         return records.filtered(
             lambda record: new_relation[record.id] != old_relation[record.id]
