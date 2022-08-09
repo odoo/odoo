@@ -2299,6 +2299,19 @@ options.registry.topMenuColor = options.Class.extend({
 options.registry.DeviceVisibility = options.Class.extend({
     isTopOption: true,
 
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        // State is kept in variables because both the Device visibility
+        // and the Invisible element states toggle the same "d-none" class.
+        // The _updateDeviceVisibility() method updates the classes by
+        // combining those two states.
+        this.deviceVisibility = this._getDeviceVisibility();
+        this.showInvisible = false;
+    },
+
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -2309,10 +2322,11 @@ options.registry.DeviceVisibility = options.Class.extend({
      * @see this.selectClass for parameters
      */
     toggleDeviceVisibility(previewMode, widgetValue, params) {
+        this.showInvisible = false;
         if (widgetValue === 'both') {
-            this.$target[0].classList.remove('d-none');
-            this.$target[0].classList.remove('d-md-none');
-            this.$target[0].classList.remove(`d-md-${this.$target.css('display')}`);
+            this.deviceVisibility = 'both';
+            this.$target[0].classList.remove('o_snippet_mobile_invisible');
+            this.$target[0].classList.remove('o_snippet_desktop_invisible');
         } else { // According to current display mode.
             let isMobile;
             this.trigger_up('service_context_get', {
@@ -2320,13 +2334,46 @@ options.registry.DeviceVisibility = options.Class.extend({
                     isMobile = ctx['isMobile'];
                 },
             });
-            if (isMobile) {
-                this.$target[0].classList.add(`d-md-${this.$target.css('display')}`);
-                this.$target[0].classList.add('d-none');
-            } else {
-                this.$target[0].classList.add('d-md-none');
-            }
+            this.deviceVisibility = isMobile ? 'no_mobile' : 'no_desktop';
+            this.$target[0].classList.add(isMobile ? 'o_snippet_mobile_invisible' : 'o_snippet_desktop_invisible');
         }
+        this._updateDeviceVisibility();
+        this.trigger_up('snippet_option_visibility_update', {show: widgetValue === 'both'});
+    },
+    /**
+     * @override
+     */
+    async onTargetHide() {
+        if (this.$target[0].classList.contains('o_snippet_mobile_invisible') ||
+                this.$target[0].classList.contains('o_snippet_desktop_invisible')) {
+            this.showInvisible = false;
+            this._updateDeviceVisibility();
+        }
+    },
+    /**
+     * @override
+     */
+    async onTargetShow() {
+        if (this.$target[0].classList.contains('o_snippet_mobile_invisible') ||
+                this.$target[0].classList.contains('o_snippet_desktop_invisible')) {
+            this.showInvisible = true;
+            this._updateDeviceVisibility();
+        }
+    },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        this.$target[0].classList.remove('o_snippet_mobile_invisible');
+        this.$target[0].classList.remove('o_snippet_desktop_invisible');
+        this.showInvisible = false;
+        this._updateDeviceVisibility();
+        // Kinda hacky: the snippet is forced hidden via onTargetHide on save
+        // but should be marked as visible as when entering edit mode later, the
+        // snippet will be shown naturally (as the CSS rules won't apply).
+        // Without this, the "eye" icon of the visibility panel would be shut
+        // when entering edit mode.
+        this.trigger_up('snippet_option_visibility_update', {show: true});
     },
 
     //--------------------------------------------------------------------------
@@ -2350,11 +2397,26 @@ options.registry.DeviceVisibility = options.Class.extend({
         return 'both';
     },
     /**
+     * Updates the visibility depending on the current device, setting and show invisible element bypass.
+     */
+    _updateDeviceVisibility() {
+        if (this.showInvisible || this.deviceVisibility === 'both') {
+            this.$target[0].classList.remove('d-none');
+            this.$target[0].classList.remove('d-md-none');
+            this.$target[0].classList.remove(`d-md-${this.$target.css('display')}`);
+        } else if (this.deviceVisibility === 'no_mobile') {
+            this.$target[0].classList.add(`d-md-${this.$target.css('display')}`);
+            this.$target[0].classList.add('d-none');
+        } else { // no desktop
+            this.$target[0].classList.add('d-md-none');
+        }
+    },
+    /**
      * @override
      */
     async _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'device_visibility_opt') {
-            return this._getDeviceVisibility() === params.device;
+            return this.deviceVisibility === params.device;
         }
         return this._super(...arguments);
     },
@@ -2895,7 +2957,9 @@ options.registry.ConditionalVisibility = options.Class.extend({
      * @override
      */
     async onTargetHide() {
-        this.$target[0].classList.add('o_conditional_hidden');
+        if (this.$target[0].classList.contains('o_snippet_invisible')) {
+            this.$target[0].classList.add('o_conditional_hidden');
+        }
     },
     /**
      * @override

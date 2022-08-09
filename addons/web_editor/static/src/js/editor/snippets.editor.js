@@ -1852,7 +1852,14 @@ var SnippetsMenu = Widget.extend({
             this.invisibleDOMMap = new Map();
             const $invisibleDOMPanelEl = $(this.invisibleDOMPanelEl);
             $invisibleDOMPanelEl.find('.o_we_invisible_entry').remove();
-            const $invisibleSnippets = globalSelector.all().find('.o_snippet_invisible').addBack('.o_snippet_invisible');
+            let isMobile;
+            this.trigger_up('service_context_get', {
+                callback: (ctx) => {
+                    isMobile = ctx['isMobile'];
+                },
+            });
+            const invisibleSelector = `.o_snippet_invisible, ${isMobile ? '.o_snippet_mobile_invisible' : '.o_snippet_desktop_invisible'}`;
+            const $invisibleSnippets = globalSelector.all().find(invisibleSelector).addBack(invisibleSelector);
 
             $invisibleDOMPanelEl.toggleClass('d-none', !$invisibleSnippets.length);
 
@@ -3517,11 +3524,12 @@ var SnippetsMenu = Widget.extend({
     /**
      * Preview on mobile.
      */
-    _onMobilePreviewClick: function () {
+    _onMobilePreviewClick: async function () {
         this.trigger_up('request_mobile_preview');
         this.snippetEditors.forEach(editor => {
             editor.updateOptionsUIVisibility();
         });
+        await this._updateInvisibleDOM();
     },
     /**
      * Undo..

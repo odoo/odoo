@@ -84,6 +84,28 @@ const WebsiteWysiwyg = Wysiwyg.extend({
             }
         }
 
+        // Restore device-based "Invisible Elements".
+        let isMobile;
+        this.trigger_up('service_context_get', {
+            callback: (ctx) => {
+                isMobile = ctx['isMobile'];
+            },
+        });
+        for (const el of this.$editable[0].querySelectorAll('.d-none')) {
+            if ([...el.classList].some(className => className.startsWith('d-md-'))) {
+                el.classList.add('o_snippet_mobile_invisible');
+                if (isMobile) {
+                    el.dataset.invisible = '1';
+                }
+            }
+        }
+        for (const el of this.$editable[0].querySelectorAll('.d-md-none')) {
+            el.classList.add('o_snippet_desktop_invisible');
+            if (!isMobile) {
+                el.dataset.invisible = '1';
+            }
+        }
+
         return this._super.apply(this, arguments);
     },
     /**
