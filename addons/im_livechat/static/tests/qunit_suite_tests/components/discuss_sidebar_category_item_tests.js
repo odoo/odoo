@@ -26,7 +26,7 @@ QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous
     await openDiscuss();
 
     const livechatItem = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
     `);
     assert.containsOnce(
         livechatItem,
@@ -59,7 +59,7 @@ QUnit.test('livechat - avatar: should have a partner profile picture for a livec
     await openDiscuss();
 
     const livechatItem = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        .o_DiscussSidebarCategoryItem[data-channel-id="${mailChannelId1}"]
     `);
     assert.containsOnce(
         livechatItem,

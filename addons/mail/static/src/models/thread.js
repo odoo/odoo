@@ -40,9 +40,6 @@ registerModel({
             if ('authorizedGroupFullName' in data) {
                 data2.authorizedGroupFullName = data.authorizedGroupFullName;
             }
-            if ('avatarCacheKey' in data) {
-                data2.avatarCacheKey = data.avatarCacheKey;
-            }
             if ('channel' in data) {
                 data2.channel = data.channel;
                 data2.model = 'mail.channel';
@@ -58,9 +55,6 @@ registerModel({
             }
             if ('create_uid' in data) {
                 data2.creator = insert({ id: data.create_uid });
-            }
-            if ('custom_channel_name' in data) {
-                data2.custom_channel_name = data.custom_channel_name;
             }
             if ('group_based_subscription' in data) {
                 data2.group_based_subscription = data.group_based_subscription;
@@ -101,9 +95,6 @@ registerModel({
             }
             if ('message_needaction_counter' in data) {
                 data2.message_needaction_counter = data.message_needaction_counter;
-            }
-            if ('message_unread_counter' in data) {
-                data2.serverMessageUnreadCounter = data.message_unread_counter;
             }
             if ('name' in data) {
                 data2.name = data.name;
@@ -1055,75 +1046,11 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand}
-         */
-        _computeCorrespondent() {
-            if (!this.channel) {
-                return clear();
-            }
-            if (this.channel.channel_type === 'channel') {
-                return clear();
-            }
-            const correspondents = this.members.filter(partner =>
-                partner !== this.messaging.currentPartner
-            );
-            if (correspondents.length === 1) {
-                // 2 members chat
-                return correspondents[0];
-            }
-            if (this.members.length === 1) {
-                // chat with oneself
-                return this.members[0];
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeCorrespondentOfDmChat() {
-            if (
-                this.channel &&
-                this.channel.channel_type === 'chat' &&
-                this.correspondent &&
-                this.public === 'private'
-            ) {
-                return this.correspondent;
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeDiscussSidebarCategoryItem() {
-            if (!this.channel) {
-                return clear();
-            }
-            if (!this.isPinned) {
-                return clear();
-            }
-            if (!this.messaging.discuss) {
-                return clear();
-            }
-            const discussSidebarCategory = this._getDiscussSidebarCategory();
-            if (!discussSidebarCategory) {
-                return clear();
-            }
-            return { category: discussSidebarCategory };
-        },
-        /**
-         * @private
          * @returns {string}
          */
         _computeDisplayName() {
-            if (this.channel && this.channel.channel_type === 'chat' && this.correspondent) {
-                return this.custom_channel_name || this.correspondent.nameOrDisplayName;
-            }
-            if (this.channel && this.channel.channel_type === 'group' && !this.name) {
-                const partnerNames = this.members.map(partner => partner.nameOrDisplayName);
-                const guestNames = this.guestMembers.map(guest => guest.name);
-                return [...partnerNames, ...guestNames].join(this.env._t(", "));
+            if (this.channel) {
+                return this.channel.displayName;
             }
             if (this.mailbox) {
                 return this.mailbox.name;
@@ -1390,39 +1317,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {integer}
-         */
-        _computeLocalMessageUnreadCounter() {
-            if (this.model !== 'mail.channel') {
-                // unread counter only makes sense on channels
-                return clear();
-            }
-            // By default trust the server up to the last message it used
-            // because it's not possible to do better.
-            let baseCounter = this.serverMessageUnreadCounter;
-            let countFromId = this.serverLastMessage ? this.serverLastMessage.id : 0;
-            // But if the client knows the last seen message that the server
-            // returned (and by assumption all the messages that come after),
-            // the counter can be computed fully locally, ignoring potentially
-            // obsolete values from the server.
-            const firstMessage = this.orderedMessages[0];
-            if (
-                firstMessage &&
-                this.lastSeenByCurrentPartnerMessageId &&
-                this.lastSeenByCurrentPartnerMessageId >= firstMessage.id
-            ) {
-                baseCounter = 0;
-                countFromId = this.lastSeenByCurrentPartnerMessageId;
-            }
-            // Include all the messages that are known locally but the server
-            // didn't take into account.
-            return this.orderedMessages.reduce((total, message) => {
-                if (message.id <= countFromId) {
-                    return total;
-                }
-                return total + 1;
-            }, baseCounter);
-        },
         /**
          * @private
          * @return {FieldCommand}
@@ -1454,15 +1348,16 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand}
+         * @returns {MessagingMenu|FieldCommand}
          */
         _computeMessagingMenuAsPinnedAndUnreadChannel() {
             if (!this.messaging || !this.messaging.messagingMenu) {
                 return clear();
             }
-            return (this.model === 'mail.channel' && this.isPinned && this.localMessageUnreadCounter > 0)
-                ? this.messaging.messagingMenu
-                : clear();
+            if (this.channel && this.isPinned && this.channel.localMessageUnreadCounter > 0) {
+                return this.messaging.messagingMenu;
+            }
+            return clear();
         },
         /**
          * @private
@@ -1476,10 +1371,10 @@ registerModel({
          * @returns {Message|undefined}
          */
         _computeMessageAfterNewMessageSeparator() {
-            if (this.model !== 'mail.channel') {
+            if (!this.channel) {
                 return clear();
             }
-            if (this.localMessageUnreadCounter === 0) {
+            if (this.channel.localMessageUnreadCounter === 0) {
                 return clear();
             }
             const index = this.orderedMessages.findIndex(message =>
@@ -1596,22 +1491,6 @@ registerModel({
          */
         _computeVideoCount() {
             return this.rtcSessions.filter(session => session.videoStream).length;
-        },
-        /**
-         * Returns the discuss sidebar category that corresponds to this channel
-         * type.
-         *
-         * @private
-         * @returns {DiscussSidebarCategory}
-         */
-        _getDiscussSidebarCategory() {
-            switch (this.channel.channel_type) {
-                case 'channel':
-                    return this.messaging.discuss.categoryChannel;
-                case 'chat':
-                case 'group':
-                    return this.messaging.discuss.categoryChat;
-            }
         },
         /**
          * @private
@@ -1762,11 +1641,6 @@ registerModel({
             sort: '_sortAttachmentsInWebClientView',
         }),
         authorizedGroupFullName: attr(),
-        /**
-         * Cache key to force a reload of the avatar when avatar is changed.
-         * It only makes sense for channels.
-         */
-        avatarCacheKey: attr(),
         cache: one('ThreadCache', {
             default: {},
             inverse: 'thread',
@@ -1793,13 +1667,6 @@ registerModel({
             compute: '_computeComposer',
             inverse: 'thread',
             isCausal: true,
-        }),
-        correspondent: one('Partner', {
-            compute: '_computeCorrespondent',
-        }),
-        correspondentOfDmChat: one('Partner', {
-            compute: '_computeCorrespondentOfDmChat',
-            inverse: 'dmChatWithCurrentPartner',
         }),
         creator: one('User'),
         /**
@@ -1841,7 +1708,6 @@ registerModel({
             inverse: 'threadAsCurrentPartnerLongTypingTimerOwner',
             isCausal: true,
         }),
-        custom_channel_name: attr(),
         /**
          * Determines the default display mode of this channel. Should contain
          * either no value (to display the chat), or 'video_full_screen' to
@@ -1852,15 +1718,6 @@ registerModel({
          * States the description of this thread. Only applies to channels.
          */
         description: attr(),
-        /**
-         * Determines the discuss sidebar category item that displays this
-         * thread (if any). Only applies to channels.
-         */
-        discussSidebarCategoryItem: one('DiscussSidebarCategoryItem', {
-            compute: '_computeDiscussSidebarCategoryItem',
-            inverse: 'thread',
-            isCausal: true,
-        }),
         displayName: attr({
             compute: '_computeDisplayName',
         }),
@@ -2076,13 +1933,6 @@ registerModel({
             compute: '_computeLastSeenByCurrentPartnerMessageId',
             default: 0,
         }),
-        /**
-         * Local value of message unread counter, that means it is based on initial server value and
-         * updated with interface updates.
-         */
-        localMessageUnreadCounter: attr({
-            compute: '_computeLocalMessageUnreadCounter',
-        }),
         mailbox: one('Mailbox', {
             inverse: 'thread',
         }),
@@ -2266,19 +2116,6 @@ registerModel({
          * @see localMessageUnreadCounter
          */
         serverLastMessage: one('Message'),
-        /**
-         * Message unread counter coming from server.
-         *
-         * Value of this field is unreliable, due to dynamic nature of
-         * messaging. So likely outdated/unsync with server. Should use
-         * localMessageUnreadCounter instead, which smartly guess the actual
-         * message unread counter at all time.
-         *
-         * @see localMessageUnreadCounter
-         */
-        serverMessageUnreadCounter: attr({
-            default: 0,
-        }),
         suggestable: one('ComposerSuggestable', {
             default: {},
             inverse: 'thread',

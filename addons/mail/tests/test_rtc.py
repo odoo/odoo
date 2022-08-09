@@ -141,9 +141,10 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'invitedMembers': [('insert', [{
                             'id': channel_member_test_user.id,
                             'channel': {'id': channel_member_test_user.channel_id.id},
@@ -248,9 +249,10 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'invitedMembers': [('insert', [
                             {
                                 'id': channel_member_test_user.id,
@@ -326,16 +328,18 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'invitedMembers': [('insert-and-unlink', [{
                             'id': channel_member_test_user.id,
                             'channel': {'id': channel_member_test_user.channel_id.id},
@@ -389,16 +393,18 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'invitedMembers': [('insert-and-unlink', [{
                             'id': channel_member_test_guest.id,
                             'channel': {'id': channel_member_test_guest.channel_id.id},
@@ -461,16 +467,18 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'invitedMembers': [('insert-and-unlink', [{
                             'id': channel_member_test_user.id,
                             'channel': {'id': channel_member_test_user.channel_id.id},
@@ -497,16 +505,18 @@ class TestChannelInternals(MailCommon):
             ],
             [
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'invitedMembers': [('insert-and-unlink', [{
                             'id': channel_member_test_guest.id,
                             'channel': {'id': channel_member_test_guest.channel_id.id},
@@ -553,23 +563,26 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'rtcInvitingSession': [('unlink',)],
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'invitedMembers': [('insert-and-unlink', [
                             {
                                 'id': channel_member_test_user.id,
@@ -639,9 +652,10 @@ class TestChannelInternals(MailCommon):
             ],
             message_items=[
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'rtcInvitingSession': [('insert', {
                             'id': channel_member.rtc_session_ids.id,
                             'channelMember': {
@@ -663,9 +677,10 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'rtcInvitingSession': [('insert', {
                             'id': channel_member.rtc_session_ids.id,
                             'channelMember': {
@@ -687,9 +702,10 @@ class TestChannelInternals(MailCommon):
                     },
                 },
                 {
-                    'type': 'mail.channel/insert',
+                    'type': 'mail.thread/insert',
                     'payload': {
                         'id': channel.id,
+                        'model': 'mail.channel',
                         'invitedMembers': [('insert', [
                             {
                                 'id': channel_member_test_user.id,

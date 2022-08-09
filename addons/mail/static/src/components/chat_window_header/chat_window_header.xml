@@ -18,9 +18,9 @@
                 <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name mh-100 mx-1 my-0 text-truncate" t-att-class="{'ms-3':!chatWindow.thread or chatWindow.thread.model !== 'mail.channel'}" t-att-title="chatWindow.name">
                     <t t-esc="chatWindow.name"/>
                 </div>
-                <t t-if="chatWindow.thread and chatWindow.thread.localMessageUnreadCounter > 0">
+                <t t-if="chatWindow.thread and chatWindow.thread.channel and chatWindow.thread.channel.localMessageUnreadCounter > 0">
                     <div class="o_ChatWindowHeader_counter o_ChatWindowHeader_item mx-1 my-0">
-                        (<t t-esc="chatWindow.thread.localMessageUnreadCounter"/>)
+                        (<t t-esc="chatWindow.thread.channel.localMessageUnreadCounter"/>)
                     </div>
                 </t>
                 <div class="flex-grow-1"/>

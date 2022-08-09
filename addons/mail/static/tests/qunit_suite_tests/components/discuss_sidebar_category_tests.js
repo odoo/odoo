@@ -204,7 +204,7 @@ QUnit.test('channel - states: close manually by clicking the title', async funct
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         "Category channel should be closed and the content should be invisible"
     );
 });
@@ -224,7 +224,7 @@ QUnit.test('channel - states: open manually by clicking the title', async functi
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         "Category channel should be open and the content should be visible"
     );
 });
@@ -250,7 +250,7 @@ QUnit.test('channel - states: close should update the value on the server', asyn
     assert.strictEqual(
         initalSettings.is_discuss_sidebar_category_channel_open,
         true,
-        "the vaule in server side should be true"
+        "the server side value should be true"
     );
 
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
@@ -262,7 +262,7 @@ QUnit.test('channel - states: close should update the value on the server', asyn
     assert.strictEqual(
         newSettings.is_discuss_sidebar_category_channel_open,
         false,
-        "the vaule in server side should be false"
+        "the server side value should be false"
     );
 });
 
@@ -287,7 +287,7 @@ QUnit.test('channel - states: open should update the value on the server', async
     assert.strictEqual(
         initalSettings.is_discuss_sidebar_category_channel_open,
         false,
-        "the vaule in server side should be false"
+        "the server side value should be false"
     );
 
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
@@ -299,7 +299,7 @@ QUnit.test('channel - states: open should update the value on the server', async
     assert.strictEqual(
         newSettings.is_discuss_sidebar_category_channel_open,
         true,
-        "the vaule in server side should be false"
+        "the server side value should be false"
     );
 });
 
@@ -323,7 +323,7 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         "Category channel should be closed and the content should be invisible"
     );
 });
@@ -348,12 +348,12 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         "Category channel should be open and the content should be visible"
     );
 });
 
-QUnit.test('channel - states: the active category item should be visble even if the category is closed', async function (assert) {
+QUnit.test('channel - states: the active category item should be visible even if the category is closed', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -363,12 +363,10 @@ QUnit.test('channel - states: the active category item should be visble even if 
 
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`
     );
 
-    const channel = document.querySelector(
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`
-    );
+    const channel = document.querySelector(`.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`);
     await afterNextRender(() => {
         channel.click();
     });
@@ -377,7 +375,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
     await click(`.o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         'the active channel item should remain even if the category is folded'
     );
 
@@ -386,7 +384,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
     }"]`);
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         "inactive item should be invisible if the category is folded"
     );
 });
@@ -545,7 +543,7 @@ QUnit.test('chat - states: close manually by clicking the title', async function
     await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         "Category chat should be closed and the content should be invisible"
     );
 });
@@ -567,8 +565,8 @@ QUnit.test('chat - states: open manually by clicking the title', async function 
     await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
-        "Category chat should be closed and the content should be invisible"
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
+        "Category chat should be open and the content should be visible"
     );
 });
 
@@ -668,8 +666,8 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
-        "Category chat should be open and the content should be visible"
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
+        "Category chat should be close and the content should be invisible"
     );
 });
 
@@ -696,12 +694,12 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
-        "Category chat should be closed and the content should be invisible"
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
+        "Category chat should be open and the content should be visible"
     );
 });
 
-QUnit.test('chat - states: the active category item should be visble even if the category is closed', async function (assert) {
+QUnit.test('chat - states: the active category item should be visible even if the category is closed', async function (assert) {
     assert.expect(4);
 
     const pyEnv = await startServer();
@@ -714,12 +712,10 @@ QUnit.test('chat - states: the active category item should be visble even if the
 
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`
     );
 
-    const chat = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
-    `);
+    const chat = document.querySelector(`.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`);
     await afterNextRender(() => {
         chat.click();
     });
@@ -728,7 +724,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
     await click(`.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategory_title`);
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         'the active chat item should remain even if the category is folded'
     );
 
@@ -737,7 +733,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
     }"]`);
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_DiscussSidebarCategory_item[data-channel-id="${mailChannelId1}"]`,
         "inactive item should be invisible if the category is folded"
     );
 });

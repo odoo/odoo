@@ -933,8 +933,9 @@ patch(MockServer.prototype, 'mail', {
                 is_minimized: foldState !== 'closed',
             };
             this.pyEnv['mail.channel.member'].write([memberOfCurrentUser.id], vals);
-            this.pyEnv['bus.bus']._sendone(this.currentPartner, 'mail.channel/insert', {
+            this.pyEnv['bus.bus']._sendone(this.currentPartner, 'mail.thread/insert', {
                 'id': channel.id,
+                'model': 'mail.channel',
                 'serverFoldState': memberOfCurrentUser.fold_state,
             });
         }
@@ -1001,6 +1002,7 @@ patch(MockServer.prototype, 'mail', {
                 ['mail_message_id', 'in', messages.map(message => message.id)],
             ]).length;
             const channelData = {
+                avatarCacheKey: channel.avatarCacheKey,
                 channel_type: channel.channel_type,
                 id: channel.id,
                 memberCount: channel.member_count,
@@ -1025,12 +1027,15 @@ patch(MockServer.prototype, 'mail', {
             const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
             if (memberOfCurrentUser) {
                 Object.assign(res, {
-                    custom_channel_name: memberOfCurrentUser.custom_channel_name,
                     is_minimized: memberOfCurrentUser.is_minimized,
                     is_pinned: memberOfCurrentUser.is_pinned,
                     last_interest_dt: memberOfCurrentUser.last_interest_dt,
                     message_unread_counter: memberOfCurrentUser.message_unread_counter,
                     state: memberOfCurrentUser.fold_state || 'open',
+                });
+                Object.assign(channelData, {
+                    custom_channel_name: memberOfCurrentUser.custom_channel_name,
+                    serverMessageUnreadCounter: memberOfCurrentUser.message_unread_counter,
                 });
                 if (memberOfCurrentUser.rtc_inviting_session_id) {
                     res['rtc_inviting_session'] = { 'id': memberOfCurrentUser.rtc_inviting_session_id };
@@ -1112,8 +1117,9 @@ patch(MockServer.prototype, 'mail', {
             [channel.id],
             { name },
         );
-        this.pyEnv['bus.bus']._sendone(channel, 'mail.channel/insert', {
+        this.pyEnv['bus.bus']._sendone(channel, 'mail.thread/insert', {
             'id': channel.id,
+            'model': 'mail.channel',
             'name': name,
         });
     },
@@ -1131,8 +1137,8 @@ patch(MockServer.prototype, 'mail', {
             { custom_channel_name: name },
         );
         this.pyEnv['bus.bus']._sendone(this.currentPartner, 'mail.channel/insert', {
-            'id': channelId,
             'custom_channel_name': name,
+            'id': channelId,
         });
     },
     /**
@@ -1257,8 +1263,8 @@ patch(MockServer.prototype, 'mail', {
         );
         const channel = this.pyEnv['mail.channel'].searchRead([['id', '=', id]])[0];
         this.pyEnv['bus.bus']._sendone(channel, 'mail.channel/insert', {
+            'avatarCacheKey': channel.avatarCacheKey,
             'id': id,
-            'avatarCacheKey': channel.avatarCacheKey
         });
     },
     /**

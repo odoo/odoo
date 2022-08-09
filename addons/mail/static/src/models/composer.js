@@ -97,9 +97,9 @@ registerModel({
             if (!this.thread) {
                 return "";
             }
-            if (this.thread.model === 'mail.channel') {
-                if (this.thread.correspondent) {
-                    return sprintf(this.env._t("Message %s..."), this.thread.correspondent.nameOrDisplayName);
+            if (this.thread.channel) {
+                if (this.thread.channel.correspondent) {
+                    return sprintf(this.env._t("Message %s..."), this.thread.channel.correspondent.nameOrDisplayName);
                 }
                 return sprintf(this.env._t("Message #%s..."), this.thread.displayName);
             }

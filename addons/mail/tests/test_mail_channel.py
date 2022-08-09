@@ -557,8 +557,8 @@ class TestChannelInternals(MailCommon):
             [{
                 "type": "mail.channel/insert",
                 "payload": {
-                    "id": channel.id,
                     "avatarCacheKey": avatar_cache_key,
+                    "id": channel.id,
                 },
             }]
         ):
