@@ -800,7 +800,12 @@ class StockMoveLine(models.Model):
                     'description': description,
                     'qty_done': False,
                     'qty_ordered': qty_ordered,
+<<<<<<< HEAD
                     'product_uom': uom,
+=======
+                    'product_uom': uom.name,
+                    'product_uom_rec': uom,
+>>>>>>> 39389479bfc... temp
                     'product': empty_move.product_id,
                 }
             else:
