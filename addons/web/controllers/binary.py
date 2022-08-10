@@ -75,6 +75,7 @@ class Binary(http.Controller):
             stream = request.env['ir.binary']._get_stream_from(record, field, filename, filename_field, mimetype)
         send_file_kwargs = {'as_attachment': download}
         if unique:
+            send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
         if nocache:
             send_file_kwargs['max_age'] = None
@@ -100,6 +101,7 @@ class Binary(http.Controller):
 
         send_file_kwargs = {'as_attachment': False}
         if unique:
+            send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
         if nocache:
             send_file_kwargs['max_age'] = None
@@ -147,6 +149,7 @@ class Binary(http.Controller):
 
         send_file_kwargs = {'as_attachment': download}
         if unique:
+            send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
         if nocache:
             send_file_kwargs['max_age'] = None
