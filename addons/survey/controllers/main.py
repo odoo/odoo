@@ -218,14 +218,12 @@ class Survey(http.Controller):
          * a token linked to an answer or generate a new token if access is allowed;
         """
         # Get the current answer token from cookie
-        answer_from_cookie = False
         if not answer_token:
             answer_token = request.httprequest.cookies.get('survey_%s' % survey_token)
-            answer_from_cookie = bool(answer_token)
 
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
 
-        if answer_from_cookie and access_data['validity_code'] in ('answer_wrong_user', 'token_wrong'):
+        if access_data['validity_code'] in ('answer_wrong_user', 'token_wrong'):
             # If the cookie had been generated for another user or does not correspond to any existing answer object
             # (probably because it has been deleted), ignore it and redo the check.
             # The cookie will be replaced by a legit value when resolving the URL, so we don't clean it further here.
