@@ -82,8 +82,9 @@ export class AccountPaymentField extends Component {
         this.props.record.model.notify();
     }
 
-    async openMove(moveId) {
-        const action = await this.orm.call(this.props.record.resModel, 'action_open_business_doc', [moveId], {});
+    async openMove(moveId, hasStatement, paymentId) {
+        const actionParams = hasStatement ? ['account.payment', 'button_open_statement_lines', [paymentId], {}] : [this.props.record.resModel, 'action_open_business_doc', [moveId], {}];
+        const action = await this.orm.call(...actionParams);
         this.action.doAction(action);
     }
 }

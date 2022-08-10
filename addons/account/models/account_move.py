@@ -1113,12 +1113,13 @@ class AccountMove(models.Model):
                 reconciled_partials = move._get_all_reconciled_invoice_partials()
                 for reconciled_partial in reconciled_partials:
                     counterpart_line = reconciled_partial['aml']
+                    statement_line_ids = counterpart_line.payment_id.reconciled_statement_line_ids
                     if counterpart_line.move_id.ref:
                         reconciliation_ref = '%s (%s)' % (counterpart_line.move_id.name, counterpart_line.move_id.ref)
                     else:
                         reconciliation_ref = counterpart_line.move_id.name
 
-                    reconciled_vals.append({
+                    reconciled_dict = {
                         'name': counterpart_line.name,
                         'journal_name': counterpart_line.journal_id.name,
                         'amount': reconciled_partial['amount'],
@@ -1132,8 +1133,18 @@ class AccountMove(models.Model):
                         # these are necessary for the views to change depending on the values
                         'is_exchange': reconciled_partial['is_exchange'],
                         'amount_company_currency': formatLang(self.env, abs(counterpart_line.balance), currency_obj=counterpart_line.company_id.currency_id),
-                        'amount_foreign_currency': formatLang(self.env, abs(counterpart_line.amount_currency), currency_obj=counterpart_line.currency_id) if counterpart_line.currency_id != counterpart_line.company_id.currency_id else False
-                    })
+                        'amount_foreign_currency': formatLang(self.env, abs(counterpart_line.amount_currency), currency_obj=counterpart_line.currency_id) if counterpart_line.currency_id != counterpart_line.company_id.currency_id else False,
+                        'has_statement': bool(statement_line_ids),
+                    }
+                    # if there are bank statement lines reconciled with the payment, show the sum of the amount in the bank statement lines
+                    # and the date will be the date of the last statement line
+                    if statement_line_ids:
+                        reconciled_dict.update({
+                            'ref': statement_line_ids[-1].name,
+                            'date': statement_line_ids[-1].date,
+                            'amount': sum([x.amount for x in statement_line_ids]),
+                        })
+                    reconciled_vals.append(reconciled_dict)
                 payments_widget_vals['content'] = reconciled_vals
 
             if payments_widget_vals['content']:
