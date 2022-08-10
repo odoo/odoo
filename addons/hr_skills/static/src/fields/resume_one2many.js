@@ -35,12 +35,11 @@ export class ResumeListRenderer extends CommonSkillsListRenderer {
 }
 ResumeListRenderer.template = 'hr_skills.ResumeListRenderer';
 
-export class ResumeX2ManyField extends SkillsX2ManyField {
-    setup() {
-        super.setup();
-        this.Renderer = ResumeListRenderer;
-    }
-}
+export class ResumeX2ManyField extends SkillsX2ManyField {}
+ResumeX2ManyField.components = {
+    ...SkillsX2ManyField.components,
+    ListRenderer: ResumeListRenderer,
+};
 
 registry.category("fields")
     .add("resume_one2many", ResumeX2ManyField);
