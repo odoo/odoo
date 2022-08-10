@@ -7,7 +7,13 @@ import core from 'web.core';
 import wysiwygLoader from 'web_editor.loader';
 import field_registry from 'web.field_registry';
 import {QWebPlugin} from '@web_editor/js/backend/QWebPlugin';
-import {getAdjacentPreviousSiblings, getAdjacentNextSiblings} from '../editor/odoo-editor/src/utils/utils';
+import {
+    getAdjacentPreviousSiblings,
+    getAdjacentNextSiblings,
+    setSelection,
+    rightPos,
+    getRangePosition
+} from '../editor/odoo-editor/src/utils/utils';
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
 import 'web._field_registry';
 import "@web/views/fields/html/html_field"; // make sure the html field file has first been executed.
@@ -15,6 +21,7 @@ import { registry } from '@web/core/registry';
 
 var _lt = core._lt;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
+var DynamicPlaceholderFieldMixin = basic_fields.DynamicPlaceholderFieldMixin;
 var QWeb = core.qweb;
 
 /**
@@ -32,7 +39,7 @@ var QWeb = core.qweb;
  *  - resizable
  *  - codeview
  */
-var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
+var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin).extend(TranslatableFieldMixin, {
     description: _lt("Html"),
     className: 'oe_form_field oe_form_field_html',
     supportedFieldTypes: ['html'],
@@ -40,12 +47,83 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
     quickEditExclusion: [
         '[href]',
     ],
-
     custom_events: {
         wysiwyg_focus: '_onWysiwygFocus',
         wysiwyg_blur: '_onWysiwygBlur',
         wysiwyg_change: '_onChange',
         wysiwyg_attachment: '_onAttachmentChange',
+    },
+    /**
+     * Position the Model Selector Popover with respect to the
+     * wysiwyg current range.
+     *
+     * @override
+     * @param {ModelFieldSelectorPopover} modelSelector
+     */
+    positionModelSelector: async function (modelSelector) {
+        // Let the default positioning do its thing.
+        await this._super.apply(this, arguments);
+        let topPosition = parseInt(modelSelector.el.style.top.replace('px', ''));
+        let leftPosition = parseInt(modelSelector.el.style.left.replace('px', ''));
+
+        // Bring back the top position to the top of the editable.
+        topPosition -= this.el.offsetHeight;
+
+        // Offsets to the top and left position to match the editable selection.
+        const position = getRangePosition(modelSelector.$el, this.wysiwyg.options.document);
+        topPosition += position.top;
+        // Offset the popover to ensure the arrow is pointing at
+        // the precise range location.
+        leftPosition += position.left - 29;
+
+        // Restrict the PopOver to visible area,
+        // and ensure the popover is not too close to the edges of the window.
+        topPosition = Math.min(topPosition, window.window.innerHeight - modelSelector.el.offsetHeight - 15);
+        leftPosition = Math.min(leftPosition, window.window.innerWidth - modelSelector.el.offsetWidth - 10);
+
+        // Apply the position back to the element.
+        modelSelector.el.style.top = topPosition + 'px';
+        modelSelector.el.style.left = leftPosition + 'px';
+    },
+    /**
+     * Open a Model Field Selector which can select fields
+     * to create a dynamic placeholder <t-out> Element in the field HTML
+     * with or without a default text value.
+     *
+     * @override
+     * @public
+     * @param {String} baseModel
+     * @param {Array} chain
+     *
+     */
+    openDynamicPlaceholder: async function (baseModel, chain = []) {
+        let modelSelector;
+        const onFieldChanged = (ev) => {
+            this.wysiwyg.odooEditor.editable.focus();
+            if (ev.data.chain.length) {
+                let dynamicPlaceholder = "object." + ev.data.chain.join('.');
+                const defaultValue = ev.data.defaultValue;
+                dynamicPlaceholder += defaultValue && defaultValue !== '' ? ` or '''${defaultValue}'''` : '';
+
+                const t = document.createElement('T');
+                t.setAttribute('t-out', dynamicPlaceholder);
+                const fragment = new DocumentFragment();
+                fragment.appendChild(t);
+                this.wysiwyg.odooEditor.execCommand('insertFragment', fragment);
+                setSelection(...rightPos(t));
+                this.wysiwyg.odooEditor.editable.focus();
+            }
+            modelSelector.destroy();
+        };
+
+        const onFieldCancel = () => {
+            this.wysiwyg.odooEditor.editable.focus();
+            modelSelector.destroy();
+        };
+
+        modelSelector = await this._openNewModelSelector(
+            baseModel, chain, onFieldChanged, onFieldCancel
+        );
     },
 
     /**

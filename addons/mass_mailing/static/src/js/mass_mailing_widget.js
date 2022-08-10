@@ -293,6 +293,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         this.wysiwyg.trigger('reload_snippet_dropzones');
         this.trigger_up('iframe_updated', { $iframe: this.wysiwyg.$iframe });
         this.wysiwyg.odooEditor.historyStep(true);
+        this._setValue(this._getValue());
     },
 
     /**
@@ -317,7 +318,55 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!this._wysiwygSnippetsActive) {
             delete options.snippets;
         }
+        // Add the commandBar (powerbox) option to open the Dynamic Placeholder
+        // generator.
+        options.powerboxCommands = [
+            {
+                category: _t('Marketing Tools'),
+                name: _t('Dynamic Placeholder'),
+                priority: 10,
+                description: _t('Insert personalized content'),
+                fontawesome: 'fa-magic',
+                callback: () => {
+                    const baseModel =
+                        this.recordData && this.recordData.mailing_model_real
+                            ? this.recordData.mailing_model_real
+                            : undefined;
+                    if (baseModel) {
+                        // The method openDynamicPlaceholder need to be triggered
+                        // after the focus from powerBox prevalidate.
+                        setTimeout(() => {
+                            this.openDynamicPlaceholder(baseModel);
+                        });
+                    }
+                },
+            }];
+
+        options.powerboxFilters = [this._filterPowerBoxCommands.bind(this)];
+
         return options;
+    },
+    /**
+     * Prevent usage of the dynamic placeholder command inside widgets
+     * containing background images ( cover & masonry ).
+     *
+     * We cannot use dynamic placeholder in block containing background images
+     * because the email processing will flatten the text into the background
+     * image and this case the dynamic placeholder cannot be dynamic anymore.
+     *
+     * @param {Array} commands commands available in this wysiwyg
+     * @returns {Array} commands which can be used after the filter was applied
+     */
+    _filterPowerBoxCommands: function (commands) {
+        let selectionIsInForbidenSnippet = false;
+        if (this.wysiwyg && this.wysiwyg.odooEditor) {
+            const selection = this.wysiwyg.odooEditor.document.getSelection();
+            selectionIsInForbidenSnippet = this.wysiwyg.closestElement(
+                selection.anchorNode,
+                'div[data-snippet="s_cover"], div[data-snippet="s_masonry_block"]'
+            );
+        }
+        return selectionIsInForbidenSnippet ? commands.filter((o) => o.title !== "Dynamic Placeholder") : commands;
     },
 
     //--------------------------------------------------------------------------
