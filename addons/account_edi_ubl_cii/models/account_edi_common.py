@@ -244,6 +244,7 @@ class AccountEdiCommon(models.AbstractModel):
         move_type, qty_factor = self._get_import_document_amount_sign(filename, tree)
         if not move_type or (existing_invoice and existing_invoice.move_type != move_type):
             return
+        move_type = self._context.get('default_move_type', move_type)
 
         invoice = existing_invoice or self.env['account.move']
         invoice_form = Form(invoice.with_context(

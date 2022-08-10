@@ -174,6 +174,12 @@ class AccountEdiFormat(models.Model):
         # EXTENDS account_edi
         self.ensure_one()
 
+        context_move_type = self._context.get('default_move_type', None)
+        if context_move_type:
+            last_move = self.env['account.move'].search([('move_type', '=', context_move_type)], limit=1)
+            if last_move:
+                journal = last_move.journal_id
+
         if not journal:
             # infer the journal
             journal = self.env['account.journal'].search([
