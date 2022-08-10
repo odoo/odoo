@@ -31,22 +31,22 @@
                             <field name="question_type" widget="radio" attrs="{'required': [('is_page', '=', False)]}" />
                         </group>
                         <group>
-                            <div class="col-lg-6 offset-lg-3 d-none d-sm-block w-100 o_preview_questions">
+                            <div class="col-lg-6 offset-lg-3 d-none d-sm-block o_preview_questions">
                                 <!-- Multiple choice: only one answer -->
                                 <div attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}" role="img" aria-label="Multiple choice with one answer"
                                     title="Multiple choice with one answer">
                                     <span>Which is yellow?</span><br/>
-                                    <div class="row o_preview_questions_choice mb-2"><i class="fa fa-circle-o  fa-lg me-2"/>answer</div>
-                                    <div class="row o_preview_questions_choice mb-2"><i class="fa fa-dot-circle-o fa-lg me-2"/>answer</div>
-                                    <div class="row o_preview_questions_choice"><i class="fa fa-circle-o  fa-lg me-2"/>answer</div>
+                                    <div class="o_preview_questions_choice mb-2"><i class="fa fa-circle-o  fa-lg me-2"/>answer</div>
+                                    <div class="o_preview_questions_choice mb-2"><i class="fa fa-dot-circle-o fa-lg me-2"/>answer</div>
+                                    <div class="o_preview_questions_choice"><i class="fa fa-circle-o  fa-lg me-2"/>answer</div>
                                 </div>
                                 <!-- Multiple choice: multiple answers allowed -->
                                 <div attrs="{'invisible': [('question_type', '!=', 'multiple_choice')]}" role="img" aria-label="Multiple choice with multiple answers"
                                     title="Multiple choice with multiple answers">
                                     <span>Which are yellow?</span><br/>
-                                    <div class="row o_preview_questions_choice mb-2"><i class="fa fa-square-o fa-lg me-2"/>answer</div>
-                                    <div class="row o_preview_questions_choice mb-2"><i class="fa fa-check-square-o fa-lg me-2"/>answer</div>
-                                    <div class="row o_preview_questions_choice"><i class="fa fa-square-o fa-lg me-2"/>answer</div>
+                                    <div class="o_preview_questions_choice mb-2"><i class="fa fa-square-o fa-lg me-2"/>answer</div>
+                                    <div class="o_preview_questions_choice mb-2"><i class="fa fa-check-square-o fa-lg me-2"/>answer</div>
+                                    <div class="o_preview_questions_choice"><i class="fa fa-square-o fa-lg me-2"/>answer</div>
                                 </div>
                                 <!-- Multiple Lines Text Zone -->
                                 <div attrs="{'invisible': [('question_type', '!=', 'text_box')]}">
