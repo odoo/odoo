@@ -1752,42 +1752,47 @@ class IrModelAccess(models.Model):
     # But as the method raises an exception in that case,  the key 'lang' might
     # not be really necessary as a cache key, unless the `ormcache_context`
     # decorator catches the exception (it does not at the moment.)
+
+    @tools.ormcache('self.env.uid', 'mode')
+    def _get_allowed_models(self, mode='read'):
+        assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
+
+        self.flush_model()
+        self.env.cr.execute(f"""
+            SELECT m.model
+              FROM ir_model_access a
+              JOIN ir_model m ON (m.id = a.model_id)
+             WHERE a.perm_{mode}
+               AND a.active
+               AND (
+                    a.group_id IS NULL OR
+                    -- use subselect fo force a better query plan. See #99695 --
+                    a.group_id IN (
+                        SELECT gu.gid
+                            FROM res_groups_users_rel gu
+                            WHERE gu.uid = %s
+                    )
+                )
+            GROUP BY m.model
+        """, (self.env.uid,))
+
+        return frozenset(v[0] for v in self.env.cr.fetchall())
+
     @api.model
-    @tools.ormcache_context('self.env.uid', 'self.env.su', 'model', 'mode', 'raise_exception', keys=('lang',))
     def check(self, model, mode='read', raise_exception=True):
         if self.env.su:
             # User root have all accesses
             return True
 
         assert isinstance(model, str), 'Not a model name: %s' % (model,)
-        assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
 
         # TransientModel records have no access rights, only an implicit access rule
         if model not in self.env:
             _logger.error('Missing model %s', model)
 
-        self.flush_model()
+        has_access = model in self._get_allowed_models(mode)
 
-        # We check if a specific or generic rule exists
-        self._cr.execute("""SELECT BOOL_OR(perm_{mode})
-                              FROM ir_model_access a
-                              JOIN ir_model m ON (m.id = a.model_id)
-                             WHERE m.model = %s
-                               AND a.active IS TRUE
-                               AND (
-                                    a.group_id IS NULL OR
-                                    -- use subselect fo force a better query plan. See #99695 --
-                                    a.group_id IN (
-                                        SELECT gu.gid
-                                          FROM res_groups_users_rel gu
-                                         WHERE gu.uid = %s
-                                    )
-                               )
-                              """.format(mode=mode),
-                         (model, self._uid,))
-        r = self._cr.fetchone()[0]
-
-        if not r and raise_exception:
+        if not has_access and raise_exception:
             groups = '\n'.join('\t- %s' % g for g in self.group_names_with_access(model, mode))
             document_kind = self.env['ir.model']._get(model).name or model
             msg_heads = {
@@ -1834,7 +1839,7 @@ class IrModelAccess(models.Model):
 
             raise AccessError(msg)
 
-        return bool(r)
+        return has_access
 
     __cache_clearing_methods = set()
 
@@ -1849,7 +1854,7 @@ class IrModelAccess(models.Model):
     @api.model
     def call_cache_clearing_methods(self):
         self.env.invalidate_all()
-        self.check.clear_cache(self)    # clear the cache of check function
+        self._get_allowed_models.clear_cache(self)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
             if model in self.env:
                 getattr(self.env[model], method)()
