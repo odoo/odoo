@@ -76,6 +76,8 @@ COUNTRY_EAS = {
     'SE': 9955,
     'FR': 9957,
     'NO': '0192',
+    'SG': '0195',
+    'AU': '0151',
 }
 
 
@@ -173,7 +175,11 @@ class AccountEdiCommon(models.AbstractModel):
                     tax_exemption_reason_code='VATEX-EU-IC',
                     tax_exemption_reason=_('Intra-Community supply'),
                 )
-        return create_dict()
+
+        if tax.amount != 0:
+            return create_dict(tax_category_code='S')
+        else:
+            return create_dict(tax_category_code='E', tax_exemption_reason=_('Articles 226 items 11 to 15 Directive 2006/112/EN'))
 
     def _get_tax_category_list(self, invoice, taxes):
         """ Full list: https://unece.org/fileadmin/DAM/trade/untdid/d16b/tred/tred5305.htm
