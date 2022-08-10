@@ -254,12 +254,12 @@ export class ViewCompiler {
             return;
         }
         if (!params.enableInvisible) {
-            combineAttributes(
-                compiled,
-                "t-if",
-                `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`,
-                " and "
-            );
+            let isVisileExpr = `!evalDomainFromRecord(props.record,${JSON.stringify(invisible)})`;
+            if (compiled.hasAttribute("t-if")) {
+                const formerTif = compiled.getAttribute("t-if");
+                isVisileExpr = `( ${formerTif} ) and ${isVisileExpr}`;
+            }
+            compiled.setAttribute("t-if", isVisileExpr);
         } else {
             appendAttr(compiled, "class", `o_invisible_modifier:${invisible}`);
         }
