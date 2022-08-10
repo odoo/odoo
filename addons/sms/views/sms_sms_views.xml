@@ -23,7 +23,8 @@
                         </group>
                     </group>
                     <group>
-                        <field name="body" widget="sms_widget" string="Message" required="1"/>
+                        <field name="body" widget="sms_widget" string="Message" required="1" 
+                        attrs="{'readonly': [('state', 'in', ('processing', 'sent'))]}"/>
                     </group>
                 </sheet>
             </form>

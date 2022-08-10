@@ -24,8 +24,18 @@ class MailingTrace(models.Model):
         # Integer because the related sms.sms can be deleted separately from its statistics.
         # However the ID is needed for several action and controllers.
     )
+    sms_uuid = fields.Char(
+        string='UUID',
+        help='UUID for identifying messages',
+        compute='_compute_uuid',
+        store=True,
+        index=True,
+    )
     sms_number = fields.Char('Number')
     sms_code = fields.Char('Code')
+    trace_status = fields.Selection(selection_add=[
+        ('processing', 'Processing'),
+    ], ondelete={'processing': 'cascade'})
     failure_type = fields.Selection(selection_add=[
         ('sms_number_missing', 'Missing Number'),
         ('sms_number_format', 'Wrong Number Format'),
@@ -36,6 +46,12 @@ class MailingTrace(models.Model):
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),
         ('sms_optout', 'Opted Out'),
+        # delivery report errors (DLR)
+        ('sms_not_delivered', 'Not Delivered'),
+        ('sms_not_allowed', 'Not Allowed'),
+        ('sms_invalid_destination', 'Invalid Destination'),
+        ('sms_rejected', 'Rejected'),
+        ('sms_expired', 'Expired'),
     ])
 
     @api.model_create_multi
@@ -47,8 +63,23 @@ class MailingTrace(models.Model):
                 values['sms_code'] = self._get_random_code()
         return super(MailingTrace, self).create(values_list)
 
+    @api.depends('sms_sms_id')
+    def _compute_uuid(self):
+        for record in self:
+            if record.sms_sms_id:
+                record.sms_uuid = record.sms_sms_id.uuid
+
     def _get_random_code(self):
         """ Generate a random code for trace. Uniqueness is not really necessary
         as it serves as obfuscation when unsubscribing. A valid trio
         code / mailing_id / number will be requested. """
         return ''.join(random.choice(string.ascii_letters + string.digits) for dummy in range(self.CODE_SIZE))
+
+    def update_status(self, sms_status):
+        if sms_status in {'delivered', 'sent', 'not_delivered'}:
+            self.set_sent()
+        else:
+            self.write({
+                'trace_status': 'error',
+                'failure_type': self.env['sms.sms'].IAP_TO_SMS_STATE.get(sms_status)
+            })

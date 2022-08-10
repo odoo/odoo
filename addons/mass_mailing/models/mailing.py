@@ -292,7 +292,7 @@ class MassMailing(models.Model):
                 m.id as mailing_id,
                 COUNT(s.id) AS expected,
                 COUNT(s.sent_datetime) AS sent,
-                COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'outgoing') AS scheduled,
+                COUNT(s.trace_status) FILTER (WHERE s.trace_status in ('outgoing', 'processing')) AS scheduled,
                 COUNT(s.trace_status) FILTER (WHERE s.trace_status = 'cancel') AS canceled,
                 COUNT(s.trace_status) FILTER (WHERE s.trace_status in ('sent', 'open', 'reply')) AS delivered,
                 COUNT(s.trace_status) FILTER (WHERE s.trace_status in ('open', 'reply')) AS opened,

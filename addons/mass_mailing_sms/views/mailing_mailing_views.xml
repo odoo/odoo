@@ -35,6 +35,9 @@
                     confirm="This will send SMS to all recipients now. Do you still want to proceed ?"/>
             </xpath>
             <!-- Headers / Warnings -->
+            <xpath expr="//div[hasclass('alert-info')]" position="attributes">
+                <attribute name="attrs">{'invisible': ['&amp;','&amp;','&amp;','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('processing', '=', 0),('canceled', '=', 0),('scheduled', '=', 0),('failed', '=', 0),('warning_message', '=', False)]}</attribute>
+            </xpath>
             <xpath expr="//header" position="after">
                 <field name="sms_has_insufficient_credit" invisible="1"/>
                 <div class="alert alert-warning text-center o-hidden-ios" attrs="{'invisible': [('sms_has_insufficient_credit', '=', False)]}" role="alert">
@@ -67,7 +70,20 @@
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>
             </xpath>
             <xpath expr="//span[@name='scheduled_text']" position="after">
-                <span name="scheduled_text_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS Text Message are in queue and will be sent soon.</span>
+                <span name="scheduled_text_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}">SMS are in queue and will be sent soon.</span>
+            </xpath>
+            <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_scheduled')]" position="after">
+                <div attrs="{'invisible': [('processing', '=', 0)]}">
+                    <button class="btn-link py-0"
+                            name="action_view_traces_processing"
+                            type="object">
+                        <strong>
+                            <field name="processing" class="oe_inline me-2"/>
+                            <span name="processing">SMS Text Message are beeing processed by IAP.</span>
+                        </strong>
+                    </button>
+                </div>
+                <span name="processing_text_sms" attrs="{'invisible': [('mailing_type', '!=', 'sms')]}"></span>
             </xpath>
             <xpath expr="//span[@name='sent']" position="attributes">
                 <attribute name="attrs">{'invisible': [('mailing_type', '!=', 'mail')]}</attribute>

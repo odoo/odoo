@@ -224,7 +224,6 @@ class TestSMSComposerBatch(TestSMSCommon):
             ).create({
                 'body': self._test_body,
             })
-
             with self.mockSMSGateway():
                 messages = composer._action_send_sms()
 

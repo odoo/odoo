@@ -57,6 +57,7 @@ class MassSMSCase(SMSCase, MockLinkTracker):
         # map trace state to sms state
         state_mapping = {
             'sent': 'sent',
+            'processing': 'processing',
             'outgoing': 'outgoing',
             'error': 'error',
             'cancel': 'canceled',
@@ -90,11 +91,8 @@ class MassSMSCase(SMSCase, MockLinkTracker):
             self.assertTrue(bool(trace.sms_sms_id_int))
 
             if check_sms:
-                if status == 'sent':
-                    if sent_unlink:
-                        self.assertSMSIapSent([number], content=content)
-                    else:
-                        self.assertSMS(partner, number, 'sent', content=content)
+                if status == 'processing':
+                    self.assertSMS(partner, number, 'processing', content=content)
                 elif status in state_mapping:
                     sms_state = state_mapping[status]
                     failure_type = recipient_info['failure_type'] if status in ('error', 'cancel', 'bounce') else None

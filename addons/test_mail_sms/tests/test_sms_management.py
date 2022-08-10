@@ -133,8 +133,8 @@ class TestSMSWizards(TestSMSActionsCommon):
                 wizard.action_resend()
 
         self.assertSMSNotification([
-            {'partner': self.partner_1, 'state': 'sent'},
-            {'partner': self.partner_2, 'state': 'sent'}
+            {'partner': self.partner_1, 'state': 'processing'},
+            {'partner': self.partner_2, 'state': 'processing'}
         ], 'TEST BODY', self.msg, check_sms=True)
         self.assertMessageBusNotifications(self.msg)
 
@@ -149,8 +149,8 @@ class TestSMSWizards(TestSMSActionsCommon):
                 wizard.action_resend()
 
         self.assertSMSNotification([
-            {'partner': self.partner_1, 'state': 'sent', 'number': self.random_numbers_san[0]},
-            {'partner': self.partner_2, 'state': 'sent', 'number': self.random_numbers_san[1]}
+            {'partner': self.partner_1, 'state': 'processing', 'number': self.random_numbers_san[0]},
+            {'partner': self.partner_2, 'state': 'processing', 'number': self.random_numbers_san[1]}
         ], 'TEST BODY', self.msg, check_sms=True)
         self.assertMessageBusNotifications(self.msg)
 
@@ -194,6 +194,6 @@ class TestSMSWizards(TestSMSActionsCommon):
             with self.mockSMSGateway():
                 wizard.action_resend()
 
-        self.assertSMSNotification([{'partner': self.partner_1, 'state': 'sent'}], 'TEST BODY', self.msg, check_sms=True)
+        self.assertSMSNotification([{'partner': self.partner_1, 'state': 'processing'}], 'TEST BODY', self.msg, check_sms=True)
         self.assertSMSNotification([{'partner': self.partner_2, 'state': 'canceled', 'number': self.notif_p2.sms_number, 'failure_type': 'sms_credit'}], 'TEST BODY', self.msg, check_sms=False)
         self.assertMessageBusNotifications(self.msg)

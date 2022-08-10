@@ -5,11 +5,14 @@
         <field name="model">mailing.trace</field>
         <field name="inherit_id" ref="mass_mailing.mailing_trace_view_search"/>
         <field name="arch" type="xml">
-           <xpath expr="//field[@name='email']" position="after">
+            <xpath expr="//field[@name='email']" position="after">
                 <field name="sms_sms_id_int"/>
                 <field name="sms_sms_id"/>
                 <field name="sms_number"/>
-           </xpath>
+            </xpath>
+            <xpath expr="//filter[@name='filter_canceled']" position="after">
+                <filter string="Processing" name="filter_processing" domain="[('trace_status', '=', 'processing')]"/>
+            </xpath>
         </field>
     </record>
 

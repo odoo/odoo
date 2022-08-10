@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from uuid import uuid4
 
 from odoo import api, fields, models, _
 from odoo.addons.phone_validation.tools import phone_validation
@@ -198,10 +199,12 @@ class SendSMS(models.TransientModel):
 
     def _action_send_sms_numbers(self):
         self.env['sms.api']._send_sms_batch([{
-            'res_id': 0,
-            'number': number,
             'content': self.body,
-        } for number in self.sanitized_numbers.split(',')])
+            'numbers': [{
+                'uuid': uuid4().hex,
+                'number': number,
+            } for number in self.sanitized_numbers.split(',')]
+        }])
         return True
 
     def _action_send_sms_comment_single(self, records=None):

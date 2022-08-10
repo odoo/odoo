@@ -56,17 +56,45 @@ class MockSMS(common.BaseCase):
                             'body': to_send['content'],
                         })
                 return result
+            elif local_endpoint == '/iap/sms/3/send':
+                result = []
+                for message in params['messages']:
+                    for number in message["numbers"]:
+                        error = sim_error or (nbr_t_error and nbr_t_error.get(number['number']))
+                        if error == 'jsonrpc_exception':
+                            raise exceptions.AccessError(
+                                'The url that this service requested returned an error. '
+                                'Please contact the author of the app. '
+                                'The url it tried to contact was ' + local_endpoint
+                            )
+                        elif error == 'credit':
+                            error = 'insufficient_credit'
+                        res = {
+                            'uuid': number['uuid'],
+                            'state': error if error else 'success',
+                            'credit': 1,
+                        }
+                        if error:
+                            # credit is only given if the amount is known
+                            res.update(credit=0)
+                        else:
+                            self._sms.append({
+                                'number': number['number'],
+                                'body': message['content'],
+                            })
+                        result.append(res)
+                return result
 
         def _sms_sms_create(model, *args, **kwargs):
             res = sms_create_origin(model, *args, **kwargs)
             self._new_sms += res.sudo()
             return res
 
-        def _sms_sms_send(records, unlink_failed=False, unlink_sent=True, raise_exception=False):
+        def _sms_sms_send(records, unlink_failed=False, raise_exception=False):
             if sms_allow_unlink:
-                return sms_send_origin(records, unlink_failed=unlink_failed, unlink_sent=unlink_sent, raise_exception=raise_exception)
+                return sms_send_origin(records, unlink_failed=unlink_failed, raise_exception=raise_exception)
             else:
-                return sms_send_origin(records, unlink_failed=False, unlink_sent=False, raise_exception=raise_exception)
+                return sms_send_origin(records, unlink_failed=False, raise_exception=raise_exception)
             return True
 
         try:
@@ -183,7 +211,7 @@ class SMSCase(MockSMS):
         self.assertEqual(self.env['mail.notification'].search(base_domain), self.env['mail.notification'])
         self.assertEqual(self._sms, [])
 
-    def assertSMSNotification(self, recipients_info, content, messages=None, check_sms=True, sent_unlink=False):
+    def assertSMSNotification(self, recipients_info, content, messages=None, check_sms=True):
         """ Check content of notifications.
 
           :param recipients_info: list[{
@@ -212,22 +240,20 @@ class SMSCase(MockSMS):
         for recipient_info in recipients_info:
             partner = recipient_info.get('partner', self.env['res.partner'])
             number = recipient_info.get('number')
-            state = recipient_info.get('state', 'sent')
+            state = recipient_info.get('state', 'processing')
+            state_notification = state if state != 'processing' else 'sent'
             if number is None and partner:
                 number = partner.phone_get_sanitized_number()
 
-            notif = notifications.filtered(lambda n: n.res_partner_id == partner and n.sms_number == number and n.notification_status == state)
+            notif = notifications.filtered(lambda n: n.res_partner_id == partner and n.sms_number == number and n.notification_status == state_notification)
             self.assertTrue(notif, 'SMS: not found notification for %s (number: %s, state: %s)' % (partner, number, state))
             self.assertEqual(notif.author_id, notif.mail_message_id.author_id, 'SMS: Message and notification should have the same author')
 
-            if state not in ('sent', 'ready', 'canceled'):
+            if state_notification not in ('sent', 'ready', 'canceled'):
                 self.assertEqual(notif.failure_type, recipient_info['failure_type'])
             if check_sms:
-                if state == 'sent':
-                    if sent_unlink:
-                        self.assertSMSIapSent([number], content=content)
-                    else:
-                        self.assertSMS(partner, number, 'sent', content=content)
+                if state == 'processing':
+                    self.assertSMS(partner, number, 'processing', content=content)
                 elif state == 'ready':
                     self.assertSMS(partner, number, 'outgoing', content=content)
                 elif state == 'exception':

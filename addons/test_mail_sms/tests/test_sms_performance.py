@@ -42,7 +42,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
             )
 
         self.assertEqual(record.message_ids[0].body, '<p>Performance Test</p>')
-        self.assertSMSNotification([{'partner': self.customer}], 'Performance Test', messages, sent_unlink=True)
+        self.assertSMSNotification([{'partner': self.customer}], 'Performance Test', messages)
 
     @mute_logger('odoo.addons.sms.models.sms_sms')
     @users('employee')
@@ -57,7 +57,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
             )
 
         self.assertEqual(record.message_ids[0].body, '<p>Performance Test</p>')
-        self.assertSMSNotification([{'partner': partner} for partner in self.partners], 'Performance Test', messages, sent_unlink=True)
+        self.assertSMSNotification([{'partner': partner} for partner in self.partners], 'Performance Test', messages)
 
     @mute_logger('odoo.addons.sms.models.sms_sms')
     @users('employee')
@@ -70,7 +70,7 @@ class TestSMSPerformance(BaseMailPerformance, sms_common.SMSCase):
             )
 
         self.assertEqual(record.message_ids[0].body, '<p>Performance Test</p>')
-        self.assertSMSNotification([{'partner': self.customer}], 'Performance Test', messages, sent_unlink=True)
+        self.assertSMSNotification([{'partner': self.customer}], 'Performance Test', messages)
 
 
 @tagged('mail_performance')

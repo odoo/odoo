@@ -238,7 +238,7 @@ class TestMassSMS(TestMassSMSCommon):
         self.assertSMSTraces(
             [{'partner': record.customer_id,
               'number': self.records_numbers[i],
-              'trace_status': 'sent',
+              'trace_status': 'processing',
               'content': 'Dear %s this is a mass SMS with two links' % record.display_name
              } for i, record in enumerate(self.records)],
             mailing, self.records,
@@ -273,7 +273,7 @@ class TestMassSMS(TestMassSMSCommon):
         self.assertSMSTraces(
             [{'partner': record.customer_id,
               'number': record.customer_id.phone_sanitized,
-              'trace_status': 'sent',
+              'trace_status': 'processing',
               'content': 'Dear %s this is a mass SMS with two links' % record.display_name
              } for record in records],
             mailing, records,
@@ -298,7 +298,7 @@ class TestMassSMS(TestMassSMSCommon):
         self.assertSMSTraces(
             [{'partner': new_record.customer_id,
               'number': new_record.customer_id.phone_sanitized,
-              'trace_status': 'sent',
+              'trace_status': 'processing',
               'content': 'Dear %s this is a mass SMS with two links' % new_record.display_name
              }],
             mailing, new_record,
@@ -353,8 +353,8 @@ class TestMassSMS(TestMassSMSCommon):
         self.assertSMSTraces(
             [{'number': '+32456000000', 'trace_status': 'cancel', 'failure_type': 'sms_optout'},
              {'number': '+32456000101', 'trace_status': 'cancel', 'failure_type': 'sms_optout'},
-             {'number': '+32456000202', 'trace_status': 'sent'},
-             {'number': '+32456000303', 'trace_status': 'sent'},
+             {'number': '+32456000202', 'trace_status': 'processing'},
+             {'number': '+32456000303', 'trace_status': 'processing'},
              {'number': '+32456000404', 'trace_status': 'cancel', 'failure_type': 'sms_blacklist'}],
             mailing, recipients
         )

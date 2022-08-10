@@ -17,5 +17,12 @@ class MailNotification(models.Model):
         ('sms_number_format', 'Wrong Number Format'),
         ('sms_credit', 'Insufficient Credit'),
         ('sms_server', 'Server Error'),
-        ('sms_acc', 'Unregistered Account')
+        ('sms_acc', 'Unregistered Account'),
+        # delivery report errors (DLR)
+        ('sms_delivered', 'Delivered'),
+        ('sms_not_delivered', 'Not Delivered'),
+        ('sms_not_allowed', 'Not Allowed'),
+        ('sms_invalid_destination', 'Invalid Destination'),
+        ('sms_rejected', 'Rejected'),
+        ('sms_expired', 'Expired'),
     ])
