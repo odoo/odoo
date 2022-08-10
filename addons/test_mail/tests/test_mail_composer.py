@@ -1090,7 +1090,6 @@ class TestComposerResultsMass(TestMailComposer):
                                     'body_content': 'TemplateBody %s' % record.name,
                                     'email_from': self.partner_employee_2.email_formatted,
                                     'subject': 'TemplateSubject %s' % record.name,
-                                    
                                 },
                                 fields_values={
                                     'email_from': self.partner_employee_2.email_formatted,
@@ -1129,11 +1128,11 @@ class TestComposerResultsMass(TestMailComposer):
                                 author=self.partner_employee,
                                 email_values={
                                     'email_from': self.partner_employee_2.email_formatted,
-                                    # 'reply_to': self.partner_employee_2.email_formatted,  FIXME: currently failing (unrendered jinja)
+                                    'reply_to': self.partner_employee_2.email_formatted,
                                 },
                                 fields_values={
                                     'email_from': self.partner_employee_2.email_formatted,
-                                    # 'reply_to': self.partner_employee_2.email_formatted,  # FIXME: currently failing (unrendered jinja)
+                                    'reply_to': self.partner_employee_2.email_formatted,
                                 },
                                )
 
