@@ -187,6 +187,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/widgets/domain_selector.js',
             'web/static/src/legacy/js/widgets/iframe_widget.js',
             'web/static/src/legacy/js/widgets/model_field_selector.js',
+            'web/static/src/legacy/js/widgets/model_field_selector_popover.js',
             'web/static/src/legacy/js/widgets/pie_chart.js',
             'web/static/src/legacy/js/widgets/ribbon.js',
             'web/static/src/legacy/js/widgets/week_days.js',

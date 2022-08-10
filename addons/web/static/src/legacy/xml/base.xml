@@ -935,21 +935,24 @@
     <div class="o_field_selector_controls" tabindex="0">
         <i role="alert" class="fa fa-exclamation-triangle o_field_selector_warning d-none" title="Invalid field chain" aria-label="Invalid field chain"/>
     </div>
-    <div t-if="!widget.options.readonly" class="o_field_selector_popover d-none" tabindex="0">
-        <div class="o_field_selector_popover_header text-center">
-            <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
-            <div class="o_field_selector_title"/>
-            <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" role="img" aria-label="Close"/>
-            <div t-if="widget.options.showSearchInput" class="o_field_selector_search mt-2">
-                <input type="text" placeholder='Search...' class="o_input"/>
-            </div>
+</div>
+<div  t-name="ModelFieldSelector.popover" class="o_field_selector_popover d-none" tabindex="0">
+    <div class="o_field_selector_popover_header text-center">
+        <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
+        <div class="o_field_selector_title"/>
+        <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" role="img" aria-label="Close"/>
+        <div t-if="widget.options.showSearchInput" class="o_field_selector_search mt-2">
+            <input type="text" placeholder='Search a field...' class="o_input"/>
         </div>
-        <div class="o_field_selector_popover_body">
-            <ul class="o_field_selector_page"/>
+        <div t-if="widget.options.needDefaultValue" class="o_field_selector_default_value_input mt-2 d-none">
+            <input type="text" placeholder='type a default text or press ENTER' class="o_input"/>
         </div>
-        <div t-if="widget.options.debugMode" class="o_field_selector_popover_footer">
-            <input type="text" class="o_input o_field_selector_debug"/>
-        </div>
+    </div>
+    <div class="o_field_selector_popover_body">
+        <ul class="o_field_selector_page"/>
+    </div>
+    <div t-if="widget.options.debugMode" class="o_field_selector_popover_footer">
+        <input type="text" class="o_input o_field_selector_debug"/>
     </div>
 </div>
 <t t-name="ModelFieldSelector.value">
@@ -971,6 +974,12 @@
         </span>
     </t>
 </t>
+<ul t-name="ModelFieldSelector.defaultValue" class="o_field_selector_page o_field_selector_default_value">
+    <li t-attf-class="o_field_selector_item active o_field_selector_select_button">
+        <t t-esc="line.string"/>
+        <div class="text-muted o_field_selector_item_title"><t t-esc="line.description"/></div>
+    </li>
+</ul>
 <ul t-name="ModelFieldSelector.page" class="o_field_selector_page">
     <t t-foreach="lines" t-as="line" t-key="line_index">
         <t t-set="relationToFollow" t-value="followRelations(line) &amp;&amp; line.relation"/>

@@ -17,6 +17,7 @@ var dom = require('web.dom');
 var Domain = require('web.Domain');
 var DomainSelector = require('web.DomainSelector');
 var DomainSelectorDialog = require('web.DomainSelectorDialog');
+var ModelFieldSelectorPopover = require("web.ModelFieldSelectorPopover");
 var framework = require('web.framework');
 var py_utils = require('web.py_utils');
 var session = require('web.session');
@@ -70,6 +71,100 @@ var TranslatableFieldMixin = {
             id: this.dataPointID,
             isComingFromTranslationAlert: false,
         });
+    },
+};
+
+var DynamicPlaceholderFieldMixin = {
+    DYNAMIC_PLACEHOLDER_TRIGGER_KEY: '#',
+    /**
+     * Overridable method that ensure the modelSelectorPopover is
+     * positioned properly.
+     *
+     * @public
+     * @param {ModelFieldSelectorPopover} modelSelector
+     */
+    positionModelSelector: function (modelSelector) {
+        let relativeParent = this.el.closest('div.modal-content');
+        if (!relativeParent) {
+            relativeParent = this.el;
+            while(!relativeParent || !['absolute', 'relative'].includes(getComputedStyle(relativeParent).position)) {
+                relativeParent = relativeParent.offsetParent;
+            }
+        }
+
+        const relatedElementPosition = this.el.getBoundingClientRect();
+        const relativeParentPosition = relativeParent.getBoundingClientRect();
+
+        let topPosition = relatedElementPosition.top + relatedElementPosition.height - relativeParentPosition.top
+        let leftPosition = relatedElementPosition.left - relativeParentPosition.left;
+
+        modelSelector.el.style.top = topPosition + 'px';
+        modelSelector.el.style.left = leftPosition + 'px';
+    },
+    /**
+     * Open and return new Model Field Selector with the provided options
+     *
+     * @private
+     * @param {String} baseModel
+     * @param {Array} chain
+     * @param {Function} onFieldChanged
+     * @param {Function} onFieldCancel
+     *
+     * @returns {ModelFieldSelectorPopover}
+     */
+    _openNewModelSelector: async function (baseModel, chain, onFieldChanged = null, onFieldCancel = null) {
+        const triggerKeyReplaceRegex = new RegExp(`${this.DYNAMIC_PLACEHOLDER_TRIGGER_KEY}$`);
+
+        const modelSelector = new ModelFieldSelectorPopover(
+            this,
+            baseModel,
+            [],
+            {
+                readonly: false,
+                needDefaultValue: true,
+                cancelOnEscape: true,
+                chainedTitle: true,
+                filter: (model) => !["one2many", "boolean", "many2many"].includes(model.type)
+            }
+        );
+        if (!onFieldChanged) {
+            onFieldChanged = (ev) => {
+                this.$el.focus();
+                if (ev.data.chain.length) {
+                    let dynamicPlaceholder = "{{object." + ev.data.chain.join('.');
+                    const defaultValue = ev.data.defaultValue;
+                    dynamicPlaceholder += defaultValue && defaultValue !== '' ? ` or '''${defaultValue}'''}}` : '}}';
+                    this.el.value =
+                        this.el.value.replace(triggerKeyReplaceRegex, '') + dynamicPlaceholder;
+                }
+                modelSelector.destroy();
+            };
+        }
+
+        if (onFieldCancel === null) {
+            onFieldCancel = () => {
+                this.$el.focus();
+                modelSelector.destroy();
+            };
+
+        }
+
+        modelSelector.on("field_chain_changed", undefined, onFieldChanged);
+        modelSelector.on("field_chain_cancel", undefined, onFieldCancel);
+
+        // If we are inside a modal environment,
+        // we need to append the ModelFieldSelectorPopover outside the
+        // modal body, to be sure the overflow will be visible.
+        const modalParent = this.el.closest('div.modal-content');
+        if (modalParent) {
+            await modelSelector.appendTo(modalParent);
+        } else {
+            await modelSelector.insertAfter(this.el);
+        }
+        this.positionModelSelector(modelSelector);
+
+        modelSelector.open(chain, true);
+        return modelSelector;
     },
 };
 
@@ -565,7 +660,7 @@ var NumericField = InputField.extend({
     },
 });
 
-var FieldChar = InputField.extend(TranslatableFieldMixin, {
+var FieldChar = InputField.extend(TranslatableFieldMixin, DynamicPlaceholderFieldMixin, {
     description: _lt("Text"),
     className: 'o_field_char',
     tagName: 'span',
@@ -576,6 +671,38 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
     // Private
     //--------------------------------------------------------------------------
 
+
+    /**
+     * @override
+     */
+    init: function () {
+        this._super(...arguments);
+        if (this.nodeOptions && this.nodeOptions.dynamic_placeholder) {
+            // When the dynamic placeholder is active, the recordData
+            // need to be updated when `mailing_model_real` change
+            this.resetOnAnyFieldChange = true;
+        }
+    },
+    /**
+     * Open the dynamic placeholder if trigger key match
+     *
+     * @private
+     * @override
+     * @param {KeyboardEvent} ev
+     */
+    async _onKeydown(ev) {
+        this._super(...arguments);
+        if (this.nodeOptions &&
+            this.nodeOptions.dynamic_placeholder &&
+            ev.key === this.DYNAMIC_PLACEHOLDER_TRIGGER_KEY) {
+            ev.preventDefault();
+            const baseModel = this.recordData && this.recordData.mailing_model_real ? this.recordData.mailing_model_real : undefined;
+            if (baseModel) {
+                await this._openNewModelSelector(baseModel);
+            }
+            this.el.value += ev.key;
+        }
+    },
     /**
      * Add translation button
      *
@@ -4205,6 +4332,7 @@ var FieldColorPicker = FieldInteger.extend({
 
 return {
     TranslatableFieldMixin: TranslatableFieldMixin,
+    DynamicPlaceholderFieldMixin: DynamicPlaceholderFieldMixin,
     DebouncedField: DebouncedField,
     FieldEmail: FieldEmail,
     FieldBinaryFile: FieldBinaryFile,

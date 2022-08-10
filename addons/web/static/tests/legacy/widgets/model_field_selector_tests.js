@@ -59,7 +59,7 @@ QUnit.module('ModelFieldSelector', {
             readonly: false,
             debugMode: true,
         });
-        await testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
+        await testUtils.mock.addMockEnvironment(fieldSelector.popover, {data: this.data});
         await fieldSelector.appendTo($target);
         var $value = fieldSelector.$("> .o_field_selector_value");
 
@@ -182,7 +182,7 @@ QUnit.module('ModelFieldSelector', {
             readonly: false,
             debugMode: true,
         });
-        await testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
+        await testUtils.mock.addMockEnvironment(fieldSelector.popover, {data: this.data});
         await fieldSelector.appendTo($target);
 
         // Focusing the field selector input should open a field selector popover
@@ -215,7 +215,7 @@ QUnit.module('ModelFieldSelector', {
                 return field.type === 'many2one';
             },
         });
-        await testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
+        await testUtils.mock.addMockEnvironment(fieldSelector.popover, {data: this.data});
         await fieldSelector.appendTo($target);
 
         fieldSelector.$el.trigger('focusin');
@@ -237,7 +237,7 @@ QUnit.module('ModelFieldSelector', {
         var fieldSelector = new ModelFieldSelector(null, "partner", [], {
             readonly: false,
         });
-        await testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
+        await testUtils.mock.addMockEnvironment(fieldSelector.popover, {data: this.data});
         await fieldSelector.appendTo($target);
 
         fieldSelector.$el.trigger('focusin');
@@ -269,7 +269,7 @@ QUnit.module('ModelFieldSelector', {
             readonly: false,
             showSearchInput: false,
         });
-        await testUtils.mock.addMockEnvironment(fieldSelector, { data: this.data });
+        await testUtils.mock.addMockEnvironment(fieldSelector.popover, { data: this.data });
         await fieldSelector.appendTo($target);
 
         fieldSelector.$el.trigger('focusin');
@@ -291,7 +291,7 @@ QUnit.module('ModelFieldSelector', {
             readonly: false,
             showSearchInput: false,
         });
-        await testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
+        await testUtils.mock.addMockEnvironment(fieldSelector.popover, {data: this.data});
         await fieldSelector.appendTo($target);
 
         var $fieldName = fieldSelector.$('.o_field_selector_chain_part');
@@ -311,7 +311,7 @@ QUnit.module('ModelFieldSelector', {
             readonly: false,
             showSearchInput: false,
         });
-        await testUtils.mock.addMockEnvironment(fieldSelector, {data: this.data});
+        await testUtils.mock.addMockEnvironment(fieldSelector.popover, {data: this.data});
         await fieldSelector.appendTo($target);
 
         var $fieldName = fieldSelector.$('.o_field_selector_chain_part');
