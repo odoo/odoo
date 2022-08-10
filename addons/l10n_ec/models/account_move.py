@@ -149,7 +149,7 @@ class AccountMove(models.Model):
             if is_ruc:
                 identification_code = "01"
             elif is_dni:
-                identification_code = "02"
+                identification_code = "05"  # TODO revert to "02" (test purposes only)
             else:
                 identification_code = "03"
         elif move.move_type in ("out_invoice", "out_refund", "entry"): #entry for withholds
