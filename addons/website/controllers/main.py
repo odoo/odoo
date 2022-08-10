@@ -503,16 +503,19 @@ class Website(Home):
             'fuzzy_search': fuzzy_term,
         }
 
-    @http.route(['/pages', '/pages/page/<int:page>'], type='http', auth="public", website=True, sitemap=False)
-    def pages_list(self, page=1, search='', **kw):
-        options = {
+    def _get_page_search_options(self, **post):
+        return {
             'displayDescription': False,
             'displayDetail': False,
             'displayExtraDetail': False,
             'displayExtraLink': False,
             'displayImage': False,
-            'allowFuzzy': not kw.get('noFuzzy'),
+            'allowFuzzy': not post.get('noFuzzy'),
         }
+
+    @http.route(['/pages', '/pages/page/<int:page>'], type='http', auth="public", website=True, sitemap=False)
+    def pages_list(self, page=1, search='', **kw):
+        options = self._get_page_search_options(**kw)
         step = 50
         pages_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
             "pages", search, limit=page * step, order='name asc, website_id desc, id',
@@ -538,6 +541,16 @@ class Website(Home):
         }
         return request.render("website.list_website_public_pages", values)
 
+    def _get_hybrid_search_options(self, **post):
+        return {
+            'displayDescription': True,
+            'displayDetail': True,
+            'displayExtraDetail': True,
+            'displayExtraLink': True,
+            'displayImage': True,
+            'allowFuzzy': not post.get('noFuzzy'),
+        }
+
     @http.route([
         '/website/search',
         '/website/search/page/<int:page>',
@@ -548,14 +561,7 @@ class Website(Home):
         if not search:
             return request.render("website.list_hybrid")
 
-        options = {
-            'displayDescription': True,
-            'displayDetail': True,
-            'displayExtraDetail': True,
-            'displayExtraLink': True,
-            'displayImage': True,
-            'allowFuzzy': not kw.get('noFuzzy'),
-        }
+        options = self._get_hybrid_search_options(**kw)
         data = self.autocomplete(search_type=search_type, term=search, order='name asc', limit=500, max_nb_chars=200, options=options)
 
         results = data.get('results', [])

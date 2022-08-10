@@ -55,7 +55,22 @@ class WebsiteBlog(http.Controller):
 
         return OrderedDict((year, [m for m in months]) for year, months in itertools.groupby(groups, lambda g: g['year']))
 
-    def _prepare_blog_values(self, blogs, blog=False, date_begin=False, date_end=False, tags=False, state=False, page=False, search=None):
+    def _get_blog_post_search_options(self, blog=None, active_tags=None, date_begin=None, date_end=None, state=None, **post):
+        return {
+            'displayDescription': True,
+            'displayDetail': False,
+            'displayExtraDetail': False,
+            'displayExtraLink': False,
+            'displayImage': False,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'blog': str(blog.id) if blog else None,
+            'tag': ','.join([str(id) for id in active_tags.ids]),
+            'date_begin': date_begin,
+            'date_end': date_end,
+            'state': state,
+        }
+
+    def _prepare_blog_values(self, blogs, blog=False, date_begin=False, date_end=False, tags=False, state=False, page=False, search=None, **post):
         """ Prepare all values to display the blogs index page or one specific blog"""
         BlogPost = request.env['blog.post']
         BlogTag = request.env['blog.tag']
@@ -101,19 +116,14 @@ class WebsiteBlog(http.Controller):
             if use_cover and not fullwidth_cover:
                 offset += 1
 
-        options = {
-            'displayDescription': True,
-            'displayDetail': False,
-            'displayExtraDetail': False,
-            'displayExtraLink': False,
-            'displayImage': False,
-            'allowFuzzy': not request.params.get('noFuzzy'),
-            'blog': str(blog.id) if blog else None,
-            'tag': ','.join([str(id) for id in active_tags.ids]),
-            'date_begin': date_begin,
-            'date_end': date_end,
-            'state': state,
-        }
+        options = self._get_blog_post_search_options(
+            blog=blog,
+            active_tags=active_tags,
+            date_begin=date_begin,
+            date_end=date_end,
+            state=state,
+            **post
+        )
         total, details, fuzzy_search_term = request.website._search_with_fuzzy("blog_posts_only", search,
             limit=page * self._blog_post_per_page, order="is_published desc, post_date desc, id asc", options=options)
         posts = details[0].get('results', BlogPost)
@@ -197,7 +207,7 @@ class WebsiteBlog(http.Controller):
                 url = QueryURL('' if blog else '/blog', ['blog', 'tag'], blog=blog, tag=tags[0], date_begin=date_begin, date_end=date_end, search=search)()
                 return request.redirect(url, code=302)
 
-        values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page, search=search)
+        values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page, search=search, **opt)
 
         # in case of a redirection need by `_prepare_blog_values` we follow it
         if isinstance(values, werkzeug.wrappers.Response):

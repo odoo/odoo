@@ -97,6 +97,20 @@ class WebsiteForum(WebsiteProfile):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
+    def _get_forum_port_search_options(self, forum=None, tag=None, filters=None, my=None, **post):
+        return {
+            'displayDescription': False,
+            'displayDetail': False,
+            'displayExtraDetail': False,
+            'displayExtraLink': False,
+            'displayImage': False,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'forum': str(forum.id) if forum else None,
+            'tag': str(tag.id) if tag else None,
+            'filters': filters,
+            'my': my,
+        }
+
     @http.route(['/forum/<model("forum.forum"):forum>',
                  '/forum/<model("forum.forum"):forum>/page/<int:page>',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
@@ -117,18 +131,13 @@ class WebsiteForum(WebsiteProfile):
         if not sorting:
             sorting = forum.default_order
 
-        options = {
-            'displayDescription': False,
-            'displayDetail': False,
-            'displayExtraDetail': False,
-            'displayExtraLink': False,
-            'displayImage': False,
-            'allowFuzzy': not post.get('noFuzzy'),
-            'forum': str(forum.id) if forum else None,
-            'tag': str(tag.id) if tag else None,
-            'filters': filters,
-            'my': my,
-        }
+        options = self._get_forum_port_search_options(
+            forum=forum,
+            tag=tag,
+            filters=filters,
+            my=my,
+            **post
+        )
         question_count, details, fuzzy_search_term = request.website._search_with_fuzzy("forum_posts_only", search,
             limit=page * self._post_per_page, order=sorting, options=options)
         question_ids = details[0].get('results', Post)
