@@ -2,43 +2,45 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ImageField" owl="1">
-        <div t-attf-class="position-absolute w-100 bottom-0 {{isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="sizeStyle">
-            <t t-if="!props.readonly">
-                <FileUploader
-                    acceptedFileExtensions="props.acceptedFileExtensions"
-                    onUploaded.bind="onFileUploaded"
-                    type="'image'"
-                >
-                    <t t-set-slot="toggler">
+        <div class="d-inline-block position-relative">
+            <div t-attf-class="position-absolute w-100 bottom-0 {{isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="sizeStyle">
+                <t t-if="!props.readonly">
+                    <FileUploader
+                        acceptedFileExtensions="props.acceptedFileExtensions"
+                        onUploaded.bind="onFileUploaded"
+                        type="'image'"
+                    >
+                        <t t-set-slot="toggler">
+                            <button
+                                class="position-absolute bottom-0 start-0 border-0 rounded-circle m-1 p-1 fa fa-pencil fa-lg o_select_file_button"
+                                data-tooltip="Edit"
+                                aria-label="Edit"
+                            />
+                        </t>
                         <button
-                            class="position-absolute bottom-0 start-0 border-0 rounded-circle m-1 p-1 fa fa-pencil fa-lg o_select_file_button"
-                            data-tooltip="Edit"
-                            aria-label="Edit"
+                            t-if="props.value and state.isValid"
+                            class="position-absolute bottom-0 end-0 border-0 rounded-circle m-1 p-1 fa fa-trash-o fa-lg o_clear_file_button"
+                            data-tooltip="Clear"
+                            aria-label="Clear"
+                            t-on-click="onFileRemove"
                         />
-                    </t>
-                    <button
-                        t-if="props.value and state.isValid"
-                        class="position-absolute bottom-0 end-0 border-0 rounded-circle m-1 p-1 fa fa-trash-o fa-lg o_clear_file_button"
-                        data-tooltip="Clear"
-                        aria-label="Clear"
-                        t-on-click="onFileRemove"
-                    />
-                </FileUploader>
-            </t>
+                    </FileUploader>
+                </t>
+            </div>
+            <img
+                class="img img-fluid"
+                alt="Binary file"
+                t-att-src="getUrl(props.previewImage or props.name)"
+                t-att-name="props.name"
+                t-att-height="props.height"
+                t-att-width="props.width"
+                t-att-style="sizeStyle"
+                t-on-error.stop="onLoadFailed"
+                t-att-data-tooltip-template="hasTooltip and tooltipAttributes.template"
+                t-att-data-tooltip-info="hasTooltip and tooltipAttributes.info"
+                t-att-data-tooltip-delay="hasTooltip and props.zoomDelay"
+            />
         </div>
-        <img
-            class="img img-fluid"
-            alt="Binary file"
-            t-att-src="getUrl(props.previewImage or props.name)"
-            t-att-name="props.name"
-            t-att-height="props.height"
-            t-att-width="props.width"
-            t-att-style="sizeStyle"
-            t-on-error.stop="onLoadFailed"
-            t-att-data-tooltip-template="hasTooltip and tooltipAttributes.template"
-            t-att-data-tooltip-info="hasTooltip and tooltipAttributes.info"
-            t-att-data-tooltip-delay="hasTooltip and props.zoomDelay"
-        />
     </t>
 
     <t t-name="web.ImageZoomTooltip" owl="1">
