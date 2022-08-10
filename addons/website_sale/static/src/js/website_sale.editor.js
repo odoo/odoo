@@ -687,6 +687,10 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             this.mode = "product.product"
         }
 
+        // Different targets
+        this.productDetailMain = this.$target[0].querySelector('#product_detail_main');
+        this.productPageCarousel = this.$target[0].querySelector("#o-carousel-product");
+        this.productPageGrid = this.$target[0].querySelector("#o-grid-product");
         return this._super(...arguments);
     },
 
@@ -719,7 +723,7 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
      * Emulate click on the main image of the carousel.
      */
     replaceMainImage: function () {
-        const image = this.$target[0].querySelector(`[data-oe-model="${this.mode}"][data-oe-field=image_1920] img`);
+        const image = this.productDetailMain.querySelector(`[data-oe-model="${this.mode}"][data-oe-field=image_1920] img`);
         image.dispatchEvent(new Event('dblclick', {bubbles: true}));
     },
 
@@ -792,21 +796,6 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
     /**
      * @override
      */
-    async _computeWidgetState(methodName, params) {
-        switch (methodName) {
-            case 'setImageWidth':
-                return this.$target.data('image_width');
-            case 'setImageLayout':
-                return this.$target.data('image_layout');
-        }
-        return this._super(...arguments);
-    },
-});
-
-options.registry.WebsiteSaleProductPageGrid = options.Class.extend({
-    /**
-     * @override
-     */
     setSpacing(previewMode, widgetValue, params) {
         const spacing = {
             0: 'none',
@@ -820,7 +809,7 @@ options.registry.WebsiteSaleProductPageGrid = options.Class.extend({
                 'product_page_image_spacing': spacing,
             },
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
-        this.$target.data('image_spacing', spacing);
+        this.productPageGrid.dataset.image_spacing = spacing;
     },
 
     setColumns(previewMode, widgetValue, params) {
@@ -830,7 +819,7 @@ options.registry.WebsiteSaleProductPageGrid = options.Class.extend({
                 'product_page_grid_columns': widgetValue,
             },
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
-        this.$target.data('grid_columns', widgetValue);
+        this.productPageGrid.dataset.grid_columns = widgetValue;
     },
 
     /**
@@ -838,17 +827,33 @@ options.registry.WebsiteSaleProductPageGrid = options.Class.extend({
      */
     async _computeWidgetState(methodName, params) {
         switch (methodName) {
+            case 'setImageWidth':
+                return this.productDetailMain.dataset.image_width;
+            case 'setImageLayout':
+                return this.productDetailMain.dataset.image_layout;
             case 'setSpacing':
+                if (!this.productPageGrid) return 0;
                 return {
                     'none': 0,
                     'small': 1,
                     'medium': 2,
                     'big': 3,
-                }[this.$target.data('image_spacing')];
+                }[this.productPageGrid.dataset.image_spacing];
             case 'setColumns':
-                return this.$target.data('grid_columns');
+                return this.productPageGrid && this.productPageGrid.dataset.grid_columns || 1;
         }
-        return this._super(methodName, params);
+        return this._super(...arguments);
+    },
+
+    async _computeWidgetVisibility(widgetName, params) {
+        switch (widgetName) {
+            case 'o_wsale_thumbnail_pos':
+                return Boolean(this.productPageCarousel);
+            case 'o_wsale_grid_spacing':
+            case 'o_wsale_grid_columns':
+                return Boolean(this.productPageGrid);
+        }
+        return this._super(widgetName, params);
     }
 });
 
