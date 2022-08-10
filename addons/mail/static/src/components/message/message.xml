@@ -148,7 +148,7 @@
                                     'w-100': !(messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms') and !messageView.isInChatWindow,
                                     'me-5': messageView.isInChatWindowAndIsAlignedLeft and !messageView.composerViewInEditing,
                                     'ms-5': messageView.isInChatWindowAndIsAlignedRight and !messageView.composerViewInEditing,
-                                    'p-3': messageView.message.prettyBody !== '' and !messageView.composerViewInEditing, 
+                                    'p-3': messageView.message.prettyBody !== '' and !messageView.composerViewInEditing and !messageView.message.isTemporary, 
                                     'p-2': messageView.composerViewInEditing, 
                                     'text-muted': messageView.message.is_note and messageView.message.message_type !== 'sms',
                                 }"
