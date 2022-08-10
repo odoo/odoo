@@ -106,27 +106,27 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".o_field_widget[name='document'] > img",
+            ".o_field_widget[name='document'] img",
             "the widget should contain an image"
         );
         assert.strictEqual(
-            target.querySelector('div[name="document"] > img').dataset.src,
+            target.querySelector('div[name="document"] img').dataset.src,
             `data:image/png;base64,${MY_IMAGE}`,
             "the image should have the correct src"
         );
         assert.hasClass(
-            target.querySelector(".o_field_widget[name='document'] > img"),
+            target.querySelector(".o_field_widget[name='document'] img"),
             "img-fluid",
             "the image should have the correct class"
         );
         assert.hasAttrValue(
-            target.querySelector(".o_field_widget[name='document'] > img"),
+            target.querySelector(".o_field_widget[name='document'] img"),
             "width",
             "90",
             "the image should correctly set its attributes"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_widget[name='document'] > img").style.maxWidth,
+            target.querySelector(".o_field_widget[name='document'] img").style.maxWidth,
             "90px",
             "the image should correctly set its attributes"
         );
@@ -167,7 +167,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.strictEqual(
-                target.querySelector('div[name="document"] > img').dataset.src,
+                target.querySelector('div[name="document"] img').dataset.src,
                 "data:image/png;base64,incorrect_base64_value",
                 "the image has the invalid src by default"
             );
@@ -175,7 +175,7 @@ QUnit.module("Fields", (hooks) => {
             // As GET requests can't occur in tests, we must generate an error
             // on the img element to check whether the data-src is replaced with
             // a placeholder, here knowing that the GET request would fail
-            await triggerEvent(target, 'div[name="document"] > img', "error");
+            await triggerEvent(target, 'div[name="document"] img', "error");
 
             assert.hasClass(
                 target.querySelector('.o_field_widget[name="document"]'),
@@ -184,27 +184,27 @@ QUnit.module("Fields", (hooks) => {
             );
             assert.containsOnce(
                 target,
-                ".o_field_widget[name='document'] > img",
+                ".o_field_widget[name='document'] img",
                 "the widget should contain an image"
             );
             assert.strictEqual(
-                target.querySelector('div[name="document"] > img').dataset.src,
+                target.querySelector('div[name="document"] img').dataset.src,
                 "/web/static/img/placeholder.png",
                 "the image should have the correct src"
             );
             assert.hasClass(
-                target.querySelector(".o_field_widget[name='document'] > img"),
+                target.querySelector(".o_field_widget[name='document'] img"),
                 "img-fluid",
                 "the image should have the correct class"
             );
             assert.hasAttrValue(
-                target.querySelector(".o_field_widget[name='document'] > img"),
+                target.querySelector(".o_field_widget[name='document'] img"),
                 "width",
                 "90",
                 "the image should correctly set its attributes"
             );
             assert.strictEqual(
-                target.querySelector(".o_field_widget[name='document'] > img").style.maxWidth,
+                target.querySelector(".o_field_widget[name='document'] img").style.maxWidth,
                 "90px",
                 "the image should correctly set its attributes"
             );
@@ -237,7 +237,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector('div[name="document"] > img').dataset.src,
+            target.querySelector('div[name="document"] img').dataset.src,
             "data:image/png;base64,coucou==",
             "the image should have the initial src"
         );
@@ -263,7 +263,7 @@ QUnit.module("Fields", (hooks) => {
         // Wait for a render
         await nextTick();
         assert.strictEqual(
-            target.querySelector("div[name=document] > img").dataset.src,
+            target.querySelector("div[name=document] img").dataset.src,
             `data:image/png;base64,${MY_IMAGE}`,
             "the image should have the new src"
         );
