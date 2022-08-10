@@ -64,6 +64,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
      *          > @prop {string} fieldType 'date' or 'datetime', type of the corresponding field
      *      @else
      *          > @prop {string} domain
+     *      @prop {string} [name] 'name' attribute set in arch
      *
      * • type 'groupBy':
      *      @prop {string} fieldName
@@ -78,6 +79,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
      *      @if hasOptions=true
      *          > @prop {string} defaultOptionId option identifier (see INTERVAL_OPTIONS)
      *                           default set to DEFAULT_INTERVAL.
+     *      @prop {string} [name] 'name' attribute set in arch
      *
      * • type 'field':
      *      @prop {string} fieldName
@@ -945,6 +947,9 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                     if (filter.isDefault) {
                         filter.defaultRank = -5;
                     }
+                    if (attrs.name) {
+                        filter.name = attrs.name;
+                    }
                     break;
                 case 'groupBy':
                     filter.fieldName = attrs.fieldName;
@@ -955,6 +960,9 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                     }
                     if (filter.isDefault) {
                         filter.defaultRank = attrs.defaultRank;
+                    }
+                    if (attrs.name) {
+                        filter.name = attrs.name;
                     }
                     break;
                 case 'field': {

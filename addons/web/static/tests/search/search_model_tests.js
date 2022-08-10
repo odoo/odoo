@@ -226,6 +226,7 @@ QUnit.module("Search", (hooks) => {
             {
                 description: "Hello",
                 domain: "[]",
+                name: "filter",
                 type: "filter",
             },
         ]);
@@ -248,6 +249,7 @@ QUnit.module("Search", (hooks) => {
                 description: "Date",
                 fieldName: "date_field",
                 fieldType: "date",
+                name: "date_filter",
                 type: "dateFilter",
             },
             {
@@ -281,6 +283,7 @@ QUnit.module("Search", (hooks) => {
                 description: "Hi",
                 fieldName: "date_field",
                 fieldType: "date",
+                name: "groupby",
                 type: "dateGroupBy",
             },
         ]);
@@ -301,11 +304,13 @@ QUnit.module("Search", (hooks) => {
             {
                 description: "Hello One",
                 domain: "[]",
+                name: "filter_1",
                 type: "filter",
             },
             {
                 description: "Hello Two",
                 domain: "[('bar', '=', 3)]",
+                name: "filter_2",
                 type: "filter",
             },
         ]);
@@ -327,11 +332,13 @@ QUnit.module("Search", (hooks) => {
             {
                 description: "Hello One",
                 domain: "[]",
+                name: "filter_1",
                 type: "filter",
             },
             {
                 description: "Hello Two",
                 domain: "[('bar', '=', 3)]",
+                name: "filter_2",
                 type: "filter",
             },
         ]);
@@ -352,6 +359,7 @@ QUnit.module("Search", (hooks) => {
             {
                 description: "Hello",
                 domain: "[]",
+                name: "filter",
                 type: "filter",
             },
             {
@@ -605,6 +613,7 @@ QUnit.module("Search", (hooks) => {
                 description: "Foo",
                 fieldName: "foo",
                 fieldType: "char",
+                name: "group_by",
                 type: "groupBy",
                 isDefault: true,
             },
@@ -823,6 +832,7 @@ QUnit.module("Search", (hooks) => {
                 description: "Foo",
                 fieldName: "foo",
                 fieldType: "char",
+                name: "foo",
                 type: "groupBy",
             },
             {
@@ -882,11 +892,11 @@ QUnit.module("Search", (hooks) => {
             serverData,
             searchViewArch,
             context: {
-                "my_date": "2021-09-17"
-            }
+                my_date: "2021-09-17",
+            },
         });
 
         model.toggleSearchItem(1);
-        assert.deepEqual(model.domain, [['date_deadline', '<', "2021-09-17"]]);
+        assert.deepEqual(model.domain, [["date_deadline", "<", "2021-09-17"]]);
     });
 });
