@@ -170,27 +170,25 @@ class User(models.Model):
 
     @api.model
     def get_view(self, view_id=None, view_type='form', **options):
-        # When the front-end loads the views it gets the list of available fields
-        # for the user (according to its access rights). Later, when the front-end wants to
-        # populate the view with data, it only asks to read those available fields.
-        # However, in this case, we want the user to be able to read/write its own data,
-        # even if they are protected by groups.
-        # We make the front-end aware of those fields by sending all field definitions.
-        # Note: limit the `sudo` to the only action of "editing own profile" action in order to
-        # avoid breaking `groups` mecanism on res.users form view.
-        profile_view = self.env.ref("hr.res_users_view_form_profile")
-        original_user = self.env.user
+        # Since users can (if allowed) change their own HR info we show them those fields by temporarily making them
+        # part of hr.group_hr_user
+        profile_view = self.env.ref('hr.res_users_view_form_profile')
+        is_hr_user = self.env.user.has_group('hr.group_hr_user')
+        hr_user = self.env.ref('hr.group_hr_user')
+        if profile_view and view_id == profile_view.id and not is_hr_user:
+            self.env.user.groups_id |= hr_user
+
+        result = super(User, self).get_view(
+            view_id=view_id,
+            view_type=view_type,
+            **options
+        )
+
+        if not is_hr_user:
+            self.env.user.groups_id = self.env.user.groups_id.filtered(lambda g: g != hr_user)
         if profile_view and view_id == profile_view.id:
-            self = self.with_user(SUPERUSER_ID)
-        result = super(User, self).get_view(view_id, view_type, **options)
-        # Due to using the SUPERUSER the result will contain action that the user may not have access too
-        # here we filter out actions that requires special implicit rights to avoid having unusable actions
-        # in the dropdown menu.
-        if options.get('toolbar') and self.env.user != original_user:
-            self = self.with_user(original_user.id)
-            if not self.user_has_groups("base.group_erp_manager"):
-                change_password_action = self.env.ref("base.change_password_wizard_action")
-                result['toolbar']['action'] = [act for act in result['toolbar']['action'] if act['id'] != change_password_action.id]
+            result['arch'] = result['arch'].replace('edit="false"', '')
+
         return result
 
     @api.model_create_multi
