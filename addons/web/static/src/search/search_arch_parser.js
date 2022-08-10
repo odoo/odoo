@@ -224,7 +224,7 @@ export class SearchArchParser extends XMLParser {
             const modifiers = JSON.parse(node.getAttribute("modifiers"));
             if (modifiers.invisible) {
                 preSearchItem.invisible = true;
-                let fieldName = preSearchItem.fieldName;
+                const fieldName = preSearchItem.fieldName;
                 if (fieldName && !this.fields[fieldName]) {
                     // In some case when a field is limited to specific groups
                     // on the model, we need to ensure to discard related filter
@@ -236,6 +236,7 @@ export class SearchArchParser extends XMLParser {
         preSearchItem.groupNumber = this.groupNumber;
         if (node.hasAttribute("name")) {
             const name = node.getAttribute("name");
+            preSearchItem.name = name;
             if (name in this.searchDefaults) {
                 preSearchItem.isDefault = true;
                 if (["groupBy", "dateGroupBy"].includes(preSearchItem.type)) {
