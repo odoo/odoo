@@ -850,6 +850,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest2.min.js')], order='create_date DESC', limit=1)
         content = attach.raw.decode()
+        print(content)
         self.assertStringEqual(
             content,
             '''

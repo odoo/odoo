@@ -23,13 +23,14 @@ except ImportError:
 from odoo import release, SUPERUSER_ID
 from odoo.http import request
 from odoo.modules.module import get_resource_path
-from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator, profiler
+from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator, profiler, config
 from odoo.tools.misc import file_open, html_escape as escape
 from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
 
 EXTENSIONS = (".js", ".css", ".scss", ".sass", ".less")
+
 
 class CompileError(RuntimeError): pass
 def rjsmin(script):
@@ -183,12 +184,7 @@ class AssetsBundle(object):
     @func.lazy_property
     def last_modified(self):
         """Returns last modified date of linked files"""
-        assets = [WebAsset(self, url=f['url'], filename=f['filename'], inline=f['content'])
-            for f in self.files
-            if f['atype'] in ['text/sass', "text/scss", "text/less", "text/css", "text/javascript"]]
-        return max(itertools.chain(
-            (asset.last_modified for asset in assets),
-        ))
+        return max(asset.last_modified for asset in itertools.chain(self.stylesheets, self.javascripts))
 
     @func.lazy_property
     def version(self):
@@ -369,6 +365,8 @@ class AssetsBundle(object):
 
         if not attachments:
             if is_minified:
+                # /!\ first loading may be slower for a single bundle (write time)(no reuse)
+
                 content = ';\n'.join(asset.minify() for asset in self.javascripts)
                 return self.save_attachment(extension, content)
             else:
@@ -807,6 +805,43 @@ class WebAsset(object):
             content = self.content
         return f'\n/* {self.name} */\n{content}'
 
+    @func.lazy_property
+    def cache_dir(self):
+        cache_dir = os.path.join(config['data_dir'], 'compiled_files')
+        if not os.path.isdir(cache_dir):
+            os.makedirs(cache_dir)
+        return cache_dir
+
+    def cached(self, content_callable, type):
+        # generate a simple uniquifier to avoid (unlikely) collisions because of path separator replacement
+        path_hash = hashlib.sha1(self._filename.encode()).hexdigest()[:4]
+        path_filename = self._filename.replace(os.sep, '_')
+        compile_filename = f'{path_filename}.{path_hash}.{type}'
+        filepath = os.path.join(self.cache_dir, compile_filename)
+
+        compiled_timestamp = os.path.isfile(filepath) and os.path.getmtime(filepath)
+        asset_timestamp = self.last_modified.timestamp()
+
+        if compiled_timestamp and compiled_timestamp == asset_timestamp:
+            with open(filepath, 'r') as f:
+                return f.read()
+        else:
+            content = content_callable()
+            # write a temporary file and atomicaly rename it to avoid write concurrency/truncated files.
+            temp_path = f'{filepath}.temp.{uuid.uuid4()}'
+            with open(temp_path, 'w') as f:
+                f.write(content)
+            try:
+                os.utime(temp_path, (asset_timestamp, asset_timestamp))
+                if compiled_timestamp:
+                    os.unlink(filepath) # shouldn't be needed on unix
+                os.rename(temp_path, filepath)
+            except OSError:
+                pass
+                # rename may raise à FileExistsError on windows if the file was created before concurrently
+                # Should be silent en replace the existing one on unix
+            return content
+
 
 class JavascriptAsset(WebAsset):
 
@@ -824,8 +859,15 @@ class JavascriptAsset(WebAsset):
             return self._converted_content
         return content
 
+    def _minify(self):
+        return rjsmin(self.content)
+
     def minify(self):
-        return self.with_header(rjsmin(self.content))
+        if self.inline or not self._filename:
+            minified = self._minify()
+        else:
+            minified = self.cached(self._minify, 'min')
+        return self.with_header(minified)
 
     def _fetch_content(self):
         try:
