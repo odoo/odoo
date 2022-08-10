@@ -3,7 +3,8 @@ import { makeView } from "../helpers";
 import { setupViewRegistries } from "@web/../tests/views/helpers";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { registry } from "@web/core/registry";
-import { click, getFixture } from "../../helpers/utils";
+import { click, getFixture, patchWithCleanup } from "../../helpers/utils";
+import { createElement } from "@web/core/utils/xml";
 
 function compileTemplate(arch) {
     const parser = new DOMParser();
@@ -370,5 +371,27 @@ QUnit.module("Form Renderer", (hooks) => {
         });
 
         assert.containsOnce(target, "button[id=action_button]");
+    });
+
+    QUnit.test("invisible is correctly computed with another t-if", (assert) => {
+        patchWithCleanup(FormCompiler.prototype, {
+            setup() {
+                this._super();
+                this.compilers.push({
+                    selector: "myNode",
+                    fn: () => {
+                        const div = createElement("div");
+                        div.className = "myNode";
+                        div.setAttribute("t-if", "myCondition or myOtherCondition");
+                        return div;
+                    },
+                });
+            },
+        });
+
+        const arch = `<myNode modifiers="{&quot;invisible&quot;: [[&quot;field&quot;, &quot;=&quot;, &quot;value&quot;]]}" />`;
+
+        const expected = `<t><div class="myNode" t-if="( myCondition or myOtherCondition ) and !evalDomainFromRecord(props.record,[[&quot;field&quot;,&quot;=&quot;,&quot;value&quot;]])" t-ref="compiled_view_root"/></t>`;
+        assert.areEquivalent(compileTemplate(arch), expected);
     });
 });
