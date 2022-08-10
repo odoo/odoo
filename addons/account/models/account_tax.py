@@ -807,8 +807,7 @@ class AccountTax(models.Model):
             'analytic_account_id': line_vals['analytic_account'].id if tax.analytic else False,
         }
 
-    def _compute_taxes(self, base_lines, tax_lines=None,
-                       handle_price_include=True, include_caba_tags=False):
+    def _compute_taxes(self, base_lines, tax_lines=None, handle_price_include=True, include_caba_tags=False, early_payment_term=None):
         """ Generic method to compute the taxes for different business models.
 
         :param base_lines: A list of python dictionaries created using the '_convert_to_tax_base_line_dict' method.
@@ -816,6 +815,7 @@ class AccountTax(models.Model):
         :param handle_price_include:    Manage the price-included taxes. If None, use the 'handle_price_include' key
                                         set on base lines.
         :param include_caba_tags: Manage tags for taxes being exigible on_payment.
+        :param early_payment_term:  The payment term to consider for the early payment discount.
         :return: A python dictionary containing:
 
             The complete diff on tax lines if 'tax_lines' is passed as parameter:
@@ -852,9 +852,14 @@ class AccountTax(models.Model):
 
         base_line_map = {}
         for line_vals in base_lines:
-            price_unit_after_discount = line_vals['price_unit'] * (1 - (line_vals['discount'] / 100.0))
+            orig_price_unit_after_discount = line_vals['price_unit'] * (1 - (line_vals['discount'] / 100.0))
+            price_unit_after_discount = orig_price_unit_after_discount
             taxes = line_vals['taxes']._origin
             currency = line_vals['currency'] or self.env.company.currency_id
+
+            if early_payment_term and early_payment_term.has_early_payment:
+                remaining_part_to_consider = (100 - early_payment_term.percentage_to_discount) / 100.0
+                price_unit_after_discount = remaining_part_to_consider * price_unit_after_discount
 
             if taxes:
 
@@ -879,6 +884,24 @@ class AccountTax(models.Model):
                     'price_subtotal': taxes_res['total_excluded'],
                     'price_total': taxes_res['total_included'],
                 }
+
+                if early_payment_term \
+                        and early_payment_term.has_early_payment \
+                        and early_payment_term.discount_computation == 'excluded':
+                    new_taxes_res = taxes.with_context(**line_vals['extra_context']).compute_all(
+                        orig_price_unit_after_discount,
+                        currency=currency,
+                        quantity=line_vals['quantity'],
+                        product=line_vals['product'],
+                        partner=line_vals['partner'],
+                        is_refund=line_vals['is_refund'],
+                        handle_price_include=manage_price_include,
+                        include_caba_tags=include_caba_tags,
+                    )
+                    for tax_res, new_taxes_res in zip(taxes_res['taxes'], new_taxes_res['taxes']):
+                        delta_tax = new_taxes_res['amount'] - tax_res['amount']
+                        tax_res['amount'] += delta_tax
+                        to_update_vals['price_total'] += delta_tax
 
                 for tax_res in taxes_res['taxes']:
                     grouping_dict = self._get_generation_dict_from_base_line(line_vals, tax_res)
@@ -1006,13 +1029,14 @@ class AccountTax(models.Model):
             })
         return tax_group_vals_list
 
-    def _prepare_tax_totals(self, base_lines, currency, tax_lines=None):
+    def _prepare_tax_totals(self, base_lines, currency, tax_lines=None, early_payment_term=None):
         """ Compute the tax totals details for the business documents.
-        :param base_lines:  A list of python dictionaries created using the '_convert_to_tax_base_line_dict' method.
-        :param currency:    The currency set on the business document.
-        :param tax_lines:   Optional list of python dictionaries created using the '_convert_to_tax_line_dict' method.
-                            If specified, the taxes will be recomputed using them instead of recomputing the taxes on
-                            the provided base lines.
+        :param base_lines:          A list of python dictionaries created using the '_convert_to_tax_base_line_dict' method.
+        :param currency:            The currency set on the business document.
+        :param tax_lines:           Optional list of python dictionaries created using the '_convert_to_tax_line_dict' method.
+                                    If specified, the taxes will be recomputed using them instead of recomputing the taxes on
+                                    the provided base lines.
+        :param early_payment_term:  The payment term to consider for the early payment discount.
         :return: A dictionary in the following form:
             {
                 'amount_total':                 The total amount to be displayed on the document, including every total
@@ -1062,6 +1086,7 @@ class AccountTax(models.Model):
             tax_results = self._compute_taxes(
                 base_lines,
                 tax_lines=tax_lines,
+                early_payment_term=early_payment_term,
             )
 
             for base_line_vals, to_update in tax_results['base_lines_to_update']:
