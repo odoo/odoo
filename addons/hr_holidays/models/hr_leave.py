@@ -4,6 +4,7 @@
 # Copyright (c) 2005-2006 Axelor SARL. (http://www.axelor.com)
 
 import logging
+import pytz
 
 from collections import namedtuple, defaultdict
 
@@ -1201,11 +1202,13 @@ class HolidaysRequest(models.Model):
 
         # Post a second message, more verbose than the tracking message
         for holiday in self.filtered(lambda holiday: holiday.employee_id.user_id):
+            user_tz = timezone(holiday.tz)
+            utc_tz = pytz.utc.localize(holiday.date_from).astimezone(user_tz)
             holiday.message_post(
                 body=_(
                     'Your %(leave_type)s planned on %(date)s has been accepted',
                     leave_type=holiday.holiday_status_id.display_name,
-                    date=holiday.date_from
+                    date=utc_tz.replace(tzinfo=None)
                 ),
                 partner_ids=holiday.employee_id.user_id.partner_id.ids)
 
