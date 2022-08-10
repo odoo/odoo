@@ -22,11 +22,18 @@ import json
 from lxml import etree
 from contextlib import closing
 from distutils.version import LooseVersion
-from reportlab.graphics.barcode import createBarcodeDrawing
 from PyPDF2 import PdfFileWriter, PdfFileReader, utils
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
+
+# Ignore a deprecation warning `load_module` usage in importlib from python 3.10 (Jammy)
+# Catched here in order to not miss the same warning from elsewhere
+import warnings
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from reportlab.graphics.barcode import createBarcodeDrawing
+
 # Allow truncated images
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
