@@ -191,6 +191,12 @@ class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
         cls.email_1 = 'test1@example.com'
         cls.email_2 = 'test2@example.com'
         cls.email_3 = cls.partner_1.email
+        # template with emails derived from template (assumes templates are processed in this form)
+        cls.template_emails_template = cls._create_template('mail.test.simple', {
+            'email_from': "${'test@test.test'}",
+            'email_to': "${'test@test.test'}",
+            'email_cc': "${'test@test.test'}",
+        })
         cls.email_template = cls._create_template('mail.test.simple', {
             'attachment_ids': [(0, 0, cls._attachments[0]), (0, 0, cls._attachments[1])],
             'partner_to': '%s,%s' % (cls.partner_2.id, cls.user_admin.partner_id.id),
@@ -346,7 +352,7 @@ class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
             body_content=self.test_record.name,
             email_from='"%s" <dynamic.from@test.com>' % self.test_record.name,
             subject='About %s' % self.test_record.name,
-            # reply_to='"%s" <dynamic.from@test.com>' % self.test_record.name,  # FIXME: currently failing (non rendered jinja)
+            reply_to='"%s" <dynamic.from@test.com>' % self.test_record.name,
         )
         self._mails = self._mails_record2
         self.assertEmails(
@@ -355,7 +361,7 @@ class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
             body_content=test_record_2.name,
             email_from='"%s" <dynamic.from@test.com>' % test_record_2.name,
             subject='About %s' % test_record_2.name,
-            # reply_to='"%s" <dynamic.from@test.com>' % test_record_2.name,  # FIXME: currently failing (non rendered jinja)
+            reply_to='"%s" <dynamic.from@test.com>' % test_record_2.name,
         )
 
     def test_composer_template_save(self):
