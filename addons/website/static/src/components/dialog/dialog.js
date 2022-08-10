@@ -106,14 +106,14 @@ AddPageDialog.template = xml`
     primaryTitle="primaryTitle"
     primaryClick="() => this.addPage()"
     close="props.close">
-    <div class="form-group row">
+    <div class="row gy-4">
         <label class="col-form-label col-md-3">
             Page Title
         </label>
         <div class="col-md-9">
             <input type="text" t-model="state.name" class="form-control" required="required" t-ref="autofocus"/>
         </div>
+        <Switch extraClasses="'offset-md-3 col-md-9 text-start'" label="switchLabel" value="state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
     </div>
-    <Switch extraClasses="'offset-md-3 col-md-9 text-start'" label="switchLabel" value="state.addMenu" onChange="(value) => this.onChangeAddMenu(value)"/>
 </WebsiteDialog>
 `;
