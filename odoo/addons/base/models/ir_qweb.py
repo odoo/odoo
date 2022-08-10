@@ -365,6 +365,7 @@ import logging
 import math
 import re
 import textwrap
+import time
 import token
 import tokenize
 import traceback
@@ -381,7 +382,7 @@ from odoo import api, models, tools
 from odoo.tools import config, safe_eval, pycompat, SUPPORTED_DEBUGGER
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.json import scriptsafe
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import get_lang, str2bool
 from odoo.tools.image import image_data_uri
 from odoo.http import request
 from odoo.modules.module import get_resource_path
@@ -2507,6 +2508,40 @@ class IrQWeb(models.AbstractModel):
     def _get_asset_link_urls(self, bundle, debug=False):
         asset_nodes = self._get_asset_nodes(bundle, js=False, debug=debug)
         return [node[1]['href'] for node in asset_nodes if node[0] == 'link']
+
+    def _pregenerate_assets_bundles(self):
+        """
+        Pregenerates all assets that may be used in web pages to speedup first loading.
+        This may is mainly usefull for tests.
+
+        The current version is looking for all t-call-assets in view to generate the minimal
+        set of bundles to generate.
+
+        Current version only generate assets without extra, not taking care of rtl.
+        """
+        _logger.runbot('Pregenerating assets bundles')
+
+        views = self.env['ir.ui.view'].search([('type', '=', 'qweb'), ('arch_db', 'like', 't-call-assets')])
+        js_bundles = set()
+        css_bundles = set()
+        for view in views:
+            for call_asset in etree.fromstring(view.arch_db).xpath("//*[@t-call-assets]"):
+                asset = call_asset.get('t-call-assets')
+                js = str2bool(call_asset.get('t-js', 'True'))
+                css = str2bool(call_asset.get('t-css', 'True'))
+                if js:
+                    js_bundles.add(asset)
+                if css:
+                    css_bundles.add(asset)
+
+        start = time.time()
+        for bundle in sorted(js_bundles):
+            self._generate_asset_nodes(bundle, css=False, js=True)
+        _logger.info('JS Assets bundles generated in %s seconds', time.time()-start)
+        start = time.time()
+        for bundle in sorted(css_bundles):
+            self._generate_asset_nodes(bundle, css=True, js=False)
+        _logger.info('CSS Assets bundles generated in %s seconds', time.time()-start)
 
 def render(template_name, values, load, **options):
     """ Rendering of a qweb template without database and outside the registry.

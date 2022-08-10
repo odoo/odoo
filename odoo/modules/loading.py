@@ -579,7 +579,11 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
         else:
             _logger.error('At least one test failed when loading the modules.')
 
-        # STEP 8: call _register_hook on every model
+
+        # STEP 8: save installed/updated modules for post-install tests and _register_hook
+        registry.updated_modules += processed_modules
+
+        # STEP 9: call _register_hook on every model
         # This is done *exactly once* when the registry is being loaded. See the
         # management of those hooks in `Registry.setup_models`: all the calls to
         # setup_models() done here do not mess up with hooks, as registry.ready
@@ -589,8 +593,6 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
             model._register_hook()
         env.flush_all()
 
-        # STEP 9: save installed/updated modules for post-install tests
-        registry.updated_modules += processed_modules
 
 def reset_modules_state(db_name):
     """
