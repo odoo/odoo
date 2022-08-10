@@ -54,6 +54,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             vals.pop('registration_name', None)
             vals.pop('registration_address_vals', None)
 
+            # /!\ For Australian companies, the ABN is encoded on the VAT field, but doesn't have the 2 digits prefix,
+            # causing a validation error
+            if partner.country_id.code == "AU" and partner.vat and not partner.vat.upper().startswith("AU"):
+                vals['company_id'] = "AU" + partner.vat
+
         # sources:
         #  https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_applying_foretaksregisteret
         #  https://docs.peppol.eu/poacc/billing/3.0/bis/#national_rules (NO-R-002 (warning))
@@ -117,6 +122,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     'endpoint_id': partner.l10n_nl_kvk,
                     'endpoint_id_attrs': {'schemeID': '0106'},
                 })
+        if partner.country_id.code == 'SG' and 'l10n_sg_unique_entity_number' in partner._fields:
+            vals.update({
+                'endpoint_id': partner.l10n_sg_unique_entity_number,
+                'endpoint_id_attrs': {'schemeID': '0195'},
+            })
 
         return vals
 
