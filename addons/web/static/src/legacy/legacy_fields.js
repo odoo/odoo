@@ -347,6 +347,7 @@ function registerField(name, LegacyFieldWidget) {
     LegacyField.fieldsToFetch = LegacyFieldWidget.prototype.fieldsToFetch || {};
     LegacyField.fieldDependencies = LegacyFieldWidget.prototype.fieldDependencies || {};
     LegacyField.useSubView = LegacyFieldWidget.prototype.useSubview;
+    LegacyField.noLabel = LegacyFieldWidget.prototype.noLabel || false;
     if (!fieldRegistry.contains(name)) {
         if (odoo.debug) {
             console.log(`Fields: using legacy ${name} FieldWidget`);
