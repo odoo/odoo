@@ -193,44 +193,6 @@
                          data-reload="/"/>
         </div>
         <!-- Product image -->
-        <div data-js="WebsiteSaleProductPage" data-selector="#product_detail_main" data-no-check="true">
-            <we-button-group string="Images Width" data-no-preview="true" data-reload="/">
-                <we-button data-set-image-width="none" data-img="/website_sale/static/src/img/snippet_options/image-width-none.svg" title="None"/>
-                <we-button data-set-image-width="50_pc" data-img="/website_sale/static/src/img/snippet_options/image-width-50.svg" title="50 percent"/>
-                <we-button data-set-image-width="66_pc" data-img="/website_sale/static/src/img/snippet_options/image-width-66.svg" title="66 percent"/>
-                <we-button data-set-image-width="100_pc" data-img="/website_sale/static/src/img/snippet_options/image-width-100.svg" title="100 percent"/>
-            </we-button-group>
-            <we-select string="Layout" data-no-preview="true" data-reload="/">
-                <we-button data-set-image-layout="carousel">Carousel</we-button>
-                <we-button data-set-image-layout="grid">Grid</we-button>
-            </we-select>
-            <we-row string="Main image">
-                <we-button class="o_we_bg_brand_primary" data-replace-main-image="true" data-no-preview="true">Replace</we-button>
-            </we-row>
-            <we-row string="Extra Images">
-                <we-button class="o_we_bg_success" data-add-images="true" data-no-preview="true">Add</we-button>
-                <we-button class="o_we_bg_danger" data-clear-images="true" data-no-preview="true">Remove all</we-button>
-            </we-row>
-        </div>
-        <div data-selector="#product_detail #o-carousel-product" data-no-check="true">
-            <we-select string="Image Zoom" data-no-preview="true" data-reload="/">
-                <we-button data-customize-website-views="">None</we-button>
-                <we-button data-customize-website-views="website_sale.product_picture_magnify">On click</we-button>
-                <we-button data-customize-website-views="website_sale.product_picture_magnify_auto">On hover</we-button>
-            </we-select>
-            <we-button-group string="Thumbnails Position" data-no-preview="true" data-reload="/">
-                <we-button class="fa fa-fw fa-long-arrow-left" title="Left" data-customize-website-views="website_sale.carousel_product_indicators_left"/>
-                <we-button class="fa fa-fw fa-long-arrow-down" title="Bottom" data-customize-website-views="website_sale.carousel_product_indicators_bottom"/>
-            </we-button-group>
-        </div>
-        <div data-js="WebsiteSaleProductPageGrid" data-selector="#product_detail #o-grid-product" data-no-check="true">
-            <we-range string="Image Spacing" data-no-preview="true" data-reload="/" data-max="3" data-step="1" data-set-spacing=""/>
-            <we-select string="Columns" data-no-preview="true" data-reload="/">
-                <we-button data-set-columns="1">1</we-button>
-                <we-button data-set-columns="2">2</we-button>
-                <we-button data-set-columns="3">3</we-button>
-            </we-select>
-        </div>
         <div data-js="WebsiteSaleProductAttribute" data-selector="#product_detail .o_wsale_product_attribute" data-no-check="true">
             <we-select string="Display Type" data-no-preview="true">
                 <we-button data-set-display-type="radio">Radio</we-button>
@@ -240,7 +202,7 @@
             </we-select>
         </div>
         <!-- Product page -->
-        <div data-selector="main:has(.o_wsale_product_page)" data-page-options="true" data-no-check="true" string="Product Page">
+        <div data-js="WebsiteSaleProductPage" data-selector="main:has(.o_wsale_product_page)" data-page-options="true" data-no-check="true" string="Product Page">
             <we-row string="Customers" class="o_we_full_row">
                 <we-button string="Rating"
                            data-customize-website-views="website_sale.product_comment"
@@ -260,12 +222,47 @@
                 <we-button data-name="variants_options_opt" data-customize-website-views="">Options</we-button>
                 <we-button data-name="variants_products_list_opt" data-customize-website-views="website_sale.product_variants">Products List</we-button>
             </we-select>
-            <we-row string="Cart" class="o_we_full_row">
+            <we-row string="Cart" class="o_we_full_row" data-name="o_wsale_buy_now_opt">
                 <we-button title="Buy Now" class="fa fa-fw fa-bolt o_we_buy_now_btn"
                            data-customize-website-views="website_sale.product_buy_now"
                            data-no-preview="true"
                            data-reload="/"/>
             </we-row>
+            <!-- Image config -->
+            <we-button-group string="Images Width" data-no-preview="true" data-reload="/">
+                <we-button data-set-image-width="none" data-img="/website_sale/static/src/img/snippet_options/image-width-none.svg" title="None"/>
+                <we-button data-set-image-width="50_pc" data-img="/website_sale/static/src/img/snippet_options/image-width-50.svg" title="50 percent"/>
+                <we-button data-set-image-width="66_pc" data-img="/website_sale/static/src/img/snippet_options/image-width-66.svg" title="66 percent"/>
+                <we-button data-set-image-width="100_pc" data-img="/website_sale/static/src/img/snippet_options/image-width-100.svg" title="100 percent"/>
+            </we-button-group>
+            <we-select string="Layout" data-no-preview="true" data-reload="/">
+                <we-button data-set-image-layout="carousel">Carousel</we-button>
+                <we-button data-set-image-layout="grid">Grid</we-button>
+            </we-select>
+            <!-- Carousel config -->
+            <we-button-group string="Thumbnails" class="o_we_sublevel_1" data-name="o_wsale_thumbnail_pos" data-no-preview="true" data-reload="/">
+                <we-button class="fa fa-fw fa-long-arrow-left" title="Left" data-customize-website-views="website_sale.carousel_product_indicators_left"/>
+                <we-button class="fa fa-fw fa-long-arrow-down" title="Bottom" data-customize-website-views="website_sale.carousel_product_indicators_bottom"/>
+            </we-button-group>
+            <!-- Grid config -->
+            <we-range string="Image Spacing" class="o_we_sublevel_1" data-name="o_wsale_grid_spacing" data-no-preview="true" data-reload="/" data-max="3" data-step="1" data-set-spacing=""/>
+            <we-select string="Columns" class="o_we_sublevel_1" data-name="o_wsale_grid_columns"  data-no-preview="true" data-reload="/">
+                <we-button data-set-columns="1">1</we-button>
+                <we-button data-set-columns="2">2</we-button>
+                <we-button data-set-columns="3">3</we-button>
+            </we-select>
+            <we-row string="Main image">
+                <we-button class="o_we_bg_brand_primary" data-replace-main-image="true" data-no-preview="true">Replace</we-button>
+            </we-row>
+            <we-row string="Extra Images">
+                <we-button class="o_we_bg_success" data-add-images="true" data-no-preview="true">Add</we-button>
+                <we-button class="o_we_bg_danger" data-clear-images="true" data-no-preview="true">Remove all</we-button>
+            </we-row>
+            <we-select string="Image Zoom" data-no-preview="true" data-reload="/">
+                <we-button data-customize-website-views="">None</we-button>
+                <we-button data-customize-website-views="website_sale.product_picture_magnify">On click</we-button>
+                <we-button data-customize-website-views="website_sale.product_picture_magnify_auto">On hover</we-button>
+            </we-select>
         </div>
         <!-- Checkout page  -->
         <div data-selector="main:has(.oe_website_sale .wizard)" data-page-options="true" data-no-check="true" string="Checkout Pages">
