@@ -23,7 +23,7 @@ class ProductTemplate(models.Model):
         virtual_available = 0
         if product:
             website = self.env['website'].get_current_website()
-            product = product.sudo().with_context(warehouse=website.warehouse_id.id)
+            product = product.sudo().with_context(warehouse=website._get_warehouse_available())
             virtual_available = product.virtual_available
             add_qty = min(add_qty, virtual_available)
 
