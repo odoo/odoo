@@ -949,10 +949,6 @@ registerModel({
          */
         async setMainAttachment(attachment) {
             this.update({ mainAttachment: attachment });
-            if (this.model === 'account.move.line') {
-                // account.move.line is not actually a thread in python
-                return;
-            }
             await this.messaging.rpc({
                 model: 'ir.attachment',
                 method: 'register_as_main_attachment',
