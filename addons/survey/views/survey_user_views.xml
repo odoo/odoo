@@ -119,8 +119,9 @@
             <tree string="Survey User inputs" decoration-muted="test_entry == True" create="false">
                 <field name="create_date"/>
                 <field name="survey_id"/>
-                <field name="partner_id"/>
-                <field name="email"/>
+                <field name="nickname" optional="hide"/>
+                <field name="partner_id" optional="show"/>
+                <field name="email" optional="show"/>
                 <field name="attempts_number"/>
                 <field name="deadline"/>
                 <field name="test_entry" invisible="True"/>
