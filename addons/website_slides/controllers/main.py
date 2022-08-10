@@ -345,6 +345,19 @@ class WebsiteSlides(WebsiteProfile):
 
         return request.render('website_slides.courses_home', render_values)
 
+    def _get_slide_channel_search_options(self, my=None, slug_tags=None, slide_category=None, **post):
+        return {
+            'displayDescription': True,
+            'displayDetail': False,
+            'displayExtraDetail': False,
+            'displayExtraLink': False,
+            'displayImage': False,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'my': my,
+            'tag': slug_tags or post.get('tag'),
+            'slide_category': slide_category,
+        }
+
     @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True)
     def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
         if slug_tags and request.httprequest.method == 'GET':
@@ -375,17 +388,12 @@ class WebsiteSlides(WebsiteProfile):
 
            * ``search``: filter on course description / name;
         """
-        options = {
-            'displayDescription': True,
-            'displayDetail': False,
-            'displayExtraDetail': False,
-            'displayExtraLink': False,
-            'displayImage': False,
-            'allowFuzzy': not post.get('noFuzzy'),
-            'my': my,
-            'tag': slug_tags or post.get('tag'),
-            'slide_category': slide_category,
-        }
+        options = self._get_slide_channel_search_options(
+            my=my,
+            slug_tags=slug_tags,
+            slide_category=slide_category,
+            **post
+        )
         search = post.get('search')
         order = self._channel_order_by_criterion.get(post.get('sorting'))
         _, details, fuzzy_search_term = request.website._search_with_fuzzy("slide_channels_only", search,

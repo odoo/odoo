@@ -32,6 +32,20 @@ class WebsiteEventController(http.Controller):
     # EVENT LIST
     # ------------------------------------------------------------
 
+    def _get_events_search_options(self, **post):
+        return {
+            'displayDescription': False,
+            'displayDetail': False,
+            'displayExtraDetail': False,
+            'displayExtraLink': False,
+            'displayImage': False,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'date': post.get('date'),
+            'tags': post.get('tags'),
+            'type': post.get('type'),
+            'country': post.get('country'),
+        }
+
     @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>'], type='http', auth="public", website=True, sitemap=sitemap_event)
     def events(self, page=1, **searches):
         Event = request.env['event.event']
@@ -47,18 +61,7 @@ class WebsiteEventController(http.Controller):
 
         step = 12  # Number of events per page
 
-        options = {
-            'displayDescription': False,
-            'displayDetail': False,
-            'displayExtraDetail': False,
-            'displayExtraLink': False,
-            'displayImage': False,
-            'allowFuzzy': not searches.get('noFuzzy'),
-            'date': searches.get('date'),
-            'tags': searches.get('tags'),
-            'type': searches.get('type'),
-            'country': searches.get('country'),
-        }
+        options = self._get_events_search_options(**searches)
         order = 'date_begin'
         if searches.get('date', 'upcoming') == 'old':
             order = 'date_begin desc'
