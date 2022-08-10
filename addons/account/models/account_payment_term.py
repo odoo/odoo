@@ -4,6 +4,7 @@ from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 
 from dateutil.relativedelta import relativedelta
+from datetime import timedelta
 
 
 class AccountPaymentTerm(models.Model):
@@ -20,6 +21,17 @@ class AccountPaymentTerm(models.Model):
     line_ids = fields.One2many('account.payment.term.line', 'payment_id', string='Terms', copy=True, default=_default_line_ids)
     company_id = fields.Many2one('res.company', string='Company')
     sequence = fields.Integer(required=True, default=10)
+
+    # -------Early payment discount fields-------
+    early_payment_applicable = fields.Boolean(string="True if the conditions required to offer an EPD are fulfilled.", compute="_compute_early_payment_applicable")
+    has_early_payment = fields.Boolean(string="Apply Early Payment Discount", compute="_compute_has_early_payment", readonly=False, store=True)
+    percentage_to_discount = fields.Float("Discount", digits='Discount', default=2)
+    discount_computation = fields.Selection([
+        ('included', 'Tax included'),
+        ('excluded', 'Tax excluded'),
+       ], string='Computation', default='included')
+    discount_days = fields.Integer(string='Availability', required=True, default=7)
+    discount_account_id = fields.Many2one(comodel_name='account.account', string='Counterpart Account')
 
     @api.constrains('line_ids')
     def _check_lines(self):
@@ -94,6 +106,32 @@ class AccountPaymentTerm(models.Model):
                 [('value_reference', 'in', ['account.payment.term,%s'%payment_term.id for payment_term in terms])]
             ).unlink()
         return super(AccountPaymentTerm, self).unlink()
+
+    @api.depends('line_ids')
+    def _compute_early_payment_applicable(self):
+        for term in self:
+            term.early_payment_applicable = not any(line.value != 'balance' for line in term.line_ids)
+
+    @api.depends('early_payment_applicable')
+    def _compute_has_early_payment(self):
+        for term in self:
+            if not term.early_payment_applicable:
+                term.has_early_payment = False
+
+    @api.onchange('discount_days')
+    def _onchange_discount_days(self):
+        if self.discount_days <= 0:
+            raise ValidationError(_("The discount availability must be strictly positive."))
+
+    @api.onchange('percentage_to_discount')
+    def _onchange_percentage_to_discount(self):
+        if self.percentage_to_discount <= 0:
+            raise ValidationError(_("The discount percentage must be strictly positive."))
+        if self.percentage_to_discount > 100:
+            raise ValidationError(_("The discount percentage cannot exceed 100."))
+
+    def _get_last_date_for_discount(self, move_date):
+        return move_date + timedelta(days=self.discount_days)
 
 
 class AccountPaymentTermLine(models.Model):

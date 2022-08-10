@@ -809,74 +809,126 @@ class AccountReconcileModel(models.Model):
         return self.env['res.partner']
 
     def _get_invoice_matching_amls_result(self, st_line, partner, candidate_vals):
+        def _create_result_dict(amls_values_list, status):
+            if 'rejected' in status:
+                return
+
+            result = {
+                'amls': self.env['account.move.line'],
+                'amls_values_list': amls_values_list,
+            }
+            for aml_values in amls_values_list:
+                result['amls'] |= aml_values['aml']
+
+            if 'allow_write_off' in status and self.line_ids:
+                result['status'] = 'write_off'
+
+            if 'allow_auto_reconcile' in status and candidate_vals['allow_auto_reconcile'] and self.auto_reconcile:
+                result['auto_reconcile'] = True
+
+            return result
+
         st_line_currency = st_line.foreign_currency_id or st_line.currency_id
+        st_line_amount = st_line._prepare_move_line_default_vals()[1]['amount_currency']
+        sign = 1 if st_line_amount > 0.0 else -1
 
         amls = candidate_vals['amls']
-        if amls.currency_id == st_line_currency:
-            st_line_amount = st_line._prepare_move_line_default_vals()[1]['amount_currency']
-            sign = 1 if st_line_amount > 0.0 else -1
+        amls_values_list = []
+        same_currency_mode = amls.currency_id == st_line_currency
+        for aml in amls:
+            extra_aml_values = {}
 
-            kepts_amls = self.env['account.move.line']
-            sum_aml_residual = 0.0
-            for aml in amls:
+            amount_residual = aml.amount_residual
+            amount_residual_currency = aml.amount_residual_currency
 
-                if st_line_currency.compare_amounts(st_line_amount, -aml.amount_residual_currency) == 0:
+            # Manage the early payment discount.
+            if same_currency_mode and aml.move_id._is_eligible_for_early_discount(st_line.date):
+                amount_residual = aml.move_id.amount_total_signed
+                amount_residual_currency = -aml.move_id.invoice_early_pay_amount_after_discount * sign
+                discounted_balance = aml.amount_residual_currency - amount_residual_currency
+
+                if aml.move_id.move_type == 'out_invoice':
+                    account = aml.company_id.account_journal_cash_discount_expense_id
+                else:
+                    account = aml.company_id.account_journal_cash_discount_income_id
+
+                extra_aml_values['early_payment_vals'] = {
+                    'name': _("%s - Early Payment Discount", aml.display_name),
+                    'account': account,
+                    'balance': discounted_balance,
+                }
+
+            amls_values_list.append({
+                'aml': aml,
+                'amount_residual': amount_residual,
+                'amount_residual_currency': amount_residual_currency,
+                **extra_aml_values,
+            })
+
+        kepts_amls_values_list = []
+        sum_amount_residual_currency = 0.0
+        if same_currency_mode:
+            for aml_values in amls_values_list:
+
+                if st_line_currency.compare_amounts(st_line_amount, -aml_values['amount_residual_currency']) == 0:
                     # Special case: the amounts are the same, submit the line directly.
-                    kepts_amls = aml
+                    kepts_amls_values_list = [aml_values]
                     break
 
-                elif st_line_currency.compare_amounts(sign * (st_line_amount + sum_aml_residual), 0.0) > 0:
+                if st_line_currency.compare_amounts(sign * (st_line_amount + sum_amount_residual_currency), 0.0) > 0:
                     # Here, we still have room for other candidates ; so we add the current one to the list we keep.
                     # Then, we continue iterating, even if there is no room anymore, just in case one of the following candidates
                     # is an exact match, which would then be preferred on the current candidates.
-                    kepts_amls |= aml
-                    sum_aml_residual += aml.amount_residual_currency
-        else:
-            kepts_amls = amls
+                    kepts_amls_values_list.append(aml_values)
+                    sum_amount_residual_currency += aml_values['amount_residual_currency']
 
-        # We check the amount criteria of the reconciliation model, and select the
-        # kept_candidates if they pass the verification.
-        status = self._check_rule_propositions(st_line, kepts_amls)
-        if 'rejected' in status:
-            return None
+        # Try to match the amls having the same currency as the statement line.
+        if kepts_amls_values_list:
+            status = self._check_rule_propositions(st_line, kepts_amls_values_list)
+            result = _create_result_dict(kepts_amls_values_list, status)
+            if result:
+                return result
 
-        rslt = {'amls': kepts_amls}
+        # Try to match the whole candidates.
+        if amls:
+            status = self._check_rule_propositions(st_line, amls_values_list)
+            result = _create_result_dict(amls_values_list, status)
+            if result:
+                return result
 
-        if 'allow_write_off' in status and self.line_ids:
-            rslt['status'] = 'write_off'
-
-        if 'allow_auto_reconcile' in status and candidate_vals['allow_auto_reconcile'] and self.auto_reconcile:
-            rslt['auto_reconcile'] = True
-
-        return rslt
-
-    def _check_rule_propositions(self, st_line, amls):
+    def _check_rule_propositions(self, st_line, amls_values_list):
         """ Check restrictions that can't be handled for each move.line separately.
         Note: Only used by models having a type equals to 'invoice_matching'.
-
-        :param st_line:     The statement line.
-        :param amls:        The candidates account.move.line.
+        :param st_line:             The statement line.
+        :param amls_values_list:    The candidates account.move.line as a list of dict:
+            * aml:                          The record.
+            * amount_residual:              The amount residual to consider.
+            * amount_residual_currency:     The amount residual in foreign currency to consider.
         :return: A string representing what to do with the candidates:
             * rejected:             Reject candidates.
             * allow_write_off:      Allow to generate the write-off from the reconcile model lines if specified.
             * allow_auto_reconcile: Allow to automatically reconcile entries if 'auto_validate' is enabled.
         """
+        self.ensure_one()
+
         if not self.allow_payment_tolerance:
             return {'allow_write_off', 'allow_auto_reconcile'}
-        if not amls:
-            return {'rejected'}
 
-        currency = st_line.foreign_currency_id or st_line.currency_id
+        st_line_currency = st_line.foreign_currency_id or st_line.currency_id
         st_line_amount_curr = st_line._prepare_move_line_default_vals()[1]['amount_currency']
         amls_amount_curr = sum(
-            st_line._prepare_counterpart_amounts_using_st_line_rate(aml.currency_id, aml.amount_residual, aml.amount_residual_currency)['amount_currency']
-            for aml in amls
+            st_line._prepare_counterpart_amounts_using_st_line_rate(
+                aml_values['aml'].currency_id,
+                aml_values['amount_residual'],
+                aml_values['amount_residual_currency'],
+            )['amount_currency']
+            for aml_values in amls_values_list
         )
         sign = 1 if st_line_amount_curr > 0.0 else -1
         amount_curr_after_rec = sign * (amls_amount_curr + st_line_amount_curr)
 
         # The statement line will be fully reconciled.
-        if currency.is_zero(amount_curr_after_rec):
+        if st_line_currency.is_zero(amount_curr_after_rec):
             return {'allow_auto_reconcile'}
 
         # The payment amount is higher than the sum of invoices.

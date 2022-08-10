@@ -234,6 +234,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
     def _check_statement_matching(self, rules, expected_values_list):
         for statement_line, expected_values in expected_values_list.items():
             res = rules._apply_rules(statement_line, statement_line._retrieve_partner())
+            res.pop('amls_values_list', None)
             self.assertDictEqual(res, expected_values)
 
     def test_matching_fields(self):
@@ -258,20 +259,26 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             match_text_location_reference=False,
             match_text_location_note=False,
         )
+        rslt = rule._apply_rules(st_line, st_line._retrieve_partner())
+        rslt.pop('amls_values_list')
         self.assertDictEqual(
-            rule._apply_rules(st_line, st_line._retrieve_partner()),
+            rslt,
             {'amls': inv1, 'model': rule},
         )
 
         rule.match_text_location_reference = True
+        rslt = rule._apply_rules(st_line, st_line._retrieve_partner())
+        rslt.pop('amls_values_list')
         self.assertDictEqual(
-            rule._apply_rules(st_line, st_line._retrieve_partner()),
+            rslt,
             {'amls': inv2, 'model': rule},
         )
 
         rule.match_text_location_note = True
+        rslt = rule._apply_rules(st_line, st_line._retrieve_partner())
+        rslt.pop('amls_values_list')
         self.assertDictEqual(
-            rule._apply_rules(st_line, st_line._retrieve_partner()),
+            rslt,
             {'amls': inv3, 'model': rule},
         )
 
