@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="x_report_form">
+            <field name="name">x.report.form</field>
+            <field name="model">x.report</field>
+            <field name="arch" type="xml">
+                <form string="X Report">
+                    <group>
+                        <group>
+                            <field name="session_id" domain="[('state', '=', 'opened')]"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Print" name="action_print" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="wizard_x_report_action" model="ir.actions.act_window">
+            <field name="name">X Report</field>
+            <field name="res_model">x.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="x_report_form"/>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+        </record>
+
+    </data>
+</odoo>
