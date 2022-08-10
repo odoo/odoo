@@ -827,11 +827,11 @@ class TestComposerResultsMass(TestMailComposer):
                                 author=self.partner_employee,
                                 email_values={
                                     'email_from': self.partner_employee.email_formatted,
-                                    # 'reply_to': self.partner_employee.email_formatted,  FIXME: currently failing (unrendered jinja)
+                                    'reply_to': self.partner_employee.email_formatted,
                                 },
                                 fields_values={
                                     'email_from': self.partner_employee.email_formatted,
-                                    # 'reply_to': self.partner_employee.email_formatted,  # FIXME: currently failing (unrendered jinja)
+                                    'reply_to': self.partner_employee.email_formatted,
                                 },
                                )
 
