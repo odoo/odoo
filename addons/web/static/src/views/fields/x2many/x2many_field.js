@@ -17,11 +17,6 @@ import { evalDomain } from "@web/views/utils";
 
 const { Component } = owl;
 
-const X2M_RENDERERS = {
-    kanban: KanbanRenderer,
-    list: ListRenderer,
-};
-
 export class X2ManyField extends Component {
     setup() {
         this.activeField = this.props.record.activeFields[this.props.name];
@@ -33,7 +28,6 @@ export class X2ManyField extends Component {
         this.addButtonText = this.props.addLabel || this.env._t("Add");
 
         this.viewMode = this.activeField.viewMode;
-        this.Renderer = X2M_RENDERERS[this.viewMode];
 
         const { saveRecord, updateRecord, removeRecord } = useX2ManyCrud(
             () => this.list,
@@ -245,8 +239,7 @@ export class X2ManyField extends Component {
         return this._openRecord({ record, mode: this.props.readonly ? "readonly" : "edit" });
     }
 }
-
-X2ManyField.components = { Pager };
+X2ManyField.components = { Pager, KanbanRenderer, ListRenderer };
 X2ManyField.props = {
     ...standardFieldProps,
     addLabel: { type: "string", optional: true },
