@@ -17,6 +17,9 @@
         'views/FgPosSessionView.xml',
         'views/account_tax_views.xml',
         'views/point_of_sale_sequence.xml',
+        'wizard/x_report_view.xml',
+        'views/FgPosReport.xml',
+        'views/x_report.xml',
         'security/ir.model.access.csv'
     ],
     'author': "1FG",

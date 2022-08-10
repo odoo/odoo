@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+            name="Pos Report"
+            id="fg_menu_pos_report"
+            parent="point_of_sale.menu_point_root"
+            sequence="15"/>
+
+        <menuitem
+            name="X Report"
+            action="fg_custom.wizard_x_report_action"
+            id="fg_menu_pos_x_report"
+            parent="fg_custom.fg_menu_pos_report"
+            sequence="1"/>
+
+        <menuitem
+            name="Z Report"
+            action="fg_custom.wizard_x_report_action"
+            id="fg_menu_pos_z_report"
+            parent="fg_custom.fg_menu_pos_report"
+            sequence="2"/>
+
+</odoo>
+
