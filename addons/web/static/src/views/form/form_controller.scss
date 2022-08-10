@@ -428,14 +428,16 @@ $o-form-label-margin-right: 0px;
 
     // Avatar
     .oe_avatar {
-        float: right;
-        margin-bottom: 10px;
+        > div {
+            float: right;
+            margin-bottom: 10px;
 
-        > img {
-            max-width: $o-avatar-size;
-            max-height: $o-avatar-size;
-            vertical-align: top;
-            border: 1px solid $o-gray-300;
+            > img {
+                max-width: $o-avatar-size;
+                max-height: $o-avatar-size;
+                vertical-align: top;
+                border: 1px solid $o-gray-300;
+            }
         }
     }
 
