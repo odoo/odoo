@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { many, one } from '@mail/model/model_field';
+import { many } from '@mail/model/model_field';
 import { insert } from '@mail/model/model_field_command';
 import { emojiCategoriesData, emojisData } from '@mail/models_data/emoji_data';
 import { executeGracefully } from '@mail/utils/utils';
@@ -16,7 +16,6 @@ registerModel({
     recordMethods: {
         _computeAllCategories() {
             return [
-                this.categoryAll,
                 ...this.dataCategories,
             ];
         },
@@ -63,9 +62,6 @@ registerModel({
         allEmojis: many('Emoji', {
             inverse: 'emojiRegistry',
             sort: '_sortAllEmojis'
-        }),
-        categoryAll: one('EmojiCategory', {
-            default: { name: 'all', title: 'all', sortId: 0 },
         }),
         dataCategories: many('EmojiCategory', {
         }),

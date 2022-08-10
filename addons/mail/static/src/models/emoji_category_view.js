@@ -10,8 +10,11 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick() {
-            this.update({ emojiCategoryBarViewOwnerAsActiveByUser: this.emojiCategoryBarViewOwner });
             this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiSearchBar.reset();
+            if (!this.emojiSubgridView.categoryNameRef.el) {
+                return;
+            }
+            this.emojiSubgridView.categoryNameRef.el.scrollIntoView();
         },
         /**
          * @param {MouseEvent} ev
@@ -35,11 +38,9 @@ registerModel({
             identifying: true,
             inverse: 'emojiCategoryViews',
         }),
-        emojiCategoryBarViewOwnerAsActiveByUser: one('EmojiCategoryBarView', {
-            inverse: 'activeByUserCategoryView',
-        }),
-        emojiCategoryBarViewOwnerAsActive: one('EmojiCategoryBarView', {
-            inverse: 'activeCategoryView',
+        emojiSubgridView: one('EmojiSubgridView', {
+            inverse: "emojiCategoryView",
+            isCausal: true,
         }),
         isHovered: attr({
             default: false,

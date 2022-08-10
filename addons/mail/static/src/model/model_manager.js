@@ -1090,6 +1090,7 @@ export class ModelManager {
         for (const [fieldName, value] of Object.entries(data2)) {
             const field = model.__fieldMap[fieldName];
             if (!field) {
+                debugger;
                 throw new Error(`"${fieldName}" is not a field on "${model}".`);
             }
             if (!field.to) {

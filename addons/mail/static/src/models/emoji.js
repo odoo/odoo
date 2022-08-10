@@ -45,7 +45,7 @@ registerModel({
          */
         _isStringInEmojiKeywords(string) {
             for (let index in this.searchData) {
-                if (this._fuzzySearch(this.searchData[index], string)) { //If at least one correspondence is found, return true.
+                if (this._fuzzySearch(this.searchData[index], string)) { //If at least one correspondance is found, return true.
                     return true;
                 }
             }
@@ -56,7 +56,6 @@ registerModel({
                 return clear();
             }
             return [
-                this.emojiRegistry.categoryAll,
                 this.emojiDataCategory
             ];
         },
