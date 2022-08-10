@@ -1307,7 +1307,12 @@ def preload_registries(dbnames):
                                 sorted(registry._init_modules))
                 _logger.info("Starting post tests")
                 tests_before = registry._assertion_report.testsRun
-                result = loader.run_suite(loader.make_suite(module_names, 'post_install'))
+                post_install_suite = loader.make_suite(module_names, 'post_install')
+                if post_install_suite.countTestCases():
+                    with registry.cursor() as cr:
+                        env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+                        env['ir.qweb']._pregenerate_assets_bundles()
+                result = loader.run_suite(post_install_suite)
                 registry._assertion_report.update(result)
                 _logger.info("%d post-tests in %.2fs, %s queries",
                              registry._assertion_report.testsRun - tests_before,
