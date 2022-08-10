@@ -111,7 +111,7 @@
                             <group>
                                 <field name="name"/>
                                 <field name="url"/>
-                                <field name="view_id" context="{'display_website': True}"/>
+                                <field name="view_id" context="{'display_website': True}" options="{'always_reload': True}"/>
                                 <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                 <field name="track"/>
                             </group>
@@ -257,6 +257,7 @@
             <field name="arch" type="xml">
                 <field name="inherit_id" position="attributes">
                     <attribute name="context">{'display_website': True}</attribute>
+                    <attribute name="options">{'always_reload': True}</attribute>
                 </field>
                 <field name="model" position="before">
                     <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
