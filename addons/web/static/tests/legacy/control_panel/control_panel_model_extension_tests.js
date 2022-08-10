@@ -113,6 +113,7 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
                 {
                     description: "Hello",
                     domain: "[]",
+                    name: "filter",
                     type: "filter",
                 },
             ]);
@@ -135,6 +136,7 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
                     fieldType: "date",
                     isDateFilter: true,
                     hasOptions: true,
+                    name: "date_filter",
                     type: "filter"
                   },
                   {
@@ -167,6 +169,7 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
                     fieldName: "date_field",
                     fieldType: "date",
                     hasOptions: true,
+                    name: "groupby",
                     type: "groupBy",
                 },
             ]);
@@ -185,11 +188,13 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
                 {
                     description: "Hello One",
                     domain: "[]",
+                    name: "filter_1",
                     type: "filter",
                 },
                 {
                     description: "Hello Two",
                     domain: "[('bar', '=', 3)]",
+                    name: "filter_2",
                     type: "filter",
                 },
             ]);
@@ -209,11 +214,13 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
                 {
                     description: "Hello One",
                     domain: "[]",
+                    name: "filter_1",
                     type: "filter",
                 },
                 {
                     description: "Hello Two",
                     domain: "[('bar', '=', 3)]",
+                    name: "filter_2",
                     type: "filter",
                 },
             ]);
@@ -232,6 +239,7 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
                 {
                     description: "Hello",
                     domain: "[]",
+                    name: "filter",
                     type: "filter",
                 },
                 {
@@ -377,6 +385,7 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
                 {
                     description: 'Hello',
                     domain: "[]",
+                    name: "filter",
                     type: 'filter',
                 },
                 {
@@ -391,6 +400,7 @@ odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.
                     fieldName: 'foo',
                     fieldType: 'char',
                     isDefault: true,
+                    name: "groupby",
                     type: 'groupBy',
                 },
             ]);
