@@ -189,6 +189,7 @@
                     <field name="amount_residual" sum="Total Residual" string="Residual" optional="hide" attrs="{'invisible':[('is_account_reconcile', '=', False)]}"/>
                     <field name="amount_residual_currency" sum="Total Residual in Currency" string="Residual in Currency" optional="hide" attrs="{'invisible':['|', ('is_same_currency', '=', True), ('is_account_reconcile', '=', False)]}"/>
 
+                    <field name="move_id" invisible="1"/>
                     <field name="parent_state" invisible="1"/>
                     <field name="account_type" invisible="1"/>
                     <field name="statement_id" invisible="1"/>
