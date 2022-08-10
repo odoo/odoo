@@ -545,7 +545,9 @@ class WebsiteSaleExtraField(models.Model):
     sequence = fields.Integer(default=10)
     field_id = fields.Many2one(
         'ir.model.fields',
-        domain=[('model_id.model', '=', 'product.template'), ('ttype', 'in', ['char', 'binary'])]
+        domain=[('model_id.model', '=', 'product.template'), ('ttype', 'in', ['char', 'binary'])],
+        required=True,
+        ondelete='cascade'
     )
     label = fields.Char(related='field_id.field_description')
     name = fields.Char(related='field_id.name')
