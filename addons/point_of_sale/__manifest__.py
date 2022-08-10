@@ -99,7 +99,6 @@
         # We can reduce the size of loaded assets in POS UI by selectively
         # loading the `web` assets. We should only include what POS needs.
         'point_of_sale.pos_assets_backend': [
-            ('include', 'web.assets_common'),
             ('include', 'web.assets_backend'),
             ('remove', 'web/static/src/core/errors/error_handlers.js'),
             ('remove', 'web/static/src/legacy/legacy_rpc_error_handler.js'),
