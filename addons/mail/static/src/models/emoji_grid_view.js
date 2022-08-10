@@ -2,42 +2,19 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiGridView',
     identifyingFields: ['emojiPickerViewOwner'],
     recordMethods: {
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeEmojiViews() {
-            if (!this.emojiPickerViewOwner.emojiCategoryBarView.activeCategoryView) {
-                return clear();
-            }
-            if (this.emojiPickerViewOwner.emojiSearchBar.currentSearch !== "") {
-                const filtered_emojis = this.emojiPickerViewOwner.emojiCategoryBarView.activeCategoryView.emojiCategory.allEmojis.filter(this._filterEmoji);
-                return insertAndReplace(
-                    filtered_emojis.map(emoji => {
-                        return { emoji: replace(emoji) };
-                    })
-                );
-            }
+        _computeEmojiSubgridViews() {
             return insertAndReplace(
-                this.emojiPickerViewOwner.emojiCategoryBarView.activeCategoryView.emojiCategory.allEmojis.map(emoji => {
-                    return { emoji: replace(emoji) };
+                this.emojiPickerViewOwner.emojiCategoryBarView.emojiCategoryViews.map(emojiCategoryView => {
+                    return ({emojiCategoryView: replace(emojiCategoryView)});
                 })
             );
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         * Filters amoji according to the current search terms.
-         */
-        _filterEmoji(emoji) {
-            return (emoji._isStringInEmojiKeywords(this.emojiPickerViewOwner.emojiSearchBar.currentSearch));
-        },
+        }
     },
     fields: {
         emojiPickerViewOwner: one('EmojiPickerView', {
@@ -45,9 +22,9 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        emojiViews: many('EmojiView', {
-            compute: '_computeEmojiViews',
-            inverse: 'emojiGridView',
+        emojiSubgridViews: many('EmojiSubgridView', {
+            compute: "_computeEmojiSubgridViews",
+            inverse: 'emojiGridViewOwner',
             readonly: true,
             isCausal: true,
         }),

@@ -2,35 +2,12 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiCategoryBarView',
     identifyingFields: ['emojiPickerViewOwner'],
     recordMethods: {
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeActiveCategoryView() {
-            if (this.activeByUserCategoryView) {
-                return replace(this.activeByUserCategoryView);
-            }
-            if (this.defaultActiveCategoryView) {
-                return replace(this.defaultActiveCategoryView);
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeDefaultActiveCategoryView() {
-            return insertAndReplace({
-                emojiCategory: insertAndReplace({ name: "all" }),
-                emojiCategoryBarViewOwner: replace(this),
-            });
-        },
         /**
          * @private
          * @returns {FieldCommand}
@@ -44,17 +21,6 @@ registerModel({
         },
     },
     fields: {
-        activeByUserCategoryView: one('EmojiCategoryView', {
-            inverse: 'emojiCategoryBarViewOwnerAsActiveByUser',
-        }),
-        activeCategoryView: one('EmojiCategoryView', {
-            compute: '_computeActiveCategoryView',
-            inverse: 'emojiCategoryBarViewOwnerAsActive',
-            required: true,
-        }),
-        defaultActiveCategoryView: one('EmojiCategoryView', {
-            compute: '_computeDefaultActiveCategoryView',
-        }),
         emojiCategoryViews: many('EmojiCategoryView', {
             compute: '_computeEmojiCategoryViews',
             inverse: 'emojiCategoryBarViewOwner',

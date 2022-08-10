@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiCategoryView',
@@ -12,7 +11,10 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick() {
-            this.update({ emojiCategoryBarViewOwnerAsActiveByUser: replace(this.emojiCategoryBarViewOwner) });
+            if (!this.emojiSubgridView.categoryNameRef.el) {
+                return;
+            }
+            this.emojiSubgridView.categoryNameRef.el.scrollIntoView();
             this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiSearchBar.reset();
         },
         /**
@@ -39,11 +41,9 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        emojiCategoryBarViewOwnerAsActiveByUser: one('EmojiCategoryBarView', {
-            inverse: 'activeByUserCategoryView',
-        }),
-        emojiCategoryBarViewOwnerAsActive: one('EmojiCategoryBarView', {
-            inverse: 'activeCategoryView',
+        emojiSubgridView: one('EmojiSubgridView', {
+            inverse: "emojiCategoryView",
+            isCausal: true,
         }),
         isHovered: attr({
             default: false,

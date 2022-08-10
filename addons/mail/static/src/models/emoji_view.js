@@ -5,18 +5,18 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'EmojiView',
-    identifyingFields: ['emojiGridView', 'emoji'],
+    identifyingFields: ['emojiSubgridView', 'emoji'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
          */
         onClick(ev) {
-            if (this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.messageActionListOwnerAsReaction) {
-                this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.messageActionListOwnerAsReaction.onClickReaction(ev);
+            if (this.emojiSubgridView.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionListOwnerAsReaction) {
+                this.emojiSubgridView.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionListOwnerAsReaction.onClickReaction(ev);
                 return;
             }
-            if (this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji) {
-                this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(ev);
+            if (this.emojiSubgridView.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji) {
+                this.emojiSubgridView.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(ev);
                 return;
             }
         },
@@ -45,7 +45,7 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        emojiGridView: one('EmojiGridView', {
+        emojiSubgridView: one('EmojiSubgridView', {
             inverse: 'emojiViews',
             readonly: true,
             required: true,

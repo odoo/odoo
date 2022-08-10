@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { many, one } from '@mail/model/model_field';
+import { many } from '@mail/model/model_field';
 import { insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { emojiCategoriesData, emojisData } from '@mail/models_data/emoji_data';
 import { executeGracefully } from '@mail/utils/utils';
@@ -16,10 +16,9 @@ registerModel({
     },
     recordMethods: {
         _computeAllCategories() {
-            return replace([
-                this.categoryAll,
-                ...this.dataCategories,
-            ]);
+            return replace(
+                this.dataCategories
+            );
         },
         async _populateFromEmojiData() {
             await executeGracefully(emojiCategoriesData.map(category => () => {
@@ -66,9 +65,6 @@ registerModel({
         allEmojis: many('Emoji', {
             inverse: 'emojiRegistry',
             sort: '_sortAllEmojis'
-        }),
-        categoryAll: one('EmojiCategory', {
-            default: insertAndReplace({ name: 'all', title: 'all', sortId: 0 }),
         }),
         dataCategories: many('EmojiCategory', {
         }),
