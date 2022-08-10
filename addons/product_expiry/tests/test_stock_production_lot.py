@@ -525,3 +525,43 @@ class TestStockProductionLot(TestStockCommon):
         })
 
         self.assertEqual(sml.expiration_date, exp_date)
+
+        exp_date = exp_date + relativedelta(days=10)
+        lot.expiration_date = exp_date
+        self.assertEqual(sml.expiration_date, exp_date)
+
+    def test_apply_lot_without_date_on_sml(self):
+        """
+        When assigning a lot to a SML, if the lot has no expiration date,
+        dates on lot and SML should be correctly set
+        """
+        #create lot without expiration date
+        lot = self.env['stock.production.lot'].create({
+            'name': 'Lot 1',
+            'product_id': self.apple_product.id,
+            'company_id': self.env.company.id,
+        })
+
+        sml = self.env['stock.move.line'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+            'product_id': self.apple_product.id,
+            'qty_done': 3,
+            'product_uom_id': self.apple_product.uom_id.id,
+            'lot_id': lot.id,
+            'company_id': self.env.company.id,
+        })
+        today_date = datetime.today()
+        time_gap = timedelta(seconds=10)
+        exp_date = today_date + timedelta(days=self.apple_product.expiration_time)
+
+        self.assertAlmostEqual(sml.expiration_date, exp_date, delta=time_gap)
+
+        self.assertAlmostEqual(
+            lot.expiration_date, exp_date, delta=time_gap)
+        self.assertAlmostEqual(
+            lot.use_date, today_date + timedelta(days=self.apple_product.use_time), delta=time_gap)
+        self.assertAlmostEqual(
+            lot.removal_date, today_date + timedelta(days=self.apple_product.removal_time), delta=time_gap)
+        self.assertAlmostEqual(
+            lot.alert_date, today_date + timedelta(days=self.apple_product.alert_time), delta=time_gap)
