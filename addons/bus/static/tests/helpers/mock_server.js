@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
-import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
@@ -13,16 +12,6 @@ patch(MockServer.prototype, 'bus', {
         Object.assign(this, TEST_USER_IDS);
         this.pendingLongpollingPromise = null;
         this.notificationsToBeResolved = [];
-    },
-
-    /**
-     * @override
-     */
-    async setup() {
-        this.pyEnv = await getPyEnv();
-        // link the pyEnv to the actual mockServer after execution of
-        // createWebClient.
-        this.pyEnv.mockServer = this;
     },
 
     //--------------------------------------------------------------------------

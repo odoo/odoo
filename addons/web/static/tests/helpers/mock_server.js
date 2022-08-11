@@ -99,11 +99,6 @@ export class MockServer {
     }
 
     /**
-     * Perform asynchronous setup after the initialization of the mockServer.
-     */
-    async setup() {}
-
-    /**
      * Simulate a complete RPC call. This is the main method for this class.
      *
      * This method also log incoming and outgoing data, and stringify/parse data
@@ -2210,12 +2205,19 @@ export class MockServer {
 // MockServer deployment helper
 // -----------------------------------------------------------------------------
 
+// instance of `MockServer` linked to the current test.
+let mockServer;
+QUnit.testStart(() => mockServer = undefined);
 export async function makeMockServer(serverData, mockRPC) {
     serverData = serverData || {};
-    const mockServer = new MockServer(serverData, {
-        debug: QUnit.config.debug,
-    });
-    await mockServer.setup();
+    if (!mockServer) {
+        mockServer = new MockServer(serverData, {
+            debug: QUnit.config.debug,
+        });
+    } else {
+        Object.assign(mockServer.archs, serverData.views);
+        Object.assign(mockServer.actions, serverData.actions);
+    }
     const _mockRPC = async (route, args = {}) => {
         let res;
         if (args.method !== "POST") {
@@ -2237,4 +2239,5 @@ export async function makeMockServer(serverData, mockRPC) {
     });
     // Replace RPC service
     serviceRegistry.add("rpc", rpcService, { force: true });
+    return mockServer;
 }
