@@ -92,73 +92,60 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         ####################
         # TODO : account_number, partner_name, transaction_type, narration
         invoice_number = cls.invoice_line_1.move_id.name
-        cls.bank_st, cls.bank_st_2, cls.cash_st = cls.env['account.bank.statement'].create([
+        cls.bank_line_1, cls.bank_line_2,\
+        cls.bank_line_3, cls.bank_line_4,\
+        cls.bank_line_5, cls.cash_line_1 = cls.env['account.bank.statement.line'].create([
             {
-                'name': 'test bank journal',
                 'journal_id': cls.bank_journal.id,
-                'line_ids': [
-                    (0, 0, {
-                        'date': '2020-01-01',
-                        'payment_ref': 'invoice %s-%s' % tuple(invoice_number.split('/')[1:]),
-                        'partner_id': cls.partner_1.id,
-                        'amount': 100,
-                        'sequence': 1,
-                    }),
-                    (0, 0, {
-                        'date': '2020-01-01',
-                        'payment_ref': 'xxxxx',
-                        'partner_id': cls.partner_1.id,
-                        'amount': 600,
-                        'sequence': 2,
-                    }),
-                ],
-            }, {
-                'name': 'second test bank journal',
+                'date': '2020-01-01',
+                'payment_ref': 'invoice %s-%s' % tuple(invoice_number.split('/')[1:]),
+                'partner_id': cls.partner_1.id,
+                'amount': 100,
+                'sequence': 1,
+            },
+            {
                 'journal_id': cls.bank_journal.id,
-                'line_ids': [
-                    (0, 0, {
-                        'date': '2020-01-01',
-                        'payment_ref': 'nawak',
-                        'narration': 'Communication: RF12 3456',
-                        'partner_id': cls.partner_3.id,
-                        'amount': 600,
-                        'sequence': 1,
-                    }),
-                    (0, 0, {
-                        'date': '2020-01-01',
-                        'payment_ref': 'RF12 3456',
-                        'partner_id': cls.partner_3.id,
-                        'amount': 600,
-                        'sequence': 2,
-                    }),
-                    (0, 0, {
-                        'date': '2020-01-01',
-                        'payment_ref': 'baaaaah',
-                        'ref': 'RF12 3456',
-                        'partner_id': cls.partner_3.id,
-                        'amount': 600,
-                        'sequence': 2,
-                    }),
-                ],
-            }, {
-                'name': 'test cash journal',
+                'date': '2020-01-01',
+                'payment_ref': 'xxxxx',
+                'partner_id': cls.partner_1.id,
+                'amount': 600,
+                'sequence': 2,
+            },
+            {
+                'journal_id': cls.bank_journal.id,
+                'date': '2020-01-01',
+                'payment_ref': 'nawak',
+                'narration': 'Communication: RF12 3456',
+                'partner_id': cls.partner_3.id,
+                'amount': 600,
+                'sequence': 1,
+            },
+            {
+                'journal_id': cls.bank_journal.id,
+                'date': '2020-01-01',
+                'payment_ref': 'RF12 3456',
+                'partner_id': cls.partner_3.id,
+                'amount': 600,
+                'sequence': 2,
+            },
+            {
+                'journal_id': cls.bank_journal.id,
+                'date': '2020-01-01',
+                'payment_ref': 'baaaaah',
+                'ref': 'RF12 3456',
+                'partner_id': cls.partner_3.id,
+                'amount': 600,
+                'sequence': 2,
+            },
+            {
                 'journal_id': cls.cash_journal.id,
-                'line_ids': [
-                    (0, 0, {
-                        'date': '2020-01-01',
-                        'payment_ref': 'yyyyy',
-                        'partner_id': cls.partner_2.id,
-                        'amount': -1000,
-                        'sequence': 1,
-                    }),
-                ],
-            }
+                'date': '2020-01-01',
+                'payment_ref': 'yyyyy',
+                'partner_id': cls.partner_2.id,
+                'amount': -1000,
+                'sequence': 1,
+            },
         ])
-
-        cls.bank_line_1, cls.bank_line_2 = cls.bank_st.line_ids
-        cls.bank_line_3, cls.bank_line_4, cls.bank_line_5 = cls.bank_st_2.line_ids
-        cls.cash_line_1 = cls.cash_st.line_ids
-        cls._post_statements(cls)
 
     @classmethod
     def _create_invoice_line(cls, amount, partner, move_type, currency=None, pay_reference=None, ref=None, name=None, inv_date='2019-09-01'):
@@ -185,20 +172,15 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
     @classmethod
     def _create_st_line(cls, amount=1000.0, date='2019-01-01', payment_ref='turlututu', **kwargs):
-        st = cls.env['account.bank.statement'].create({
-            'name': 'test_allow_payment_tolerance_1',
+        st_line = cls.env['account.bank.statement.line'].create({
             'journal_id': kwargs.get('journal_id', cls.bank_journal.id),
-            'line_ids': [Command.create({
-                'amount': amount,
-                'date': date,
-                'payment_ref': payment_ref,
-                'partner_id': cls.partner_a.id,
-                **kwargs,
-            })],
+            'amount': amount,
+            'date': date,
+            'payment_ref': payment_ref,
+            'partner_id': cls.partner_a.id,
+            **kwargs,
         })
-        st.balance_end_real = st.balance_end
-        st.button_post()
-        return st.line_ids
+        return st_line
 
     @classmethod
     def _create_reconcile_model(cls, **kwargs):
@@ -223,12 +205,6 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 for i, line_vals in enumerate(kwargs.get('partner_mapping_line_ids', []))
             ],
         })
-
-    def _post_statements(self):
-        self.bank_st.balance_end_real = self.bank_st.balance_end
-        self.bank_st_2.balance_end_real = self.bank_st_2.balance_end
-        self.cash_st.balance_end_real = self.cash_st.balance_end
-        (self.bank_st + self.bank_st_2 + self.cash_st).button_post()
 
     @freeze_time('2020-01-01')
     def _check_statement_matching(self, rules, expected_values_list):
@@ -321,7 +297,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             })
 
     def test_matching_fields_match_journal_ids(self):
-        self.rule_1.match_journal_ids |= self.cash_st.journal_id
+        self.rule_1.match_journal_ids |= self.cash_line_1.journal_id
         self._check_statement_matching(self.rule_1, {
             self.bank_line_1: {},
             self.bank_line_2: {},
@@ -938,24 +914,15 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'past_months_limit': False,
         })
 
-        statement = self.env['account.bank.statement'].create({
-            'name': 'test_match_multi_currencies',
+        statement_line = self.env['account.bank.statement.line'].create({
             'journal_id': journal.id,
-            'line_ids': [
-                (0, 0, {
-                    'journal_id': journal.id,
-                    'date': '2016-01-01',
-                    'payment_ref': 'line',
-                    'partner_id': partner.id,
-                    'foreign_currency_id': self.currency_data_2['currency'].id,
-                    'amount': 300.0,            # Rate is 3 GOL = 1 USD in 2016.
-                    'amount_currency': 900.0,   # Rate is 10 DAR = 1 USD in 2016 but the rate used by the bank is 9:1.
-                }),
-            ],
+            'date': '2016-01-01',
+            'payment_ref': 'line',
+            'partner_id': partner.id,
+            'foreign_currency_id': self.currency_data_2['currency'].id,
+            'amount': 300.0,  # Rate is 3 GOL = 1 USD in 2016.
+            'amount_currency': 900.0,  # Rate is 10 DAR = 1 USD in 2016 but the rate used by the bank is 9:1.
         })
-        statement_line = statement.line_ids
-
-        statement.button_post()
 
         move = self.env['account.move'].create({
             'move_type': 'entry',

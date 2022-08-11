@@ -549,53 +549,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         # I close the session to generate the journal entries
         current_session.action_pos_session_closing_control()
 
-        """In order to test the reports on Bank Statement defined in point_of_sale module, I create a bank statement line, confirm it and print the reports"""
-
-        # I select the period and journal for the bank statement
-        # FIXME:poma
-        #
-        # context_journal = {'journal_type': 'bank'}
-        # self.assertTrue(self.AccountBankStatement.with_context(
-        #     context_journal)._default_journal(), 'Journal has not been selected')
-        # journal = self.env['account.journal'].create({
-        #     'name': 'Bank Test',
-        #     'code': 'BNKT',
-        #     'type': 'bank',
-        #     'company_id': self.env.company.id,
-        # })
-        # # I create a bank statement with Opening and Closing balance 0.
-        # account_statement = self.AccountBankStatement.create({
-        #     'balance_start': 0.0,
-        #     'balance_end_real': 0.0,
-        #     'date': time.strftime('%Y-%m-%d'),
-        #     'journal_id': journal.id,
-        #     'company_id': self.env.company.id,
-        #     'name': 'pos session test',
-        # })
-        # # I create bank statement line
-        # account_statement_line = self.AccountBankStatementLine.create({
-        #     'amount': 1000,
-        #     'partner_id': self.partner4.id,
-        #     'statement_id': account_statement.id,
-        #     'payment_ref': 'EXT001'
-        # })
-        # # I modify the bank statement and set the Closing Balance.
-        # account_statement.write({
-        #     'balance_end_real': 1000.0,
-        # })
-        #
-        # # I reconcile the bank statement.
-        # new_aml_dicts = [{
-        #     'account_id': self.partner4.property_account_receivable_id.id,
-        #     'name': "EXT001",
-        #     'credit': 1000.0,
-        #     'debit': 0.0,
-        # }]
-        #
-        # # I confirm the bank statement using Confirm button
-        #
-        # self.AccountBankStatement.button_validate()
-
     def test_create_from_ui(self):
         """
         Simulation of sales coming from the interface, even after closing the session

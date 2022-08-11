@@ -40,7 +40,7 @@
                                         <td>Opening</td>
                                         <td t-esc="env.pos.format_currency(defaultCashDetails.opening)"/>
                                     </tr>
-                                    <tr t-foreach="defaultCashDetails.moves" t-as="move" t-key="move.name">
+                                    <tr t-foreach="defaultCashDetails.moves" t-as="move" t-key="move_index">
                                         <td>
                                             <div class="flex">
                                                 <div class="cash-sign" t-esc="move.amount &lt; 0 ? '-' : '+'"/>
