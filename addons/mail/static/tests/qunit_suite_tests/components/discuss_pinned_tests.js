@@ -19,7 +19,7 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${messaging.inbox.localId}"]`,
+        `.o_Discuss_thread[data-thread-local-id="${messaging.inbox.thread.localId}"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
@@ -121,7 +121,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${messaging.inbox.localId}"]`,
+        `.o_Discuss_thread[data-thread-local-id="${messaging.inbox.thread.localId}"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(

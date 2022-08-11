@@ -43,10 +43,10 @@
                     </t>
                 </div>
                 <div class="o_ThreadViewTopbar_actions d-flex align-items-center ms-1">
-                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread === messaging.inbox">
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread === messaging.inbox.thread">
                         <button class="o_ThreadViewTopbar_markAllReadButton btn btn-secondary" t-att-disabled="threadViewTopbar.threadView.messages.length === 0" t-on-click="threadViewTopbar.onClickInboxMarkAllAsRead">Mark all read</button>
                     </t>
-                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread === messaging.starred">
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread === messaging.starred.thread">
                         <button class="o_ThreadViewTopbar_unstarAllButton btn btn-secondary" t-att-disabled="threadViewTopbar.threadView.messages.length === 0" t-on-click="threadViewTopbar.onClickUnstarAll">Unstar all</button>
                     </t>
                     <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasCallFeature and threadViewTopbar.thread.rtcSessions.length === 0">

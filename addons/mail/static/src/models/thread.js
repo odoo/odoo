@@ -815,7 +815,7 @@ registerModel({
         async open({ expanded = false, focus } = {}) {
             const discuss = this.messaging.discuss;
             // check if thread must be opened in form view
-            if (!['mail.box', 'mail.channel'].includes(this.model)) {
+            if (!this.channel && !this.mailbox) {
                 if (expanded || discuss.discussView) {
                     // Close chat window because having the same thread opened
                     // both in chat window and as main document does not look
@@ -831,7 +831,7 @@ registerModel({
             // check if thread must be opened in discuss
             if (
                 (!this.messaging.device.isSmall && (discuss.discussView || expanded)) ||
-                this.model === 'mail.box'
+                this.mailbox
             ) {
                 return discuss.openThread(this, {
                     focus: focus !== undefined ? focus : !this.messaging.device.isMobileDevice,
@@ -1061,7 +1061,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeComposer() {
-            if (this.model === 'mail.box') {
+            if (this.mailbox) {
                 return clear();
             }
             return insertAndReplace();
@@ -1138,6 +1138,9 @@ registerModel({
                 const guestNames = this.guestMembers.map(guest => guest.name);
                 return [...partnerNames, ...guestNames].join(this.env._t(", "));
             }
+            if (this.mailbox) {
+                return this.mailbox.name;
+            }
             return this.name;
         },
         /**
@@ -1145,11 +1148,11 @@ registerModel({
          * @returns {Object}
          */
         _computeFetchMessagesParams() {
-            if (this.model === 'mail.box') {
-                return {};
-            }
             if (this.model === 'mail.channel') {
                 return { 'channel_id': this.id };
+            }
+            if (this.mailbox) {
+                return {};
             }
             return {
                 'thread_id': this.id,
@@ -1161,16 +1164,11 @@ registerModel({
          * @returns {string}
          */
         _computeFetchMessagesUrl() {
-            switch (this) {
-                case this.messaging.inbox:
-                    return '/mail/inbox/messages';
-                case this.messaging.history:
-                    return '/mail/history/messages';
-                case this.messaging.starred:
-                    return '/mail/starred/messages';
-            }
             if (this.model === 'mail.channel') {
                 return `/mail/channel/messages`;
+            }
+            if (this.mailbox) {
+                return this.mailbox.fetchMessagesUrl;
             }
             return `/mail/thread/messages`;
         },
@@ -1639,23 +1637,6 @@ registerModel({
         /**
          * @private
          */
-        _onChangeCounter() {
-            if (this === this.messaging.inbox) {
-                if (
-                    this.threadViews.length > 0 &&
-                    this.lastCounter > 0 && this.counter === 0
-                ) {
-                    this.env.services.effect.add({
-                        message: this.env._t("Congratulations, your inbox is empty!"),
-                        type: 'rainbow_man',
-                    });
-                }
-                this.update({ lastCounter: this.counter });
-            }
-        },
-        /**
-         * @private
-         */
         _onChangeLastSeenByCurrentPartnerMessageId() {
             this.messaging.messagingBus.trigger('o-thread-last-seen-by-current-partner-message-id-changed', {
                 thread: this,
@@ -1812,9 +1793,6 @@ registerModel({
         correspondentOfDmChat: one('Partner', {
             compute: '_computeCorrespondentOfDmChat',
             inverse: 'dmChatWithCurrentPartner',
-        }),
-        counter: attr({
-            default: 0,
         }),
         creator: one('User'),
         /**
@@ -2094,15 +2072,14 @@ registerModel({
             default: 0,
         }),
         /**
-         * Useful to display rainbow man on inbox.
-         */
-        lastCounter: attr(),
-        /**
          * Local value of message unread counter, that means it is based on initial server value and
          * updated with interface updates.
          */
         localMessageUnreadCounter: attr({
             compute: '_computeLocalMessageUnreadCounter',
+        }),
+        mailbox: one('Mailbox', {
+            inverse: 'thread',
         }),
         mainAttachment: one('Attachment'),
         /**
@@ -2407,10 +2384,6 @@ registerModel({
         new OnChange({
             dependencies: ['lastSeenByCurrentPartnerMessageId'],
             methodName: '_onChangeLastSeenByCurrentPartnerMessageId',
-        }),
-        new OnChange({
-            dependencies: ['counter'],
-            methodName: '_onChangeCounter',
         }),
         new OnChange({
             dependencies: ['isServerPinned'],

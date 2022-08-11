@@ -25,7 +25,7 @@ QUnit.test('mark as read', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click } = await start({
+    const { afterEvent, click, messaging } = await start({
         async mockRPC(route, args) {
             if (route.includes('mark_all_as_read')) {
                 assert.step('mark_all_as_read');
@@ -45,7 +45,7 @@ QUnit.test('mark as read', async function (assert) {
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",
         predicate: ({ threadCache }) => {
-            return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
+            return threadCache.thread === messaging.inbox.thread;
         },
     }));
     assert.containsOnce(
@@ -83,13 +83,13 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click } = await start();
+    const { afterEvent, click, messaging } = await start();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",
         predicate: ({ threadCache }) => {
-            return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
+            return threadCache.thread === messaging.inbox.thread;
         },
     }));
     assert.containsOnce(
@@ -134,7 +134,7 @@ QUnit.test('click on expand from chat window should close the chat window and op
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, env } = await start();
+    const { afterEvent, click, env, messaging } = await start();
     patchWithCleanup(env.services.action, {
         doAction(action) {
             assert.step('do_action');
@@ -155,7 +155,7 @@ QUnit.test('click on expand from chat window should close the chat window and op
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",
         predicate: ({ threadCache }) => {
-            return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
+            return threadCache.thread === messaging.inbox.thread;
         },
     }));
     assert.containsOnce(
@@ -207,7 +207,7 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click } = await start({
+    const { afterEvent, click, messaging } = await start({
         async mockRPC(route, args) {
             if (route.includes('channel_fold')) {
                 const message = "should not call channel_fold when opening a non-channel chat window";
@@ -222,7 +222,7 @@ QUnit.test('[technical] opening a non-channel chat window should not call channe
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",
         predicate: ({ threadCache }) => {
-            return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
+            return threadCache.thread === messaging.inbox.thread;
         },
     }));
     assert.containsOnce(
@@ -271,13 +271,13 @@ QUnit.test('preview should display last needaction message preview even if there
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent } = await start();
+    const { afterEvent, messaging } = await start();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",
         predicate: ({ threadCache }) => {
-            return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
+            return threadCache.thread === messaging.inbox.thread;
         },
     }));
     assert.containsOnce(
@@ -311,13 +311,13 @@ QUnit.test('chat window header should not have unread counter for non-channel th
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click } = await start();
+    const { afterEvent, click, messaging } = await start();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",
         predicate: ({ threadCache }) => {
-            return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
+            return threadCache.thread === messaging.inbox.thread;
         },
     }));
     await click('.o_ThreadNeedactionPreview');

@@ -54,7 +54,7 @@ registerModel({
             }
             if (this.threadView && this.threadView.replyingToMessageView) {
                 const { threadView } = this;
-                if (this.threadView.thread === this.messaging.inbox) {
+                if (this.threadView.thread === this.messaging.inbox.thread) {
                     this.delete();
                 }
                 threadView.update({ replyingToMessageView: clear() });
@@ -585,7 +585,7 @@ registerModel({
                         params.context = { mail_post_autofollow: this.composer.activeThread.hasWriteAccess };
                     }
                 }
-                if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox) {
+                if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox.thread) {
                     postData.parent_id = this.threadView.replyingToMessageView.message.id;
                 }
                 const { threadView = {} } = this;
@@ -621,7 +621,7 @@ registerModel({
                     }
                 }
                 if (threadViewThread) {
-                    if (threadViewThread === messaging.inbox) {
+                    if (threadViewThread === messaging.inbox.thread) {
                         messaging.notify({
                             message: sprintf(messaging.env._t(`Message posted on "%s"`), message.originThread.displayName),
                             type: 'info',
@@ -794,7 +794,7 @@ registerModel({
                 return clear();
             }
             if (this.threadView.threadViewer.discuss) {
-                return this.threadView.threadViewer.discuss.thread === this.messaging.inbox;
+                return this.threadView.threadViewer.discuss.thread === this.messaging.inbox.thread;
             }
             return clear();
         },
@@ -1019,7 +1019,7 @@ registerModel({
                     this.messaging.device.isSmall ||
                     (
                         this.messaging.discuss.threadView === this.threadView &&
-                        this.messaging.discuss.thread === this.messaging.inbox
+                        this.messaging.discuss.thread === this.messaging.inbox.thread
                     )
                 ) {
                     return ['ctrl-enter', 'meta-enter'];

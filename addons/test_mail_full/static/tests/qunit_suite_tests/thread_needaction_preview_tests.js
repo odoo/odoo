@@ -30,13 +30,13 @@ QUnit.test('rating value displayed on the thread needaction preview', async func
         rating_image_url: "/rating/static/src/img/rating_5.png",
         rating_text: "top",
     }]);
-    const { afterEvent } = await start();
+    const { afterEvent, messaging } = await start();
     await afterNextRender(() => afterEvent({
         eventName: 'o-thread-cache-loaded-messages',
         func: () => document.querySelector('.o_MessagingMenu_toggler').click(),
         message: "should wait until inbox loaded initial needaction messages",
         predicate: ({ threadCache }) => {
-            return threadCache.thread.model === 'mail.box' && threadCache.thread.id === 'inbox';
+            return threadCache.thread === messaging.inbox.thread;
         },
     }));
     assert.strictEqual(

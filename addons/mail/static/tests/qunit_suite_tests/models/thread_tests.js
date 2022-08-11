@@ -15,13 +15,13 @@ QUnit.test('inbox & starred mailboxes', async function (assert) {
     const mailboxStarred = messaging.starred;
     assert.ok(mailboxInbox, "should have mailbox inbox");
     assert.ok(mailboxStarred, "should have mailbox starred");
-    assert.strictEqual(mailboxInbox.model, 'mail.box');
+    assert.strictEqual(mailboxInbox.thread.model, 'mail.box');
     assert.strictEqual(mailboxInbox.counter, 0);
-    assert.strictEqual(mailboxInbox.id, 'inbox');
+    assert.strictEqual(mailboxInbox.thread.id, 'inbox');
     assert.strictEqual(mailboxInbox.name, "Inbox"); // language-dependent
-    assert.strictEqual(mailboxStarred.model, 'mail.box');
+    assert.strictEqual(mailboxStarred.thread.model, 'mail.box');
     assert.strictEqual(mailboxStarred.counter, 0);
-    assert.strictEqual(mailboxStarred.id, 'starred');
+    assert.strictEqual(mailboxStarred.thread.id, 'starred');
     assert.strictEqual(mailboxStarred.name, "Starred"); // language-dependent
 });
 

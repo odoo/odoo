@@ -42,14 +42,14 @@
                 <t t-elif="thread.channel and thread.channel.channel_type === 'group'">
                     <div class="o_ThreadIcon fa fa-fw fa-users" title="Grouped Chat"/>
                 </t>
-                <t t-elif="thread.model === 'mail.box'">
-                    <t t-if="thread === messaging.inbox">
+                <t t-elif="thread.mailbox">
+                    <t t-if="thread.mailbox === messaging.inbox">
                         <div class="o_ThreadIcon_mailboxInbox fa fa-fw fa-inbox"/>
                     </t>
-                    <t t-elif="thread === messaging.starred">
+                    <t t-elif="thread.mailbox === messaging.starred">
                         <div class="o_ThreadIcon_mailboxStarred fa fa-fw fa-star-o"/>
                     </t>
-                    <t t-elif="thread === messaging.history">
+                    <t t-elif="thread.mailbox === messaging.history">
                         <div class="o_ThreadIcon_mailboxHistory fa fa-fw fa-history"/>
                     </t>
                 </t>

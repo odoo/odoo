@@ -18,7 +18,7 @@ export class DiscussMobileMailboxSelectionItem extends Component {
     }
 
     /**
-     * @returns {Thread}
+     * @returns {Mailbox}
      */
     get mailbox() {
         return this.props.mailbox;
