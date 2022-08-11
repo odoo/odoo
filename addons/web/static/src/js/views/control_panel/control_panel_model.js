@@ -988,7 +988,9 @@ var ControlPanelModel = mvc.Model.extend({
             var timeRange = Domain.prototype.constructDomain(
                     filter.fieldName,
                     filter.timeRangeId,
-                    filter.fieldType
+                    filter.fieldType,
+                    null,
+                    this.actionContext.include_today
                 );
             var timeRangeDescription = _.find(filter.timeRangeOptions, function (option) {
                 return option.optionId === filter.timeRangeId;
@@ -998,7 +1000,8 @@ var ControlPanelModel = mvc.Model.extend({
                     filter.fieldName,
                     filter.timeRangeId,
                     filter.fieldType,
-                    filter.comparisonTimeRangeId
+                    filter.comparisonTimeRangeId,
+                    this.actionContext.include_today
                 );
                 comparisonTimeRangeDescription = _.find(filter.comparisonTimeRangeOptions, function (comparisonOption) {
                     return comparisonOption.optionId === filter.comparisonTimeRangeId;

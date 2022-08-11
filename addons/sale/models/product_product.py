@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import timedelta, time
+from datetime import datetime, time
+from dateutil.relativedelta import relativedelta
+import pytz
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_round
 
@@ -15,15 +17,17 @@ class ProductProduct(models.Model):
         self.sales_count = 0
         if not self.user_has_groups('sales_team.group_sale_salesman'):
             return r
-        date_from = fields.Datetime.to_string(fields.datetime.combine(fields.datetime.now() - timedelta(days=365),
-                                                                      time.min))
-
+        tz = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
+        utc = pytz.timezone('UTC')
+        date_from = tz.localize(datetime.combine(fields.Date.context_today(self) + relativedelta(days=-364), time.min)).astimezone(utc).strftime('%Y-%m-%d %H:%M:%S')
+        date_to = tz.localize(datetime.combine(fields.Date.context_today(self) + relativedelta(days=1), time.min)).astimezone(utc).strftime('%Y-%m-%d %H:%M:%S')
         done_states = self.env['sale.report']._get_done_states()
 
         domain = [
             ('state', 'in', done_states),
             ('product_id', 'in', self.ids),
             ('date', '>=', date_from),
+            ('date', '<', date_to),
         ]
         for group in self.env['sale.report'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id']):
             r[group['product_id'][0]] = group['product_uom_qty']
@@ -51,6 +55,7 @@ class ProductProduct(models.Model):
             'search_default_Sales': 1,
             'active_model': 'sale.report',
             'time_ranges': {'field': 'date', 'range': 'last_365_days'},
+            'include_today': True,
         }
         return action
 

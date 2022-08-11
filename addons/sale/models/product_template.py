@@ -89,7 +89,8 @@ class ProductTemplate(models.Model):
             'active_id': self._context.get('active_id'),
             'active_model': 'sale.report',
             'search_default_Sales': 1,
-            'time_ranges': {'field': 'date', 'range': 'last_365_days'}
+            'time_ranges': {'field': 'date', 'range': 'last_365_days'},
+            'include_today': True,
         }
         return action
 

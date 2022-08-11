@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import datetime, time
+from dateutil.relativedelta import relativedelta
+import pytz
 import operator as py_operator
 from odoo import api, fields, models
 from odoo.tools.float_utils import float_round, float_is_zero
@@ -55,7 +57,8 @@ class ProductTemplate(models.Model):
         action['domain'] = [('state', '=', 'done'), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'graph_measure': 'product_uom_qty',
-            'time_ranges': {'field': 'date_planned_start', 'range': 'last_365_days'}
+            'time_ranges': {'field': 'date_planned_start', 'range': 'last_365_days'},
+            'include_today': True,
         }
         return action
 
@@ -97,9 +100,12 @@ class ProductProduct(models.Model):
         return action
 
     def _compute_mrp_product_qty(self):
-        date_from = fields.Datetime.to_string(fields.datetime.now() - timedelta(days=365))
+        tz = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
+        utc = pytz.timezone('UTC')
+        date_from = tz.localize(datetime.combine(fields.Date.context_today(self) + relativedelta(days=-364), time.min)).astimezone(utc).strftime('%Y-%m-%d %H:%M:%S')
+        date_to = tz.localize(datetime.combine(fields.Date.context_today(self) + relativedelta(days=1), time.min)).astimezone(utc).strftime('%Y-%m-%d %H:%M:%S')
         #TODO: state = done?
-        domain = [('state', '=', 'done'), ('product_id', 'in', self.ids), ('date_planned_start', '>', date_from)]
+        domain = [('state', '=', 'done'), ('product_id', 'in', self.ids), ('date_planned_start', '>=', date_from), ('date_planned_start', '<', date_to)]
         read_group_res = self.env['mrp.production'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
         mapped_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in read_group_res])
         for product in self:

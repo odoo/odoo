@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import datetime, time
+from dateutil.relativedelta import relativedelta
+import pytz
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.tools.float_utils import float_round
-
 
 class ProductTemplate(models.Model):
     _name = 'product.template'
@@ -44,7 +45,8 @@ class ProductTemplate(models.Model):
         action['context'] = {
             'graph_measure': 'qty_ordered',
             'search_default_orders': 1,
-            'time_ranges': {'field': 'date_approve', 'range': 'last_365_days'}
+            'time_ranges': {'field': 'date_approve', 'range': 'last_365_days'},
+            'include_today': True,
         }
         return action
 
@@ -56,11 +58,15 @@ class ProductProduct(models.Model):
     purchased_product_qty = fields.Float(compute='_compute_purchased_product_qty', string='Purchased')
 
     def _compute_purchased_product_qty(self):
-        date_from = fields.Datetime.to_string(fields.datetime.now() - timedelta(days=365))
+        tz = pytz.timezone(self.env.context.get('tz') or self.env.user.tz)
+        utc = pytz.timezone('UTC')
+        date_from = tz.localize(datetime.combine(fields.Date.context_today(self) + relativedelta(days=-364), time.min)).astimezone(utc).strftime('%Y-%m-%d %H:%M:%S')
+        date_to = tz.localize(datetime.combine(fields.Date.context_today(self) + relativedelta(days=1), time.min)).astimezone(utc).strftime('%Y-%m-%d %H:%M:%S')
         domain = [
             ('state', 'in', ['purchase', 'done']),
             ('product_id', 'in', self.ids),
-            ('date_order', '>', date_from)
+            ('date_order', '>=', date_from),
+            ('date_order', '<', date_to),
         ]
         order_lines = self.env['purchase.order.line'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id'])
         purchased_data = dict([(data['product_id'][0], data['product_uom_qty']) for data in order_lines])

@@ -252,7 +252,7 @@ var Domain = collections.Tree.extend({
      * @param {string} comparisonPeriod
      * @returns {string} a domain in string form
      */
-    constructDomain: function (fieldName, period, type, comparisonPeriod) {
+    constructDomain: function (fieldName, period, type, comparisonPeriod, includeToday = false) {
         var leftBoundaryParams, rightBoundaryParams;
         var offsetPeriodParams;
         function makeInterval () {
@@ -360,8 +360,8 @@ var Domain = collections.Tree.extend({
                 offsetPeriodParams = {days: -30};
                 return makeInterval();
             case 'last_365_days':
-                leftBoundaryParams = {days: -365};
-                rightBoundaryParams = {};
+                leftBoundaryParams = {days: includeToday ? -364 : -365};
+                rightBoundaryParams = { days: includeToday ? 1 : 0 };
                 offsetPeriodParams = {days: -365};
                 return makeInterval();
             case 'last_5_years':
