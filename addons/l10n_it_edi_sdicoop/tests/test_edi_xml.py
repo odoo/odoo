@@ -518,7 +518,7 @@ class TestItEdi(TestItEdiCommon):
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
 
-    def test_non_latin_and_latin_inovice(self):
+    def test_non_latin_and_latin_invoice(self):
         invoice_etree = etree.fromstring(self.non_latin_and_latin_invoice._export_as_xml())
         expected_etree = self.with_applied_xpath(
             etree.fromstring(self.edi_basis_xml),
