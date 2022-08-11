@@ -10,32 +10,34 @@
         </div>
     </t>
 
-    <form class="form-inline" t-name="mrp.report_bom_search">
-        <div class="form-group col-lg-4">
-            <label>Quantity:</label>
-            <div class="row">
-                <div class="col-lg-6">
-                    <input type="number" step="any" t-att-value="bom_qty" min="1" class="o_input o_mrp_bom_report_qty"/>
-                </div>
-                <div class="col-lg-6">
-                    <t t-if="is_uom_applied" t-esc="bom_uom_name"/>
+    <form class="container-fluid w-lg-75 w-xl-auto pt-lg-3 me-0" t-name="mrp.report_bom_search">
+        <div class="row gap-3">
+            <div class="col-12 col-md">
+                <div class="row">
+                    <label class="col-3 col-xl flex-grow-0">Quantity:</label>
+                    <input type="number" step="any" t-att-value="bom_qty" min="1" class="o_input o_mrp_bom_report_qty col"/>
+                    <div t-if="is_uom_applied" class="col" t-out="bom_uom_name"/>
                 </div>
             </div>
-        </div>
-        <div t-if="is_variant_applied" class="form-group col-lg-4">
-            <label>Variant:</label>
-            <select class="o_input o_mrp_bom_report_variants">
-                <option t-foreach="variants" t-as="variant" t-att-value="variant">
-                    <t t-esc="variants[variant]"/>
-                </option>
-            </select>
-        </div>
-        <div t-attf-class="form-group #{is_variant_applied ? 'col-lg-4' : 'col-lg-8'}">
-            <label>Report:</label>
-            <select class="o_input o_mrp_bom_report_type">
-                <option t-att-data-type="'all'">BoM Structure &amp; Cost</option>
-                <option t-att-data-type="'bom_structure'">BoM Structure</option>
-            </select>
+            <div t-if="is_variant_applied" class="col-12 col-md">
+                <div class="row">
+                    <label class="col-3 col-xl flex-grow-0">Variant:</label>
+                    <select class="o_input o_mrp_bom_report_variants col">
+                        <option t-foreach="variants" t-as="variant" t-att-value="variant">
+                            <t t-esc="variants[variant]"/>
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div t-attf-class="col-12 col-xl">
+                <div class="row">
+                    <label class="col-3 col-xl flex-grow-0">Report:</label>
+                    <select class="o_input o_mrp_bom_report_type col">
+                        <option t-att-data-type="'all'">BoM Structure &amp; Cost</option>
+                        <option t-att-data-type="'bom_structure'">BoM Structure</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </form>
 
