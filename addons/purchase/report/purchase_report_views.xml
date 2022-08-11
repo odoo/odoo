@@ -53,6 +53,10 @@
             <search string="Purchase Orders">
                 <filter string="Requests for Quotation" name="quotes" domain="[('state','in',('draft','sent'))]"/>
                 <filter string="Purchase Orders" name="orders" domain="[('state','!=','draft'), ('state','!=','sent'), ('state','!=','cancel')]"/>
+                <separator/>
+                <filter string="Order Date: Last 365 Days" name="filter_date_order_365days" domain="[
+                    ('date_order', '&gt;', (datetime.datetime.combine(context_today() + relativedelta(days=-365), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <separator/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
                 <group expand="0" string="Extended Filters">
