@@ -2,13 +2,13 @@ odoo.define('web.bus_tests', function (require) {
 "use strict";
 
 var { busService } = require('@bus/services/bus_service');
+const { startServer } = require('@bus/../tests/helpers/mock_python_environment');
 const { presenceService } = require('@bus/services/presence_service');
 const { multiTabService } = require('@bus/multi_tab_service');
 
 var { CrossTab } = require('@bus/crosstab_bus');
 var testUtils = require('web.test_utils');
 const { browser } = require("@web/core/browser/browser");
-const { ConnectionLostError } = require("@web/core/network/rpc_service");
 const { registry } = require("@web/core/registry");
 const { patchWithCleanup, nextTick } = require("@web/../tests/helpers/utils");
 const { makeTestEnv } = require('@web/../tests/helpers/mock_env');
@@ -30,48 +30,28 @@ QUnit.module('Bus', {
     },
 }, function () {
     QUnit.test('notifications received from the longpolling channel', async function (assert) {
-        assert.expect(6);
+        assert.expect(3);
 
-        var pollPromise = testUtils.makeTestPromise();
-        const env = await makeTestEnv({
-            mockRPC(route, args) {
-                if (route === '/longpolling/poll') {
-                    assert.step(route + ' - ' + args.channels.join(','));
-
-                    pollPromise = testUtils.makeTestPromise();
-                    pollPromise.abort = (function () {
-                        this.reject({message: "XmlHttpRequestError abort"}, $.Event());
-                    }).bind(pollPromise);
-                    return pollPromise;
-                }
-            },
-        });
+        const pyEnv = await startServer();
+        const env = await makeTestEnv({ activateMockServer: true });
         env.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
-            assert.step('notification - ' + notifications.toString());
+            assert.step('notification - ' + notifications.map(notif => notif.payload).toString());
         });
         env.services['bus_service'].addChannel('lambda');
-
-        pollPromise.resolve([{
-            message: 'beta',
-        }]);
+        pyEnv['bus.bus']._sendone('lambda', 'notifType', 'beta');
         await testUtils.nextTick();
 
-        pollPromise.resolve([{
-            message: 'epsilon',
-        }]);
+        pyEnv['bus.bus']._sendone('lambda', 'notifType', 'epsilon');
         await testUtils.nextTick();
 
         assert.verifySteps([
-            '/longpolling/poll - lambda',
             'notification - beta',
-            '/longpolling/poll - lambda',
             'notification - epsilon',
-            '/longpolling/poll - lambda',
         ]);
     });
 
-    QUnit.test('longpolling restarts when connection is lost', async function (assert) {
-        assert.expect(4);
+    QUnit.test('notifications still received after disconnect/reconnect', async function (assert) {
+        assert.expect(3);
 
         const oldSetTimeout = window.setTimeout;
         patchWithCleanup(
@@ -82,30 +62,21 @@ QUnit.module('Bus', {
             { pure: true },
         )
 
-        let busService;
-        let rpcCount = 0;
-        const env = await makeTestEnv({
-            mockRPC(route) {
-                if (route === '/longpolling/poll') {
-                    rpcCount++;
-                    assert.step(`polling ${rpcCount}`);
-                    if (rpcCount == 1) {
-                        return new ConnectionLostError();
-                    }
-                    assert.equal(rpcCount, 2, "Should not be called after stopPolling");
-                    busService.stopPolling();
-                    return new ConnectionLostError();
-                }
-            },
+        const pyEnv = await startServer();
+        const env = await makeTestEnv({ activateMockServer: true });
+        env.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
+            assert.step('notification - ' + notifications.map(notif => notif.payload).toString());
         });
-        busService = env.services['bus_service'];
-        busService.startPolling();
+        env.services['bus_service'].addChannel('lambda');
+        pyEnv['bus.bus']._sendone('lambda', 'notifType', 'beta');
+        pyEnv.simulateConnectionLostAndRecovered();
+        pyEnv['bus.bus']._sendone('lambda', 'notifType', 'gamma');
         // Give longpolling bus a tick to try to restart polling
         await nextTick();
 
         assert.verifySteps([
-            "polling 1",
-            "polling 2",
+            "notification - beta",
+            "notification - gamma",
         ]);
     });
 
@@ -147,26 +118,16 @@ QUnit.module('Bus', {
         assert.verifySteps(['/longpolling/poll']);
     });
 
-    QUnit.test('cross tab bus share message from a channel', async function (assert) {
-        assert.expect(5);
+    QUnit.test('tabs share message from a channel', async function (assert) {
+        assert.expect(3);
 
-        // master
-
-        var pollPromiseMaster = testUtils.makeTestPromise();
-        const masterEnv = await makeTestEnv({
-            mockRPC(route, args) {
-                if (route === '/longpolling/poll') {
-                    assert.step('master' + ' - ' + route + ' - ' + args.channels.join(','));
-
-                    pollPromiseMaster = testUtils.makeTestPromise();
-                    return pollPromiseMaster;
-                }
-            }
+        const pyEnv = await startServer();
+        // main
+        const mainEnv = await makeTestEnv({ activateMockServer: true });
+        mainEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
+            assert.step('main - notification - ' + notifications.map(notif => notif.payload).toString());
         });
-        masterEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
-            assert.step('master - notification - ' + notifications.toString());
-        });
-        masterEnv.services['bus_service'].addChannel('lambda');
+        mainEnv.services['bus_service'].addChannel('lambda');
 
         // slave
         const slaveEnv = await makeTestEnv({
@@ -177,50 +138,31 @@ QUnit.module('Bus', {
             }
         });
         slaveEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
-            assert.step('slave - notification - ' + notifications.toString());
+            assert.step('slave - notification - ' + notifications.map(notif => notif.payload).toString());
         });
         slaveEnv.services['bus_service'].addChannel('lambda');
 
-        pollPromiseMaster.resolve([{
-            id: 1,
-            channel: 'lambda',
-            message: 'beta',
-        }]);
+        pyEnv['bus.bus']._sendone('lambda', 'notifType', 'beta');
         await testUtils.nextTick();
 
         assert.verifySteps([
-            'master - /longpolling/poll - lambda',
-            'master - notification - beta',
+            'main - notification - beta',
             'slave - notification - beta',
-            'master - /longpolling/poll - lambda',
         ]);
     });
 
-    QUnit.test('multi tab service elects new master on master unload', async function (assert) {
-        assert.expect(8);
+    QUnit.test('secondEnv start polling after main unload', async function (assert) {
+        assert.expect(3);
 
-        // master
-        var pollPromiseMaster = testUtils.makeTestPromise();
-
-        const masterEnv = await makeTestEnv({
-            mockRPC(route, args) {
+        // main tab.
+        const mainEnv = await makeTestEnv({
+            mockRPC(route) {
                 if (route === '/longpolling/poll') {
-                    assert.step('master - ' + route + ' - ' + args.channels.join(','));
-
-                    pollPromiseMaster = testUtils.makeTestPromise();
-                    return pollPromiseMaster;
+                    assert.step('main - poll');
                 }
             }
         });
-
-        masterEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
-            assert.step('master - notification - ' + notifications.toString());
-        });
-        masterEnv.services['bus_service'].addChannel('lambda');
-
-        // slave
-        var pollPromiseSlave = testUtils.makeTestPromise();
-        // prevent slave tab from receiving unload event.
+        // prevent second tab from receiving unload event.
         patchWithCleanup(browser, {
             addEventListener(eventName, callback) {
                 if (eventName === 'unload') {
@@ -229,45 +171,63 @@ QUnit.module('Bus', {
                 this._super(eventName, callback);
             },
         });
-        const slaveEnv = await makeTestEnv({
-            mockRPC(route, args) {
+        // second tab
+        await makeTestEnv({
+            mockRPC(route) {
                 if (route === '/longpolling/poll') {
-                    assert.step('slave - ' + route + ' - ' + args.channels.join(','));
-
-                    pollPromiseSlave = testUtils.makeTestPromise();
-                    return pollPromiseSlave;
+                    assert.step('second - poll');
                 }
             }
         });
-        slaveEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
-            assert.step('slave - notification - ' + notifications.toString());
-        });
-        slaveEnv.services['bus_service'].addChannel('lambda');
-        pollPromiseMaster.resolve([{
-            id: 1,
-            channel: 'lambda',
-            message: 'beta',
-        }]);
-        await testUtils.nextTick();
-
-        // simulate unloading master
+        mainEnv.services['bus_service'].startPolling();
+        // simulate main unload.
         window.dispatchEvent(new Event('unload'));
 
-        pollPromiseSlave.resolve([{
-            id: 2,
-            channel: 'lambda',
-            message: 'gamma',
-        }]);
+        assert.verifySteps([
+            'main - poll',
+            'second - poll',
+        ]);
+    });
+
+    QUnit.test('second tab still receives notifications after main unload', async function (assert) {
+        assert.expect(4);
+
+        const pyEnv = await startServer();
+        // main
+        const mainEnv = await makeTestEnv({ activateMockServer: true });
+        mainEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
+            assert.step('main - notification - ' + notifications.map(notif => notif.payload).toString());
+        });
+        mainEnv.services['bus_service'].addChannel('lambda');
+
+        // second env
+        // prevent second tab from receiving unload event.
+        patchWithCleanup(browser, {
+            addEventListener(eventName, callback) {
+                if (eventName === 'unload') {
+                    return;
+                }
+                this._super(eventName, callback);
+            },
+        });
+        const secondEnv = await makeTestEnv({ activateMockServer: true });
+        secondEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
+            assert.step('slave - notification - ' + notifications.map(notif => notif.payload).toString());
+        });
+        secondEnv.services['bus_service'].addChannel('lambda');
+        pyEnv['bus.bus']._sendone('lambda', 'notifType', 'beta');
+        await testUtils.nextTick();
+
+        // simulate unloading main
+        window.dispatchEvent(new Event('unload'));
+
+        pyEnv['bus.bus']._sendone('lambda', 'notifType', 'gamma');
         await testUtils.nextTick();
 
         assert.verifySteps([
-            'master - /longpolling/poll - lambda',
-            'master - notification - beta',
+            'main - notification - beta',
             'slave - notification - beta',
-            'master - /longpolling/poll - lambda',
-            'slave - /longpolling/poll - lambda',
             'slave - notification - gamma',
-            'slave - /longpolling/poll - lambda',
         ]);
     });
 
@@ -285,24 +245,8 @@ QUnit.module('Bus', {
             },
         });
 
-        let pollPromise;
-        const firstTabEnv = await makeTestEnv({
-            mockRPC(route) {
-                if (route === '/longpolling/poll') {
-                    pollPromise = testUtils.makeTestPromise();
-                    return pollPromise;
-                }
-            }
-        });
-
-        const secondTabEnv = await makeTestEnv({
-            mockRPC(route) {
-                if (route === '/longpolling/poll') {
-                    pollPromise = testUtils.makeTestPromise();
-                    return pollPromise;
-                }
-            }
-        });
+        const firstTabEnv = await makeTestEnv({ activateMockServer: true });
+        const secondTabEnv = await makeTestEnv({ activateMockServer: true });
         firstTabEnv.services['bus_service'].__tabId__ = 1;
         secondTabEnv.services['bus_service'].__tabId__ = 2;
         firstTabEnv.services['bus_service'].addChannel('alpha');
@@ -319,29 +263,30 @@ QUnit.module('Bus', {
     });
 
     QUnit.test('two tabs adding a different channel', async function (assert) {
-        const firstTabEnv = await makeTestEnv({
-            mockRPC: function (route, args) {
-                if (route === '/longpolling/poll') {
-                    assert.step(args.channels.join());
-                    return testUtils.makeTestPromise();
-                }
-            }
-        });
-        const secondTabEnv = await makeTestEnv({
-            mockRPC: function (route, args) {
-                if (route === '/longpolling/poll') {
-                    throw new Error("slave tab should not use the polling route");
-                }
-            }
-        });
+        assert.expect(3);
 
+        const pyEnv = await startServer();
+        const firstTabEnv = await makeTestEnv({ activateMockServer: true });
+        const secondTabEnv = await makeTestEnv({ activateMockServer: true });
+        firstTabEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
+            assert.step('first - notification - ' + notifications.map(notif => notif.payload).toString());
+        });
+        secondTabEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
+            assert.step('second - notification - ' + notifications.map(notif => notif.payload).toString());
+        });
         firstTabEnv.services['bus_service'].addChannel("alpha");
-        await nextTick();
-        assert.verifySteps(["alpha"]);
-
         secondTabEnv.services['bus_service'].addChannel("beta");
         await nextTick();
-        assert.verifySteps(["alpha,beta"]);
+        pyEnv['bus.bus']._sendmany([
+            ['alpha', 'notifType', 'alpha'],
+            ['beta', 'notifType', 'beta']
+        ]);
+        await nextTick();
+
+        assert.verifySteps([
+            'first - notification - alpha,beta',
+            'second - notification - alpha,beta',
+        ]);
     });
 });
 
