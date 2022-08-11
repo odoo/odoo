@@ -2454,7 +2454,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <div class="d-flex align-items-center o_search_result_item">
             <img t-if="result.get('image_url')" t-att-src="result.get('image_url')" class="flex-shrink-0 o_image_64_contain"/>
             <i t-else="" t-att-class="'o_image_64_contain text-center pt16 fa %s' % result.get('_fa')" style="font-size: 34px;"/>
-            <div class="flex-grow-1 px-3">
+            <div class="o_search_result_item_detail px-3">
                 <t t-set="description" t-value="result.get('description')"/>
                 <t t-set="extra_link" t-value="result.get('extra_link_url') and result.get('extra_link')"/>
                 <t t-set="extra_link_html" t-value="not result.get('extra_link_url') and result.get('extra_link')"/>
