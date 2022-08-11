@@ -56,6 +56,12 @@ $utilities: () !default;
 $utilities: map-merge(
     $utilities,
     (
+        "display": map-merge(
+            map-get($utilities, "display"),
+            (
+                values: join(map-get(map-get($utilities, "display"), "values"), contents),
+            ),
+        ),
         "position": map-merge(
             map-get($utilities, "position"),
             (
