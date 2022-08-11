@@ -678,56 +678,64 @@ $o-form-label-margin-right: 0px;
             display: flex;
         }
 
-        .o_address_city {
+        .o_address_city span {
             margin-right: 2%;
         }
-        .o_address_state {
+        .o_address_state span {
             margin-right: 2%;
         }
         &.o_zip_city {
-            .o_address_zip {
+            .o_address_zip span {
                 margin-right: 2%;
             }
-            .o_address_city {
+            .o_address_city span {
                 margin-right: 0;
             }
-            .o_address_state {
+            .o_address_state span {
                 display: block;
                 margin-right: 0;
             }
         }
         &.o_city_state {
-            .o_address_state {
+            .o_address_state span {
                 margin-right: 0;
             }
-            .o_address_zip {
+            .o_address_zip span {
                 display: block;
                 margin-right: 0;
             }
         }
-        > span.o_field_widget {
+        > .o_field_widget span {
             width: auto;
         }
     }
-    &.o_form_editable .o_address_format {
+    .o_form_editable .o_address_format {
         .o_address_city {
+            display: inline-block;
             width: 38%;
+            margin-right: 2%;
         }
-        div.o_address_state {
+        .o_address_state {
+            display: inline-block;
             width: 33%;
+            margin-right: 2%;
         }
-        input.o_address_zip {
+        .o_address_zip {
+            display: inline-block;
             width: 25%;
         }
         &.o_zip_city {
             .o_address_zip {
                 width: 38%;
+                margin-right: 2%;
             }
             .o_address_city {
                 width: 60%;
+                margin-right: 0;
             }
             .o_address_state {
                 width: 100%;
+                margin-right: 0;
             }
         }
         &.o_city_state {
@@ -736,6 +744,7 @@ $o-form-label-margin-right: 0px;
             }
             .o_address_state {
                 width: 48%;
+                margin-right: 0;
             }
             .o_address_zip {
                 width: 100%;
