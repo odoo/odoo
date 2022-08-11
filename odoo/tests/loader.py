@@ -1,4 +1,5 @@
 import importlib
+import importlib.util
 import inspect
 import itertools
 import logging
@@ -14,41 +15,25 @@ _logger = logging.getLogger(__name__)
 def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
     feed unittest.TestLoader.loadTestsFromModule() """
-    # Try to import the module
-    results = _get_tests_modules('odoo.addons', module)
+    results = _get_tests_modules(importlib.util.find_spec(f'odoo.addons.{module}'))
 
-    try:
-        importlib.import_module('odoo.upgrade.%s' % module)
-    except ImportError:
-        pass
-    else:
-        results += _get_tests_modules('odoo.upgrade', module)
+    upgrade_spec = importlib.util.find_spec(f'odoo.upgrade.{module}')
+    if upgrade_spec:
+        results += _get_tests_modules(upgrade_spec)
 
     return results
 
-
-def _get_tests_modules(path, module):
-    modpath = '%s.%s' % (path, module)
-    try:
-        mod = importlib.import_module('.tests', modpath)
-    except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6
-        # Hide ImportErrors on `tests` sub-module, but display other exceptions
-        if e.name == modpath + '.tests' and e.msg.startswith('No module named'):
-            return []
-        _logger.exception('Can not `import %s`.', module)
+def _get_tests_modules(mod):
+    spec = importlib.util.find_spec('.tests', mod.name)
+    if not spec:
         return []
-    except Exception as e:
-        _logger.exception('Can not `import %s`.', module)
-        return []
-    if hasattr(mod, 'fast_suite') or hasattr(mod, 'checks'):
-        _logger.warning(
-            "Found deprecated fast_suite or checks attribute in test module "
-            "%s. These have no effect in or after version 8.0.",
-            mod.__name__)
 
-    result = [mod_obj for name, mod_obj in inspect.getmembers(mod, inspect.ismodule)
-              if name.startswith('test_')]
-    return result
+    tests_mod = importlib.import_module(spec.name)
+    return [
+        mod_obj
+        for name, mod_obj in inspect.getmembers(tests_mod, inspect.ismodule)
+        if name.startswith('test_')
+    ]
 
 def make_suite(module_names, position='at_install'):
     """ Creates a test suite for all the tests in the specified modules,
