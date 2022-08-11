@@ -88,6 +88,7 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/scss/survey_reports.scss',
         ],
         'web.assets_backend': [
+            'survey/static/src/question_page/*.js',
             'survey/static/src/js/fields_section_one2many.js',
             'survey/static/src/js/fields_form_page_description.js',
             'survey/static/src/js/survey_renderers.js',
@@ -97,7 +98,10 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/scss/survey_templates_results.scss',
         ],
         'web.assets_tests': [
-            'survey/static/tests/**/*',
+            'survey/static/tests/tours/*.js',
+        ],
+        'web.qunit_suite_tests': [
+            'survey/static/tests/components/*.js',
         ],
         'web.assets_common': [
             'survey/static/src/js/tours/survey_tour.js',
