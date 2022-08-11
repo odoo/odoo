@@ -4,7 +4,7 @@ import { TEST_USER_IDS } from '@bus/../tests/helpers/test_constants';
 
 import { registry } from '@web/core/registry';
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
-import { MockServer } from "@web/../tests/helpers/mock_server";
+import { makeMockServer } from "@web/../tests/helpers/mock_server";
 import core from 'web.core';
 
 const modelDefinitionsPromise = new Promise(resolve => {
@@ -74,12 +74,18 @@ let pyEnv;
  * Creates an environment that can be used to setup test data as well as
  * creating data after test start.
  *
- * @returns {Object} An environment that can be used to interact with the mock
- * server (creation, deletion, update of records...)
+ * @param {Object} serverData serverData to pass to the mockServer,
+ * models and records are ignored: models should be fetched and records
+ * should be created with the environment returned by this method.
+ * @param {Object} [serverData.action] actions to be passed to the mock
+ * server.
+ * @param {Object} [serverData.views] views to be passed to the mock
+ * server.
+ * @returns {Object} An environment that can be used to interact with
+ * the mock server (creation, deletion, update of records...)
  */
- export async function startServer() {
+ export async function startServer({ actions, views = {} } = {}) {
     const models = {};
-    const views = {};
     const modelDefinitions = await modelDefinitionsPromise;
     const recordsToInsertRegistry = registry.category('bus.model.definitions').category('recordsToInsert');
     for (const [modelName, fields] of modelDefinitions) {
@@ -90,10 +96,11 @@ let pyEnv;
         }
         models[modelName] = { fields: { ...fields }, records };
 
-        // generate default views for this model.
+        // generate default views for this model if none were passed.
         const viewArchsSubRegistries = registry.category('bus.view.archs').subRegistries;
         for (const [viewType, archsRegistry] of Object.entries(viewArchsSubRegistries)) {
             views[`${modelName},false,${viewType}`] =
+                views[`${modelName},false,${viewType}`] ||
                 archsRegistry.get(modelName, archsRegistry.get('default'));
         }
     }
@@ -193,8 +200,8 @@ let pyEnv;
             },
          },
     );
-    pyEnv['mockServer'] = new MockServer({ models }, {});
-    await pyEnv['mockServer'].setup();
+    pyEnv['mockServer'] = await makeMockServer({ actions, models, views });
+    pyEnv['mockServer'].pyEnv = pyEnv;
     registerCleanup(() => pyEnv = undefined);
     return pyEnv;
 }

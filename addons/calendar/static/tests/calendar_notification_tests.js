@@ -7,11 +7,12 @@ import { getPyEnv } from '@bus/../tests/helpers/mock_python_environment';
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { calendarNotificationService } from "@calendar/js/services/calendar_notification_service";
-import { click, getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
 const serviceRegistry = registry.category("services");
+const { afterNextRender } = owl.App;
 
 QUnit.module("Calendar Notification", (hooks) => {
     let target;
@@ -45,15 +46,16 @@ QUnit.module("Calendar Notification", (hooks) => {
             };
             await createWebClient({ mockRPC });
             const pyEnv = await getPyEnv();
-            pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "calendar.alarm", [{
-                "alarm_id": 1,
-                "event_id": 2,
-                "title": "Meeting",
-                "message": "Very old meeting message",
-                "timer": 20 * 60,
-                "notify_at": "1978-04-14 12:45:00",
-            }]);
-            await nextTick();
+            await afterNextRender(() => {
+                pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "calendar.alarm", [{
+                    "alarm_id": 1,
+                    "event_id": 2,
+                    "title": "Meeting",
+                    "message": "Very old meeting message",
+                    "timer": 20 * 60,
+                    "notify_at": "1978-04-14 12:45:00",
+                }]);
+            });
 
             assert.containsOnce(target, ".o_notification_body");
             assert.strictEqual(
@@ -97,15 +99,16 @@ QUnit.module("Calendar Notification", (hooks) => {
 
             await createWebClient({ mockRPC });
             const pyEnv = await getPyEnv();
-            pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "calendar.alarm", [{
-                "alarm_id": 1,
-                "event_id": 2,
-                "title": "Meeting",
-                "message": "Very old meeting message",
-                "timer": 20 * 60,
-                "notify_at": "1978-04-14 12:45:00",
-            }]);
-            await nextTick();
+            await afterNextRender(() => {
+                pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "calendar.alarm", [{
+                    "alarm_id": 1,
+                    "event_id": 2,
+                    "title": "Meeting",
+                    "message": "Very old meeting message",
+                    "timer": 20 * 60,
+                    "notify_at": "1978-04-14 12:45:00",
+                }]);
+            });
 
             assert.containsOnce(target, ".o_notification_body");
             assert.strictEqual(
@@ -137,15 +140,16 @@ QUnit.module("Calendar Notification", (hooks) => {
 
             await createWebClient({ mockRPC });
             const pyEnv = await getPyEnv();
-            pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "calendar.alarm", [{
-                "alarm_id": 1,
-                "event_id": 2,
-                "title": "Meeting",
-                "message": "Very old meeting message",
-                "timer": 20 * 60,
-                "notify_at": "1978-04-14 12:45:00",
-            }]);
-            await nextTick();
+            await afterNextRender(() => {
+                pyEnv['bus.bus']._sendone(pyEnv.currentPartner, "calendar.alarm", [{
+                    "alarm_id": 1,
+                    "event_id": 2,
+                    "title": "Meeting",
+                    "message": "Very old meeting message",
+                    "timer": 20 * 60,
+                    "notify_at": "1978-04-14 12:45:00",
+                }]);
+            });
 
             assert.containsOnce(target, ".o_notification_body");
             assert.strictEqual(

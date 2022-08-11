@@ -505,7 +505,6 @@ async function addMockEnvironment(widget, params) {
         widget: widget,
     });
 
-    await mockServer.setup();
     // build and set the Owl env on Component
     if (!('mockSRC' in params)) { // redirect src rpcs to the mock server
         params.mockSRC = true;
