@@ -496,7 +496,7 @@ export class OdooEditor extends EventTarget {
         }
     }
     observerFlush() {
-        this.observerApply(this.observer.takeRecords());
+        this.observerApply(this.filterMutationRecords(this.observer.takeRecords()));
     }
     observerActive(label) {
         this._observerUnactiveLabels.delete(label);
