@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
+from contextlib import nullcontext
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon
@@ -1197,8 +1197,8 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
             ('attach tuple 3', "attachement tupple content 3", {'cid': 'cid2'}),
         ]
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
-        with self.assertQueryCount(employee=49):
-            self.cr.sql_log = self.warm and self.cr.sql_log_count
+        enable_logging = self.cr._enable_logging() if self.warm else nullcontext()
+        with self.assertQueryCount(employee=49), enable_logging:
             record_container.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
                 subject='Test Subject',
@@ -1212,7 +1212,6 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
                 model_description=False,
                 mail_auto_delete=True
             )
-            self.cr.sql_log = False
         new_message = record_container.message_ids[0]
         self.assertEqual(attachments.mapped('res_model'), [record_container._name for i in range(3)])
         self.assertEqual(attachments.mapped('res_id'), [record_container.id for i in range(3)])
