@@ -18,8 +18,9 @@ class GiftCardController(main.WebsiteSale):
     @http.route()
     def shop_payment(self, **post):
         order = request.website.sale_get_order()
+        res = super().shop_payment(**post)
         order._recompute_gift_card_lines()
-        return super().shop_payment(**post)
+        return res
 
     @http.route(['/shop/cart'], type='http', auth="public", website=True)
     def cart(self, **post):
