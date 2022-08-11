@@ -9,6 +9,7 @@ import psycopg2.errorcodes
 import odoo
 from odoo.tests import common
 from odoo.tests.common import BaseCase
+from odoo.tools.misc import mute_logger
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
@@ -85,13 +86,13 @@ class TestIrSequenceNoGap(BaseCase):
             n = env['ir.sequence'].next_by_code('test_sequence_type_2')
             self.assertTrue(n)
 
+    @mute_logger('odoo.sql_db')
     def test_ir_sequence_draw_twice_no_gap(self):
         """ Try to draw a number from two transactions.
         This is expected to not work.
         """
         with environment() as env0:
             with environment() as env1:
-                env1.cr._default_log_exceptions = False # Prevent logging a traceback
                 # NOTE: The error has to be an OperationalError
                 # s.t. the automatic request retry (service/model.py) works.
                 with self.assertRaises(psycopg2.OperationalError) as e:

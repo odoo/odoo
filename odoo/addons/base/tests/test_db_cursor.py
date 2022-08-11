@@ -4,6 +4,7 @@ import logging
 from functools import partial
 
 import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 
 import odoo
 from odoo.sql_db import TestCursor
@@ -40,6 +41,10 @@ class TestRealCursor(BaseCase):
         cr = registry().cursor()
         cr.close()
         cr.close()
+
+    def test_transaction_isolation_cursor(self):
+        with registry().cursor() as cr:
+            self.assertEqual(cr.connection.isolation_level, ISOLATION_LEVEL_REPEATABLE_READ)
 
 class TestTestCursor(common.TransactionCase):
     def setUp(self):
