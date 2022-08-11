@@ -4,16 +4,12 @@
 """
 Some functions related to the os and os.path module
 """
-import logging
 import os
 import re
-import tempfile
 import zipfile
 
-from contextlib import contextmanager
 from os.path import join as opj
 
-_logger = logging.getLogger(__name__)
 
 WINDOWS_RESERVED = re.compile(r'''
     ^
@@ -59,28 +55,14 @@ def listdir(dir, recursive=False):
     paths relative to the provided `dir` except completely broken if the symlink
     it follows leaves `dir`...
     """
-    if not recursive:
-        _logger.getChild('listdir').warning("Deprecated: just call os.listdir...")
+    assert recursive, "use `os.listdir` or `pathlib.Path.iterdir`"
     dir = os.path.normpath(dir)
-    if not recursive:
-        return os.listdir(dir)
 
     res = []
     for root, _, files in os.walk(dir, followlinks=True):
         r = os.path.relpath(root, dir)
-        # FIXME: what should happen if root is outside dir?
         yield from (opj(r, f) for f in files)
     return res
-
-def walksymlinks(top, topdown=True, onerror=None):
-    _logger.getChild('walksymlinks').warning("Deprecated: use os.walk(followlinks=True) instead")
-    return os.walk(top, topdown=topdown, onerror=onerror, followlinks=True)
-
-@contextmanager
-def tempdir():
-    _logger.getChild('tempdir').warning("Deprecated: use tempfile.TemporaryDirectory")
-    with tempfile.TemporaryDirectory() as d:
-        yield d
 
 def zip_dir(path, stream, include_dir=True, fnct_sort=None):      # TODO add ignore list
     """
@@ -106,46 +88,10 @@ def zip_dir(path, stream, include_dir=True, fnct_sort=None):      # TODO add ign
 
 
 if os.name != 'nt':
-    getppid = os.getppid
     is_running_as_nt_service = lambda: False
 else:
-    import ctypes
     import win32service as ws
     import win32serviceutil as wsu
-
-    # based on http://mail.python.org/pipermail/python-win32/2007-June/006174.html
-    _TH32CS_SNAPPROCESS = 0x00000002
-    class _PROCESSENTRY32(ctypes.Structure):
-        _fields_ = [("dwSize", ctypes.c_ulong),
-                    ("cntUsage", ctypes.c_ulong),
-                    ("th32ProcessID", ctypes.c_ulong),
-                    ("th32DefaultHeapID", ctypes.c_ulong),
-                    ("th32ModuleID", ctypes.c_ulong),
-                    ("cntThreads", ctypes.c_ulong),
-                    ("th32ParentProcessID", ctypes.c_ulong),
-                    ("pcPriClassBase", ctypes.c_ulong),
-                    ("dwFlags", ctypes.c_ulong),
-                    ("szExeFile", ctypes.c_char * 260)]
-
-    def getppid():
-        CreateToolhelp32Snapshot = ctypes.windll.kernel32.CreateToolhelp32Snapshot
-        Process32First = ctypes.windll.kernel32.Process32First
-        Process32Next = ctypes.windll.kernel32.Process32Next
-        CloseHandle = ctypes.windll.kernel32.CloseHandle
-        hProcessSnap = CreateToolhelp32Snapshot(_TH32CS_SNAPPROCESS, 0)
-        current_pid = os.getpid()
-        try:
-            pe32 = _PROCESSENTRY32()
-            pe32.dwSize = ctypes.sizeof(_PROCESSENTRY32)
-            if not Process32First(hProcessSnap, ctypes.byref(pe32)):
-                raise OSError('Failed getting first process.')
-            while True:
-                if pe32.th32ProcessID == current_pid:
-                    return pe32.th32ParentProcessID
-                if not Process32Next(hProcessSnap, ctypes.byref(pe32)):
-                    return None
-        finally:
-            CloseHandle(hProcessSnap)
 
     from contextlib import contextmanager
     from odoo.release import nt_service_name
@@ -162,10 +108,6 @@ else:
             with close_srv(ws.OpenSCManager(None, None, ws.SC_MANAGER_ALL_ACCESS)) as hscm:
                 with close_srv(wsu.SmartOpenService(hscm, nt_service_name, ws.SERVICE_ALL_ACCESS)) as hs:
                     info = ws.QueryServiceStatusEx(hs)
-                    return info['ProcessId'] == getppid()
+                    return info['ProcessId'] == os.getppid()
         except Exception:
             return False
-
-if __name__ == '__main__':
-    from pprint import pprint as pp
-    pp(listdir('../report', True))
