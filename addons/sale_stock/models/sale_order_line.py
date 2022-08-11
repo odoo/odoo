@@ -15,7 +15,7 @@ class SaleOrderLine(models.Model):
     qty_delivered_method = fields.Selection(selection_add=[('stock_move', 'Stock Moves')])
     route_id = fields.Many2one('stock.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict', check_company=True)
     move_ids = fields.One2many('stock.move', 'sale_line_id', string='Stock Moves')
-    product_type = fields.Selection(related='product_id.detailed_type')
+    product_type = fields.Selection(related='product_id.detailed_type', depends=['product_id'])
     virtual_available_at_date = fields.Float(compute='_compute_qty_at_date', digits='Product Unit of Measure')
     scheduled_date = fields.Datetime(compute='_compute_qty_at_date')
     forecast_expected_date = fields.Datetime(compute='_compute_qty_at_date')
