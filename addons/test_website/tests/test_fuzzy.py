@@ -44,7 +44,7 @@ class TestAutoComplete(TransactionCase):
         # => Find exact match through the fallback
         self._autocomplete('REF3000', 1, False)
         # => No exact match => Find fuzzy within first 1000 (distance=3: replace D by F, move 3, add 1)
-        self._autocomplete('RED3000', 1, 'ref1003')
+        self._autocomplete('RED3000', 1, 'ref3000' if self.env.registry.has_trigram else 'ref1003')
         # => Find exact match through the fallback
         self._autocomplete('REF300', 10, False)
         # => Find exact match through the fallback
