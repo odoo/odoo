@@ -3,12 +3,10 @@
     <data>
         <!-- Discuss utility templates for notifications -->
         <template id="message_user_assigned">
-<div style="margin: 0px; padding: 0px; font-size: 13px;">
     <span>Dear <t t-esc="object.user_id.sudo().name"/>,</span>
     <br/><br/>
     <span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.display_name"/>.</span>
     <br/>
-</div>
         </template>
 
         <template id="message_activity_done">
