@@ -514,11 +514,11 @@ registerModel({
                 // kept for compatibility in stable
                 inbox.update({ counter: decrement(message_ids.length) });
             }
-            if (inbox.counter > inbox.cache.fetchedMessages.length) {
+            if (inbox.counter > inbox.thread.cache.fetchedMessages.length) {
                 // Force refresh Inbox because depending on what was marked as
                 // read the cache might become empty even though there are more
                 // messages on the server.
-                inbox.cache.update({ hasToLoadMessages: true });
+                inbox.thread.cache.update({ hasToLoadMessages: true });
             }
         },
         /**

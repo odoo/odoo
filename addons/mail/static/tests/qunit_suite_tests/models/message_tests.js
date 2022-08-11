@@ -70,9 +70,9 @@ QUnit.test('create', async function (assert) {
         }))
     );
     // from partnerId being in needaction_partner_ids
-    assert.ok(message.threads.includes(messaging.inbox));
+    assert.ok(message.threads.includes(messaging.inbox.thread));
     // from partnerId being in starred_partner_ids
-    assert.ok(message.threads.includes(messaging.starred));
+    assert.ok(message.threads.includes(messaging.starred.thread));
     const attachment = messaging.models['Attachment'].findFromIdentifyingData({ id: 750 });
     assert.ok(attachment);
     assert.strictEqual(attachment.filename, "test.txt");

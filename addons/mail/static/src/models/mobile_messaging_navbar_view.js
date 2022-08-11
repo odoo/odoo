@@ -19,9 +19,9 @@ registerModel({
                 this.discuss.update({ activeMobileNavbarTabId: tabId });
                 if (
                     this.discuss.activeMobileNavbarTabId === 'mailbox' &&
-                    (!this.discuss.thread || this.discuss.thread.model !== 'mailbox')
+                    (!this.discuss.thread || !this.discuss.thread.mailbox)
                 ) {
-                    this.discuss.update({ thread: replace(this.messaging.inbox) });
+                    this.discuss.update({ thread: replace(this.messaging.inbox.thread) });
                 }
                 if (this.discuss.activeMobileNavbarTabId !== 'mailbox') {
                     this.discuss.update({ thread: clear() });

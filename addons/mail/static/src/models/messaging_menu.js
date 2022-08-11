@@ -100,7 +100,7 @@ registerModel({
             this.messaging.refreshIsNotificationPermissionDefault();
             if (this.isOpen) {
                 // populate some needaction messages on threads.
-                this.messaging.inbox.cache.update({ isCacheRefreshRequested: true });
+                this.messaging.inbox.thread.cache.update({ isCacheRefreshRequested: true });
             }
         },
         /**

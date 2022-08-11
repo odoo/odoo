@@ -35,7 +35,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, insertText, openDiscuss } = await start();
+    const { afterEvent, click, insertText, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -43,8 +43,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -134,7 +133,7 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, openDiscuss } = await start();
+    const { afterEvent, click, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -142,8 +141,7 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -192,7 +190,7 @@ QUnit.test('reply: discard on reply button toggle', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, openDiscuss } = await start();
+    const { afterEvent, click, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -200,8 +198,7 @@ QUnit.test('reply: discard on reply button toggle', async function (assert) {
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -244,7 +241,7 @@ QUnit.test('reply: discard on click away', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, openDiscuss } = await start();
+    const { afterEvent, click, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -252,8 +249,7 @@ QUnit.test('reply: discard on click away', async function (assert) {
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -325,7 +321,7 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, insertText, openDiscuss } = await start({
+    const { afterEvent, click, insertText, messaging, openDiscuss } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('/mail/message/post');
@@ -349,8 +345,7 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -392,7 +387,7 @@ QUnit.test('"reply to" composer should send message if message replied to is not
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, click, insertText, openDiscuss } = await start({
+    const { afterEvent, click, insertText, messaging, openDiscuss } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('/mail/message/post');
@@ -416,8 +411,7 @@ QUnit.test('"reply to" composer should send message if message replied to is not
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -494,7 +488,7 @@ QUnit.test('show subject of message in Inbox', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, openDiscuss } = await start();
+    const { afterEvent, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -502,8 +496,7 @@ QUnit.test('show subject of message in Inbox', async function (assert) {
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -541,7 +534,7 @@ QUnit.test('show subject of message in history', async function (assert) {
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, openDiscuss } = await start({
+    const { afterEvent, messaging, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: 'mail.box_history',
@@ -555,8 +548,7 @@ QUnit.test('show subject of message in history', async function (assert) {
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'history'
+                threadViewer.thread === messaging.history.thread
             );
         },
     });
@@ -595,7 +587,7 @@ QUnit.test('click on (non-channel/non-partner) origin thread link should redirec
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, env, openDiscuss } = await start();
+    const { afterEvent, env, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -603,8 +595,7 @@ QUnit.test('click on (non-channel/non-partner) origin thread link should redirec
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -675,7 +666,7 @@ QUnit.test('subject should not be shown when subject is the same as the thread n
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, openDiscuss } = await start();
+    const { afterEvent, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -683,8 +674,7 @@ QUnit.test('subject should not be shown when subject is the same as the thread n
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -713,7 +703,7 @@ QUnit.test('subject should not be shown when subject is the same as the thread n
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, openDiscuss } = await start();
+    const { afterEvent, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -721,8 +711,7 @@ QUnit.test('subject should not be shown when subject is the same as the thread n
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -751,7 +740,7 @@ QUnit.test('subject should not be shown when subject differs from thread name on
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, openDiscuss } = await start();
+    const { afterEvent, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -759,8 +748,7 @@ QUnit.test('subject should not be shown when subject differs from thread name on
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -789,7 +777,7 @@ QUnit.test('subject should not be shown when subject differs from thread name on
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, openDiscuss } = await start();
+    const { afterEvent, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -797,8 +785,7 @@ QUnit.test('subject should not be shown when subject differs from thread name on
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -827,7 +814,7 @@ QUnit.test('subject should be shown when the thread name has an extra prefix com
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, openDiscuss } = await start();
+    const { afterEvent, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -835,8 +822,7 @@ QUnit.test('subject should be shown when the thread name has an extra prefix com
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -865,7 +851,7 @@ QUnit.test('subject should not be shown when subject differs from thread name on
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, openDiscuss } = await start();
+    const { afterEvent, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -873,8 +859,7 @@ QUnit.test('subject should not be shown when subject differs from thread name on
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });
@@ -903,7 +888,7 @@ QUnit.test('subject should not be shown when subject differs from thread name on
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId,
     });
-    const { afterEvent, openDiscuss } = await start();
+    const { afterEvent, messaging, openDiscuss } = await start();
     await afterEvent({
         eventName: 'o-thread-view-hint-processed',
         func: openDiscuss,
@@ -911,8 +896,7 @@ QUnit.test('subject should not be shown when subject differs from thread name on
         predicate: ({ hint, threadViewer }) => {
             return (
                 hint.type === 'messages-loaded' &&
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'inbox'
+                threadViewer.thread === messaging.inbox.thread
             );
         },
     });

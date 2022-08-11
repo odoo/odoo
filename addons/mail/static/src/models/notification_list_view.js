@@ -32,28 +32,6 @@ registerModel({
          */
         _computeFilteredThreads() {
             switch (this.filter) {
-                case 'mailbox': {
-                    return replace(this.messaging.models['Thread']
-                        .all(thread => thread.isPinned && thread.model === 'mail.box')
-                        .sort((mailbox1, mailbox2) => {
-                            if (mailbox1 === this.messaging.inbox) {
-                                return -1;
-                            }
-                            if (mailbox2 === this.messaging.inbox) {
-                                return 1;
-                            }
-                            if (mailbox1 === this.messaging.starred) {
-                                return -1;
-                            }
-                            if (mailbox2 === this.messaging.starred) {
-                                return 1;
-                            }
-                            const mailbox1Name = mailbox1.displayName;
-                            const mailbox2Name = mailbox2.displayName;
-                            mailbox1Name < mailbox2Name ? -1 : 1;
-                        })
-                    );
-                }
                 case 'channel': {
                     return replace(this.messaging.models['Thread']
                         .all(thread =>
@@ -132,7 +110,7 @@ registerModel({
             }
             return insertAndReplace(
                 this.messaging.models['Thread']
-                    .all(t => t.model !== 'mail.box' && t.needactionMessagesAsOriginThread.length > 0)
+                    .all(t => !t.mailbox && t.needactionMessagesAsOriginThread.length > 0)
                     .sort((t1, t2) => {
                         if (t1.needactionMessagesAsOriginThread.length > 0 && t2.needactionMessagesAsOriginThread.length === 0) {
                             return -1;

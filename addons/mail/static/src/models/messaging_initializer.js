@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { executeGracefully } from '@mail/utils/utils';
-import { link, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
+import { link, insert, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessagingInitializer',
@@ -21,26 +21,6 @@ registerModel({
          * the current user. This includes pinned channels for instance.
          */
         async start() {
-            this.messaging.update({
-                history: insertAndReplace({
-                    id: 'history',
-                    isServerPinned: true,
-                    model: 'mail.box',
-                    name: this.env._t("History"),
-                }),
-                inbox: insertAndReplace({
-                    id: 'inbox',
-                    isServerPinned: true,
-                    model: 'mail.box',
-                    name: this.env._t("Inbox"),
-                }),
-                starred: insertAndReplace({
-                    id: 'starred',
-                    isServerPinned: true,
-                    model: 'mail.box',
-                    name: this.env._t("Starred"),
-                }),
-            });
             this.messaging.device.start();
             const discuss = this.messaging.discuss;
             const data = await this.performInitRpc();

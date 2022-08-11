@@ -123,7 +123,7 @@ registerModel({
             return Boolean(
                 this.messaging && this.messaging.inbox &&
                 this.messageView && this.messageView.messageListViewMessageViewItemOwner && this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
-                this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox
+                this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox.thread
             );
         },
         /**
@@ -135,8 +135,8 @@ registerModel({
                 this.messaging && this.messaging.inbox &&
                 this.message && !this.message.isTemporary && !this.message.isTransient &&
                 this.messageView && this.messageView.messageListViewMessageViewItemOwner && this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread && (
-                    this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox ||
-                    this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.model === 'mail.channel'
+                    this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread === this.messaging.inbox.thread ||
+                    this.messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.channel
                 )
             );
         },
