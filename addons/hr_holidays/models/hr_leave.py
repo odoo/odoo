@@ -733,6 +733,8 @@ class HolidaysRequest(models.Model):
     def name_get(self):
         res = []
         for leave in self:
+            user_tz = timezone(self.env.user.tz if self.env.user.tz else 'UTC')
+            date_from_utc = leave.date_from.astimezone(user_tz).date()
             if self.env.context.get('short_name'):
                 if leave.leave_type_request_unit == 'hour':
                     res.append((leave.id, _("%s : %.2f hours") % (leave.name or leave.holiday_status_id.name, leave.number_of_hours_display)))
@@ -767,7 +769,7 @@ class HolidaysRequest(models.Model):
                                 person=target,
                                 leave_type=leave.holiday_status_id.name,
                                 duration=leave.number_of_hours_display,
-                                date=fields.Date.to_string(leave.date_from),
+                                date=fields.Date.to_string(date_from_utc),
                             )
                         ))
                 else:
