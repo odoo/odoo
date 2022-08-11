@@ -26,7 +26,7 @@ export class OuterGroup extends Group {
         return items.map((item) => {
             const [slotName, slot] = item;
             const itemSpan = slot.itemSpan || 1;
-            return { name: slotName, size: itemSpan * colSize, newline: slot.newline };
+            return { name: slotName, size: itemSpan * colSize, newline: slot.newline, colspan: itemSpan };
         });
     }
 }
@@ -34,6 +34,7 @@ OuterGroup.template = "web.Form.OuterGroup";
 OuterGroup.defaultProps = {
     ...Group.defaultProps,
     slots: [],
+    hasOuterTemplate: true,
 };
 
 export class InnerGroup extends Group {
@@ -66,6 +67,9 @@ export class InnerGroup extends Group {
             const isVisible = !("isVisible" in slot) || slot.isVisible;
             currentRow.push({ name: slotName, subType, itemSpan, props, isVisible, Component });
             reservedSpace += itemSpan || 1;
+
+            // Allows to remove the line if the content is not visible instead of leaving an empty line.
+            currentRow.isVisible = isVisible;
         }
         rows.push(currentRow);
 

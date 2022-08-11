@@ -919,7 +919,7 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
         });
 
-        const groups = target.querySelectorAll(".o_group");
+        const groups = target.querySelectorAll(".o_inner_group");
 
         assert.containsNone(
             groups[0],
