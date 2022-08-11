@@ -17,6 +17,8 @@ odoo.define('point_of_sale.PartnerDetailsEdit', function(require) {
                 'country_id': partner.country_id && partner.country_id[0],
                 'state_id': partner.state_id && partner.state_id[0],
             };
+            if (!partner.property_product_pricelist)
+                this.changes['property_product_pricelist'] = this.env.pos.default_pricelist.id;
 
             onMounted(() => {
                 this.env.bus.on('save-partner', this, this.saveChanges);
