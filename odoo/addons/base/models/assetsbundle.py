@@ -128,15 +128,15 @@ class AssetsBundle(object):
         for f in files:
             if css:
                 if f['atype'] == 'text/sass':
-                    self.stylesheets.append(SassStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
+                    self.stylesheets.append(SassStylesheetAsset(url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
                 elif f['atype'] == 'text/scss':
-                    self.stylesheets.append(ScssStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
+                    self.stylesheets.append(ScssStylesheetAsset(url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
                 elif f['atype'] == 'text/less':
-                    self.stylesheets.append(LessStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
+                    self.stylesheets.append(LessStylesheetAsset(url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
                 elif f['atype'] == 'text/css':
-                    self.stylesheets.append(StylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
+                    self.stylesheets.append(StylesheetAsset(url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
             if js and f['atype'] == 'text/javascript':
-                self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
+                self.javascripts.append(JavascriptAsset(url=f['url'], filename=f['filename'], inline=f['content']))
 
     def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False):
         """
@@ -163,8 +163,6 @@ class AssetsBundle(object):
                 response.append(("link", attr, None))
             if self.css_errors:
                 msg = '\n'.join(self.css_errors)
-
-                js = JavascriptAsset(self, inline=self.dialog_message(msg))
                 response.append((
                     'script',
                     {
@@ -173,9 +171,8 @@ class AssetsBundle(object):
                         'data-asset-bundle': self.name,
                         'data-asset-version': self.version,
                     },
-                    js.with_header()
+                    self.dialog_message(msg)
                 ))
-                css = StylesheetAsset(self, url='')
                 response.append((
                     'link', 
                     {
@@ -584,7 +581,13 @@ class AssetsBundle(object):
             for atype in (SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset):
                 assets = [asset for asset in self.stylesheets if isinstance(asset, atype)]
                 if assets:
-                    source = '\n'.join([asset.get_source() for asset in assets])
+                    sources = []
+                    for asset in assets:
+                        try:
+                            sources.append(asset.get_source())
+                        except AssetError as e:
+                            self.css_errors.append(str(e))
+                    source = '\n'.join(sources)
                     compiled += self.compile_css(assets[0].compile, source)
 
             # We want to run rtlcss on normal css, so merge it in compiled
@@ -593,15 +596,11 @@ class AssetsBundle(object):
                 compiled += '\n'.join([asset.get_source() for asset in stylesheet_assets])
                 compiled = self.run_rtlcss(compiled)
 
-            if not self.css_errors and old_attachments:
-                self._unlink_attachments(old_attachments)
-                old_attachments = None
-
             fragments = self.rx_css_split.split(compiled)
             at_rules = fragments.pop(0)
             if at_rules:
                 # Sass and less moves @at-rules to the top in order to stay css 2.1 compatible
-                self.stylesheets.insert(0, StylesheetAsset(self, inline=at_rules))
+                self.stylesheets.insert(0, StylesheetAsset(inline=at_rules))
             while fragments:
                 asset_id = fragments.pop(0)
                 asset = next(asset for asset in self.stylesheets if asset.id == asset_id)
@@ -709,20 +708,17 @@ class AssetsBundle(object):
         return error
 
 class WebAsset(object):
-    html_url_format = '%s'
     _content = None
     _filename = None
     _ir_attach = None
     _id = None
 
-    def __init__(self, bundle, inline=None, url=None, filename=None):
-        self.bundle = bundle
+    def __init__(self, inline=None, url=None, filename=None):
         self.inline = inline
         self._filename = filename
         self.url = url
-        self.html_url_args = url
         if not inline and not url:
-            raise Exception("An asset should either be inlined or url linked, defined in bundle '%s'" % bundle.name)
+            raise Exception("An asset should either be inlined or url linked.")
 
     @func.lazy_property
     def id(self):
@@ -732,10 +728,6 @@ class WebAsset(object):
     @func.lazy_property
     def name(self):
         return '<inline asset>' if self.inline else self.url
-
-    @property
-    def html_url(self):
-        return self.html_url_format % self.html_url_args
 
     def stat(self):
         if not (self.inline or self._filename or self._ir_attach):
@@ -832,8 +824,8 @@ class WebAsset(object):
 
 class JavascriptAsset(WebAsset):
 
-    def __init__(self, bundle, inline=None, url=None, filename=None):
-        super().__init__(bundle, inline, url, filename)
+    def __init__(self, inline=None, url=None, filename=None):
+        super().__init__(inline, url, filename)
         self.is_transpiled = is_odoo_module(super().content)
         self._converted_content = None
 
@@ -892,14 +884,9 @@ class StylesheetAsset(WebAsset):
     rx_sourceMap = re.compile(r'(/\*# sourceMappingURL=.*)', re.U)
     rx_charset = re.compile(r'(@charset "[^"]+";)', re.U)
 
-    def __init__(self, *args, **kw):
-        self.media = kw.pop('media', None)
-        self.direction = kw.pop('direction', None)
+    def __init__(self, *args, media=None, **kw):
+        self.media = media
         super(StylesheetAsset, self).__init__(*args, **kw)
-        if self.direction == 'rtl' and self.url:
-            self.html_url_args = self.url.rsplit('.', 1)
-            self.html_url_format = '%%s/%s/%s.%%s' % ('rtl', self.bundle.name)
-            self.html_url_args = tuple(self.html_url_args)
 
     @property
     def content(self):
@@ -909,30 +896,26 @@ class StylesheetAsset(WebAsset):
         return content
 
     def _fetch_content(self):
-        try:
-            content = super(StylesheetAsset, self)._fetch_content()
-            web_dir = os.path.dirname(self.url)
+        content = super(StylesheetAsset, self)._fetch_content()
+        web_dir = os.path.dirname(self.url)
 
-            if self.rx_import:
-                content = self.rx_import.sub(
-                    r"""@import \1%s/""" % (web_dir,),
-                    content,
-                )
+        if self.rx_import:
+            content = self.rx_import.sub(
+                r"""@import \1%s/""" % (web_dir,),
+                content,
+            )
 
-            if self.rx_url:
-                content = self.rx_url.sub(
-                    r"url(\1%s/" % (web_dir,),
-                    content,
-                )
+        if self.rx_url:
+            content = self.rx_url.sub(
+                r"url(\1%s/" % (web_dir,),
+                content,
+            )
 
-            if self.rx_charset:
-                # remove charset declarations, we only support utf-8
-                content = self.rx_charset.sub('', content)
+        if self.rx_charset:
+            # remove charset declarations, we only support utf-8
+            content = self.rx_charset.sub('', content)
 
-            return content
-        except AssetError as e:
-            self.bundle.css_errors.append(str(e))
-            return ''
+        return content
 
     def get_source(self):
         content = self.inline or self._fetch_content()
@@ -950,11 +933,6 @@ class StylesheetAsset(WebAsset):
 
 class PreprocessedCSS(StylesheetAsset):
     rx_import = None
-
-    def __init__(self, *args, **kw):
-        super(PreprocessedCSS, self).__init__(*args, **kw)
-        self.html_url_args = tuple(self.url.rsplit('/', 1))
-        self.html_url_format = '%%s/%s%s/%%s.css' % ('rtl/' if self.direction == 'rtl' else '', self.bundle.name)
 
     def get_command(self):
         raise NotImplementedError
