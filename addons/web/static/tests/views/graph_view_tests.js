@@ -193,6 +193,12 @@ QUnit.module("Views", (hooks) => {
                             group_operator: "sum",
                             sortable: true,
                         },
+                        color_ids: {
+                            string: "Colors",
+                            type: "many2many",
+                            relation: "color",
+                            store: true,
+                        },
                     },
                     records: [
                         {
@@ -202,6 +208,7 @@ QUnit.module("Views", (hooks) => {
                             product_id: 37,
                             date: "2016-01-01",
                             revenue: 1,
+                            color_ids: [7],
                         },
                         {
                             id: 2,
@@ -211,6 +218,7 @@ QUnit.module("Views", (hooks) => {
                             color_id: 7,
                             date: "2016-01-03",
                             revenue: 2,
+                            color_ids: [14],
                         },
                         {
                             id: 3,
@@ -219,6 +227,7 @@ QUnit.module("Views", (hooks) => {
                             product_id: 37,
                             date: "2016-03-04",
                             revenue: 3,
+                            color_ids: [7, 14],
                         },
                         {
                             id: 4,
@@ -227,6 +236,7 @@ QUnit.module("Views", (hooks) => {
                             product_id: 37,
                             date: "2016-03-07",
                             revenue: 4,
+                            color_ids: [7],
                         },
                         {
                             id: 5,
@@ -235,6 +245,7 @@ QUnit.module("Views", (hooks) => {
                             product_id: 41,
                             date: "2016-05-01",
                             revenue: 5,
+                            color_ids: [7, 14],
                         },
                         { id: 6, foo: 63, bar: false, product_id: 41 },
                         { id: 7, foo: 42, bar: false, product_id: 41 },
@@ -547,6 +558,96 @@ QUnit.module("Views", (hooks) => {
             },
             2,
             1
+        );
+    });
+
+    QUnit.test("bar chart many2many groupBy", async function (assert) {
+        assert.expect(16);
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph>
+                    <field name="revenue" type="measure"/>
+                    <field name="color_ids"/>
+                </graph>`,
+        });
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
+        checkLabels(assert, graph, ["Undefined", "black", "red"]);
+        checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label"], {
+            backgroundColor: "#1f77b4",
+            borderColor: undefined,
+            data: [8, 10, 13],
+            label: "Revenue",
+        });
+        checkLegend(assert, graph, "Revenue");
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "Undefined", value: "8" }], title: "Revenue" },
+            0
+        );
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "black", value: "10" }], title: "Revenue" },
+            1
+        );
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "red", value: "13" }], title: "Revenue" },
+            2
+        );
+    });
+
+    QUnit.test("differentiate many2many values with same label", async function (assert) {
+        assert.expect(19);
+        serverData.models.color.records.push({ id: 21, display_name: "red" });
+        serverData.models.foo.records.push({ id: 30, color_ids: [21], revenue: 14 });
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph>
+                    <field name="revenue" type="measure"/>
+                    <field name="color_ids"/>
+                </graph>`,
+        });
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
+        checkLabels(assert, graph, ["Undefined", "black", "red", "red (2)"]);
+        checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label"], {
+            backgroundColor: "#1f77b4",
+            borderColor: undefined,
+            data: [8, 10, 14, 13],
+            label: "Revenue",
+        });
+
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "Undefined", value: "8" }], title: "Revenue" },
+            0
+        );
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "black", value: "10" }], title: "Revenue" },
+            1
+        );
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "red", value: "14" }], title: "Revenue" },
+            2
+        );
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "red (2)", value: "13" }], title: "Revenue" },
+            3
         );
     });
 
@@ -883,6 +984,42 @@ QUnit.module("Views", (hooks) => {
                     { label: "true / xpad", value: "0" },
                 ],
             },
+            1
+        );
+    });
+
+    QUnit.test("line chart many2many groupBy", async function (assert) {
+        assert.expect(12);
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph type="line">
+                    <field name="revenue" type="measure"/>
+                    <field name="color_ids"/>
+                </graph>
+            `,
+        });
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
+        checkLabels(assert, graph, ["black", "red"]);
+        checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label"], {
+            backgroundColor: "rgba(31,119,180,0.4)",
+            borderColor: "#1f77b4",
+            data: [10, 13],
+            label: "Revenue",
+        });
+        checkLegend(assert, graph, "Revenue");
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "black", value: "10" }], title: "Revenue" },
+            0
+        );
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "red", value: "13" }], title: "Revenue" },
             1
         );
     });
@@ -1504,6 +1641,47 @@ QUnit.module("Views", (hooks) => {
         checkLegend(assert, graph, ["false", "true"]);
         checkTooltip(assert, graph, { lines: [{ label: "false", value: "5 (62.50%)" }] }, 0);
         checkTooltip(assert, graph, { lines: [{ label: "true", value: "3 (37.50%)" }] }, 1);
+    });
+
+    QUnit.test("pie chart many2many groupby", async function (assert) {
+        assert.expect(16);
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph type="pie">
+                    <field name="revenue" type="measure"/>
+                    <field name="color_ids"/>
+                </graph>
+            `,
+        });
+        assert.containsOnce(target, "div.o_graph_canvas_container canvas");
+        checkLabels(assert, graph, ["Undefined", "black", "red"]);
+        checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data"], {
+            backgroundColor: ["#1f77b4", "#ff7f0e", "#aec7e8"],
+            borderColor: BORDER_WHITE,
+            data: [8, 10, 13],
+        });
+        checkLegend(assert, graph, ["Undefined", "black", "red"]);
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "Undefined", value: "8 (25.81%)" }], title: "Revenue" },
+            0
+        );
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "black", value: "10 (32.26%)" }], title: "Revenue" },
+            1
+        );
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "red", value: "13 (41.94%)" }], title: "Revenue" },
+            2
+        );
     });
 
     QUnit.test("pie chart rendering (two groupBy)", async function (assert) {
