@@ -113,7 +113,7 @@ class LegacyTaxTotalsComponent extends AbstractFieldOwl {
     setup() {
         super.setup();
         this.totals = useState({value: this.value ? this.value : null});
-        this._computeTotalsFormat()
+        if (this.totals.value) this._computeTotalsFormat();
         this.readonly = this.mode == 'readonly' || this.record.evalModifiers(this.attrs.modifiers).readonly;
         onWillUpdateProps(this.onWillUpdateProps);
     }

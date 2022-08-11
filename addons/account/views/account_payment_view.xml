@@ -210,12 +210,12 @@
                             </button>
 
                             <!-- Statement stat button -->
-                            <button name="button_open_statements" type="object"
+                            <button name="button_open_statement_lines" type="object"
                                     class="oe_stat_button" icon="fa-bars"
-                                    attrs="{'invisible': [('reconciled_statements_count','=', 0)]}">
-                                <field name="reconciled_statements_count"/>
-                                <span attrs="{'invisible': [('reconciled_statements_count','&gt;', 1)]}">Statement</span>
-                                <span attrs="{'invisible': [('reconciled_statements_count','&lt;=', 1)]}">Statements</span>
+                                    attrs="{'invisible': [('reconciled_statement_lines_count','=', 0)]}">
+                                <field name="reconciled_statement_lines_count"/>
+                                <span attrs="{'invisible': [('reconciled_statement_lines_count','&gt;', 1)]}">Statement line</span>
+                                <span attrs="{'invisible': [('reconciled_statement_lines_count','&lt;=', 1)]}">Statement lines</span>
                             </button>
 
                             <!-- Journal Entry  button -->

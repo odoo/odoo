@@ -19,6 +19,7 @@ You could use this simplified accounting in case you work with an (external) acc
     'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
+        'data/bank_statement_balance.sql',
         'data/account_data.xml',
         'data/digest_data.xml',
         'views/account_report.xml',
@@ -31,7 +32,6 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_payment_register_views.xml',
         'views/account_move_views.xml',
         'wizard/setup_wizards_view.xml',
-        'wizard/pos_box.xml',
         'views/account_account_views.xml',
         'views/account_group_views.xml',
         'views/account_journal_views.xml',

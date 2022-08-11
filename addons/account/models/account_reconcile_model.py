@@ -214,7 +214,7 @@ class AccountReconcileModelLine(models.Model):
             }
 
         if not aml_vals['name']:
-            aml_vals['name'] = st_line.payment_ref
+            aml_vals['name'] = st_line.payment_ref or '/'
 
         return aml_vals
 

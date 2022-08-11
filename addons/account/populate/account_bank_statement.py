@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """Classes defining the populate factory for Bank Statements and related models."""
+import random
+
 from odoo import models
 from odoo.tools import populate
 
@@ -21,22 +23,91 @@ class AccountBankStatement(models.Model):
         'large': 20000,
     }
 
-    _populate_dependencies = ['account.journal', 'res.company']
+    _populate_dependencies = ['account.bank.statement.line', ]
 
     def _populate_factories(self):
-        company_ids = self.env['res.company'].search([
-            ('chart_template_id', '!=', False),
-            ('id', 'in', self.env.registry.populated_models['res.company']),
-        ])
-        journal_ids = self.env['account.journal'].search([
-            ('company_id', 'in', company_ids.ids),
-            ('type', 'in', ('cash', 'bank')),
-        ]).ids
+
         return [
-            ('journal_id', populate.iterate(journal_ids)),
             ('name', populate.constant('statement_{counter}')),
-            ('date', populate.randdatetime(relative_before=relativedelta(years=-4))),
         ]
+
+    def _populate(self, size):
+        """
+        Populate the bank statements with random lines.
+
+        The first half is all valid statements with no gaps, the second half is properly balanced but with gaps.
+        :param size:
+        :return:
+        """
+        records = super()._populate(size)
+        _logger.info('Adjusting Bank Statements')
+        total = len(records)
+        for statement in records[:total//2]:
+            first_line = self.env['account.bank.statement.line'].search(
+                domain=[('statement_id', '=', False)],
+                limit=1,
+                order='date, sequence desc, id',
+            )
+            journal = first_line.journal_id
+            st_lines = first_line | self.env['account.bank.statement.line'].search(
+                domain=[
+                    ('statement_id', '=', False),
+                    ('journal_id', '=', journal.id)
+                ],
+                limit=random.randint(1, 19),
+                order='date, sequence desc, id',
+            )
+            statement.line_ids = st_lines
+            statement.balance_end_real = statement.balance_end
+        for statement in records[total//2:total*3//4]:
+            if random.random() < 0.1:
+                continue
+            first_line = random.choice(
+                self.env['account.bank.statement.line'].search(
+                    domain=[('statement_id', '=', False)],
+                    limit=3,
+                    order='date, sequence desc, id',
+                )
+            )
+            journal = first_line.journal_id
+            st_lines = first_line | self.env['account.bank.statement.line'].search(
+                domain=[
+                    ('statement_id', '=', False),
+                    ('journal_id', '=', journal.id)
+                ],
+                limit=random.randint(1, 19),
+                order='date, sequence desc, id'
+            )
+            statement.line_ids = st_lines
+            statement.balance_end_real = statement.balance_end
+        for statement in records[total*3//4:]:
+            if random.random() < 0.2:
+                continue
+            first_line = random.choice(
+                self.env['account.bank.statement.line'].search(
+                    domain=[('statement_id', '=', False)],
+                    limit=3,
+                    order='date, sequence desc, id'
+                )
+            )
+            journal = first_line.journal_id
+            st_lines = sum(
+                random.choices(
+                    self.env['account.bank.statement.line'].search(
+                        domain=[
+                            ('statement_id', '=', False),
+                            ('journal_id', '=', journal.id)
+                        ],
+                        limit=random.randint(1, 29),
+                        order='date, sequence desc, id',
+                    ),
+                    k=random.randint(1, 19),
+                ),
+                first_line,
+            )
+            statement.line_ids = st_lines
+            statement.balance_end_real = statement.balance_end * random.randint(1, 3)
+        return records
 
 
 class AccountBankStatementLine(models.Model):
@@ -50,7 +121,7 @@ class AccountBankStatementLine(models.Model):
         'large': 200000,
     }
 
-    _populate_dependencies = ['account.bank.statement', 'res.partner']
+    _populate_dependencies = ['account.journal', 'res.company', 'res.partner']
 
     def _populate_factories(self):
         @lru_cache()
@@ -74,61 +145,50 @@ class AccountBankStatementLine(models.Model):
             :param values (dict): the values already selected for the record.
             :return (int): an id of a partner accessible by the company of the statement.
             """
-            company_id = self.env['account.bank.statement'].browse(values['statement_id']).company_id.id
+            company_id = self.env['account.journal'].browse(values['journal_id']).company_id.id
             partner = search_partner_ids(company_id)
             return random.choices(partner + [False], [1/len(partner)] * len(partner) + [1])[0]
 
-        def get_date(random, values, **kwargs):
-            """Get a date in the past.
-
-            This date can but up to 31 days before the statement linked to this line.
-            :param random: seeded random number generator.
-            :param values (dict): the values already selected for the record.
-            :return (datetime.date): a date up to 31 days before the date of the statement.
+        def get_amount_currency(random, values, **kwargs):
             """
-            statement_date = self.env['account.bank.statement'].browse(values['statement_id']).date
-            return statement_date + relativedelta(days=random.randint(-31, 0))
+            Get a random amount currency between one tenth of  amount and 10 times amount with the same sign
+             if foreign_currency_id is set
 
-        def get_amount(random, **kwargs):
-            """Get a random amount between -1000 and 1000.
-
-            It is impossible to get a null amount. Because it would not be a valid statement line.
             :param random: seeded random number generator.
-            :return (float): a number between -1000 and 1000.
+            :return (float): a number between amount / 10 and amount * 10.
             """
-            return random.uniform(-1000, 1000) or 1
+            return random.uniform(0.1 * values['amount'], 10 * values['amount']) if values['foreign_currency_id'] else 0
 
         def get_currency(random, values, **kwargs):
-            """Get a randome currency.
+            """Get a random currency.
 
-            The currency has to be empty if it is the same as the currency of the statement's journal's.
+            The currency has to be empty if it is the same as the currency of the line's journal's.
             :param random: seeded random number generator.
             :param values (dict): the values already selected for the record.
             :return (int, bool): the id of an active currency or False if it is the same currency as
-                                 the statement's journal's currency.
+                                 the lines's journal's currency.
             """
-            journal = self.env['account.bank.statement'].browse(values['statement_id']).journal_id
+            journal = self.env['account.journal'].browse(values['journal_id'])
             currency = random.choice(self.env['res.currency'].search([('active', '=', True)]).ids)
             return currency if currency != (journal.currency_id or journal.company_id.currency_id).id else False
 
-        # Because we are accessing related fields of bank statements, a prefetch can improve the performances.
-        self = self.with_prefetch(self.env.registry.populated_models['account.bank.statement'])
-        return [
-            ('statement_id', populate.randomize(self.env.registry.populated_models['account.bank.statement'])),
-            ('partner_id', populate.compute(get_partner)),
-            ('payment_ref', populate.constant('statement_{values[statement_id]}_{counter}')),
-            ('date', populate.compute(get_date)),
-            ('amount', populate.compute(get_amount)),
-            ('currency_id', populate.compute(get_currency)),
-        ]
+        company_ids = self.env['res.company'].search([
+            ('chart_template_id', '!=', False),
+            ('id', 'in', self.env.registry.populated_models['res.company']),
+        ])
 
-    def _populate(self, size):
-        records = super()._populate(size)
-        _logger.info('Posting Bank Statements')
-        statements = records.statement_id.sorted(lambda r: (r.date, r.name, r.id))
-        previous = defaultdict(int)
-        for statement in statements:
-            statement.balance_start = previous[statement.journal_id]
-            previous[statement.journal_id] = statement.balance_end_real = statement.balance_start + statement.total_entry_encoding
-        statements.button_post()
-        return records
+        journal_ids = self.env['account.journal'].search([
+            ('company_id', 'in', company_ids.ids),
+            ('type', 'in', ('cash', 'bank')),
+        ]).ids
+        # Because we are accessing related fields of bank statements, a prefetch can improve the performances.
+        # self = self.with_prefetch(self.env.registry.populated_models['account.bank.statement'])
+        return [
+            ('journal_id', populate.iterate(journal_ids)),
+            ('partner_id', populate.compute(get_partner)),
+            ('date', populate.randdatetime(relative_before=relativedelta(years=-4))),
+            ('payment_ref', populate.constant('transaction_{values[date]}_{counter}')),
+            ('amount', populate.randint(-1000, 1000)),
+            ('foreign_currency_id', populate.compute(get_currency)),
+            ('amount_currency', populate.compute(get_amount_currency)),
+        ]

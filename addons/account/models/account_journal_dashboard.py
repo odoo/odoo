@@ -125,7 +125,6 @@ class account_journal(models.Model):
             return {'x':short_name,'y': amount, 'name':name}
 
         self.ensure_one()
-        BankStatement = self.env['account.bank.statement']
         data = []
         today = datetime.today()
         last_month = today + timedelta(days=-30)
@@ -278,9 +277,7 @@ class account_journal(models.Model):
                 SELECT COUNT(st_line.id)
                 FROM account_bank_statement_line st_line
                 JOIN account_move st_line_move ON st_line_move.id = st_line.move_id
-                JOIN account_bank_statement st ON st_line.statement_id = st.id
                 WHERE st_line_move.journal_id IN %s
-                AND st.state = 'posted'
                 AND NOT st_line.is_reconciled
                 AND st_line_move.to_check IS NOT TRUE
             ''', [tuple(self.ids)])

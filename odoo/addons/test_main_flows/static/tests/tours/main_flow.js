@@ -988,7 +988,8 @@ tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the
     trigger: '.o_app[data-menu-xmlid="account_accountant.menu_accounting"]',
     content: _t('Go to Accounting'),
     position: 'bottom',
-}, {
+}, /* TODO:PoMa redesign the workflow to adapt the new bank recon widget
+{
     edition: "enterprise",
     trigger: 'div[name=bank_statement_create_button] > a[data-name=create_bank_statement]',
     content: _t('Create a new bank statement'),
@@ -1087,5 +1088,5 @@ tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the
     trigger: 'a:contains("Customer Invoices")',
     auto: true,
     run() {}
-}]);
+}*/]);
 });

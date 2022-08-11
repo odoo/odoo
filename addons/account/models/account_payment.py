@@ -126,10 +126,10 @@ class AccountPayment(models.Model):
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_bills_count = fields.Integer(string="# Reconciled Bills",
         compute="_compute_stat_buttons_from_reconciliation")
-    reconciled_statement_ids = fields.Many2many('account.bank.statement', string="Reconciled Statements",
+    reconciled_statement_line_ids = fields.Many2many('account.bank.statement.line', string="Reconciled Statement Lines",
         compute='_compute_stat_buttons_from_reconciliation',
-        help="Statements matched to this payment")
-    reconciled_statements_count = fields.Integer(string="# Reconciled Statements",
+        help="Statements lines matched to this payment")
+    reconciled_statement_lines_count = fields.Integer(string="# Reconciled Statement Lines",
         compute="_compute_stat_buttons_from_reconciliation")
 
     # == Display purpose fields ==
@@ -371,6 +371,7 @@ class AccountPayment(models.Model):
                     # In that case, the user manages transactions only using the register payment wizard.
                     pay.is_matched = True
                 else:
+                    # check if it is matched against suspend accounts
                     pay.is_matched = pay.currency_id.is_zero(sum(liquidity_lines.mapped(residual_field)))
 
                 reconcile_lines = (counterpart_lines + writeoff_lines).filtered(lambda line: line.account_id.reconcile)
@@ -573,8 +574,8 @@ class AccountPayment(models.Model):
             self.reconciled_invoices_type = ''
             self.reconciled_bill_ids = False
             self.reconciled_bills_count = 0
-            self.reconciled_statement_ids = False
-            self.reconciled_statements_count = 0
+            self.reconciled_statement_line_ids = False
+            self.reconciled_statement_lines_count = 0
             return
 
         self.env['account.move'].flush_model()
@@ -622,7 +623,7 @@ class AccountPayment(models.Model):
         self._cr.execute('''
             SELECT
                 payment.id,
-                ARRAY_AGG(DISTINCT counterpart_line.statement_id) AS statement_ids
+                ARRAY_AGG(DISTINCT counterpart_line.statement_line_id) AS statement_line_ids
             FROM account_payment payment
             JOIN account_move move ON move.id = payment.move_id
             JOIN account_journal journal ON journal.id = move.journal_id
@@ -639,17 +640,17 @@ class AccountPayment(models.Model):
             WHERE account.id = payment.outstanding_account_id
                 AND payment.id IN %(payment_ids)s
                 AND line.id != counterpart_line.id
-                AND counterpart_line.statement_id IS NOT NULL
+                AND counterpart_line.statement_line_id IS NOT NULL
             GROUP BY payment.id
         ''', {
             'payment_ids': tuple(stored_payments.ids)
         })
-        query_res = dict((payment_id, statement_ids) for payment_id, statement_ids in self._cr.fetchall())
+        query_res = dict((payment_id, statement_line_ids) for payment_id, statement_line_ids in self._cr.fetchall())
 
         for pay in self:
-            statement_ids = query_res.get(pay.id, [])
-            pay.reconciled_statement_ids = [(6, 0, statement_ids)]
-            pay.reconciled_statements_count = len(statement_ids)
+            statement_line_ids = query_res.get(pay.id, [])
+            pay.reconciled_statement_line_ids = [(6, 0, statement_line_ids)]
+            pay.reconciled_statement_lines_count = len(statement_line_ids)
             if len(pay.reconciled_invoice_ids.mapped('move_type')) == 1 and pay.reconciled_invoice_ids[0].move_type == 'out_refund':
                 pay.reconciled_invoices_type = 'credit_note'
             else:
@@ -1007,29 +1008,17 @@ class AccountPayment(models.Model):
             })
         return action
 
-    def button_open_statements(self):
+    def button_open_statement_lines(self):
         ''' Redirect the user to the statement line(s) reconciled to this payment.
         :return:    An action on account.move.
         '''
         self.ensure_one()
 
-        action = {
-            'name': _("Matched Statements"),
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.bank.statement',
-            'context': {'create': False},
-        }
-        if len(self.reconciled_statement_ids) == 1:
-            action.update({
-                'view_mode': 'form',
-                'res_id': self.reconciled_statement_ids.id,
-            })
-        else:
-            action.update({
-                'view_mode': 'list,form',
-                'domain': [('id', 'in', self.reconciled_statement_ids.ids)],
-            })
-        return action
+        return self.env['account.bank.statement.line'].action_open_bank_reconciliation_widget(
+            extra_domain=[('id', 'in', self.reconciled_statement_line_ids.ids)],
+            default_context={'create': False},
+            name=_("Matched statement lines")
+        )
 
     def button_open_journal_entry(self):
         ''' Redirect the user to this payment journal.
