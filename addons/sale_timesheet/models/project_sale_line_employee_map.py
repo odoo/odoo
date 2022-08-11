@@ -24,7 +24,7 @@ class ProjectProductEmployeeMap(models.Model):
     price_unit = fields.Float("Unit Price", compute='_compute_price_unit', store=True, readonly=True)
     currency_id = fields.Many2one('res.currency', string="Currency", compute='_compute_currency_id', store=True, readonly=False)
     cost = fields.Monetary(currency_field='cost_currency_id', compute='_compute_cost', store=True, readonly=False,
-                           help="This cost overrides the employee's default timesheet cost in employee's HR Settings")
+                           help="This cost overrides the employee's default employee hourly wage in employee's HR Settings")
     display_cost = fields.Monetary(currency_field='cost_currency_id', compute="_compute_display_cost", inverse="_inverse_display_cost", string="Hourly Cost")
     cost_currency_id = fields.Many2one('res.currency', string="Cost Currency", related='employee_id.currency_id', readonly=True)
     is_cost_changed = fields.Boolean('Is Cost Manually Changed', compute='_compute_is_cost_changed', store=True)
@@ -55,12 +55,12 @@ class ProjectProductEmployeeMap(models.Model):
         for line in self:
             line.currency_id = line.sale_line_id.currency_id if line.sale_line_id else False
 
-    @api.depends('employee_id.timesheet_cost')
+    @api.depends('employee_id.hourly_cost')
     def _compute_cost(self):
         self.env.remove_to_compute(self._fields['is_cost_changed'], self)
         for map_entry in self:
             if not map_entry.is_cost_changed:
-                map_entry.cost = map_entry.employee_id.timesheet_cost or 0.0
+                map_entry.cost = map_entry.employee_id.hourly_cost or 0.0
 
     def _get_working_hours_per_calendar(self, is_uom_day=False):
         resource_calendar_per_hours = {}
@@ -104,7 +104,7 @@ class ProjectProductEmployeeMap(models.Model):
     @api.depends('cost')
     def _compute_is_cost_changed(self):
         for map_entry in self:
-            map_entry.is_cost_changed = map_entry.employee_id and map_entry.cost != map_entry.employee_id.timesheet_cost
+            map_entry.is_cost_changed = map_entry.employee_id and map_entry.cost != map_entry.employee_id.hourly_cost
 
     @api.model_create_multi
     def create(self, vals_list):

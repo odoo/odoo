@@ -34,23 +34,23 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
 
         cls.employee_user = cls.env['hr.employee'].create({
             'name': 'Employee User',
-            'timesheet_cost': 15,
+            'hourly_cost': 15,
         })
         cls.employee_manager = cls.env['hr.employee'].create({
             'name': 'Employee Manager',
-            'timesheet_cost': 45,
+            'hourly_cost': 45,
         })
 
         cls.employee_company_B = cls.env['hr.employee'].create({
             'name': 'Gregor Clegane',
             'user_id': cls.user_employee_company_B.id,
-            'timesheet_cost': 15,
+            'hourly_cost': 15,
         })
 
         cls.manager_company_B = cls.env['hr.employee'].create({
             'name': 'Cersei Lannister',
             'user_id': cls.user_manager_company_B.id,
-            'timesheet_cost': 45,
+            'hourly_cost': 45,
         })
 
         # Account and project

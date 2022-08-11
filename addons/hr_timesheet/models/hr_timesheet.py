@@ -284,7 +284,7 @@ class AccountAnalyticLine(models.Model):
         # (re)compute the amount (depending on unit_amount, employee_id for the cost, and account_id for currency)
         if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'account_id']):
             for timesheet in sudo_self:
-                cost = timesheet._employee_timesheet_cost()
+                cost = timesheet._hourly_cost()
                 amount = -timesheet.unit_amount * cost
                 amount_converted = timesheet.employee_id.currency_id._convert(
                     amount, timesheet.account_id.currency_id or timesheet.currency_id, self.env.company, timesheet.date)
@@ -306,9 +306,9 @@ class AccountAnalyticLine(models.Model):
     def _get_timesheet_time_day(self):
         return self._convert_hours_to_days(self.unit_amount)
 
-    def _employee_timesheet_cost(self):
+    def _hourly_cost(self):
         self.ensure_one()
-        return self.employee_id.timesheet_cost or 0.0
+        return self.employee_id.hourly_cost or 0.0
 
     def _get_report_base_filename(self):
         task_ids = self.task_id

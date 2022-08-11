@@ -22,7 +22,8 @@
         <record id="group_timesheet_manager" model="res.groups">
             <field name="name">Administrator</field>
             <field name="category_id" ref="base.module_category_services_timesheets"/>
-            <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver')), (4, ref('hr.group_hr_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver')), (4, ref('hr.group_hr_user')),
+                                             (4, ref('hr_hourly_cost.group_hourly_cost_manager'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 

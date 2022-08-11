@@ -156,9 +156,9 @@ class AccountAnalyticLine(models.Model):
         self.ensure_one()
         return self.env['project.sale.line.employee.map'].search([('project_id', '=', self.project_id.id), ('employee_id', '=', self.employee_id.id)])
 
-    def _employee_timesheet_cost(self):
+    def _hourly_cost(self):
         if self.project_id.pricing_type == 'employee_rate':
             mapping_entry = self._get_employee_mapping_entry()
             if mapping_entry:
                 return mapping_entry.cost
-        return super()._employee_timesheet_cost()
+        return super()._hourly_cost()

@@ -16,7 +16,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         # set up
         cls.employee_tde = cls.env['hr.employee'].create({
             'name': 'Employee TDE',
-            'timesheet_cost': 42,
+            'hourly_cost': 42,
         })
 
         cls.partner_2 = cls.env['res.partner'].create({

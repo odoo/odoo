@@ -112,13 +112,13 @@ class TestProject(TestCommonSaleTimesheet):
                 'sale_line_id': self.project_global.sale_line_id.id,
             })
         self.assertFalse(employee_mapping.is_cost_changed)
-        self.assertEqual(employee_mapping.cost, self.employee_manager.timesheet_cost)
+        self.assertEqual(employee_mapping.cost, self.employee_manager.hourly_cost)
 
         employee_mapping.cost = 5
         self.assertTrue(employee_mapping.is_cost_changed)
         self.assertEqual(employee_mapping.cost, 5)
 
-        self.employee_manager.timesheet_cost = 80
+        self.employee_manager.hourly_cost = 80
         self.assertTrue(employee_mapping.is_cost_changed)
         self.assertEqual(employee_mapping.cost, 5)
 
@@ -126,9 +126,9 @@ class TestProject(TestCommonSaleTimesheet):
         self.assertTrue(employee_mapping.is_cost_changed)
         self.assertEqual(employee_mapping.cost, 5)
 
-        employee_mapping.cost = self.employee_user.timesheet_cost
+        employee_mapping.cost = self.employee_user.hourly_cost
         employee_mapping.employee_id = self.employee_company_B
-        self.assertEqual(employee_mapping.cost, self.employee_company_B.timesheet_cost)
+        self.assertEqual(employee_mapping.cost, self.employee_company_B.hourly_cost)
 
     def test_analytic_account_balance(self):
         """
@@ -150,7 +150,7 @@ class TestProject(TestCommonSaleTimesheet):
         })
 
         unit_amount = 6
-        expected_analytic_account_balance = - self.employee_user.timesheet_cost * unit_amount
+        expected_analytic_account_balance = - self.employee_user.hourly_cost * unit_amount
         self.project_global.write({
             'sale_line_id': sale_line.id,
             'sale_line_employee_ids': [
