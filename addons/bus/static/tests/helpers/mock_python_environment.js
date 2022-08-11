@@ -74,9 +74,7 @@ let pyEnv;
  * Creates an environment that can be used to setup test data as well as
  * creating data after test start.
  *
- * @param {Object} serverData serverData to pass to the mockServer,
- * models and records are ignored: models should be fetched and records
- * should be created with the environment returned by this method.
+ * @param {Object} serverData serverData to pass to the mockServer.
  * @param {Object} [serverData.action] actions to be passed to the mock
  * server.
  * @param {Object} [serverData.views] views to be passed to the mock
@@ -106,16 +104,19 @@ let pyEnv;
     }
     pyEnv = new Proxy(
         {
+            get currentPartner() {
+                return this.mockServer.currentPartner;
+            },
             getData() {
                 return this.mockServer.models;
             },
             getViews() {
                 return views;
             },
-            ...TEST_USER_IDS,
-            get currentPartner() {
-                return this.mockServer.currentPartner;
+            simulateConnectionLostAndRecovered() {
+                this.mockServer._simulateConnectionLostAndRecovered();
             },
+            ...TEST_USER_IDS,
         },
         {
             get(target, name) {
