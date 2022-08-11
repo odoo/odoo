@@ -7,6 +7,9 @@ from odoo import _, api, fields, models
 class PickingType(models.Model):
     _inherit = 'stock.picking.type'
 
+    code = fields.Selection(selection_add=[
+        ('repair', 'Repair')
+    ], ondelete={'repair': 'cascade'})
     is_repairable = fields.Boolean(
         'Create Repair Orders from Returns',
         compute='_compute_is_repairable', store=True, readonly=False,
