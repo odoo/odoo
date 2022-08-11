@@ -271,11 +271,11 @@
                 <div class="col-12 col-md-8 col-lg-9">
                     <ul class="nav nav-tabs o_wprofile_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
                         <li class="nav-item">
-                            <a role="tab" aria-controls="about" href="#profile_tab_content_about" class="nav-link active" data-bs-toggle="tab">About</a>
+                            <a role="tab" aria-controls="about" href="#profile_tab_content_about" t-attf-class="nav-link #{'active' if not active_tab or active_tab == 'about' else ''}" data-bs-toggle="tab">About</a>
                         </li>
                     </ul>
                     <div class="tab-content py-4 o_wprofile_tabs_content mb-4" id="profile_extra_info_tabcontent">
-                        <div role="tabpanel" class="tab-pane active" id="profile_tab_content_about">
+                        <div role="tabpanel" t-attf-class="tab-pane #{ 'show active' if not active_tab or active_tab == 'about' else '' }" id="profile_tab_content_about">
                             <div class="o_wprofile_email_validation_container mb16 mt16">
                                 <t t-call="website_profile.email_validation_banner">
                                     <t t-set="redirect_url" t-value="'/profile/user/%s' % user.id"/>
