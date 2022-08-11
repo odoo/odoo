@@ -53,7 +53,7 @@ class PosSession(models.Model):
     login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
 
     opening_notes = fields.Text(string="Opening Notes")
-    cash_control = fields.Boolean(compute='_compute_cash_all', string='Has Cash Control', compute_sudo=True, store=True)
+    cash_control = fields.Boolean(compute='_compute_cash_all', string='Has Cash Control', compute_sudo=True)
     cash_journal_id = fields.Many2one('account.journal', compute='_compute_cash_all', string='Cash Journal', store=True)
 
     cash_register_balance_end_real = fields.Monetary(
@@ -175,14 +175,6 @@ class PosSession(models.Model):
             if (company.period_lock_date and start_date <= company.period_lock_date) or (company.fiscalyear_lock_date and start_date <= company.fiscalyear_lock_date):
                 raise ValidationError(_("You cannot create a session before the accounting lock date."))
 
-    def _check_bank_statement_state(self):
-        for session in self:
-            posted_stmt_lines = session.statement_line_ids.filtered(lambda x: x.state == "posted")
-            if posted_stmt_lines:
-                raise UserError(_("Some Cash Transactions are already posted. "
-                                  "Please reset them to new in order to close the session.\n"
-                                  "Cash Registers: %r", list(stmt_line.name for stmt_line in posted_stmt_lines)))
-
     def _check_invoices_are_posted(self):
         unposted_invoices = self.order_ids.sudo().with_company(self.company_id).account_move.filtered(lambda x: x.state != 'posted')
         if unposted_invoices:
@@ -247,8 +239,7 @@ class PosSession(models.Model):
                 session.cash_register_balance_start = last_session.cash_register_balance_end_real  # defaults to 0 if lastsession is empty
             else:
                 values['state'] = 'opened'
-            if values:
-                session.write(values)
+            session.write(values)
         return True
 
     def action_pos_session_closing_control(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
@@ -266,7 +257,6 @@ class PosSession(models.Model):
             if session.rescue and session.config_id.cash_control:
                 default_cash_payment_method_id = self.payment_method_ids.filtered(lambda pm: pm.type == 'cash')[0]
                 orders = self.order_ids.filtered(lambda o: o.state == 'paid' or o.state == 'invoiced')
-
                 total_cash = sum(
                     orders.payment_ids.filtered(lambda p: p.payment_method_id == default_cash_payment_method_id).mapped('amount')
                 ) + self.cash_register_balance_start
@@ -285,7 +275,6 @@ class PosSession(models.Model):
         # Session without cash payment method will not have a cash register.
         # However, there could be other payment methods, thus, session still
         # needs to be validated.
-        self._check_bank_statement_state()
         return self._validate_session(balancing_account, amount_to_balance, bank_payment_method_diffs)
 
     def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
@@ -333,7 +322,6 @@ class PosSession(models.Model):
             self.sudo().with_company(self.company_id)._reconcile_account_move_lines(data)
         else:
             if self.config_id.cash_control:
-
                 st_line_vals = {
                     'journal_id': self.cash_journal_id.id,
                     'amount': self.cash_register_difference,
@@ -402,12 +390,6 @@ class PosSession(models.Model):
         if check_closing_session:
             return check_closing_session
 
-        # For now we won't simply do
-        # self._check_pos_session_balance()
-        # self._check_bank_statement_state()
-        # validate_result = self._validate_session()
-        # because some functions are being used and overridden in other modules...
-        # so we'll try to use the original flow as of now for the moment
         validate_result = self.action_pos_session_closing_control(bank_payment_method_diffs=bank_payment_method_diffs)
 
         # If an error is raised, the user will still be redirected to the back end to manually close the session.
@@ -555,7 +537,7 @@ class PosSession(models.Model):
                 'name': default_cash_payment_method_id.name,
                 'amount': self.cash_register_balance_start
                           + total_default_cash_payment_amount
-                          + self.cash_real_transaction,
+                          + sum(self.statement_line_ids.mapped('amount')),
                 'opening': self.cash_register_balance_start,
                 'payment_amount': total_default_cash_payment_amount,
                 'moves': cash_in_out_list,
@@ -1399,16 +1381,6 @@ class PosSession(models.Model):
         # self should be single record as this method is only called in the subfunctions of self._validate_session
         return self.currency_id._convert(amount, self.company_id.currency_id, self.company_id, date, round=round)
 
-    def show_cash_register(self):
-        self.ensure_one()
-        return {
-            'name': _('Cash register for %s') % (self.name, ),
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.bank.statement.line',
-            'view_mode': 'tree',
-            'domain': [('pos_session_id', '=', self.id)],
-        }
-
     def show_journal_items(self):
         self.ensure_one()
         all_related_moves = self._get_related_account_moves()
@@ -1542,14 +1514,16 @@ class PosSession(models.Model):
         if not sessions:
             raise UserError(_("There is no cash payment method for this PoS Session"))
 
-        for session in sessions:
-            self.env['account.bank.statement.line'].create({
+        self.env['account.bank.statement.line'].create([
+            {
                 'pos_session_id': session.id,
                 'journal_id': session.cash_journal_id.id,
                 'amount': sign * amount,
                 'date': fields.Date.context_today(self),
                 'payment_ref': '-'.join([session.name, extras['translatedType'], reason]),
-            })
+            }
+            for session in sessions
+        ])
 
         message_content = [f"Cash {extras['translatedType']}", f'- Amount: {extras["formattedAmount"]}']
         if reason:

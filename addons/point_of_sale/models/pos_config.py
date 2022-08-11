@@ -219,7 +219,7 @@ class PosConfig(models.Model):
         for pos_config in self:
             session = PosSession.search_read(
                 [('config_id', '=', pos_config.id), ('state', '=', 'closed')],
-                ['cash_register_balance_end_real', 'stop_at', 'cash_journal_id'],
+                ['cash_register_balance_end_real', 'stop_at'],
                 order="stop_at desc", limit=1)
             if session:
                 timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')

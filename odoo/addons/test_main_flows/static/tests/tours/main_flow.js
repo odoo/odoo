@@ -901,35 +901,33 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t('Go to Accounting'),
     position: 'bottom',
 }, {
-    // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
+    mobile: false,
     edition: "enterprise",
-    trigger: 'div[name=bank_statement_create_button] > a[data-name=create_bank_statement], div[name=bank_statement_create_button] > a[name=create_bank_statement]',
-    content: _t('Create a new bank statement'),
-    position: 'bottom',
+    trigger: "div.o_account_kanban div.o_kanban_card_header a.oe_kanban_action span:contains('Bank')",
+    content: _t("Open the bank reconciliation widget"),
 }, {
+    mobile: false,
     edition: "enterprise",
-    trigger: '.o_field_widget[name=name] input',
-    content: _t("Let's enter the reference."),
-    position: 'left',
-    run: 'text the_flow.statement',
+    trigger: "button.o_switch_view.o_list",
+    content: _t("Move to the list view"),
 }, {
+    mobile: false,
     edition: "enterprise",
-    trigger: ".o_field_widget[name=balance_end_real] input",
-    content: _t("Let's calculate the ending balance."),
-    position: 'right',
-    run: 'text 9955.87',
+    trigger: "button.o_list_button_add",
+    content: _t("Create a new bank transaction"),
 }, {
-    // FIXME convert list in kanban + form
+    mobile: false,
     edition: "enterprise",
-    trigger: ".o_field_widget[name=line_ids] .o_field_x2many_list_row_add > a",
-    content: _t("Click here to add some lines."),
-    position: "bottom",
-}, {
-    edition: "enterprise",
-    trigger: ".o_selected_row .o_field_widget[name=amount] input",
+    trigger: '.o_field_widget[name=amount] input',
     content: _t("Write the amount received."),
     position: "bottom",
     run: "text 11.00",
+}, {
+    mobile: false,
+    edition: "enterprise",
+    trigger: ".o_selected_row .o_field_widget[name=payment_ref] input",
+    content: _t("Let's enter a name."),
+    run: "text the_flow.statement.line",
 }, {
     mobile: false,
     edition: "enterprise",
@@ -944,42 +942,49 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     in_modal: false,
     auto: true,
 }, {
-    mobile: true,
+    mobile: false,
     edition: "enterprise",
-    trigger: ".o_selected_row .o_field_widget[name=partner_id] input",
-    content: _t("Write the name of your customer."),
-    position: "bottom",
-},
-...tour.stepUtils.mobileKanbanSearchMany2X('Partner', 'the_flow.customer'),
-{
-    edition: "enterprise",
-    trigger: ".o_selected_row .o_field_widget[name=payment_ref] input",
+    trigger: '.o_list_button_save',
     extra_trigger: ".o_selected_row .o_field_widget[name=partner_id] .o_external_button",
-    content: _t("Let's enter a name."),
-    position: "bottom",
-    run: "text the_flow.statement.line",
-}, {
-    edition: "enterprise",
-    trigger: '.o_form_button_save',
     content: _t('Save.'),
     position: 'bottom',
-},
-...tour.stepUtils.statusbarButtonsSteps('Post', _t('Processing'), ".breadcrumb-item.active:contains('the_flow.statement')").map(tour.stepUtils.editionEnterpriseModifier),
-...tour.stepUtils.statusbarButtonsSteps('Reconcile', _t('Reconcile'), ".o_statusbar_status .btn.dropdown-toggle:contains(Processing)")
-    .map(function(step){return {mobile: false, ...step}})
-    .map(tour.stepUtils.editionEnterpriseModifier),
-{
+}, {
     mobile: false,
     edition: "enterprise",
-    trigger: "button[name='button_validate']",
-    content: Markup(_t('<p><b>Click on Reconcile</p>')),
-    position: "right",
-},
-{
+    trigger: "button.o_switch_view.o_kanban",
+    extra_trigger: ".o_list_button_add",
+    content: _t("Move back to the kanban view"),
+}, {
     mobile: false,
     edition: "enterprise",
-    trigger: ".o_tag_badge_text:contains('Matched')",
-    auto: true,
+    trigger: "div.o_bank_rec_st_line_kanban_card span:contains('the_flow.customer')",
+    extra_trigger: "div.o_bank_rec_st_line_kanban_card span:contains('the_flow.customer')",
+    content: _t("Select the newly created bank transaction"),
+}, {
+    mobile: false,
+    edition: "enterprise",
+    trigger: "button[name='button_validate'].btn-primary",
+    extra_trigger: "button[name='button_validate'].btn-primary",
+    content: _t("Reconcile the bank transaction"),
+}, {
+    mobile: false,
+    edition: "enterprise",
+    trigger: ".o_control_panel .o_filter_menu .o_dropdown_title:contains('Filters'):first",
+    extra_trigger: "a.active[name='amls_tab']",
+    content: _t("Click on 'Filters'"),
+}, {
+    mobile: false,
+    edition: "enterprise",
+    trigger: ".o_control_panel .o_filter_menu .dropdown-item:contains('Matched')",
+    extra_trigger: ".o_control_panel .o_filter_menu .dropdown-item:contains('Matched')",
+    content: _t("Add the 'Matched' filters"),
+}, {
+    mobile: false,
+    edition: "enterprise",
+    trigger: "div.o_bank_rec_st_line_kanban_card span:contains('the_flow.customer')",
+    extra_trigger: "div.o_bank_rec_st_line_kanban_card span:contains('the_flow.customer')",
+    content: _t("Ensure the line is well reconciled"),
+    run: function(){},
 },
 // exit reconciliation widget
 {

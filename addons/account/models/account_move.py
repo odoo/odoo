@@ -162,13 +162,6 @@ class AccountMove(models.Model):
         copy=False,
         check_company=True,
     )
-    # used to open the linked bank statement from the edit button in a group by
-    # view, or via the smart button on journal entries.
-    statement_id = fields.Many2one(
-        related='statement_line_id.statement_id',
-        copy=False,
-        readonly=True,
-    )
 
     # === Cash basis feature fields === #
     # used to keep track of the tax cash basis reconciliation. This is needed
@@ -614,6 +607,8 @@ class AccountMove(models.Model):
             return self.payment_id.journal_id
         if self.statement_line_id and self.statement_line_id.journal_id:
             return self.statement_line_id.journal_id
+        if self.statement_line_ids.statement_id.journal_id:
+            return self.statement_line_ids.statement_id.journal_id[:1]
 
         if self.is_sale_document(include_receipts=True):
             journal_types = ['sale']
@@ -2403,7 +2398,7 @@ class AccountMove(models.Model):
         # EXTENDS account sequence.mixin
         self.ensure_one()
         is_payment = self.payment_id or self._context.get('is_payment')
-        if self.journal_id.type == 'sale':
+        if self.journal_id.type in ['sale', 'bank', 'cash']:
             starting_sequence = "%s/%04d/00000" % (self.journal_id.code, self.date.year)
         else:
             starting_sequence = "%s/%04d/%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
@@ -3319,15 +3314,6 @@ class AccountMove(models.Model):
                 'res_id': self.id,
                 'views': [(False, 'form')],
             }
-
-    def open_bank_statement_view(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.bank.statement',
-            'view_mode': 'form',
-            'res_id': self.statement_id.id,
-            'views': [(False, 'form')],
-        }
 
     def open_payment_view(self):
         return {

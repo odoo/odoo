@@ -408,7 +408,7 @@ class AccountChartTemplate(models.Model):
         the provided company (meaning hence that its chart of accounts cannot
         be changed anymore).
         """
-        model_to_check = ['account.payment', 'account.bank.statement']
+        model_to_check = ['account.payment', 'account.bank.statement.line']
         for model in model_to_check:
             if self.env[model].sudo().search([('company_id', '=', company_id.id)], limit=1):
                 return True

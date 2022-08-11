@@ -132,11 +132,10 @@ class AccountPayment(models.Model):
         compute='_compute_stat_buttons_from_reconciliation',
         help="Statements lines matched to this payment",
     )
-    reconciled_statement_ids = fields.Many2many('account.bank.statement', string="Reconciled Statements",
-        compute='_compute_stat_buttons_from_reconciliation',
-        help="Statements matched to this payment")
-    reconciled_statements_count = fields.Integer(string="# Reconciled Statements",
-        compute="_compute_stat_buttons_from_reconciliation")
+    reconciled_statement_lines_count = fields.Integer(
+        string="# Reconciled Statement Lines",
+        compute="_compute_stat_buttons_from_reconciliation",
+    )
 
     # == Display purpose fields ==
     payment_method_code = fields.Char(
@@ -563,8 +562,7 @@ class AccountPayment(models.Model):
             self.reconciled_bill_ids = False
             self.reconciled_bills_count = 0
             self.reconciled_statement_line_ids = False
-            self.reconciled_statement_ids = False
-            self.reconciled_statements_count = 0
+            self.reconciled_statement_lines_count = 0
             return
 
         self.env['account.move'].flush_model()
@@ -629,7 +627,7 @@ class AccountPayment(models.Model):
             WHERE account.id = payment.outstanding_account_id
                 AND payment.id IN %(payment_ids)s
                 AND line.id != counterpart_line.id
-                AND counterpart_line.statement_id IS NOT NULL
+                AND counterpart_line.statement_line_id IS NOT NULL
             GROUP BY payment.id
         ''', {
             'payment_ids': tuple(stored_payments.ids)
@@ -639,8 +637,7 @@ class AccountPayment(models.Model):
         for pay in self:
             statement_line_ids = query_res.get(pay.id, [])
             pay.reconciled_statement_line_ids = [Command.set(statement_line_ids)]
-            pay.reconciled_statement_ids = [Command.set(pay.reconciled_statement_line_ids.statement_id.ids)]
-            pay.reconciled_statements_count = len(statement_line_ids)
+            pay.reconciled_statement_lines_count = len(statement_line_ids)
             if len(pay.reconciled_invoice_ids.mapped('move_type')) == 1 and pay.reconciled_invoice_ids[0].move_type == 'out_refund':
                 pay.reconciled_invoices_type = 'credit_note'
             else:
@@ -981,27 +978,27 @@ class AccountPayment(models.Model):
             })
         return action
 
-    def button_open_statements(self):
+    def button_open_statement_lines(self):
         ''' Redirect the user to the statement line(s) reconciled to this payment.
         :return:    An action on account.move.
         '''
         self.ensure_one()
 
         action = {
-            'name': _("Matched Statements"),
+            'name': _("Matched Transactions"),
             'type': 'ir.actions.act_window',
-            'res_model': 'account.bank.statement',
+            'res_model': 'account.bank.statement.line',
             'context': {'create': False},
         }
-        if len(self.reconciled_statement_ids) == 1:
+        if len(self.reconciled_statement_lines_ids) == 1:
             action.update({
                 'view_mode': 'form',
-                'res_id': self.reconciled_statement_ids.id,
+                'res_id': self.reconciled_statement_lines_ids.id,
             })
         else:
             action.update({
                 'view_mode': 'list,form',
-                'domain': [('id', 'in', self.reconciled_statement_ids.ids)],
+                'domain': [('id', 'in', self.reconciled_statement_lines_ids.ids)],
             })
         return action
 

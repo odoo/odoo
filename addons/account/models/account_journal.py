@@ -892,7 +892,7 @@ class AccountJournal(models.Model):
         :return:        An account.bank.statement record or an empty recordset.
         '''
         self.ensure_one()
-        last_statement_domain = (domain or []) + [('journal_id', '=', self.id)]
+        last_statement_domain = (domain or []) + [('journal_id', '=', self.id), ('statement_id', '!=', False)]
         last_st_line = self.env['account.bank.statement.line'].search(last_statement_domain, order='date desc, id desc', limit=1)
         return last_st_line.statement_id
 

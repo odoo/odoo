@@ -286,22 +286,22 @@ class ResCompany(models.Model):
         :param unreconciled_statement_lines: The statement lines.
         :return: A dictionary representing a window action.
         """
-        statements = unreconciled_statement_lines.statement_id
+
         action = {
-            'name': _("Unreconciled Statements"),
+            'name': _("Unreconciled Transactions"),
             'type': 'ir.actions.act_window',
-            'res_model': 'account.bank.statement',
+            'res_model': 'account.bank.statement.line',
             'context': {'create': False},
         }
-        if len(statements) == 1:
+        if len(unreconciled_statement_lines) == 1:
             action.update({
                 'view_mode': 'form',
-                'res_id': statements.id,
+                'res_id': unreconciled_statement_lines.id,
             })
         else:
             action.update({
                 'view_mode': 'list,form',
-                'domain': [('id', 'in', statements.ids)],
+                'domain': [('id', 'in', unreconciled_statement_lines.ids)],
             })
         return action
 

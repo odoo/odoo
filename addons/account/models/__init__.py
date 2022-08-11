@@ -17,6 +17,7 @@ from . import account_full_reconcile
 from . import account_payment
 from . import account_payment_method
 from . import account_bank_statement
+from . import account_bank_statement_line
 from . import chart_template
 from . import account_analytic_account
 from . import account_analytic_distribution_model
