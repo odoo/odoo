@@ -85,19 +85,12 @@ class TestExpenses(TestExpenseCommon):
         in_payment_state = expense_sheet.account_move_id._get_invoice_in_payment_state()
         self.assertEqual(expense_sheet.payment_state, in_payment_state, 'payment_state should be ' + in_payment_state)
 
-        statement = self.env['account.bank.statement'].create({
-            'name': 'test_statement',
+        statement_line = self.env['account.bank.statement.line'].create({
             'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [
-                (0, 0, {
-                    'payment_ref': 'pay_ref',
-                    'amount': -350.0,
-                    'partner_id': self.expense_employee.address_home_id.id,
-                }),
-            ],
+            'payment_ref': 'pay_ref',
+            'amount': -350.0,
+            'partner_id': self.expense_employee.address_home_id.id,
         })
-        statement.button_post()
-        statement_line = statement.line_ids
 
         # Reconcile without the bank reconciliation widget since the widget is in enterprise.
         _st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line\

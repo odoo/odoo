@@ -26,7 +26,6 @@ The module adds following features:
     'installable': True,
     'auto_install': True,
     'data': [
-        'views/account_views.xml',
         'views/pos_views.xml',
         'views/account_sale_closure.xml',
         'views/pos_inalterability_menuitem.xml',

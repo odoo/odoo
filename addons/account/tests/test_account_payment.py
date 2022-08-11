@@ -747,19 +747,12 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             'is_matched': False,
         }])
 
-        statement = self.env['account.bank.statement'].create({
-            'name': 'test_statement',
+        statement_line = self.env['account.bank.statement.line'].create({
+            'payment_ref': '50 to pay',
             'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [
-                (0, 0, {
-                    'payment_ref': '50 to pay',
-                    'partner_id': self.partner_a.id,
-                    'amount': 50.0,
-                }),
-            ],
+            'partner_id': self.partner_a.id,
+            'amount': 50.0,
         })
-        statement.button_post()
-        statement_line = statement.line_ids
 
         # Reconcile without the bank reconciliation widget since the widget is in enterprise.
         _st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line\
@@ -780,17 +773,17 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         payment = AccountPayment.create({
             'journal_id': self.company_data['default_journal_bank'].id,
         })
-        self.assertRegex(payment.name, r'BNK1/\d{4}/\d{2}/0001')
+        self.assertRegex(payment.name, r'BNK1/\d{4}/00001')
 
         with Form(AccountPayment.with_context(default_move_journal_types=('bank', 'cash'))) as payment_form:
             self.assertEqual(payment_form._values['name'], '/')
             payment_form.journal_id = self.company_data['default_journal_cash']
-            self.assertRegex(payment_form._values['name'], r'CSH1/\d{4}/\d{2}/0001')
+            self.assertRegex(payment_form._values['name'], r'CSH1/\d{4}/00001')
             payment_form.journal_id = self.company_data['default_journal_bank']
         payment = payment_form.save()
         self.assertEqual(payment.name, '/')
         payment.action_post()
-        self.assertRegex(payment.name, r'BNK1/\d{4}/\d{2}/0002')
+        self.assertRegex(payment.name, r'BNK1/\d{4}/00002')
 
     def test_payment_without_default_company_account(self):
         """ The purpose of this test is to check the specific behavior when duplicating an inbound payment, then change

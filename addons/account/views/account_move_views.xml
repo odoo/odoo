@@ -32,7 +32,7 @@
                                     </group>
                                     <group string="Accounting Documents">
                                         <field name="move_id" readonly="1"/>
-                                        <field name="statement_id" readonly="True" attrs="{'invisible': [('statement_id','=',False)]}"/>
+                                        <field name="statement_line_id" readonly="True" attrs="{'invisible': [('statement_line_id','=',False)]}"/>
                                     </group>
                                     <group string="Dates">
                                         <field name="date" groups="account.group_account_readonly"/>
@@ -196,7 +196,7 @@
 
                     <field name="parent_state" invisible="1"/>
                     <field name="account_type" invisible="1"/>
-                    <field name="statement_id" invisible="1"/>
+                    <field name="statement_line_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="is_same_currency" invisible="1"/>
                     <field name="is_account_reconcile" invisible="1"/>
@@ -674,13 +674,6 @@
                     </div>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
-                            <button name="open_move"
-                                    class="oe_stat_button"
-                                    icon="fa-bars"
-                                    type="object"
-                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('statement_id', '=', False)]}"
-                                    string="1 Statement">
-                            </button>
                             <button name="open_payment_view"
                                     class="oe_stat_button"
                                     icon="fa-bars"
@@ -742,7 +735,7 @@
                         <field name="restrict_mode_hash_table" invisible="1"/>
                         <field name="country_code" invisible="1"/>
                         <field name="display_inactive_currency_warning" invisible="1"/>
-                        <field name="statement_id" invisible="1"/>
+                        <field name="statement_line_id" invisible="1"/>
                         <field name="payment_id" invisible="1"/>
                         <field name="tax_country_id" invisible="1"/>
                         <field name="tax_cash_basis_created_move_ids" invisible="1"/>

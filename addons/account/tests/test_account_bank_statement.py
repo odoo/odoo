@@ -6,7 +6,8 @@ from odoo.exceptions import ValidationError, UserError
 from odoo import fields, Command
 
 
-class TestAccountBankStatementCommon(AccountTestInvoicingCommon):
+@tagged('post_install', '-at_install')
+class TestAccountBankStatementLine(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
@@ -34,319 +35,15 @@ class TestAccountBankStatementCommon(AccountTestInvoicingCommon):
         cls.currency_3 = cls.currency_data_2['currency']
         cls.currency_4 = cls.currency_data_3['currency']
 
-    def assertBankStatementLine(self, statement_line, expected_statement_line_vals, expected_move_line_vals):
-        self.assertRecordValues(statement_line, [expected_statement_line_vals])
-        self.assertRecordValues(statement_line.line_ids.sorted('balance'), expected_move_line_vals)
-
-
-@tagged('post_install', '-at_install')
-class TestAccountBankStatement(TestAccountBankStatementCommon):
-
-    # -------------------------------------------------------------------------
-    # TESTS about the statement model.
-    # -------------------------------------------------------------------------
-
-    def test_starting_ending_balance_chaining(self):
-        # Create first statement on 2019-01-02.
-        bnk1 = self.env['account.bank.statement'].create({
-            'name': 'BNK1',
-            'date': '2019-01-02',
-            'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 100.0})],
-        })
-        self.assertRecordValues(bnk1, [{
-            'balance_start': 0.0,
-            'balance_end_real': 100.0,
-            'balance_end': 100.0,
-            'previous_statement_id': False,
-        }])
-
-        # Create a new statement after that one.
-        bnk2 = self.env['account.bank.statement'].create({
-            'name': 'BNK2',
-            'date': '2019-01-10',
-            'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 50.0})],
-        })
-        self.assertRecordValues(bnk2, [{
-            'balance_start': 100.0,
-            'balance_end_real': 150.0,
-            'balance_end': 150.0,
-            'previous_statement_id': bnk1.id,
-        }])
-
-        # Create new statement with given ending balance.
-        bnk3 = self.env['account.bank.statement'].create({
-            'name': 'BNK3',
-            'date': '2019-01-15',
-            'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 25.0})],
-            'balance_end_real': 200.0,
-        })
-        self.assertRecordValues(bnk3, [{
-            'balance_start': 150.0,
-            'balance_end_real': 200.0,
-            'balance_end': 175.0,
-            'previous_statement_id': bnk2.id,
-        }])
-
-        # Create new statement with a date right after BNK1.
-        bnk4 = self.env['account.bank.statement'].create({
-            'name': 'BNK4',
-            'date': '2019-01-03',
-            'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 100.0})],
-        })
-        self.assertRecordValues(bnk4, [{
-            'balance_start': 100.0,
-            'balance_end_real': 200.0,
-            'balance_end': 200.0,
-            'previous_statement_id': bnk1.id,
-        }])
-
-        # BNK2/BNK3 should have changed their previous statements.
-        self.assertRecordValues(bnk2, [{
-            'balance_start': 200.0,
-            'balance_end_real': 250.0,
-            'balance_end': 250.0,
-            'previous_statement_id': bnk4.id,
-        }])
-        self.assertRecordValues(bnk3, [{
-            'balance_start': 250.0,
-            'balance_end_real': 200.0,
-            'balance_end': 275.0,
-            'previous_statement_id': bnk2.id,
-        }])
-
-        # Correct the ending balance of BNK3.
-        bnk3.balance_end_real = 275
-
-        # Change date of BNK4 to be the last.
-        bnk4.date = '2019-01-20'
-        self.assertRecordValues(bnk1, [{
-            'balance_start': 0.0,
-            'balance_end_real': 100.0,
-            'balance_end': 100.0,
-            'previous_statement_id': False,
-        }])
-        self.assertRecordValues(bnk2, [{
-            'balance_start': 100.0,
-            'balance_end_real': 150.0,
-            'balance_end': 150.0,
-            'previous_statement_id': bnk1.id,
-        }])
-        self.assertRecordValues(bnk3, [{
-            'balance_start': 150.0,
-            'balance_end_real': 175.0,
-            'balance_end': 175.0,
-            'previous_statement_id': bnk2.id,
-        }])
-        self.assertRecordValues(bnk4, [{
-            'balance_start': 175.0,
-            'balance_end_real': 200.0,
-            'balance_end': 275.0,
-            'previous_statement_id': bnk3.id,
-        }])
-
-        # Correct the ending balance of BNK4.
-        bnk4.balance_end_real = 275
-
-        # Move BNK3 to first position.
-        bnk3.date = '2019-01-01'
-        self.assertRecordValues(bnk3, [{
-            'balance_start': 0.0,
-            'balance_end_real': 25.0,
-            'balance_end': 25.0,
-            'previous_statement_id': False,
-        }])
-        self.assertRecordValues(bnk1, [{
-            'balance_start': 25.0,
-            'balance_end_real': 125.0,
-            'balance_end': 125.0,
-            'previous_statement_id': bnk3.id,
-        }])
-        self.assertRecordValues(bnk2, [{
-            'balance_start': 125.0,
-            'balance_end_real': 175.0,
-            'balance_end': 175.0,
-            'previous_statement_id': bnk1.id,
-        }])
-        self.assertRecordValues(bnk4, [{
-            'balance_start': 175.0,
-            'balance_end_real': 275.0,
-            'balance_end': 275.0,
-            'previous_statement_id': bnk2.id,
-        }])
-
-        # Move BNK1 to the third position.
-        bnk1.date = '2019-01-11'
-        self.assertRecordValues(bnk3, [{
-            'balance_start': 0.0,
-            'balance_end_real': 25.0,
-            'balance_end': 25.0,
-            'previous_statement_id': False,
-        }])
-        self.assertRecordValues(bnk2, [{
-            'balance_start': 25.0,
-            'balance_end_real': 75.0,
-            'balance_end': 75.0,
-            'previous_statement_id': bnk3.id,
-        }])
-        self.assertRecordValues(bnk1, [{
-            'balance_start': 75.0,
-            'balance_end_real': 175.0,
-            'balance_end': 175.0,
-            'previous_statement_id': bnk2.id,
-        }])
-        self.assertRecordValues(bnk4, [{
-            'balance_start': 175.0,
-            'balance_end_real': 275.0,
-            'balance_end': 275.0,
-            'previous_statement_id': bnk1.id,
-        }])
-
-        # Delete BNK3 and BNK1.
-        (bnk3 + bnk1).unlink()
-        self.assertRecordValues(bnk2, [{
-            'balance_start': 0.0,
-            'balance_end_real': 50.0,
-            'balance_end': 50.0,
-            'previous_statement_id': False,
-        }])
-        self.assertRecordValues(bnk4, [{
-            'balance_start': 50.0,
-            'balance_end_real': 275.0,
-            'balance_end': 150.0,
-            'previous_statement_id': bnk2.id,
-        }])
-
-    def test_statements_different_journal(self):
-        # Create statements in bank journal.
-        bnk1_1 = self.env['account.bank.statement'].create({
-            'name': 'BNK1_1',
-            'date': '2019-01-01',
-            'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 100.0})],
-            'balance_end_real': 100.0,
-        })
-        bnk1_2 = self.env['account.bank.statement'].create({
-            'name': 'BNK1_2',
-            'date': '2019-01-10',
-            'journal_id': self.company_data['default_journal_bank'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 50.0})],
-        })
-
-        # Create statements in cash journal.
-        bnk2_1 = self.env['account.bank.statement'].create({
-            'name': 'BNK2_1',
-            'date': '2019-01-02',
-            'journal_id': self.company_data['default_journal_cash'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 20.0})],
-            'balance_end_real': 20.0,
-        })
-        bnk2_2 = self.env['account.bank.statement'].create({
-            'name': 'BNK2_2',
-            'date': '2019-01-12',
-            'journal_id': self.company_data['default_journal_cash'].id,
-            'line_ids': [(0, 0, {'payment_ref': '/', 'amount': 10.0})],
-        })
-        self.assertRecordValues(bnk1_1, [{
-            'balance_start': 0.0,
-            'balance_end_real': 100.0,
-            'balance_end': 100.0,
-            'previous_statement_id': False,
-        }])
-        self.assertRecordValues(bnk1_2, [{
-            'balance_start': 100.0,
-            'balance_end_real': 150.0,
-            'balance_end': 150.0,
-            'previous_statement_id': bnk1_1.id,
-        }])
-        self.assertRecordValues(bnk2_1, [{
-            'balance_start': 0.0,
-            'balance_end_real': 20.0,
-            'balance_end': 20.0,
-            'previous_statement_id': False,
-        }])
-        self.assertRecordValues(bnk2_2, [{
-            'balance_start': 20.0,
-            'balance_end_real': 0.0,
-            'balance_end': 30.0,
-            'previous_statement_id': bnk2_1.id,
-        }])
-
-    def test_cash_statement_with_difference(self):
-        ''' A cash statement always creates an additional line to store the cash difference towards the ending balance.
-        '''
-        statement = self.env['account.bank.statement'].create({
-            'name': 'test_statement',
-            'date': '2019-01-01',
-            'journal_id': self.company_data['default_journal_cash'].id,
-            'balance_end_real': 100.0,
-        })
-
-        statement.button_post()
-
-        self.assertRecordValues(statement.line_ids, [{
-            'amount': 100.0,
-            'is_reconciled': True,
-        }])
-
-    def test_bank_statement_with_difference(self):
-        """ Test that a bank statement with difference could be posted but not validated. """
-        bank_statement = self.env['account.bank.statement'].create({
-            'name': 'test_statement',
-            'date': '2019-01-01',
-            'journal_id': self.bank_journal_1.id,
-            'balance_start': 10.0,
-            'balance_end_real': 100.0,
-            'balance_end': 10.0,
-            'line_ids': [Command.create({
-                'date': fields.Date.to_date('2019-01-01'),
-                'payment_ref': 'transaction_abc',
-                'amount': 10,
-                'partner_id': self.partner_a.id,
-            })]
-        })
-        bank_statement.button_post()
-        # Check if the bank statement is well posted (No check on the balance as the balance could be edited after).
-        self.assertEqual(bank_statement.state, 'posted')
-
-        # Check that the bank statement couldn't be validated with balance_end != balance_end_real
-        with self.assertRaises(UserError):
-            bank_statement.button_validate()
-
-        # Check if we can validate the bank statement if balance_end == balance_end_real
-        bank_statement.balance_end_real = bank_statement.balance_end
-
-        # Reconcile without the bank reconciliation widget since the widget is in enterprise.
-        statement_line = bank_statement.line_ids
-        st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line \
-            .with_context(skip_account_move_synchronization=True) \
-            ._seek_for_lines()
-        st_suspense_lines.account_id = st_liquidity_lines.account_id
-        (st_suspense_lines + st_liquidity_lines).reconcile()
-
-        bank_statement.button_validate()
-        self.assertEqual(bank_statement.state, 'confirm')
-
-@tagged('post_install', '-at_install')
-class TestAccountBankStatementLine(TestAccountBankStatementCommon):
-
-    @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
-
         cls.statement = cls.env['account.bank.statement'].create({
             'name': 'test_statement',
-            'date': '2019-01-01',
-            'journal_id': cls.bank_journal_1.id,
             'line_ids': [
                 (0, 0, {
                     'date': '2019-01-01',
                     'payment_ref': 'line_1',
                     'partner_id': cls.partner_a.id,
                     'foreign_currency_id': cls.currency_2.id,
+                    'journal_id': cls.bank_journal_1.id,
                     'amount': 1250.0,
                     'amount_currency': 2500.0,
                 }),
@@ -386,6 +83,36 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             'amount_currency': -2500.0,
         }
 
+    def assertBankStatementLine(self, statement_line, expected_statement_line_vals, expected_move_line_vals):
+        self.assertRecordValues(statement_line, [expected_statement_line_vals])
+        self.assertRecordValues(statement_line.line_ids.sorted('balance'), expected_move_line_vals)
+
+    def create_bank_transaction(self, amount, date, amount_currency=None, currency=None, statement=None,
+                                partner=None, journal=None, sequence=0):
+        values = {
+            'payment_ref': str(amount),
+            'amount': amount,
+            'date': date,
+            'partner_id': partner and partner.id,
+            'sequence': sequence,
+        }
+        if amount_currency:
+            values['amount_currency'] = amount_currency
+            values['foreign_currency_id'] = currency.id
+        if statement and journal and statement.journal_id != journal:
+            raise (ValidationError("The statement and the journal are contradictory"))
+        if statement:
+            values['journal_id'] = statement.journal_id.id
+            values['statement_id'] = statement.id
+        if journal:
+            values['journal_id'] = journal.id
+        if not values.get('journal_id'):
+            values['journal_id'] = (self.company_data_2['default_journal_bank']
+                                    if self.env.company == self.company_data_2['company']
+                                    else self.company_data['default_journal_bank']
+                                    ).id
+        return self.env['account.bank.statement.line'].create(values)
+
     # -------------------------------------------------------------------------
     # TESTS about the statement line model.
     # -------------------------------------------------------------------------
@@ -408,22 +135,15 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         if journal_currency:
             journal.currency_id = journal_currency.id
 
-        statement = self.env['account.bank.statement'].create({
-            'name': 'test_statement',
+        statement_line = self.env['account.bank.statement.line'].create({
             'date': '2019-01-01',
             'journal_id': journal.id,
-            'line_ids': [
-                (0, 0, {
-                    'date': '2019-01-01',
-                    'payment_ref': 'line_1',
-                    'partner_id': self.partner_a.id,
-                    'foreign_currency_id': foreign_currency and foreign_currency.id,
-                    'amount': amount,
-                    'amount_currency': amount_currency,
-                }),
-            ],
+            'payment_ref': 'line_1',
+            'partner_id': self.partner_a.id,
+            'foreign_currency_id': foreign_currency and foreign_currency.id,
+            'amount': amount,
+            'amount_currency': amount_currency,
         })
-        statement_line = statement.line_ids
 
         # ==== Test the statement line amounts are correct ====
         # If there is a bug in the compute/inverse methods, the amount/amount_currency could be
@@ -532,6 +252,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
     def test_edition_journal_curr_2_statement_curr_3(self):
         self._test_edition_customer_and_supplier_flows(
+            # pylint: disable=bad-whitespace
             80.0,               120.0,
             self.currency_2,    self.currency_3,
             {'debit': 40.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_2.id},
@@ -540,6 +261,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
     def test_edition_journal_curr_2_statement_curr_1(self):
         self._test_edition_customer_and_supplier_flows(
+            # pylint: disable=bad-whitespace
             120.0,              80.0,
             self.currency_2,    self.currency_1,
             {'debit': 80.0,     'credit': 0.0,      'amount_currency': 120.0,       'currency_id': self.currency_2.id},
@@ -548,7 +270,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
     def test_edition_journal_curr_1_statement_curr_2(self):
         self._test_edition_customer_and_supplier_flows(
-            # pylint: disable=C0326
+            # pylint: disable=bad-whitespace
             80.0,               120.0,
             self.currency_1,    self.currency_2,
             {'debit': 80.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_1.id},
@@ -557,6 +279,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
     def test_edition_journal_curr_2_statement_false(self):
         self._test_edition_customer_and_supplier_flows(
+            # pylint: disable=bad-whitespace
             80.0,               0.0,
             self.currency_2,    False,
             {'debit': 40.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_2.id},
@@ -565,6 +288,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
     def test_edition_journal_curr_1_statement_false(self):
         self._test_edition_customer_and_supplier_flows(
+            # pylint: disable=bad-whitespace
             80.0,               0.0,
             self.currency_1,    False,
             {'debit': 80.0,     'credit': 0.0,      'amount_currency': 80.0,        'currency_id': self.currency_1.id},
@@ -574,24 +298,18 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_journal_curr_1_statement_curr_2(self):
         self.bank_journal_2.currency_id = self.currency_1
 
-        statement = self.env['account.bank.statement'].create({
-            'name': 'test_statement',
-            'date': '2019-01-01',
+        statement_line = self.env['account.bank.statement.line'].create({
             'journal_id': self.bank_journal_2.id,
-            'line_ids': [
-                (0, 0, {
-                    'date': '2019-01-01',
-                    'payment_ref': 'line_1',
-                    'partner_id': self.partner_a.id,
-                    'foreign_currency_id': self.currency_2.id,
-                    'amount': 0.0,
-                    'amount_currency': 10.0,
-                }),
-            ],
+            'date': '2019-01-01',
+            'payment_ref': 'line_1',
+            'partner_id': self.partner_a.id,
+            'foreign_currency_id': self.currency_2.id,
+            'amount': 0.0,
+            'amount_currency': 10.0,
         })
 
-        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
-            # pylint: disable=C0326
+        self.assertRecordValues(statement_line.move_id.line_ids, [
+            # pylint: disable=bad-whitespace
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_1.id},
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': -10.0,       'currency_id': self.currency_2.id},
         ])
@@ -599,23 +317,18 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_journal_curr_2_statement_curr_1(self):
         self.bank_journal_2.currency_id = self.currency_2
 
-        statement = self.env['account.bank.statement'].create({
-            'name': 'test_statement',
-            'date': '2019-01-01',
+        statement_line = self.env['account.bank.statement.line'].create({
             'journal_id': self.bank_journal_2.id,
-            'line_ids': [
-                (0, 0, {
-                    'date': '2019-01-01',
-                    'payment_ref': 'line_1',
-                    'partner_id': self.partner_a.id,
-                    'foreign_currency_id': self.currency_1.id,
-                    'amount': 0.0,
-                    'amount_currency': 10.0,
-                }),
-            ],
+            'date': '2019-01-01',
+            'payment_ref': 'line_1',
+            'partner_id': self.partner_a.id,
+            'foreign_currency_id': self.currency_1.id,
+            'amount': 0.0,
+            'amount_currency': 10.0,
         })
 
-        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+        self.assertRecordValues(statement_line.move_id.line_ids, [
+            # pylint: disable=bad-whitespace
             {'debit': 10.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_2.id},
             {'debit': 0.0,      'credit': 10.0,     'amount_currency': -10.0,       'currency_id': self.currency_1.id},
         ])
@@ -623,41 +336,29 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_journal_curr_2_statement_curr_3(self):
         self.bank_journal_2.currency_id = self.currency_2
 
-        statement = self.env['account.bank.statement'].create({
-            'name': 'test_statement',
-            'date': '2019-01-01',
+        statement_line = self.env['account.bank.statement.line'].create({
             'journal_id': self.bank_journal_2.id,
-            'line_ids': [
-                (0, 0, {
-                    'date': '2019-01-01',
-                    'payment_ref': 'line_1',
-                    'partner_id': self.partner_a.id,
-                    'foreign_currency_id': self.currency_3.id,
-                    'amount': 0.0,
-                    'amount_currency': 10.0,
-                }),
-            ],
+            'date': '2019-01-01',
+            'payment_ref': 'line_1',
+            'partner_id': self.partner_a.id,
+            'foreign_currency_id': self.currency_3.id,
+            'amount': 0.0,
+            'amount_currency': 10.0,
         })
 
-        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+        self.assertRecordValues(statement_line.move_id.line_ids, [
+            # pylint: disable=bad-whitespace
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_2.id},
             {'debit': 0.0,      'credit': 0.0,      'amount_currency': -10.0,       'currency_id': self.currency_3.id},
         ])
 
     def test_constraints(self):
-        def assertStatementLineConstraint(statement_vals, statement_line_vals):
+        def assertStatementLineConstraint(statement_line_vals):
             with self.assertRaises(Exception), self.cr.savepoint():
-                self.env['account.bank.statement'].create({
-                    **statement_vals,
-                    'line_ids': [(0, 0, statement_line_vals)],
-                })
+                self.env['account.bank.statement.line'].create(statement_line_vals)
 
-        statement_vals = {
-            'name': 'test_statement',
-            'date': '2019-01-01',
-            'journal_id': self.bank_journal_2.id,
-        }
         statement_line_vals = {
+            'journal_id': self.bank_journal_2.id,
             'date': '2019-01-01',
             'payment_ref': 'line_1',
             'partner_id': self.partner_a.id,
@@ -669,30 +370,26 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         # ==== Test constraints at creation ====
 
         # Foreign currency must not be the same as the journal one.
-        assertStatementLineConstraint(statement_vals, {
+        assertStatementLineConstraint({
             **statement_line_vals,
             'foreign_currency_id': self.currency_1.id,
         })
 
         # Can't have a stand alone amount in foreign currency without foreign currency set.
-        assertStatementLineConstraint(statement_vals, {
+        assertStatementLineConstraint({
             **statement_line_vals,
             'amount_currency': 10.0,
         })
 
         # Can't have a foreign currency set without amount in foreign currency.
-        assertStatementLineConstraint(statement_vals, {
+        assertStatementLineConstraint({
             **statement_line_vals,
             'foreign_currency_id': self.currency_2.id,
         })
 
         # ==== Test constraints at edition ====
 
-        statement = self.env['account.bank.statement'].create({
-            **statement_vals,
-            'line_ids': [(0, 0, statement_line_vals)],
-        })
-        st_line = statement.line_ids
+        st_line = self.env['account.bank.statement.line'].create(statement_line_vals)
 
         # You can't messed up the journal entry by adding another liquidity line.
         addition_lines_to_create = [
@@ -717,24 +414,21 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             st_line.line_ids.create(addition_lines_to_create)
 
-        # You can't set the journal entry in an unconsistent state.
-        with self.assertRaises(UserError), self.cr.savepoint():
-            st_line.move_id.action_post()
-
     def test_statement_line_move_onchange_1(self):
         ''' Test the consistency between the account.bank.statement.line and the generated account.move.lines
         using the form view emulator.
         '''
 
         # Check the initial state of the statement line.
-        self.assertBankStatementLine(self.statement_line, self.expected_st_line, [self.expected_counterpart_line, self.expected_bank_line])
+        self.assertBankStatementLine(self.statement_line, self.expected_st_line,
+                                     [self.expected_counterpart_line, self.expected_bank_line])
 
         # Inverse the amount + change them.
-        with Form(self.statement) as statement_form:
-            with statement_form.line_ids.edit(0) as st_line_form:
-                st_line_form.amount = -2000.0
-                st_line_form.amount_currency = -4000.0
-                st_line_form.foreign_currency_id = self.currency_3
+        self.statement_line.write({
+            'amount': -2000.0,
+            'amount_currency': -4000.0,
+            'foreign_currency_id': self.currency_3.id,
+        })
 
         self.assertBankStatementLine(self.statement_line, {
             **self.expected_st_line,
@@ -759,10 +453,10 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
         ])
 
         # Check changing the label and the partner.
-        with Form(self.statement) as statement_form:
-            with statement_form.line_ids.edit(0) as st_line_form:
-                st_line_form.payment_ref = 'line_1 (bis)'
-                st_line_form.partner_id = self.partner_b
+        self.statement_line.write({
+            'payment_ref': 'line_1 (bis)',
+            'partner_id': self.partner_b.id,
+        })
 
         self.assertBankStatementLine(self.statement_line, {
             **self.expected_st_line,
@@ -802,23 +496,17 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             journal = self.bank_journal_1.copy()
             journal.currency_id = journal_currency
 
-            statement = self.env['account.bank.statement'].create({
-                'name': 'test_statement',
-                'date': '2019-01-01',
+            statement_line = self.env['account.bank.statement.line'].create({
                 'journal_id': journal.id,
-                'line_ids': [
-                    Command.create({
-                        'date': '2019-01-01',
-                        'payment_ref': 'test_prepare_counterpart_amounts_using_st_line_rate',
-                        'foreign_currency_id': foreign_currency.id if foreign_currency != journal_currency else None,
-                        'amount': amount,
-                        'amount_currency': amount_currency if foreign_currency != journal_currency else 0.0,
-                    }),
-                ],
+                'date': '2019-01-01',
+                'payment_ref': 'test_prepare_counterpart_amounts_using_st_line_rate',
+                'foreign_currency_id': foreign_currency.id if foreign_currency != journal_currency else None,
+                'amount': amount,
+                'amount_currency': amount_currency if foreign_currency != journal_currency else 0.0,
             })
-            statement_line = statement.line_ids
 
-            res = statement_line._prepare_counterpart_amounts_using_st_line_rate(aml_currency, -aml_balance, -aml_amount_currency)
+            res = statement_line._prepare_counterpart_amounts_using_st_line_rate(aml_currency, -aml_balance,
+                                                                                 -aml_amount_currency)
             self.assertAlmostEqual(res['amount_currency'], expected_amount_currency)
             self.assertAlmostEqual(res['balance'], expected_balance)
 
@@ -847,13 +535,12 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
             'name': 'test_statement',
-            'date': '2017-01-01',
-            'journal_id': self.bank_journal_2.id,
             'line_ids': [
                 (0, 0, {
                     'date': '2019-01-01',
                     'payment_ref': "Happy new year",
                     'amount': 0.0,
+                    'journal_id': self.bank_journal_2.id,
                 }),
             ],
         })
@@ -861,29 +548,519 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         self.assertRecordValues(statement_line, [{'is_reconciled': True, 'amount_residual': 0.0}])
 
-    def test_statement_line_note_onchange_partner(self):
-        """
-        Check if narration field stays as it is when changing the partner
-        in reconciliation widget.
-        """
-        bank_stmt = self.env['account.bank.statement'].create({
-            'company_id': self.env.company.id,
-            'journal_id': self.bank_journal_1.id,
-            'name': 'test',
+    def test_statement_valid_complete_1(self):
+        self.env.user.company_id = self.company_data_2['company']
+
+        # create a valid and complete statement as the first lines (no statement before)
+        line1 = self.create_bank_transaction(1, '2020-01-10')
+        line2 = self.create_bank_transaction(2, '2020-01-11')
+        statement1 = self.env['account.bank.statement'].create({
+            'line_ids': [Command.set((line1 + line2).ids)],
+            'balance_start': 0,
+            'balance_end_real': 3,
         })
-
-        bank_stmt_line = self.env['account.bank.statement.line'].create({
-            'payment_ref': 'testLine',
-            'statement_id': bank_stmt.id,
-            'narration': 'This is a note',
-            'amount': 100,
-        })
-
-        bank_stmt_line.partner_id = self.partner_b
-
-        self.assertRecordValues(bank_stmt_line, [{
-            'payment_ref': 'testLine',
-            'statement_id': bank_stmt.id,
-            'narration': '<p>This is a note</p>',
-            'amount': 100,
+        self.assertRecordValues(statement1, [{
+            'is_complete': True,
+            'is_valid': True,
         }])
+        # remove the first line, so not complete but it is still valid because there is no statement before
+        line1.statement_id = False
+        statement1.invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1, [{
+            'is_complete': False,
+            'is_valid': True,
+        }])
+        # create a new line in the statement to make it complete again. Starting value does not match the last line
+        # but it is still valid because the previous line has no statement
+        line3 = self.create_bank_transaction(1, '2020-01-12', statement=statement1)
+        statement1.invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1, [{
+            'is_complete': True,
+            'is_valid': True,
+        }])
+        # add a statement to the first line, statement1 is still complete but not valid because balance start
+        # does not match the previous statement
+        statement2 = self.env['account.bank.statement'].create({
+            'line_ids': [Command.set(line1.ids)],
+            'balance_end_real': 1,
+        })
+        (statement1 + statement2).invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1 + statement2, [{
+            'is_complete': True,
+            'is_valid': False,
+        }, {
+            'is_complete': True,
+            'is_valid': True,  # first statement
+        }])
+        # Fix the statement balance start, so the statement is not complete (end - start = 2, vs sum lines = 3)
+        # but it is matched with the previous statements balance end
+        statement1.balance_start = 1
+        statement1.invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1, [{
+            'is_complete': False,
+            'is_valid': True,
+        }])
+        # change the prev statement so the end balance does not match the start balance of statement 1
+        statement2.balance_end_real = 10
+        statement2.flush_recordset(['balance_end_real'])
+        statement1.invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1, [{
+            'is_complete': False,
+            'is_valid': False,
+        }])
+        # make the statement valid again
+        statement1.balance_start = 10
+        statement1.invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1, [{
+            'is_complete': False,
+            'is_valid': True,
+        }])
+        # and complete again by adding a new transaction to it
+        line4 = self.create_bank_transaction(-10, '2020-01-13', statement=statement1)
+        (statement1 + statement2).invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1 + statement2, [{
+            'is_complete': True,
+            'is_valid': True,
+            'date': fields.Date.from_string('2020-01-13'),
+        }, {
+            'is_complete': False,
+            'is_valid': True,
+            'date': fields.Date.from_string('2020-01-10'),
+        }])
+        # check point
+        self.assertRecordValues(line1 + line2 + line3 + line4, [
+            {'date': fields.Date.from_string('2020-01-10'), 'statement_id': statement2.id},
+            {'date': fields.Date.from_string('2020-01-11'), 'statement_id': statement1.id},
+            {'date': fields.Date.from_string('2020-01-12'), 'statement_id': statement1.id},
+            {'date': fields.Date.from_string('2020-01-13'), 'statement_id': statement1.id},
+        ])
+
+        # changing statement 2 balance makes statement 1 valid,
+        # but making statement 1 the first statement should make it valid again
+        statement2.balance_end_real = 100
+        statement2.flush_recordset(['balance_end_real'])
+        statement1.invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1, [{
+            'is_valid': False,
+        }])
+        line1.statement_id = False
+        line1.flush_model()
+        statement2.flush_model()
+        statement1.invalidate_model(['is_valid'])
+        self.assertRecordValues(statement1, [{
+            'is_valid': True,
+        }])
+
+        # having a gap in the statement shouldn't make it invalid
+        line3.statement_id = False
+        statement1.flush_recordset(['is_valid'])
+        self.assertRecordValues(statement1, [{
+            'is_valid': True,
+        }])
+
+        # Change the statement on one of the lines of statement 1
+        statement3 = self.env['account.bank.statement'].create({
+            'line_ids': [Command.set(line4.ids)],
+            'balance_start': -5,
+        })
+        (statement1 + statement3).flush_recordset(['is_valid'])
+        self.assertRecordValues(statement1 + statement3, [{
+            'is_valid': True,
+        }, {
+            'is_valid': False,  # balance does not match with statement1
+        }])
+
+        # changing statement1 end_balance should change the validity of statement3
+        statement1.balance_end_real = -5
+        statement1.flush_recordset(['balance_end_real'])
+        (statement1 + statement3).invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1 + statement3, [{
+            'is_valid': True,
+        }, {
+            'is_valid': True,  # balance start matches previous end, despite the gap
+        }])
+        # check point
+        self.assertRecordValues(line1 + line2 + line3 + line4, [
+            {'date': fields.Date.from_string('2020-01-10'), 'statement_id': False},
+            {'date': fields.Date.from_string('2020-01-11'), 'statement_id': statement1.id},
+            {'date': fields.Date.from_string('2020-01-12'), 'statement_id': False},
+            {'date': fields.Date.from_string('2020-01-13'), 'statement_id': statement3.id},
+        ])
+        self.assertRecordValues(statement1 + statement2 + statement3, [
+            {'is_valid': True, 'balance_start': 10, 'balance_end_real': -5,
+             'date': fields.Date.from_string('2020-01-11')},
+            {'is_valid': True, 'balance_start': False, 'balance_end_real': 100, 'date': False},
+            {'is_valid': True, 'balance_start': -5, 'balance_end_real': False,
+             'date': fields.Date.from_string('2020-01-13')},
+        ])
+
+        # adding a statement to the first line should make statement1 invalid
+        line1.statement_id = statement2
+        statement2.flush_model()
+        (statement1 + statement2).invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1 + statement2, [{'is_valid': False}, {'is_valid': True}])
+
+        # moving statement2 the line between statement1 and statement3 should make statement1 valid again
+        # and statement3 invalid
+        statement2.line_ids = line3
+        statement2.flush_model()
+        (statement1 + statement2 + statement3).invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1 + statement2 + statement3, [
+            {'is_valid': True}, {'is_valid': False}, {'is_valid': False},
+        ])
+
+    def test_statement_line_ordering(self):
+        self.env.user.company_id = self.company_data_2['company']
+
+        # the line numbers are chosen based on the order of the lines in the list view
+        line7 = self.create_bank_transaction(7, '2020-01-10', sequence=1)
+        line8 = self.create_bank_transaction(8, '2020-01-10', sequence=2)
+        line2 = self.create_bank_transaction(2, '2020-01-13')
+        _line6 = self.create_bank_transaction(6, '2020-01-11')
+        line5 = self.create_bank_transaction(5, '2020-01-12', sequence=3)
+        line4 = self.create_bank_transaction(4, '2020-01-12', sequence=2)
+        _line1 = self.create_bank_transaction(1, '2020-01-13')
+        line3 = self.create_bank_transaction(3, '2020-01-12', sequence=1)
+
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                {'amount': 1, 'running_balance': 36, 'statement_id': False},
+                {'amount': 2, 'running_balance': 35, 'statement_id': False},
+                {'amount': 3, 'running_balance': 33, 'statement_id': False},
+                {'amount': 4, 'running_balance': 30, 'statement_id': False},
+                {'amount': 5, 'running_balance': 26, 'statement_id': False},
+                {'amount': 6, 'running_balance': 21, 'statement_id': False},
+                {'amount': 7, 'running_balance': 15, 'statement_id': False},
+                {'amount': 8, 'running_balance': 8, 'statement_id': False},
+            ],
+        )
+
+        # Same but with a subset of lines to ensure the balance is not only computed based on selected records.
+        self.env['account.bank.statement.line'].invalidate_model(fnames=['running_balance'])
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([
+                ('company_id', '=', self.env.company.id),
+                ('amount', '>=', 3),
+                ('amount', '<=', 6),
+            ]),
+            [
+                {'amount': 3, 'running_balance': 33},
+                {'amount': 4, 'running_balance': 30},
+                {'amount': 5, 'running_balance': 26},
+                {'amount': 6, 'running_balance': 21},
+            ],
+        )
+
+        # Put line2 -> line4 inside a statement with a wrong balance_end_real.
+        (line2 + line3 + line4).statement_id = statement1 = \
+            self.env['account.bank.statement'].create({'balance_end_real': 9})
+        self.assertRecordValues(statement1, [{
+            'is_complete': True,
+        }])
+
+        statement1.invalidate_recordset(['is_valid'])
+        statement1.balance_start = 26
+        self.assertRecordValues(statement1, [{
+            'is_complete': False,
+        }])
+
+        statement1.invalidate_recordset(['is_valid'])
+        statement1.balance_end_real = 35
+        self.assertRecordValues(statement1, [{
+            'is_complete': True,
+        }])
+        # line3, line4 and line5 have the same date. Move line5 at the first place using the sequence.
+        line5.sequence = -1
+        statement1.invalidate_recordset(['is_valid'])
+        self.env['account.bank.statement.line'].invalidate_model(fnames=['running_balance'])
+        self.assertRecordValues(statement1, [{
+            'is_complete': True,
+        }])
+
+        statement1.balance_start = 21
+        statement1.invalidate_recordset(['is_valid'])
+        self.assertRecordValues(statement1, [{
+            'is_complete': False,
+        }])
+
+        self.env['account.bank.statement.line'].invalidate_model(fnames=['running_balance'])
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'running_balance': 36, 'statement_id': False},
+                {'amount': 2, 'running_balance': 35, 'statement_id': statement1.id},
+                {'amount': 5, 'running_balance': 33, 'statement_id': False},
+                {'amount': 3, 'running_balance': 28, 'statement_id': statement1.id},
+                {'amount': 4, 'running_balance': 25, 'statement_id': statement1.id},
+                {'amount': 6, 'running_balance': 21, 'statement_id': False},
+                {'amount': 7, 'running_balance': 15, 'statement_id': False},
+                {'amount': 8, 'running_balance': 8, 'statement_id': False},
+            ],
+        )
+
+        line8.amount = 18
+
+        self.env['account.bank.statement.line'].invalidate_model(fnames=['running_balance'])
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'running_balance': 36, 'statement_id': False},
+                {'amount': 2, 'running_balance': 35, 'statement_id': statement1.id},
+                {'amount': 5, 'running_balance': 33, 'statement_id': False},
+                {'amount': 3, 'running_balance': 28, 'statement_id': statement1.id},
+                {'amount': 4, 'running_balance': 25, 'statement_id': statement1.id},
+                {'amount': 6, 'running_balance': 31, 'statement_id': False},
+                {'amount': 7, 'running_balance': 25, 'statement_id': False},
+                {'amount': 18, 'running_balance': 18, 'statement_id': False},
+            ],
+        )
+        line5.amount = 15
+
+        self.env['account.bank.statement.line'].invalidate_model(fnames=['running_balance'])
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'running_balance': 46, 'statement_id': False},
+                {'amount': 2, 'running_balance': 45, 'statement_id': statement1.id},
+                {'amount': 15, 'running_balance': 43, 'statement_id': False},
+                {'amount': 3, 'running_balance': 28, 'statement_id': statement1.id},
+                {'amount': 4, 'running_balance': 25, 'statement_id': statement1.id},
+                {'amount': 6, 'running_balance': 31, 'statement_id': False},
+                {'amount': 7, 'running_balance': 25, 'statement_id': False},
+                {'amount': 18, 'running_balance': 18, 'statement_id': False},
+            ],
+        )
+
+        line7.unlink()
+
+        self.env['account.bank.statement.line'].invalidate_model(fnames=['running_balance'])
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'running_balance': 46, 'statement_id': False},
+                {'amount': 2, 'running_balance': 45, 'statement_id': statement1.id},
+                {'amount': 15, 'running_balance': 43, 'statement_id': False},
+                {'amount': 3, 'running_balance': 28, 'statement_id': statement1.id},
+                {'amount': 4, 'running_balance': 25, 'statement_id': statement1.id},
+                {'amount': 6, 'running_balance': 24, 'statement_id': False},
+                {'amount': 18, 'running_balance': 18, 'statement_id': False},
+            ],
+        )
+
+    def test_statement_split(self):
+        self.env.user.company_id = self.company_data_2['company']
+
+        # the line numbers are chosen based on the order of the lines in the list view
+        line7 = self.create_bank_transaction(7, '2020-01-10', sequence=1)
+        line8 = self.create_bank_transaction(8, '2020-01-10', sequence=2)
+        line2 = self.create_bank_transaction(2, '2020-01-13')
+        line6 = self.create_bank_transaction(6, '2020-01-11')
+        _line5 = self.create_bank_transaction(5, '2020-01-12', sequence=3)
+        line4 = self.create_bank_transaction(4, '2020-01-12', sequence=2)
+        line1 = self.create_bank_transaction(1, '2020-01-13')
+        line3 = self.create_bank_transaction(3, '2020-01-12', sequence=1)
+
+        # Split the last 2 lines by splitting on the line before last.
+        statement1 = self.env['account.bank.statement'].with_context({'split_line_id': line7.id}).create({})
+        self.assertRecordValues(statement1, [{
+            'is_complete': True,
+            'balance_end_real': 15,
+            'balance_end': 15,
+            'balance_start': 0,
+        }])
+        self.assertRecordValues(line7 + line8, [
+            {'amount': 7, 'statement_id': statement1.id},
+            {'amount': 8, 'statement_id': statement1.id},
+        ])
+
+        # Split on a line adjutant to another statement
+        self.env['account.bank.statement.line'].invalidate_model(['running_balance'])
+        statement2 = self.env['account.bank.statement'].with_context({'split_line_id': line6.id}).create({})
+        self.assertRecordValues(statement1, [{
+            'is_complete': True,
+            'balance_end_real': 15,
+            'balance_start': 0,
+        }])
+        self.assertRecordValues(statement2, [{
+            'is_complete': True,
+            'balance_end_real': 21,
+            'balance_start': 15,
+        }])
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'running_balance': 36, 'statement_id': False},
+                {'amount': 2, 'running_balance': 35, 'statement_id': False},
+                {'amount': 3, 'running_balance': 33, 'statement_id': False},
+                {'amount': 4, 'running_balance': 30, 'statement_id': False},
+                {'amount': 5, 'running_balance': 26, 'statement_id': False},
+                {'amount': 6, 'running_balance': 21, 'statement_id': statement2.id},
+                {'amount': 7, 'running_balance': 15, 'statement_id': statement1.id},
+                {'amount': 8, 'running_balance': 8,  'statement_id': statement1.id},
+            ],
+        )
+
+        # Split on a line with a gap to another statement
+        statement1.unlink()
+        self.env['account.bank.statement.line'].invalidate_model(['running_balance'])
+        statement3 = self.env['account.bank.statement'].with_context({'split_line_id': line3.id}).create({})
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'running_balance': 36, 'statement_id': False},
+                {'amount': 2, 'running_balance': 35, 'statement_id': False},
+                {'amount': 3, 'running_balance': 33, 'statement_id': statement3.id},
+                {'amount': 4, 'running_balance': 30, 'statement_id': statement3.id},
+                {'amount': 5, 'running_balance': 26, 'statement_id': statement3.id},
+                {'amount': 6, 'running_balance': 21, 'statement_id': statement2.id},
+                {'amount': 7, 'running_balance': 15, 'statement_id': False},
+                {'amount': 8, 'running_balance': 8,  'statement_id': False},
+            ],
+        )
+        # Split on a line with a single line statement
+        statement4 = self.env['account.bank.statement'].with_context({'split_line_id': line6.id}).create({})
+        self.env['account.bank.statement.line'].invalidate_model(['running_balance'])
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'running_balance': 36, 'statement_id': False},
+                {'amount': 2, 'running_balance': 35, 'statement_id': False},
+                {'amount': 3, 'running_balance': 33, 'statement_id': statement3.id},
+                {'amount': 4, 'running_balance': 30, 'statement_id': statement3.id},
+                {'amount': 5, 'running_balance': 26, 'statement_id': statement3.id},
+                {'amount': 6, 'running_balance': 21, 'statement_id': statement4.id},
+                {'amount': 7, 'running_balance': 15, 'statement_id': statement4.id},
+                {'amount': 8, 'running_balance': 8,  'statement_id': statement4.id},
+            ],
+        )
+        # check double split on a single line
+        self.env['account.bank.statement.line'].invalidate_model(['running_balance'])
+        statement5 = self.env['account.bank.statement'].with_context({'split_line_id': line2.id}).create({})
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'running_balance': 36, 'statement_id': False},
+                {'amount': 2, 'running_balance': 35, 'statement_id': statement5.id},
+                {'amount': 3, 'running_balance': 33, 'statement_id': statement3.id},
+                {'amount': 4, 'running_balance': 30, 'statement_id': statement3.id},
+                {'amount': 5, 'running_balance': 26, 'statement_id': statement3.id},
+                {'amount': 6, 'running_balance': 21, 'statement_id': statement4.id},
+                {'amount': 7, 'running_balance': 15, 'statement_id': statement4.id},
+                {'amount': 8, 'running_balance': 8,  'statement_id': statement4.id},
+            ],
+        )
+        self.env['account.bank.statement.line'].invalidate_model(['running_balance'])
+        statement6 = self.env['account.bank.statement'].with_context({'split_line_id': line2.id}).create({})
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'running_balance': 36, 'statement_id': False},
+                {'amount': 2, 'running_balance': 35, 'statement_id': statement6.id},
+                {'amount': 3, 'running_balance': 33, 'statement_id': statement3.id},
+                {'amount': 4, 'running_balance': 30, 'statement_id': statement3.id},
+                {'amount': 5, 'running_balance': 26, 'statement_id': statement3.id},
+                {'amount': 6, 'running_balance': 21, 'statement_id': statement4.id},
+                {'amount': 7, 'running_balance': 15, 'statement_id': statement4.id},
+                {'amount': 8, 'running_balance': 8,  'statement_id': statement4.id},
+            ],
+        )
+
+        # Split in the middle of a statement
+        self.env['account.bank.statement.line'].invalidate_model(['running_balance'])
+        statement7 = self.env['account.bank.statement'].with_context({'split_line_id': line4.id}).create({})
+        self.env['account.bank.statement.line'].invalidate_model(['running_balance'])
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'running_balance': 36, 'statement_id': False},
+                {'amount': 2, 'running_balance': 35, 'statement_id': statement6.id},
+                {'amount': 3, 'running_balance': 33, 'statement_id': statement3.id},
+                {'amount': 4, 'running_balance': 30, 'statement_id': statement7.id},
+                {'amount': 5, 'running_balance': 26, 'statement_id': statement7.id},
+                {'amount': 6, 'running_balance': 21, 'statement_id': statement4.id},
+                {'amount': 7, 'running_balance': 15, 'statement_id': statement4.id},
+                {'amount': 8, 'running_balance': 8,  'statement_id': statement4.id},
+            ],
+        )
+        self.assertRecordValues(statement3 + statement7, [
+            {'balance_end_real': 33, 'balance_start': 30, 'is_complete': True, 'is_valid': True, },
+            {'balance_end_real': 30, 'balance_start': 21, 'is_complete': True, 'is_valid': True, },
+        ])
+
+        # split at start of another statement
+        self.env['account.bank.statement.line'].invalidate_model(['running_balance'])
+        statement8 = self.env['account.bank.statement'].with_context({'split_line_id': line6.id}).create({})
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'statement_id': False},
+                {'amount': 2, 'statement_id': statement6.id},
+                {'amount': 3, 'statement_id': statement3.id},
+                {'amount': 4, 'statement_id': statement7.id},
+                {'amount': 5, 'statement_id': statement7.id},
+                {'amount': 6, 'statement_id': statement8.id},
+                {'amount': 7, 'statement_id': statement8.id},
+                {'amount': 8, 'statement_id': statement8.id},
+            ],
+        )
+
+        # split at end of another statement
+        self.env['account.bank.statement.line'].invalidate_model(['running_balance'])
+        statement9 = self.env['account.bank.statement'].with_context({'split_line_id': line8.id}).create({})
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'statement_id': False},
+                {'amount': 2, 'statement_id': statement6.id},
+                {'amount': 3, 'statement_id': statement3.id},
+                {'amount': 4, 'statement_id': statement7.id},
+                {'amount': 5, 'statement_id': statement7.id},
+                {'amount': 6, 'statement_id': statement8.id},
+                {'amount': 7, 'statement_id': statement8.id},
+                {'amount': 8, 'statement_id': statement9.id},
+            ],
+        )
+        self.assertRecordValues(statement8 + statement9, [
+            {'balance_end_real': 21, 'balance_start': 8, 'is_complete': True, 'is_valid': True, },
+            {'balance_end_real': 8, 'balance_start': 0, 'is_complete': True, 'is_valid': True, },
+        ])
+
+        # split at most recent line
+        self.env['account.bank.statement.line'].invalidate_model(['running_balance'])
+        statement10 = self.env['account.bank.statement'].with_context({'split_line_id': line1.id}).create({})
+        self.assertRecordValues(
+            self.env['account.bank.statement.line'].search([('company_id', '=', self.env.company.id)]),
+            [
+                # pylint: disable=C0326
+                {'amount': 1, 'statement_id': statement10.id},
+                {'amount': 2, 'statement_id': statement6.id},
+                {'amount': 3, 'statement_id': statement3.id},
+                {'amount': 4, 'statement_id': statement7.id},
+                {'amount': 5, 'statement_id': statement7.id},
+                {'amount': 6, 'statement_id': statement8.id},
+                {'amount': 7, 'statement_id': statement8.id},
+                {'amount': 8, 'statement_id': statement9.id},
+            ],
+        )
+
+        all_statements = self.env['account.bank.statement'].search([
+            ('line_ids', '!=', False),
+            ('company_id', '=', self.env.company.id),
+        ])
+        all_statements.invalidate_recordset(['is_valid'])
+        self.assertEqual(len(all_statements), 6)
+        self.assertEqual(all_statements.mapped('is_valid'), [True] * len(all_statements))
+        self.assertEqual(all_statements.mapped('is_complete'), [True] * len(all_statements))
