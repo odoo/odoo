@@ -431,7 +431,7 @@ export class GraphModel extends Model {
                                     label = `${val}`; // toUpperCase?
                                 } else if (val === false) {
                                     label = this.env._t("Undefined");
-                                } else if (type === "many2one") {
+                                } else if (["many2many", "many2one"].includes(type)) {
                                     const [id, name] = val;
                                     const key = JSON.stringify([fieldName, name]);
                                     if (!numbering[key]) {
@@ -501,9 +501,10 @@ export class GraphModel extends Model {
         const processedGroupBy = [];
         for (const gb of groupBy) {
             const { fieldName, interval } = gb;
-            const { sortable, type } = fields[fieldName];
+            const { sortable, type, store } = fields[fieldName];
             if (
-                !sortable ||
+                // many2many is groupable precisely when it is stored (cf. groupable in odoo/fields.py)
+                (type === "many2many" ? !store : !sortable) ||
                 ["id", "__count"].includes(fieldName) ||
                 !GROUPABLE_TYPES.includes(type)
             ) {
