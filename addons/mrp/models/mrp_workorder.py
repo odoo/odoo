@@ -737,6 +737,17 @@ class MrpWorkorder(models.Model):
         for wo in self:
             wo.qty_remaining = max(float_round(wo.qty_production - wo.qty_reported_from_previous_wo - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding), 0)
 
+    def _get_product_expected_duration(self, alternative_workcenter=False):
+        """In case there are specific capacities defined in the workcenter
+        that matches the product we are producing. Add the extra-time.
+        """
+        self.ensure_one()
+        workcenter = alternative_workcenter or self.workcenter_id
+        for product in workcenter.capacity_ids:
+            if product.product_id == self.product_id:
+                return product.time_start + product.time_stop
+        return 0.0
+
     def _get_duration_expected(self, alternative_workcenter=False, ratio=1):
         self.ensure_one()
         if not self.workcenter_id:
@@ -745,7 +756,7 @@ class MrpWorkorder(models.Model):
             duration_expected_working = (self.duration_expected - self.workcenter_id.time_start - self.workcenter_id.time_stop) * self.workcenter_id.time_efficiency / 100.0
             if duration_expected_working < 0:
                 duration_expected_working = 0
-            return self.workcenter_id.time_start + self.workcenter_id.time_stop + duration_expected_working * ratio * 100.0 / self.workcenter_id.time_efficiency
+            return self.workcenter_id.time_start + self.workcenter_id.time_stop + duration_expected_working * ratio * 100.0 / self.workcenter_id.time_efficiency + self._get_product_expected_duration()
         qty_production = self.production_id.product_uom_id._compute_quantity(self.qty_production, self.production_id.product_id.uom_id)
         capacity = self.workcenter_id._get_capacity(self.product_id)
         cycle_number = float_round(qty_production / capacity, precision_digits=0, rounding_method='UP')
@@ -756,9 +767,9 @@ class MrpWorkorder(models.Model):
                 duration_expected_working = 0
             capacity = alternative_workcenter._get_capacity(self.product_id)
             alternative_wc_cycle_nb = float_round(qty_production / capacity, precision_digits=0, rounding_method='UP')
-            return alternative_workcenter.time_start + alternative_workcenter.time_stop + alternative_wc_cycle_nb * duration_expected_working * 100.0 / alternative_workcenter.time_efficiency
+            return alternative_workcenter.time_start + alternative_workcenter.time_stop + alternative_wc_cycle_nb * duration_expected_working * 100.0 / alternative_workcenter.time_efficiency + self._get_product_expected_duration(alternative_workcenter)
         time_cycle = self.operation_id.time_cycle
-        return self.workcenter_id.time_start + self.workcenter_id.time_stop + cycle_number * time_cycle * 100.0 / self.workcenter_id.time_efficiency
+        return self.workcenter_id.time_start + self.workcenter_id.time_stop + cycle_number * time_cycle * 100.0 / self.workcenter_id.time_efficiency  + self._get_product_expected_duration()
 
     def _get_conflicted_workorder_ids(self):
         """Get conlicted workorder(s) with self.
