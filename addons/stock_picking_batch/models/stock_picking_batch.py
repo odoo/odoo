@@ -209,7 +209,6 @@ class StockPickingBatch(models.Model):
         return True
 
     def action_cancel(self):
-        self.ensure_one()
         self.state = 'cancel'
         self.picking_ids = False
         return True
