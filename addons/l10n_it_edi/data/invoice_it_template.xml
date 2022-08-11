@@ -25,6 +25,16 @@
                     <AliquotaIVA t-if="line.tax_ids.amount_type == 'percent'" t-esc="format_numbers(line.tax_ids.amount)"/>
                     <AliquotaIVA t-elif="line.tax_ids.amount_type != 'percent'" t-esc="'0.00'"/>
                     <Natura t-if="line.tax_ids.l10n_it_has_exoneration" t-esc="line.tax_ids.l10n_it_kind_exoneration"/>
+                    <AltriDatiGestionali t-if="conversion_rate">
+                        <TipoDato>Currency</TipoDato>
+                        <RiferimentoTesto t-esc="format_alphanumeric(record.currency_id.name)"/>
+                        <RiferimentoNumero t-esc="'%.06f' % line.price_subtotal"/>
+                    </AltriDatiGestionali>
+                    <AltriDatiGestionali t-if="conversion_rate">
+                        <TipoDato>Exch.Rate</TipoDato>
+                        <RiferimentoNumero t-esc="conversion_rate"/>
+                        <RiferimentoData t-esc="format_date(record.invoice_date)"/>
+                    </AltriDatiGestionali>
                 </DettaglioLinee>
 </template>
 
@@ -152,9 +162,9 @@
                 <DatiRiepilogo>
                     <AliquotaIVA t-esc="format_numbers(tax.amount)"/>
                     <Natura t-if="has_exoneration" t-esc="kind_exoneration"/>
-                    <Arrotondamento t-if="tax_line['rounding']" t-esc="format_numbers(tax_line['rounding'])"/>
-                    <ImponibileImporto t-esc="format_monetary(tax_dict['base_amount_currency'], currency)"/>
-                    <Imposta t-esc="format_monetary(tax_dict['tax_amount_currency'], currency)"/>
+                    <Arrotondamento t-if="(tax_dict.get('rounding') and currency.name != 'EUR') or (tax_dict.get('rounding_euros') and currency.name == 'EUR')" t-esc="format_numbers(tax_dict['rounding'] if currency.name != 'EUR' else tax_dict['rounding_euros'])"/>
+                    <ImponibileImporto t-esc="format_monetary(tax_dict['base_amount'] if currency.name == 'EUR' else tax_dict['base_amount_currency'], currency)"/>
+                    <Imposta t-esc="format_monetary(tax_dict['tax_amount'] if currency.name == 'EUR' else tax_dict['base_amount_currency'], currency)"/>
                     <EsigibilitaIVA t-if="not has_exoneration or kind_exoneration == 'N6'" t-esc="tax.l10n_it_vat_due_date"/>
                     <RiferimentoNormativo t-if="has_exoneration" t-esc="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
                 </DatiRiepilogo>
