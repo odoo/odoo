@@ -584,9 +584,12 @@ QUnit.module('convert_inline', {}, function () {
         const $editable = $(`<div><div class="container"><div class="row"><div class="col">Hello</div></div></div></div>`);
         $(document.body).append($editable); // editable needs to be in the DOM to compute its dynamic styles.
         convertInline.classToStyle($editable, convertInline.getCSSRules($editable[0].ownerDocument));
-        const containerStyle = `padding: 0px 16px; margin: 0px auto; box-sizing: border-box; max-width: 1320px; width: 100%;`;
-        const rowStyle = `margin: 0px; box-sizing: border-box;`;
-        const colStyle = `padding: 0px 16px; margin: 0px; box-sizing: border-box; max-width: 100%; width: 100%;`;
+        // Some positional properties (eg., padding-right, margin-left) are not
+        // concatenated (eg., as padding, margin) because they were defined with
+        // variables (var) or calculated (calc).
+        const containerStyle = `margin: 0px auto; box-sizing: border-box; max-width: 1320px; padding-left: 16px; padding-right: 16px; width: 100%;`;
+        const rowStyle = `box-sizing: border-box; margin-left: -16px; margin-right: -16px; margin-top: 0px;`;
+        const colStyle = `box-sizing: border-box; margin-top: 0px; padding-left: 16px; padding-right: 16px; max-width: 100%; width: 100%;`;
         assert.strictEqual($editable.html(),
             `<div class="container" style="${containerStyle}" width="100%">` +
             `<div class="row" style="${rowStyle}">` +

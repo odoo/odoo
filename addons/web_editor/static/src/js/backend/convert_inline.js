@@ -14,7 +14,6 @@ const RE_COMMAS_OUTSIDE_PARENTHESES = /,(?![^(]*?\))/g;
 const RE_OFFSET_MATCH = /(^| )offset(-[\w\d]+)*( |$)/;
 const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
-const RE_POSITIONAL_STYLE = /(margin|padding|border)-(top|right|bottom|left).*/;
 const RE_WHITESPACE = /[\s\u200b]*/;
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/;
 // Attributes all tables should have in a mailing.
@@ -435,7 +434,6 @@ function classToStyle($editable, cssRules) {
         writes.push(() => {
             let computedStyle;
             for (let styleName of node.style) {
-                styleName = styleName.replace(RE_POSITIONAL_STYLE, '$1');
                 const styleValue = node.style.getPropertyValue(styleName);
                 if (styleValue.includes('var(') || styleValue.includes('calc(')) {
                     computedStyle = computedStyle || getComputedStyle(node);
@@ -1235,9 +1233,10 @@ function _getMatchedCSSRules(node, cssRules) {
     ]) {
         const positions = ['top', 'right', 'bottom', 'left'];
         const positionalKeys = positions.map(position => `${info.name}-${position}${info.suffix || ''}`);
-        const hasStyles = positionalKeys.some(key => processedStyle[key]);
+        const styles = positionalKeys.map(key => processedStyle[key]).filter(s => s);
+        const hasVariableStyle = styles.some(style => style.includes('calc(') || style.includes('var('));
         const inherits = positionalKeys.some(key => ['inherit', 'initial'].includes((processedStyle[key] || '').trim()));
-        if (hasStyles && !inherits) {
+        if (styles.length && !hasVariableStyle && !inherits) {
             const propertyName = `${info.name}${info.suffix || ''}`;
             processedStyle[propertyName] = positionalKeys.every(key => processedStyle[positionalKeys[0]] === processedStyle[key])
                 ? processedStyle[propertyName] = processedStyle[positionalKeys[0]] // top = right = bottom = left => property: [top];
