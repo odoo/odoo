@@ -2498,12 +2498,12 @@ class IrQWeb(models.AbstractModel):
     def _get_asset_bundle(self, bundle_name, files, env=None, css=True, js=True):
         return AssetsBundle(bundle_name, files, env=env, css=css, js=js)
 
-    def _generate_asset_nodes(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
+    def _generate_asset_nodes(self, bundle_name, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         nodeAttrs = {'media': media} if css and media else None
-        files, remains = self._get_asset_content(bundle, nodeAttrs, defer_load=defer_load, lazy_load=lazy_load)
-        asset = self._get_asset_bundle(bundle, files, env=self.env, css=css, js=js)
+        files, remains = self._get_asset_content(bundle_name, nodeAttrs, defer_load=defer_load, lazy_load=lazy_load)
+        bundle = self._get_asset_bundle(bundle_name, files, env=self.env, css=css, js=js)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] == 'script')]
-        return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
+        return remains + bundle.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
 
     def _get_asset_link_urls(self, bundle, debug=False):
         asset_nodes = self._get_asset_nodes(bundle, js=False, debug=debug)

@@ -754,9 +754,9 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
         files, _ = self.env['ir.qweb']._get_asset_content(self.stylebundle_name)
         return AssetsBundle(self.stylebundle_name, files, env=self.env)
 
-    def _bundle(self, asset, should_create, should_unlink):
+    def _bundle(self, bundle, should_create, should_unlink):
         self.counter.clear()
-        asset.to_node(debug='assets')
+        bundle.to_node(debug='assets')
         self.assertEqual(self.counter['create'], 2 if should_create else 0)
         self.assertEqual(self.counter['unlink'], 2 if should_unlink else 0)
 

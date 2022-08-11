@@ -163,8 +163,31 @@ class AssetsBundle(object):
                 response.append(("link", attr, None))
             if self.css_errors:
                 msg = '\n'.join(self.css_errors)
-                response.append(JavascriptAsset(self, inline=self.dialog_message(msg)).to_node())
-                response.append(StylesheetAsset(self, url="/web/static/lib/bootstrap/dist/css/bootstrap.css").to_node())
+
+                js = JavascriptAsset(self, inline=self.dialog_message(msg))
+                response.append((
+                    'script',
+                    {
+                        'type': 'text/javascript',
+                        'charset': 'utf-8',
+                        'data-asset-bundle': self.name,
+                        'data-asset-version': self.version,
+                    },
+                    js.with_header()
+                ))
+                css = StylesheetAsset(self, url='')
+                response.append((
+                    'link', 
+                    {
+                        'type': 'text/css',
+                        'rel': 'stylesheet',
+                        'href': '/web/static/lib/bootstrap/dist/css/bootstrap.css',
+                        'media': None,
+                        'data-asset-bundle': self.name,
+                        'data-asset-version': self.version,
+                    },
+                    None
+                ))
 
         if js and self.javascripts:
             js_attachment = self.js(is_minified=not is_debug_assets)
@@ -549,38 +572,6 @@ class AssetsBundle(object):
         """
         return [('url', 'in', list(assets.keys()))]
 
-    def is_css_preprocessed(self):
-        preprocessed = True
-        old_attachments = self.env['ir.attachment'].sudo()
-        asset_types = [SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset]
-        if self.user_direction == 'rtl':
-            asset_types.append(StylesheetAsset)
-
-        for atype in asset_types:
-            outdated = False
-            assets = dict((asset.html_url, asset) for asset in self.stylesheets if isinstance(asset, atype))
-            if assets:
-                assets_domain = self._get_assets_domain_for_already_processed_css(assets)
-                attachments = self.env['ir.attachment'].sudo().search(assets_domain)
-                old_attachments += attachments
-                for attachment in attachments:
-                    asset = assets[attachment.url]
-                    if asset.last_modified > attachment['__last_update']:
-                        outdated = True
-                        break
-                    if asset._content is None:
-                        asset._content = (attachment.raw or b'').decode('utf8')
-                        if not asset._content and attachment.file_size > 0:
-                            asset._content = None # file missing, force recompile
-
-                if any(asset._content is None for asset in assets.values()):
-                    outdated = True
-
-                if outdated:
-                    preprocessed = False
-
-        return preprocessed, old_attachments
-
     def preprocess_css(self, debug=False, old_attachments=None):
         """
             Checks if the bundle contains any sass/less content, then compiles it to css.
@@ -759,9 +750,6 @@ class WebAsset(object):
             except ValueError:
                 raise AssetNotFound("Could not find %s" % self.name)
 
-    def to_node(self):
-        raise NotImplementedError()
-
     @func.lazy_property
     def last_modified(self):
         try:
@@ -874,22 +862,6 @@ class JavascriptAsset(WebAsset):
         except AssetError as e:
             return u"console.error(%s);" % json.dumps(to_text(e))
 
-    def to_node(self):
-        if self.url:
-            return ("script", dict([
-                ["type", "text/javascript"],
-                ["src", self.html_url],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle.version],
-            ]), None)
-        else:
-            return ("script", dict([
-                ["type", "text/javascript"],
-                ["charset", "utf-8"],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle.version],
-            ]), self.with_header())
-
     def with_header(self, content=None, minimal=True):
         if minimal:
             return super().with_header(content)
@@ -902,7 +874,6 @@ class JavascriptAsset(WebAsset):
         #   **************************/
         lines = [
             f"Filepath: {self.url}",
-            f"Bundle: {self.bundle.name}",
             f"Lines: {len(content.splitlines())}",
         ]
         length = max(map(len, lines))
@@ -976,27 +947,6 @@ class StylesheetAsset(WebAsset):
         content = re.sub(r'\s+', ' ', content)
         content = re.sub(r' *([{}]) *', r'\1', content)
         return self.with_header(content)
-
-    def to_node(self):
-        if self.url:
-            attr = dict([
-                ["type", "text/css"],
-                ["rel", "stylesheet"],
-                ["href", self.html_url],
-                ["media", escape(to_text(self.media)) if self.media else None],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle.version],
-            ])
-            return ("link", attr, None)
-        else:
-            attr = dict([
-                ["type", "text/css"],
-                ["media", escape(to_text(self.media)) if self.media else None],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle.version],
-            ])
-            return ("style", attr, self.with_header())
-
 
 class PreprocessedCSS(StylesheetAsset):
     rx_import = None
