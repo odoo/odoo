@@ -82,7 +82,7 @@ class SaleOrderLine(models.Model):
         string="Product Template",
         related='product_id.product_tmpl_id',
         domain=[('sale_ok', '=', True)])
-    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
+    product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', depends=['product_id'])
 
     product_custom_attribute_value_ids = fields.One2many(
         comodel_name='product.attribute.custom.value', inverse_name='sale_order_line_id',
