@@ -299,6 +299,7 @@ function cardToTable($editable) {
     for (const card of editable.querySelectorAll('.card')) {
         const table = _createTable(card.attributes);
         table.style.removeProperty('overflow');
+        const cardImgTopSuperRows = [];
         for (const child of [...card.childNodes]) {
             const row = document.createElement('tr');
             const col = document.createElement('td');
@@ -327,6 +328,17 @@ function cardToTable($editable) {
             superCol.append(subTable);
             superRow.append(superCol);
             table.append(superRow);
+            if (child.classList && child.classList.contains('card-img-top')) {
+                // Collect .card-img-top superRows to manipulate their heights.
+                cardImgTopSuperRows.push(superRow);
+            }
+        }
+        // We expect successive .card-img-top to have the same height so the
+        // bodies of the cards are aligned. This achieves that without flexboxes
+        // by forcing the height of the smallest card:
+        const smallestCardImgRow = Math.min(0, ...cardImgTopSuperRows.map(row => row.clientHeight));
+        for (const row of cardImgTopSuperRows) {
+            row.style.height = smallestCardImgRow + 'px';
         }
         card.before(table);
         card.remove();
@@ -826,6 +838,12 @@ function formatTables($editable) {
             row.style.verticalAlign = 'middle';
         } else if (alignItems === 'flex-end' || alignItems === 'baseline') {
             row.style.verticalAlign = 'bottom';
+        } else if (alignItems === 'stretch') {
+            const columns = [...row.children].filter(child => child.nodeName === 'TD');
+            const biggestHeight = Math.max(...columns.map(column => column.clientHeight));
+            for (const column of columns) {
+                column.style.height = biggestHeight + 'px';
+            }
         }
     }
     // Tables don't properly inherit alignments from their ancestors in Outlook.
