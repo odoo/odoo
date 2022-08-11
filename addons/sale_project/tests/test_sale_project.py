@@ -164,7 +164,7 @@ class TestSaleProject(TransactionCase):
         self.assertIn(task.sale_line_id, self.project_global._get_sale_order_items())
         self.assertEqual(self.project_global._get_sale_orders(), sale_order | sale_order_2)
 
-        sale_order_lines = sale_order.order_line + sale_line_1_order_2  # exclude the Section and Note Sales Order Items
+        sale_order_lines = so_line_order_task_in_global + sale_line_1_order_2  # exclude the Section and Note Sales Order Items, only choose the ones related to project_global
         sale_items_data = self.project_global._get_sale_items(with_action=False)
         self.assertEqual(sale_items_data['total'], len(sale_order_lines))
         expected_sale_line_dict = {
