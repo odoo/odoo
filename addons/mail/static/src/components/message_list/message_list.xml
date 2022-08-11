@@ -7,19 +7,19 @@
                 <!-- No result messages -->
                 <t t-if="messageListView.threadViewOwner.threadCache.orderedNonEmptyMessages.length === 0">
                     <div class="o_MessageList_empty o_MessageList_item d-flex flex-grow-1 flex-column align-items-center justify-content-center align-self-center w-100 h-100 p-4 text-center text-muted fst-italic">
-                        <t t-if="messageListView.threadViewOwner.thread === messaging.inbox">
+                        <t t-if="messageListView.threadViewOwner.thread === messaging.inbox.thread">
                             <h4 class="o_MessageList_emptyTitle mb-3 fw-bolder">
                                 Congratulations, your inbox is empty
                             </h4>
                             New messages appear here.
                         </t>
-                        <t t-elif="messageListView.threadViewOwner.thread === messaging.starred">
+                        <t t-elif="messageListView.threadViewOwner.thread === messaging.starred.thread">
                             <h4 class="o_MessageList_emptyTitle mb-3 fw-bolder">
                                 No starred messages
                             </h4>
                             You can mark any message as 'starred', and it shows up in this mailbox.
                         </t>
-                        <t t-elif="messageListView.threadViewOwner.thread === messaging.history">
+                        <t t-elif="messageListView.threadViewOwner.thread === messaging.history.thread">
                             <img src="/web/static/img/neutral_face.svg" alt="History"/>
                             <h4 class="o_MessageList_emptyTitle mb-3 fw-bolder">
                                 No history messages
@@ -45,7 +45,7 @@
                 <t t-if="!messageListView.threadViewOwner.threadCache.hasLoadingFailed and messageListView.threadViewOwner.order === 'asc'">
                     <t t-call="mail.MessageList.loadMore"/>
                 </t>
-                <div t-if="messageListView.threadViewOwner.order === 'asc' and messageListView.threadViewOwner.threadCache.orderedNonEmptyMessages.length !== 0 and !(messageListView.threadViewOwner.thread and messageListView.threadViewOwner.thread.model === 'mail.box')" class="flex-grow-1"/>
+                <div t-if="messageListView.threadViewOwner.order === 'asc' and messageListView.threadViewOwner.threadCache.orderedNonEmptyMessages.length !== 0 and !(messageListView.threadViewOwner.thread and messageListView.threadViewOwner.thread.mailbox)" class="flex-grow-1"/>
                 <!-- MESSAGES -->
                 <t t-set="current_day" t-value="0"/>
                 <t t-foreach="messageListView.messageListViewMessageViewItems" t-as="messageListViewMessageViewItem" t-key="messageListViewMessageViewItem.localId">

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
@@ -58,13 +58,13 @@ registerModel({
         /**
          * Called when clicking on a mailbox selection item.
          *
-         * @param {Thread} mailbox
+         * @param {Mailbox} mailbox
          */
         onClickMobileMailboxSelectionItem(mailbox) {
             if (!mailbox.exists()) {
                 return;
             }
-            mailbox.open();
+            mailbox.thread.open();
         },
         /**
          * @param {Event} ev
@@ -119,6 +119,15 @@ registerModel({
                 active_id: this.discuss.activeId,
             });
         },
+        /**
+         * @private
+         * @returns {Array[]}
+         */
+        _sortMailboxes() {
+            return [
+                ['smaller-first', 'sequence'],
+            ];
+        },
     },
     fields: {
         /**
@@ -145,6 +154,10 @@ registerModel({
             compute: '_computeMobileAddItemHeaderAutocompleteInputView',
             inverse: 'discussViewOwnerAsMobileAddItemHeader',
             isCausal: true,
+        }),
+        orderedMailboxes: many('Mailbox', {
+            related: 'messaging.allMailboxes',
+            sort: '_sortMailboxes',
         }),
         /**
          * Reference of the quick search input. Useful to filter channels and

@@ -322,6 +322,9 @@ registerModel({
         },
     },
     fields: {
+        allMailboxes: many('Mailbox', {
+            inverse: 'messagingAsAnyMailbox',
+        }),
         /**
          * Inverse of the messaging field present on all models. This field
          * therefore contains all existing records.
@@ -383,14 +386,16 @@ registerModel({
         fetchImStatusTimerDuration: attr({
             default: 50 * 1000,
         }),
-        /**
-         * Mailbox History.
-         */
-        history: one('Thread'),
-        /**
-         * Mailbox Inbox.
-         */
-        inbox: one('Thread'),
+        history: one('Mailbox', {
+            default: insertAndReplace(),
+            inverse: 'messagingAsHistory',
+            isCausal: true,
+        }),
+        inbox: one('Mailbox', {
+            default: insertAndReplace(),
+            inverse: 'messagingAsInbox',
+            isCausal: true,
+        }),
         /**
          * Promise that will be resolved when messaging is initialized.
          */
@@ -447,7 +452,6 @@ registerModel({
         messagingMenu: one('MessagingMenu', {
             default: insertAndReplace(),
             isCausal: true,
-            readonly: true,
         }),
         notificationHandler: one('MessagingNotificationHandler', {
             compute: '_computeNotificationHandler',
@@ -489,10 +493,11 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
-        /**
-         * Mailbox Starred.
-         */
-        starred: one('Thread'),
+        starred: one('Mailbox', {
+            default: insertAndReplace(),
+            inverse: 'messagingAsStarred',
+            isCausal: true,
+        }),
         userNotificationManager: one('UserNotificationManager', {
             default: insertAndReplace(),
             isCausal: true,

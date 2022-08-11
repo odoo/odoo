@@ -10,7 +10,7 @@ registerModel({
     recordMethods: {
         /**
          * @private
-         * @returns {Thread}
+         * @returns {Mailbox}
          */
         _computeMailbox() {
             if (this.discussViewOwnerAsHistory) {
@@ -38,7 +38,7 @@ registerModel({
             inverse: 'starredView',
             readonly: true,
         }),
-        mailbox: one('Thread', {
+        mailbox: one('Mailbox', {
             compute: '_computeMailbox',
             readonly: true,
             required: true,

@@ -107,7 +107,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeComposerView() {
-            if (!this.thread || this.thread.model === 'mail.box') {
+            if (!this.thread || this.thread.mailbox) {
                 return clear();
             }
             if (this.threadViewer && this.threadViewer.chatter) {
@@ -121,7 +121,7 @@ registerModel({
          */
         _computeHasComposerThreadName() {
             if (this.threadViewer.discuss) {
-                return this.threadViewer.discuss.thread === this.messaging.inbox;
+                return this.threadViewer.discuss.thread === this.messaging.inbox.thread;
             }
             return clear();
         },
@@ -140,7 +140,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeHasSquashCloseMessages() {
-            return Boolean(this.threadViewer && !this.threadViewer.chatter && this.thread && this.thread.model !== 'mail.box');
+            return Boolean(this.threadViewer && !this.threadViewer.chatter && this.thread && !this.thread.mailbox);
         },
         /**
          * @private

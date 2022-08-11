@@ -3,7 +3,7 @@
 
     <t t-name="mail.DiscussMobileMailboxSelection" owl="1">
         <div class="o_DiscussMobileMailboxSelection d-flex" t-attf-class="{{ className }}" t-ref="root">
-            <t t-foreach="discussView.discuss.orderedMailboxes" t-as="mailbox" t-key="mailbox.localId">
+            <t t-foreach="discussView.orderedMailboxes" t-as="mailbox" t-key="mailbox.localId">
                 <DiscussMobileMailboxSelectionItem discussView="discussView" mailbox="mailbox"/>
             </t>
         </div>

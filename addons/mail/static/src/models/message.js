@@ -602,13 +602,13 @@ registerModel({
         _computeThreads() {
             const threads = [];
             if (this.isHistory && this.messaging.history) {
-                threads.push(this.messaging.history);
+                threads.push(this.messaging.history.thread);
             }
             if (this.isNeedaction && this.messaging.inbox) {
-                threads.push(this.messaging.inbox);
+                threads.push(this.messaging.inbox.thread);
             }
             if (this.isStarred && this.messaging.starred) {
-                threads.push(this.messaging.starred);
+                threads.push(this.messaging.starred.thread);
             }
             if (this.originThread) {
                 threads.push(this.originThread);
