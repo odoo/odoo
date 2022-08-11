@@ -842,13 +842,15 @@ class HolidaysRequest(models.Model):
                             )
                         ))
                     else:
+                        user_tz = timezone(leave.tz)
+                        date_from_utc = leave.date_from and leave.date_from.astimezone(user_tz).date()
                         res.append((
                             leave.id,
                             _("%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s",
                                 person=target,
                                 leave_type=leave.holiday_status_id.name,
                                 duration=leave.number_of_hours_display,
-                                date=fields.Date.to_string(leave.date_from),
+                                date=fields.Date.to_string(date_from_utc),
                             )
                         ))
                 else:
