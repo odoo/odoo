@@ -5017,6 +5017,43 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "one2many list not editable, the context is properly evaluated and sent",
+        async function (assert) {
+            assert.expect(3);
+            serverData.views = {
+                "turtle,false,form": '<form><field name="turtle_foo"/></form>',
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="int_field"/>
+                        <field name="turtles" context="{'hello': 'world', 'abc': int_field}">
+                            <tree>
+                                <field name="turtle_foo"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                resId: 1,
+                mockRPC(route, args) {
+                    if (args.method === "get_views" && args.model === "turtle") {
+                        const context = args.kwargs.context;
+                        assert.strictEqual(context.hello, "world");
+                        assert.strictEqual(context.abc, 10);
+                    }
+                },
+            });
+
+            await clickEdit(target);
+            await addRow(target);
+            assert.containsOnce(target, ".modal");
+        }
+    );
+
     QUnit.test("one2many with many2many widget: create", async function (assert) {
         assert.expect(10);
 

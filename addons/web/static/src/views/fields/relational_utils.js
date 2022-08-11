@@ -522,7 +522,7 @@ async function getFormViewInfo({ list, activeField, viewService, userService, en
     const comodel = list.resModel;
     if (!formViewInfo) {
         const { fields, relatedModels, views } = await viewService.loadViews({
-            context: {},
+            context: list.context,
             resModel: comodel,
             views: [[false, "form"]],
         });
