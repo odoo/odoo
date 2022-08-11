@@ -214,7 +214,6 @@ export async function addLegacyMockEnvironment(env, legacyParams = {}) {
         const W = Widget.extend({ do_push_state() {} });
         const widget = new W(adapter);
         const legacyMockServer = new LegacyMockServer(legacyParams.models, { widget });
-        await legacyMockServer.setup();
         const originalRPC = env.services.rpc;
         const rpc = async (...args) => {
             try {

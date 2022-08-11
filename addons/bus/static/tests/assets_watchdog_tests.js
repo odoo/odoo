@@ -7,7 +7,7 @@ import { getPyEnv } from '@bus/../tests/helpers/mock_python_environment';
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { assetsWatchdogService } from "@bus/services/assets_watchdog_service";
-import { click, getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 
@@ -37,11 +37,12 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
 
         await createWebClient({});
         const pyEnv = await getPyEnv();
-        pyEnv['bus.bus']._sendone("broadcast", "bundle_changed", {
-            server_version: "NEW_MAJOR_VERSION"
+        const { afterNextRender } = owl.App;
+        await afterNextRender(() => {
+            pyEnv['bus.bus']._sendone("broadcast", "bundle_changed", {
+                server_version: "NEW_MAJOR_VERSION"
+            });
         });
-
-        await nextTick();
 
         assert.containsOnce(target, ".o_notification_body");
         assert.strictEqual(
