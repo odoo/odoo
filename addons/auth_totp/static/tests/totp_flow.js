@@ -59,6 +59,17 @@ function closeProfileDialog({content, totp_state}) {
                 $modal.find('button[name=preference_cancel]').click()
             }
         }
+    }, {
+        trigger: 'body',
+        async run() {
+            while (document.querySelector('.o_dialog_container .o_dialog')) {
+                await Promise.resolve();
+            }
+            this.$anchor.addClass('dialog-closed');
+        },
+    }, {
+        trigger: 'body.dialog-closed',
+        run() {},
     }];
 }
 
