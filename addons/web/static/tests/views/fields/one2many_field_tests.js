@@ -5429,7 +5429,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".modal-footer button.btn-primary"));
 
         assert.containsOnce(target, ".modal");
-        assert.containsOnce(target, ".modal tbody label.o_field_invalid");
+        assert.containsOnce(target, ".modal label.o_field_invalid");
     });
 
     QUnit.test("one2many list with action button", async function (assert) {
