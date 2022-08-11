@@ -18,8 +18,8 @@
                 </xpath>
 
                 <xpath expr="//sheet" position="before">
-                    <div class="alert alert-success text-center o_form_header" attrs="{'invisible': [('signup_valid', '!=', True)]}" role="status">
-                        <a class="close" data-bs-dismiss="alert" href="#" aria-label="Close"><i title="Close" class="small fa fa-times"/></a>
+                    <div class="alert alert-success text-center o_form_header alert-dismissible" attrs="{'invisible': [('signup_valid', '!=', True)]}" role="status">
+                        <button class="btn-close" data-bs-dismiss="alert" aria-label="Close"/>
                         <div attrs="{'invisible': [('state', '!=', 'active')]}">
                             <strong>A password reset has been requested for this user. An email containing the following link has been sent:</strong>
                         </div>
