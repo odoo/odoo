@@ -86,8 +86,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
         test_message = self.env['mail.message'].browse(self.test_message.ids)
 
         recipients_data = self._generate_notify_recipients(self.partner_1 + self.partner_2 + self.partner_employee)
-        for email_xmlid in ['mail.message_notification_email',
-                            'mail.mail_notification_light',
+        for email_xmlid in ['mail.mail_notification_light',
                             'mail.mail_notification_layout',
                             'mail.mail_notification_layout_with_responsible_signature']:
             test_message.sudo().notification_ids.unlink()  # otherwise partner/message constraint fails
