@@ -100,7 +100,7 @@ publicWidget.registry.websiteSlidesEmbed = publicWidget.Widget.extend({
      */
     start: function (parent) {
         var defs = [this._super.apply(this, arguments)];
-        $('iframe.o_wslides_iframe_viewer').on('ready', this._onIframeViewerReady.bind(this));
+        $('iframe.o_wslides_iframe_viewer').ready(this._onIframeViewerReady.bind(this));
         return Promise.all(defs);
     },
 
@@ -115,8 +115,9 @@ publicWidget.registry.websiteSlidesEmbed = publicWidget.Widget.extend({
     _onIframeViewerReady: function (ev) {
         // TODO : make it work. For now, once the iframe is loaded, the value of #page_count is
         // still now set (the pdf is still loading)
-        var $iframe = $(ev.currentTarget);
-        var maxPage = $iframe.contents().find('#page_count').val();
+        var maxPage = parseInt(
+            $('iframe.o_wslides_iframe_viewer').contents().find('#page_count').text()
+        );
         new SlideSocialEmbed(this, maxPage).attachTo($('.oe_slide_js_embed_code_widget'));
     },
 });
