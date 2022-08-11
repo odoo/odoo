@@ -281,8 +281,8 @@ class Project(models.Model):
         } for sol_read in sols.with_context(with_price_unit=True).read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])]
 
     def _get_sale_items_domain(self, additional_domain=None):
-        sale_orders = self._get_sale_order_items().sudo().order_id
-        domain = [('order_id', 'in', sale_orders.ids), ('is_downpayment', '=', False), ('state', 'in', ['sale', 'done']), ('display_type', '=', False)]
+        sale_line_ids = self._fetch_sale_order_item_ids()
+        domain = [('id', 'in', sale_line_ids), ('is_downpayment', '=', False), ('state', 'in', ['sale', 'done']), ('display_type', '=', False)]
         if additional_domain:
             domain = expression.AND([domain, additional_domain])
         return domain
