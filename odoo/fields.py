@@ -772,6 +772,15 @@ class Field(MetaField('DummyField', (object,), {})):
                     warnings.warn(f"Field {self} cannot be precomputed as it depends on non-precomputed field {field}")
                     self.precompute = False
 
+                if field_seq and not field_seq[-1]._description_searchable:
+                    # the field before this one is not searchable, so there is
+                    # no way to know which on records to recompute self
+                    warnings.warn(
+                        f"Field {field_seq[-1]!r} in dependency of {self} should be searchable. "
+                        f"This is necessary to determine which records to recompute when {field} is modified. "
+                        f"You should either make the field searchable, or simplify the field dependency."
+                    )
+
                 field_seq.append(field)
 
                 # do not make self trigger itself: for instance, a one2many
