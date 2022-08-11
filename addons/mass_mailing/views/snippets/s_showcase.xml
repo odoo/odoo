@@ -2,22 +2,19 @@
 <odoo>
 
 <template id="s_showcase" name="Showcase">
-    <div class="s_showcase pt48 pb48 o_mail_snippet_general" data-snippet="s_showcase">
-        <!-- TODO: (below) issue with height: `fit-content` is not supported, can we calculate it in px in translation ? 
-        empty div height is 0 unless table has defined height (div.col-1 > div.w-50.h100.border-end)-->
+    <div class="s_showcase o_mail_snippet_general pt48 pb48">
+        <!-- TODO: (below) issue with height: `fit-content` is not supported, can we calculate it in px in translation ?
+        empty div height is 0 unless table has defined height (div.col-1 > div.w-50.h100.border-right)-->
         <div class="container" style="height: fit-content;">
-            <div class="row g-0 s_col_no_resize s_col_no_bgcolor s_nb_column_fixed">
-                <div class="col-lg-5 text-end pb24" align="right">
+            <div class="row no-gutters s_col_no_resize s_col_no_bgcolor s_nb_column_fixed">
+                <div class="col-lg-6 pb24" style="text-align: right; padding-right: 70px;" align="right">
                     <div class="mb-2">
                         <h3 class="d-inline-block">First feature</h3>
                         <i class="fa fa-2x fa-desktop text-secondary ms-3"/>
                     </div>
                     <p>A short description of this great feature.</p>
                 </div>
-                <div class="col-lg-2 o_mail_no_resize" align="left">
-                    <div class="w-50 h-100 border-end"/>
-                </div>
-                <div class="col-lg-5 pb24" align="left">
+                <div class="col-lg-6 pb24 border-start" style="padding-left: 70px;" align="left">
                     <div class="mb-2">
                         <i class="fa fa-2x fa-heart text-secondary me-3"/>
                         <h3 class="d-inline-block">Another feature</h3>
@@ -25,18 +22,15 @@
                     <p>A short description of this great feature.</p>
                 </div>
             </div>
-            <div class="row g-0 s_col_no_resize s_col_no_bgcolor s_nb_column_fixed">
-                <div class="col-lg-5 text-end" align="right">
+            <div class="row no-gutters s_col_no_resize s_col_no_bgcolor s_nb_column_fixed">
+                <div class="col-lg-6" style="text-align: right; padding-right: 70px;" align="right">
                     <div class="mb-2">
                         <h3 class="d-inline-block">Second feature</h3>
                         <i class="fa fa-2x fa-paint-brush text-secondary ms-3"/>
                     </div>
                     <p>A short description of this great feature.</p>
                 </div>
-                <div class="col-lg-2 o_mail_no_resize" align="left">
-                    <div class="w-50 h-100 border-end"/>
-                </div>
-                <div class="col-lg-5" align="left">
+                <div class="col-lg-6 border-start" style="padding-left: 70px;" align="left">
                     <div class="mb-2">
                         <i class="fa fa-2x fa-gift text-secondary me-3"/>
                         <h3 class="d-inline-block">Last Feature</h3>
@@ -45,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div class="container text-center pt32" align="center">
+        <div class="container pt32" style="text-align: center;" align="center">
             <a href="#" class="btn btn-primary">Discover all the features</a>
         </div>
     </div>

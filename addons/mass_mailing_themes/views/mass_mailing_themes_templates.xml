@@ -28,51 +28,52 @@
     <template id="theme_newsletter_template">
         <style id="design-element">
             h3 {
+                color: #2b3b58;
                 font-size: 18px;
                 font-weight: bolder;
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <div class="s_header_social o_mail_block_header_social o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_header_social" style="background-color: rgb(26, 36, 54) !important;" data-name="Header Social">
-            <div class="o_mail_table_styles container">
+            <div class="container">
                 <div class="row">
-                    <div class="col-lg-8 pt16 pb16">
+                    <div class="col-lg-4">
                         <a style="text-decoration:none;float:none;" href="http://www.example.com" target="_blank">
-                             <img border="0" src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_logo.png" style="height: auto; max-width: 400px; width: 194px;" alt="Your Logo" />
+                             <img border="0" src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_logo.png" style="height: auto; max-width: 100%; width: 194px;"  width="194" alt="Your Logo" />
                         </a>
                     </div>
-                    <div class="col-lg-4 o_mail_no_resize" style="text-align: right;">
-                        <div class="o_mail_header_social" t-translation="off">
-                            <a title="Facebook" href="https://www.facebook.com/Odoo">
-                                <span class="fa fa-facebook rounded-circle text-white" style="background-color: rgb(43, 59, 88) !important;"/>
-                            </a>&amp;nbsp;&amp;nbsp;
-                            <a style="margin-left:10px" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                                <span class="fa fa-linkedin rounded-circle text-white" style="background-color: rgb(43, 59, 88) !important;"/>
-                            </a>&amp;nbsp;&amp;nbsp;
-                            <a style="margin-left:10px" title="Twitter" href="https://twitter.com/Odoo">
-                                <span class="fa fa-twitter rounded-circle text-white" style="background-color: rgb(43, 59, 88) !important;"/>​
-                            </a>&amp;nbsp;&amp;nbsp;
-                            <a style="margin-left:10px" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
-                                <span class="fa fa-instagram rounded-circle text-white" style="background-color: rgb(43, 59, 88) !important;"/>
-                            </a>
-                        </div>
+                    <div class="col-lg-8 o_mail_header_social" style="text-align: right;" t-translation="off">
+                        <a title="Facebook" href="https://www.facebook.com/Odoo">
+                            <span class="fa fa-facebook rounded-circle text-white" style="background-color: rgb(43, 59, 88) !important;"/>
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
+                            <span class="fa fa-linkedin rounded-circle text-white" style="background-color: rgb(43, 59, 88) !important;"/>
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" title="Twitter" href="https://twitter.com/Odoo">
+                            <span class="fa fa-twitter rounded-circle text-white" style="background-color: rgb(43, 59, 88) !important;"/>​
+                        </a>&amp;nbsp;&amp;nbsp;
+                        <a style="margin-left:10px" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
+                            <span class="fa fa-instagram rounded-circle text-white" style="background-color: rgb(43, 59, 88) !important;"/>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="s_text_block o_mail_snippet_general px-3 pb16 pt32" style="background-color: rgb(43, 59, 88) !important;" data-snippet="s_text_block" data-name="Text">
-            <p><font style="color: rgb(255, 255, 255);">Hi there!</font></p>
-            <p><font style="color: rgb(255, 255, 255);">The next edition of <span style="font-weight: bolder;">Odoo Experience Online</span> is coming soon!
-                <br/>To stir up your curiosity, have a look at all the great talks scheduled and highlighted in our agenda!</font>
-            </p>
+        <div class="s_text_block o_mail_snippet_general pb16 pt32" style="background-color: rgb(43, 59, 88) !important; padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <p><font style="color: rgb(255, 255, 255);">Hi there!</font></p>
+                <p><font style="color: rgb(255, 255, 255);">The next edition of <span style="font-weight: bolder;">Odoo Experience Online</span> is coming soon!
+                    <br/>To stir up your curiosity, have a look at all the great talks scheduled and highlighted in our agenda!</font>
+                </p>
+            </div>
         </div>
-        <div class="s_media_list o_mail_snippet_general o_cc o_cc2 pb16 pt0" style="background-color: rgb(43, 59, 88) !important;" data-snippet="s_media_list" data-vcss="001" data-name="Media List">
+        <div class="s_media_list o_mail_snippet_general o_cc o_cc2 pb16 pt0" style="background-color: rgb(43, 59, 88) !important; padding-left: 15px; padding-right: 15px;" data-snippet="s_media_list" data-vcss="001" data-name="Media List">
             <div class="container">
-                <div class="row s_nb_column_fixed s_col_no_bgcolor">
+                <div class="row s_nb_column_fixed">
                     <div class="col-lg-12 s_media_list_item pt0 pb0" data-name="Media item">
-                        <div class="row s_col_no_resize s_col_no_bgcolor g-0 align-items-center o_cc o_cc1">
-                            <div class="col-lg-5 s_media_list_img_wrapper align-self-stretch">
-                                <img src="/mass_mailing_themes/static/src/img/theme_newsletter/s_media_list_1.jpg" class="s_media_list_img h-100 w-100"/>
+                        <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
+                            <div class="col-lg-5 s_media_list_img_wrapper align-self-stretch px-0">
+                                <img src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_media_list_1.jpg" class="s_media_list_img h-100 w-100" style="padding: 10px;"/>
                             </div>
                             <div class="col-lg-7 s_media_list_body">
                                 <h3>Get 6-months' worth of knowledge
@@ -83,9 +84,9 @@
                         </div>
                     </div>
                     <div class="col-lg-12 s_media_list_item pt16 pb0" data-name="Media item">
-                        <div class="row s_col_no_resize s_col_no_bgcolor g-0 align-items-center o_cc o_cc1">
-                            <div class="col-lg-5 s_media_list_img_wrapper align-self-stretch">
-                                <img src="/mass_mailing_themes/static/src/img/theme_newsletter/s_media_list_2.jpg" class="s_media_list_img h-100 w-100"/>
+                        <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
+                            <div class="col-lg-5 s_media_list_img_wrapper align-self-stretch px-0">
+                                <img src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_media_list_2.jpg" class="s_media_list_img h-100 w-100" style="padding: 10px;"/>
                             </div>
                             <div class="col-lg-7 s_media_list_body">
                                 <h3>Meet (other) awesome members
@@ -96,9 +97,9 @@
                         </div>
                     </div>
                     <div class="col-lg-12 s_media_list_item pt16 pb0" data-name="Media item">
-                        <div class="row s_col_no_resize s_col_no_bgcolor g-0 align-items-center o_cc o_cc1">
-                            <div class="col-lg-5 s_media_list_img_wrapper align-self-stretch">
-                                <img src="/mass_mailing_themes/static/src/img/theme_newsletter/s_media_list_3.jpg" class="s_media_list_img h-100 w-100"/>
+                        <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
+                            <div class=" col-lg-5 s_media_list_img_wrapper align-self-stretch px-0">
+                                <img src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_media_list_3.jpg" class="s_media_list_img h-100 w-100" style="padding: 10px;"/>
                             </div>
                             <div class="col-lg-7 s_media_list_body">
                                 <h3>An interactive, fun
@@ -114,24 +115,26 @@
         <div class="s_call_to_action o_mail_snippet_general o_cc o_cc3 pt40 pb40" style="background-color: rgb(26, 36, 54) !important;" data-snippet="s_call_to_action" data-name="Call to Action">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-12 pb0 pt0" style="border-color: rgb(56, 62, 69) !important;">
-                        <h2 style="text-align: center;"><font style="color: rgb(255, 255, 255);">And it won't cost you a thing!</font></h2>
+                    <div class="col-lg-12" style="border-color: rgb(56, 62, 69) !important;">
+                        <h3 style="text-align: center;"><font style="color: rgb(255, 255, 255);">And it won't cost you a thing!</font></h3>
                         <p style="text-align: center;"><font style="color: rgb(255, 255, 255);">Zero, zilch, nada! Odoo Experience is free for everyone!</font></p>
-                        <p style="text-align: center;"><a class="btn btn-primary btn-lg rounded-circle" href="http://">Register now!</a></p>
+                    </div>
+                    <div class="col-lg-12" style="text-align: center;">
+                        <a class="btn btn-primary btn-lg rounded-circle" href="http://">Register now!</a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
-            <div class="container o_mail_table_styles">
+        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200 pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+            <div class="container">
                 <div class="row">
-                    <div class="col-lg-12 o_mail_footer_links">
+                    <div class="col-lg-12 o_mail_footer_links pt8 pb8" style="text-align: center;">
                         <a role="button" href="/unsubscribe_from_list" class="btn btn-link ">Unsubscribe</a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        <p class="o_mail_footer_copy">
+                        <p style="text-align: center;">
                             © <t t-out="now.strftime('%Y')" /> All Rights Reserved
                         </p>
                     </div>
@@ -173,33 +176,31 @@
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
-        <div class="s_header_social o_mail_block_header_social o_mail_snippet_general" data-snippet="s_mail_block_header_social" data-name="Header Social">
-            <div class="o_mail_table_styles container">
+        <div class="s_header_social o_mail_block_header_social o_mail_snippet_general pt40 pb32" data-snippet="s_mail_block_header_social" data-name="Header Social">
+            <div class="container">
                 <div class="row">
-                    <div class="col-8 o_mail_logo_container pt40 pb32">
-                        <a style="text-decoration:none;float:none;" href="#">
-                            <img width="189" style="height:auto;max-width:400px;" src="/mass_mailing_themes/static/src/img/theme_tech/s_default_image_logo.png"/>
+                    <div class="col-lg-4">
+                        <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;" target="_blank">
+                            <img border="0" width="189" style="height:auto; max-width:100%; width: 189px;" src="/mass_mailing_themes/static/src/img/theme_tech/tech_logo.png"/>
                         </a>
                     </div>
-                    <div class="col-4 o_mail_no_resize" style="text-align:center;">
-                        <div class="o_mail_header_social" t-translation="off">
-                            <a title="Facebook" href="https://www.facebook.com/Odoo">
-                                <span class="fa fa-facebook" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
-                            </a>
-                            <span style="font-size: 18px;">&amp;nbsp; &amp;nbsp;</span>
-                            <a style="margin-left:10px" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
-                                <span class="fa fa-linkedin" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
-                            </a>
-                            <span style="font-size: 18px;">&amp;nbsp; &amp;nbsp;</span>
-                            <a style="margin-left:10px" title="Twitter" href="https://twitter.com/Odoo">
-                                <span class="fa fa-twitter" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
-                            </a>
-                            <span style="font-size: 18px;">&amp;nbsp; &amp;nbsp;</span>
-                            <a style="margin-left:10px" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
-                                <span class="fa fa-instagram" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>
-                            </a>
-                            <span style="font-size: 18px;">&amp;nbsp; &amp;nbsp;</span>
-                        </div>
+                    <div class="col-lg-8 o_mail_header_social" style="text-align:right;">
+                        <a title="Facebook" href="https://www.facebook.com/Odoo">
+                            <span class="fa fa-facebook" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
+                        </a>
+                        &amp;nbsp; &amp;nbsp;
+                        <a style="margin-left:10px" title="LinkedIn" href="https://www.linkedin.com/company/odoo">
+                            <span class="fa fa-linkedin" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
+                        </a>
+                        &amp;nbsp; &amp;nbsp;
+                        <a style="margin-left:10px" title="Twitter" href="https://twitter.com/Odoo">
+                            <span class="fa fa-twitter" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>​
+                        </a>
+                        &amp;nbsp; &amp;nbsp;
+                        <a style="margin-left:10px" title="Instagram" href="https://www.instagram.com/explore/tags/odoo/">
+                            <span class="fa fa-instagram" style="color: rgb(54, 166, 210) !important; font-size: 18px;"/>
+                        </a>
+                        &amp;nbsp; &amp;nbsp;
                     </div>
                 </div>
             </div>
@@ -213,11 +214,11 @@
                     <div class="col-lg-7 pt16 pb16">
                         <h1>Breaking IT news
                             <br/>and Analysis</h1>
-                        <p>Our roundup of the most popular and latest tech related videos from last week.<br/></p>
-                        <div style="text-align:left;"><a class="btn btn-primary rounded-circle" href="#">VISIT OUR WEBSITE</a></div>
+                        <p style="text-align: left;">Our roundup of the most popular and latest tech related videos from last week.<br/></p>
+                        <p style="text-align:left;"><a class="btn btn-primary rounded-circle" href="#">VISIT OUR WEBSITE</a></p>
                     </div>
                     <div class="col-lg-5 px-0">
-                        <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_tech/text_image-triangle.png" data-original-id="242" data-original-src="/mass_mailing_themes/static/src/img/theme_tech/s_default_image_text_image.jpg" data-mimetype="image/svg+xml" data-shape="mass_mailing/basic/triangle" data-file-name="text_image-triangle.svg" data-shape-colors=";;;;" data-original-mimetype="image/jpeg"/>
+                        <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_tech/s_default_image_text_image.jpg" data-original-id="242" data-original-src="/mass_mailing_themes/static/src/img/theme_tech/s_default_image_text_image.jpg" data-mimetype="image/svg+xml" data-shape="mass_mailing/basic/triangle" data-file-name="text_image-triangle.svg" data-shape-colors=";;;;" data-original-mimetype="image/jpeg"/>
                     </div>
                 </div>
             </div>
@@ -225,13 +226,13 @@
         <div class="s_hr o_mail_snippet_general pt0 pb16" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_media_list o_mail_snippet_general o_cc o_cc2 pb0 pt0 bg-white" data-snippet="s_media_list" data-vcss="001" data-name="Media List">
+        <div class="s_media_list o_mail_snippet_general o_cc o_cc2 pb0 pt0 bg-white" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_media_list" data-vcss="001" data-name="Media List">
             <div class="container">
                 <div class="row s_nb_column_fixed s_col_no_bgcolor">
                     <div class="col-lg-12 s_media_list_item pb0 pt0" data-name="Media item">
-                        <div class="row s_col_no_resize s_col_no_bgcolor g-0 align-items-center o_cc o_cc1">
-                            <div class="col-lg-4 s_media_list_img_wrapper align-self-stretch">
-                                <img src="/mass_mailing_themes/static/src/img/theme_tech/tech_media_list_image_1.jpg" class="s_media_list_img h-100 w-100"/>
+                        <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
+                            <div class="col-lg-4 s_media_list_img_wrapper align-self-stretch px-0">
+                                <img src="/mass_mailing_themes/static/src/img/theme_tech/s_default_image_media_list_1.jpg" class="s_media_list_img h-100 w-100"/>
                             </div>
                             <div class="col-lg-8 s_media_list_body">
                                 <h3>The future of smartphone video production</h3>
@@ -243,8 +244,8 @@
                         </div>
                     </div>
                     <div class="col-lg-12 s_media_list_item pt0 pb0" data-name="Media item">
-                        <div class="row s_col_no_resize s_col_no_bgcolor g-0 align-items-center o_cc o_cc1">
-                            <div class="align-self-stretch s_media_list_img_wrapper col-lg-12">
+                        <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
+                            <div class="col-lg-12 s_media_list_img_wrapper align-self-stretch px-0">
                                 <div class="s_hr o_mail_snippet_general pt16 pb16" data-snippet="s_hr" data-name="Separator">
                                     <hr class="s_hr_1px s_hr_solid"/>
                                 </div>
@@ -252,9 +253,9 @@
                         </div>
                     </div>
                     <div class="col-lg-12 s_media_list_item pb0 pt0" data-name="Media item">
-                        <div class="row s_col_no_resize s_col_no_bgcolor g-0 align-items-center o_cc o_cc1">
-                            <div class="col-lg-4 s_media_list_img_wrapper align-self-stretch">
-                                <img src="/mass_mailing_themes/static/src/img/theme_tech/tech_media_list_image_2.jpg" class="s_media_list_img h-100 w-100"/>
+                        <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
+                            <div class="col-lg-4 s_media_list_img_wrapper align-self-stretch px-0">
+                                <img src="/mass_mailing_themes/static/src/img/theme_tech/s_default_image_media_list_2.jpg" class="s_media_list_img h-100 w-100"/>
                             </div>
                             <div class="col-lg-8 s_media_list_body pt16 pb16">
                                 <h3>5 Ways Drones Can Better Your Live Events</h3>
@@ -264,8 +265,8 @@
                         </div>
                     </div>
                     <div class="col-lg-12 s_media_list_item pt0 pb0" data-name="Media item">
-                        <div class="row s_col_no_resize s_col_no_bgcolor g-0 align-items-center o_cc o_cc1">
-                            <div class="col-lg-12 s_media_list_img_wrapper align-self-stretch">
+                        <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
+                            <div class="col-lg-12 s_media_list_img_wrapper align-self-stretch px-0">
                                 <div class="s_hr o_mail_snippet_general pt16 pb16" data-snippet="s_hr" data-name="Separator">
                                     <hr class="s_hr_1px s_hr_solid"/>
                                 </div>
@@ -273,9 +274,9 @@
                         </div>
                     </div>
                     <div class="col-lg-12 s_media_list_item pt0 pb0" data-name="Media item">
-                        <div class="row s_col_no_resize s_col_no_bgcolor g-0 align-items-center o_cc o_cc1">
-                            <div class="col-lg-4 s_media_list_img_wrapper align-self-stretch">
-                                <img src="/mass_mailing_themes/static/src/img/theme_tech/tech_media_list_image_3.jpg" class="s_media_list_img h-100 w-100"/>
+                        <div class="row s_col_no_resize s_col_no_bgcolor align-items-center o_cc o_cc1">
+                            <div class="col-lg-4 s_media_list_img_wrapper align-self-stretch px-0">
+                                <img src="/mass_mailing_themes/static/src/img/theme_tech/s_default_image_media_list_3.jpg" class="s_media_list_img h-100 w-100"/>
                             </div>
                             <div class="col-lg-8 s_media_list_body">
                                 <h3>How to Code a Website Without Experience</h3>
@@ -290,16 +291,16 @@
         <div class="s_hr o_mail_snippet_general pt16 pb0" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general" data-snippet="s_mail_block_footer_social" data-name="Footer Social Center">
-            <div class="container o_mail_table_styles">
+        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Social Center">
+            <div class="container">
                 <div class="row">
-                    <div class="col-lg-12 o_mail_footer_links">
-                        <a href="/unsubscribe_from_list" class="btn btn-link"><font style="color: rgb(147, 146, 146);">Unsubscribe</font></a>
+                    <div class="col-lg-12 o_mail_footer_links pt8 pb8" style="text-align: center;">
+                        <a href="/unsubscribe_from_list" class="btn btn-link"><font style="color: rgb(173, 173, 173);">Unsubscribe</font></a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        <p class="o_mail_footer_copy">
+                        <p style="text-align: center;">
                             © <t t-out="now.strftime('%Y')" /> All Rights Reserved
                         </p>
                     </div>
@@ -350,26 +351,26 @@
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <t t-set="future_date" t-value="(datetime.date.today() + datetime.timedelta(days=30))"/>
         <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general" data-snippet="s_mail_block_header_logo" data-name="Centered Logo" style="background-color: rgb(36, 37, 48) !important;">
-            <div class="container o_mail_table_styles">
+            <div class="container">
                 <div class="row">
                     <div class="col-lg-4" style="text-align: center;">
-                        <font style="color: rgb(255, 255, 255);">FREE</font>
-                        <br/><span style="font-weight: bolder"><font style="color: rgb(255, 255, 255);">SHIPPING</font></span>
+                        <p><font style="color: rgb(255, 255, 255);">FREE</font>
+                        <br/><span style="font-weight: bolder"><font style="color: rgb(255, 255, 255);">SHIPPING</font></span></p>
                     </div>
                     <div class="col-lg-4 pt16 pb16" style="text-align: center;">
-                        <a style="text-decoration:none; text-align:center;" href="http://www.example.com">
-                            <img border="0" src="/mass_mailing_themes/static/src/img/theme_vip/s_default_image_logo.png" style="height: auto; max-width: 400px; width: 105px;" />
+                        <a style="text-decoration:none; text-align:center;" t-att-href="(company_id.website) or '#'" target="_blank">
+                            <img border="0" src="/mass_mailing_themes/static/src/img/theme_vip/vip_logo.png" style="height: auto; max-width: 100%; width: 105px;" width="105" />
                         </a>
                     </div>
                     <div class="col-lg-4" style="text-align: center;">
-                        <font style="color: rgb(255, 255, 255);">EXCLUSIVE</font>
-                        <br/><span style="font-weight: bolder"><font style="color: rgb(255, 255, 255);">DEALS</font></span>
+                        <p><font style="color: rgb(255, 255, 255);">EXCLUSIVE</font>
+                        <br/><span style="font-weight: bolder"><font style="color: rgb(255, 255, 255);">DEALS</font></span></p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover" style="background-color: rgb(36, 37, 48) !important;">
-            <img src="/mass_mailing_themes/static/src/img/theme_vip/vip_banner_part1.png" alt="Cover" class="img-fluid w-100"/>
+            <img src="/mass_mailing_themes/static/src/img/theme_vip/vip_banner_part1.png" alt="Cover" class="img-fluid w-100 mx-auto"/>
         </div>
         <div class="s_hr o_mail_snippet_general pt0 pb16" data-snippet="s_hr" data-name="Separator" style="background-color: rgb(36, 37, 48) !important;">
             <hr class="s_hr_1px s_hr_solid"/>
@@ -384,9 +385,9 @@
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
         <div class="s_cover o_mail_snippet_general" data-snippet="s_cover" data-name="Cover" style="background-color: rgb(36, 37, 48) !important;">
-            <img src="/mass_mailing_themes/static/src/img/theme_vip/vip_banner_part2.png" alt="Cover" class="img-fluid w-100"/>
+            <img src="/mass_mailing_themes/static/src/img/theme_vip/vip_banner_part2.png" alt="Cover" class="img-fluid w-100 mx-auto"/>
         </div>
-        <div class="s_discount2 o_mail_block_discount2 o_mail_snippet_general px-3 pt32 pb32" data-snippet="s_coupon_code" data-name="Promo Code" style="background-color: rgb(36, 37, 48) !important; text-align: center;">
+        <div class="s_discount2 o_mail_block_discount2 o_mail_snippet_general pt32 pb32" data-snippet="s_coupon_code" data-name="Promo Code" style="background-color: rgb(36, 37, 48) !important; text-align: center; padding-left: 15px; padding-right: 15px;">
             <p style="text-align: center;">Here's your coupon code* :</p>
             <table border="0" cellpadding="0" cellspacing="0" align="center" class="border" style="background-color: rgb(36, 37, 48) !important; border-collapse: collapse; border-color: rgb(198, 150, 120) !important;">
                 <tr>
@@ -414,10 +415,10 @@
                 </div>
             </div>
         </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general" data-snippet="s_mail_block_footer_social" data-name="Footer Center" style="background-color: rgb(36, 37, 48) !important;">
-            <div class="container o_mail_table_styles">
+        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center" style="background-color: rgb(36, 37, 48) !important;">
+            <div class="container">
                 <div class="row">
-                    <div class="col-lg-12 o_mail_footer_social" t-translation="off">
+                    <div class="col-lg-12" style="text-align: center;" t-translation="off">
                         <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
                             <span class="fa fa-facebook rounded-circle" style="background-color: rgb(198, 150, 120) !important; color: rgb(36, 37, 48) !important;"></span>
                         </a>&amp;nbsp;&amp;nbsp;
@@ -433,13 +434,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-12 o_mail_footer_links">
+                    <div class="col-lg-12 o_mail_footer_links pt8 pb8" style="text-align: center;">
                         <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        <p class="o_mail_footer_copy">
+                        <p style="text-align: center;">
                             © <t t-out="now.strftime('%Y')" /> All Rights Reserved
                         </p>
                     </div>
@@ -478,7 +479,7 @@
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general bg-white pt32 pb16" data-snippet="s_mail_block_header_logo" data-name="Centered Logo">
-            <div class="container o_mail_table_styles">
+            <div class="container">
                 <div class="row">
                     <div class="col-lg-3">
                         <p style="text-align: center;"><t t-out="now.strftime('%b')" />
@@ -491,7 +492,8 @@
                     </div>
                     <div class="col-lg-3">
                         <p style="text-align: center;">Issue
-                        <br/><span style="font-weight: bolder;">#42</span></p>
+                            <br/><span style="font-weight: bolder;">#42</span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -499,13 +501,13 @@
         <div class="s_hr o_mail_snippet_general pb32" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_text_image o_mail_snippet_general" data-snippet="s_image_text" data-name="Image - Text">
+        <div class="s_text_image o_mail_snippet_general" data-snippet="s_text_image" data-name="Image - Text">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-lg-8 px-0">
-                        <img src="/mass_mailing_themes/static/src/img/theme_bold/s_default_image_block_image_text.jpg" class="img w-100" style="width: 533px;"/>
+                        <img src="/mass_mailing_themes/static/src/img/theme_bold/s_default_image_image_text.jpg" class="img w-100" style="width: 533px;"/>
                     </div>
-                    <div class="col-lg-4 pt0 pb0">
+                    <div class="col-lg-4 o_cc pt0 pb0">
                         <h2 style="text-align: center;">IN THIS ISSUE</h2>
                         <div class="s_hr o_mail_snippet_general pt16 pb16" data-snippet="s_hr" data-name="Separator">
                             <hr class="s_hr_1px s_hr_solid"/>
@@ -546,35 +548,31 @@
         <div class="s_mail_product_list o_mail_snippet_general pt0" data-snippet="s_product_list" data-name="Items">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-6">
-                        <div>
-                            <h3 style="text-align: left;">
-                                <font style="background-color: rgb(231, 148, 57);">TRAVEL</font>
-                            </h3>
-                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_bold/s_product_list_image_2.jpg" alt="Man on a rock looking at mountains in the distance" style="width: 100% !important;"/>
-                            <h2 style="text-align: left;">Destinations for an eco-holiday</h2>
-                            <p>Bitten by the travel bug but looking to travel consciously? Eco-travel is the way forward.</p>
-                            <p style="text-align: right;">
-                                <a href="#" class="btn btn-link">
-                                    Find out more&amp;nbsp;<span class="fa fa-angle-right"/>
-                                </a>
-                            </p>
-                        </div>
+                    <div class="col-lg-6 o_cc">
+                        <h3><font style="background-color: rgb(231, 148, 57);">TRAVEL</font></h3>
+                        <a href="#">
+                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_bold/s_default_image_product_2.jpg" alt="Man on a rock looking at mountains in the distance" style="width: 100% !important; padding: 15px 0px;"/>
+                        </a>
+                        <h2 style="text-align: left;">Destinations for an eco-holiday</h2>
+                        <p style="text-align: left;">Bitten by the travel bug but looking to travel consciously? Eco-travel is the way forward.</p>
+                        <p style="text-align: right;">
+                            <a href="#" class="btn btn-link">
+                                Find out more&amp;nbsp;<span class="fa fa-angle-right"/>
+                            </a>
+                        </p>
                     </div>
-                    <div class="col-lg-6">
-                        <div>
-                            <h3 style="text-align: left;">
-                                <font style="background-color: rgb(231, 99, 99);">LIFESTYLE</font>
-                            </h3>
-                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_bold/s_product_list_image_1.jpg" alt="" style="width: 100% !important;"/>
-                            <h2 style="text-align: left;">Top 5 energy-boosting morning routines</h2>
-                            <p>Imagine waking up with more energy, more flexibility, with less stress and fewer instances of anxiously rushing out the door.</p>
-                            <p style="text-align: right;">
-                                <a href="#" class="btn btn-link">
-                                    Find out more&amp;nbsp;<span class="fa fa-angle-right"/>
-                                </a>
-                            </p>
-                        </div>
+                    <div class="col-lg-6 o_cc">
+                        <h3><font style="background-color: rgb(231, 99, 99);">LIFESTYLE</font></h3>
+                        <a href="#">
+                            <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_bold/s_default_image_product_1.jpg" alt="Woman having breakfast in bed" style="width: 100% !important; padding: 15px 0px;"/>
+                        </a>
+                        <h2 style="text-align: left;">Top 5 energy-boosting morning routines</h2>
+                        <p style="text-align: left;">Imagine waking up with more energy, more flexibility, with less stress and fewer instances of anxiously rushing out the door.</p>
+                        <p style="text-align: right;">
+                            <a href="#" class="btn btn-link">
+                                Find out more&amp;nbsp;<span class="fa fa-angle-right"/>
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -585,10 +583,8 @@
         <div class="s_text_image o_mail_snippet_general" data-snippet="s_text_image" data-name="Text - Image">
             <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-lg-6 pt16 pb16">
-                        <h3 style="text-align: left;">
-                            <font style="background-color: rgb(57, 123, 33);">FOOD</font>
-                        </h3>
+                    <div class="col-lg-6 o_cc pt16 pb16">
+                        <h3 style="text-align: left;"><font style="background-color: rgb(57, 123, 33);">FOOD</font></h3>
                         <h2>Delicious recipes from around the world</h2>
                         <p>Travel without leaving your kitchen with these international recipes. From Canada to Australia, Mexico to Sweden, and everywhere in between.</p>
                         <div style="text-align:right">
@@ -598,7 +594,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 px-0">
-                        <img src="/mass_mailing_themes/static/src/img/theme_bold/s_image_text_2.jpg" class="img w-100"/>
+                        <img src="/mass_mailing_themes/static/src/img/theme_bold/s_default_image_image_text_2.jpg" class="img w-100"/>
                     </div>
                 </div>
             </div>
@@ -606,10 +602,10 @@
         <div class="s_hr o_mail_snippet_general pt32 pb16" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
-            <div class="container o_mail_table_styles">
+        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+            <div class="container">
                 <div class="row">
-                    <div class="col-lg-12 o_mail_footer_social">
+                    <div class="col-lg-12" style="text-align: center;" t-translation="off">
                         <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
                             <span class="fa fa-facebook"></span>
                         </a>&amp;nbsp;&amp;nbsp;
@@ -625,13 +621,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-12 o_mail_footer_links">
-                        <a role="button" href="/unsubscribe_from_list" class="btn btn-link ">Unsubscribe</a>
+                    <div class="col-lg-12 o_mail_footer_links pt8 pb8" style="text-align: center;">
+                        <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        <p class="o_mail_footer_copy">
+                        <p style="text-align: center;">
                             © <t t-out="now.strftime('%Y')" /> All Rights Reserved
                         </p>
                     </div>
@@ -670,48 +666,48 @@
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
         <t t-set="future_date" t-value="(datetime.date.today() + datetime.timedelta(days=30))"/>
-        <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general bg-200" data-snippet="s_mail_block_header_logo" data-name="Header Logo">
-            <div class="container o_mail_table_styles">
+        <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general pt16 pb16 bg-200" data-snippet="s_mail_block_header_logo" data-name="Header Logo">
+            <div class="container">
                 <div class="row">
                     <div class="col-lg-4"></div>
                     <div class="col-lg-4 pt16 pb16" style="text-align: center;">
                         <a style="text-decoration:none;" href="http://www.example.com">
-                            <img src="/mass_mailing_themes/static/src/img/theme_bignews/s_default_image_logo.png" width="70" style="height:auto;max-width:400px;width:70px"/>
+                            <img src="/mass_mailing_themes/static/src/img/theme_bignews/bignews_logo.png" width="70" style="height:auto;max-width:100%; width:70px;"/>
                         </a>
                     </div>
                     <div class="col-lg-4" style="text-align:right"></div>
                 </div>
             </div>
         </div>
-        <div class="s_title o_mail_snippet_general pt32 pb32" data-snippet="s_title" data-name="Title">
+        <div class="s_title o_mail_snippet_general pt32 pb16" data-snippet="s_title" data-name="Title">
             <div class="container s_allow_columns">
                 <h1 style="text-align: center;">WE'RE MOVING</h1>
             </div>
         </div>
         <div class="s_cover o_mail_snippet_general pt0" data-snippet="s_cover" data-name="Cover">
-            <img src="/mass_mailing_themes/static/src/img/theme_bignews/s_default_image_block_banner.jpg" alt="Cover image" class="img-fluid mx-auto d-block" style="width: 690px;"/>
+            <img src="/mass_mailing_themes/static/src/img/theme_bignews/s_default_image_cover.jpg" alt="Cover image" class="img-fluid w-100 mx-auto" style="padding: 15px;"/>
         </div>
-        <div class="s_text_block o_mail_snippet_general pt32 pb32 px-3" data-snippet="s_text_block" data-name="Text">
+        <div class="s_text_block o_mail_snippet_general pt32 pb32" data-snippet="s_text_block" data-name="Text" style="padding-left: 15px; padding-right: 15px;">
             <div class="container s_allow_columns">
                 <h2>BEGINNING <t t-out="future_date.strftime('%B %d').upper()" /></h2>
-            <p>We are proud to announce that due to our remarkable growth in the Springfield area, we are moving to a new location on July 1.
-               <br/>We will continue to offer the same friendly service at our new address on <span style="font-weight: bolder">1600 Main Street</span>,
-               <br/>which will allow us to offer an even larger selection of products and services.
-            </p>
-            <p>See you there,</p>
-            <p><img src="/mass_mailing_themes/static/src/img/theme_bignews/signature.png" style="width:125px; margin-top:8px;margin-bottom:-25px;" alt="Signature"/></p>
-            <p>Michael Fletcher<br/>
-               <span style="font-size: 12px; font-weight: bolder;">Customer Service</span>
-            </p>
-            <p style="text-align: center;">
-                <a role="button" href="#" class="btn btn-primary">READ MORE</a>
-            </p>
+                <p>We are proud to announce that due to our remarkable growth in the Springfield area, we are moving to a new location on July 1.
+                   <br/>We will continue to offer the same friendly service at our new address on <span style="font-weight: bolder">1600 Main Street</span>,
+                   <br/>which will allow us to offer an even larger selection of products and services.
+                </p>
+                <p>See you there,</p>
+                <p><img src="/mass_mailing_themes/static/src/img/theme_bignews/signature.png" style="width:125px; margin-top:8px;margin-bottom:-25px;" alt="Signature"/></p>
+                <p>Michael Fletcher<br/>
+                   <span style="font-size: 12px; font-weight: bolder;">Customer Service</span>
+                </p>
+                <p style="text-align: center;">
+                    <a role="button" href="#" class="btn btn-primary">READ MORE</a>
+                </p>
+            </div>
         </div>
-        </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
-            <div class="container o_mail_table_styles">
+        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200 pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
+            <div class="container">
                 <div class="row">
-                    <div class="col-lg-12 o_mail_footer_social" t-translation="off">
+                    <div class="col-lg-12" style="text-align: center;" t-translation="off">
                         <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
                             <span class="fa fa-facebook" style="color: rgb(186, 0, 19) !important;"/>​
                         </a>&amp;nbsp;&amp;nbsp;
@@ -727,12 +723,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-12 o_mail_footer_links">
-                        <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a></div>
+                    <div class="col-lg-12 o_mail_footer_links pt8 pb8" style="text-align: center;">
+                        <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        <p class="o_mail_footer_copy">
+                        <p style="text-align: center;">
                             © <t t-out="now.strftime('%Y')" /> All Rights Reserved
                         </p>
                     </div>
@@ -745,7 +742,6 @@
     <template id="theme_solar_template">
         <style id="design-element">
             h1 {
-                font-size: 62px;
                 font-weight: bolder;
             }
             h2 {
@@ -767,23 +763,20 @@
             }
         </style>
         <t t-set="now" t-value="datetime.datetime.now()"/>
-        <div class="s_header_text_social o_mail_block_header_text_social o_mail_snippet_general" data-snippet="s_mail_block_header_text_social" data-name="Left Text">
-            <div class="o_mail_table_styles container">
+        <div class="s_header_text_social o_mail_block_header_text_social o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_header_text_social" data-name="Left Text">
+            <div class="container">
                 <div class="row">
-                    <div class="col-lg-8 pt16 pb16">
-                        <p>
-                            <a href="http://www.example.com">
-                                <span style="color: rgb(255, 187, 0) !important;" class="fa fa-2x fa-sun-o" />&amp;nbsp;
-                            </a>
-                            <span style="font-size: 24px;"><font style="font-weight: bolder; color: rgb(255, 255, 255); background-color: rgb(255, 187, 0);">SOLAR</font></span>
-                        </p>
+                    <div class="col-lg-4 pt16 pb16">
+                        <h1>
+                            <a t-att-href="(company_id.website) or '#'" target="_blank">
+                                <span style="color: rgb(255, 187, 0) !important; font-size: 32px" class="fa fa-1x fa-sun-o" />
+                            </a><span style="font-size: 32px;"><font style="font-weight: bolder; color: rgb(255, 255, 255); background-color: rgb(255, 187, 0);">SOLAR</font></span>
+                        </h1>
                     </div>
-                    <div class="col-lg-4 o_mail_no_resize" style="text-align:right;">
-                        <div class="o_mail_header_social">
-                            <a href="/view">
-                                <span style="font-weight: bolder;">View online</span>&amp;nbsp;<span class="fa fa-external-link" />
-                            </a>
-                        </div>
+                    <div class="col-lg-8 o_mail_header_social" style="text-align:right;">
+                        <a href="/view">
+                            <span style="font-weight: bolder;">View online</span>&amp;nbsp;<span class="fa fa-external-link" />
+                        </a>
                     </div>
                 </div>
             </div>
@@ -791,13 +784,13 @@
         <div class="s_title o_mail_snippet_general pt72 pb80" data-snippet="s_title" data-name="Title" style="background-color: rgb(255, 187, 0) !important;">
             <div class="container s_allow_columns">
                 <h1 style="text-align:center">
-                        <font style="background-color: rgb(255, 255, 255);">&amp;nbsp;10% OFF&amp;nbsp;</font>
+                        <font style="font-size: 62px; background-color: rgb(255, 255, 255);">&amp;nbsp;10% OFF&amp;nbsp;</font>
                     <br/>
-                        <font style="background-color: rgb(255, 255, 255);">&amp;nbsp;SALES&amp;nbsp;</font>
+                        <font style="font-size: 62px; background-color: rgb(255, 255, 255);">&amp;nbsp;SALES&amp;nbsp;</font>
                 </h1>
             </div>
         </div>
-        <div class="s_discount2 o_mail_block_discount2 o_mail_snippet_general px-3 pt32 pb32" data-name="Promo Code">
+        <div class="s_discount2 o_mail_block_discount2 o_mail_snippet_general pt32 pb32" data-name="Promo Code" style="padding-left: 15px; padding-right: 15px;">
             <h2 style="text-align: center;">GET 10%&amp;nbsp;OFF</h2>
             <p style="text-align: center;">
                 Valid on all sales prices in our webshop.
@@ -808,6 +801,7 @@
                     <td width="200" height="50" align="center" class="o_cc" style="min-width: 150px; width: 200px; text-align: center;"><p class="mb0">ENDOFSUMMER20</p></td>
                 </tr>
             </table>
+            <br/>
             <p style="text-align:center;">
                 <a role="button" class="btn btn-primary btn-lg" href="http://">Visit the website</a>
             </p>
@@ -815,31 +809,31 @@
         <div class="s_hr pt16 pb16" data-snippet="s_hr" data-name="Separator">
             <hr class="s_hr_1px s_hr_solid"/>
         </div>
-        <div class="s_features pb32 o_mail_snippet_general pt32" data-snippet="s_features" data-name="Features">
+        <div class="s_features o_mail_snippet_general" data-snippet="s_features" data-name="Features">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-4" style="text-align:center;">
-                        <img alt="Customer Service" src="/mass_mailing_themes/static/src/img/theme_solar/customer-service.gif" class="img-fluid o_we_custom_image mx-auto d-block" style="width: 100px;"/>
+                    <div class="col-lg-4 pt16 pb16" style="text-align:center;">
+                        <img alt="Customer Service" src="/mass_mailing_themes/static/src/img/theme_solar/s_default_image_product_1.jpg" class="img-fluid o_we_custom_image mx-auto d-block" style="width: 100px;"/>
                         <h3>24/7 <br/>Customer Service</h3>
                     </div>
-                    <div class="col-lg-4" style="text-align:center;">
-                        <img alt="Free Delivery" src="/mass_mailing_themes/static/src/img/theme_solar/delivery.gif" class="img-fluid o_we_custom_image mx-auto d-block" style="width: 100px;"/>
+                    <div class="col-lg-4 pt16 pb16" style="text-align:center;">
+                        <img alt="Free Delivery" src="/mass_mailing_themes/static/src/img/theme_solar/s_default_image_product_2.jpg" class="img-fluid o_we_custom_image mx-auto d-block" style="width: 100px;"/>
                         <h3 style="text-align:center;">Free delivery*</h3>
                         <p style="text-align:center;">*For orders over $39.</p>
                     </div>
-                    <div class="col-lg-4" style="text-align:center;">
-                        <img alt="" src="/mass_mailing_themes/static/src/img/theme_solar/returns.gif" class="img-fluid o_we_custom_image mx-auto d-block" style="width: 100px;"/>
+                    <div class="col-lg-4 pt16 pb16" style="text-align:center;">
+                        <img alt="Easy Returns" src="/mass_mailing_themes/static/src/img/theme_solar/s_default_image_product_3.jpg" class="img-fluid o_we_custom_image mx-auto d-block" style="width: 100px;"/>
                         <h3 style="text-align:center;">Easy Returns</h3>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general" data-snippet="s_mail_block_footer_social_left" data-name="Footer Left" style="background-color: rgb(255, 187, 0) !important;">
-            <div cellspacing="0" cellpadding="0" class="container o_mail_table_styles">
+        <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social_left" data-name="Footer Left" style="background-color: rgb(255, 187, 0) !important;">
+            <div class="container">
                 <div class="row">
-                    <div class="col-lg o_mail_footer_description">
+                    <div class="col-lg-6">
                         <p>
-                            <span style="font-weight: bolder">
+                            <span style="font-weight: bolder;">
                                 <font style="background-color: rgb(255, 255, 255); color: rgb(255, 187, 0);">SOLAR</font>
                             </span>
                         </p>
@@ -849,8 +843,8 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-lg" align="right">
-                        <div class="o_mail_footer_social pb16" t-translation="off">
+                    <div class="col-lg-6">
+                        <div class="pb16" style="text-align: right;" t-translation="off">
                             <a aria-label="Facebook" title="Facebook" href="https://www.facebook.com/Odoo">
                                 <span class="fa fa-facebook rounded bg-black" style="color: rgb(255, 187, 0) !important;"/>
                             </a>&amp;nbsp;&amp;nbsp;
@@ -864,8 +858,9 @@
                                 <span class="fa fa-instagram rounded bg-black" style="color: rgb(255, 187, 0) !important;"/>
                             </a>
                         </div>
-                        <p class="o_mail_footer_copy">
-                            <font style="color: rgb(137, 101, 1);">© <t t-out="now.strftime('%Y')" /> All Rights Reserved</font></p>
+                        <p style="text-align: right">
+                            <font style="color: rgb(137, 101, 1);">© <t t-out="now.strftime('%Y')" /> All Rights Reserved</font>
+                        </p>
                     </div>
                 </div>
             </div>
