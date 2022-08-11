@@ -95,13 +95,13 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                         {
                             'id': 'billable_manual',
                             'sequence': sequence_per_invoice_type['billable_manual'],
-                            'billed': (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.timesheet_cost,
+                            'billed': (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.hourly_cost,
                             'to_bill': 0.0,
                         },
                     ],
                     'total': {
                         'to_bill': 0.0,
-                        'billed': (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.timesheet_cost
+                        'billed': (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.hourly_cost
                     },
                 },
             }
@@ -129,21 +129,21 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                         {
                             'id': 'billable_manual',
                             'sequence': sequence_per_invoice_type['billable_manual'],
-                            'billed': (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.timesheet_cost,
+                            'billed': (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.hourly_cost,
                             'to_bill': 0.0,
                         },
                         {
                             'id': 'non_billable',
                             'sequence': sequence_per_invoice_type['non_billable'],
-                            'billed': timesheet3.unit_amount * -self.employee_manager.timesheet_cost,
+                            'billed': timesheet3.unit_amount * -self.employee_manager.hourly_cost,
                             'to_bill': 0.0,
                         },
                     ],
                     'total': {
                         'to_bill': 0.0,
                         'billed':
-                            (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.timesheet_cost
-                            + timesheet3.unit_amount * -self.employee_manager.timesheet_cost,
+                            (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.hourly_cost
+                            + timesheet3.unit_amount * -self.employee_manager.hourly_cost,
                     },
                 },
             },
@@ -172,21 +172,21 @@ class TestSaleTimesheetProjectProfitability(TestCommonSaleTimesheet):
                         {
                             'id': 'billable_time',
                             'sequence': sequence_per_invoice_type['billable_time'],
-                            'billed': (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.timesheet_cost,
+                            'billed': (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.hourly_cost,
                             'to_bill': 0.0,
                         },
                         {
                             'id': 'non_billable',
                             'sequence': sequence_per_invoice_type['non_billable'],
-                            'billed': timesheet3.unit_amount * -self.employee_manager.timesheet_cost,
+                            'billed': timesheet3.unit_amount * -self.employee_manager.hourly_cost,
                             'to_bill': 0.0,
                         },
                     ],
                     'total': {
                         'to_bill': 0.0,
                         'billed':
-                            (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.timesheet_cost
-                            + timesheet3.unit_amount * -self.employee_manager.timesheet_cost,
+                            (timesheet1.unit_amount + timesheet2.unit_amount) * -self.employee_user.hourly_cost
+                            + timesheet3.unit_amount * -self.employee_manager.hourly_cost,
                     },
                 },
             },

@@ -36,7 +36,7 @@ class TimesheetAttendance(models.Model):
             FROM (
                 SELECT
                     -hr_attendance.id AS id,
-                    hr_employee.timesheet_cost AS emp_cost,
+                    hr_employee.hourly_cost AS emp_cost,
                     resource_resource.user_id AS user_id,
                     hr_attendance.worked_hours AS attendance,
                     NULL AS timesheet,
@@ -48,7 +48,7 @@ class TimesheetAttendance(models.Model):
             UNION ALL
                 SELECT
                     ts.id AS id,
-                    hr_employee.timesheet_cost AS emp_cost,
+                    hr_employee.hourly_cost AS emp_cost,
                     ts.user_id AS user_id,
                     NULL AS attendance,
                     ts.unit_amount AS timesheet,

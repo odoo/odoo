@@ -253,8 +253,8 @@ class TestTimesheet(TestCommonTimesheet):
     def test_recompute_amount_for_multiple_timesheets(self):
         """ Check that amount is recomputed correctly when setting unit_amount for multiple timesheets at once. """
         Timesheet = self.env['account.analytic.line']
-        self.empl_employee.timesheet_cost = 5.0
-        self.empl_employee2.timesheet_cost = 6.0
+        self.empl_employee.hourly_cost = 5.0
+        self.empl_employee2.hourly_cost = 6.0
         # create a timesheet for each employee
         timesheet_1 = Timesheet.with_user(self.user_employee).create({
             'project_id': self.project_customer.id,
