@@ -9,6 +9,57 @@
                 </div>
             </t>
         </xpath>
+        <!-- Certification Attempts -->
+        <xpath expr="//ul[hasclass('o_wprofile_nav_tabs')]" position="inside">
+            <li t-if="show_certification_tab" class="nav-item">
+                <a role="tab" aria-controls="certification" href="#profile_tab_content_certification" t-attf-class="nav-link #{ 'active' if active_tab == 'certification' else '' }" data-toggle="tab">
+                    <t t-if="user_inputs" t-out="len(user_inputs)" /> Certification Attempts
+                </a>
+            </li>
+        </xpath>
+        <xpath expr="//div[hasclass('o_wprofile_tabs_content')]" position="inside">
+            <div t-if="show_certification_tab" role="tabpanel" t-attf-class="tab-pane #{ 'show active' if active_tab == 'certification' else '' }" id="profile_tab_content_certification">
+                <h5 class="d-flex justify-content-between align-items-end border-bottom pb-1">
+                    Certification Attempts
+                    <form method="get">
+                        <div class="input-group" role="search">
+                            <input type="text" class="form-control" name="certification_search" t-att-value="certification_search_terms or ''" placeholder="Search Attempts..."/>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary" aria-label="Search" title="Search">
+                                    <i class="fa fa-search"/>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </h5>
+                <t t-if="not user_inputs">
+                    <p t-if="certification_search_terms">No certification found for the given search term.</p>
+                    <p t-else="">You have not taken any certification yet.</p>
+                    <a href="/slides/all?slide_category=certification">
+                        <i class="fa fa-arrow-right"/> See Certifications
+                    </a>
+                </t>
+                <div t-else="" class="card p-3 mb-3" t-foreach="user_inputs" t-as="user_input">
+                    <div class="row">
+                        <div class="col-sm-3" t-out="user_input.create_date" t-options="{'widget': 'datetime'}"/>
+                        <div class="col-sm-4">
+                            <a t-if="user_input.slide_id"
+                                t-attf-href="/slides_survey/slide/get_certification_url?slide_id=#{user_input.slide_id.id}"
+                                t-out="user_input.survey_id.title"/>
+                            <t t-else="" t-out="user_input.survey_id.title"/>
+                        </div>
+                        <div class="col-sm-3">
+                            Attempt n°<t t-out="user_input.attempts_number"/>
+                        </div>
+                        <div class="col-sm-2">
+                            <span t-attf-class="badge #{ 'badge-primary' if user_input.scoring_success else 'badge-danger'}">
+                                <t t-out="user_input.scoring_percentage"/>%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
     </template>
 
      <template id="display_certificate">
