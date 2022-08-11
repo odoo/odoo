@@ -104,6 +104,23 @@ export class WebsitePreview extends Component {
                 window.removeEventListener('popstate', handleBackNavigation);
             };
         }, () => []);
+
+        const toggleIsMobile = () => {
+            const wrapwrapEl = this.iframe.el.contentDocument.querySelector('#wrapwrap');
+            if (wrapwrapEl) {
+                wrapwrapEl.classList.toggle('o_is_mobile', this.websiteContext.isMobile);
+            }
+        };
+        // Toggle the 'o_is_mobile' class on the wrapwrap when 'isMobile'
+        // changes in the context. (e.g. Click on mobile preview buttons)
+        useEffect(toggleIsMobile, () => [this.websiteContext.isMobile]);
+
+        // Toggle the 'o_is_mobile' class on the wrapwrap according to
+        // 'isMobile' on iframe load.
+        useEffect(() => {
+            this.iframe.el.addEventListener('OdooFrameContentLoaded', toggleIsMobile);
+            return () => this.iframe.el.removeEventListener('OdooFrameContentLoaded', toggleIsMobile);
+        }, () => []);
     }
 
     get websiteId() {

@@ -81,7 +81,7 @@ odoo.define("website_blog.tour", function (require) {
         position: "bottom",
     }, {
         trigger: ".o_menu_systray_item.o_mobile_preview",
-        extra_trigger: '.o_website_preview .o_is_mobile',
+        extra_trigger: '.o_website_preview.o_is_mobile',
         content: _t("Once you have reviewed the content on mobile, you can switch back to the normal view by clicking here again"),
         position: "right",
     }, {

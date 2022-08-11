@@ -3,7 +3,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.iframeWidget" owl="1">
-    <div t-if="props.value" class="h-100" t-att-class="this.state.isMobile and 'is_mobile'">
+    <div t-if="props.value" class="h-100" t-att-class="{ 'is_mobile': this.state.isMobile }">
         <iframe
             frameBorder="0"
             class="d-block"
