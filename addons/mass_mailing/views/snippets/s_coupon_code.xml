@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="s_coupon_code" name="Promo Code">
-        <div class="o_mail_snippet_general o_mail_block_discount2 s_discount2 px-3 pt32 pb32">
-            <h2 class="text-center"><b>GET $20 OFF</b></h2>
-            <p class="text-center">
+        <div class="s_discount2 o_mail_block_discount2 o_mail_snippet_general pt32 pb32" style="padding-left: 15px; padding-right: 15px;">
+            <h2 style="text-align: center;"><span style="font-weight: bolder;">GET $20 OFF</span></h2>
+            <p style="text-align: center;">
                 Here's your coupon code - but hurry! Ends 9/28
             </p>
             <table border="0" cellpadding="0" cellspacing="0" align="center" class="border" style="border-collapse:collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;">
                 <tr>
-                    <td width="50" height="50" align="center" class="o_mail_no_resize bg-300 text-center" style="width:50px!important; min-width: 50px; max-width:5.6rem;"><i class="fa fa-2x fa-ticket"></i></td>
-                    <td width="200" height="50" align="center" class="text-center" style="font-size: 15px; line-height: 22px; font-weight: 700; min-width: 150px; width: 200px;">ENDOFSUMMER20</td>
+                    <td width="50" height="50" align="center" class="o_mail_no_resize mx-auto o_cc o_cc3" style="width:50px!important; min-width: 50px; max-width:5.6rem; text-align: center;"><i class="fa fa-2x fa-ticket"></i></td>
+                    <td width="200" height="50" align="center" class="o_cc" style="font-size: 15px; line-height: 22px; font-weight: 700; min-width: 150px; width: 200px; text-align: center;"><p class="mb0">ENDOFSUMMER20</p></td>
                 </tr>
             </table>
-            <div class="text-center pt24">
+            <br/>
+            <p style="text-align:center;">
                 <a role="button" href="#" class="btn btn-primary">Use now</a>
-            </div>
+            </p>
         </div>
     </template>
 </odoo>

@@ -18,33 +18,46 @@
     <!-- Default Theme -->
     <template id="theme_default_template">
         <style id="design-element">
-            h1 {
-                font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
-            }
             h2 {
-                font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
-            }
-            h3 {
-                font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+                font-weight: bolder;
             }
             p, p > *, li, li > * {
-                font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+                color: #6c757d;
             }
-            a:not(.btn), a.btn.btn-link {
-                color: #81709b;
-            }
-            a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
-                background-color: #81709b;
-                border-color: #81709b;
-            }
-            a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
-                background-color: #72e1d0;
-                border-color: #72e1d0;
+            hr {
+                border-top-color: #ced4da !important;
             }
         </style>
-        <t t-call="mass_mailing.s_mail_block_header_logo" />
-        <t t-call="mass_mailing.s_title" />
-        <t t-call="mass_mailing.s_text_block" />
+        <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general pt16 pb16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4"/>
+                    <div class="col-lg-4" style="text-align: center;">
+                        <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;" target="_blank">
+                            <img border="0" src="/mass_mailing/static/src/img/theme_default/s_default_image_header_logo.png" style="height:auto; max-width:100%;" width="180"/>
+                        </a>
+                    </div>
+                    <div class="col-lg-4" style="text-align: right;"/>
+                </div>
+            </div>
+        </div>
+        <div class="s_text_block o_mail_snippet_general pt40 pb16" style="padding-left: 15px; padding-right: 15px;">
+            <div class="container s_allow_columns">
+                <h2>Thank you for joining us!</h2>
+                <p><br/>We want to take this opportunity to welcome you to our ever-growing community!
+                <br/>Your platform is ready for work, it will help you reduce the costs of digital signatures, attract new customers and increase sales.</p>
+                <p><img src="/mass_mailing/static/src/img/theme_default/signature.png" style="width:125px; margin-top:8px;margin-bottom:-25px;" alt="Signature"/></p>
+                <p>Michael Fletcher<br/>
+                   <span style="font-size: 12px; font-weight: bolder;">Customer Service</span>
+                </p>
+                <p style="text-align: center;">
+                    <a role="button" href="#" class="btn btn-primary">LOGIN</a>
+                </p>
+            </div>
+        </div>
+        <div class="s_hr pt16 pb16" data-snippet="s_hr" data-name="Separator">
+            <hr class="s_hr_1px s_hr_solid"/>
+        </div>
         <t t-call="mass_mailing.s_mail_block_footer_social_left"/>
     </template>
 </odoo>
