@@ -181,13 +181,14 @@ class DataPoint {
         if (params.__bm_load_params__) {
             this.__bm_load_params__ = params.__bm_load_params__;
             info = this.__bm_load_params__;
+            this.context = info.context;
         } else if (params.handle) {
             this.__bm_handle__ = params.handle;
             info = this.model.__bm__.get(this.__bm_handle__);
+            this.context = this.model.__bm__.localData[this.__bm_handle__].getContext();
         } else {
             throw new Error("Datapoint needs load params or handle");
         }
-        this.context = info.context;
         this.resModel = info.model || info.modelName;
         this.fields = info.fields;
         this.activeFields = {};
