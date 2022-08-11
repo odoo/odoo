@@ -11,7 +11,6 @@
         'data/payment_acquirer_data.xml',
         'views/payment_views.xml',
     ],
-    'post_init_hook': '_post_init_hook',
     'installable': True,
     'license': 'LGPL-3'
 }
