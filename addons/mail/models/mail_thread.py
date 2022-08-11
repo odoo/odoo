@@ -2465,7 +2465,7 @@ class MailThread(models.AbstractModel):
             template_values['subtitles'] = subtitles
 
         email_layout_xmlid = msg_vals.get('email_layout_xmlid') if msg_vals else message.email_layout_xmlid
-        template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.message_notification_email'
+        template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.mail_notification_layout'
         base_mail_values = self._notify_by_email_get_base_mail_values(message, additional_values={'auto_delete': mail_auto_delete})
 
         # Clean the context to get rid of residual default_* keys that could cause issues during
