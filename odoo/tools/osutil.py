@@ -6,6 +6,7 @@ Some functions related to the os and os.path module
 """
 import os
 import re
+import warnings
 import zipfile
 
 from os.path import join as opj
@@ -56,6 +57,7 @@ def listdir(dir, recursive=False):
     it follows leaves `dir`...
     """
     assert recursive, "use `os.listdir` or `pathlib.Path.iterdir`"
+    warnings.warn("Since 16.0, use os.walk or a recursive glob", DeprecationWarning, stacklevel=2)
     dir = os.path.normpath(dir)
 
     res = []

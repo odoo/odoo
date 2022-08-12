@@ -217,6 +217,11 @@ def get_module_path(module, downloaded=False, display_warning=True):
     return False
 
 def get_module_filetree(module, dir='.'):
+    warnings.warn(
+        "Since 16.0: use os.walk or a recursive glob or something",
+        DeprecationWarning,
+        stacklevel=2
+    )
     path = get_module_path(module)
     if not path:
         return False
