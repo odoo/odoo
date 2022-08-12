@@ -1386,7 +1386,7 @@ class Picking(models.Model):
                     quantity_left_todo = float_round(
                         ml.reserved_uom_qty - ml.qty_done,
                         precision_rounding=ml.product_uom_id.rounding,
-                        rounding_method='UP')
+                        rounding_method='HALF-UP')
                     done_to_keep = ml.qty_done
                     new_move_line = ml.copy(
                         default={'reserved_uom_qty': 0, 'qty_done': ml.qty_done})
