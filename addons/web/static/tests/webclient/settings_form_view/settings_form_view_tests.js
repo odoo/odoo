@@ -7,15 +7,25 @@ import {
     makeDeferred,
     mockTimeout,
     nextTick,
+    patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { editSearch } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { registry } from "@web/core/registry";
+import { SettingsFormCompiler } from "@web/webclient/settings_form_view/settings_form_compiler";
 
 let target;
 let serverData;
 let execTimeouts;
+
+QUnit.assert.areEquivalent = function (template1, template2) {
+    if (template1.replace(/\s/g, "") === template2.replace(/\s/g, "")) {
+        QUnit.assert.ok(true);
+    } else {
+        QUnit.assert.strictEqual(template1, template2);
+    }
+};
 
 QUnit.module("SettingsFormView", (hooks) => {
     hooks.beforeEach(() => {
@@ -1250,5 +1260,49 @@ QUnit.module("SettingsFormView", (hooks) => {
             [...target.querySelectorAll(".highlighter")].map((x) => x.parentElement.textContent),
             ["xphone"]
         );
+    });
+
+    QUnit.test("standalone field labels with string inside a settings page", async (assert) => {
+        let compiled = undefined;
+        patchWithCleanup(SettingsFormCompiler.prototype, {
+            compile() {
+                const _compiled = this._super(...arguments);
+                compiled = _compiled;
+                return _compiled;
+            },
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form js_class="base_settings">
+                    <div class="o_setting_container">
+                        <div class="settings">
+                            <div class="app_settings_block" string="CRM" data-key="crm">
+                                <label string="My&quot; little &apos;  Label" for="display_name" class="highhopes"/>
+                                <field name="display_name" />
+                            </div>
+                        </div>
+                    </div>
+                </form>`,
+        });
+
+        assert.strictEqual(
+            target.querySelector("label.highhopes").textContent,
+            "My\" little '  Label"
+        );
+
+        const expectedCompiled = `
+        <div class="o_setting_container">
+            <SettingsPage slots="props.slots" initialTab="props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}]" class="'settings'">
+                <SettingsApp t-props="{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;,&quot;isVisible&quot;:false}" selectedTab="settings.selectedTab" t-if="!searchState.value or search(&quot;app&quot;, &quot;crm&quot;)" class="'app_settings_block'">
+                    <FormLabel t-props="{id:'display_name',fieldName:'display_name',record:props.record,fieldInfo:props.archInfo.fieldNodes['display_name'],className:&quot;highhopes&quot;}" string="\`My&quot; little '  Label\`"/>
+                    <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
+                </SettingsApp>
+            </SettingsPage>
+        </div>`;
+        assert.areEquivalent(compiled.firstChild.innerHTML, expectedCompiled);
     });
 });

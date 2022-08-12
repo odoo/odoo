@@ -175,8 +175,12 @@ function compileField(el, params) {
     return res;
 }
 
+const labelsWeak = new WeakMap();
 function compileLabel(el, params) {
     const res = this.compileLabel(el, params);
+    // It the node is a FormLabel component node, the label is
+    // localized *after* the field.
+    // We don't know yet if the label refers to a field or not.
     if (res.textContent && res.tagName !== "FormLabel" && params.config) {
         params.labels.push({
             label: res.textContent.trim(),
@@ -186,6 +190,7 @@ function compileLabel(el, params) {
         const highlight = createElement("HighlightText");
         highlight.setAttribute("originalText", `\`${res.textContent}\``);
         append(res, highlight);
+        labelsWeak.set(res, { textContent: res.textContent });
         res.firstChild.remove();
     }
     return res;
@@ -235,7 +240,17 @@ export class SettingsFormCompiler extends FormCompiler {
         );
     }
     createLabelFromField(fieldId, fieldName, fieldString, label, params) {
+        const labelweak = labelsWeak.get(label);
+        if (labelweak) {
+            // Undo what we've done when we where not sure whether this label was attached to a field
+            // Now, we now it is.
+            label.textContent = labelweak.textContent;
+        }
         const res = super.createLabelFromField(fieldId, fieldName, fieldString, label, params);
+        if (labelweak) {
+            // the work of pushing the label in the search structure is already done
+            return res;
+        }
         let labelText = label.textContent || fieldString;
         labelText = labelText ? labelText : params.record.fields[fieldName].string;
 
