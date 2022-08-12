@@ -819,6 +819,7 @@ class MailCase(MockEmail):
                         mail_groups['failure'].append(partner)
                         if ncheck_send:
                             email_groups[ngroup].append(partner)
+                    # canceled: currently nothing checked
                     elif nstatus == 'canceled':
                         pass
                     else:

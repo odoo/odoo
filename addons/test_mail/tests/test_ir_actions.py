@@ -3,19 +3,53 @@
 
 from odoo.addons.base.tests.test_ir_actions import TestServerActionsBase
 from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 
+@tagged('ir_actions')
 class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
 
+    def setUp(self):
+        super(TestServerActionsEmail, self).setUp()
+        self.template = self._create_template(
+            'res.partner',
+            {'email_from': '{{ object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted }}',
+             'partner_to': '%s' % self.test_partner.id,
+            }
+        )
+
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_action_email(self):
-        email_template = self._create_template('res.partner', {'partner_to': '%s' % self.test_partner.id})
-        self.action.write({'state': 'email', 'template_id': email_template.id})
-        self.action.with_context(self.context).run()
+        # initial state
+        self.assertEqual(len(self.test_partner.message_ids), 1,
+                         'Contains Contact created message')
+        self.assertFalse(self.test_partner.message_partner_ids)
+
+        # update action: send an email
+        self.action.write({
+            'mail_post_method': 'email',
+            'state': 'mail_post',
+            'template_id': self.template.id,
+        })
+        self.assertFalse(self.action.mail_post_autofollow, 'Email action does not support autofollow')
+
+        with self.mock_mail_app():
+            self.action.with_context(self.context).run()
+
         # check an email is waiting for sending
         mail = self.env['mail.mail'].sudo().search([('subject', '=', 'About TestingPartner')])
         self.assertEqual(len(mail), 1)
-        # check email content
+        self.assertTrue(mail.auto_delete)
         self.assertEqual(mail.body, '<p>Hello TestingPartner</p>')
+        self.assertFalse(mail.is_notification)
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mail.send()
+
+        # no archive (message)
+        self.assertEqual(len(self.test_partner.message_ids), 1,
+                         'Contains Contact created message')
+        self.assertFalse(self.test_partner.message_partner_ids)
 
     def test_action_followers(self):
         self.test_partner.message_unsubscribe(self.test_partner.message_partner_ids.ids)
@@ -26,6 +60,49 @@ class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
         })
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_partner.message_partner_ids, self.env.ref('base.partner_admin') | random_partner)
+
+    def test_action_message_post(self):
+        # initial state
+        self.assertEqual(len(self.test_partner.message_ids), 1,
+                         'Contains Contact created message')
+        self.assertFalse(self.test_partner.message_partner_ids)
+
+        # test without autofollow and comment
+        self.action.write({
+            'mail_post_autofollow': False,
+            'mail_post_method': 'comment',
+            'state': 'mail_post',
+            'template_id': self.template.id
+        })
+
+        with self.assertSinglePostNotifications(
+                [{'partner': self.test_partner, 'type': 'email', 'status': 'ready'}],
+                message_info={'content': 'Hello %s' % self.test_partner.name,
+                              'message_type': 'notification',
+                              'subtype': 'mail.mt_comment',
+                             }
+            ):
+            self.action.with_context(self.context).run()
+        # NOTE: template using current user will have funny email_from
+        self.assertEqual(self.test_partner.message_ids[0].email_from, self.partner_root.email_formatted)
+        self.assertFalse(self.test_partner.message_partner_ids)
+
+        # test with autofollow and note
+        self.action.write({
+            'mail_post_autofollow': True,
+            'mail_post_method': 'note'
+        })
+        with self.assertSinglePostNotifications(
+                [{'partner': self.test_partner, 'type': 'email', 'status': 'ready'}],
+                message_info={'content': 'Hello %s' % self.test_partner.name,
+                              'message_type': 'notification',
+                              'subtype': 'mail.mt_note',
+                             }
+            ):
+            self.action.with_context(self.context).run()
+        self.assertEqual(len(self.test_partner.message_ids), 3,
+                         '2 new messages produced')
+        self.assertEqual(self.test_partner.message_partner_ids, self.test_partner)
 
     def test_action_next_activity(self):
         self.action.write({

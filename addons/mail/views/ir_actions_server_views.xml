@@ -11,7 +11,8 @@
                     <page string="Activity" name="next_activity" autofocus="autofocus" attrs="{'invisible': [('state', '!=', 'next_activity')]}">
                         <group>
                             <group>
-                                <field name="activity_type_id" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('state', '=', 'next_activity')]}"/>
+                                <field name="activity_type_id" options="{'no_create': True, 'no_open': True}"
+                                       attrs="{'required': [('state', '=', 'next_activity')]}"/>
                                 <field name="activity_summary" placeholder="e.g. Discuss proposal"/>
                             </group>
                             <group>
@@ -40,10 +41,16 @@
                 </xpath>
                 <xpath expr="//field[@name='link_field_id']" position="after">
                     <field name="partner_ids" widget="many2many_tags"
-                        attrs="{'invisible': [('state', '!=', 'followers')]}"/>
+                           attrs="{'invisible': [('state', '!=', 'followers')]}"/>
                     <field name="template_id"
-                        attrs="{'invisible': [('state', '!=', 'email')],
-                                'required': [('state', '=', 'email')]}"/>
+                           attrs="{'invisible': [('state', '!=', 'mail_post')],
+                                   'required': [('state', '=', 'mail_post')]}"
+                           context="{'default_model': model_name,
+                                     'default_use_default_to': True}"/>
+                    <field name="mail_post_method"
+                           attrs="{'invisible': [('state', '!=', 'mail_post')],
+                                   'required': [('state', '=', 'mail_post')]}"/>
+                    <field name="mail_post_autofollow" invisible="1"/>
                 </xpath>
             </field>
         </record>

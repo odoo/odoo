@@ -8,11 +8,13 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='link_field_id']" position="after">
                 <field name="sms_template_id"
-                    context="{'default_model_id': model_id}"
+                    context="{'default_model': model_name}"
                     attrs="{'invisible': [('state', '!=', 'sms')],
                             'required': [('state', '=', 'sms')]}"/>
-                <field name="sms_mass_keep_log"
-                    attrs="{'invisible': [('state', '!=', 'sms')]}"/>
+                <field name="sms_method"
+                       string="Send as"
+                       attrs="{'invisible': [('state', '!=', 'sms')],
+                               'required': [('state', '=', 'sms')]}"/>
             </xpath>
         </field>
     </record>

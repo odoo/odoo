@@ -89,10 +89,11 @@ record['name'] = record.name + 'X'""",
                 'active': True,
             }, {
                 'name': 'Base Automation: test send an email',
+                'mail_post_method': 'email',
                 'model_id': self.env.ref('test_base_automation.model_base_automation_lead_test').id,
                 'template_id': self.test_mail_template_automation.id,
                 'trigger_field_ids': [(4, self.env.ref('test_base_automation.field_base_automation_lead_test__deadline').id)],
-                'state': 'email',
+                'state': 'mail_post',
                 'code': """
 record = model.browse(env.context['active_id'])
 record['name'] = record.name + 'X'""",
