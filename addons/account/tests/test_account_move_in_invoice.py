@@ -5,7 +5,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields, Command
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, RedirectWarning
 
 from collections import defaultdict
 
@@ -1469,13 +1469,69 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'currency_id': self.currency_data['currency'].id,
         })
 
-    def test_in_invoice_duplicate_supplier_reference(self):
-        ''' Ensure two vendor bills can't share the same vendor reference. '''
-        self.invoice.ref = 'a supplier reference'
-        invoice2 = self.invoice.copy(default={'invoice_date': self.invoice.invoice_date})
-        invoice2.ref = 'a supplier reference'
-        with self.assertRaises(ValidationError):
-            invoice2.action_post()
+    def test_in_invoice_single_duplicate_supplier_reference(self):
+        """ Ensure duplicated ref are computed correctly in this simple case """
+        invoice_1 = self.invoice
+        invoice_1.ref = 'a unique supplier reference that will be copied'
+        invoice_2 = invoice_1.copy(default={'invoice_date': invoice_1.invoice_date})
+        # ensure no Error is raised
+        invoice_2.ref = invoice_1.ref
+        self.assertRecordValues(invoice_2, [{'duplicated_ref_ids': invoice_1.ids}])
+
+    def test_in_invoice_single_duplicate_supplier_reference_with_form(self):
+        """ Ensure duplicated ref are computed correctly with UI's NEW_ID"""
+        invoice_1 = self.invoice
+        invoice_1.ref = 'a unique supplier reference that will be copied'
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.partner_id = self.partner_a
+        move_form.invoice_date = invoice_1.invoice_date
+        move_form.ref = invoice_1.ref
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_b
+        invoice_2 = move_form.save()
+        self.assertRecordValues(invoice_2, [{'duplicated_ref_ids': invoice_1.ids}])
+
+    def test_in_invoice_multiple_duplicate_supplier_reference_batch(self):
+        """ Ensure duplicated ref are computed correctly even when updated in batch"""
+        invoice_1 = self.invoice
+        invoice_1.ref = 'a unique supplier reference that will be copied'
+        invoice_2 = invoice_1.copy(default={'invoice_date': invoice_1.invoice_date})
+        invoice_3 = invoice_1.copy(default={'invoice_date': invoice_1.invoice_date})
+
+        # reassign to trigger the compute method
+        invoices = invoice_1 + invoice_2 + invoice_3
+        invoices.ref = invoice_1.ref
+        self.assertRecordValues(invoices, [
+            {'duplicated_ref_ids': (invoice_2 + invoice_3).ids},
+            {'duplicated_ref_ids': (invoice_1 + invoice_3).ids},
+            {'duplicated_ref_ids': (invoice_1 + invoice_2).ids},
+        ])
+
+    def test_in_invoice_multiple_duplicate_supplier_reference_constrains(self):
+        """ Ensure that an error is raised on post if some invoices with duplicated ref share the same invoice_date """
+        invoice_1 = self.invoice
+        invoice_1.ref = 'a unique supplier reference that will be copied'
+        invoice_2 = invoice_1.copy(default={'invoice_date': invoice_1.invoice_date})
+        invoice_3 = invoice_1.copy(default={'invoice_date': invoice_1.invoice_date})
+
+        # reassign to trigger the compute method
+        invoices = invoice_1 + invoice_2 + invoice_3
+        invoices.ref = invoice_1.ref
+
+        # test constrains: batch without any previous posted invoice
+        with self.assertRaises(RedirectWarning):
+            (invoice_1 + invoice_2 + invoice_3).action_post()
+
+        # test constrains: batch with one previous posted invoice
+        invoice_1.action_post()
+        with self.assertRaises(RedirectWarning):
+            (invoice_2 + invoice_3).action_post()
+
+        # test constrains: single with one previous posted invoice
+        with self.assertRaises(RedirectWarning):
+            invoice_2.action_post()
 
     def test_in_invoice_switch_in_refund_1(self):
         # Test creating an account_move with an in_invoice_type and switch it in an in_refund.
