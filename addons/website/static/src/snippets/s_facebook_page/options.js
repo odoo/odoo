@@ -17,9 +17,9 @@ options.registry.facebookPage = options.Class.extend({
             height: 215,
             width: 350,
             tabs: '',
-            small_header: true,
-            hide_cover: true,
-            show_facepile: false,
+            small_header: 'true',
+            hide_cover: 'true',
+            show_facepile: 'false',
         };
         this.fbData = _.defaults(_.pick(this.$target[0].dataset, _.keys(defaults)), defaults);
 
@@ -101,9 +101,9 @@ options.registry.facebookPage = options.Class.extend({
             if (this.fbData.tabs) {
                 this.fbData.height = this.fbData.tabs === 'events' ? 300 : 500;
             } else if (this.fbData.small_header) {
-                this.fbData.height = this.fbData.show_facepile ? 165 : 70;
+                this.fbData.height = this.fbData.show_facepile === 'true' ? 165 : 70;
             } else {
-                this.fbData.height = this.fbData.show_facepile ? 225 : 150;
+                this.fbData.height = this.fbData.show_facepile === 'true' ? 225 : 150;
             }
             _.each(this.fbData, (value, key) => {
                 this.$target[0].dataset[key] = value;
