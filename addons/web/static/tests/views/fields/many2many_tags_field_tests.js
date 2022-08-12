@@ -481,7 +481,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // First checks that default color 0 is rendered as 0 color
-        let badgeNode = target.querySelector(".o_tag.badge");
+        const badgeNode = target.querySelector(".o_tag.badge");
         assert.strictEqual(badgeNode.dataset.color, "0", "first tag color should be 0");
 
         // Update the color in readonly => write automatically
@@ -1538,6 +1538,25 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='timmy'] input").placeholder,
             "Placeholder"
+        );
+    });
+
+    QUnit.test("Many2ManyTagsField supports 'create' props to be a Boolean", async (assert) => {
+        patchWithCleanup(AutoComplete, {
+            timeout: 0,
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="timmy" widget="many2many_tags" placeholder="Placeholder" options="{'create': False }"/></form>`,
+        });
+
+        await click(target.querySelector(".o_field_many2many_tags input"));
+        assert.strictEqual(
+            target.querySelector(".o_field_many2many_tags .o-autocomplete--dropdown-menu")
+                .textContent,
+            "goldsilver"
         );
     });
 });
