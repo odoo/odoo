@@ -9,7 +9,7 @@
                 <field name="is_mailing_campaign_activated" invisible="1"/>
                 <button name="%(action_create_mass_mailings_from_campaign)d"
                     type="action" class="oe_highlight" attrs="{'invisible': [('is_mailing_campaign_activated', '=', False)]}"
-                    groups="mass_mailing.group_mass_mailing_user" string="Send new Mailing"/>
+                    groups="mass_mailing.group_mass_mailing_user" string="Send Mailing"/>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(action_view_mass_mailings_from_campaign)d"
@@ -17,63 +17,43 @@
                     attrs="{'invisible': ['|', ('mailing_mail_count', '=', 0), ('is_mailing_campaign_activated', '=', False)]}"
                     groups="mass_mailing.group_mass_mailing_user">
                     <field name="mailing_mail_count" widget="statinfo" string="Mailings"/>
+                    <field name="ab_testing_mailings_count" invisible="1"/>
                 </button>
             </xpath>
             <xpath expr="//notebook" position="inside">
                 <page string="Mailings" name="mailings"
                     attrs="{'invisible': ['|', ('mailing_mail_count', '=', 0), ('is_mailing_campaign_activated', '=', False)]}"
                     groups="mass_mailing.group_mass_mailing_user">
-                    <field name="mailing_mail_ids" readonly="1" nolabel="1">
+                    <field name="mailing_mail_ids" nolabel="1">
                         <tree>
-                            <field name="subject"/>
-                            <field name="sent_date"/>
-                            <field name="state"/>
-                            <field name="delivered"/>
-                            <field name="opened"/>
-                            <field name="replied"/>
-                            <field name="bounced"/>
+                            <field name="calendar_date" string="Date"/>
+                            <field name="subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                            <field name="mailing_model_id" string="Recipients" optional="hide"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="ab_testing_enabled" string="A/B Test"
+                                groups="mass_mailing.group_mass_mailing_campaign"
+                                attrs="{'column_invisible': [('parent.ab_testing_mailings_count', '=', 0)]}"/>
+                            <field name="campaign_id" string="Campaign" groups="mass_mailing.group_mass_mailing_campaign" optional="hide"/>
+                            <field name="received_ratio" string="Delivered (%)" avg="Average of Delivered"/>
+                            <field name="opened_ratio" string="Opened (%)" avg="Average of Opened"/>
+                            <field name="bounced_ratio" string="Bounced (%)" optional="hide" avg="Average of Bounced"/>
+                            <field name="clicks_ratio" string="Clicked (%)" avg="Average of Clicked"/>
+                            <field name="replied_ratio" string="Replied (%)" avg="Average of Replied"/>
+                            <field name="state" decoration-info="state in ('draft', 'in_queue')" decoration-success="state in ('sending', 'done')" widget="badge"/>
                             <button name="action_duplicate" type="object" string="Duplicate"/>
                         </tree>
                     </field>
-                    <div class="o_utm_campaign_mass_mailing_substats d-flex justify-content-end align-items-center">
-                        <div class="d-flex justify-content-end align-items-center flex-column">
-                            <label for="received_ratio" string="Delivered" class="m-0"/>
-                            <div class="m-0">
-                                <span class="text-end">
-                                    <field name="received_ratio"/>
-                                    <span>%</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end align-items-center flex-column">
-                            <label for="opened_ratio" string="Opened" class="m-0"/>
-                            <div class="m-0">
-                                <span class="text-end">
-                                    <field name="opened_ratio"/>
-                                    <span>%</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end align-items-center flex-column">
-                            <label for="replied_ratio" string="Replied" class="m-0"/>
-                            <div class="m-0">
-                                <span class="text-end">
-                                    <field name="replied_ratio"/>
-                                    <span>%</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end align-items-center flex-column">
-                            <label for="bounced_ratio" string="Bounced" class="m-0"/>
-                            <div class="m-0">
-                                <span class="text-end">
-                                    <field name="bounced_ratio"/>
-                                    <span>%</span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
                 </page>
+            </xpath>
+            <xpath expr="//notebook" position="after">
+                <group name="ab_test_group" groups="mass_mailing.group_mass_mailing_campaign" attrs="{'invisible': [('ab_testing_mailings_count', '=', 0)]}">
+                    <group string="A/B Test">
+                        <field name="ab_testing_completed" invisible="1"/>
+                        <field name="ab_testing_winner_selection" attrs="{'readonly': [('ab_testing_completed', '=', True)]}"/>
+                        <field name="ab_testing_schedule_datetime"
+                            attrs="{'invisible': [('ab_testing_winner_selection', '=', 'manual')], 'readonly': [('ab_testing_completed', '=', True)]}"/>
+                    </group>
+                </group>
             </xpath>
         </field>
     </record>
