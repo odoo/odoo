@@ -127,6 +127,7 @@ class SaleOrder(models.Model):
             'view_mode': 'kanban,form',
             'name': _('Projects'),
             'res_model': 'project.project',
+            "context": {'active_id': self.project_id.id}
         }
         if len(self.project_ids) == 1:
             action.update({'views': [(view_form_id, 'form')], 'res_id': self.project_ids.id})
