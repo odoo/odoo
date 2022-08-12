@@ -164,7 +164,7 @@ registerModel({
          */
         _computeIsEditable() {
             const hasWriteAccess = this.followedThread ? this.followedThread.hasWriteAccess : false;
-            return this.messaging.currentPartner === this.partner ? true : hasWriteAccess;
+            return this.messaging.currentPartner === this.partner ? this.followedThread.hasReadAccess : hasWriteAccess;
         },
     },
     fields: {

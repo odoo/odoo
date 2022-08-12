@@ -41,7 +41,7 @@ QUnit.test('base rendering', async function (assert) {
         "should have a schedule activity button in chatter menu"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachments`).length,
+        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
         1,
         "should have an attachments button in chatter menu"
     );
@@ -51,9 +51,9 @@ QUnit.test('base rendering', async function (assert) {
         "attachments button should not have a loader"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCount`).length,
+        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachmentsText`).length,
         1,
-        "attachments button should have a counter"
+        "attachments button should have a text"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatterTopbar_followerListMenu`).length,
@@ -88,7 +88,7 @@ QUnit.test('base disabled rendering', async function (assert) {
         "schedule activity should be disabled"
     );
     assert.ok(
-        document.querySelector(`.o_ChatterTopbar_buttonAttachments`).disabled,
+        document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
         "attachments button should be disabled"
     );
     assert.strictEqual(
@@ -97,14 +97,14 @@ QUnit.test('base disabled rendering', async function (assert) {
         "attachments button should not have a loader"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCount`).length,
+        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachmentsText`).length,
         1,
-        "attachments button should have a counter"
+        "attachments button should have a text"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ChatterTopbar_buttonAttachmentsCount`).textContent,
+        document.querySelector(`.o_ChatterTopbar_buttonAddAttachmentsText`).textContent,
         'Attach files',
-        "attachments button counter content should be 'Attach files'"
+        "Add attachments button content should be 'Attach files'"
     );
 });
 
@@ -134,7 +134,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
         "should have a chatter topbar"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachments`).length,
+        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
         1,
         "should have an attachments button in chatter menu"
     );
@@ -176,7 +176,7 @@ QUnit.test('attachment counter while loading attachments', async function (asser
         "should have a chatter topbar"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachments`).length,
+        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
         1,
         "should have an attachments button in chatter menu"
     );
@@ -217,7 +217,7 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
         "should have a chatter topbar"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachments`).length,
+        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
         1,
         "should have an attachments button in chatter menu"
     );
@@ -234,7 +234,7 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
 
     await afterNextRender(() => attachmentPromise.resolve());
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachments`).length,
+        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
         1,
         "should have an attachments button in chatter menu"
     );
@@ -244,7 +244,7 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
         "attachments button should not have a loader"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCount`).length,
+        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachmentsText`).length,
         1,
         "attachments button should have a counter"
     );
@@ -268,17 +268,17 @@ QUnit.test('attachment counter without attachments', async function (assert) {
         "should have a chatter topbar"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachments`).length,
+        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachments`).length,
         1,
         "should have an attachments button in chatter menu"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachmentsCount`).length,
+        document.querySelectorAll(`.o_ChatterTopbar_buttonAddAttachmentsText`).length,
         1,
         "attachments button should have a counter"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ChatterTopbar_buttonAttachmentsCount`).textContent,
+        document.querySelector(`.o_ChatterTopbar_buttonAddAttachmentsText`).textContent,
         'Attach files',
         'attachment counter content should contain "Attach files"'
     );
@@ -316,7 +316,7 @@ QUnit.test('attachment counter with attachments', async function (assert) {
         "should have a chatter topbar"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachments`).length,
+        document.querySelectorAll(`.o_ChatterTopbar_buttonToggleAttachments`).length,
         1,
         "should have an attachments button in chatter menu"
     );
@@ -361,7 +361,7 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
     );
     assert.containsOnce(
         document.body,
-        `.o_ChatterTopbar_buttonAttachments`,
+        `.o_ChatterTopbar_buttonAddAttachments`,
         "should have an attachments button in chatter menu"
     );
 
@@ -377,7 +377,7 @@ QUnit.test('composer state conserved when clicking on another topbar button', as
         "send message button should not be active"
     );
 
-    document.querySelector(`.o_ChatterTopbar_buttonAttachments`).click();
+    document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).click();
     await nextAnimationFrame();
     assert.containsOnce(
         document.body,
