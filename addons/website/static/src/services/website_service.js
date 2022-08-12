@@ -42,6 +42,8 @@ export const websiteService = {
         let blockingProcesses = [];
         let modelNamesProm = null;
         const modelNames = {};
+        let invalidateSnippetCache = false;
+        let lastWebsiteId = null;
 
         const context = reactive({
             showNewContentModal: false,
@@ -71,6 +73,10 @@ export const websiteService = {
         });
         return {
             set currentWebsiteId(id) {
+                if (id && id !== lastWebsiteId) {
+                    invalidateSnippetCache = true;
+                    lastWebsiteId = id;
+                }
                 currentWebsiteId = id;
                 websiteSystrayRegistry.trigger('EDIT-WEBSITE');
             },
@@ -166,6 +172,13 @@ export const websiteService = {
             set actionJsId(jsId) {
                 actionJsId = jsId;
             },
+            get invalidateSnippetCache() {
+                return invalidateSnippetCache;
+            },
+            set invalidateSnippetCache(value) {
+                invalidateSnippetCache = value;
+            },
+
             goToWebsite({ websiteId, path, edition, translation } = {}) {
                 action.doAction('website.website_preview', {
                     clearBreadcrumbs: true,
