@@ -464,7 +464,7 @@ class WebsiteSale(http.Controller):
         """
 
         if not (request.env.user.has_group('website.group_website_designer') or\
-            request.env.user.has_group('website.group_website_publisher')):
+            request.env.user.has_group('website.group_website_restricted_editor')):
             raise NotFound()
 
         image_ids = request.env["ir.attachment"].browse(i['id'] for i in images)
@@ -500,7 +500,7 @@ class WebsiteSale(http.Controller):
         Unlinks all images from the product.
         """
         if not (request.env.user.has_group('website.group_website_designer') or\
-            request.env.user.has_group('website.group_website_publisher')):
+            request.env.user.has_group('website.group_website_restricted_editor')):
             raise NotFound()
 
         product_product = request.env['product.product'].browse(int(product_product_id)) if product_product_id else False
@@ -520,7 +520,7 @@ class WebsiteSale(http.Controller):
         Delete or clear the product's image.
         """
         if not (request.env.user.has_group('website.group_website_designer') or\
-            request.env.user.has_group('website.group_website_publisher')) or\
+            request.env.user.has_group('website.group_website_restricted_editor')) or\
             image_res_model not in ['product.product', 'product.template', 'product.image']:
             raise NotFound()
 
@@ -535,7 +535,7 @@ class WebsiteSale(http.Controller):
     @http.route(['/shop/product/resequence-image'], type='json', auth='user', website=True)
     def resequence_product_image(self, image_res_model, image_res_id, move):
         if not (request.env.user.has_group('website.group_website_designer') or\
-            request.env.user.has_group('website.group_website_publisher')) or\
+            request.env.user.has_group('website.group_website_restricted_editor')) or\
             image_res_model not in ['product.product', 'product.template', 'product.image'] or\
             move not in ['first', 'left', 'right', 'last']:
             raise NotFound()
@@ -1377,7 +1377,7 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/config/product'], type='json', auth='user')
     def change_product_config(self, product_id, **options):
-        if not request.env.user.has_group('website.group_website_publisher'):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise NotFound()
 
         product = request.env['product.template'].browse(product_id)
@@ -1396,7 +1396,7 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/config/attribute'], type='json', auth='user')
     def change_attribute_config(self, attribute_id, **options):
-        if not request.env.user.has_group('website.group_website_publisher'):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise NotFound()
 
         attribute = request.env['product.attribute'].browse(attribute_id)
@@ -1405,7 +1405,7 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/config/website'], type='json', auth='user')
     def _change_website_config(self, **options):
-        if not request.env.user.has_group('website.group_website_publisher'):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise NotFound()
 
         current_website = request.env['website'].get_current_website()

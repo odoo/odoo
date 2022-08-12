@@ -95,7 +95,7 @@ class Website(Home):
         different session.
         """
         if not (request.env.user.has_group('website.group_multi_website')
-           and request.env.user.has_group('website.group_website_publisher')):
+           and request.env.user.has_group('website.group_website_restricted_editor')):
             # The user might not be logged in on the forced website, so he won't
             # have rights. We just redirect to the path as the user is already
             # on the domain (basically a no-op as it won't change domain or
@@ -626,7 +626,7 @@ class Website(Home):
 
     @http.route(['/website/get_seo_data'], type='json', auth="user", website=True)
     def get_seo_data(self, res_id, res_model):
-        if not request.env.user.has_group('website.group_website_publisher'):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
 
         fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']

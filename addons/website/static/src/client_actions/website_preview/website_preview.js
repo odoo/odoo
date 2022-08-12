@@ -174,7 +174,7 @@ export class WebsitePreview extends Component {
     }
 
     addWelcomeMessage() {
-        if (this.websiteService.isPublisher) {
+        if (this.websiteService.isRestrictedEditor) {
             const $wrap = $(this.iframe.el.contentDocument.querySelector('#wrapwrap.homepage')).find('#wrap');
             if ($wrap.length && $wrap.html().trim() === '') {
                 this.$welcomeMessage = $(core.qweb.render('website.homepage_editor_welcome_message'));

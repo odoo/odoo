@@ -60,7 +60,7 @@ patch(NavBar.prototype, 'website_navbar', {
         const filteredSections = [];
         for (const section of sections) {
             const isWebsiteCustomMenu = this.websiteEditingMenus[section.xmlid];
-            const displayWebsiteCustomMenu = isWebsiteCustomMenu && this.websiteService.isPublisher && this.websiteEditingMenus[section.xmlid].isDisplayed();
+            const displayWebsiteCustomMenu = isWebsiteCustomMenu && this.websiteService.isRestrictedEditor && this.websiteEditingMenus[section.xmlid].isDisplayed();
             if (!isWebsiteCustomMenu || displayWebsiteCustomMenu) {
                 let subSections = [];
                 if (section.childrenTree.length) {
@@ -76,7 +76,7 @@ patch(NavBar.prototype, 'website_navbar', {
      * @override
      */
     get systrayItems() {
-        if (this.websiteService.currentWebsite && this.websiteService.isPublisher) {
+        if (this.websiteService.currentWebsite && this.websiteService.isRestrictedEditor) {
             return websiteSystrayRegistry
                 .getEntries()
                 .map(([key, value], index) => ({ key, ...value, index }))
