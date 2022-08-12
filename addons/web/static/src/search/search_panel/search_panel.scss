@@ -24,6 +24,15 @@
     width: var(--SearchPanel-width, #{$o-search-panel-width});
     font-size: var(--SearchPanel-fontSize, #{$o-search-panel-font-size});
 
+    .o_search_panel_category_value,
+    .o_search_panel_filter_value input,
+    .o_search_panel_filter_value .o_search_panel_label_title,
+    .o_search_panel_group_header input,
+    .o_search_panel_group_header .o_search_panel_label_title
+    {
+        cursor: pointer;
+    }
+
     .o_toggle_fold {
         width: map-get($spacers, 4);
     }
