@@ -2421,7 +2421,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                         </tbody>
                     </table>
                 </div>
-                <div t-if="pager" class="o_portal_pager text-center">
+                <div t-if="pager" class="o_portal_pager d-flex justify-content-center">
                     <t t-call="website.pager"/>
                 </div>
             </div>
@@ -2458,7 +2458,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 <div t-if="results" class="table-responsive">
                     <t t-call="website.one_hybrid" t-foreach="results" t-as="result"/>
                 </div>
-                <div t-if="pager" class="o_portal_pager text-center">
+                <div t-if="pager" class="o_portal_pager d-flex justify-content-center">
                     <t t-call="website.pager"/>
                 </div>
             </div>
