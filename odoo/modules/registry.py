@@ -6,7 +6,7 @@
 """
 from collections import defaultdict, deque
 from collections.abc import Mapping
-from contextlib import closing, contextmanager
+from contextlib import closing, contextmanager, suppress
 from functools import partial
 from operator import attrgetter
 import logging
@@ -332,7 +332,7 @@ class Registry(Mapping):
             for field in Model._fields.values():
                 # dependencies of custom fields may not exist; ignore that case
                 exceptions = (Exception,) if field.base_field.manual else ()
-                with ignore(*exceptions):
+                with suppress(*exceptions):
                     dependencies[field] = OrderedSet(field.resolve_depends(self))
 
         # determine transitive dependencies
