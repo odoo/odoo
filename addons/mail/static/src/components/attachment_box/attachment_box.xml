@@ -18,7 +18,7 @@
                             record="attachmentBoxView.attachmentList"
                         />
                     </t>
-                    <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="attachmentBoxView.onClickAddAttachment">
+                    <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="attachmentBoxView.onClickAddAttachment" t-att-disabled="!attachmentBoxView.chatter.hasWriteAccess">
                         <i class="fa fa-plus-square"/>
                         Attach files
                     </button>

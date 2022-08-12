@@ -16,10 +16,10 @@ registerModel({
             if (!this.chatterOwner) {
                 return clear();
             }
-            return this.chatterOwner.isDisabled;
+            return !this.chatterOwner.hasReadAccess;
         },
         /**
-         * @param {MouseEvent} ev 
+         * @param {MouseEvent} ev
          */
         onClickFollow(ev) {
             if (!this.exists()) {

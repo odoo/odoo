@@ -301,7 +301,7 @@ QUnit.test('basic chatter rendering without followers', async function (assert) 
     );
     assert.containsOnce(
         document.body,
-        '.o_ChatterTopbar_buttonAttachments',
+        '.o_ChatterTopbar_buttonAddAttachments',
         "there should be an attachment button"
     );
     assert.containsOnce(
@@ -358,7 +358,7 @@ QUnit.test('basic chatter rendering without activities', async function (assert)
     );
     assert.containsOnce(
         document.body,
-        '.o_ChatterTopbar_buttonAttachments',
+        '.o_ChatterTopbar_buttonAddAttachments',
         "there should be an attachment button"
     );
     assert.containsNone(
@@ -415,7 +415,7 @@ QUnit.test('basic chatter rendering without messages', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_ChatterTopbar_buttonAttachments',
+        '.o_ChatterTopbar_buttonAddAttachments',
         "there should be an attachment button"
     );
     assert.containsOnce(
@@ -538,7 +538,7 @@ QUnit.test('chatter should become enabled when creation done', async function (a
         "log note button should be disabled"
     );
     assert.ok(
-        document.querySelector(`.o_ChatterTopbar_buttonAttachments`).disabled,
+        document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
         "attachments button should be disabled"
     );
 
@@ -554,7 +554,7 @@ QUnit.test('chatter should become enabled when creation done', async function (a
         "log note button should now be enabled"
     );
     assert.notOk(
-        document.querySelector(`.o_ChatterTopbar_buttonAttachments`).disabled,
+        document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
         "attachments button should now be enabled"
     );
 });

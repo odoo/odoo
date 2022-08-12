@@ -34,16 +34,16 @@ registerModel({
             this.update({ isShowingAttachmentsLoading: true });
         },
         /**
-         * Handles click on the attachments button.
-         *
-         * @param {MouseEvent} ev
+         * Handles click on the attach button.
          */
-        onClickButtonAttachments(ev) {
-            if (this.thread && this.thread.allAttachments.length === 0) {
-                this.fileUploader.openBrowserFileUploader();
-            } else {
-                this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : insertAndReplace() });
-            }
+        onClickButtonAddAttachments() {
+            this.fileUploader.openBrowserFileUploader();
+        },
+        /**
+         * Handles click on the attachments button.
+         */
+        onClickButtonToggleAttachments() {
+            this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : insertAndReplace() });
         },
         /**
          * Handles click on top bar close button.
@@ -233,6 +233,13 @@ registerModel({
          * @private
          * @returns {boolean}
          */
+        _computeHasReadAccess() {
+            return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasReadAccess);
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeHasThreadView() {
             return Boolean(this.thread && this.hasMessageList);
         },
@@ -240,8 +247,8 @@ registerModel({
          * @private
          * @returns {boolean}
          */
-        _computeIsDisabled() {
-            return Boolean(!this.thread || this.thread.isTemporary || !this.thread.hasReadAccess);
+        _computeHasWriteAccess() {
+            return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasWriteAccess);
         },
         /**
          * @private
@@ -411,11 +418,17 @@ registerModel({
         hasParentReloadOnMessagePosted: attr({
             default: false,
         }),
+        hasReadAccess: attr({
+            compute: '_computeHasReadAccess',
+        }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
         hasThreadView: attr({
             compute: '_computeHasThreadView',
+        }),
+        hasWriteAccess: attr({
+            compute: '_computeHasWriteAccess',
         }),
         hasTopbarCloseButton: attr({
             default: false,
@@ -433,10 +446,6 @@ registerModel({
          * Determiners whether the attachment box is visible initially.
          */
         isAttachmentBoxVisibleInitially: attr({
-            default: false,
-        }),
-        isDisabled: attr({
-            compute: '_computeIsDisabled',
             default: false,
         }),
         isInFormSheetBg: attr({

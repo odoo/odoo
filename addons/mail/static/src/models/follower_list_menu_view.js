@@ -43,7 +43,7 @@ registerModel({
          * @returns {Boolean}
          */
         _computeIsDisabled() {
-            return this.chatterOwner.isDisabled;
+            return !this.chatterOwner.hasReadAccess;
         }
     },
     fields: {
