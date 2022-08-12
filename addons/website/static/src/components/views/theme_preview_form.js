@@ -23,6 +23,7 @@ export function useLoaderOnClick() {
         async onClickViewButton(params) {
             const name = params.clickParams.name;
             if (['button_refresh_theme', 'button_choose_theme'].includes(name)) {
+                website.invalidateSnippetCache = true;
                 website.showLoader({ showTips: name !== 'button_refresh_theme' });
                 try {
                     const resParams = params.getResParams();
