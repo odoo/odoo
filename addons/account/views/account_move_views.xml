@@ -94,6 +94,7 @@
                 <kanban class="o_kanban_mobile" create="false" group_create="false">
                     <field name="company_currency_id"/>
                     <field name="partner_id"/>
+                    <field name="quantity"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -1048,6 +1049,8 @@
                                                 <field name="price_unit"/>
                                                 <field name="discount" string="Disc.%"/>
                                                 <field name="currency_id" invisible="1"/>
+                                                <field name="amount_currency" invisible="1"/>
+                                                <field name="recompute_tax_line" invisible="1" force_save="1"/>
                                             </group>
                                             <group>
                                                 <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
