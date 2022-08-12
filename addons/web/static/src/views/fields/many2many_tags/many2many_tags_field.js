@@ -145,7 +145,9 @@ export class Many2ManyTagsField extends Component {
     }
 
     onBadgeClick(ev, record) {
-        if (!this.canOpenColorDropdown) return;
+        if (!this.canOpenColorDropdown) {
+            return;
+        }
         const isClosed = !document.querySelector(".o_tag_popover");
         if (isClosed) {
             this.currentPopoverEl = null;
@@ -284,7 +286,7 @@ Many2ManyTagsField.props = {
     canEditColor: { type: Boolean, optional: true },
     canQuickCreate: { type: Boolean, optional: true },
     colorField: { type: String, optional: true },
-    createDomain: { type: Array, optional: true },
+    createDomain: { type: [Array, Boolean], optional: true },
     placeholder: { type: String, optional: true },
     relation: { type: String },
     nameCreateField: { type: String, optional: true },
