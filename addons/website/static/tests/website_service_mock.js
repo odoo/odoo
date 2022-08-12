@@ -13,7 +13,7 @@ function makeFakeWebsiteService() {
                 get context() {
                     return {};
                 },
-                get isPublisher() {
+                get isRestrictedEditor() {
                     return true;
                 },
                 get hasMultiWebsites() {

@@ -14,7 +14,7 @@ class Rating(models.Model):
 
     def write(self, values):
         if values.get('publisher_comment'):
-            if not self.env.user.has_group("website.group_website_publisher"):
+            if not self.env.user.has_group("website.group_website_restricted_editor"):
                 raise exceptions.AccessError(_("Only the publisher of the website can change the rating comment"))
             if not values.get('publisher_datetime'):
                 values['publisher_datetime'] = fields.Datetime.now()

@@ -268,7 +268,7 @@ class Http(models.AbstractModel):
                 path += '?' + request.httprequest.query_string.decode('utf-8')
             return request.redirect(path, code=301)
 
-        if page and (request.website.is_publisher() or page.is_visible):
+        if page and (request.website.is_restricted_editor() or page.is_visible):
             _, ext = os.path.splitext(req_page)
             response = request.render(page.view_id.id, {
                 'main_object': page,
@@ -318,7 +318,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_exception_code_values(cls, exception):
         code, values = super()._get_exception_code_values(exception)
-        if isinstance(exception, werkzeug.exceptions.NotFound) and request.website.is_publisher():
+        if isinstance(exception, werkzeug.exceptions.NotFound) and request.website.is_restricted_editor():
             code = 'page_404'
             values['path'] = request.httprequest.path[1:]
         if isinstance(exception, werkzeug.exceptions.Forbidden) and \
@@ -353,7 +353,7 @@ class Http(models.AbstractModel):
                     )
                     values['view'] = values['view'] and values['view'][0]
         # Needed to show reset template on translated pages (`_prepare_environment` will set it for main lang)
-        values['editable'] = request.uid and request.website.is_publisher()
+        values['editable'] = request.uid and request.website.is_restricted_editor()
         return values
 
     @classmethod
@@ -372,7 +372,7 @@ class Http(models.AbstractModel):
             'geoip_country_code': geoip_country_code,
             'geoip_phone_code': geoip_phone_code,
         })
-        if request.env.user.has_group('website.group_website_publisher'):
+        if request.env.user.has_group('website.group_website_restricted_editor'):
             session_info.update({
                 'website_id': request.website.id,
                 'website_company_id': request.website._get_cached('company_id'),

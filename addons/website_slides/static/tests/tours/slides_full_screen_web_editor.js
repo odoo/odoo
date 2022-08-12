@@ -4,7 +4,7 @@ import wTourUtils from 'website.tour_utils';
 
 /**
  * Global use case:
- * - a user (website publisher) lands on the fullscreen view of a course ;
+ * - a user (website restricted editor) lands on the fullscreen view of a course ;
  * - they click on the website editor "Edit" button ;
  * - they are redirected to the non-fullscreen view with the editor opened.
  *

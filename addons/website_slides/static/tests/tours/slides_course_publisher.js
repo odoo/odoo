@@ -5,7 +5,7 @@ import slidesTourTools from '@website_slides/../tests/tours/slides_tour_tools';
 
 /**
  * Global use case:
- * a user (website publisher) creates a course;
+ * a user (website restricted editor) creates a course;
  * they update it;
  * they create some lessons in it;
  * they publishe it;

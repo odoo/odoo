@@ -37,7 +37,7 @@ export const websiteService = {
         let editedObjectPath;
         let websiteRootInstance;
         let Wysiwyg;
-        let isPublisher;
+        let isRestrictedEditor;
         let isDesigner;
         let hasMultiWebsites;
         let actionJsId;
@@ -145,8 +145,8 @@ export const websiteService = {
             get editedObjectPath() {
                 return editedObjectPath;
             },
-            get isPublisher() {
-                return isPublisher === true;
+            get isRestrictedEditor() {
+                return isRestrictedEditor === true;
             },
             get isDesigner() {
                 return isDesigner === true;
@@ -178,8 +178,8 @@ export const websiteService = {
             },
             async fetchWebsites() {
                 // Fetch user groups, before fetching the websites.
-                [isPublisher, isDesigner, hasMultiWebsites] = await Promise.all([
-                    user.hasGroup('website.group_website_publisher'),
+                [isRestrictedEditor, isDesigner, hasMultiWebsites] = await Promise.all([
+                    user.hasGroup('website.group_website_restricted_editor'),
                     user.hasGroup('website.group_website_designer'),
                     user.hasGroup('website.group_multi_website'),
                 ]);
