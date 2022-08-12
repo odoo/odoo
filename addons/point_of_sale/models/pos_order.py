@@ -268,7 +268,7 @@ class PosOrder(models.Model):
         [('draft', 'New'), ('cancel', 'Cancelled'), ('paid', 'Paid'), ('done', 'Posted'), ('invoiced', 'Invoiced')],
         'Status', readonly=True, copy=False, default='draft')
 
-    account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False)
+    account_move = fields.Many2one('account.move', string='Invoice', readonly=True, copy=False, index=True)
     picking_ids = fields.One2many('stock.picking', 'pos_order_id')
     picking_count = fields.Integer(compute='_compute_picking_count')
     failed_pickings = fields.Boolean(compute='_compute_picking_count')
