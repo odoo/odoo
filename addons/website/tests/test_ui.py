@@ -142,9 +142,6 @@ class TestUi(odoo.tests.HttpCase):
         })
         self.start_tour(self.env['website'].get_client_action_url('/'), 'restricted_editor', login='restricted')
 
-    def test_03_backend_dashboard(self):
-        self.start_tour('/@/', 'backend_dashboard', login='admin')
-
     def test_04_website_navbar_menu(self):
         website = self.env['website'].search([], limit=1)
         self.env['website.menu'].create({
