@@ -1204,7 +1204,7 @@ class Channel(models.Model):
         else:
             all_channel_partners = self.env['mail.channel.partner'].with_context(active_test=False)
             channel_partners = all_channel_partners.search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
-            msg = _("You are in a private conversation with <b>@%s</b>.", html_escape(channel_partners[0].partner_id.name if channel_partners else _('Anonymous')))
+            msg = _("You are in a private conversation with <b>@%s</b>.", html_escape(_(" @").join(_(partners.partner_id.name) for partners in channel_partners) if channel_partners else _('Anonymous')))
         msg += self._execute_command_help_message_extra()
 
         self._send_transient_message(partner, msg)
