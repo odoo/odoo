@@ -364,7 +364,7 @@ class HrContract(models.Model):
     def _recompute_work_entries(self, date_from, date_to):
         self.ensure_one()
         wizard = self.env['hr.work.entry.regeneration.wizard'].create({
-            'employee_id': self.employee_id.id,
+            'employee_ids': [(4, self.employee_id.id)],
             'date_from': date_from,
             'date_to': date_to,
         })
