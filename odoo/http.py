@@ -725,7 +725,7 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
             # Skip this method if it is not @route decorated anywhere in
             # the hierarchy
             def is_method_a_route(cls):
-                return resolve_attr(cls, f'{method_name}.original_routing', None) is not None
+                return getattr(getattr(cls, method_name, None), 'original_routing', None) is not None
             if not any(map(is_method_a_route, type(ctrl).mro())):
                 continue
 

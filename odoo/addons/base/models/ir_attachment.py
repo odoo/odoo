@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import contextlib
 import hashlib
 import io
 import itertools
@@ -148,7 +149,7 @@ class IrAttachment(models.Model):
         if not os.path.exists(full_path):
             dirname = os.path.dirname(full_path)
             if not os.path.isdir(dirname):
-                with tools.ignore(OSError):
+                with contextlib.suppress(OSError):
                     os.makedirs(dirname)
             open(full_path, 'ab').close()
 
@@ -206,7 +207,7 @@ class IrAttachment(models.Model):
                         removed += 1
                     except (OSError, IOError):
                         _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
-                with tools.ignore(OSError):
+                with contextlib.suppress(OSError):
                     os.unlink(filepath)
 
         _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
