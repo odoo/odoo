@@ -8,6 +8,7 @@ import {
     getTag,
 } from "@web/core/utils/xml";
 import { toStringExpression } from "./utils";
+import { useDebugCategory, useEnvDebugContext } from "@web/core/debug/debug_context";
 
 /**
  * @typedef Compiler
@@ -449,6 +450,17 @@ export class ViewCompiler {
     }
 }
 
+function debugViewCompiler(templates) {
+    const debugContext = useEnvDebugContext();
+    const contexts = debugContext.categories.get("view_compiler");
+    const nextTemplates = {};
+    if (contexts) {
+        contexts.forEach(({ templates }) => Object.assign(nextTemplates, templates));
+    }
+    Object.assign(nextTemplates, templates);
+    useDebugCategory("view_compiler", { templates: nextTemplates });
+}
+
 /**
  * @param {typeof ViewCompiler} ViewCompiler
  * @param {string} rawArch
@@ -468,5 +480,7 @@ export function useViewCompiler(ViewCompiler, rawArch, templates, params) {
             compiledTemplates[key] = xml`${compiledDoc.outerHTML}`;
         }
     }
+    debugViewCompiler(compiledTemplates);
+
     return { ...compiledTemplates };
 }

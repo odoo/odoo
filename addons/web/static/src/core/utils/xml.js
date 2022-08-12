@@ -158,3 +158,35 @@ export function setAttributes(node, attributes) {
         node.setAttribute(name, value);
     }
 }
+
+function indentXML(node, spaces = 2, level = 0) {
+    // trim existing spaces and new lines, as owl would anyway
+    for (const child of node.childNodes) {
+        if (child.nodeType === 3 && !(child.innerText && child.innerText.trim())) {
+            child.remove();
+        } else if (child.nodeType === 3) {
+            child.innerText = child.innerText.trim();
+        }
+    }
+
+    for (const c of node.children) {
+        c.before(xmlDocument.createTextNode("\n"));
+        indentXML(c, spaces, level + 1);
+    }
+    const actualSpaces = new Array(spaces * level).join(" ");
+    if (actualSpaces) {
+        node.before(xmlDocument.createTextNode(actualSpaces));
+    }
+
+    if (node.children.length) {
+        node.append(xmlDocument.createTextNode("\n"));
+        node.append(xmlDocument.createTextNode(actualSpaces));
+    }
+    return node;
+}
+
+export function indentFromString(string, spaces = 2) {
+    const doc = parser.parseFromString(string, "text/xml");
+    const indented = indentXML(doc.firstChild, spaces);
+    return new XMLSerializer().serializeToString(indented);
+}

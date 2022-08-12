@@ -34,10 +34,10 @@ export class FormRenderer extends Component {
         useBounceButton(useRef("compiled_view_root"), (target) => {
             return !record.isInEdition && !!target.closest(".oe_title, .o_inner_group");
         });
-        this.uiService = useService('ui');
+        this.uiService = useService("ui");
         this.onResize = useDebounced(this.render, 200);
-        onMounted(() => browser.addEventListener('resize', this.onResize));
-        onWillUnmount(() => browser.removeEventListener('resize', this.onResize));
+        onMounted(() => browser.addEventListener("resize", this.onResize));
+        onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
     }
 
     evalDomainFromRecord(record, expr) {
