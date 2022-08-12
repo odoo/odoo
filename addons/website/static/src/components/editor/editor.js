@@ -22,6 +22,14 @@ export class WebsiteEditorComponent extends Component {
         });
         this.wysiwygOptions = {};
 
+        // TODO: This is done here because the snippet menu cannot access
+        // OWL services. Once it can, the logic for invalidating the
+        // cache should probably be moved there.
+        if (this.websiteService.invalidateSnippetCache) {
+            this.wysiwygOptions.invalidateSnippetCache = true;
+            this.websiteService.invalidateSnippetCache = false;
+        }
+
         useChildSubEnv(legacyEnv);
 
         onWillStart(async () => {

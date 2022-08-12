@@ -317,3 +317,17 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_23_website_multi_edition(self):
         self.start_tour('/@?enable_editor=1', 'website_multi_edition', login='admin')
+
+    def test_24_snippet_cache_across_websites(self):
+        default_website = self.env.ref('website.default_website')
+        self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
+            name='custom_snippet_test',
+            arch="""
+                <section class="s_text_block">
+                    <div class="custom_snippet_website_1">Custom Snippet Website 1</div>
+                </section>
+            """,
+            thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
+            snippet_key='s_text_block',
+            template_key='website.snippets')
+        self.start_tour('/@/', 'snippet_cache_across_websites', login='admin')
