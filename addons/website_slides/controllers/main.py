@@ -130,7 +130,7 @@ class WebsiteSlides(WebsiteProfile):
                     'id': answer.id,
                     'text_value': answer.text_value,
                     'is_correct': answer.is_correct if slide_completed or request.website.is_publisher() else None,
-                    'comment': answer.comment if request.website.is_publisher else None
+                    'comment': answer.comment if request.website.is_publisher() else None
                 } for answer in question.sudo().answer_ids],
             } for question in slide.question_ids]
         }
