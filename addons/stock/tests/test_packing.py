@@ -1196,3 +1196,41 @@ class TestPacking(TestPackingCommon):
             {'product_id': self.productA.id, 'product_uom_qty': 50, 'qty_done': 0, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_02.id},
             {'product_id': self.productB.id, 'product_uom_qty': 50, 'qty_done': 0, 'result_package_id': package_02.id, 'location_dest_id': sub_loc_02.id},
         ])
+
+    def test_rounding_and_reserved_qty(self):
+        """
+        Basic use case: deliver a storable product put in two packages. This
+        test actually ensures that the process 'put in pack' handles some
+        possible issues with the floating point representation
+        """
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 0.4)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_lines': [(0, 0, {
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 0.4,
+                'product_uom': self.productA.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'picking_type_id': self.warehouse.out_type_id.id,
+            })],
+        })
+        picking.action_confirm()
+
+        picking.move_line_ids.qty_done = 0.3
+        picking.action_put_in_pack()
+
+        picking.move_line_ids.filtered(lambda ml: not ml.result_package_id).qty_done = 0.1
+        picking.action_put_in_pack()
+
+        quant = self.env['stock.quant'].search([('product_id', '=', self.productA.id), ('location_id', '=', self.stock_location.id)])
+        self.assertEqual(quant.available_quantity, 0)
+
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        self.assertEqual(picking.move_lines.quantity_done, 0.4)
+        self.assertEqual(len(picking.move_line_ids.result_package_id), 2)
