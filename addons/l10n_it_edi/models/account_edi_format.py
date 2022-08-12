@@ -375,6 +375,32 @@ class AccountEdiFormat(models.Model):
                 return self._import_fattura_pa(decoded_content, invoice)
         return super()._update_invoice_from_binary(filename, content, extension, invoice)
 
+    def _l10n_it_get_partner_invoice(self, tree, company):
+        # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
+        elements = tree.xpath('//CedentePrestatore//IdCodice')
+        partner = elements and self.env['res.partner'].search(
+            ['&', ('vat', 'ilike', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)],
+            limit=1)
+        if not partner:
+            elements = tree.xpath('//CedentePrestatore//CodiceFiscale')
+            if elements:
+                codice = elements[0].text
+                domains = [[('l10n_it_codice_fiscale', '=', codice)]]
+                if re.match(r'^[0-9]{11}$', codice):
+                    domains.append([('l10n_it_codice_fiscale', '=', 'IT' + codice)])
+                elif re.match(r'^IT[0-9]{11}$', codice):
+                    domains.append([('l10n_it_codice_fiscale', '=',
+                                     self.env['res.partner']._l10n_it_normalize_codice_fiscale(codice))])
+                partner = elements and self.env['res.partner'].search(
+                    AND([OR(domains), OR([[('company_id', '=', company.id)], [('company_id', '=', False)]])]), limit=1)
+        if not partner:
+            elements = tree.xpath('//DatiTrasmissione//Email')
+            partner = elements and self.env['res.partner'].search(
+                ['&', '|', ('email', '=', elements[0].text), ('l10n_it_pec_email', '=', elements[0].text), '|',
+                 ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
+
+        return partner
+
     def _import_fattura_pa(self, tree, invoice):
         """ Decodes a fattura_pa invoice into an invoice.
 
@@ -432,23 +458,8 @@ class AccountEdiFormat(models.Model):
             with invoice_ctx._get_edi_creation() as invoice_form:
                 message_to_log = []
 
-                # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
-                elements = tree.xpath('//CedentePrestatore//IdCodice')
-                partner = elements and self.env['res.partner'].search(['&', ('vat', 'ilike', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
-                if not partner:
-                    elements = tree.xpath('//CedentePrestatore//CodiceFiscale')
-                    if elements:
-                        codice = elements[0].text
-                        domains = [[('l10n_it_codice_fiscale', '=', codice)]]
-                        if re.match(r'^[0-9]{11}$', codice):
-                            domains.append([('l10n_it_codice_fiscale', '=', 'IT' + codice)])
-                        elif re.match(r'^IT[0-9]{11}$', codice):
-                            domains.append([('l10n_it_codice_fiscale', '=', self.env['res.partner']._l10n_it_normalize_codice_fiscale(codice))])
-                        partner = elements and self.env['res.partner'].search(
-                            AND([OR(domains), OR([[('company_id', '=', company.id)], [('company_id', '=', False)]])]), limit=1)
-                if not partner:
-                    elements = tree.xpath('//DatiTrasmissione//Email')
-                    partner = elements and self.env['res.partner'].search(['&', '|', ('email', '=', elements[0].text), ('l10n_it_pec_email', '=', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
+                partner = self._l10n_it_get_partner_invoice(tree, company)
+
                 if partner:
                     invoice_form.partner_id = partner
                 else:
