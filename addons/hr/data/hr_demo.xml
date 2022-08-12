@@ -13,7 +13,7 @@
       </record>
 
       <record id="dep_rd_be" model="hr.department">
-          <field name="name">R&amp;D Belgium</field>
+          <field name="name">R&amp;D USA</field>
           <field name="parent_id" ref="dep_rd"/>
       </record>
 
@@ -162,6 +162,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="phone">+1 555-555-5555</field>
           <field name="email">admin@yourcompany.example.com</field>
           <field name="create_date">2010-01-01 00:00:00</field>
+          <field name="type">private</field>
       </record>
       <record id="res_partner_demo_private_address" model="res.partner">
           <field name="name">Mark Demo</field>
@@ -201,6 +202,13 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="create_date">2010-01-01 00:00:00</field>
       </record>
 
+        <record id="res_partner_mit_private_address" model="res.partner">
+            <field name="name">Anital Oliver</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">anita.oliver00@example.com</field>
+            <field name="type">private</field>
+        </record>
+
       <record id="employee_mit" model="hr.employee">
           <field name="name">Anita Oliver</field>
           <field name="department_id" ref="dep_rd_be"/>
@@ -208,6 +216,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="job_id" ref="hr.job_developer"/>
           <field name="job_title">Experienced Developer</field>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4')])]"/>
+          <field name="address_home_id" ref="hr.res_partner_mit_private_address"/>
           <field name="work_location_id" ref="work_location_1"/>
           <field name="work_phone">(538)-497-4804</field>
           <field name="mobile_phone">(538)-672-3185</field>
@@ -288,6 +297,13 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="create_date">2010-01-01 00:00:00</field>
       </record>
 
+        <record id="res_partner_fpi_private_address" model="res.partner">
+            <field name="name">Audrey Peterson</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">Audrey.peterson2020@example.com</field>
+            <field name="type">private</field>
+        </record>
+
       <record id="employee_fpi" model="hr.employee">
           <field name="name">Audrey Peterson</field>
           <field name="department_id" ref="dep_ps"/>
@@ -295,6 +311,7 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="job_id" ref="hr.job_consultant"/>
           <field name="job_title">Consultant</field>
           <field name="category_ids" eval="[(6, 0, [ref('employee_category_4'), ref('employee_category_5')])]"/>
+          <field name="address_home_id" ref="hr.res_partner_fpi_private_address"/>
           <field name="work_location_id" ref="work_location_1"/>
           <field name="work_phone">(203)-276-7903</field>
           <field name="work_email">audrey.peterson25@example.com</field>
@@ -368,11 +385,19 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="create_date">2010-01-01 00:00:00</field>
       </record>
 
+        <record id="res_partner_jep_private_address" model="res.partner">
+            <field name="name">Doris Cole</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">Doris.cole.LoveSong@example.com</field>
+            <field name="type">private</field>
+        </record>
+
       <record id="employee_jep" model="hr.employee">
           <field name="name">Doris Cole</field>
           <field name="department_id" ref="dep_ps"/>
           <field name="job_id" ref="hr.job_consultant"/>
           <field name="job_title">Consultant</field>
+          <field name="address_home_id" ref="hr.res_partner_jep_private_address"/>
           <field name="work_location_id" ref="work_location_1"/>
           <field name="work_phone">(883)-331-5378</field>
           <field name="work_email">doris.cole31@example.com</field>
@@ -392,11 +417,19 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="create_date">2010-01-01 00:00:00</field>
       </record>
 
+        <record id="res_partner_jog_private_address" model="res.partner">
+            <field name="name">Beth Evans</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">beth.evans@example.com</field>
+            <field name="type">private</field>
+        </record>
+
       <record id="employee_jog" model="hr.employee">
           <field name="name">Beth Evans</field>
           <field name="department_id" ref="dep_rd"/>
           <field name="job_id" ref="hr.job_developer"/>
           <field name="job_title">Experienced Developer</field>
+          <field name="address_home_id" ref="hr.res_partner_jog_private_address"/>
           <field name="work_location_id" ref="work_location_1"/>
           <field name="work_phone">(754)-532-3841</field>
           <field name="work_email">beth.evans77@example.com</field>
@@ -428,16 +461,25 @@ If you have development competencies, we can propose you specific traineeships</
           <field name="create_date">2010-01-01 00:00:00</field>
       </record>
 
+        <record id="res_partner_hne_private_address" model="res.partner">
+            <field name="name">Abigail Peterson</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">abigail.peterson33@example.com</field>
+            <field name="type">private</field>
+        </record>
+
       <record id="employee_hne" model="hr.employee">
           <field name="name">Abigail Peterson</field>
           <field name="department_id" ref="dep_ps"/>
           <field name="job_id" ref="hr.job_consultant"/>
           <field name="job_title">Consultant</field>
+          <field name="address_home_id" ref="hr.res_partner_hne_private_address"/>
           <field name="work_location_id" ref="work_location_1"/>
           <field name="work_email">abigail.peterson39@example.com</field>
           <field name="work_phone">(482)-233-3393</field>
           <field name="image_1920" type="base64" file="hr/static/img/employee_hne-image.jpg"/>
           <field name="create_date">2010-01-01 00:00:00</field>
+          <field name="marital">married</field>
       </record>
     </data>
 </odoo>
