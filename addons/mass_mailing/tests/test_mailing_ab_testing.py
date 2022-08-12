@@ -103,10 +103,34 @@ class TestMailingABTesting(MassMailCommon):
         })
         ab_mailing.invalidate_recordset()
 
-        # Check if the campaign is correclty created and the values set on the mailing are still the same
+        # Check if the campaign is correctly created and the values set on the mailing are still the same
         self.assertTrue(ab_mailing.campaign_id, "A campaign id is present for the A/B test mailing")
         self.assertEqual(ab_mailing.ab_testing_winner_selection, 'manual', "The selection winner has been propagated correctly")
         self.assertEqual(ab_mailing.ab_testing_schedule_datetime, schedule_datetime, "The schedule date has been propagated correctly")
+
+        # Check that while enabling the A/B testing, if campaign is already set, new one should not be created
+        created_mailing_campaign = ab_mailing.campaign_id
+        ab_mailing.ab_testing_enabled = False
+        ab_mailing.ab_testing_enabled = True
+        self.assertEqual(ab_mailing.campaign_id, created_mailing_campaign, "No new campaign should have been created")
+
+        # Check that while enabling the A/B testing, if user manually selects a campaign, it should be saved
+        # rather than being replaced with the automatically created one
+        ab_mailing.write({'ab_testing_enabled': False, 'campaign_id': False})
+        ab_mailing.write({'ab_testing_enabled': True, 'campaign_id': created_mailing_campaign})
+        self.assertEqual(ab_mailing.campaign_id, created_mailing_campaign, "No new campaign should have been created")
+
+        ab_mailing_2 = self.env['mailing.mailing'].create({
+            'subject': 'A/B Testing V2',
+            'contact_list_ids': self.mailing_list.ids,
+        })
+        ab_mailing_2.invalidate_recordset()
+
+        ab_mailing_2.ab_testing_enabled = True
+        # Check if the campaign is correctly created with default values
+        self.assertTrue(ab_mailing.campaign_id, "A campaign id is present for the A/B test mailing")
+        self.assertTrue(ab_mailing.ab_testing_winner_selection, "The selection winner has been set to default value")
+        self.assertTrue(ab_mailing.ab_testing_schedule_datetime, "The schedule date has been set to default value")
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('user_marketing')

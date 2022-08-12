@@ -18,6 +18,7 @@ class UtmCampaign(models.Model):
         groups="mass_mailing.group_mass_mailing_user")
 
     # A/B Testing
+    ab_testing_mailings_sms_count = fields.Integer("A/B Test Mailings SMS #", compute="_compute_mailing_sms_count")
     ab_testing_sms_winner_selection = fields.Selection([
         ('manual', 'Manual'),
         ('clicks_ratio', 'Highest Click Rate')], string="SMS Winner Selection", default="clicks_ratio")
@@ -32,8 +33,25 @@ class UtmCampaign(models.Model):
 
     @api.depends('mailing_sms_ids')
     def _compute_mailing_sms_count(self):
+        if self.ids:
+            mailing_sms_data = self.env['mailing.mailing'].read_group(
+                [('campaign_id', 'in', self.ids), ('mailing_type', '=', 'sms')],
+                ['campaign_id', 'ab_testing_enabled'],
+                ['campaign_id', 'ab_testing_enabled'],
+                lazy=False,
+            )
+            ab_testing_mapped_sms_data = {}
+            mapped_sms_data = {}
+            for data in mailing_sms_data:
+                if data['ab_testing_enabled']:
+                    ab_testing_mapped_sms_data.setdefault(data['campaign_id'][0], []).append(data['__count'])
+                mapped_sms_data.setdefault(data['campaign_id'][0], []).append(data['__count'])
+        else:
+            mapped_sms_data = dict()
+            ab_testing_mapped_sms_data = dict()
         for campaign in self:
-            campaign.mailing_sms_count = len(campaign.mailing_sms_ids)
+            campaign.mailing_sms_count = sum(mapped_sms_data.get(campaign._origin.id or campaign.id, []))
+            campaign.ab_testing_mailings_sms_count = sum(ab_testing_mapped_sms_data.get(campaign._origin.id or campaign.id, []))
 
     def action_create_mass_sms(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.action_create_mass_mailings_from_campaign")
