@@ -75,10 +75,21 @@
         <field name="model">fleet.vehicle</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='driver_id']" position="after">
+            <xpath expr="//field[@name='license_plate']" position="after">
                 <field name="mobility_card"/>
+            </xpath>
+            <xpath expr="//field[@name='driver_id']" position="after">
                 <field name="driver_employee_id" string="Current Driver (Employee)"/>
-                <field name="future_driver_employee_id" string="Future Driver (Employee)"/>
+            </xpath>
+            <xpath expr="//field[@name='log_drivers']" position="attributes">
+                <attribute name="filter_domain">[
+                    '|', '|', '|', '|',
+                    ('log_drivers.driver_id.name', 'ilike', self),
+                    ('driver_id.name', 'ilike', self),
+                    ('future_driver_id.name', 'ilike', self),
+                    ('driver_employee_id.name', 'ilike', self),
+                    ('future_driver_employee_id.name', 'ilike', self),
+                ]</attribute>
             </xpath>
         </field>
     </record>

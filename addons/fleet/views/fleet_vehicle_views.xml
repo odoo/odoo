@@ -206,12 +206,17 @@
         <field name="arch" type="xml">
             <search string="All vehicles">
                 <field string="Vehicle" name="name" filter_domain="['|', ('name', 'ilike', self), ('license_plate', 'ilike', self)]"/>
-                <field string="Drivers" name="log_drivers" filter_domain="[('log_drivers.driver_id.name', 'ilike', self)]"/>
-                <field string="Current Driver" name="driver_id"/>
+                <field string="Drivers" name="log_drivers" filter_domain="[
+                    '|', '|',
+                    ('log_drivers.driver_id', 'ilike', self),
+                    ('driver_id', 'ilike', self),
+                    ('future_driver_id', 'ilike', self),
+                ]"/>
                 <field string="Model" name="model_id"/>
                 <field string="License Plate" name="license_plate"/>
                 <field name="tag_ids"/>
                 <field string="Status" name="state_id"/>
+                <field string="Current Driver" name="driver_id"/>
                 <filter string="Available" name="available"
                     domain="['&amp;', ('future_driver_id', '=', False), '|', ('driver_id', '=', False), '|', '&amp;', ('plan_to_change_car', '=', True), ('vehicle_type', '=', 'car'), '&amp;', ('plan_to_change_bike', '=', True), ('vehicle_type', '=', 'bike')]"/>
                 <filter string="Bikes" name="bikes" domain="[('vehicle_type', '=', 'bike')]"/>
