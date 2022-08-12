@@ -85,6 +85,35 @@ class TestMrpByProduct(common.TransactionCase):
         # I see that stock moves of External Hard Disk including Headset USB are done now.
         self.assertFalse(any(move.state != 'done' for move in moves), 'Moves are not done!')
 
+    def test_01_mrp_byproduct(self):
+        self.env["stock.quant"].create({
+            "product_id": self.product_c_id,
+            "location_id": self.warehouse.lot_stock_id.id,
+            "quantity": 4,
+        })
+        bom_product_a = self.MrpBom.create({
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'product_uom_id': self.uom_unit_id,
+            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})]
+            })
+        mnf_product_a_form = Form(self.env['mrp.production'])
+        mnf_product_a_form.product_id = self.product_a
+        mnf_product_a_form.bom_id = bom_product_a
+        mnf_product_a_form.product_qty = 2.0
+        mnf_product_a = mnf_product_a_form.save()
+        mnf_product_a.action_confirm()
+        self.assertEqual(mnf_product_a.state, "confirmed")
+        mnf_product_a.move_raw_ids._action_assign()
+        mnf_product_a.move_raw_ids.quantity_done = mnf_product_a.move_raw_ids.product_uom_qty
+        mnf_product_a.move_raw_ids._action_done()
+        self.assertEqual(mnf_product_a.state, "progress")
+        mnf_product_a.qty_producing = 2
+        mnf_product_a.button_mark_done()
+        self.assertTrue(mnf_product_a.move_finished_ids)
+        self.assertEqual(mnf_product_a.state, "done")
+
     def test_change_product(self):
         """ Create a production order for a specific product with a BoM. Then change the BoM and the finished product for
         other ones and check the finished product of the first mo did not became a byproduct of the second one."""
