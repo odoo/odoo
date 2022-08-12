@@ -206,7 +206,7 @@ QUnit.test('show attachment box', async function (assert) {
         "should have a chatter topbar"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ChatterTopbar_buttonAttachments`).length,
+        document.querySelectorAll(`.o_ChatterTopbar_buttonToggleAttachments`).length,
         1,
         "should have an attachments button in chatter topbar"
     );
@@ -221,7 +221,7 @@ QUnit.test('show attachment box', async function (assert) {
         "should not have an attachment box in the chatter"
     );
 
-    await click(`.o_ChatterTopbar_buttonAttachments`);
+    await click(`.o_ChatterTopbar_buttonToggleAttachments`);
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter_attachmentBox`).length,
         1,
