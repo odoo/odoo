@@ -8,7 +8,7 @@ from collections import defaultdict
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models, SUPERUSER_ID
+from odoo import _, api, exceptions, fields, models
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import safe_eval
 
@@ -49,50 +49,116 @@ class BaseAutomation(models.Model):
         ('on_change', 'Based on Form Modification'),
         ('on_time', 'Based on Timed Condition')
         ], string='Trigger', required=True)
-    trg_date_id = fields.Many2one('ir.model.fields', string='Trigger Date',
-                                  help="""When should the condition be triggered.
-                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update.""",
-                                  domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]")
-    trg_date_range = fields.Integer(string='Delay after trigger date',
-                                    help="""Delay after the trigger date.
-                                    You can put a negative number if you need a delay before the
-                                    trigger date, like sending a reminder 15 minutes before a meeting.""")
-    trg_date_range_type = fields.Selection([('minutes', 'Minutes'), ('hour', 'Hours'), ('day', 'Days'), ('month', 'Months')],
-                                           string='Delay type', default='hour')
-    trg_date_calendar_id = fields.Many2one("resource.calendar", string='Use Calendar',
-                                            help="When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days.")
-    filter_pre_domain = fields.Char(string='Before Update Domain',
-                                    help="If present, this condition must be satisfied before the update of the record.")
+    trg_date_id = fields.Many2one(
+        'ir.model.fields', string='Trigger Date',
+        compute='_compute_trg_date_id',
+        readonly=False, store=True,
+        domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]",
+        help="""When should the condition be triggered.
+                If present, will be checked by the scheduler. If empty, will be checked at creation and update.""")
+    trg_date_range = fields.Integer(
+        string='Delay after trigger date',
+        compute='_compute_trg_date_range_data',
+        readonly=False, store=True,
+        help="""Delay after the trigger date.
+        You can put a negative number if you need a delay before the
+        trigger date, like sending a reminder 15 minutes before a meeting.""")
+    trg_date_range_type = fields.Selection(
+        [('minutes', 'Minutes'), ('hour', 'Hours'), ('day', 'Days'), ('month', 'Months')],
+        string='Delay type',
+        compute='_compute_trg_date_range_data',
+        readonly=False, store=True)
+    trg_date_calendar_id = fields.Many2one(
+        "resource.calendar", string='Use Calendar',
+        compute='_compute_trg_date_calendar_id',
+        readonly=False, store=True,
+        help="When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days.")
+    filter_pre_domain = fields.Char(
+        string='Before Update Domain',
+        compute='_compute_filter_pre_domain',
+        readonly=False, store=True,
+        help="If present, this condition must be satisfied before the update of the record.")
     filter_domain = fields.Char(string='Apply on', help="If present, this condition must be satisfied before executing the action rule.")
     last_run = fields.Datetime(readonly=True, copy=False)
     on_change_field_ids = fields.Many2many(
         "ir.model.fields",
         relation="base_automation_onchange_fields_rel",
+        compute='_compute_on_change_field_ids',
+        readonly=False, store=True,
         string="On Change Fields Trigger",
         help="Fields that trigger the onchange.",
     )
-    trigger_field_ids = fields.Many2many('ir.model.fields', string='Trigger Fields',
-                                        help="The action will be triggered if and only if one of these fields is updated."
-                                             "If empty, all fields are watched.")
+    trigger_field_ids = fields.Many2many(
+        'ir.model.fields', string='Trigger Fields',
+        compute='_compute_trigger_field_ids', readonly=False, store=True,
+        help="The action will be triggered if and only if one of these fields is updated. If empty, all fields are watched.")
     least_delay_msg = fields.Char(compute='_compute_least_delay_msg')
 
     # which fields have an impact on the registry and the cron
     CRITICAL_FIELDS = ['model_id', 'active', 'trigger', 'on_change_field_ids']
     RANGE_FIELDS = ['trg_date_range', 'trg_date_range_type']
 
-    @api.onchange('model_id')
-    def onchange_model_id(self):
-        self.model_name = self.model_id.model
+    @api.constrains('trigger', 'state')
+    def _check_trigger_state(self):
+        if any(action.trigger == 'on_change' and action.state != 'code' for action in self):
+            raise exceptions.ValidationError(
+                _('Form Modification based actions can only be used with code action type.')
+            )
+        if any(action.trigger == 'on_unlink' and action.state in ['mail_post', 'followers', 'next_activity'] for action in self):
+            raise exceptions.ValidationError(
+                _('Email, followers or activities action types cannot be used when deleting records.')
+            )
 
-    @api.onchange('trigger')
-    def onchange_trigger(self):
-        if self.trigger in ['on_create', 'on_create_or_write', 'on_unlink']:
-            self.filter_pre_domain = self.trg_date_id = self.trg_date_range = self.trg_date_range_type = False
-        elif self.trigger in ['on_write', 'on_create_or_write']:
-            self.trg_date_id = self.trg_date_range = self.trg_date_range_type = False
-        elif self.trigger == 'on_time':
-            self.filter_pre_domain = False
-            self.trg_date_range_type = 'hour'
+    @api.depends('model_id', 'trigger')
+    def _compute_trg_date_id(self):
+        invalid = self.filtered(
+            lambda act: act.trigger != 'on_time' or \
+                        (act.model_id and act.trg_date_id.model_id != act.model_id)
+        )
+        if invalid:
+            invalid.trg_date_id = False
+
+    @api.depends('trigger')
+    def _compute_trg_date_range_data(self):
+        not_timed = self.filtered(lambda act: act.trigger != 'on_time')
+        if not_timed:
+            not_timed.trg_date_range = False
+            not_timed.trg_date_range_type = False
+        remaining = (self - not_timed).filtered(lambda act: not act.trg_date_range_type)
+        if remaining:
+            remaining.trg_date_range_type = 'hour'
+
+    @api.depends('trigger', 'trg_date_id', 'trg_date_range_type')
+    def _compute_trg_date_calendar_id(self):
+        invalid = self.filtered(
+            lambda act: act.trigger != 'on_time' or \
+                        not act.trg_date_id or \
+                        act.trg_date_range_type != 'day'
+        )
+        if invalid:
+            invalid.trg_date_calendar_id = False
+
+    @api.depends('trigger')
+    def _compute_filter_pre_domain(self):
+        to_reset = self.filtered(lambda act: act.trigger not in ('on_write', 'on_create_or_write'))
+        if to_reset:
+            to_reset.filter_pre_domain = False
+
+    @api.depends('model_id', 'trigger')
+    def _compute_on_change_field_ids(self):
+        to_reset = self.filtered(lambda act: act.trigger != 'on_change')
+        if to_reset:
+            to_reset.on_change_field_ids = False
+        for action in (self - to_reset).filtered('on_change_field_ids'):
+            action.on_change_field_ids = action.on_change_field_ids.filtered(lambda field: field.model_id == action.model_id)
+
+    @api.depends('model_id', 'trigger')
+    def _compute_trigger_field_ids(self):
+        to_reset = self.filtered(lambda act: act.trigger not in ('on_write', 'on_create_or_write'))
+        if to_reset:
+            to_reset.trigger_field_ids = False
+        for action in (self - to_reset).filtered('trigger_field_ids'):
+            action.trigger_field_ids = action.trigger_field_ids.filtered(lambda field: field.model_id == action.model_id)
 
     @api.onchange('trigger', 'state')
     def _onchange_state(self):

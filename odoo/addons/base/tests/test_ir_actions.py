@@ -23,9 +23,10 @@ class TestServerActionsBase(common.TransactionCase):
             'address_format': 'SuperFormat',
         })
         self.test_partner = self.env['res.partner'].create({
-            'name': 'TestingPartner',
             'city': 'OrigCity',
             'country_id': self.test_country.id,
+            'email': 'test.partner@test.example.com',
+            'name': 'TestingPartner',
         })
         self.context = {
             'active_model': 'res.partner',
