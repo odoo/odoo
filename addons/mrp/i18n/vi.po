@@ -218,12 +218,12 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"font-weight-bold\">To Produce</span>"
-msgstr "<span class=\"font-weight-bold\">Để sản xuất</span>"
+msgstr "<span class=\"font-weight-bold\">Chờ sản xuất</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Backorders</span>"
-msgstr "<span class=\"o_stat_text\">Đơn dự trữ</span>"
+msgstr "<span class=\"o_stat_text\">Lệnh dở dang</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1281,7 +1281,7 @@ msgstr "Số đơn dự trữ liên kết"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Create Backorder"
-msgstr "Tạo đơn dự trữ"
+msgstr "Tạo đơn Dở dang"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_create_components_lots
@@ -1292,7 +1292,7 @@ msgstr "Tạo mới một Lô/Số Sê-ri cho các thành phần"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create a Backorder"
-msgstr "Tạo đơn dự trữ"
+msgstr "Tạo một đơn Dở dang"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1300,8 +1300,8 @@ msgid ""
 "Create a backorder if you expect to process the remaining products later. Do"
 " not create a backorder if you will not process the remaining products."
 msgstr ""
-"Tạo đơn dự trữ nếu bạn dự kiến sẽ xử lý sản phẩm còn lại sau. Không tạo đơn "
-"dự trữ nếu bạn sẽ không xử lý sản phẩm còn lại. "
+"Tạo đơn một đơn dở dang nếu bạn dự kiến sẽ xử lý sản phẩm còn lại sau. Không tạo đơn "
+"dở dang nếu bạn sẽ không xử lý sản phẩm còn lại. "
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_report
@@ -1328,7 +1328,7 @@ msgstr "Tạo mới một năng suất hoạt động sản xuất"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Create backorder"
-msgstr "Tạo đơn dự trữ"
+msgstr "Tạo đơn Dở dang"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4912,7 +4912,7 @@ msgstr "Tổng thời lượng thực (theo phút)"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Traceability"
-msgstr "Truy xuất kho"
+msgstr "Truy nguyên"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_traceability_report
@@ -5712,8 +5712,8 @@ msgid ""
 "                        Do not create a backorder if you will not process the remaining products."
 msgstr ""
 "Số lượng số sê-ri bạn đã nhập ít hơn số lượng cần sản xuất.<br/>\n"
-"                        Tạo đơn dự trữ nếu bạn dự kiến sản xuất số lượng còn lại sau.<br/>\n"
-"                        Không tạo đơn dự trữ nếu bạn không xử lý sản phẩm còn lại. "
+"                        Tạo đơn dở dang nếu bạn dự kiến sản xuất số lượng còn lại sau.<br/>\n"
+"                        Không tạo đơn dở dang nếu bạn không xử lý sản phẩm còn lại. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
@@ -5722,9 +5722,9 @@ msgid ""
 "<i>apply</i> Odoo will produce all the finished products and consume all "
 "components."
 msgstr ""
-"You have not recorded <i>produced</i> quantities yet, by clicking on "
-"<i>apply</i> Odoo will produce all the finished products and consume all "
-"components."
+"Bạn vẫn chưa ghi nhận số lượng <i>đã sản xuất</i>, bằng việc bấm vào "
+"<i>áp dụng</i> phần mềm sẽ sản xuất tất cả các thành phầm và tiêu thụ toàn "
+"bộ các thành phần."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -5779,12 +5779,12 @@ msgstr "Bạn cần phải cung cấp một số lô cho thành phẩm."
 #: code:addons/mrp/wizard/mrp_immediate_production.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number for products:"
-msgstr "You need to supply Lot/Serial Number for products:"
+msgstr "Bạn cần phải cung cấp số Lô/Seri cho sản phẩm:"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
 msgid "You produced less than initial demand"
-msgstr "You produced less than initial demand"
+msgstr "Bạn đã sản xuất ít hơn nhu cầu ban đầu"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -5795,12 +5795,12 @@ msgstr "Bạn cần phải cung cấp một số lô cho thành phẩm."
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "and build finished products using"
-msgstr "and build finished products using"
+msgstr "và tạo các thành phẩm sử dụng"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "bills of materials"
-msgstr "bills of materials"
+msgstr "định mức nguyên vật liệu"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -5810,7 +5810,7 @@ msgstr "đã hủy"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "components"
-msgstr "components"
+msgstr "thành phần"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
