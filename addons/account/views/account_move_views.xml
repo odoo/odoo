@@ -611,6 +611,15 @@
                                 attrs="{'invisible' : [('to_check', '=', False)]}" data-hotkey="k" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
+                    <div class="alert alert-warning mb-0" role="alert"
+                         attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('duplicated_ref_ids', '=', [])]}">
+                        Warning: this bill might be a duplicate of
+                        <button name="open_duplicated_ref_bill_view"
+                                type="object"
+                                string="one of those bills"
+                                class="btn btn-link p-0"
+                        />
+                    </div>
                     <!-- Invoice outstanding credits -->
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-warning mb-0" role="alert"
@@ -734,6 +743,7 @@
                         <field name="tax_cash_basis_created_move_ids" invisible="1"/>
                         <field name="quick_edit_mode" invisible="1"/>
                         <field name="hide_post_button" invisible="1"/>
+                        <field name="duplicated_ref_ids" invisible="1"/>
 
                         <div class="oe_title">
                             <span class="o_form_label"><field name="move_type" attrs="{'invisible': [('move_type', '=', 'entry')]}" readonly="1" nolabel="1"/></span>
