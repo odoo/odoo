@@ -254,7 +254,7 @@
                         </div>
                     </div>
                     <div class="col-lg-4 pt-3 pt-lg-0 pl-2 pl-lg-0">
-                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-attf-id="#{event.id}">
+                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-attf-id="#{event.id}" disabled="disabled">
                             Register
                             <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
                                 (only <t t-esc="event.seats_available"/> available)
