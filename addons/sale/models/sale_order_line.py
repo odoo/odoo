@@ -5,6 +5,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.fields import Command
 from odoo.osv import expression
 from odoo.tools import float_is_zero, float_compare, float_round
 
@@ -1043,11 +1044,10 @@ class SaleOrderLine(models.Model):
         return new or old
 
     def _prepare_invoice_line(self, **optional_values):
-        """
-        Prepare the dict of values to create the new invoice line for a sales order line.
+        """Prepare the values to create the new invoice line for a sales order line.
 
-        :param qty: float quantity to invoice
         :param optional_values: any parameter that should be added to the returned invoice line
+        :rtype: dict
         """
         self.ensure_one()
         res = {
@@ -1059,9 +1059,10 @@ class SaleOrderLine(models.Model):
             'quantity': self.qty_to_invoice,
             'discount': self.discount,
             'price_unit': self.price_unit,
-            'tax_ids': [(6, 0, self.tax_id.ids)],
-            'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
-            'sale_line_ids': [(4, self.id)],
+            'tax_ids': [Command.set(self.tax_id.ids)],
+            'analytic_tag_ids': [Command.set(self.analytic_tag_ids.ids)],
+            'sale_line_ids': [Command.link(self.id)],
+            'is_downpayment': self.is_downpayment,
         }
         if self.order_id.analytic_account_id:
             res['analytic_account_id'] = self.order_id.analytic_account_id.id

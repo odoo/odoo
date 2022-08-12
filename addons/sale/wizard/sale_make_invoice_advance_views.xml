@@ -1,64 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="view_sale_advance_payment_inv" model="ir.ui.view">
-            <field name="name">Invoice Orders</field>
-            <field name="model">sale.advance.payment.inv</field>
-            <field name="arch" type="xml">
-                <form string="Invoice Sales Order">
-                    <p class="oe_grey">
-                        Invoices will be created in draft so that you can review
-                        them before validation.
-                    </p>
-                    <group>
-                        <field name="count" attrs="{'invisible': [('count','=', 1)]}" readonly="True"/>
-                        <field name="advance_payment_method" class="oe_inline" widget="radio"
-                            attrs="{'invisible': [('count','&gt;',1)]}"/>
-                        <field name="has_down_payments" invisible="1" />
-                        <label for="deduct_down_payments" string="" attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}"/>
-                        <div attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}"
-                            id="down_payment_details">
-                            <field name="deduct_down_payments" nolabel="1"/>
-                            <label for="deduct_down_payments"/>
-                        </div>
-                        <field name="product_id"
-                            context="{'default_invoice_policy': 'order'}" class="oe_inline"
-                            invisible="1"/>
-                        <label for="amount" attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"/>
-                        <div attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed','percentage'))]}"
-                            id="payment_method_details">
-                            <field name="currency_id" invisible="1"/>
-                            <field name="fixed_amount"
-                                attrs="{'required': [('advance_payment_method', '=', 'fixed')], 'invisible': [('advance_payment_method', '!=','fixed')]}" class="oe_inline"/>
-                            <field name="amount"
-                                attrs="{'required': [('advance_payment_method', '=', 'percentage')], 'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline"/>
-                            <span
-                                attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}" class="oe_inline">%</span>
-                        </div>
-                        <field name="deposit_account_id" options="{'no_create': True}" class="oe_inline"
-                            attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}" groups="account.group_account_manager"/>
-                        <field name="deposit_taxes_id" class="oe_inline" widget="many2many_tags"
-                            domain="[('type_tax_use','=','sale')]"
-                            attrs="{'invisible': ['|', ('advance_payment_method', 'not in', ('fixed', 'percentage')), ('product_id', '!=', False)]}"/>
-                    </group>
-                    <footer>
-                        <button name="create_invoices" id="create_invoice_open" string="Create and View Invoice" type="object"
-                            context="{'open_invoices': True}" class="btn-primary" data-hotkey="q"/>
-                        <button name="create_invoices" id="create_invoice" string="Create Invoice" type="object" data-hotkey="w"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
 
-        <record id="action_view_sale_advance_payment_inv" model="ir.actions.act_window">
-            <field name="name">Create invoices</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.advance.payment.inv</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <!-- TODO: check if we need this -->
-            <field name="binding_model_id" ref="sale.model_sale_order" />
-            <field name="binding_view_types">list</field>
-        </record>
+    <record id="view_sale_advance_payment_inv" model="ir.ui.view">
+        <field name="name">Invoice Orders</field>
+        <field name="model">sale.advance.payment.inv</field>
+        <field name="arch" type="xml">
+            <form string="Invoice Sales Order">
+                <p class="oe_grey">
+                    Invoices will be created in draft so that you can review
+                    them before validation.
+                </p>
+                <group>
+                    <field name="sale_order_ids" invisible="1"/>
+                    <field name="has_down_payments" invisible="1"/>
+                    <field name="count" attrs="{'invisible': [('count', '=', 1)]}"/>
+                    <field name="advance_payment_method" class="oe_inline"
+                        widget="radio"
+                        attrs="{'invisible': [('count', '&gt;', 1)]}"/>
+                    <label for="deduct_down_payments"
+                        string=""
+                        attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}"/>
+                    <div attrs="{'invisible': ['|', ('has_down_payments', '=', False), ('advance_payment_method', '!=', 'delivered')]}"
+                        id="down_payment_details">
+                        <field name="deduct_down_payments" nolabel="1"/>
+                        <label for="deduct_down_payments"/>
+                    </div>
+                </group>
+                <group name="down_payment_specification"
+                    attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed', 'percentage'))]}">
+                    <field name="company_id" invisible="1"/>
+                    <field name="product_id" invisible="1"/>
+                    <label for="amount"/>
+                    <div id="payment_method_details">
+                        <field name="currency_id" invisible="1"/>
+                        <field name="fixed_amount"
+                            attrs="{'required': [('advance_payment_method', '=', 'fixed')],
+                                'invisible': [('advance_payment_method', '!=', 'fixed')]}"
+                            class="oe_inline"/>
+                        <field name="amount"
+                            attrs="{'required': [('advance_payment_method', '=', 'percentage')],
+                                'invisible': [('advance_payment_method', '!=', 'percentage')]}"
+                            class="oe_inline"/>
+                        <span attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}"
+                            class="oe_inline">%</span>
+                    </div>
+                    <field name="deposit_account_id"
+                        options="{'no_create': True}"
+                        attrs="{'invisible': [('product_id', '!=', False)]}"
+                        groups="account.group_account_manager"/>
+                    <field name="deposit_taxes_id"
+                        widget="many2many_tags"
+                        attrs="{'invisible': [('product_id', '!=', False)]}"/>
+                </group>
+                <footer>
+                    <button name="create_invoices" type="object"
+                        id="create_invoice_open"
+                        string="Create and View Invoice"
+                        context="{'open_invoices': True}"
+                        class="btn-primary" data-hotkey="q"/>
+                    <button name="create_invoices" type="object"
+                        id="create_invoice"
+                        string="Create Invoice"
+                        data-hotkey="w"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_sale_advance_payment_inv" model="ir.actions.act_window">
+        <field name="name">Create invoices</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.advance.payment.inv</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list</field>
+    </record>
 
 </odoo>
