@@ -919,7 +919,7 @@ QUnit.test('chat window: scroll conservation on toggle discuss', async function 
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
         pyEnv['mail.message'].create({
             body: "not empty",
             model: "mail.channel",
@@ -1373,7 +1373,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
         pyEnv['mail.message'].create({
             body: "not empty",
             model: "mail.channel",
@@ -1521,7 +1521,7 @@ QUnit.test('chat window with a thread: keep scroll position in message list on t
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 100; i++) {
         pyEnv['mail.message'].create({
             body: "not empty",
             model: "mail.channel",
