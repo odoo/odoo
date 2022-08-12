@@ -175,7 +175,7 @@ class PortalChatter(http.Controller):
                 'message_count': message_data['message_count'],
                 'is_user_public': is_user_public,
                 'is_user_employee': request.env.user._is_internal(),
-                'is_user_publisher': request.env.user.has_group('website.group_website_publisher'),
+                'is_user_publisher': request.env.user.has_group('website.group_website_restricted_editor'),
                 'display_composer': display_composer,
                 'partner_id': request.env.user.partner_id.id
             }
