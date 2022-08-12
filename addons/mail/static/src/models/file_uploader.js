@@ -76,7 +76,7 @@ registerModel({
             if (this.chatterOwner) {
                 return replace(this.chatterOwner.thread);
             }
-            if (this.composerView && this.composerView.composer) {
+            if (this.composerView) {
                 return replace(this.composerView.composer.activeThread);
             }
             return clear();
