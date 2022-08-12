@@ -469,7 +469,7 @@
             <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
-        <record id="ir_actions_server_website_google_analytics" model="ir.actions.server">
+        <record id="ir_actions_server_website_analytics" model="ir.actions.server">
             <field name="name">Website: Analytics</field>
             <field name="model_id" ref="website.model_website"/>
             <field name="state">code</field>
@@ -638,11 +638,11 @@
             action="website.ir_actions_server_website_dashboard"
             active="0"/>
 
-        <menuitem id="menu_website_google_analytics"
+        <menuitem id="menu_website_analytics"
             name="Analytics"
             sequence="20"
             parent="menu_reporting"
-            action="website.ir_actions_server_website_google_analytics"/>
+            action="website.ir_actions_server_website_analytics"/>
 
         <menuitem id="menu_optimize_seo"
             name="Optimize SEO"
