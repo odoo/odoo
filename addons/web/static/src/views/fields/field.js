@@ -247,7 +247,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         });
     }
 
-    if (fieldInfo.modifiers.invisible !== true && X2M_TYPES.includes(field.type)) {
+    if (X2M_TYPES.includes(field.type)) {
         const views = {};
         for (const child of node.children) {
             const viewType = child.tagName === "tree" ? "list" : child.tagName;

@@ -12401,4 +12401,69 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_boolean_toggle");
         assert.verifySteps(["onchange turtle", "onchange partner"]);
     });
+
+    QUnit.test("create a new record with an x2m invisible", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <form>
+                        <field name="p" invisible="1">
+                            <tree>
+                                <field name="int_field"/>
+                                <field name="trululu"/>
+                            </tree>
+                        </field>
+                    </form>`,
+            mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    assert.step(args.method);
+                    assert.deepEqual(args.args[3], {
+                        p: "",
+                        "p.int_field": "",
+                        "p.trululu": "",
+                    });
+                }
+            },
+        });
+
+        assert.containsNone(target, "[name='p']");
+        assert.verifySteps(["onchange"]);
+    });
+
+    QUnit.test("edit a record with an x2m invisible", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <form>
+                        <field name="foo"/>
+                        <field name="turtles" invisible="1">
+                            <tree>
+                                <field name="turtle_foo"/>
+                                <field name="turtle_int"/>
+                            </tree>
+                        </field>
+                    </form>`,
+            mockRPC(route, args) {
+                assert.step(`${args.method} ${args.model}`);
+                if (args.method === "write") {
+                    assert.deepEqual(args.args[1], {
+                        foo: "plop",
+                    });
+                }
+            },
+            resId: 1,
+        });
+
+        assert.containsNone(target, "[name='p']");
+        assert.verifySteps(["get_views partner", "read partner"]);
+
+        await clickEdit(target);
+        await editInput(target, "[name='foo'] input", "plop");
+        await clickSave(target);
+        assert.verifySteps(["write partner", "read partner"]);
+    });
 });
