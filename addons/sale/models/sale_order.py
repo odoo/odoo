@@ -947,28 +947,26 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
 
-        invoice_vals = {
+        return {
             'ref': self.client_order_ref or '',
             'move_type': 'out_invoice',
             'narration': self.note,
-            'currency_id': self.pricelist_id.currency_id.id,
+            'currency_id': self.currency_id.id,
             'campaign_id': self.campaign_id.id,
             'medium_id': self.medium_id.id,
             'source_id': self.source_id.id,
-            'user_id': self.user_id.id,
-            'invoice_user_id': self.user_id.id,
             'team_id': self.team_id.id,
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id._get_fiscal_position(self.partner_invoice_id)).id,
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
+            'invoice_user_id': self.user_id.id,
             'payment_reference': self.reference,
             'transaction_ids': [Command.set(self.transaction_ids.ids)],
-            'invoice_line_ids': [],
             'company_id': self.company_id.id,
+            'invoice_line_ids': [],
         }
-        return invoice_vals
 
     def action_view_invoice(self):
         invoices = self.mapped('invoice_ids')
