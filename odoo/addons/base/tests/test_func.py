@@ -5,23 +5,7 @@ import functools
 
 from odoo.tests.common import BaseCase
 from odoo.tools import frozendict, lazy
-from odoo.tools.func import compose
 from odoo import Command
-
-
-class TestCompose(BaseCase):
-    def test_basic(self):
-        str_add = compose(str, lambda a, b: a + b)
-        self.assertEqual(str_add(1, 2), "3")
-
-    def test_decorator(self):
-        """ ensure compose() can be partially applied as a decorator
-        """
-        @functools.partial(compose, str)
-        def mul(a, b):
-            return a * b
-
-        self.assertEqual(mul(5, 42), u"210")
 
 
 class TestFrozendict(BaseCase):

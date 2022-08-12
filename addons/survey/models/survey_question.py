@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import collections
+import contextlib
 import json
 import itertools
 import operator
@@ -369,7 +370,7 @@ class SurveyQuestion(models.Model):
 
         if self.validation_required:
             # Answer is not in the right range
-            with tools.ignore(Exception):
+            with contextlib.suppress(Exception):
                 if not (self.validation_min_float_value <= floatanswer <= self.validation_max_float_value):
                     return {self.id: self.validation_error_msg}
         return {}

@@ -4,6 +4,7 @@
 __all__ = ['synchronized', 'lazy_classproperty', 'lazy_property',
            'classproperty', 'conditional', 'lazy']
 
+import warnings
 from inspect import getsourcefile, Parameter, signature
 from functools import wraps
 from json import JSONEncoder
@@ -116,6 +117,11 @@ def compose(a, b):
          def b():
             ...
     """
+    warnings.warn(
+        "Since 16.0, just byo or use a dedicated library like funcy.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
     @wraps(b)
     def wrapper(*args, **kwargs):
         return a(b(*args, **kwargs))
