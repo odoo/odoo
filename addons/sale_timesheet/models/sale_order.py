@@ -12,40 +12,31 @@ from odoo.tools import float_compare
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    timesheet_ids = fields.Many2many('account.analytic.line', compute='_compute_timesheet_ids', string='Timesheet activities associated to this sale')
-    timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_ids', groups="hr_timesheet.group_hr_timesheet_user")
+    timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_count', groups="hr_timesheet.group_hr_timesheet_user")
 
     # override domain
     project_id = fields.Many2one(domain="[('pricing_type', '!=', 'employee_rate'), ('analytic_account_id', '!=', False), ('company_id', '=', company_id)]")
     timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
-    timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration', help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
+    timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration',
+        help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit", compute_sudo=True,
+        groups="hr_timesheet.group_hr_timesheet_user")
 
-    def _compute_timesheet_ids(self):
-        timesheet_groups = self.env['account.analytic.line'].sudo().read_group(
-            [('so_line', 'in', self.mapped('order_line').ids), ('project_id', '!=', False)],
-            ['so_line', 'ids:array_agg(id)'],
-            ['so_line'])
-        timesheets_per_sol = {group['so_line'][0]: (group['ids'], group['so_line_count']) for group in timesheet_groups}
+    def _compute_timesheet_count(self):
+        timesheets_per_so = {
+            group['order_id'][0]: group['order_id_count']
+            for group in self.env['account.analytic.line']._read_group(
+                [('order_id', 'in', self.ids), ('project_id', '!=', False)],
+                ['order_id'],
+                ['order_id']
+            )
+        }
 
         for order in self:
-            timesheet_ids = []
-            timesheet_count = 0
-            for sale_line_id in order.order_line.filtered('is_service').ids:
-                list_timesheet_ids, count = timesheets_per_sol.get(sale_line_id, ([], 0))
-                timesheet_ids.extend(list_timesheet_ids)
-                timesheet_count += count
+            order.timesheet_count = timesheets_per_so.get(order.id, 0)
 
-            order.update({
-                'timesheet_ids': self.env['account.analytic.line'].browse(timesheet_ids),
-                'timesheet_count': timesheet_count,
-            })
-
-    @api.depends('company_id.project_time_mode_id', 'timesheet_ids', 'company_id.timesheet_encode_uom_id')
+    @api.depends('company_id.project_time_mode_id', 'company_id.timesheet_encode_uom_id', 'order_line.timesheet_ids')
     def _compute_timesheet_total_duration(self):
-        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
-            self.update({'timesheet_total_duration': 0})
-            return
-        group_data = self.env['account.analytic.line'].sudo()._read_group([
+        group_data = self.env['account.analytic.line']._read_group([
             ('order_id', 'in', self.ids)
         ], ['order_id', 'unit_amount'], ['order_id'])
         timesheet_unit_amount_dict = defaultdict(float)

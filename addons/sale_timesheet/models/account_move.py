@@ -11,9 +11,11 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     timesheet_ids = fields.One2many('account.analytic.line', 'timesheet_invoice_id', string='Timesheets', readonly=True, copy=False)
-    timesheet_count = fields.Integer("Number of timesheets", compute='_compute_timesheet_count')
+    timesheet_count = fields.Integer("Number of timesheets", compute='_compute_timesheet_count', compute_sudo=True)
     timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
-    timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration', help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
+    timesheet_total_duration = fields.Integer("Timesheet Total Duration",
+        compute='_compute_timesheet_total_duration', compute_sudo=True,
+        help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
 
     @api.depends('timesheet_ids', 'company_id.timesheet_encode_uom_id')
     def _compute_timesheet_total_duration(self):
