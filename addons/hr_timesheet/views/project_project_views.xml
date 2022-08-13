@@ -54,13 +54,12 @@
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
                     <field name="allow_timesheets" invisible="1"/>
-                    <field name="timesheet_count" invisible="1"/>
                     <field name="remaining_hours" invisible="1"/>
                     <field name="encode_uom_in_days" invisible="1"/>
                     <field name="allocated_hours" invisible="1"/>
                 </field>
                 <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
-                    <div role="menuitem" t-if="record.allow_timesheets.raw_value and record.timesheet_count and record.timesheet_count.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
+                    <div role="menuitem" t-if="record.allow_timesheets.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
                         <a name="action_project_timesheets" type="object">Timesheets</a>
                     </div>
                 </xpath>
