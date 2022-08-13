@@ -20,11 +20,10 @@ class Project(models.Model):
     )
 
     timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
-    timesheet_count = fields.Integer(compute="_compute_timesheet_count", groups='hr_timesheet.group_hr_timesheet_user')
     timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
     total_timesheet_time = fields.Integer(
         compute='_compute_total_timesheet_time', groups='hr_timesheet.group_hr_timesheet_user',
-        help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.")
+        help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.", compute_sudo=True)
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
     is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project')
     remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Remaining Invoiced Time', compute_sudo=True)
@@ -147,17 +146,6 @@ class Project(models.Model):
             # Now convert to the proper unit of measure set in the settings
             total_time *= project.timesheet_encode_uom_id.factor
             project.total_timesheet_time = int(round(total_time))
-
-    @api.depends('timesheet_ids')
-    def _compute_timesheet_count(self):
-        timesheet_read_group = self.env['account.analytic.line']._read_group(
-            [('project_id', 'in', self.ids)],
-            ['project_id'],
-            ['project_id']
-        )
-        timesheet_project_map = {project_info['project_id'][0]: project_info['project_id_count'] for project_info in timesheet_read_group}
-        for project in self:
-            project.timesheet_count = timesheet_project_map.get(project.id, 0)
 
     @api.model_create_multi
     def create(self, vals_list):
