@@ -6,7 +6,7 @@
 # Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2021
 # Lucia Pacheco <lpo@odoo.com>, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,13 +14,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
@@ -426,7 +426,7 @@ msgstr "Vinculado a"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Lots &amp; Serial numbers will appear on the invoice"
-msgstr "Los números de lote y de serie aparecerán en a factura"
+msgstr "Los números de lote y de serie aparecerán en la factura"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -495,7 +495,7 @@ msgstr "Categoría de producto"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Movimientos de producto (Línea de movimiento de existencias)"
+msgstr "Movimientos de producto (línea de movimiento de existencias)"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -806,10 +806,10 @@ msgid ""
 msgstr ""
 "Se utiliza para una valorización en tiempo real del inventario. Cuando se "
 "establece en una ubicación virtual (no de tipo interno), esta cuenta se "
-"usará para mantener el valor de los productos que son movidos de una "
-"ubicación interna a esta ubicación, en lugar de la cuenta de salida de "
-"existencias genérica establecida en el producto. No tiene efecto para "
-"ubicaciones internas."
+"usará para mantener el valor de los productos que se mueven de una ubicación"
+" interna a esta ubicación, en lugar de la cuenta de salida de existencias "
+"genérica establecida en el producto. No tiene efecto para ubicaciones "
+"internas."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -822,7 +822,7 @@ msgid ""
 msgstr ""
 "Se utiliza para una valorización en tiempo real del inventario. Cuando se "
 "establece en una ubicación virtual (no de tipo interno), esta cuenta se "
-"usará para mantener el valor de los productos que son movidos fuera de la "
+"usará para mantener el valor de los productos que se mueven fuera de la "
 "ubicación a una ubicación interna, en lugar de la cuenta de salida de "
 "existencias genérica establecida en el producto. No tiene efecto para "
 "ubicaciones internas."
@@ -891,22 +891,20 @@ msgstr ""
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
 msgstr ""
-"Modelo de asistente para volver a valorizar un inventario de existencias "
-"para un producto"
+"Modelo de asistente para revalorizar un inventario de existencias para un "
+"producto"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
-msgstr ""
-"No puede volver a valorizar un producto con un método de costo estándar."
+msgstr "No puede revalorizar un producto con un método de costo estándar."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr ""
-"No puede volver a valorizar un producto con inventario vacío o negativo."
+msgstr "No puede revalorizar un producto con inventario vacío o negativo."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0

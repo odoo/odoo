@@ -14,10 +14,10 @@
 # Irina Fedulova <istartlin@gmail.com>, 2021
 # Collex100, 2021
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2021
-# Сергей Шебанин <sergey@shebanin.ru>, 2021
 # Gennady Marchenko <gennadym@gmail.com>, 2021
 # Валерий Хохлов, 2022
 # Martin Trigaux, 2022
+# Сергей Шебанин <sergey@shebanin.ru>, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-06-10 08:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -252,6 +252,27 @@ msgstr "Добавить через URL"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Add a blockquote section."
+msgstr "Добавить абзац с цитатой."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Add a button."
+msgstr "Добавить кнопку."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Add a code section."
+msgstr "Добавить абзац с кодом."
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Add a column left"
@@ -263,6 +284,13 @@ msgstr ""
 #, python-format
 msgid "Add a column right"
 msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Add a link."
+msgstr "Добавить ссылку."
 
 #. module: web_editor
 #. openerp-web
@@ -411,7 +439,7 @@ msgstr "Авто"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Autoconvert to relative link"
-msgstr ""
+msgstr "Автоматически конвертировать в относительную ссылку"
 
 #. module: web_editor
 #. openerp-web
@@ -439,6 +467,15 @@ msgid "Background Position"
 msgstr "Расположение фона"
 
 #. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Basic blocks"
+msgstr "Базовые блоки"
+
+#. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Basics"
 msgstr "Основное"
@@ -455,7 +492,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Big section heading."
-msgstr ""
+msgstr "Большой заголовок раздела."
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
@@ -520,10 +557,11 @@ msgstr ""
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Bulleted list"
-msgstr ""
+msgstr " Маркированный список"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
@@ -564,7 +602,7 @@ msgstr "Изменить медиаописание и всплывающую п
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Checklist"
-msgstr ""
+msgstr "Чеклист"
 
 #. module: web_editor
 #. openerp-web
@@ -584,6 +622,7 @@ msgstr "Закрыть"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Code"
@@ -646,7 +685,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Copy Link"
-msgstr ""
+msgstr "Копировать ссылку"
 
 #. module: web_editor
 #. openerp-web
@@ -679,13 +718,20 @@ msgstr "Создать"
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Create a list with numbering."
-msgstr ""
+msgstr "Создать список с нумерацией."
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Create a simple bulleted list."
+msgstr "Создать простой маркированный список."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Create an URL."
 msgstr ""
 
 #. module: web_editor
@@ -771,7 +817,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Delete current table"
-msgstr ""
+msgstr "Удалить текущую таблицу"
 
 #. module: web_editor
 #. openerp-web
@@ -867,7 +913,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Edit Link"
-msgstr ""
+msgstr "Править ссылку"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
@@ -888,6 +934,42 @@ msgstr ""
 msgid ""
 "Editing a built-in file through this editor is not advised, as it will "
 "prevent it from being updated during future App upgrades."
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Embed"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Embed Image"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Embed Youtube Video"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Embed the image in the document."
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Embed the youtube video in the document."
 msgstr ""
 
 #. module: web_editor
@@ -1016,6 +1098,13 @@ msgstr "Размер шрифта"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "For technical reasons, this block cannot be dropped here"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "Format"
@@ -1099,21 +1188,21 @@ msgstr "Заголовок 6"
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Heading 1"
-msgstr ""
+msgstr "Заголовок 1"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Heading 2"
-msgstr ""
+msgstr "Заголовок 2"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Heading 3"
-msgstr ""
+msgstr "Заголовок 3"
 
 #. module: web_editor
 #. openerp-web
@@ -1243,6 +1332,7 @@ msgstr "Иллюстрации"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
 #, python-format
@@ -1295,6 +1385,13 @@ msgstr ""
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Insert a table."
+msgstr "Вставить таблицу."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Insert a video."
 msgstr ""
 
 #. module: web_editor
@@ -1302,7 +1399,14 @@ msgstr ""
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Insert an horizontal rule separator."
-msgstr ""
+msgstr "Вставить горизонтальную линию."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Insert an image."
+msgstr "Вставить картинку."
 
 #. module: web_editor
 #. openerp-web
@@ -1316,14 +1420,14 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Insert or edit link"
-msgstr ""
+msgstr "Вставить или править ссылку"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Insert table"
-msgstr ""
+msgstr "Вставить таблицу"
 
 #. module: web_editor
 #. openerp-web
@@ -1331,6 +1435,12 @@ msgstr ""
 #, python-format
 msgid "Install"
 msgstr "Установить"
+
+#. module: web_editor
+#: code:addons/web_editor/models/ir_ui_view.py:0
+#, python-format
+msgid "Invalid field value for %s: %s"
+msgstr ""
 
 #. module: web_editor
 #. openerp-web
@@ -1419,6 +1529,7 @@ msgstr "Строк"
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/link.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #, python-format
 msgid "Link"
 msgstr "Ссылка"
@@ -1435,7 +1546,7 @@ msgstr "Текст Ссылки"
 #: code:addons/web_editor/static/src/js/wysiwyg/widgets/link_popover_widget.js:0
 #, python-format
 msgid "Link copied to clipboard."
-msgstr ""
+msgstr "Ссылка скопирована в буфер обмена."
 
 #. module: web_editor
 #. openerp-web
@@ -1449,7 +1560,7 @@ msgstr "Ссылка на"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Load more..."
-msgstr ""
+msgstr "Загрузить ещё..."
 
 #. module: web_editor
 #. openerp-web
@@ -1471,7 +1582,15 @@ msgstr ""
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
 msgid "Media"
-msgstr "медиа"
+msgstr "Медиа"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Medias"
+msgstr "Медиа"
 
 #. module: web_editor
 #. openerp-web
@@ -1488,7 +1607,7 @@ msgstr "Средний"
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Medium section heading."
-msgstr ""
+msgstr "Средний заголовок раздела."
 
 #. module: web_editor
 #. openerp-web
@@ -1508,6 +1627,14 @@ msgstr "Мои изображения"
 #: model:ir.model.fields,field_description:web_editor.field_web_editor_converter_test_sub__name
 msgid "Name"
 msgstr "Название"
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
+#, python-format
+msgid "Navigation"
+msgstr "Навигация"
 
 #. module: web_editor
 #. openerp-web
@@ -1575,7 +1702,7 @@ msgstr "Нормальный"
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Numbered list"
-msgstr ""
+msgstr "Нумерованный список"
 
 #. module: web_editor
 #. openerp-web
@@ -1656,6 +1783,20 @@ msgstr "Отступ"
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Paragraph block."
+msgstr "Простой абзац."
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Paste as URL"
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Paste as text"
 msgstr ""
 
 #. module: web_editor
@@ -1714,6 +1855,7 @@ msgstr "Качество"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Quote"
@@ -1845,7 +1987,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Remove Link"
-msgstr ""
+msgstr "Убрать ссылку"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
@@ -1878,7 +2020,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Remove link"
-msgstr ""
+msgstr "Убрать ссылку"
 
 #. module: web_editor
 #. openerp-web
@@ -2193,6 +2335,13 @@ msgstr "Показывать сжатые изображения"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
+#, python-format
+msgid "Simple text paste."
+msgstr ""
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
@@ -2240,7 +2389,7 @@ msgstr "Маленький"
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Small section heading."
-msgstr ""
+msgstr "Малый заголовок раздела."
 
 #. module: web_editor
 #. openerp-web
@@ -2302,14 +2451,14 @@ msgstr "Таблица"
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Table Options"
-msgstr ""
+msgstr "Опции таблицы"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Table tools"
-msgstr ""
+msgstr "Инструменты таблицы"
 
 #. module: web_editor
 #. openerp-web
@@ -2517,7 +2666,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Toggle checklist"
-msgstr ""
+msgstr "Переключить чеклист"
 
 #. module: web_editor
 #. openerp-web
@@ -2538,7 +2687,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Toggle ordered list"
-msgstr ""
+msgstr "Переключить нумерованный список"
 
 #. module: web_editor
 #. openerp-web
@@ -2559,7 +2708,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/editor.xml:0
 #, python-format
 msgid "Toggle unordered list"
-msgstr ""
+msgstr "Переключить маркированный список"
 
 #. module: web_editor
 #. openerp-web
@@ -2574,7 +2723,7 @@ msgstr "Подсказка"
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Track tasks with a checklist."
-msgstr ""
+msgstr "Отслеживать задачи при помощи чеклиста."
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options
@@ -2627,7 +2776,7 @@ msgstr "Тип"
 #: code:addons/web_editor/static/src/odoo-editor/src/OdooEditor.js:0
 #, python-format
 msgid "Type \"/\" for commands"
-msgstr ""
+msgstr " Введите \"/\" для меню команд"
 
 #. module: web_editor
 #. openerp-web
@@ -2683,6 +2832,7 @@ msgstr ""
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#: code:addons/web_editor/static/src/js/wysiwyg/wysiwyg.js:0
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Video"
@@ -2700,7 +2850,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Video code"
-msgstr "код видео"
+msgstr "Код видео"
 
 #. module: web_editor
 #. openerp-web
@@ -2807,13 +2957,6 @@ msgstr ""
 msgid ""
 "You can upload images with the button located in the top left of the screen."
 msgstr "Вы можете загрузить изображения по кнопке вверху окна."
-
-#. module: web_editor
-#: code:addons/web_editor/models/ir_qweb.py:0
-#: code:addons/web_editor/models/ir_qweb.py:0
-#, python-format
-msgid "You entered an invalid value, please try again."
-msgstr ""
 
 #. module: web_editor
 #: code:addons/web_editor/controllers/main.py:0
@@ -2950,7 +3093,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "⌙ Autoconvert to relative link"
-msgstr ""
+msgstr "⌙ Автоматически конвертировать в относительную ссылку"
 
 #. module: web_editor
 #. openerp-web
@@ -2997,7 +3140,7 @@ msgstr "⌙ Изображение"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "⌙ Link Label"
-msgstr ""
+msgstr "⌙ Метка ссылки"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_background_options
