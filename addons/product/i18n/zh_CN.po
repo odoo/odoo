@@ -12,7 +12,7 @@
 # 老窦 北京 <2662059195@qq.com>, 2019
 # bower Guo <124358678@qq.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
-# r <263737@qq.com>, 2019
+# rsh <263737@qq.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
 # v2exerer <9010446@qq.com>, 2019
@@ -20,14 +20,14 @@
 # keecome <7017511@qq.com>, 2019
 # snow wang <147156565@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
-# Martin Trigaux, 2019
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2019
+# Felix Yang <felixyangsh@aliyun.com>, 2019
 # as co02 <asco02@163.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# Jeffery CHEN <jeffery9@gmail.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # liAnGjiA <liangjia@qq.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2308,6 +2308,15 @@ msgid "This comes from the product form."
 msgstr "此处源自该产品表单。"
 
 #. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr "产品属性、值和排除项的这种配置不会导致任何可能的变体。 如果需要，请直接存档或删除您的产品。"
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
 msgstr "这是所有属性额外价格的总和"
@@ -2797,6 +2806,14 @@ msgstr ""
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
 msgstr "不能将属性 %s 从产品 %s 调整至产品 %s"
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr "您不能禁用价目表规则，请将其删除或存档其价目表."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
