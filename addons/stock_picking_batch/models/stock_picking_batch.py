@@ -150,8 +150,8 @@ class StockPickingBatch(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if not self.picking_ids and self.state == 'in_progress':
-            self.action_cancel()
+        if not self.picking_ids:
+            self.filtered(lambda b: b.state == 'in_progress').action_cancel()
         if vals.get('picking_type_id'):
             self._sanity_check()
         if vals.get('picking_ids'):
@@ -191,7 +191,6 @@ class StockPickingBatch(models.Model):
         return True
 
     def action_cancel(self):
-        self.ensure_one()
         self.state = 'cancel'
         self.picking_ids = False
         return True
