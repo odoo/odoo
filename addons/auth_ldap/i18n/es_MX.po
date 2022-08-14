@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
@@ -36,17 +36,17 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
-"    Filtro que se usa para buscar cuentas de usuarios en a base de datos de LDAP. es un filtro LDAP arbitrario que se representa en strings. Cualquier marcador de posición `%s` se remplazará con el inicio de sesión (identificador) proporcionado por el usuario, el filtro debería contener al menos uno de esos marcadores de posición.\n"
+"     Filtro que se usa para buscar cuentas de usuarios en la base de datos de LDAP. Es un filtro LDAP arbitrario que se representa en strings. Cualquier marcador de posición `%s` se remplazará con el inicio de sesión (identificador) proporcionado por el usuario, el filtro debería contener al menos uno de esos marcadores de posición.\n"
 "\n"
-"    El filtro debe arrojar al menos un (1) resultado, de lo contrario, el inicio de sesión se considerará inválido.\n"
+"El filtro debe arrojar al menos un (1) resultado, de lo contrario, el inicio de sesión se considerará inválido.\n"
 "\n"
-"    Por ejemplo (los atributos actuales dependen del servidor y configuración de LDAP):\n"
+"Por ejemplo (los atributos actuales dependen del servidor y configuración de LDAP):\n"
 "\n"
-"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"(&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
 "\n"
-"    or\n"
+"or\n"
 "\n"
-"        (|(mail=%s)(uid=%s))\n"
+"(|(mail=%s)(uid=%s))\n"
 "    "
 
 #. module: auth_ldap
@@ -184,8 +184,8 @@ msgstr "Información de conexión"
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
-"Usuarios locales no encontrados en el registro LDAP, no se ha configurado la"
-" creación de uno"
+"No se encontró un usuario local para el inicio se sesión LDAP y tampoco está"
+" configurado para crear uno nuevo."
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form

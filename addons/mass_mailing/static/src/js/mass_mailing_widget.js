@@ -159,6 +159,11 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
         return this._super.apply(this, arguments);
     },
+    _createWysiwygInstance: async function () {
+        const res = await this._super(...arguments);
+        this.wysiwyg.getEditable().find('img').attr('loading', '');
+        return res;
+    },
 
     /**
      * @override
