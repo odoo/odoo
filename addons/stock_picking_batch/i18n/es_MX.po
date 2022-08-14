@@ -3,10 +3,8 @@
 # 	* stock_picking_batch
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
-# Lucia Pacheco <lpo@odoo.com>, 2022
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Martin Trigaux, 2022
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:58+0000\n"
 "PO-Revision-Date: 2017-12-13 14:58+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +26,8 @@ msgid ""
 "<span class=\"o_form_label font-weight-bold\" "
 "attrs=\"{'invisible':[('auto_batch', '=', False)]}\">Group by</span>"
 msgstr ""
+"<span class=\"o_form_label font-weight-bold\" "
+"attrs=\"{'invisible':[('auto_batch', '=', False)]}\">Agrupar por</span>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -37,7 +37,7 @@ msgstr "<strong>DESDE</strong>"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr "<strong>Número lote/serie</strong>"
+msgstr "<strong>Número de lote/de serie</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -70,6 +70,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
+"No se agregará el traslado de forma automática a un lote si excederá el número de líneas al agregarse.\n"
+"Deje este valor como \"0\" si no hay límite de líneas."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_max_pickings
@@ -77,6 +79,8 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
+"No se agregará el traslado de forma automática a lotes que excederán este número de traslados.\n"
+"Deje este valor como \"0\" si no hay límite de traslados."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
@@ -157,38 +161,40 @@ msgstr "Número de archivos adjuntos"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_auto_confirm
 msgid "Auto-confirm"
-msgstr ""
+msgstr "Autoconfirmar"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
 msgid "Automatic Batches"
-msgstr ""
+msgstr "Lotes automáticos"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
 msgid "Automatically group batches by contacts."
-msgstr ""
+msgstr "Agrupar lotes por contactos de forma automática."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
 msgid "Automatically group batches by destination country."
-msgstr ""
+msgstr "Agrupa de forma automática lotes por país de destino."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
 msgid "Automatically group batches by their destination location."
-msgstr ""
+msgstr "Agrupa de forma automática lotes por ubicación de destino."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
 msgid "Automatically group batches by their source location."
-msgstr ""
+msgstr "Agrupa de forma automática lotes por ubicación de origen."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
 msgid ""
 "Automatically put pickings into batches as they are confirmed when possible."
 msgstr ""
+"Pone recolecciones en lotes de forma automática a medida que se confirman "
+"cuando es posible."
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_backorder_confirmation
@@ -218,7 +224,7 @@ msgstr "Lote"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit
 #, python-format
 msgid "Batch Transfer"
-msgstr "Transferir agrupación"
+msgstr "Traslado por lote"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
@@ -230,7 +236,7 @@ msgstr "Líneas de traslado por lote"
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Batch Transfers"
-msgstr "Traslado de lotes"
+msgstr "Traslado por lotes"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -241,7 +247,7 @@ msgstr "Traslados por lote sin finalizar"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
 msgid "Batch associated to this transfer"
-msgstr "Agrupación asociada a este albarán"
+msgstr "Lote asociado a este traslado"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
@@ -281,12 +287,12 @@ msgstr "Elegir diseño de etiquetas"
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
-msgstr ""
+msgstr "Elegir tipos de etiquetas para imprimir"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Clear quantities"
-msgstr ""
+msgstr "Quitar cantidades"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
@@ -360,7 +366,7 @@ msgstr "Operaciones detalladas"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado en pantalla"
+msgstr "Nombre en pantalla"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__done
@@ -382,7 +388,7 @@ msgstr "Seguidores"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Partners)"
+msgstr "Seguidores (partners)"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_type_icon
@@ -409,7 +415,7 @@ msgstr "Tiene un mensaje"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__id
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__id
 msgid "ID"
-msgstr "Identificación"
+msgstr "ID"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_exception_icon
@@ -440,6 +446,8 @@ msgid ""
 "If the Automatic Batches feature is enabled, at least one 'Group by' option "
 "must be selected."
 msgstr ""
+"Si se habilita la función de lotes automáticos, se debe seleccionar por lo "
+"menos una opción de \"Agrupar por\"."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -500,12 +508,12 @@ msgstr "Archivo adjunto principal"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid "Maximum lines per batch"
-msgstr ""
+msgstr "Máximo de líneas por lote"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid "Maximum transfers per batch"
-msgstr ""
+msgstr "Máximo de traslados por lote"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -664,7 +672,7 @@ msgstr "Usuario responsable"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error en entrega del SMS"
+msgstr "Error de entrega del SMS"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__scheduled_date
@@ -683,7 +691,7 @@ msgstr ""
 "Fecha programada en la que se procesarán los traslados.\n"
 "              - Si se configura manualmente, la fecha programada para todos los traslados en lote se actualizará automáticamente a esta fecha.\n"
 "              - Si no se configura manualmente, y se agregan, remueven o actualizan los traslados, entonces esta será la fecha programada más temprana\n"
-"                pero esta fecha programada no será establecida en todos los traslados por lote."
+"                pero esta fecha programada no se establecerá en todos los traslados por lote."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -708,12 +716,12 @@ msgstr "Mostrar verificar disponibilidad"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_clear_qty_button
 msgid "Show Clear Qty Button"
-msgstr ""
+msgstr "Mostrar botón de quitar cantidades"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
 msgid "Show Set Qty Button"
-msgstr ""
+msgstr "Mostrar botón de establecer cantidades"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_validate
@@ -818,15 +826,16 @@ msgid ""
 "Technical field used to compute whether the check availability button should"
 " be shown."
 msgstr ""
-"Campo técnico utilizado para calcular si se debe mostrar el botón comprobar "
-"disponibilidad."
+"Campo técnico que se utiliza para calcular si se debe mostrar el botón de "
+"comprobar disponibilidad."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__show_validate
 msgid ""
 "Technical field used to decide whether the validate button should be shown."
 msgstr ""
-"Campo técnico utilizado para decidir si se debe mostrar el botón de validar."
+"Campo técnico que se utiliza para decidir si se debe mostrar el botón de "
+"validar."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
@@ -849,7 +858,7 @@ msgid ""
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
 "El objetivo del traslado por lotes es agrupar las operaciones que puedan\n"
-"(necesitan) hacerse juntas para aumentar su eficacia.\n"
+"(deben) hacerse juntas para aumentar su eficacia.\n"
 "También puede ser útil para asignar tareas (una persona = un lote) o\n"
 "ayudar en la gestión de los tiempos de las operaciones (tareas que se deben realizar a la 1pm)."
 
@@ -917,7 +926,7 @@ msgstr "Trasladado por"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Transfers"
-msgstr "Transferencias"
+msgstr "Traslados"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_code

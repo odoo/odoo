@@ -11,11 +11,11 @@
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2021
 # RGB Consulting <odoo@rgbconsulting.com>, 2021
 # Quim - eccit <quim@eccit.com>, 2021
-# Harcogourmet, 2022
 # AncesLatino2004, 2022
 # marcescu, 2022
 # jabelchi, 2022
 # CristianCruzParra, 2022
+# Harcogourmet, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:07+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: CristianCruzParra, 2022\n"
+"Last-Translator: Harcogourmet, 2022\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,6 +53,8 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"<h3>Si us plau, feu el pagament a: </h3><ul><li>Banc: %s</li><li>Número de "
+"compte: %s</li><li>Titular del compte: %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -81,7 +83,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Mètodes de pagament desades</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -98,11 +100,14 @@ msgid ""
 "<span>Start selling directly without an account; an email will be sent by "
 "Paypal to create your new account and collect your payments.</span>"
 msgstr ""
+"<span>Comença a vendre directament sense un compte; Paypal enviarà un correu"
+" electrònic per crear el vostre compte nou i cobrar els vostres "
+"pagaments</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid "<strong>No suitable payment acquirer could be found.</strong>"
-msgstr ""
+msgstr "<strong>No s'ha pogut trobar cap mètode de pagament adequat.</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -120,6 +125,9 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment acquirer configuration."
 msgstr ""
+"<strong>Avís!</strong> Hi ha un reemborsament pendent d'aquest pagament.\n"
+"                        Espereu un moment perquè es processi. Si el reemborsament encara està pendent en\n"
+"                        uns minuts, comproveu la configuració del mètode de pagament."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -737,7 +745,7 @@ msgstr "Error"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "Error: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -1304,7 +1312,7 @@ msgstr "Diari de pagament"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
 msgid "Payment Link"
-msgstr ""
+msgstr "Enllaç de pagament"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__payment_method

@@ -3,11 +3,10 @@
 # 	* stock_account
 # 
 # Translators:
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Lucia Pacheco <lpo@odoo.com>, 2022
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -204,7 +203,7 @@ msgstr "Empresa"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -315,7 +314,7 @@ msgstr "Mostrar números de lote y de serie en las facturas"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado en pantalla"
+msgstr "Nombre en pantalla"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
@@ -353,7 +352,7 @@ msgstr "Agrupar por..."
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__id
 msgid "ID"
-msgstr "Identificación"
+msgstr "ID"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -399,7 +398,7 @@ msgstr "Apunte de diario"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
 msgid "Landed Costs"
-msgstr "Costes en destino"
+msgstr "Costos en destino"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer____last_update
@@ -427,7 +426,7 @@ msgstr "Vinculado a"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Lots &amp; Serial numbers will appear on the invoice"
-msgstr "Los lotes y números de serie aparecerán en la factura"
+msgstr "Los números de lote y de serie aparecerán en la factura"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -536,7 +535,7 @@ msgstr "Quants"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason"
-msgstr "Motivo"
+msgstr "Razón"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
@@ -561,7 +560,7 @@ msgstr "Valor restante"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Devolución para recolección"
+msgstr "Recolección de devolución"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
@@ -807,10 +806,10 @@ msgid ""
 msgstr ""
 "Se utiliza para una valorización en tiempo real del inventario. Cuando se "
 "establece en una ubicación virtual (no de tipo interno), esta cuenta se "
-"usará para mantener el valor de los productos que son movidos de una "
-"ubicación interna a esta ubicación, en lugar de la cuenta de salida de "
-"existencias genérica establecida en el producto. No tiene efecto para "
-"ubicaciones internas."
+"usará para mantener el valor de los productos que se mueven de una ubicación"
+" interna a esta ubicación, en lugar de la cuenta de salida de existencias "
+"genérica establecida en el producto. No tiene efecto para ubicaciones "
+"internas."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
@@ -823,7 +822,7 @@ msgid ""
 msgstr ""
 "Se utiliza para una valorización en tiempo real del inventario. Cuando se "
 "establece en una ubicación virtual (no de tipo interno), esta cuenta se "
-"usará para mantener el valor de los productos que son movidos fuera de la "
+"usará para mantener el valor de los productos que se mueven fuera de la "
 "ubicación a una ubicación interna, en lugar de la cuenta de salida de "
 "existencias genérica establecida en el producto. No tiene efecto para "
 "ubicaciones internas."
@@ -856,7 +855,7 @@ msgstr "Valor Svl"
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Warning"
-msgstr "Alerta"
+msgstr "Advertencia"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
@@ -892,22 +891,20 @@ msgstr ""
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
 msgstr ""
-"Modelo de asistente para volver a valorizar un inventario de existencias "
-"para un producto"
+"Modelo de asistente para revalorizar un inventario de existencias para un "
+"producto"
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
-msgstr ""
-"No puede volver a valorizar un producto con un método de costo estándar."
+msgstr "No puede revalorizar un producto con un método de costo estándar."
 
 #. module: stock_account
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr ""
-"No puede volver a valorizar un producto con inventario vacío o negativo."
+msgstr "No puede revalorizar un producto con inventario vacío o negativo."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
