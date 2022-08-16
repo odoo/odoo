@@ -4,7 +4,6 @@ import logging
 from unittest.mock import patch
 
 from lxml import objectify
-from werkzeug import urls
 
 from odoo.fields import Command
 from odoo.tools.misc import hmac as hmac_tool
@@ -243,9 +242,6 @@ class PaymentCommon(AccountTestInvoicingCommon):
         token_str = '|'.join(str(val) for val in values)
         access_token = hmac_tool(self.env(su=True), 'generate_access_token', token_str)
         return access_token
-
-    def _build_url(self, route):
-        return urls.url_join(self.base_url(), route)
 
     def _extract_values_from_html_form(self, html_form):
         """ Extract the transaction rendering values from an HTML form.
