@@ -6,10 +6,6 @@ import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'OtherMemberLongTypingInThreadTimer',
-    identifyingFields: [
-        'partner',
-        'thread',
-    ],
     recordMethods: {
         onOtherMemberLongTypingTimeout() {
             this.thread.unregisterOtherMemberTypingMember(this.partner);
@@ -17,11 +13,13 @@ registerModel({
     },
     fields: {
         partner: one('Partner', {
+            identifying: true,
             inverse: 'otherMemberLongTypingInThreadTimers',
             readonly: true,
             required: true,
         }),
         thread: one('Thread', {
+            identifying: true,
             inverse: 'otherMembersLongTypingTimers',
             readonly: true,
             required: true,

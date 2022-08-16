@@ -7,7 +7,6 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'ActivityGroup',
-    identifyingFields: ['irModel'],
     modelMethods: {
         convertData(data) {
             return {
@@ -45,6 +44,7 @@ registerModel({
         }),
         domain: attr(),
         irModel: one('ir.model', {
+            identifying: true,
             inverse: 'activityGroup',
             readonly: true,
             required: true,

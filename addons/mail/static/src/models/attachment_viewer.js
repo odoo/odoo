@@ -6,7 +6,6 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'AttachmentViewer',
-    identifyingFields: ['dialogOwner'],
     recordMethods: {
         /**
          * Close the dialog with this attachment viewer.
@@ -249,6 +248,7 @@ registerModel({
          * Determines the dialog displaying this attachment viewer.
          */
         dialogOwner: one('Dialog', {
+            identifying: true,
             inverse: 'attachmentViewer',
             isCausal: true,
             readonly: true,

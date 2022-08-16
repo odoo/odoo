@@ -9,7 +9,6 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'CallView',
-    identifyingFields: ['threadView'],
     lifecycleHooks: {
         _created() {
             browser.addEventListener('fullscreenchange', this._onFullScreenChange);
@@ -229,6 +228,7 @@ registerModel({
          * ThreadView on which the call view is attached.
          */
         threadView: one('ThreadView', {
+            identifying: true,
             inverse: 'callView',
             readonly: true,
             required: true,

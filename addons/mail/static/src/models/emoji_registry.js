@@ -6,7 +6,6 @@ import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiRegistry',
-    identifyingFields: ['messaging'],
     fields: {
         allEmojis: many('Emoji', {
             default: insertAndReplace([

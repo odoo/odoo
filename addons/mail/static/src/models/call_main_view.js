@@ -8,7 +8,6 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'CallMainView',
-    identifyingFields: ['callView'],
     recordMethods: {
         /**
          * Finds a tile layout and dimensions that respects param0.aspectRatio while maximizing
@@ -163,6 +162,7 @@ registerModel({
             readonly: true,
         }),
         callView: one('CallView', {
+            identifying: true,
             inverse: 'callMainView',
             required: true,
             readonly: true,

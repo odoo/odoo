@@ -23,7 +23,6 @@ const getMessageNextTemporaryId = (function () {
 
 registerModel({
     name: 'Chatter',
-    identifyingFields: ['id'],
     recordMethods: {
         focus() {
             if (this.composerView) {
@@ -439,6 +438,7 @@ registerModel({
          * of this record.
          */
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

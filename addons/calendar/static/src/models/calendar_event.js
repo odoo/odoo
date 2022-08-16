@@ -9,7 +9,6 @@ import { getLangTimeFormat } from 'web.time';
 
 registerModel({
     name: 'calendar.event',
-    identifyingFields: ['id'],
     recordMethods: {
         _computeFormattedStart() {
             if (!this.start) {
@@ -25,6 +24,7 @@ registerModel({
             compute: '_computeFormattedStart',
         }),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

@@ -6,7 +6,6 @@ import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiCategoryBarView',
-    identifyingFields: ['emojiPickerViewOwner'],
     recordMethods: {
         /**
          * @private
@@ -58,6 +57,7 @@ registerModel({
             isCausal: true,
         }),
         emojiPickerViewOwner: one('EmojiPickerView', {
+            identifying: true,
             inverse: 'emojiCategoryBarView',
             readonly: true,
             required: true,

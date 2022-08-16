@@ -5,7 +5,6 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ir.model',
-    identifyingFields: ['id'],
     recordMethods: {
         /**
          * @private
@@ -28,6 +27,7 @@ registerModel({
         }),
         iconUrl: attr(),
         id: attr({
+            identifying: true,
             required: true,
             readonly: true,
         }),

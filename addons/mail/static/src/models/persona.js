@@ -6,7 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Persona',
-    identifyingFields: [['guest', 'partner']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * @private
@@ -41,6 +41,7 @@ registerModel({
             isCausal: true,
         }),
         guest: one('Guest', {
+            identifying: true,
             inverse: 'persona',
             readonly: true,
         }),
@@ -53,6 +54,7 @@ registerModel({
             readonly: true,
         }),
         partner: one('Partner', {
+            identifying: true,
             inverse: 'persona',
             readonly: true,
         }),

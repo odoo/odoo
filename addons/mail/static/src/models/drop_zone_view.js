@@ -6,7 +6,7 @@ import { decrement, increment } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DropZoneView',
-    identifyingFields: [['chatterOwner', 'composerViewOwner']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * Shows a visual drop effect when dragging inside the dropzone.
@@ -94,10 +94,12 @@ registerModel({
     },
     fields: {
         chatterOwner: one('Chatter', {
+            identifying: true,
             inverse: 'dropZoneView',
             readonly: true,
         }),
         composerViewOwner: one('ComposerView', {
+            identifying: true,
             inverse: 'dropZoneView',
             readonly: true,
         }),

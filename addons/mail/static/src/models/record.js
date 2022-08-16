@@ -16,14 +16,6 @@ registerModel({
      * relational fields. Name of models must be unique.
      */
     name: 'Record',
-     /**
-     * Determines which fields are identifying fields for this model. Must be
-     * overwritten in actual models. This should be a list of either field name
-     * or sub-list of field name. Each top level element will be parsed as "and"
-     * and each element of the same sub-list will be parsed as "or". If there
-     * is no identifying fields, this model generates a singleton.
-     */
-    identifyingFields: ['messaging'],
     lifecycleHooks: {
         /**
          * This function is called after the record has been created, more

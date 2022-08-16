@@ -7,7 +7,6 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'PublicLivechatFeedbackView',
-    identifyingFields: ['publicLivechatGlobalOwner'],
     lifecycleHooks: {
         _created() {
             this.update({
@@ -35,6 +34,7 @@ registerModel({
     },
     fields: {
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
+            identifying: true,
             inverse: 'feedbackView',
             readonly: true,
             required: true,

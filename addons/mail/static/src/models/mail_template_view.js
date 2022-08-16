@@ -5,7 +5,6 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'MailTemplateView',
-    identifyingFields: ['activityViewOwner', 'mailTemplate'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -26,11 +25,13 @@ registerModel({
     },
     fields: {
         activityViewOwner: one('ActivityView', {
+            identifying: true,
             inverse: 'mailTemplateViews',
             readonly: true,
             required: true,
         }),
         mailTemplate: one('MailTemplate', {
+            identifying: true,
             readonly: true,
             required: true,
         }),

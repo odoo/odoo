@@ -6,7 +6,6 @@ import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ActivityBoxView',
-    identifyingFields: ['chatter'],
     recordMethods: {
         /**
          * Handles click on activity box title.
@@ -32,6 +31,7 @@ registerModel({
             isCausal: true,
         }),
         chatter: one('Chatter', {
+            identifying: true,
             inverse: 'activityBoxView',
             readonly: true,
             required: true,

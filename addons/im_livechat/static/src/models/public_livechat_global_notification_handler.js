@@ -9,7 +9,6 @@ import utils from 'web.utils';
 
 registerModel({
     name: 'PublicLivechatGlobalNotificationHandler',
-    identifyingFields: ['publicLivechatGlobalOwner'],
     lifecycleHooks: {
         _created() {
             this.env.services['bus_service'].addChannel(this.messaging.publicLivechatGlobal.publicLivechat.uuid);
@@ -96,6 +95,7 @@ registerModel({
     },
     fields: {
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
+            identifying: true,
             inverse: 'notificationHandler',
             readonly: true,
             required: true,

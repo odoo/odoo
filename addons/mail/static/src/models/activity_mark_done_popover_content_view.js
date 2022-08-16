@@ -6,7 +6,6 @@ import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ActivityMarkDonePopoverContentView',
-    identifyingFields: ['popoverViewOwner'],
     recordMethods: {
         /**
          * Handles blur on this feedback textarea.
@@ -105,6 +104,7 @@ registerModel({
             default: '',
         }),
         popoverViewOwner: one('PopoverView', {
+            identifying: true,
             inverse: 'activityMarkDonePopoverContentView',
             readonly: true,
             required: true,

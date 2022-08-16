@@ -5,7 +5,6 @@ import { registerModel } from '@mail/model/model_core';
 
 registerModel({
     name: 'CallDemoView',
-    identifyingFields: ['welcomeView'],
     recordMethods: {
         /**
          * Stops recording user's microphone.
@@ -174,6 +173,7 @@ registerModel({
          * States the welcome view containing this media preview.
          */
         welcomeView: one('WelcomeView', {
+            identifying: true,
             inverse: 'callDemoView',
             readonly: true,
         }),

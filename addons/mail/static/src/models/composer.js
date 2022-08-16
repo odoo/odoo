@@ -7,7 +7,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'Composer',
-    identifyingFields: [['thread', 'messageViewInEditing']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * @private
@@ -185,6 +185,7 @@ registerModel({
             compute: '_computeMentionedPartners',
         }),
         messageViewInEditing: one('MessageView', {
+            identifying: true,
             inverse: 'composerForEditing',
             readonly: true,
         }),
@@ -218,6 +219,7 @@ registerModel({
          * States the thread which this composer represents the state (if any).
          */
         thread: one('Thread', {
+            identifying: true,
             inverse: 'composer',
             readonly: true,
         }),

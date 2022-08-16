@@ -13,7 +13,7 @@ import { sprintf } from '@web/core/utils/strings';
  */
 registerModel({
     name: 'ComposerSuggestionView',
-    identifyingFields: [['composerSuggestionListViewExtraComposerSuggestionViewItemOwner', 'composerSuggestionListViewMainComposerSuggestionViewItemOwner']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * @param {Event} ev
@@ -115,10 +115,12 @@ registerModel({
             inverse: 'activeSuggestionView',
         }),
         composerSuggestionListViewExtraComposerSuggestionViewItemOwner: one('ComposerSuggestionListViewExtraComposerSuggestionViewItem', {
+            identifying: true,
             inverse: 'composerSuggestionView',
             readonly: true,
         }),
         composerSuggestionListViewMainComposerSuggestionViewItemOwner: one('ComposerSuggestionListViewMainComposerSuggestionViewItem', {
+            identifying: true,
             inverse: 'composerSuggestionView',
             readonly: true,
         }),

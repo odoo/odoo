@@ -11,7 +11,6 @@ import { get_cookie, set_cookie, unaccent } from 'web.utils';
 
 registerModel({
     name: 'LivechatButtonView',
-    identifyingFields: ['publicLivechatGlobalOwner'],
     lifecycleHooks: {
         _created() {
             this.update({ widget: this.env.services.public_livechat_service.mountLivechatButton() });
@@ -609,6 +608,7 @@ registerModel({
             compute: '_computeOpenChatDebounced',
         }),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
+            identifying: true,
             inverse: 'livechatButtonView',
             readonly: true,
             required: true,

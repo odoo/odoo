@@ -6,7 +6,6 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'TrackingValue',
-    identifyingFields: ['id'],
     recordMethods: {
         /**
          * @private
@@ -30,6 +29,7 @@ registerModel({
             compute: '_computeFormattedChangedField',
         }),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),
@@ -46,4 +46,5 @@ registerModel({
             inverse: 'trackingValueAsOldValue',
             isCausal: true,
         }),
-}});
+    },
+});

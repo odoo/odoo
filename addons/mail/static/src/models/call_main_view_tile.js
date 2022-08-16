@@ -6,14 +6,15 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'CallMainViewTile',
-    identifyingFields: ['callMainViewOwner', 'channelMember'],
     fields: {
         callMainViewOwner: one('CallMainView', {
+            identifying: true,
             inverse: 'mainTiles',
             readonly: true,
             required: true,
         }),
         channelMember: one('ChannelMember', {
+            identifying: true,
             readonly: true,
             required: true,
         }),

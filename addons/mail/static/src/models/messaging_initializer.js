@@ -6,7 +6,6 @@ import { link, insert, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessagingInitializer',
-    identifyingFields: ['messaging'],
     recordMethods: {
         /**
          * @returns {Object}

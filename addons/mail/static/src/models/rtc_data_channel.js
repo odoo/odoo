@@ -5,7 +5,6 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'RtcDataChannel',
-    identifyingFields: ['rtcSession'],
     lifecycleHooks: {
         _willDelete() {
             this.dataChannel.close();
@@ -17,6 +16,7 @@ registerModel({
             readonly: true,
         }),
         rtcSession: one('RtcSession', {
+            identifying: true,
             inverse: 'rtcDataChannel',
             readonly: true,
             required: true,

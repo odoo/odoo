@@ -7,7 +7,6 @@ import { localization } from '@web/core/l10n/localization';
 
 registerModel({
     name: 'Locale',
-    identifyingFields: ['messaging'],
     recordMethods: {
         /**
          * @private

@@ -8,7 +8,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ChannelMemberListCategoryView',
-    identifyingFields: [['channelMemberListViewOwnerAsOffline', 'channelMemberListViewOwnerAsOnline']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * @private
@@ -77,10 +77,12 @@ registerModel({
             required: true,
         }),
         channelMemberListViewOwnerAsOffline: one('ChannelMemberListView', {
+            identifying: true,
             inverse: 'offlineCategoryView',
             readonly: true,
         }),
         channelMemberListViewOwnerAsOnline: one('ChannelMemberListView', {
+            identifying: true,
             inverse: 'onlineCategoryView',
             readonly: true,
         }),

@@ -6,7 +6,6 @@ import { replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'SnailmailErrorView',
-    identifyingFields: ['dialogOwner'],
     recordMethods: {
         /**
          * Returns whether the given html element is inside this snailmail error view.
@@ -59,6 +58,7 @@ registerModel({
     fields: {
         component: attr(),
         dialogOwner: one('Dialog', {
+            identifying: true,
             inverse: 'snailmailErrorView',
             readonly: true,
             required: true,

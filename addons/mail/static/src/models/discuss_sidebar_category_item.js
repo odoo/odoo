@@ -8,7 +8,6 @@ import Dialog from 'web.Dialog';
 
 registerModel({
     name: 'DiscussSidebarCategoryItem',
-    identifyingFields: ['category', 'thread'],
     recordMethods: {
         /**
          * @private
@@ -226,6 +225,7 @@ registerModel({
          * Determines the discuss sidebar category displaying this item.
          */
         category: one('DiscussSidebarCategory', {
+            identifying: true,
             inverse: 'categoryItems',
             readonly: true,
             required: true,
@@ -288,6 +288,7 @@ registerModel({
          * The related thread.
          */
         thread: one('Thread', {
+            identifying: true,
             inverse: 'discussSidebarCategoryItem',
             readonly: true,
             required: true,

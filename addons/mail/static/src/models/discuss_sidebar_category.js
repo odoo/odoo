@@ -7,7 +7,7 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'DiscussSidebarCategory',
-    identifyingFields: [['discussAsChannel', 'discussAsChat']],
+    identifyingMode: 'xor',
     modelMethods: {
         /**
          * Performs the `set_res_users_settings` RPC on `res.users.settings`.
@@ -377,10 +377,12 @@ registerModel({
             sum: 'categoryItems.categoryCounterContribution',
         }),
         discussAsChannel: one('Discuss', {
+            identifying: true,
             inverse: 'categoryChannel',
             readonly: true,
         }),
         discussAsChat: one('Discuss', {
+            identifying: true,
             inverse: 'categoryChat',
             readonly: true,
         }),

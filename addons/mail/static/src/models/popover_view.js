@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'PopoverView',
-    identifyingFields: [['activityViewOwnerAsMarkDone', 'composerViewOwnerAsEmoji', 'messageActionListOwnerAsReaction', 'threadViewTopbarOwnerAsInvite']],
+    identifyingMode: 'xor',
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);
@@ -179,6 +179,7 @@ registerModel({
             readonly: true,
         }),
         activityViewOwnerAsMarkDone: one('ActivityView', {
+            identifying: true,
             inverse: 'markDonePopoverView',
             readonly: true,
         }),
@@ -206,6 +207,7 @@ registerModel({
          * If set, this popover view is owned by a composer view.
          */
         composerViewOwnerAsEmoji: one('ComposerView', {
+            identifying: true,
             inverse: 'emojisPopoverView',
             readonly: true,
         }),
@@ -250,6 +252,7 @@ registerModel({
          * If set, this popover view is owned by a message action list.
          */
         messageActionListOwnerAsReaction: one('MessageActionList', {
+            identifying: true,
             inverse: 'reactionPopoverView',
             readonly: true,
         }),
@@ -265,6 +268,7 @@ registerModel({
          * If set, this popover view is owned by a thread view topbar record.
          */
         threadViewTopbarOwnerAsInvite: one('ThreadViewTopbar', {
+            identifying: true,
             inverse: 'invitePopoverView',
             readonly: true,
         }),

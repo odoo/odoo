@@ -5,7 +5,6 @@ import { attr } from '@mail/model/model_field';
 
 registerModel({
     name: 'RtcPeerNotification',
-    identifyingFields: ['id'],
     fields: {
         channelId: attr({
             readonly: true,
@@ -21,6 +20,7 @@ registerModel({
          * given by the creator of this record.
          */
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

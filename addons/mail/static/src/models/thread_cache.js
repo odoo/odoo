@@ -7,7 +7,6 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'ThreadCache',
-    identifyingFields: ['thread'],
     recordMethods: {
         async loadMoreMessages() {
             if (this.isAllHistoryLoaded || this.isLoading) {
@@ -359,6 +358,7 @@ registerModel({
             compute: '_computeOrderedNonEmptyMessages',
         }),
         thread: one('Thread', {
+            identifying: true,
             inverse: 'cache',
             readonly: true,
             required: true,

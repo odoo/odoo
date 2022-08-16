@@ -6,7 +6,6 @@ import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiPickerView',
-    identifyingFields: ['popoverViewOwner'],
     fields: {
         emojiCategoryBarView: one('EmojiCategoryBarView', {
             default: insertAndReplace(),
@@ -23,6 +22,7 @@ registerModel({
             isCausal: true,
         }),
         popoverViewOwner: one('PopoverView', {
+            identifying: true,
             inverse: 'emojiPickerView',
             readonly: true,
             required: true,

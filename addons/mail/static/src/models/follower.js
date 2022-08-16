@@ -6,7 +6,6 @@ import { clear, insert, insertAndReplace, link, replace, unlink } from '@mail/mo
 
 registerModel({
     name: 'Follower',
-    identifyingFields: ['id'],
     modelMethods: {
         /**
          * @param {Object} data
@@ -184,6 +183,7 @@ registerModel({
             isCausal: true,
         }),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

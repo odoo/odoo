@@ -1,17 +1,14 @@
 /** @odoo-module **/
 
-import { addFields, addRecordMethods, patchIdentifyingFields, patchRecordMethods } from '@mail/model/model_core';
+import { addFields, addRecordMethods, patchRecordMethods } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/dialog';
 
-patchIdentifyingFields('Dialog', identifyingFields => {
-    identifyingFields[0].push('messageViewOwnerAsSnailmailError');
-});
-
 addFields('Dialog', {
     messageViewOwnerAsSnailmailError: one('MessageView', {
+        identifying: true,
         inverse: 'snailmailErrorDialog',
         readonly: true,
     }),

@@ -6,12 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AutocompleteInputView',
-    identifyingFields: [[
-        'chatWindowOwnerAsNewMessage',
-        'discussSidebarCategoryOwnerAsAddingItem',
-        'discussViewOwnerAsMobileAddItemHeader',
-        'messagingMenuOwnerAsMobileNewMessageInput',
-    ]],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * @param {FocusEvent} ev
@@ -92,6 +87,7 @@ registerModel({
     },
     fields: {
         chatWindowOwnerAsNewMessage: one('ChatWindow', {
+            identifying: true,
             inverse: 'newMessageAutocompleteInputView',
             readonly: true,
         }),
@@ -101,10 +97,12 @@ registerModel({
             default: '',
         }),
         discussSidebarCategoryOwnerAsAddingItem: one('DiscussSidebarCategory', {
+            identifying: true,
             inverse: 'addingItemAutocompleteInputView',
             readonly: true,
         }),
         discussViewOwnerAsMobileAddItemHeader: one('DiscussView', {
+            identifying: true,
             inverse: 'mobileAddItemHeaderAutocompleteInputView',
             readonly: true,
         }),
@@ -117,6 +115,7 @@ registerModel({
             default: false,
         }),
         messagingMenuOwnerAsMobileNewMessageInput: one('MessagingMenu', {
+            identifying: true,
             inverse: 'mobileNewMessageAutocompleteInputView',
             readonly: true,
         }),

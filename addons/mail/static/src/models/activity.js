@@ -8,7 +8,6 @@ const { markup } = owl;
 
 registerModel({
     name: 'Activity',
-    identifyingFields: ['id'],
     modelMethods: {
         /**
          * @param {Object} data
@@ -289,6 +288,7 @@ registerModel({
         }),
         icon: attr(),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

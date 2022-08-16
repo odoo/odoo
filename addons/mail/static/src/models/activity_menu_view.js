@@ -8,7 +8,6 @@ import session from 'web.session';
 
 registerModel({
     name: 'ActivityMenuView',
-    identifyingFields: [],
     lifecycleHooks: {
         _created() {
             this.fetchData();

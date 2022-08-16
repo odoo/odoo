@@ -9,7 +9,6 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ActivityView',
-    identifyingFields: ['activityBoxView', 'activity'],
     recordMethods: {
         /**
          * Handles the click on a link inside the activity.
@@ -169,11 +168,13 @@ registerModel({
     },
     fields: {
         activity: one('Activity', {
+            identifying: true,
             inverse: 'activityViews',
             required: true,
             readonly: true,
         }),
         activityBoxView: one('ActivityBoxView', {
+            identifying: true,
             inverse: 'activityViews',
             readonly: true,
             required: true,

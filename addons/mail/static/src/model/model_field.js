@@ -18,6 +18,7 @@ export class ModelField {
         default: def,
         fieldName,
         fieldType,
+        identifying = false,
         inverse,
         isCausal = false,
         readonly = false,
@@ -52,6 +53,10 @@ export class ModelField {
          *   2. 'relation': fields that relate to some other records.
          */
         this.fieldType = fieldType;
+        /**
+         * Determines whether this field is an identifying field for its model.
+         */
+        this.identifying = identifying;
         /**
          * This prop only makes sense in a relational field. This contains
          * the name of the field name in the inverse relation. This may not

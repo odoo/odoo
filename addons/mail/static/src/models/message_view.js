@@ -7,7 +7,7 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'MessageView',
-    identifyingFields: [['messageListViewMessageViewItemOwner', 'deleteMessageConfirmViewOwner']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * Briefly highlights the message.
@@ -471,6 +471,7 @@ registerModel({
          * message view.
          */
         deleteMessageConfirmViewOwner: one('DeleteMessageConfirmView', {
+            identifying: true,
             inverse: 'messageView',
             readonly: true,
         }),
@@ -597,6 +598,7 @@ registerModel({
             readonly: true,
         }),
         messageListViewMessageViewItemOwner: one('MessageListViewMessageViewItem', {
+            identifying: true,
             inverse: 'messageView',
             readonly: true,
         }),

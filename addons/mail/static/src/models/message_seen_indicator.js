@@ -7,7 +7,6 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'MessageSeenIndicator',
-    identifyingFields: ['thread', 'message'],
     recordMethods: {
         /**
          * Manually called as not always called when necessary
@@ -258,6 +257,7 @@ registerModel({
          * The message concerned by this seen indicator.
          */
         message: one('Message', {
+            identifying: true,
             readonly: true,
             required: true,
         }),
@@ -275,6 +275,7 @@ registerModel({
          * The thread concerned by this seen indicator.
          */
         thread: one('Thread', {
+            identifying: true,
             inverse: 'messageSeenIndicators',
             readonly: true,
             required: true,

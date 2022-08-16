@@ -5,9 +5,9 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ChatbotStep',
-    identifyingFields: ['chabotOwner'],
     fields: {
         chabotOwner: one('Chatbot', {
+            identifying: true,
             inverse: 'currentStep',
             readonly: true,
             required: true,

@@ -6,7 +6,6 @@ import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentCard',
-    identifyingFields: ['attachmentList', 'attachment'],
     recordMethods: {
         /**
          * Opens the attachment viewer when clicking on viewable attachment.
@@ -49,6 +48,7 @@ registerModel({
          * Determines the attachment of this card.
          */
         attachment: one('Attachment', {
+            identifying: true,
             readonly: true,
             required: true,
         }),
@@ -60,6 +60,7 @@ registerModel({
          * States the attachmentList displaying this card.
          */
         attachmentList: one('AttachmentList', {
+            identifying: true,
             inverse: 'attachmentCards',
             readonly: true,
             required: true,

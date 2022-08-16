@@ -44,7 +44,6 @@ const BASE_VISUAL = {
 
 registerModel({
     name: 'ChatWindowManager',
-    identifyingFields: ['messaging'],
     recordMethods: {
         /**
          * Close all chat windows.

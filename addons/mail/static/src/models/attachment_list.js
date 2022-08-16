@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'AttachmentList',
-    identifyingFields: [['composerViewOwner', 'messageViewOwner', 'attachmentBoxViewOwner']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * Select the next attachment.
@@ -137,6 +137,7 @@ registerModel({
          * Link with a AttachmentBoxView to handle attachments.
          */
         attachmentBoxViewOwner: one('AttachmentBoxView', {
+            identifying: true,
             inverse: 'attachmentList',
             readonly: true,
         }),
@@ -171,6 +172,7 @@ registerModel({
          * Link with a composer view to handle attachments.
          */
         composerViewOwner: one('ComposerView', {
+            identifying: true,
             inverse: 'attachmentList',
             readonly: true,
         }),
@@ -220,6 +222,7 @@ registerModel({
          * Link with a message view to handle attachments.
          */
         messageViewOwner: one('MessageView', {
+            identifying: true,
             inverse: 'attachmentList',
             readonly: true,
         }),
