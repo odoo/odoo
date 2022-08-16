@@ -149,7 +149,7 @@ class StockMove(models.Model):
         for move in self:
             if move.state != 'draft':
                 continue
-            move.manual_consumption = move.bom_line_id.manual_consumption or move.product_id.tracking != 'none'
+            move.manual_consumption = not move.raw_material_production_id.use_auto_consume_components_lots and (move.bom_line_id.manual_consumption or move.has_tracking != 'none')
 
     @api.depends('bom_line_id')
     def _compute_description_bom_line(self):
@@ -443,8 +443,7 @@ class StockMove(models.Model):
         # Do not update extra product quantities
         if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
             return True
-        if self.has_tracking != 'none' or self.state == 'done' or \
-           self.manual_consumption or self._origin.manual_consumption:
+        if (not self.raw_material_production_id.use_auto_consume_components_lots and self.has_tracking != 'none') or self.manual_consumption or self._origin.manual_consumption:
             return True
         return False
 
