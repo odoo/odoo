@@ -332,10 +332,14 @@ class HolidaysAllocation(models.Model):
         first_day_this_year = fields.Date.today() + relativedelta(month=1, day=1)
         for allocation in self:
             current_level = allocation._get_current_accrual_plan_level_id(first_day_this_year)[0]
+            lastcall = current_level._get_previous_date(first_day_this_year)
             nextcall = current_level._get_next_date(first_day_this_year)
+            if lastcall == first_day_this_year:
+                lastcall = current_level._get_previous_date(first_day_this_year - relativedelta(days=1))
+                nextcall = first_day_this_year
             if current_level and current_level.action_with_unused_accruals == 'lost':
                 # Allocations are lost but number_of_days should not be lower than leaves_taken
-                allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': first_day_this_year, 'nextcall': nextcall})
+                allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': lastcall, 'nextcall': nextcall})
 
     def _get_current_accrual_plan_level_id(self, date, level_ids=False):
         """
@@ -432,15 +436,6 @@ class HolidaysAllocation(models.Model):
                 # this is used to prorate the first number of days given to the employee
                 period_start = current_level._get_previous_date(allocation.lastcall)
                 period_end = current_level._get_next_date(allocation.lastcall)
-                # If accruals are lost at the beginning of year, skip accrual until beginning of this year
-                if current_level.action_with_unused_accruals == 'lost':
-                    this_year_first_day = today + relativedelta(day=1, month=1)
-                    if period_end < this_year_first_day:
-                        allocation.lastcall = allocation.nextcall
-                        allocation.nextcall = nextcall
-                        continue
-                    else:
-                        period_start = max(period_start, this_year_first_day)
                 # Also prorate this accrual in the event that we are passing from one level to another
                 if current_level_idx < (len(level_ids) - 1) and allocation.accrual_plan_id.transition_mode == 'immediately':
                     next_level = level_ids[current_level_idx + 1]
