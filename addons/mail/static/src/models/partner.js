@@ -423,9 +423,6 @@ registerModel({
         isOnline: attr({
             compute: '_computeIsOnline',
         }),
-        memberThreads: many('Thread', {
-            inverse: 'members',
-        }),
         model: attr({
             default: 'res.partner',
         }),
