@@ -184,8 +184,11 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         async getNewPartners() {
             let domain = [];
             if(this.state.query) {
-                domain = ['|', ["name", "ilike", this.state.query + "%"],
-                               ["parent_name", "ilike", this.state.query + "%"]];
+                domain = ['|', '|',
+                    ["parent_name", "ilike", this.state.query],
+                    ["display_name", "ilike", this.state.query],
+                    ["email", "ilike", this.state.query],
+                ];
             }
             const result = await this.env.services.rpc(
                 {
