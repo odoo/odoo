@@ -586,6 +586,9 @@ export class ListRenderer extends Component {
         if (record.isInEdition) {
             classNames.push("o_selected_row");
         }
+        if (record.selected) {
+            classNames.push("o_data_row_selected");
+        }
         if (this.props.list.model.useSampleModel) {
             classNames.push("o_sample_data_disabled");
         }
