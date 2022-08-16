@@ -10,6 +10,8 @@
     'version': '0.1',
     'depends': ['website_sale_delivery', 'delivery_mondialrelay'],
     'data': [
+        'views/delivery_carrier_views.xml',
+        'views/res_config_settings_views.xml',
         'views/templates.xml',
     ],
     'assets': {
