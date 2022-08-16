@@ -34,6 +34,7 @@ registerModel({
             for (const template of templates) {
                 qweb.add_template(template);
             }
+            this.update({ hasLoadedQWebTemplate: true });
         },
         /**
           * @private
@@ -50,7 +51,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeLivechatButtonView() {
-            if (this.isAvailable) {
+            if (this.isAvailable && this.hasLoadedQWebTemplate && this.env.services.public_livechat_service) {
                 return insertAndReplace();
             }
             return clear();
@@ -74,6 +75,9 @@ registerModel({
         feedbackView: one('PublicLivechatFeedbackView', {
             inverse: 'publicLivechatGlobalOwner',
             isCausal: true,
+        }),
+        hasLoadedQWebTemplate: attr({
+            default: false,
         }),
         isAvailable: attr({
             default: false,
