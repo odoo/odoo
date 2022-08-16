@@ -67,4 +67,3 @@ class TestPurchaseRequisitionCommon(common.TransactionCase):
         cls.res_partner_1 = cls.env['res.partner'].create({
             'name': 'Wood Corner',
         })
-        cls.env.user.company_id.currency_id = cls.env.ref("base.USD").id
