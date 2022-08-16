@@ -1,23 +1,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from functools import partial
-import json
 import logging
-from psycopg2 import IntegrityError, OperationalError, errorcodes
 import random
 import threading
 import time
+from collections.abc import Mapping, Sequence
+from functools import partial
+
+from psycopg2 import IntegrityError, OperationalError, errorcodes
 
 import odoo
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.models import check_method_name
 from odoo.tools import DotDict
-from odoo.tools.translate import translate_sql_constraint
-from odoo.tools.translate import _
-
+from odoo.tools.translate import _, translate_sql_constraint
 from . import security
-from ..tools import traverse_containers, lazy
+from ..tools import lazy
 
 _logger = logging.getLogger(__name__)
 
@@ -52,7 +50,7 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     result = retrying(partial(odoo.api.call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)
-    for l in traverse_containers(result, lazy):
+    for l in _traverse_containers(result, lazy):
         _0 = l._value
     return result
 
@@ -167,3 +165,22 @@ def retrying(func, env):
         env.cr.commit()  # effectively commits and execute post-commits
     env.registry.signal_changes()
     return result
+
+
+def _traverse_containers(val, type_):
+    """ Yields atoms filtered by specified ``type_`` (or type tuple), traverses
+    through standard containers (non-string mappings or sequences) *unless*
+    they're selected by the type filter
+    """
+    from odoo.models import BaseModel
+    if isinstance(val, type_):
+        yield val
+    elif isinstance(val, (str, bytes, BaseModel)):
+        return
+    elif isinstance(val, Mapping):
+        for k, v in val.items():
+            yield from _traverse_containers(k, type_)
+            yield from _traverse_containers(v, type_)
+    elif isinstance(val, Sequence):
+        for v in val:
+            yield from _traverse_containers(v, type_)
