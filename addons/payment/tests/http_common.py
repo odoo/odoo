@@ -2,7 +2,9 @@
 
 import json
 from uuid import uuid4
+
 from lxml import etree, objectify
+from werkzeug import urls
 
 from odoo.tests import HttpCase
 
@@ -18,6 +20,9 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
 
     # Helpers #
     ###########
+
+    def _build_url(self, route):
+        return urls.url_join(self.base_url(), route)
 
     def _make_http_get_request(self, url, params=None):
         """ Make an HTTP GET request to the provided URL.
