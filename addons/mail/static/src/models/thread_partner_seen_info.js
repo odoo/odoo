@@ -5,7 +5,6 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ThreadPartnerSeenInfo',
-    identifyingFields: ['thread', 'partner'],
     fields: {
         lastFetchedMessage: one('Message'),
         lastSeenMessage: one('Message'),
@@ -13,6 +12,7 @@ registerModel({
          * Partner that this seen info is related to.
          */
         partner: one('Partner', {
+            identifying: true,
             readonly: true,
             required: true,
         }),
@@ -21,6 +21,7 @@ registerModel({
          */
         thread: one('Thread', {
             inverse: 'partnerSeenInfos',
+            identifying: true,
             readonly: true,
             required: true,
         }),

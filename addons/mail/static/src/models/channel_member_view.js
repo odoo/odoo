@@ -3,11 +3,10 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
-import { isEventHandled } from '@mail/utils/utils'
+import { isEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'ChannelMemberView',
-    identifyingFields: ['channelMemberListCategoryViewOwner', 'channelMember'],
     recordMethods: {
         /**
          * Handles click on channel member in the member list of this channel.
@@ -47,11 +46,13 @@ registerModel({
     },
     fields: {
         channelMemberListCategoryViewOwner: one('ChannelMemberListCategoryView', {
+            identifying: true,
             inverse: 'channelMemberViews',
             readonly: true,
             required: true,
         }),
         channelMember: one('ChannelMember', {
+            identifying: true,
             inverse: 'channelMemberViews',
             readonly: true,
             required: true,

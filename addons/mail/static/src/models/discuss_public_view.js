@@ -6,7 +6,6 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'DiscussPublicView',
-    identifyingFields: ['messaging'],
     recordMethods: {
         /**
          * Creates and displays the thread view and clears the welcome view.

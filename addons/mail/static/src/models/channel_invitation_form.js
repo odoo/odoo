@@ -9,7 +9,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ChannelInvitationForm',
-    identifyingFields: [['chatWindow', 'popoverViewOwner']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * Handles click on the "copy" button.
@@ -236,6 +236,7 @@ registerModel({
             compute: '_computeAccessRestrictedToGroupText',
         }),
         chatWindow: one('ChatWindow', {
+            identifying: true,
             inverse: 'channelInvitationForm',
             readonly: true,
         }),
@@ -271,6 +272,7 @@ registerModel({
          * If set, this channel invitation form is content of related popover view.
          */
         popoverViewOwner: one('PopoverView', {
+            identifying: true,
             inverse: 'channelInvitationForm',
             isCausal: true,
             readonly: true,

@@ -6,7 +6,6 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'PublicLivechatMessage',
-    identifyingFields: ['id'],
     recordMethods: {
         /**
          * @private
@@ -25,6 +24,7 @@ registerModel({
         }),
         data: attr(),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

@@ -7,7 +7,6 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'ChatterTopbar',
-    identifyingFields: ['chatter'],
     recordMethods: {
         /**
          * @private
@@ -41,6 +40,7 @@ registerModel({
             compute: '_computeAttachmentButtonText',
         }),
         chatter: one('Chatter', {
+            identifying: true,
             inverse: 'topbar',
             readonly: true,
             required: true,

@@ -6,7 +6,6 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallOptionMenu',
-    identifyingFields: ['callActionListView'],
     recordMethods: {
         /**
          * @param {Event} ev
@@ -67,6 +66,7 @@ registerModel({
          */
         component: attr(),
         callActionListView: one('CallActionListView', {
+            identifying: true,
             inverse: 'callOptionMenu',
             readonly: true,
             required: true,

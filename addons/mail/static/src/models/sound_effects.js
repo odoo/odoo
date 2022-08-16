@@ -6,7 +6,6 @@ import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'SoundEffects',
-    identifyingFields: ['messaging'],
     fields: {
         channelJoin: one('SoundEffect', {
             default: insertAndReplace({ defaultVolume: 0.3, filename: 'channel_01_in' }),

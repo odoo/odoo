@@ -6,7 +6,6 @@ import { clear, insert, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Visitor',
-    identifyingFields: ['id'],
     modelMethods: {
         convertData(data) {
             const data2 = {};
@@ -108,6 +107,7 @@ registerModel({
          * States the id of this visitor.
          */
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

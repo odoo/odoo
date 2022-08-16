@@ -6,7 +6,6 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'RtcSession',
-    identifyingFields: ['id'],
     lifecycleHooks: {
         _willDelete() {
             this.reset();
@@ -380,6 +379,7 @@ registerModel({
          * Id of the record on the server.
          */
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

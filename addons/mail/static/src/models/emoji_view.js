@@ -5,7 +5,6 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'EmojiView',
-    identifyingFields: ['emojiGridView', 'emoji'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -35,11 +34,13 @@ registerModel({
     },
     fields: {
         emoji: one('Emoji', {
+            identifying: true,
             inverse: 'emojiViews',
             readonly: true,
             required: true,
         }),
         emojiGridView: one('EmojiGridView', {
+            identifying: true,
             inverse: 'emojiViews',
             readonly: true,
             required: true,

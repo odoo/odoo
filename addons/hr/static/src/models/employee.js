@@ -6,7 +6,6 @@ import { clear, insert } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Employee',
-    identifyingFields: ['id'],
     modelMethods: {
         /**
          * @param {Object} data
@@ -164,6 +163,7 @@ registerModel({
          * Unique identifier for this employee.
          */
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

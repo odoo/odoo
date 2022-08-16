@@ -6,7 +6,7 @@ import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DiscussSidebarMailboxView',
-    identifyingFields: [['discussViewOwnerAsHistory', 'discussViewOwnerAsInbox', 'discussViewOwnerAsStarred']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * @private
@@ -27,14 +27,17 @@ registerModel({
     },
     fields: {
         discussViewOwnerAsHistory: one('DiscussView', {
+            identifying: true,
             inverse: 'historyView',
             readonly: true,
         }),
         discussViewOwnerAsInbox: one('DiscussView', {
+            identifying: true,
             inverse: 'inboxView',
             readonly: true,
         }),
         discussViewOwnerAsStarred: one('DiscussView', {
+            identifying: true,
             inverse: 'starredView',
             readonly: true,
         }),

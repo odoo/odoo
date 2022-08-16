@@ -6,7 +6,6 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'NotificationGroupView',
-    identifyingFields: ['notificationListViewOwner', 'notificationGroup'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -52,11 +51,13 @@ registerModel({
          */
         markAsReadRef: attr(),
         notificationGroup: one('NotificationGroup', {
+            identifying: true,
             inverse: 'notificationGroupViews',
             readonly: true,
             required: true,
         }),
         notificationListViewOwner: one('NotificationListView', {
+            identifying: true,
             inverse: 'notificationGroupViews',
             readonly: true,
             required: true,

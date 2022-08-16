@@ -7,7 +7,6 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'AttachmentImage',
-    identifyingFields: ['attachmentList', 'attachment'],
     recordMethods: {
         /**
          * Called when clicking on download icon.
@@ -115,6 +114,7 @@ registerModel({
          * Determines the attachment of this attachment image..
          */
         attachment: one('Attachment', {
+            identifying: true,
             readonly: true,
             required: true,
         }),
@@ -126,6 +126,7 @@ registerModel({
          * States the attachmentList displaying this attachment image.
          */
         attachmentList: one('AttachmentList', {
+            identifying: true,
             inverse: 'attachmentImages',
             readonly: true,
             required: true,

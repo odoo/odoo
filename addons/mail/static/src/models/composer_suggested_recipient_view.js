@@ -5,14 +5,15 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ComposerSuggestedRecipientView',
-    identifyingFields: ['composerSuggestedRecipientListViewOwner', 'suggestedRecipientInfo'],
     fields: {
         composerSuggestedRecipientListViewOwner: one('ComposerSuggestedRecipientListView', {
+            identifying: true,
             inverse: 'composerSuggestedRecipientViews',
             readonly: true,
             required: true,
         }),
         suggestedRecipientInfo: one('SuggestedRecipientInfo', {
+            identifying: true,
             inverse: 'composerSuggestedRecipientViews',
             readonly: true,
             required: true,

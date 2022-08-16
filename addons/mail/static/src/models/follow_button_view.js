@@ -6,7 +6,6 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'FollowButtonView',
-    identifyingFields: [['chatterOwner']],
     recordMethods: {
         /**
          * @private
@@ -64,6 +63,7 @@ registerModel({
     },
     fields: {
         chatterOwner: one('Chatter', {
+            identifying: true,
             inverse: 'followButtonView',
             readonly: true,
         }),

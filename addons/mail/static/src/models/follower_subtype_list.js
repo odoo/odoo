@@ -6,7 +6,6 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'FollowerSubtypeList',
-    identifyingFields: ['dialogOwner'],
     recordMethods: {
         /**
          * Returns whether the given html element is inside this follower subtype list.
@@ -68,6 +67,7 @@ registerModel({
          * States the dialog displaying this follower subtype list.
          */
         dialogOwner: one('Dialog', {
+            identifying: true,
             inverse: 'followerSubtypeList',
             isCausal: true,
             readonly: true,

@@ -7,7 +7,6 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'DiscussView',
-    identifyingFields: ['discuss'],
     recordMethods: {
         /**
          * Handles click on the mobile "new channel" button.
@@ -136,6 +135,7 @@ registerModel({
          */
         actionId: attr(),
         discuss: one('Discuss', {
+            identifying: true,
             inverse: 'discussView',
             readonly: true,
             required: true,

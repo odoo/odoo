@@ -8,7 +8,6 @@ import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
 registerModel({
     name: 'WebClientViewAttachmentView',
-    identifyingFields: ['id'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -57,6 +56,7 @@ registerModel({
     fields: {
         component: attr(),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

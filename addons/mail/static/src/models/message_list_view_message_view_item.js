@@ -10,17 +10,18 @@ import { insertAndReplace } from '@mail/model/model_field_command';
  */
 registerModel({
     name: 'MessageListViewMessageViewItem',
-    identifyingFields: ['messageListViewOwner', 'message'],
     fields: {
         isSquashed: attr({
             required: true,
         }),
         message: one('Message', {
+            identifying: true,
             inverse: 'messageListViewMessageViewItems',
             readonly: true,
             required: true,
         }),
         messageListViewOwner: one('MessageListView', {
+            identifying: true,
             inverse: 'messageListViewMessageViewItems',
             readonly: true,
             required: true,

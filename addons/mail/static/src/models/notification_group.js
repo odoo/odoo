@@ -7,7 +7,6 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'NotificationGroup',
-    identifyingFields: ['res_model', 'res_id', 'notification_type'],
     recordMethods: {
         /**
          * Cancel notifications of the group.
@@ -113,6 +112,7 @@ registerModel({
             compute: '_computeDate',
         }),
         notification_type: attr({
+            identifying: true,
             readonly: true,
         }),
         notifications: many('Notification', {
@@ -123,9 +123,11 @@ registerModel({
             isCausal: true,
         }),
         res_id: attr({
+            identifying: true,
             readonly: true,
         }),
         res_model: attr({
+            identifying: true,
             readonly: true,
         }),
         res_model_name: attr(),

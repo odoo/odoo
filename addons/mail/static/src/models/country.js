@@ -6,7 +6,6 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Country',
-    identifyingFields: ['id'],
     recordMethods: {
         /**
          * @private
@@ -25,6 +24,7 @@ registerModel({
             compute: '_computeFlagUrl',
         }),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

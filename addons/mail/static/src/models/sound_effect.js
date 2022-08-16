@@ -5,7 +5,6 @@ import { attr } from '@mail/model/model_field';
 
 registerModel({
     name: 'SoundEffect',
-    identifyingFields: ['path', 'filename'],
     recordMethods: {
         /**
          * @param {Object} param0
@@ -61,6 +60,7 @@ registerModel({
          * Name of the audio file.
          */
         filename: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),
@@ -69,6 +69,7 @@ registerModel({
          */
         path: attr({
             default: '/mail/static/src/audio/',
+            identifying: true,
             readonly: true,
             required: true,
         }),

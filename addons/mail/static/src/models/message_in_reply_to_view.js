@@ -7,7 +7,6 @@ import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'MessageInReplyToView',
-    identifyingFields: ['messageView'],
     recordMethods: {
         /**
          * @private
@@ -60,6 +59,7 @@ registerModel({
             compute: '_computeHasBodyBackLink',
         }),
         messageView: one('MessageView', {
+            identifying: true,
             inverse: 'messageInReplyToView',
             readonly: true,
             required: true,

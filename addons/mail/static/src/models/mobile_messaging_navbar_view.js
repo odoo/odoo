@@ -6,7 +6,7 @@ import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MobileMessagingNavbarView',
-    identifyingFields: [['discuss', 'messagingMenu']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * @param {string} tabId
@@ -97,10 +97,12 @@ registerModel({
             compute: '_computeActiveTabId',
         }),
         discuss: one('Discuss', {
+            identifying: true,
             inverse: 'mobileMessagingNavbarView',
             readonly: true,
         }),
         messagingMenu: one('MessagingMenu', {
+            identifying: true,
             inverse: 'mobileMessagingNavbarView',
             readonly: true,
         }),

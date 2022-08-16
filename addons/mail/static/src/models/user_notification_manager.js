@@ -8,7 +8,6 @@ import { url } from '@web/core/utils/urls';
 
 registerModel({
     name: 'UserNotificationManager',
-    identifyingFields: [],
     recordMethods: {
         /**
          * Send a notification, preferably a native one. If native

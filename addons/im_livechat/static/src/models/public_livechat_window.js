@@ -8,7 +8,6 @@ import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'PublicLivechatWindow',
-    identifyingFields: ['livechatButtonViewOwner'],
     lifecycleHooks: {
         _created() {
             this.update({
@@ -43,6 +42,7 @@ registerModel({
             default: null,
         }),
         livechatButtonViewOwner: one('LivechatButtonView', {
+            identifying: true,
             inverse: 'chatWindow',
             readonly: true,
             required: true,

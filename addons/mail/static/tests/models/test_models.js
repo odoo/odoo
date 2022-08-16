@@ -6,9 +6,9 @@ import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'TestAddress',
-    identifyingFields: ['id'],
     fields: {
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),
@@ -21,9 +21,9 @@ registerModel({
 
 registerModel({
     name: 'TestContact',
-    identifyingFields: ['id'],
     fields: {
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),
@@ -47,9 +47,9 @@ registerModel({
 
 registerModel({
     name: 'TestHobby',
-    identifyingFields: ['description'],
     fields: {
         description: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),
@@ -58,9 +58,9 @@ registerModel({
 
 registerModel({
     name: 'TestTask',
-    identifyingFields: ['id'],
     fields: {
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

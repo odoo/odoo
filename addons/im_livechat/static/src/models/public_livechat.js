@@ -8,7 +8,6 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'PublicLivechat',
-    identifyingFields: ['publicLivechatGlobalOwner'],
     lifecycleHooks: {
         _created() {
             this.update({
@@ -93,6 +92,7 @@ registerModel({
         }),
         legacyPublicLivechat: attr(),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
+            identifying: true,
             inverse: 'publicLivechat',
             readonly: true,
             required: true,

@@ -8,7 +8,6 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'CallSystrayMenu',
-    identifyingFields: ['rtc'],
     recordMethods: {
         /**
          * @private
@@ -30,6 +29,7 @@ registerModel({
             default: '',
         }),
         rtc: one('Rtc', {
+            identifying: true,
             inverse: 'callSystrayMenu',
             readonly: true,
             required: true,

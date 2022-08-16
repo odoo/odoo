@@ -5,7 +5,6 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'CallInviteRequestPopup',
-    identifyingFields: ['thread'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -35,6 +34,7 @@ registerModel({
     },
     fields: {
         thread: one('Thread', {
+            identifying: true,
             inverse: 'callInviteRequestPopup',
             readonly: true,
             required: true,

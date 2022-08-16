@@ -6,7 +6,6 @@ import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'FollowerListMenuView',
-    identifyingFields: [['chatterOwner']],
     recordMethods: {
         hide() {
             this.update({ isDropdownOpen: false });
@@ -48,6 +47,7 @@ registerModel({
     },
     fields: {
         chatterOwner: one('Chatter', {
+            identifying: true,
             inverse: 'followerListMenuView',
             readonly: true,
         }),

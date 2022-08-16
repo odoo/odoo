@@ -8,7 +8,6 @@ import { SIZES } from '@web/core/ui/ui_service';
 
 registerModel({
     name: 'Device',
-    identifyingFields: ['messaging'],
     lifecycleHooks: {
         _created() {
             this._refresh();

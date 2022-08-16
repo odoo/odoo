@@ -7,7 +7,7 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'Mailbox',
-    identifyingFields: [['messagingAsHistory', 'messagingAsInbox', 'messagingAsStarred']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * @returns {string|FieldCommand}
@@ -116,14 +116,17 @@ registerModel({
             inverse: 'allMailboxes',
         }),
         messagingAsHistory: one('Messaging', {
+            identifying: true,
             inverse: 'history',
             readonly: true,
         }),
         messagingAsInbox: one('Messaging', {
+            identifying: true,
             inverse: 'inbox',
             readonly: true,
         }),
         messagingAsStarred: one('Messaging', {
+            identifying: true,
             inverse: 'starred',
             readonly: true,
         }),

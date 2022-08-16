@@ -6,7 +6,7 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadViewer',
-    identifyingFields: [['chatter', 'chatWindow', 'discuss', 'discussPublicView']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * @param {integer} scrollHeight
@@ -73,10 +73,12 @@ registerModel({
     },
     fields: {
         chatter: one('Chatter', {
+            identifying: true,
             inverse: 'threadViewer',
             readonly: true,
         }),
         chatWindow: one('ChatWindow', {
+            identifying: true,
             inverse: 'threadViewer',
             readonly: true,
         }),
@@ -87,10 +89,12 @@ registerModel({
             default: false,
         }),
         discuss: one('Discuss', {
+            identifying: true,
             inverse: 'threadViewer',
             readonly: true,
         }),
         discussPublicView: one('DiscussPublicView', {
+            identifying: true,
             inverse: 'threadViewer',
             readonly: true,
         }),

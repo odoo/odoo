@@ -251,23 +251,6 @@ function assertNameIsAvailableOnRecords(name, modelDefinition) {
 }
 
 /**
- * Applies the provided function to the identifying fields of the model
- * specified by the `modelName`.
- *
- * @param {string} modelName The name of the model to which to apply the patch.
- * @param {function} patch The function to be applied on the identifying fields.
- */
-export function patchIdentifyingFields(modelName, patch) {
-    addContextToErrors(() => {
-        if (!registry.has(modelName)) {
-            throw new Error(`model must be registered before being patched.`);
-        }
-        assertIsFunction(patch);
-    }, `Cannot patch identifyingFields on model "${modelName}": `);
-    patch(registry.get(modelName).get('identifyingFields'));
-}
-
-/**
  * Overrides the lifecycle hooks of the model specified by the `modelName`.
  *
  * @param {string} modelName The name of the model to which to apply the patch.
@@ -343,7 +326,7 @@ export function patchRecordMethods(modelName, recordMethods) {
 /**
  * @param {Object} definition The JSON definition of the model to register.
  * @param {Object} [definition.fields]
- * @param {string[]} definition.identifyingFields
+ * @param {string} [definition.identifyingMode='and']
  * @param {Object} [definition.lifecycleHooks]
  * @param {Object} [definition.modelGetters] Deprecated; use fields instead.
  * @param {Object} [definition.modelMethods]
@@ -352,19 +335,19 @@ export function patchRecordMethods(modelName, recordMethods) {
  * @param {Object} [definition.recordGetters] Deprecated; use fields instead.
  * @param {Object} [definition.recordMethods]
  */
-export function registerModel({ fields, identifyingFields, lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods }) {
+export function registerModel({ fields, identifyingMode = 'and', lifecycleHooks, modelGetters, modelMethods, name, onChanges, recordGetters, recordMethods }) {
     if (!name) {
         throw new Error("Model is lacking a name.");
     }
-    if (!identifyingFields) {
-        throw new Error(`Cannot register model "${name}": definition is lacking identifying fields.`);
+    if (!identifyingMode) {
+        throw new Error(`Cannot register model "${name}": definition is lacking identifying mode.`);
     }
     if (registry.has(name)) {
         throw new Error(`Cannot register model "${name}": model has already been registered.`);
     }
     registry.set(name, new Map([
         ['name', name],
-        ['identifyingFields', identifyingFields],
+        ['identifyingMode', identifyingMode],
         ['lifecycleHooks', new Map()],
         ['modelMethods', new Map()],
         ['modelGetters', new Map()],

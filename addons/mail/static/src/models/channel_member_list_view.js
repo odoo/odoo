@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'ChannelMemberListView',
-    identifyingFields: [['chatWindowOwner', 'threadViewOwner']],
+    identifyingMode: 'xor',
     lifecycleHooks: {
         _created() {
             this.channel.fetchChannelMembers();
@@ -59,6 +59,7 @@ registerModel({
             readonly: true,
         }),
         chatWindowOwner: one('ChatWindow', {
+            identifying: true,
             inverse: 'channelMemberListView',
             readonly: true,
         }),
@@ -73,6 +74,7 @@ registerModel({
             isCausal: true,
         }),
         threadViewOwner: one('ThreadView', {
+            identifying: true,
             inverse: 'channelMemberListView',
             readonly: true,
         }),

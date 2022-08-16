@@ -1,24 +1,21 @@
 /** @odoo-module **/
 
-import { addFields, patchIdentifyingFields, patchRecordMethods } from '@mail/model/model_core';
+import { addFields, patchRecordMethods } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/timer';
 
 addFields('Timer', {
     qunitTestOwner1: one('QUnitTest', {
+        identifying: true,
         inverse: 'timer1',
         readonly: true,
     }),
     qunitTestOwner2: one('QUnitTest', {
+        identifying: true,
         inverse: 'timer2',
         readonly: true,
     }),
-});
-
-patchIdentifyingFields('Timer', identifyingFields => {
-    identifyingFields[0].push('qunitTestOwner1');
-    identifyingFields[0].push('qunitTestOwner2');
 });
 
 patchRecordMethods('Timer', {

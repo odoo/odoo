@@ -7,7 +7,6 @@ import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
     name: 'CannedResponse',
-    identifyingFields: ['id'],
     modelMethods: {
         /**
          * Fetches canned responses matching the given search term to extend the
@@ -71,6 +70,7 @@ registerModel({
     },
     fields: {
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

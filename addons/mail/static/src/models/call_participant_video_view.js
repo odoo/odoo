@@ -6,7 +6,6 @@ import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallParticipantVideoView',
-    identifyingFields: ['callParticipantCardOwner'],
     recordMethods: {
         /**
          * Plays the video as some browsers may not support or block autoplay.
@@ -38,6 +37,7 @@ registerModel({
     },
     fields: {
         callParticipantCardOwner: one('CallParticipantCard', {
+            identifying: true,
             inverse: 'callParticipantVideoView',
             readonly: true,
             required: true,

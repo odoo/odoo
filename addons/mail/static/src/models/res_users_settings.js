@@ -8,9 +8,9 @@ import { attr, many, one } from '@mail/model/model_field';
  */
 registerModel({
     name: 'res.users.settings',
-    identifyingFields: ['id'],
     fields: {
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

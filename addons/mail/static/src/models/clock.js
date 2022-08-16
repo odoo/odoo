@@ -9,7 +9,6 @@ import { OnChange } from '@mail/model/model_onchange';
  */
 registerModel({
     name: 'Clock',
-    identifyingFields: ['frequency'],
     lifecycleHooks: {
         _willDelete() {
             this.messaging.browser.clearInterval(this.tickInterval);
@@ -62,6 +61,7 @@ registerModel({
          * must be recomputed.
          */
         frequency: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

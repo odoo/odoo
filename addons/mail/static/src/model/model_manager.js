@@ -197,8 +197,7 @@ export class ModelManager {
         for (const model of Object.values(this.models)) {
             delete model.__fieldList;
             delete model.__fieldMap;
-            delete model.__identifyingFields;
-            delete model.__identifyingFieldsFlattened;
+            delete model.__identifyingFieldNames;
             delete model.__records;
             delete model.__requiredFieldsList;
             delete model.fields;
@@ -418,7 +417,7 @@ export class ModelManager {
     }
 
     /**
-     * Adds fields, methods, getters, and identifyingFields from the model
+     * Adds fields, methods, getters, and identifyingMode from the model
      * definition to the model, then registers it in `this.models`.
      *
      * @private
@@ -439,17 +438,7 @@ export class ModelManager {
         model.fields = {};
         // Contains all records. key is local id, while value is the record.
         model.__records = {};
-        model.__identifyingFields = definition.get('identifyingFields');
-        const identifyingFieldsFlattened = new Set();
-        for (const identifyingElement of model.__identifyingFields) {
-            const identifyingFields = typeof identifyingElement === 'string'
-                ? [identifyingElement]
-                : identifyingElement;
-            for (const identifyingField of identifyingFields) {
-                identifyingFieldsFlattened.add(identifyingField);
-            }
-        }
-        model.__identifyingFieldsFlattened = identifyingFieldsFlattened;
+        model.identifyingMode = definition.get('identifyingMode');
         this._listenersObservingAllByModel.set(model, new Map());
         this.models[model.name] = model;
     }
@@ -476,6 +465,7 @@ export class ModelManager {
                             'compute',
                             'default',
                             'fieldType',
+                            'identifying',
                             'readonly',
                             'related',
                             'required',
@@ -492,6 +482,7 @@ export class ModelManager {
                             'compute',
                             'default',
                             'fieldType',
+                            'identifying',
                             'inverse',
                             'isCausal',
                             'readonly',
@@ -579,6 +570,17 @@ export class ModelManager {
      */
     _checkProcessedFieldsOnModels() {
         for (const model of Object.values(this.models)) {
+            switch (model.identifyingMode) {
+                case 'and':
+                    break;
+                case 'xor':
+                    if (model.__identifyingFieldNames.size === 0) {
+                        throw new Error(`No identifying fields has been specified for 'xor' identifying mode on ${model}`);
+                    }
+                    break;
+                default:
+                    throw new Error(`Unsupported identifying mode "${model.identifyingMode}" on ${model}. Must be one of 'and' or 'xor'.`);
+            }
             for (const field of model.__fieldList) {
                 const fieldName = field.fieldName;
                 if (!(['attribute', 'relation'].includes(field.fieldType))) {
@@ -617,7 +619,7 @@ export class ModelManager {
                     throw new Error(`${field} on ${model} has its inverse ${inverseField} on ${relatedModel} referring to an invalid model (model(${inverseField.to})).`);
                 }
             }
-            for (const identifyingField of model.__identifyingFieldsFlattened) {
+            for (const identifyingField of model.__identifyingFieldNames) {
                 const field = model.__fieldMap[identifyingField];
                 if (!field) {
                     throw new Error(`Identifying field "${identifyingField}" is not a field on ${model}.`);
@@ -966,51 +968,81 @@ export class ModelManager {
      * @returns {string}
      */
     _getRecordIndex(model, data) {
-        return `${model.name}(${model.__identifyingFields.map(identifyingElement => {
-            const fieldName = typeof identifyingElement === 'string'
-                ? identifyingElement
-                : identifyingElement.reduce((fieldName, currentFieldName) => {
-                    const fieldValue = data[currentFieldName] !== undefined
-                        ? data[currentFieldName]
-                        : model.__fieldMap[currentFieldName].default;
+        const parts = [];
+        switch (model.identifyingMode) {
+            case 'and':
+                for (const fieldName of model.__identifyingFieldNames) {
+                    const fieldValue = this._getValueFromDataOrFromDefault(model, fieldName, data);
                     if (fieldValue === undefined) {
-                        return fieldName;
+                        throw new Error(`Identifying field "${fieldName}" is lacking a value on ${model} with 'and' identifying mode`);
+                    }
+                    parts.push(this._getRecordIndexFromField(model, fieldName, fieldValue));
+                }
+                break;
+            case 'xor': {
+                const [fieldName, fieldValue] = [...model.__identifyingFieldNames].reduce(([fieldName, fieldValue], currentFieldName) => {
+                    const currentFieldValue = this._getValueFromDataOrFromDefault(model, currentFieldName, data);
+                    if (currentFieldValue === undefined) {
+                        return [fieldName, fieldValue];
                     }
                     if (fieldName) {
-                        throw new Error(`Identifying element on ${model} with "or" value should have only one of the conditional values given in data. Currently have both ${fieldName} and ${currentFieldName}.`);
+                        throw new Error(`Identifying field on ${model} with 'xor' identifying mode should have only one of the conditional values given in data. Currently have both "${fieldName}" and "${currentFieldName}".`);
                     }
-                    return currentFieldName;
-                }, undefined);
-            if (!fieldName) {
-                throw new Error(`Identifying element "${identifyingElement}" on ${model} is lacking a value.`);
+                    return [currentFieldName, currentFieldValue];
+                }, [undefined, undefined]);
+                parts.push(this._getRecordIndexFromField(model, fieldName, fieldValue));
+                break;
             }
-            const fieldValue = data[fieldName] !== undefined
-                ? data[fieldName]
-                : model.__fieldMap[fieldName].default;
-            if (fieldValue === undefined) {
-                throw new Error(`Identifying field "${fieldName}" on ${model} is lacking a value.`);
-            }
-            const relationTo = model.__fieldMap[fieldName].to;
-            if (!relationTo) {
-                return `${fieldName}: ${fieldValue}`;
-            }
-            const OtherModel = this.models[relationTo];
-            if (fieldValue instanceof OtherModel) {
-                return `${fieldName}: ${this._getRecordIndex(OtherModel, fieldValue)}`;
-            }
-            const fieldValue2 = model.__fieldMap[fieldName].convertToFieldCommandList(fieldValue)[0];
-            if (!(fieldValue2 instanceof FieldCommand)) {
-                throw new Error(`Identifying element "${model}/${fieldName}" is expecting a command for relational field.`);
-            }
-            if (!['link', 'insert', 'replace', 'insert-and-replace'].includes(fieldValue2._name)) {
-                throw new Error(`Identifying element "${model}/${fieldName}" is expecting a command of type "insert-and-replace", "replace", "insert" or "link". "${fieldValue2._name}" was given instead.`);
-            }
-            const relationValue = fieldValue2._value;
-            if (!relationValue) {
-                throw new Error(`Identifying element "${model}/${fieldName}" is lacking a relation value.`);
-            }
-            return `${fieldName}: ${this._getRecordIndex(OtherModel, relationValue)}`;
-        }).join(', ')})`;
+        }
+        return `${model.name}(${parts.join(', ')})`;
+    }
+
+    /**
+     * Returns the part of the record index that comes from the given fieldName
+     * with the given fieldValue.
+     *
+     * @param {Object} model
+     * @param {string} fieldName
+     * @param {any} fieldValue
+     * @returns {string}
+     */
+    _getRecordIndexFromField(model, fieldName, fieldValue) {
+        const relationTo = model.__fieldMap[fieldName].to;
+        if (!relationTo) {
+            return `${fieldName}: ${fieldValue}`;
+        }
+        const OtherModel = this.models[relationTo];
+        if (fieldValue instanceof OtherModel) {
+            return `${fieldName}: ${this._getRecordIndex(OtherModel, fieldValue)}`;
+        }
+        const fieldValue2 = model.__fieldMap[fieldName].convertToFieldCommandList(fieldValue)[0];
+        if (!(fieldValue2 instanceof FieldCommand)) {
+            throw new Error(`Identifying element "${model}/${fieldName}" is expecting a command for relational field.`);
+        }
+        if (!['link', 'insert', 'replace', 'insert-and-replace'].includes(fieldValue2._name)) {
+            throw new Error(`Identifying element "${model}/${fieldName}" is expecting a command of type "insert-and-replace", "replace", "insert" or "link". "${fieldValue2._name}" was given instead.`);
+        }
+        const relationValue = fieldValue2._value;
+        if (!relationValue) {
+            throw new Error(`Identifying element "${model}/${fieldName}" is lacking a relation value.`);
+        }
+        return `${fieldName}: ${this._getRecordIndex(OtherModel, relationValue)}`;
+    }
+
+    /**
+     * Returns the value for the given fieldName from the provided data if it is
+     * defined or from default value of this field otherwise.
+     *
+     * @param {Object} model
+     * @param {string} fieldName
+     * @param {Object} data
+     * @returns {any}
+     */
+    _getValueFromDataOrFromDefault(model, fieldName, data) {
+        if (data[fieldName] !== undefined) {
+            return data[fieldName];
+        }
+        return model.__fieldMap[fieldName].default;
     }
 
     /**
@@ -1051,7 +1083,7 @@ export class ModelManager {
                 fieldName: `_inverse_${model}/${field.fieldName}`,
                 // Allows the inverse of an identifying field to be
                 // automatically generated.
-                isCausal: model.__identifyingFieldsFlattened.has(field.fieldName),
+                isCausal: field.identifying,
             },
         ));
         return inverseField;
@@ -1230,8 +1262,12 @@ export class ModelManager {
             model.__requiredFieldsList = model.__fieldList.filter(
                 field => field.required
             );
-            // Add field accessors.
-            for (const fieldName of Object.keys(model.__fieldMap)) {
+            model.__identifyingFieldNames = new Set();
+            for (const [fieldName, field] of Object.entries(model.__fieldMap)) {
+                if (field.identifying) {
+                    model.__identifyingFieldNames.add(fieldName);
+                }
+                // Add field accessors.
                 Object.defineProperty(model.prototype, fieldName, {
                     get: function getFieldValue() { // this is bound to record
                         const field = model.__fieldMap[fieldName];
@@ -1290,10 +1326,10 @@ export class ModelManager {
             // Always update identifying fields first because updating other relational field will
             // trigger update of inverse field, which will require this identifying fields to be set
             // beforehand to properly detect whether this is already linked or not on the inverse.
-            if (model.__identifyingFieldsFlattened.has(a) && !model.__identifyingFieldsFlattened.has(b)) {
+            if (model.__identifyingFieldNames.has(a) && !model.__identifyingFieldNames.has(b)) {
                 return -1;
             }
-            if (!model.__identifyingFieldsFlattened.has(a) && model.__identifyingFieldsFlattened.has(b)) {
+            if (!model.__identifyingFieldNames.has(a) && model.__identifyingFieldNames.has(b)) {
                 return 1;
             }
             return 0;

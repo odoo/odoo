@@ -10,7 +10,6 @@ import { get_cookie, Markup, set_cookie } from 'web.utils';
 
 registerModel({
     name: 'PublicLivechatGlobal',
-    identifyingFields: ['messaging'],
     lifecycleHooks: {
         _created() {
             // History tracking

@@ -12,7 +12,7 @@ const formatters = registry.category("formatters");
 
 registerModel({
     name: 'TrackingValueItem',
-    identifyingFields: [['trackingValueAsNewValue','trackingValueAsOldValue']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * @private
@@ -90,10 +90,12 @@ registerModel({
             compute: '_computeFormattedValueOrNone',
         }),
         trackingValueAsNewValue: one('TrackingValue', {
+            identifying: true,
             inverse: 'newValue',
             readonly: true,
         }),
         trackingValueAsOldValue: one('TrackingValue', {
+            identifying: true,
             inverse: 'oldValue',
             readonly: true,
         }),
@@ -101,4 +103,5 @@ registerModel({
          * The original value of the tracking value item.
          */
         value: attr(),
-}});
+    },
+});

@@ -5,12 +5,12 @@ import { attr, many } from '@mail/model/model_field';
 
 registerModel({
     name: 'EmojiCategory',
-    identifyingFields: ['categoryName'],
     fields: {
         allEmojis: many('Emoji', {
             inverse: 'emojiCategories',
         }),
         categoryName: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

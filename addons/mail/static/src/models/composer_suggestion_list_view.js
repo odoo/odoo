@@ -6,7 +6,6 @@ import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ComposerSuggestionListView',
-    identifyingFields: ['composerViewOwner'],
     recordMethods: {
         /**
          * Sets the first suggestion as active. Main and extra records are
@@ -120,6 +119,7 @@ registerModel({
             isCausal: true,
         }),
         composerViewOwner: one('ComposerView', {
+            identifying: true,
             inverse: 'composerSuggestionListView',
             readonly: true,
             required: true,

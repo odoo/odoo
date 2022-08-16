@@ -7,7 +7,6 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'ThreadView',
-    identifyingFields: ['threadViewer'],
     lifecycleHooks: {
         _willDelete() {
             this.messaging.browser.clearTimeout(this.loaderTimeout);
@@ -526,6 +525,7 @@ registerModel({
          * Determines the `ThreadViewer` currently managing `this`.
          */
         threadViewer: one('ThreadViewer', {
+            identifying: true,
             inverse: 'threadView',
             readonly: true,
             required: true,

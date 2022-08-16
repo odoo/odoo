@@ -6,7 +6,6 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'DeleteMessageConfirmView',
-    identifyingFields: ['dialogOwner'],
     recordMethods: {
         /**
          * Returns whether the given html element is inside this delete message confirm view.
@@ -44,6 +43,7 @@ registerModel({
     fields: {
         component: attr(),
         dialogOwner: one('Dialog', {
+            identifying: true,
             inverse: 'deleteMessageConfirmView',
             readonly: true,
             required: true,

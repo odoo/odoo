@@ -6,7 +6,6 @@ import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'RtcPeerConnection',
-    identifyingFields: ['rtcSession'],
     lifecycleHooks: {
         _willDelete() {
             this.peerConnection.close();
@@ -59,6 +58,7 @@ registerModel({
          */
         peerConnection: attr(),
         rtcSession: one('RtcSession', {
+            identifying: true,
             inverse: 'rtcPeerConnection',
             readonly: true,
             required: true,

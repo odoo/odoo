@@ -6,7 +6,6 @@ import { isEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'ChatWindowHeaderView',
-    identifyingFields: ['chatWindowOwner'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -28,6 +27,7 @@ registerModel({
     },
     fields: {
         chatWindowOwner: one('ChatWindow', {
+            identifying: true,
             inverse: 'chatWindowHeaderView',
             readonly: true,
             required: true,

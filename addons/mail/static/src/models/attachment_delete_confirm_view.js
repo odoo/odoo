@@ -7,7 +7,6 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'AttachmentDeleteConfirmView',
-    identifyingFields: ['dialogOwner'],
     recordMethods: {
         /**
          * Returns whether the given html element is inside this attachment delete confirm view.
@@ -84,6 +83,7 @@ registerModel({
         }),
         component: attr(),
         dialogOwner: one('Dialog', {
+            identifying: true,
             inverse: 'attachmentDeleteConfirmView',
             readonly: true,
             required: true,

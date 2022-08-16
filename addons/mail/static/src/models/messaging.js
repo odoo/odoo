@@ -12,7 +12,6 @@ const { EventBus } = owl;
 
 registerModel({
     name: 'Messaging',
-    identifyingFields: [],
     lifecycleHooks: {
         _created() {
             odoo.__DEBUG__.messaging = this;

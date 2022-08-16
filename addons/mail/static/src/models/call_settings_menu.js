@@ -7,7 +7,6 @@ import { attr, one } from '@mail/model/model_field';
 
 registerModel({
     name: 'CallSettingsMenu',
-    identifyingFields: ['userSetting'],
     lifecycleHooks: {
         _created() {
             browser.addEventListener('keydown', this._onKeyDown);
@@ -83,6 +82,7 @@ registerModel({
             default: false,
         }),
         userSetting: one('UserSetting', {
+            identifying: true,
             inverse: 'callSettingsMenu',
             readonly: true,
         }),

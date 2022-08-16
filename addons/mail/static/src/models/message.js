@@ -13,7 +13,6 @@ const { markup } = owl;
 
 registerModel({
     name: 'Message',
-    identifyingFields: ['id'],
     modelMethods: {
         /**
          * @param {Object} data
@@ -690,6 +689,7 @@ registerModel({
             compute: '_computeHasReactionIcon',
         }),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

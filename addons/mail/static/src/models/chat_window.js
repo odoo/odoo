@@ -7,7 +7,7 @@ import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'ChatWindow',
-    identifyingFields: ['manager', ['thread', 'managerAsNewMessage']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * Close this chat window.
@@ -658,6 +658,7 @@ registerModel({
             readonly: true,
         }),
         managerAsNewMessage: one('ChatWindowManager', {
+            identifying: true,
             inverse: 'newMessageChatWindow',
             readonly: true,
         }),
@@ -681,6 +682,7 @@ registerModel({
          * If no `Thread` is linked, `this` is considered "new message".
          */
         thread: one('Thread', {
+            identifying: true,
             inverse: 'chatWindow',
             readonly: true,
         }),

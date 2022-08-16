@@ -6,7 +6,6 @@ import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Guest',
-    identifyingFields: ['id'],
     modelMethods: {
         /**
          * @param {Object} param0
@@ -47,6 +46,7 @@ registerModel({
             compute: '_computeAvatarUrl',
         }),
         id: attr({
+            identifying: true,
             required: true,
             readonly: true,
         }),

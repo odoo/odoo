@@ -9,7 +9,6 @@ import { OnChange } from '@mail/model/model_onchange';
  */
 registerModel({
     name: 'res.users.settings.volumes',
-    identifyingFields: ['id'],
     recordMethods: {
         /**
          * @private
@@ -31,6 +30,7 @@ registerModel({
             inverse: 'volumeSetting',
         }),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

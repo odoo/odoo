@@ -18,7 +18,6 @@ const getRTCPeerNotificationNextTemporaryId = (function () {
 
 registerModel({
     name: 'Rtc',
-    identifyingFields: ['messaging'],
     lifecycleHooks: {
         _created() {
             browser.addEventListener('keydown', this._onKeyDown);
