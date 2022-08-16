@@ -111,7 +111,7 @@ class SurveyQuestion(models.Model):
     time_limit = fields.Integer("Time limit (seconds)")
     # -- comments (simple choice, multiple choice, matrix (without count as an answer))
     comments_allowed = fields.Boolean('Show Comments Field')
-    comments_message = fields.Char('Comment Message', translate=True, default=lambda self: _("If other, please specify:"))
+    comments_message = fields.Char('Comment Message', translate=True)
     comment_count_as_answer = fields.Boolean('Comment Field is an Answer Choice')
     # question validation
     validation_required = fields.Boolean('Validate entry', compute='_compute_validation_required', readonly=False, store=True)
@@ -124,9 +124,9 @@ class SurveyQuestion(models.Model):
     validation_max_date = fields.Date('Maximum Date')
     validation_min_datetime = fields.Datetime('Minimum Datetime')
     validation_max_datetime = fields.Datetime('Maximum Datetime')
-    validation_error_msg = fields.Char('Validation Error message', translate=True, default=lambda self: _("The answer you entered is not valid."))
+    validation_error_msg = fields.Char('Validation Error message', translate=True)
     constr_mandatory = fields.Boolean('Mandatory Answer')
-    constr_error_msg = fields.Char('Error message', translate=True, default=lambda self: _("This question requires an answer."))
+    constr_error_msg = fields.Char('Error message', translate=True)
     # answers
     user_input_line_ids = fields.One2many(
         'survey.user_input.line', 'question_id', string='Answers',
@@ -332,7 +332,7 @@ class SurveyQuestion(models.Model):
             answer = answer.strip()
         # Empty answer to mandatory question
         if self.constr_mandatory and not answer and self.question_type not in ['simple_choice', 'multiple_choice']:
-            return {self.id: self.constr_error_msg}
+            return {self.id: self.constr_error_msg or _('This question requires an answer.')}
 
         # because in choices question types, comment can count as answer
         if answer or self.question_type in ['simple_choice', 'multiple_choice']:
@@ -359,7 +359,7 @@ class SurveyQuestion(models.Model):
         # Length of the answer must be in a range
         if self.validation_required:
             if not (self.validation_length_min <= len(answer) <= self.validation_length_max):
-                return {self.id: self.validation_error_msg}
+                return {self.id: self.validation_error_msg or _('The answer you entered is not valid.')}
         return {}
 
     def _validate_numerical_box(self, answer):
@@ -372,7 +372,7 @@ class SurveyQuestion(models.Model):
             # Answer is not in the right range
             with contextlib.suppress(Exception):
                 if not (self.validation_min_float_value <= floatanswer <= self.validation_max_float_value):
-                    return {self.id: self.validation_error_msg}
+                    return {self.id: self.validation_error_msg  or _('The answer you entered is not valid.')}
         return {}
 
     def _validate_date(self, answer):
@@ -396,7 +396,7 @@ class SurveyQuestion(models.Model):
             if (min_date and max_date and not (min_date <= dateanswer <= max_date))\
                     or (min_date and not min_date <= dateanswer)\
                     or (max_date and not dateanswer <= max_date):
-                return {self.id: self.validation_error_msg}
+                return {self.id: self.validation_error_msg or _('The answer you entered is not valid.')}
         return {}
 
     def _validate_choice(self, answer, comment):
@@ -404,13 +404,13 @@ class SurveyQuestion(models.Model):
         if self.constr_mandatory \
                 and not answer \
                 and not (self.comments_allowed and self.comment_count_as_answer and comment):
-            return {self.id: self.constr_error_msg}
+            return {self.id: self.constr_error_msg or _('This question requires an answer.')}
         return {}
 
     def _validate_matrix(self, answers):
         # Validate that each line has been answered
         if self.constr_mandatory and len(self.matrix_row_ids) != len(answers):
-            return {self.id: self.constr_error_msg}
+            return {self.id: self.constr_error_msg or _('This question requires an answer.')}
         return {}
 
     def _index(self):
