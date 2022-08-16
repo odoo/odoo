@@ -12,6 +12,14 @@ import { get_cookie, Markup, set_cookie, unaccent } from 'web.utils';
 registerModel({
     name: 'LivechatButtonView',
     identifyingFields: ['publicLivechatGlobalOwner'],
+    lifecycleHooks: {
+        _created() {
+            this.update({ widget: this.env.services.public_livechat_service.mountLivechatButton() });
+        },
+        _willDelete() {
+            this.widget.destroy();
+        },
+    },
     recordMethods: {
         /**
          * @param {Object} data
