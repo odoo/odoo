@@ -155,6 +155,7 @@ class GetMetadataDialog extends Component {
         const metadata = result[0];
         this.state.id = metadata.id;
         this.state.xmlid = metadata.xmlid;
+        this.state.xmlids = metadata.xmlids;
         this.state.noupdate = metadata.noupdate;
         this.state.creator = formatMany2one(metadata.create_uid);
         this.state.lastModifiedBy = formatMany2one(metadata.write_uid);

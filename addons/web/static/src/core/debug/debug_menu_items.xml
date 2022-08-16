@@ -71,9 +71,16 @@
                 <tr>
                     <th>XML ID:</th>
                     <td>
-                        <t t-esc="state.xmlid or '/'"/>
-                        <t t-if="!state.xmlid">
-                            <a t-on-click="onClickCreateXmlid"> (create)</a>
+                        <t t-if='state.xmlids.length > 1'>
+                            <t t-foreach="state.xmlids" t-as="imd" t-key="imd['xmlid']">
+                                <div
+                                    t-att-class='"p-0 " + (imd["xmlid"] === state.xmlid ? "fw-bolder " : "") + (imd["noupdate"] === true ? "fst-italic " : "")'
+                                    t-esc="imd['xmlid']" />
+                            </t>
+                        </t>
+                        <t t-elif="state.xmlid" t-esc="state.xmlid"/>
+                        <t t-else="">
+                            / <a t-on-click="onClickCreateXmlid"> (create)</a>
                         </t>
                     </td>
                 </tr>
