@@ -6,7 +6,6 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Chatbot',
-    identifyingFields: ['publicLivechatGlobalOwner'],
     recordMethods: {
         /**
          * @private
@@ -157,6 +156,7 @@ registerModel({
             default: 3500, // in milliseconds
         }),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
+            identifying: true,
             inverse: 'chatbot',
             readonly: true,
             required: true,

@@ -6,7 +6,6 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallActionListView',
-    identifyingFields: ['callMainView'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -150,6 +149,7 @@ registerModel({
             default: '',
         }),
         callMainView: one('CallMainView', {
+            identifying: true,
             inverse: 'callActionListView',
             readonly: true,
             required: true,

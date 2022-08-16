@@ -5,14 +5,15 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'ChannelInvitationFormSelectedPartnerView',
-    identifyingFields: ['channelInvitationFormOwner', 'partner'],
     fields: {
         channelInvitationFormOwner: one('ChannelInvitationForm', {
+            identifying: true,
             inverse: 'selectedPartnerViews',
             readonly: true,
             required: true,
         }),
         partner: one('Partner', {
+            identifying: true,
             inverse: 'channelInvitationFormSelectedPartnerViews',
             readonly: true,
             required: true,

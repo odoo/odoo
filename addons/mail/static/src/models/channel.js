@@ -6,7 +6,6 @@ import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Channel',
-    identifyingFields: ['id'],
     recordMethods: {
         async fetchChannelMembers() {
             const channelData = await this.messaging.rpc({
@@ -92,6 +91,7 @@ registerModel({
         }),
         channel_type: attr(),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

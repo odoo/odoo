@@ -6,7 +6,6 @@ import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallSidebarView',
-    identifyingFields: ['callView'],
     recordMethods: {
         /**
          * @private
@@ -18,6 +17,7 @@ registerModel({
     },
     fields: {
         callView: one('CallView', {
+            identifying: true,
             inverse: 'callSidebarView',
             readonly: true,
             required: true,

@@ -7,7 +7,6 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'SuggestedRecipientInfo',
-    identifyingFields: ['id'],
     recordMethods: {
         /**
          * @private
@@ -65,6 +64,7 @@ registerModel({
          * given by the creator of this record.
          */
         id: attr({
+            identifying: true,
             readonly: true,
         }),
         /**

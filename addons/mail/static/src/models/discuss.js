@@ -7,7 +7,6 @@ import { escape, sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'Discuss',
-    identifyingFields: ['messaging'],
     recordMethods: {
         clearIsAddingItem() {
             this.update({

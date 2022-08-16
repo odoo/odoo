@@ -7,7 +7,6 @@ import { htmlToTextContentInline } from '@mail/js/utils';
 
 registerModel({
     name: 'ThreadNeedactionPreviewView',
-    identifyingFields: ['notificationListViewOwner', 'thread'],
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -109,6 +108,7 @@ registerModel({
             isCausal: true,
         }),
         notificationListViewOwner: one('NotificationListView', {
+            identifying: true,
             inverse: 'threadNeedactionPreviewViews',
             readonly: true,
             required: true,
@@ -120,6 +120,7 @@ registerModel({
             readonly: true,
         }),
         thread: one('Thread', {
+            identifying: true,
             inverse: 'threadNeedactionPreviewViews',
             readonly: true,
             required: true,

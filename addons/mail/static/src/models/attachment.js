@@ -6,7 +6,6 @@ import { clear, insert, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Attachment',
-    identifyingFields: ['id'],
     modelMethods: {
         /**
          * @static
@@ -330,6 +329,7 @@ registerModel({
         }),
         filename: attr(),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

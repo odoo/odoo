@@ -6,7 +6,6 @@ import { replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Emoji',
-    identifyingFields: ['unicode'],
     recordMethods: {
         /**
          * @private
@@ -38,6 +37,7 @@ registerModel({
             readonly: true,
         }),
         unicode: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

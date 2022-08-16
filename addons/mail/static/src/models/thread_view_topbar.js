@@ -6,7 +6,6 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadViewTopbar',
-    identifyingFields: ['threadView'],
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickCaptureGlobal, true);
@@ -697,6 +696,7 @@ registerModel({
          * States the thread view managing this top bar.
          */
         threadView: one('ThreadView', {
+            identifying: true,
             inverse: 'topbar',
             readonly: true,
             required: true,

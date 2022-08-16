@@ -7,7 +7,6 @@ import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'MessageActionList',
-    identifyingFields: ['messageView'],
     recordMethods: {
         /**
          * @private
@@ -186,6 +185,7 @@ registerModel({
          * States the message view that controls this message action list.
          */
         messageView: one('MessageView', {
+            identifying: true,
             inverse: 'messageActionList',
             readonly: true,
             required: true,

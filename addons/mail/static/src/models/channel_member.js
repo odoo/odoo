@@ -6,7 +6,6 @@ import { clear, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ChannelMember',
-    identifyingFields: ['id'],
     recordMethods: {
         /**
          * @private
@@ -81,6 +80,7 @@ registerModel({
             isCausal: true,
         }),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

@@ -13,9 +13,7 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
  */
 registerModel({
     name: 'Throttle',
-    identifyingFields: [[
-        'threadAsThrottleNotifyCurrentPartnerTypingStatus',
-    ]],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * Clear any buffered function call and immediately terminates any cooling
@@ -73,6 +71,7 @@ registerModel({
             default: false,
         }),
         threadAsThrottleNotifyCurrentPartnerTypingStatus: one('Thread', {
+            identifying: true,
             inverse: 'throttleNotifyCurrentPartnerTypingStatus',
             readonly: true,
         }),

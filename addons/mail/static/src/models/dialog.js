@@ -6,13 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'Dialog',
-    identifyingFields: [[
-        'attachmentCardOwnerAsAttachmentDeleteConfirm',
-        'attachmentImageOwnerAsAttachmentDeleteConfirm',
-        'attachmentListOwnerAsAttachmentView',
-        'followerOwnerAsSubtypeList',
-        'messageActionListOwnerAsDeleteConfirm',
-    ]],
+    identifyingMode: 'xor',
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this._onClickGlobal, true);
@@ -188,6 +182,7 @@ registerModel({
     },
     fields: {
         attachmentCardOwnerAsAttachmentDeleteConfirm: one('AttachmentCard', {
+            identifying: true,
             inverse: 'attachmentDeleteConfirmDialog',
             readonly: true,
         }),
@@ -197,10 +192,12 @@ registerModel({
             isCausal: true,
         }),
         attachmentImageOwnerAsAttachmentDeleteConfirm: one('AttachmentImage', {
+            identifying: true,
             inverse: 'attachmentDeleteConfirmDialog',
             readonly: true,
         }),
         attachmentListOwnerAsAttachmentView: one('AttachmentList', {
+            identifying: true,
             inverse: 'attachmentListViewDialog',
             readonly: true,
         }),
@@ -225,6 +222,7 @@ registerModel({
             isCausal: true,
         }),
         followerOwnerAsSubtypeList: one('Follower', {
+            identifying: true,
             inverse: 'followerSubtypeListDialog',
             readonly: true,
         }),
@@ -243,6 +241,7 @@ registerModel({
             readonly: true,
         }),
         messageActionListOwnerAsDeleteConfirm: one('MessageActionList', {
+            identifying: true,
             inverse: 'deleteConfirmDialog',
             readonly: true,
         }),

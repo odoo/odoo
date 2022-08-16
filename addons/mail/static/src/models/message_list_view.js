@@ -6,7 +6,6 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'MessageListView',
-    identifyingFields: ['threadViewOwner'],
     recordMethods: {
         /**
          * @returns {Element|undefined}
@@ -125,6 +124,7 @@ registerModel({
             related: 'threadViewOwner.thread',
         }),
         threadViewOwner: one('ThreadView', {
+            identifying: true,
             inverse: 'messageListView',
             readonly: true,
             required: true,

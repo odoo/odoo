@@ -11,9 +11,9 @@ import { insertAndReplace } from '@mail/model/model_field_command';
  */
 registerModel({
     name: 'ComposerSuggestionListViewExtraComposerSuggestionViewItem',
-    identifyingFields: ['composerSuggestionListViewOwner', 'suggestable'],
     fields: {
         composerSuggestionListViewOwner: one('ComposerSuggestionListView', {
+            identifying: true,
             inverse: 'composerSuggestionListViewExtraComposerSuggestionViewItems',
             readonly: true,
             required: true,
@@ -26,6 +26,7 @@ registerModel({
             required: true,
         }),
         suggestable: one('ComposerSuggestable', {
+            identifying: true,
             inverse: 'composerSuggestionListViewExtraComposerSuggestionViewItems',
             readonly: true,
             required: true,

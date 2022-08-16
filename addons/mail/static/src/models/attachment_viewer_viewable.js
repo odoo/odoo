@@ -10,7 +10,7 @@ import { attr, one } from "@mail/model/model_field";
 
 registerModel({
     name: "AttachmentViewerViewable",
-    identifyingFields: [["attachmentOwner"]],
+    identifyingMode: 'xor',
     recordMethods: {
         download() {
             return this.attachmentOwner.download();
@@ -94,6 +94,7 @@ registerModel({
     },
     fields: {
         attachmentOwner: one("Attachment", {
+            identifying: true,
             inverse: 'attachmentViewerViewable',
             readonly: true,
         }),

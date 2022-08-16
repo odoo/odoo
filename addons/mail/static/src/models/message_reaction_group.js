@@ -8,7 +8,6 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'MessageReactionGroup',
-    identifyingFields: ['message', 'content'],
     recordMethods: {
         /**
          * Handles click on the reaction group.
@@ -75,6 +74,7 @@ registerModel({
     },
     fields: {
         content: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),
@@ -91,6 +91,7 @@ registerModel({
         }),
         message: one('Message', {
             compute: '_computeMessage',
+            identifying: true,
             inverse: 'messageReactionGroups',
             readonly: true,
             required: true,

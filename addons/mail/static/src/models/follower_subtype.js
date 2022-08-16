@@ -5,7 +5,6 @@ import { attr, many } from '@mail/model/model_field';
 
 registerModel({
     name: 'FollowerSubtype',
-    identifyingFields: ['id'],
     modelMethods: {
         /**
          * @param {Object} data
@@ -43,6 +42,7 @@ registerModel({
             isCausal: true,
         }),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

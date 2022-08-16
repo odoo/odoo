@@ -8,7 +8,6 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'NotificationRequestView',
-    identifyingFields: ['notificationListViewOwner'],
     recordMethods: {
         /**
          * @private
@@ -36,6 +35,7 @@ registerModel({
             compute: '_computeHeaderText',
         }),
         notificationListViewOwner: one('NotificationListView', {
+            identifying: true,
             inverse: 'notificationRequestView',
             required: true,
             readonly: true,

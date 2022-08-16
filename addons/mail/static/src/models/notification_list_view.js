@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'NotificationListView',
-    identifyingFields: [['discussOwner', 'messagingMenuOwner']],
+    identifyingMode: 'xor',
     lifecycleHooks: {
         _created() {
             this._loadPreviews();
@@ -180,6 +180,7 @@ registerModel({
     },
     fields: {
         discussOwner: one('Discuss', {
+            identifying: true,
             inverse: 'notificationListView',
             readonly: true,
         }),
@@ -190,6 +191,7 @@ registerModel({
             compute: '_computeFilteredThreads',
         }),
         messagingMenuOwner: one('MessagingMenu', {
+            identifying: true,
             inverse: 'notificationListView',
             readonly: true,
         }),

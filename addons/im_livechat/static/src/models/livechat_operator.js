@@ -5,9 +5,9 @@ import { attr } from '@mail/model/model_field';
 
 registerModel({
     name: 'LivechatOperator',
-    identifyingFields: ['id'],
     fields: {
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

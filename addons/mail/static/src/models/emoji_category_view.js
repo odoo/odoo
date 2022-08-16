@@ -6,9 +6,8 @@ import { replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiCategoryView',
-    identifyingFields: ['emojiCategoryBarViewOwner', 'emojiCategory'],
     recordMethods: {
-        /** 
+        /**
          * @param {MouseEvent} ev
          */
         onClick() {
@@ -29,11 +28,13 @@ registerModel({
     },
     fields: {
         emojiCategory: one('EmojiCategory', {
+            identifying: true,
             inverse: 'emojiCategoryViews',
             readonly: true,
             required: true,
         }),
         emojiCategoryBarViewOwner: one('EmojiCategoryBarView', {
+            identifying: true,
             inverse: 'emojiCategoryViews',
             readonly: true,
             required: true,

@@ -5,7 +5,6 @@ import { one } from '@mail/model/model_field';
 
 registerModel({
     name: 'FollowerSubtypeView',
-    identifyingFields: ['followerSubtypeListOwner', 'subtype'],
     recordMethods: {
         /**
          * Called when clicking on cancel button.
@@ -25,11 +24,13 @@ registerModel({
             related: 'followerSubtypeListOwner.follower',
         }),
         followerSubtypeListOwner: one('FollowerSubtypeList', {
+            identifying: true,
             inverse: 'followerSubtypeViews',
             readonly: true,
             required: true,
         }),
         subtype: one('FollowerSubtype', {
+            identifying: true,
             inverse: 'followerSubtypeViews',
             readonly: true,
             required: true,

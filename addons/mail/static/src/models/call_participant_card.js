@@ -9,7 +9,7 @@ import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
     name: 'CallParticipantCard',
-    identifyingFields: [['sidebarViewTileOwner', 'mainViewTileOwner']],
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * @param {Event} ev
@@ -168,6 +168,7 @@ registerModel({
             compute: '_computeInboundConnectionTypeText',
         }),
         mainViewTileOwner: one('CallMainViewTile', {
+            identifying: true,
             inverse: 'participantCard',
             readonly: true,
         }),
@@ -203,6 +204,7 @@ registerModel({
             inverse: 'callParticipantCards',
         }),
         sidebarViewTileOwner: one('CallSidebarViewTile', {
+            identifying: true,
             inverse: 'participantCard',
             readonly: true,
         }),

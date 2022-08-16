@@ -12,7 +12,7 @@ import { url } from '@web/core/utils/urls';
 
 registerModel({
     name: 'ComposerView',
-    identifyingFields: [['threadView', 'messageViewInEditing', 'chatter']],
+    identifyingMode: 'xor',
     lifecycleHooks: {
         _created() {
             document.addEventListener('click', this.onClickCaptureGlobal, true);
@@ -1377,6 +1377,7 @@ registerModel({
          * States the chatter which this composer allows editing (if any).
          */
         chatter: one('Chatter', {
+            identifying: true,
             inverse: 'composerView',
             readonly: true,
         }),
@@ -1542,6 +1543,7 @@ registerModel({
          * States the message view on which this composer allows editing (if any).
          */
         messageViewInEditing: one('MessageView', {
+            identifying: true,
             inverse: 'composerViewInEditing',
             readonly: true,
         }),
@@ -1609,6 +1611,7 @@ registerModel({
          * States the thread view on which this composer allows editing (if any).
          */
         threadView: one('ThreadView', {
+            identifying: true,
             inverse: 'composerView',
             readonly: true,
         }),

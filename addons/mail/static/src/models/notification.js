@@ -6,7 +6,6 @@ import { clear, insert, insertAndReplace } from '@mail/model/model_field_command
 
 registerModel({
     name: 'Notification',
-    identifyingFields: ['id'],
     modelMethods: {
         /**
          * @param {Object} data
@@ -131,6 +130,7 @@ registerModel({
             compute: '_computeIconTitle',
         }),
         id: attr({
+            identifying: true,
             readonly: true,
             required: true,
         }),

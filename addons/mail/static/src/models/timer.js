@@ -6,17 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Timer',
-    identifyingFields: [[
-        'callMainViewAsShowOverlay',
-        'chatterOwnerAsAttachmentsLoader',
-        'messagingOwnerAsFetchImStatusTimer',
-        'messageViewOwnerAsHighlight',
-        'otherMemberLongTypingInThreadTimerOwner',
-        'rtcSessionOwnerAsBroadcast',
-        'threadAsCurrentPartnerInactiveTypingTimerOwner',
-        'threadAsCurrentPartnerLongTypingTimerOwner',
-        'throttleOwner',
-    ]],
+    identifyingMode: 'xor',
     lifecycleHooks: {
         _willDelete() {
             this.messaging.browser.clearTimeout(this.timeoutId);
@@ -123,10 +113,12 @@ registerModel({
     },
     fields: {
         callMainViewAsShowOverlay: one('CallMainView', {
+            identifying: true,
             inverse: 'showOverlayTimer',
             readonly: true,
         }),
         chatterOwnerAsAttachmentsLoader: one('Chatter', {
+            identifying: true,
             inverse: 'attachmentsLoaderTimer',
             readonly: true,
         }),
@@ -140,31 +132,38 @@ registerModel({
             required: true,
         }),
         messagingOwnerAsFetchImStatusTimer: one('Messaging', {
+            identifying: true,
             inverse: 'fetchImStatusTimer',
             readonly: true,
         }),
         messageViewOwnerAsHighlight: one('MessageView', {
+            identifying: true,
             inverse: 'highlightTimer',
             readonly: true,
         }),
         otherMemberLongTypingInThreadTimerOwner: one('OtherMemberLongTypingInThreadTimer', {
+            identifying: true,
             inverse: 'timer',
             isCausal: true,
             readonly: true,
         }),
         rtcSessionOwnerAsBroadcast: one('RtcSession', {
+            identifying: true,
             inverse: 'broadcastTimer',
             readonly: true,
         }),
         threadAsCurrentPartnerInactiveTypingTimerOwner: one('Thread', {
+            identifying: true,
             inverse: 'currentPartnerInactiveTypingTimer',
             readonly: true,
         }),
         threadAsCurrentPartnerLongTypingTimerOwner: one('Thread', {
+            identifying: true,
             inverse: 'currentPartnerLongTypingTimer',
             readonly: true,
         }),
         throttleOwner: one('Throttle', {
+            identifying: true,
             inverse: 'cooldownTimer',
             readonly: true,
         }),

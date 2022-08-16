@@ -6,7 +6,6 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 
 registerModel({
     name: 'MessageSeenIndicatorView',
-    identifyingFields: ['messageViewOwner'],
     recordMethods: {
         /**
          * @private
@@ -24,6 +23,7 @@ registerModel({
     },
     fields: {
         messageViewOwner: one('MessageView', {
+            identifying: true,
             inverse: 'messageSeenIndicatorView',
             readonly: true,
             required: true,

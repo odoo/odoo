@@ -6,7 +6,6 @@ import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ChannelInvitationFormSelectablePartnerView',
-    identifyingFields: ['channelInvitationFormOwner', 'partner'],
     recordMethods: {
         /**
          * @private
@@ -18,11 +17,13 @@ registerModel({
     },
     fields: {
         channelInvitationFormOwner: one('ChannelInvitationForm', {
+            identifying: true,
             inverse: 'selectablePartnerViews',
             readonly: true,
             required: true,
         }),
         partner: one('Partner', {
+            identifying: true,
             inverse: 'channelInvitationFormSelectablePartnerViews',
             readonly: true,
             required: true,
