@@ -354,10 +354,10 @@ function formatMonetary(value, field, options) {
     if (!currency || options.noSymbol) {
         return formatted_value;
     }
-    if (currency.position === "after") {
-        return formatted_value += NBSP + currency.symbol;
-    } else {
+    if (currency.position === "before") {
         return currency.symbol + NBSP + formatted_value;
+    } else {
+        return formatted_value += NBSP + currency.symbol;
     }
 }
 /**
