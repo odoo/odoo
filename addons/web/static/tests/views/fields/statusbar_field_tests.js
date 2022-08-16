@@ -134,7 +134,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.records[1].bar = false;
 
         let count = 0;
-        let fetchFieldCount = 0;
+        let fieldsFetched = [];
         await makeView({
             type: "form",
             resModel: "partner",
@@ -149,7 +149,7 @@ QUnit.module("Fields", (hooks) => {
             mockRPC(route, { method, kwargs }) {
                 if (method === "search_read") {
                     count++;
-                    fetchFieldCount = kwargs.fields.length;
+                    fieldsFetched = kwargs.fields;
                 }
             },
         });
@@ -159,7 +159,11 @@ QUnit.module("Fields", (hooks) => {
             1,
             "once search_read should have been done to fetch the relational values"
         );
-        assert.strictEqual(fetchFieldCount, 1, "search_read should only fetch field id");
+        assert.deepEqual(
+            fieldsFetched,
+            ["display_name"],
+            "search_read should only fetch field display_name"
+        );
         assert.containsN(target, ".o_statusbar_status button:not(.dropdown-toggle)", 2);
         assert.containsN(target, ".o_statusbar_status button:disabled", 2);
         assert.hasClass(
