@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="delivery_carrier_view_search_inherit_website_sale_delivery_mondialrelay" model="ir.ui.view">
+        <field name="name">delivery.carrier.view.search.inherit.website.sale.delivery.mondial.relay</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="before">
+                <filter string="Mondial Relay" name="is_mondialrelay" domain="[('is_mondialrelay', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -41,6 +41,7 @@ class ResConfigSettings(models.TransientModel):
 
     module_delivery = fields.Boolean(
         compute='_compute_module_delivery', store=True, readonly=False)
+    module_delivery_mondialrelay = fields.Boolean("Mondial Relay Connector")
     module_website_sale_delivery = fields.Boolean(
         compute='_compute_module_delivery', store=True, readonly=False)
     group_product_pricelist = fields.Boolean(
