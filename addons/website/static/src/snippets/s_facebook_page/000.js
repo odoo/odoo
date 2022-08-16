@@ -16,7 +16,7 @@ const FacebookPageWidget = publicWidget.Widget.extend({
 
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
 
-        var params = _.pick(this.$el[0].dataset, 'href', 'height', 'tabs', 'small_header', 'hide_cover', 'show_facepile');
+        var params = _.pick(this.$el[0].dataset, 'href', 'height', 'tabs', 'small_header', 'hide_cover');
         if (!params.href) {
             return def;
         }
