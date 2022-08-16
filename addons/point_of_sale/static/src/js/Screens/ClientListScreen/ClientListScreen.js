@@ -192,7 +192,11 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
         async getNewClient() {
             var domain = [];
             if(this.state.query) {
-                domain = [["name", "ilike", this.state.query + "%"]];
+                domain = [
+                    '|','|',
+                    ["display_name", "ilike", this.state.query],
+                    ["email", "ilike", this.state.query],
+                    ];
             }
             const result = await this.env.services.rpc(
                 {
