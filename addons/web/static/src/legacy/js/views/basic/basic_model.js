@@ -2914,31 +2914,12 @@ var BasicModel = AbstractModel.extend({
             return Promise.resolve();
         }
 
-        var self = this;
         return this._rpc({
                 model: field.relation,
                 method: 'search_read',
-                fields: ["id"].concat(fieldsToRead || []),
+                fields: ["display_name"].concat(fieldsToRead || []),
                 context: context,
                 domain: domain,
-            })
-            .then(function (records) {
-                var ids = _.pluck(records, 'id');
-                return self._rpc({
-                        model: field.relation,
-                        method: 'name_get',
-                        args: [ids],
-                        context: context,
-                    })
-                    .then(function (name_gets) {
-                        _.each(records, function (rec) {
-                            var name_get = _.find(name_gets, function (n) {
-                                return n[0] === rec.id;
-                            });
-                            rec.display_name = name_get[1];
-                        });
-                        return records;
-                    });
             });
     },
     /**

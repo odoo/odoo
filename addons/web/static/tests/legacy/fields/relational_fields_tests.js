@@ -764,7 +764,7 @@ QUnit.module('Legacy relational_fields', {
         this.data.partner.records[1].bar = false;
 
         var count = 0;
-        var nb_fields_fetched;
+        var fieldsFetched;
         var form = await createView({
             View: FormView,
             model: 'partner',
@@ -778,7 +778,7 @@ QUnit.module('Legacy relational_fields', {
             mockRPC: function (route, args) {
                 if (args.method === 'search_read') {
                     count++;
-                    nb_fields_fetched = args.kwargs.fields.length;
+                    fieldsFetched = args.kwargs.fields;
                 }
                 return this._super.apply(this, arguments);
             },
@@ -787,7 +787,7 @@ QUnit.module('Legacy relational_fields', {
         });
 
         assert.strictEqual(count, 1, 'once search_read should have been done to fetch the relational values');
-        assert.strictEqual(nb_fields_fetched, 1, 'search_read should only fetch field id');
+        assert.deepEqual(fieldsFetched, ['display_name'], 'search_read should only fetch field display_name');
         assert.containsN(form, '.o_statusbar_status button:not(.dropdown-toggle)', 2);
         assert.containsN(form, '.o_statusbar_status button:disabled', 2);
         assert.hasClass(form.$('.o_statusbar_status button[data-value="4"]'), 'btn-primary');
