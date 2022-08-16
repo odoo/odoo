@@ -1640,6 +1640,29 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector("label.o_form_label").textContent, "customstring");
     });
 
+    QUnit.only("label uses an empty string attribute", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <label for="bar" string=""/>
+                            <div>
+                                <field name="bar"/>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(target, "label.o_form_label");
+        assert.strictEqual(target.querySelector("label.o_form_label").textContent, "");
+    });
+
     QUnit.test(
         "label is not rendered when invisible and not at top-level in a group",
         async function (assert) {

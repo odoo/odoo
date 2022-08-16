@@ -79,8 +79,8 @@ export class FormCompiler extends ViewCompiler {
             fieldInfo: `props.archInfo.fieldNodes['${fieldId}']`,
             className: `"${label.className}"`,
         };
-        let labelText = label.textContent || fieldString;
-        labelText = labelText
+        let labelText = label.textContent != null ? label.textContent : fieldString;
+        labelText = labelText != null
             ? toStringExpression(labelText)
             : `props.record.fields['${fieldName}'].string`;
         const formLabel = createElement("FormLabel", {
