@@ -136,13 +136,19 @@ class ResPartner(models.Model):
         return True
 
     @api.model
-    def _signup_retrieve_partner(self, token, check_validity=False, raise_exception=False):
+    def _signup_retrieve_partner(self, token, check_validity=False, raise_exception=False, include_inactive=False):
         """ find the partner corresponding to a token, and possibly check its validity
             :param token: the token to resolve
             :param check_validity: if True, also check validity
             :param raise_exception: if True, raise exception instead of returning False
+            :param include_inactive: if True, the request is to activate a user who has just signed up and his account
+            has not been activated yet
             :return: partner (browse record) or False (if raise_exception is False)
         """
+        #
+        if include_inactive:
+            self = self.with_context(active_test=False)
+
         partner = self.search([('signup_token', '=', token)], limit=1)
         if not partner:
             if raise_exception:
@@ -155,7 +161,7 @@ class ResPartner(models.Model):
         return partner
 
     @api.model
-    def signup_retrieve_info(self, token):
+    def signup_retrieve_info(self, token, include_inactive=False):
         """ retrieve the user info about the token
             :return: a dictionary with the user information:
                 - 'db': the name of the database
@@ -164,7 +170,7 @@ class ResPartner(models.Model):
                 - 'login': the user login, if the user already exists
                 - 'email': the partner email, if the user does not exist
         """
-        partner = self._signup_retrieve_partner(token, raise_exception=True)
+        partner = self._signup_retrieve_partner(token, raise_exception=True, include_inactive=include_inactive)
         res = {'db': self.env.cr.dbname}
         if partner.signup_valid:
             res['token'] = token

@@ -14,6 +14,7 @@ class ResConfigSettings(models.TransientModel):
         selection=[
             ('b2b', 'On invitation'),
             ('b2c', 'Free sign up'),
+            ('b2c_email_activate', 'Free sign up with email activation'),
         ],
         string='Customer Account',
         default='b2c',
