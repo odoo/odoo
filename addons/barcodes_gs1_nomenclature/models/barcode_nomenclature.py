@@ -139,7 +139,7 @@ class BarcodeNomenclature(models.Model):
                 if not isinstance(arg, (list, tuple)) or len(arg) != 3:
                     continue
                 field_name, operator, value = arg
-                if field_name != field or operator not in ['ilike', 'not ilike', '=', '!=']:
+                if field_name != field or operator not in ['ilike', 'not ilike', '=', '!='] or value is False:
                     continue
 
                 parsed_data = []
