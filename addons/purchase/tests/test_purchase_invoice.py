@@ -343,6 +343,52 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         aml = self.env['account.move.line'].search([('purchase_line_id', '=', purchase_order.order_line.id)])
         self.assertRecordValues(aml, [{'analytic_account_id': analytic_account_manual.id}])
 
+    def test_vendor_bill_analytic_account_product_change(self):
+        self.env.user.groups_id += self.env.ref('account.group_account_readonly')
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+
+        analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account'})
+        analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account'})
+
+        super_product = self.env['product.product'].create({'name': 'Super Product'})
+        great_product = self.env['product.product'].create({'name': 'Great Product'})
+        product_no_account = self.env['product.product'].create({'name': 'Product No Account'})
+        self.env['account.analytic.default'].create([
+            {
+                'analytic_id': analytic_account_super.id,
+                'product_id': super_product.id,
+            },
+            {
+                'analytic_id': analytic_account_great.id,
+                'product_id': great_product.id,
+            },
+        ])
+        po_form = Form(self.env['purchase.order'].with_context(tracking_disable=True))
+        po_form.partner_id = self.env.ref('base.res_partner_1')
+        with po_form.order_line.new() as po_line_form:
+            po_line_form.name = super_product.name
+            po_line_form.product_id = super_product
+        purchase_order = po_form.save()
+        purchase_order_line = purchase_order.order_line
+
+        self.assertEqual(purchase_order_line.account_analytic_id.id, analytic_account_super.id, "The analytic account should be set to 'Super Account'")
+        purchase_order_line.write({'product_id': great_product.id})
+        self.assertEqual(purchase_order_line.account_analytic_id.id, analytic_account_great.id, "The analytic account should be set to 'Great Account'")
+        purchase_order_line.write({'product_id': product_no_account.id})
+        self.assertFalse(purchase_order_line.account_analytic_id.id, "The analytic account should not be set")
+
+        po_no_analytic_account = self.env['purchase.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+        })
+        pol_no_analytic_account = self.env['purchase.order.line'].create({
+            'name': super_product.name,
+            'product_id': super_product.id,
+            'order_id': po_no_analytic_account.id,
+            'account_analytic_id': False,
+        })
+        po_no_analytic_account.button_confirm()
+        self.assertFalse(pol_no_analytic_account.account_analytic_id.id, "The compute should not overwrite what the user has set.")
+
     def test_sequence_invoice_lines_from_multiple_purchases(self):
         """Test if the invoice lines are sequenced by purchase order when creating an invoice
            from multiple selected po's"""
