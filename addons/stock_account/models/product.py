@@ -158,16 +158,15 @@ class ProductProduct(models.Model):
         self.ensure_one()
         company_id = self.env.context.get('force_company', self.env.company.id)
         company = self.env['res.company'].browse(company_id)
-        vals = {
+        value = company.currency_id.round(unit_cost * quantity)
+        return {
             'product_id': self.id,
-            'value': company.currency_id.round(unit_cost * quantity),
+            'value': value,
             'unit_cost': unit_cost,
             'quantity': quantity,
+            'remaining_qty': quantity,
+            'remaining_value': value,
         }
-        if self.cost_method in ('average', 'fifo'):
-            vals['remaining_qty'] = quantity
-            vals['remaining_value'] = vals['value']
-        return vals
 
     def _prepare_out_svl_vals(self, quantity, company):
         """Prepare the values for a stock valuation layer created by a delivery.
@@ -188,24 +187,23 @@ class ProductProduct(models.Model):
             'unit_cost': self.standard_price,
             'quantity': quantity,
         }
-        if self.cost_method in ('average', 'fifo'):
-            fifo_vals = self._run_fifo(abs(quantity), company)
-            vals['remaining_qty'] = fifo_vals.get('remaining_qty')
-            # In case of AVCO, fix rounding issue of standard price when needed.
-            if self.cost_method == 'average':
-                rounding_error = currency.round(self.standard_price * self.quantity_svl - self.value_svl)
-                if rounding_error:
-                    # If it is bigger than the (smallest number of the currency * quantity) / 2,
-                    # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
-                    if abs(rounding_error) <= (abs(quantity) * currency.rounding) / 2:
-                        vals['value'] += rounding_error
-                        vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
-                            '+' if rounding_error > 0 else '',
-                            float_repr(rounding_error, precision_digits=currency.decimal_places),
-                            currency.symbol
-                        )
-            if self.cost_method == 'fifo':
-                vals.update(fifo_vals)
+        fifo_vals = self._run_fifo(abs(quantity), company)
+        vals['remaining_qty'] = fifo_vals.get('remaining_qty')
+        # In case of AVCO, fix rounding issue of standard price when needed.
+        if self.cost_method == 'average':
+            rounding_error = currency.round(self.standard_price * self.quantity_svl - self.value_svl)
+            if rounding_error:
+                # If it is bigger than the (smallest number of the currency * quantity) / 2,
+                # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
+                if abs(rounding_error) <= (abs(quantity) * currency.rounding) / 2:
+                    vals['value'] += rounding_error
+                    vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
+                        '+' if rounding_error > 0 else '',
+                        float_repr(rounding_error, precision_digits=currency.decimal_places),
+                        currency.symbol
+                    )
+        if self.cost_method == 'fifo':
+            vals.update(fifo_vals)
         return vals
 
     def _change_standard_price(self, new_price):
