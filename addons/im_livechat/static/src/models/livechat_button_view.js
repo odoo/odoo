@@ -62,11 +62,11 @@ registerModel({
              * unnecessary and irrelevant (restart / end messages, any text field values, ...).
              */
             if (
-                this.chatbot &&
-                this.chatbot.currentStep &&
-                this.chatbot.currentStep.data
+                this.messaging.publicLivechatGlobal.chatbot &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
-                this.chatbot.currentStep.data.conversation_closed = true;
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed = true;
                 this.chatbotSaveSession();
             }
             this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
@@ -81,9 +81,9 @@ registerModel({
          */
         chatbotEndScript() {
             if (
-                this.chatbot.currentStep &&
-                this.chatbot.currentStep.data &&
-                this.chatbot.currentStep.data.conversation_closed
+                this.messaging.publicLivechatGlobal.chatbot.currentStep &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed
             ) {
                 // don't touch anything if the user has closed the conversation, let the chat window
                 // handle the display
@@ -102,8 +102,8 @@ registerModel({
          */
         chatbotSaveSession() {
             localStorage.setItem('im_livechat.chatbot.state.uuid_' + this.messaging.publicLivechatGlobal.publicLivechat.uuid, JSON.stringify({
-                '_chatbot': this.chatbot.data,
-                '_chatbotCurrentStep': this.chatbot.currentStep.data,
+                '_chatbot': this.messaging.publicLivechatGlobal.chatbot.data,
+                '_chatbotCurrentStep': this.messaging.publicLivechatGlobal.chatbot.currentStep.data,
             }));
         },
         /**
@@ -126,7 +126,7 @@ registerModel({
                 route: '/chatbot/restart',
                 params: {
                     channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
-                    chatbot_script_id: this.chatbot.scriptId,
+                    chatbot_script_id: this.messaging.publicLivechatGlobal.chatbot.scriptId,
                 },
             });
 
@@ -134,12 +134,12 @@ registerModel({
                 this.widget._chatbotAddMessage(postedMessage);
             }
 
-            this.chatbot.update({ currentStep: clear() });
+            this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: clear() });
             this.chatbotSetIsTyping();
             this.update({
                 chatbotNextStepTimeout: setTimeout(
                     this.widget._chatbotTriggerNextStep.bind(this.widget),
-                    this.chatbot.messageDelay,
+                    this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                 ),
             });
         },
@@ -165,7 +165,7 @@ registerModel({
             }
             const chatbotState = localStorage.getItem(this.chatbotSessionCookieKey);
             if (chatbotState) {
-                this.chatbot.update({ currentStep: insertAndReplace({ data: this.localStorageChatbotState._chatbotCurrentStep }) });
+                this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: insertAndReplace({ data: this.localStorageChatbotState._chatbotCurrentStep }) });
             }
         },
         closeChat() {
@@ -218,13 +218,13 @@ registerModel({
                                 'chatbotImageSrc': `/im_livechat/operator/${
                                     this.messaging.publicLivechatGlobal.publicLivechat.operator.id
                                 }/avatar`,
-                                'chatbotName': this.chatbot.name,
+                                'chatbotName': this.messaging.publicLivechatGlobal.chatbot.name,
                                 'isWelcomeMessage': isWelcomeMessage,
                             }))
                         );
                         this.chatWindow.publicLivechatView.widget.scrollToBottom();
                     },
-                    this.chatbot.messageDelay / 3,
+                    this.messaging.publicLivechatGlobal.chatbot.messageDelay / 3,
                 ),
             });
         },
@@ -271,25 +271,6 @@ registerModel({
          */
         _computeChannelId() {
             return this.messaging.publicLivechatGlobal.options.channel_id;
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeChatbot() {
-            if (this.isTestChatbot) {
-                return insertAndReplace({ data: this.testChatbotData.chatbot });
-            }
-            if (this.chatbotState === 'init') {
-                return insertAndReplace({ data: this.rule.chatbot });
-            }
-            if (this.chatbotState === 'welcome') {
-                return insertAndReplace({ data: this.livechatInit.rule.chatbot });
-            }
-            if (this.chatbotState === 'restore_session' && this.localStorageChatbotState) {
-                return insertAndReplace({ data: this.localStorageChatbotState._chatbot });
-            }
-            return clear();
         },
         /**
          * @private
@@ -525,9 +506,9 @@ registerModel({
             });
 
             if (
-                this.chatbot &&
-                this.chatbot.currentStep &&
-                this.chatbot.currentStep.data &&
+                this.messaging.publicLivechatGlobal.chatbot &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data &&
                 this.messaging.publicLivechatGlobal.messages &&
                 this.messaging.publicLivechatGlobal.messages.length !== 0
             ) {
@@ -574,22 +555,22 @@ registerModel({
             }
             if (
                 this.isChatbot &&
-                this.chatbot.currentStep &&
-                this.chatbot.currentStep.data
+                this.messaging.publicLivechatGlobal.chatbot.currentStep &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
                 if (
-                    this.chatbot.currentStep.data.chatbot_step_type === 'forward_operator' &&
-                    this.chatbot.currentStep.data.chatbot_operator_found
+                    this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'forward_operator' &&
+                    this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_operator_found
                 ) {
                     return; // operator has taken over the conversation, let them speak
-                } else if (this.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
+                } else if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
                     this.widget._debouncedChatbotAwaitUserInput();
-                } else if (!this.chatbot.shouldEndScript) {
+                } else if (!this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
                     this.chatbotSetIsTyping();
                     this.update({
                         chatbotNextStepTimeout: setTimeout(
                             this.widget._chatbotTriggerNextStep.bind(this.widget),
-                            this.chatbot.messageDelay,
+                            this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                         ),
                     });
                 } else {
@@ -619,8 +600,8 @@ registerModel({
         async _sendMessageChatbotBefore() {
             if (
                 this.isChatbot &&
-                this.chatbot.currentStep &&
-                this.chatbot.currentStep.data
+                this.messaging.publicLivechatGlobal.chatbot.currentStep &&
+                this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
                 await this.widget._chatbotPostWelcomeMessages();
             }
@@ -669,7 +650,7 @@ registerModel({
          * @override
          */
         async _willStartChatbot() {
-            if (this.rule && !!this.chatbot) {
+            if (this.rule && !!this.messaging.publicLivechatGlobal.chatbot) {
                 // noop
             } else if (this.messaging.publicLivechatGlobal.history !== null && this.messaging.publicLivechatGlobal.history.length === 0) {
                 this.update({
@@ -692,9 +673,9 @@ registerModel({
                 // we landed on a website page where a channel rule is configured to run a chatbot.script
                 // -> initialize necessary state
                 if (this.rule.chatbot_welcome_steps && this.rule.chatbot_welcome_steps.length !== 0) {
-                    this.chatbot.update({
+                    this.messaging.publicLivechatGlobal.chatbot.update({
                         currentStep: insertAndReplace({
-                            data: this.chatbot.lastWelcomeStep,
+                            data: this.messaging.publicLivechatGlobal.chatbot.lastWelcomeStep,
                         }),
                     });
                 }
@@ -727,11 +708,6 @@ registerModel({
         }),
         channelId: attr({
             compute: '_computeChannelId',
-        }),
-        chatbot: one('Chatbot', {
-            compute: '_computeChatbot',
-            inverse: 'livechatButtonViewOwner',
-            isCausal: true,
         }),
         chatbotNextStepTimeout: attr(),
         chatbotSessionCookieKey: attr({

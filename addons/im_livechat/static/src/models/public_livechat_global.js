@@ -37,6 +37,28 @@ registerModel({
             this.update({ hasLoadedQWebTemplate: true });
         },
         /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeChatbot() {
+            if (!this.livechatButtonView) {
+                return clear();
+            }
+            if (this.livechatButtonView.isTestChatbot) {
+                return insertAndReplace({ data: this.livechatButtonView.testChatbotData.chatbot });
+            }
+            if (this.livechatButtonView.chatbotState === 'init') {
+                return insertAndReplace({ data: this.livechatButtonView.rule.chatbot });
+            }
+            if (this.livechatButtonView.chatbotState === 'welcome') {
+                return insertAndReplace({ data: this.livechatButtonView.livechatInit.rule.chatbot });
+            }
+            if (this.livechatButtonView.chatbotState === 'restore_session' && this.livechatButtonView.localStorageChatbotState) {
+                return insertAndReplace({ data: this.livechatButtonView.localStorageChatbotState._chatbot });
+            }
+            return clear();
+        },
+        /**
           * @private
           * @returns {FieldCommand}
           */
@@ -70,6 +92,11 @@ registerModel({
                 3: "😐",
                 1: "😞",
             },
+        }),
+        chatbot: one('Chatbot', {
+            compute: '_computeChatbot',
+            inverse: 'publicLivechatGlobalOwner',
+            isCausal: true,
         }),
         chatbotServerUrl: attr(),
         feedbackView: one('PublicLivechatFeedbackView', {

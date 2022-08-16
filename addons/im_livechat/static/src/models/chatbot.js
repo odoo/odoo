@@ -6,7 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Chatbot',
-    identifyingFields: ['livechatButtonViewOwner'],
+    identifyingFields: ['publicLivechatOwner'],
     recordMethods: {
         /**
          * @private
@@ -63,7 +63,7 @@ registerModel({
          * @returns {integer|FieldCommand}
          */
         _computeMessageDelay() {
-            if (this.livechatButtonViewOwner.isWebsiteLivechatChatbotFlow) {
+            if (this.messaging.publicLivechatGlobal.livechatButtonView.isWebsiteLivechatChatbotFlow) {
                 return 100;
             }
             return clear();
@@ -149,17 +149,17 @@ registerModel({
         lastWelcomeStep: attr({
             compute: '_computeLastWelcomeStep',
         }),
-        livechatButtonViewOwner: one('LivechatButtonView', {
-            inverse: 'chatbot',
-            readonly: true,
-            required: true,
-        }),
         name: attr({
             compute: '_computeName',
         }),
         messageDelay: attr({
             compute: '_computeMessageDelay',
             default: 3500, // in milliseconds
+        }),
+        publicLivechatOwner: one('PublicLivechatGlobal', {
+            inverse: 'chatbot',
+            readonly: true,
+            required: true,
         }),
         scriptId: attr({
             compute: '_computeScriptId',
