@@ -120,7 +120,11 @@ class AccountBankStatement(models.Model):
     # won't be called and therefore the other field will have a value of 0 and we don't want that.
     @api.depends('previous_statement_id', 'previous_statement_id.balance_end_real')
     def _compute_starting_balance(self):
-        for statement in self:
+        # When a bank statement is inserted out-of-order several fields needs to be recomputed.
+        # As the records to recompute are ordered by id, it may occur that the first record
+        # to recompute start a recursive recomputation of field balance_end_real
+        # To avoid this we sort the records by date
+        for statement in self.sorted(key=lambda s: s.date):
             if statement.previous_statement_id.balance_end_real != statement.balance_start:
                 statement.balance_start = statement.previous_statement_id.balance_end_real
             else:
