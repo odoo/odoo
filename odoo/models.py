@@ -3523,6 +3523,7 @@ class BaseModel(metaclass=MetaModel):
             * write_uid: last user who changed the record
             * write_date: date of the last change to the record
             * xmlid: XML ID to use to refer to this record (if there is one), in format ``module.name``
+            * xmlids: list of dict with xmlid in format ``module.name``, and noupdate as boolean
             * noupdate: A boolean telling if the record will be updated or not
         """
 
@@ -3531,14 +3532,25 @@ class BaseModel(metaclass=MetaModel):
             res = self.read(LOG_ACCESS_COLUMNS)
         else:
             res = [{'id': x} for x in self.ids]
-        xml_data = dict((x['res_id'], x) for x in IrModelData.search_read([('model', '=', self._name),
-                                                                           ('res_id', 'in', self.ids)],
-                                                                          ['res_id', 'noupdate', 'module', 'name'],
-                                                                          order='id DESC'))
+
+
+        xml_data = defaultdict(list)
+        imds = IrModelData.search_read(
+            [('model', '=', self._name), ('res_id', 'in', self.ids)],
+            ['res_id', 'noupdate', 'module', 'name'],
+            order='id DESC'
+        )
+        for imd in imds:
+            xml_data[imd['res_id']].append({
+                'xmlid': "%s.%s" % (imd['module'], imd['name']),
+                'noupdate': imd['noupdate'],
+            })
+
         for r in res:
-            value = xml_data.get(r['id'], {})
-            r['xmlid'] = '%(module)s.%(name)s' % value if value else False
-            r['noupdate'] = value.get('noupdate', False)
+            main = xml_data.get(r['id'], [{}])[-1]
+            r['xmlid'] = main.get('xmlid', False)
+            r['noupdate'] = main.get('noupdate', False)
+            r['xmlids'] = xml_data.get(r['id'], [])[::-1]
         return res
 
     def get_base_url(self):
