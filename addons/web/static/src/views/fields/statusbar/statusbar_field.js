@@ -190,7 +190,7 @@ StatusBarField.extractProps = ({ attrs, field }) => {
 registry.category("fields").add("statusbar", StatusBarField);
 
 export async function preloadStatusBar(orm, record, fieldName) {
-    const fieldNames = ["id"];
+    const fieldNames = ["id", "display_name"];
     const foldField = record.activeFields[fieldName].options.fold_field;
     if (foldField) {
         fieldNames.push(foldField);
@@ -203,18 +203,7 @@ export async function preloadStatusBar(orm, record, fieldName) {
     }
 
     const relation = record.fields[fieldName].relation;
-    const records = await orm.searchRead(relation, domain, fieldNames);
-    const foldMap = {};
-    for (const rec of records) {
-        foldMap[rec.id] = rec[foldField];
-    }
-
-    const nameGets = await orm.call(relation, "name_get", [records.map((rec) => rec.id)]);
-    return nameGets.map((nameGet) => ({
-        id: nameGet[0],
-        name: nameGet[1],
-        isFolded: foldField ? foldMap[nameGet[0]] : false,
-    }));
+    return await orm.searchRead(relation, domain, fieldNames);
 }
 
 registry.category("preloadedData").add("statusbar", {
