@@ -7,818 +7,872 @@
         <field name="filter_fiscal_position" eval="True"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
-            <record id="tax_report_balance" model="account.report.column">
-                <field name="name">Balance</field>
-                <field name="expression_label">balance</field>
+            <record id="tax_report_tax_base" model="account.report.column">
+                <field name="name">Tax base</field>
+                <field name="expression_label">tax_base</field>
+            </record>
+            <record id="tax_report_tax_amount" model="account.report.column">
+                <field name="name">Tax amount</field>
+                <field name="expression_label">tax_amount</field>
             </record>
         </field>
         <field name="line_ids">
-            <record id="account_tax_report_line_ostali_porezi" model="account.report.line">
-                <field name="name">Ostali porezi, carine, trošarine i sl.</field>
-                <field name="aggregation_formula">POREZ_NA_POTROSNJU.balance</field>
+            <!-- Section 0 -->
+             <record id="tax_report_title_vat_calculation" model="account.report.line">
+                 <field name="name">Vat calculation of supplied goods and services - total value(i. + ii.)</field>
+                 <field name="code">c_0_total</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_0_0_tag_column1" model="account.report.expression">
+                        <field name="label">tax_base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">c_I_total.tax_base + c_II_total.tax_base</field>
+                    </record>
+                    <record id="tax_report_line_0_0_tag_column2" model="account.report.expression">
+                        <field name="label">tax_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">c_II_total.tax_amount</field>
+                    </record>
+                </field>
+            </record>
+            <!-- Section I -->
+            <record id="tax_report_title_transactions0" model="account.report.line">
+                <field name="name">I. Transactions not subject to vat and exempt - total value (1.+2.+3.+4.+5.+6.+7.+8.+9.+10.)</field>
+                <field name="code">c_I_total</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_I_0_tag_column1" model="account.report.expression">
+                        <field name="label">tax_base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">hr01.tax_base + hr02.tax_base + hr03.tax_base + hr04.tax_base + hr05.tax_base + hr06.tax_base + hr07.tax_base + hr08.tax_base + hr09.tax_base + hr10.tax_base </field>
+                    </record>
+                </field>
+                <!-- Sub Section 1 -->
                 <field name="children_ids">
-                    <record id="account_tax_report_line_porez" model="account.report.line">
-                        <field name="name">Porez na potrošnju</field>
-                        <field name="code">POREZ_NA_POTROSNJU</field>
+                    <record id="tax_report_line_I_1" model="account.report.line">
+                        <field name="name">1. Supplies in the republic of croatia in respect of which the receiver calculates vat (domestic reverse charge)</field>
+                        <field name="code">hr01</field>
                         <field name="expression_ids">
-                            <record id="account_tax_report_line_porez_formula" model="account.report.expression">
-                                <field name="label">balance</field>
-                                <field name="engine">external</field>
-                                <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=2</field>
+                            <record id="tax_report_line_I_1_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.1_base</field>
                             </record>
                         </field>
                     </record>
                 </field>
-            </record>
-            <record id="account_tax_report_line_pdv" model="account.report.line">
-                <field name="name">PDV</field>
-                <field name="aggregation_formula">(((koje.balance + (izvozne.balance + isporuke.balance + tuzemne.balance + ostale.balance) + isporuke_po.balance) + (izdani_10.balance + izdani_25.balance)) + (pretporez_10.balance + (0.7 * pretporez_25_70.balance + 0.3 * pretporez_25_30.balance) + placeni_uvozu.balance + placeni_usluge_10.balance + placeni_usluge_25.balance + pretporez_0.balance)) + (((izdani_racuni.balance + izdani_racuni_25.balance) + (pretporez_10_tax.balance + pretporez_25_tax.balance + placeni_uvozu_tax.balance + placeni_usluge_10_tax.balance + placeni_usluge_25_ta.balance))) + ((nepriznati_pretporez_25_other.balance + (0.3 * nepriznati_pretporez_25_30.balance) + (0.7 * nepriznati_pretporez_25_70.balance)) + pretporez_koji.balance + (nepriznati_pretporez_25_tax.balance) + (pretporez_koji_neplaceni.balance + pretporez_koji_neplaceni_25.balance + pretporez_koji_neplaceni_usluge_25.balance))</field>
+                <!-- Sub Section 2 -->
                 <field name="children_ids">
-                    <record id="account_tax_report_line_obrazac_pdv" model="account.report.line">
-                        <field name="name">OBRAZAC PDV</field>
-                        <field name="aggregation_formula">(((koje.balance + (izvozne.balance + isporuke.balance + tuzemne.balance + ostale.balance) + isporuke_po.balance) + (izdani_10.balance + izdani_25.balance)) + (pretporez_10.balance + (0.7 * pretporez_25_70.balance + 0.3 * pretporez_25_30.balance) + placeni_uvozu.balance + placeni_usluge_10.balance + placeni_usluge_25.balance + pretporez_0.balance)) + (((izdani_racuni.balance + izdani_racuni_25.balance) + (pretporez_10_tax.balance + pretporez_25_tax.balance + placeni_uvozu_tax.balance + placeni_usluge_10_tax.balance + placeni_usluge_25_ta.balance)))</field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_line_osnovica" model="account.report.line">
-                                <field name="name">O S N O V I C A</field>
-                                <field name="aggregation_formula">((koje.balance + (izvozne.balance + isporuke.balance + tuzemne.balance + ostale.balance) + isporuke_po.balance) + (izdani_10.balance + izdani_25.balance)) + (pretporez_10.balance + (0.7 * pretporez_25_70.balance + 0.3 * pretporez_25_30.balance) + placeni_uvozu.balance + placeni_usluge_10.balance + placeni_usluge_25.balance + pretporez_0.balance)</field>
-                                <field name="children_ids">
-                                    <record id="account_tax_report_line_obracun" model="account.report.line">
-                                        <field name="name">Obračun isporuka (I+II)</field>
-                                        <field name="aggregation_formula">OBRACUN_I_ISPORUKE_NE_PODLIJEZU__OSLOBODENE.balance + OBRACUN_II_OPOREZIVE_ISPORUKE.balance</field>
-                                        <field name="children_ids">
-                                            <record id="account_tax_report_line_obracun_isporuke" model="account.report.line">
-                                                <field name="name">I. Isporuke ne podliježu / oslobođene</field>
-                                                <field name="code">OBRACUN_I_ISPORUKE_NE_PODLIJEZU__OSLOBODENE</field>
-                                                <field name="aggregation_formula">koje.balance + I2_OSLOBODENE_UKUPNO.balance + isporuke_po.balance</field>
-                                                <field name="children_ids">
-                                                    <record id="account_tax_report_line_koje" model="account.report.line">
-                                                        <field name="name">I.1. Koje ne podliježu oporezivanju</field>
-                                                        <field name="code">koje</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_koje_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">I.1. Koje ne podliježu oporezivanju</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_oslobodene" model="account.report.line">
-                                                        <field name="name">I.2. Oslobođene ukupno</field>
-                                                        <field name="code">I2_OSLOBODENE_UKUPNO</field>
-                                                        <field name="aggregation_formula">izvozne.balance + isporuke.balance + tuzemne.balance + ostale.balance</field>
-                                                        <field name="children_ids">
-                                                            <record id="account_tax_report_line_izvozne" model="account.report.line">
-                                                                <field name="name">I.2.1. Izvozne</field>
-                                                                <field name="code">izvozne</field>
-                                                                <field name="expression_ids">
-                                                                    <record id="account_tax_report_line_izvozne_tag" model="account.report.expression">
-                                                                        <field name="label">balance</field>
-                                                                        <field name="engine">tax_tags</field>
-                                                                        <field name="formula">I.2.1. Izvozne</field>
-                                                                    </record>
-                                                                </field>
-                                                            </record>
-                                                            <record id="account_tax_report_line_isporuke" model="account.report.line">
-                                                                <field name="name">I.2.2. Isporuke dobara</field>
-                                                                <field name="code">isporuke</field>
-                                                                <field name="expression_ids">
-                                                                    <record id="account_tax_report_line_isporuke_tag" model="account.report.expression">
-                                                                        <field name="label">balance</field>
-                                                                        <field name="engine">tax_tags</field>
-                                                                        <field name="formula">I.2.2. Isporuke dobara</field>
-                                                                    </record>
-                                                                </field>
-                                                            </record>
-                                                            <record id="account_tax_report_line_tuzemne" model="account.report.line">
-                                                                <field name="name">I.2.3. Tuzemne - bez prava odbitka</field>
-                                                                <field name="code">tuzemne</field>
-                                                                <field name="expression_ids">
-                                                                    <record id="account_tax_report_line_tuzemne_tag" model="account.report.expression">
-                                                                        <field name="label">balance</field>
-                                                                        <field name="engine">tax_tags</field>
-                                                                        <field name="formula">I.2.3. Tuzemne  - bez prava odbitka</field>
-                                                                    </record>
-                                                                </field>
-                                                            </record>
-                                                            <record id="account_tax_report_line_ostale" model="account.report.line">
-                                                                <field name="name">I.2.4. Ostale – s pravom odbitka</field>
-                                                                <field name="code">ostale</field>
-                                                                <field name="expression_ids">
-                                                                    <record id="account_tax_report_line_ostale_tag" model="account.report.expression">
-                                                                        <field name="label">balance</field>
-                                                                        <field name="engine">tax_tags</field>
-                                                                        <field name="formula">I.2.4. Ostale – s pravom odbitka</field>
-                                                                    </record>
-                                                                </field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_isporuke_po" model="account.report.line">
-                                                        <field name="name">I.3. Isporuke po stopi od 0%</field>
-                                                        <field name="code">isporuke_po</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_isporuke_po_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">I.3. Isporuke po stopi od 0%</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_oporezive" model="account.report.line">
-                                                <field name="name">II. Oporezive isporuke</field>
-                                                <field name="code">OBRACUN_II_OPOREZIVE_ISPORUKE</field>
-                                                <field name="aggregation_formula">izdani_10.balance + OBRACUN_II2_IZDANI_RACUNI_PO_STOPI_22_I_23.balance + izdani_25.balance + II4_NENAPLACENI_IZVOZ.balance + II5_OSLOBODENJE_IZVOZA__PUTNICKI_PROMET.balance</field>
-                                                <field name="children_ids">
-                                                    <record id="account_tax_report_line_izdani_10" model="account.report.line">
-                                                        <field name="name">II.1 Izdani računi po stopi 10%</field>
-                                                        <field name="code">izdani_10</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_izdani_10_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">II.1 Izdani računi po stopi 10% (osnovica)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_izdani_22_i_23" model="account.report.line">
-                                                        <field name="name">II.2 Izdani računi po stopi 22% i 23%</field>
-                                                        <field name="code">OBRACUN_II2_IZDANI_RACUNI_PO_STOPI_22_I_23</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_izdani_22_i_23_formula" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">external</field>
-                                                                <field name="formula">sum</field>
-                                                                <field name="subformula">editable;rounding=2</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_izdani_25" model="account.report.line">
-                                                        <field name="name">II.3 Izdani računi po stopi 25%</field>
-                                                        <field name="code">izdani_25</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_izdani_25_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">II.3 Izdani računi po stopi 25% (osnovica)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_nenaplaceni" model="account.report.line">
-                                                        <field name="name">II.4 Nenaplaćeni izvoz</field>
-                                                        <field name="code">II4_NENAPLACENI_IZVOZ</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_nenaplaceni_formula" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">external</field>
-                                                                <field name="formula">sum</field>
-                                                                <field name="subformula">editable;rounding=2</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_oslobodenje" model="account.report.line">
-                                                        <field name="name">II.5 Oslobođenje izvoza – putnički promet</field>
-                                                        <field name="code">II5_OSLOBODENJE_IZVOZA__PUTNICKI_PROMET</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_oslobodenje_formula" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">external</field>
-                                                                <field name="formula">sum</field>
-                                                                <field name="subformula">editable;rounding=2</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="account_tax_report_line_obracunani" model="account.report.line">
-                                        <field name="name">III. OBRAČUNANI PRETPOREZ</field>
-                                        <field name="aggregation_formula">pretporez_10.balance + (0.7 * pretporez_25_70.balance + 0.3 * pretporez_25_30.balance) + placeni_uvozu.balance + placeni_usluge_10.balance + placeni_usluge_25.balance + pretporez_0.balance</field>
-                                        <field name="children_ids">
-                                            <record id="account_tax_report_line_pretporez_10" model="account.report.line">
-                                                <field name="name">III.1. Pretporez 10%</field>
-                                                <field name="code">pretporez_10</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_pretporez_10_tag" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">tax_tags</field>
-                                                        <field name="formula">III.1. Pretporez 10% (osnovica)</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_pretporez_22_i_23" model="account.report.line">
-                                                <field name="name">III.2. Pretporez 22% i23%</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_pretporez_22_i_23_tag" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">tax_tags</field>
-                                                        <field name="formula">III.2. Pretporez 22% i23%</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_pretporez_25" model="account.report.line">
-                                                <field name="name">III.3. Pretporez 25%</field>
-                                                <field name="aggregation_formula">0.3 * pretporez_25_30.balance + 0.7 * pretporez_25_70.balance</field>
-                                                <field name="children_ids">
-                                                    <record id="account_tax_report_line_pretporez_25_30" model="account.report.line">
-                                                        <field name="name">III.3. Pretporez 25% (30%)</field>
-                                                        <field name="code">pretporez_25_30</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_pretporez_25_30_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">III.3. Pretporez 25% (30%)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_pretporez_25_70" model="account.report.line">
-                                                        <field name="name">III.3. Pretporez 25% (70%)</field>
-                                                        <field name="code">pretporez_25_70</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_pretporez_25_70_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">III.3. Pretporez 25% (70%)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_placeni_uvozu" model="account.report.line">
-                                                <field name="name">III.4. Plaćeni PP pri uvozu</field>
-                                                <field name="code">placeni_uvozu</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_placeni_uvozu_tag" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">tax_tags</field>
-                                                        <field name="formula">III.4. Plaćeni PP pri uvozu (osnovica)</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_placeni_usluge_10" model="account.report.line">
-                                                <field name="name">III.5. Plaćeni PP na ino usluge 10%</field>
-                                                <field name="code">placeni_usluge_10</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_placeni_usluge_10_tag" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">tax_tags</field>
-                                                        <field name="formula">III.5. Plaćeni PP na ino usluge 10% (osnovica)</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_placeni_usluge_22_i_23" model="account.report.line">
-                                                <field name="name">III.6. Plaćeni PP na ino usluge 22% i 23%</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_placeni_usluge_22_i_23_tag" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">tax_tags</field>
-                                                        <field name="formula">III.6. Plaćeni PP na ino usluge 22% i 23%</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_placeni_usluge_25" model="account.report.line">
-                                                <field name="name">III.7. Plaćeni PP na ino usluge 25%</field>
-                                                <field name="code">placeni_usluge_25</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_placeni_usluge_25_tag" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">tax_tags</field>
-                                                        <field name="formula">III.7. Plaćeni PP na ino usluge 25% (osnovica)</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_pretporez_0" model="account.report.line">
-                                                <field name="name">III.0. Pretporez 0%</field>
-                                                <field name="code">pretporez_0</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_pretporez_0_tag" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">tax_tags</field>
-                                                        <field name="formula">III.0. Pretporez 0%</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                </field>
-                            </record>
-                            <record id="account_tax_report_line_pdv_porez" model="account.report.line">
-                                <field name="name">PDV – POREZ – razlika za uplatu/preplata</field>
-                                <field name="aggregation_formula">VI_POREZNA_OBVEZA_U_RAZDOBLJU.balance + UPLACENO_U_RAZDOBLJU.balance</field>
-                                <field name="children_ids">
-                                    <record id="account_tax_report_line_porezna" model="account.report.line">
-                                        <field name="name">VI. POREZNA OBVEZA U RAZDOBLJU</field>
-                                        <field name="code">VI_POREZNA_OBVEZA_U_RAZDOBLJU</field>
-                                        <field name="aggregation_formula">POREZNA_I_ISPORUKE_NE_PODLIJEZU__OSLOBODENE.balance + POREZNA_II_OPOREZIVE_ISPORUKE.balance + III_OBRACUNANI_PRETPOREZ.balance</field>
-                                        <field name="children_ids">
-                                            <record id="account_tax_report_line_isporuke_ne" model="account.report.line">
-                                                <field name="name">I. Isporuke ne podliježu / oslobođene</field>
-                                                <field name="code">POREZNA_I_ISPORUKE_NE_PODLIJEZU__OSLOBODENE</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_isporuke_ne_formula" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">external</field>
-                                                        <field name="formula">sum</field>
-                                                        <field name="subformula">editable;rounding=2</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_oporezive_isporuke" model="account.report.line">
-                                                <field name="name">II. Oporezive isporuke</field>
-                                                <field name="code">POREZNA_II_OPOREZIVE_ISPORUKE</field>
-                                                <field name="aggregation_formula">izdani_racuni.balance + POREZNA_II2_IZDANI_RACUNI_PO_STOPI_22_I_23.balance + izdani_racuni_25.balance + II4_OSLOBODENJE_IZVOZA__PUTNICKI_PROMET.balance</field>
-                                                <field name="children_ids">
-                                                    <record id="account_tax_report_line_izdani_racuni" model="account.report.line">
-                                                        <field name="name">II.1 Izdani računi po stopi 10%</field>
-                                                        <field name="code">izdani_racuni</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_izdani_racuni_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">II.1 Izdani računi po stopi 10% (porez)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_izdani_racuni_22_i_23" model="account.report.line">
-                                                        <field name="name">II.2 Izdani računi po stopi 22% i 23%</field>
-                                                        <field name="code">POREZNA_II2_IZDANI_RACUNI_PO_STOPI_22_I_23</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_izdani_racuni_22_i_23_formula" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">external</field>
-                                                                <field name="formula">sum</field>
-                                                                <field name="subformula">editable;rounding=2</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_izdani_racuni_25" model="account.report.line">
-                                                        <field name="name">II.3 Izdani računi po stopi 25%</field>
-                                                        <field name="code">izdani_racuni_25</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_izdani_racuni_25_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">II.3 Izdani računi po stopi 25% (porez)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_oslobodenje_izvoza" model="account.report.line">
-                                                        <field name="name">II.4 Oslobođenje izvoza – putnički promet</field>
-                                                        <field name="code">II4_OSLOBODENJE_IZVOZA__PUTNICKI_PROMET</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_oslobodenje_izvoza_formula" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">external</field>
-                                                                <field name="formula">sum</field>
-                                                                <field name="subformula">editable;rounding=2</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_obracunani_pretporez" model="account.report.line">
-                                                <field name="name">III. OBRAČUNANI PRETPOREZ</field>
-                                                <field name="code">III_OBRACUNANI_PRETPOREZ</field>
-                                                <field name="aggregation_formula">pretporez_10_tax.balance + III2_PRETPOREZ_22_I_23.balance + pretporez_25_tax.balance + placeni_uvozu_tax.balance + placeni_usluge_10_tax.balance + III6_PLACENI_PP_NA_INO_USLUGE_22_I_23.balance + placeni_usluge_25_ta.balance + III8_ISPRAVCI_PRETPOREZA.balance</field>
-                                                <field name="children_ids">
-                                                    <record id="account_tax_report_line_pretporez_10_tax" model="account.report.line">
-                                                        <field name="name">III.1. Pretporez 10%</field>
-                                                        <field name="code">pretporez_10_tax</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_pretporez_10_tax_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">III.1. Pretporez 10% (porez)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_pretporez_22_i_23_tax" model="account.report.line">
-                                                        <field name="name">III.2. Pretporez 22% i 23%</field>
-                                                        <field name="code">III2_PRETPOREZ_22_I_23</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_pretporez_22_i_23_tax_formula" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">external</field>
-                                                                <field name="formula">sum</field>
-                                                                <field name="subformula">editable;rounding=2</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_pretporez_25_tax" model="account.report.line">
-                                                        <field name="name">III.3. Pretporez 25%</field>
-                                                        <field name="code">pretporez_25_tax</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_pretporez_25_tax_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">III.3. Pretporez 25%</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_placeni_uvozu_tax" model="account.report.line">
-                                                        <field name="name">III.4. Plaćeni PP pri uvozu</field>
-                                                        <field name="code">placeni_uvozu_tax</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_placeni_uvozu_tax_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">III.4. Plaćeni PP pri uvozu (porez)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_placeni_usluge_10_tax" model="account.report.line">
-                                                        <field name="name">III.5. Plaćeni PP na ino usluge 10%</field>
-                                                        <field name="code">placeni_usluge_10_tax</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_placeni_usluge_10_tax_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">III.5. Plaćeni PP na ino usluge 10% (porez)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_placeni_usluge_22_i_23_tax" model="account.report.line">
-                                                        <field name="name">III.6. Plaćeni PP na ino usluge 22% i 23%</field>
-                                                        <field name="code">III6_PLACENI_PP_NA_INO_USLUGE_22_I_23</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_placeni_usluge_22_i_23_tax_formula" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">external</field>
-                                                                <field name="formula">sum</field>
-                                                                <field name="subformula">editable;rounding=2</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_placeni_usluge_25_tax" model="account.report.line">
-                                                        <field name="name">III.7. Plaćeni PP na ino usluge 25%</field>
-                                                        <field name="code">placeni_usluge_25_ta</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_placeni_usluge_25_tax_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">III.7. Plaćeni PP na ino usluge 25% (porez)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_ispravci" model="account.report.line">
-                                                        <field name="name">III.8. Ispravci pretporeza</field>
-                                                        <field name="code">III8_ISPRAVCI_PRETPOREZA</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_ispravci_formula" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">external</field>
-                                                                <field name="formula">sum</field>
-                                                                <field name="subformula">editable;rounding=2</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="account_tax_report_line_uplaceno" model="account.report.line">
-                                        <field name="name">Uplaćeno u razdoblju</field>
-                                        <field name="code">UPLACENO_U_RAZDOBLJU</field>
-                                        <field name="expression_ids">
-                                            <record id="account_tax_report_line_uplaceno_formula" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">sum</field>
-                                                <field name="subformula">editable;rounding=2</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                </field>
+                    <record id="tax_report_line_I_2" model="account.report.line">
+                        <field name="name">2. Supplies carried out in another member state</field>
+                        <field name="code">hr02</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_2_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.2_base</field>
                             </record>
                         </field>
                     </record>
-                    <record id="account_tax_report_line_pdv_ostalo" model="account.report.line">
-                        <field name="name">PDV - OSTALO</field>
-                        <field name="aggregation_formula">(nepriznati_pretporez_25_other.balance + (0.3 * nepriznati_pretporez_25_30.balance) + (0.7 * nepriznati_pretporez_25_70.balance)) + pretporez_koji.balance + (nepriznati_pretporez_25_tax.balance) + (pretporez_koji_neplaceni.balance + pretporez_koji_neplaceni_25.balance + pretporez_koji_neplaceni_usluge_25.balance)</field>
-                        <field name="children_ids">
-                            <record id="account_tax_report_line_ostali_podaci" model="account.report.line">
-                                <field name="name">Ostali podaci</field>
-                                <field name="aggregation_formula">1_ZA_ISPRAVAK_PRETPOREZA.balance + 2_OTUDENJESTJECANJE_GOSPODARSKE_CJELINE_ILI_POGONA.balance + 3_NABAVA_DOBARA_I_USLUGA_ZA_REPREZENTACIJU.balance + 4_NABAVA_OSOBNIH_VOZILA_I_DRUGIH_SREDSTAVA_ZA_OSOBNI_PRIJEVOZ.balance + 5_OSNOVICA_ZA_OBRACUN_VLASTITE_POTROSNJE_ZA_OSOBNA_VOZILA_NABAV.balance</field>
-                                <field name="children_ids">
-                                    <record id="account_tax_report_line_ispravak" model="account.report.line">
-                                        <field name="name">1. ZA ISPRAVAK PRETPOREZA</field>
-                                        <field name="code">1_ZA_ISPRAVAK_PRETPOREZA</field>
-                                        <field name="aggregation_formula">11_NABAVA_NEKRETNINA.balance + 12_PRODAJA_NEKRETNINA.balance + 13_NABAVA_OSOBNIH_VOZILA.balance + 14_PRODAJA_OSOBNIH_VOZILA.balance + 15_NABAVA_DUGOTRAJNE_IMOVINE.balance + 16_PRODAJA_DUGOTRAJNE_IMOVINE.balance</field>
-                                        <field name="children_ids">
-                                            <record id="account_tax_report_line_nabava" model="account.report.line">
-                                                <field name="name">1.1. NABAVA NEKRETNINA</field>
-                                                <field name="code">11_NABAVA_NEKRETNINA</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_nabava_formula" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">external</field>
-                                                        <field name="formula">sum</field>
-                                                        <field name="subformula">editable;rounding=2</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_prodaja" model="account.report.line">
-                                                <field name="name">1.2. PRODAJA NEKRETNINA</field>
-                                                <field name="code">12_PRODAJA_NEKRETNINA</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_prodaja_formula" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">external</field>
-                                                        <field name="formula">sum</field>
-                                                        <field name="subformula">editable;rounding=2</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_nabava_osobnih" model="account.report.line">
-                                                <field name="name">1.3. NABAVA OSOBNIH VOZILA</field>
-                                                <field name="code">13_NABAVA_OSOBNIH_VOZILA</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_nabava_osobnih_formula" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">external</field>
-                                                        <field name="formula">sum</field>
-                                                        <field name="subformula">editable;rounding=2</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_prodaja_osobnih" model="account.report.line">
-                                                <field name="name">1.4. PRODAJA OSOBNIH VOZILA</field>
-                                                <field name="code">14_PRODAJA_OSOBNIH_VOZILA</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_prodaja_osobnih_formula" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">external</field>
-                                                        <field name="formula">sum</field>
-                                                        <field name="subformula">editable;rounding=2</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_nabava_dugotrajne" model="account.report.line">
-                                                <field name="name">1.5. NABAVA DUGOTRAJNE IMOVINE</field>
-                                                <field name="code">15_NABAVA_DUGOTRAJNE_IMOVINE</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_nabava_dugotrajne_formula" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">external</field>
-                                                        <field name="formula">sum</field>
-                                                        <field name="subformula">editable;rounding=2</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_prodaja_dugotrajne" model="account.report.line">
-                                                <field name="name">1.6. PRODAJA DUGOTRAJNE IMOVINE</field>
-                                                <field name="code">16_PRODAJA_DUGOTRAJNE_IMOVINE</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_prodaja_dugotrajne_formula" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">external</field>
-                                                        <field name="formula">sum</field>
-                                                        <field name="subformula">editable;rounding=2</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="account_tax_report_line_otudenje" model="account.report.line">
-                                        <field name="name">2. OTUĐENJE/STJECANJE GOSPODARSKE CJELINE ILI POGONA</field>
-                                        <field name="code">2_OTUDENJESTJECANJE_GOSPODARSKE_CJELINE_ILI_POGONA</field>
-                                        <field name="expression_ids">
-                                            <record id="account_tax_report_line_otudenje_formula" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">sum</field>
-                                                <field name="subformula">editable;rounding=2</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="account_tax_report_line_nabava_dobara" model="account.report.line">
-                                        <field name="name">3. NABAVA DOBARA I USLUGA ZA REPREZENTACIJU</field>
-                                        <field name="code">3_NABAVA_DOBARA_I_USLUGA_ZA_REPREZENTACIJU</field>
-                                        <field name="expression_ids">
-                                            <record id="account_tax_report_line_nabava_dobara_formula" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">sum</field>
-                                                <field name="subformula">editable;rounding=2</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="account_tax_report_line_nabava_osobnih_vozila" model="account.report.line">
-                                        <field name="name">4. NABAVA OSOBNIH VOZILA I DRUGIH SREDSTAVA ZA OSOBNI PRIJEVOZ</field>
-                                        <field name="code">4_NABAVA_OSOBNIH_VOZILA_I_DRUGIH_SREDSTAVA_ZA_OSOBNI_PRIJEVOZ</field>
-                                        <field name="expression_ids">
-                                            <record id="account_tax_report_line_nabava_osobnih_vozila_formula" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">sum</field>
-                                                <field name="subformula">editable;rounding=2</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="account_tax_report_line_osnovica_za_obracun" model="account.report.line">
-                                        <field name="name">5. OSNOVICA ZA OBRAČUN VLASTITE POTROŠNJE ZA OSOBNA VOZILA NABAV</field>
-                                        <field name="code">5_OSNOVICA_ZA_OBRACUN_VLASTITE_POTROSNJE_ZA_OSOBNA_VOZILA_NABAV</field>
-                                        <field name="expression_ids">
-                                            <record id="account_tax_report_line_osnovica_za_obracun_formula" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">external</field>
-                                                <field name="formula">sum</field>
-                                                <field name="subformula">editable;rounding=2</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                </field>
+                </field>
+                <!-- Sub Section 3 -->
+                <field name="children_ids">
+                    <record id="tax_report_line_I_3" model="account.report.line">
+                        <field name="name">3. Supplies of goods within the eu</field>
+                        <field name="code">hr03</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_3_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.3_base</field>
                             </record>
-                            <record id="account_tax_report_line_nepriznati_pretporez" model="account.report.line">
-                                <field name="name">NEPRIZNATI PRETPOREZ</field>
-                                <field name="aggregation_formula">0.3 * nepriznati_pretporez_25_30.balance + 0.7 * nepriznati_pretporez_25_70.balance + nepriznati_pretporez_25_other.balance + pretporez_koji.balance</field>
-                                <field name="children_ids">
-                                    <record id="account_tax_report_line_nepriznati_pretporez_osnovica_3070" model="account.report.line">
-                                        <field name="name">NEPRIZNATI PRETPOREZ (osnovica 30 ili 70%)</field>
-                                        <field name="aggregation_formula">0.3 * nepriznati_pretporez_25_30.balance + 0.7 * nepriznati_pretporez_25_70.balance + nepriznati_pretporez_25_other.balance</field>
-                                        <field name="children_ids">
-                                            <record id="account_tax_report_line_nepriznati_pretporez_10" model="account.report.line">
-                                                <field name="name">Nepriznati pretporez 10% (o)</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_nepriznati_pretporez_10_formula" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">external</field>
-                                                        <field name="formula">sum</field>
-                                                        <field name="subformula">editable;rounding=2</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_nepriznati_pretporez_22_i_23" model="account.report.line">
-                                                <field name="name">Nepriznati pretporez 22% i 23% (o)</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_nepriznati_pretporez_22_i_23_formula" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">external</field>
-                                                        <field name="formula">sum</field>
-                                                        <field name="subformula">editable;rounding=2</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_nepriznati_pretporez_25" model="account.report.line">
-                                                <field name="name">Nepriznati pretporez 25% (o)</field>
-                                                <field name="aggregation_formula">0.3 * nepriznati_pretporez_25_30.balance + 0.7 * nepriznati_pretporez_25_70.balance + nepriznati_pretporez_25_other.balance</field>
-                                                <field name="children_ids">
-                                                    <record id="account_tax_report_line_nepriznati_pretporez_25_30" model="account.report.line">
-                                                        <field name="name">Nepriznati pretporez 25% (o) (30%)</field>
-                                                        <field name="code">nepriznati_pretporez_25_30</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_nepriznati_pretporez_25_30_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">Nepriznati pretporez 25% (o) (30%)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_nepriznati_pretporez_25_70" model="account.report.line">
-                                                        <field name="name">Nepriznati pretporez 25% (o) (70%)</field>
-                                                        <field name="code">nepriznati_pretporez_25_70</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_nepriznati_pretporez_25_70_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">Nepriznati pretporez 25% (o) (70%)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_nepriznati_pretporez_25_other" model="account.report.line">
-                                                        <field name="name">Nepriznati pretporez 25% (o)</field>
-                                                        <field name="code">nepriznati_pretporez_25_other</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_nepriznati_pretporez_25_other_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">Nepriznati pretporez 25% (o)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="account_tax_report_line_pretporez_koji" model="account.report.line">
-                                        <field name="name">Pretporez koji još nije priznan (uključivo i neplaćeni R-2)</field>
-                                        <field name="code">pretporez_koji</field>
-                                        <field name="expression_ids">
-                                            <record id="account_tax_report_line_pretporez_koji_tag" model="account.report.expression">
-                                                <field name="label">balance</field>
-                                                <field name="engine">tax_tags</field>
-                                                <field name="formula">Pretporez koji još nije priznan (uključivo i neplaćeni R-2)</field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="account_tax_report_line_nepriznati_pretporez_porez" model="account.report.line">
-                                        <field name="name">NEPRIZNATI PRETPOREZ (porez)</field>
-                                        <field name="aggregation_formula">NEPRIZNATI_PRETPOREZ_30_ILI_70.balance</field>
-                                        <field name="children_ids">
-                                            <record id="account_tax_report_line_nepriznati_pretporez_3070" model="account.report.line">
-                                                <field name="name">NEPRIZNATI PRETPOREZ (30 ili 70%)</field>
-                                                <field name="code">NEPRIZNATI_PRETPOREZ_30_ILI_70</field>
-                                                <field name="aggregation_formula">NEPRIZNATI_PRETPOREZ_10_P.balance + NEPRIZNATI_PRETPOREZ_22_I_23_P.balance + nepriznati_pretporez_25_tax.balance</field>
-                                                <field name="children_ids">
-                                                    <record id="account_tax_report_line_nepriznati_pretporez_10_tax" model="account.report.line">
-                                                        <field name="name">Nepriznati pretporez 10% (p)</field>
-                                                        <field name="code">NEPRIZNATI_PRETPOREZ_10_P</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_nepriznati_pretporez_10_tax_formula" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">external</field>
-                                                                <field name="formula">sum</field>
-                                                                <field name="subformula">editable;rounding=2</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_nepriznati_pretporez_22_i_23_tax" model="account.report.line">
-                                                        <field name="name">Nepriznati pretporez 22% i 23% (p)</field>
-                                                        <field name="code">NEPRIZNATI_PRETPOREZ_22_I_23_P</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_nepriznati_pretporez_22_i_23_tax_formula" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">external</field>
-                                                                <field name="formula">sum</field>
-                                                                <field name="subformula">editable;rounding=2</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                    <record id="account_tax_report_line_nepriznati_pretporez_25_tax" model="account.report.line">
-                                                        <field name="name">Nepriznati pretporez 25% (p)</field>
-                                                        <field name="code">nepriznati_pretporez_25_tax</field>
-                                                        <field name="expression_ids">
-                                                            <record id="account_tax_report_line_nepriznati_pretporez_25_tax_tag" model="account.report.expression">
-                                                                <field name="label">balance</field>
-                                                                <field name="engine">tax_tags</field>
-                                                                <field name="formula">Nepriznati pretporez 25% (p)</field>
-                                                            </record>
-                                                        </field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                    <record id="account_tax_report_line_pretporez_koji_ukupno" model="account.report.line">
-                                        <field name="name">Pretporez koji još nije priznan (ukupno)</field>
-                                        <field name="aggregation_formula">pretporez_koji_neplaceni.balance + pretporez_koji_neplaceni_25.balance + pretporez_koji_neplaceni_usluge_25.balance + PRETPOREZ_KOJI_JOS_NIJE_PRIZNAN_NEPLACENE_INO_USLUGE_10.balance</field>
-                                        <field name="children_ids">
-                                            <record id="account_tax_report_line_pretporez_koji_neplaceni" model="account.report.line">
-                                                <field name="name">Pretporez koji još nije priznan (neplaćeni R2)</field>
-                                                <field name="code">pretporez_koji_neplaceni</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_pretporez_koji_neplaceni_tag" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">tax_tags</field>
-                                                        <field name="formula">Pretporez koji još nije priznan (neplaćeni R2)</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_pretporez_koji_neplaceni_25" model="account.report.line">
-                                                <field name="name">Pretporez koji još nije priznan (neplaćeni UVOZ dobara 25%)</field>
-                                                <field name="code">pretporez_koji_neplaceni_25</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_pretporez_koji_neplaceni_25_tag" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">tax_tags</field>
-                                                        <field name="formula">Pretporez koji još nije priznan (neplaćeni UVOZ dobara 25%)</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_pretporez_koji_neplaceni_usluge_25" model="account.report.line">
-                                                <field name="name">Pretporez koji još nije priznan (neplaćene INO usluge 25%)</field>
-                                                <field name="code">pretporez_koji_neplaceni_usluge_25</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_pretporez_koji_neplaceni_usluge_25_tag" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">tax_tags</field>
-                                                        <field name="formula">Pretporez koji još nije priznan (neplaćene INO usluge 25%)</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                            <record id="account_tax_report_line_pretporez_koji_neplaceni_usluge_10" model="account.report.line">
-                                                <field name="name">Pretporez koji još nije priznan (neplaćene INO usluge 10%)</field>
-                                                <field name="code">PRETPOREZ_KOJI_JOS_NIJE_PRIZNAN_NEPLACENE_INO_USLUGE_10</field>
-                                                <field name="expression_ids">
-                                                    <record id="account_tax_report_line_pretporez_koji_neplaceni_usluge_10_formula" model="account.report.expression">
-                                                        <field name="label">balance</field>
-                                                        <field name="engine">external</field>
-                                                        <field name="formula">sum</field>
-                                                        <field name="subformula">editable;rounding=2</field>
-                                                    </record>
-                                                </field>
-                                            </record>
-                                        </field>
-                                    </record>
-                                </field>
+                        </field>
+                    </record>
+                </field>
+                <!-- Sub Section 4 -->
+                <field name="children_ids">
+                    <record id="tax_report_line_I_4" model="account.report.line">
+                        <field name="name">4. Supplies of services within the eu</field>
+                        <field name="code">hr04</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_4_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.4_base</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+                <!-- Sub Section 5 -->
+                <field name="children_ids">
+                    <record id="tax_report_line_I_5" model="account.report.line">
+                        <field name="name">5. Supplies to persons not established in the republic of croatia</field>
+                        <field name="code">hr05</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_5_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.5_base</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+                <!-- Sub Section 6 -->
+                <field name="children_ids">
+                    <record id="tax_report_line_I_6" model="account.report.line">
+                        <field name="name">6. Installed and assembled goods in another member state</field>
+                                <field name="code">hr06</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_6_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.6_base</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+                <!-- Sub Section 7 -->
+                <field name="children_ids">
+                    <record id="tax_report_line_I_7" model="account.report.line">
+                        <field name="name">7. Supplies of new means of transport to another member state</field>
+                        <field name="code">hr07</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_7_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.7_base</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+                <!-- Sub Section 8 -->
+                <field name="children_ids">
+                    <record id="tax_report_line_I_8" model="account.report.line">
+                        <field name="name">8. Domestic supplies</field>
+                        <field name="code">hr08</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_8_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.8_base</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+                <!-- Sub Section 9 -->
+                <field name="children_ids">
+                    <record id="tax_report_line_I_9" model="account.report.line">
+                        <field name="name">9. Exportation</field>
+                        <field name="code">hr09</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_9_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.9_base</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+                <!-- Sub Section 10 -->
+                <field name="children_ids">
+                    <record id="tax_report_line_I_10" model="account.report.line">
+                        <field name="name">10. Other exemptions</field>
+                        <field name="code">hr10</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_I_10_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">I.10_base</field>
                             </record>
                         </field>
                     </record>
                 </field>
             </record>
+            <!-- Section II -->
+            <record id="tax_report_title_transactions1" model="account.report.line">
+                <field name="name">II. Taxable transactions – total amount (1.+2.+3.+4.+5.+6.+7.+8.+9.+10.+11.+12.+13.+14.+15.)</field>
+                <field name="code">c_II_total</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_II_0_tag_column1" model="account.report.expression">
+                        <field name="label">tax_base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">hr11.tax_base + hr12.tax_base + hr13.tax_base + hr14.tax_base + hr15.tax_base + hr16.tax_base + hr17.tax_base + hr18.tax_base + hr19.tax_base + hr20.tax_base + hr21.tax_base + hr22.tax_base + hr23.tax_base + hr24.tax_base + hr25.tax_base</field>
+                    </record>
+                    <record id="tax_report_line_II_0_tag_column2" model="account.report.expression">
+                        <field name="label">tax_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">hr11.tax_amount + hr12.tax_amount + hr13.tax_amount + hr14.tax_amount + hr15.tax_amount + hr16.tax_amount + hr17.tax_amount + hr18.tax_amount + hr19.tax_amount + hr20.tax_amount + hr21.tax_amount + hr22.tax_amount + hr23.tax_amount + hr24.tax_amount + hr25.tax_amount</field>
+                    </record>
+                </field>
+                 <!-- Sub Section 1 -->
+                <field name="children_ids">
+                    <record id="tax_report_line_II_1" model="account.report.line">
+                        <field name="name">1. Supplies of goods and services in the republic of croatia at a rate 5%</field>
+                        <field name="code">hr11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_1_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.1_base</field>
+                            </record>
+                            <record id="tax_report_line_II_1_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.1_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                     <!-- Sub Section 2 -->
+                    <record id="tax_report_line_II_2" model="account.report.line">
+                        <field name="name">2. Supplies of goods and services in the republic of croatia at a rate 13%</field>
+                        <field name="code">hr12</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_2_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.2_base</field>
+                            </record>
+                            <record id="tax_report_line_II_2_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.2_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 3 -->
+                    <record id="tax_report_line_II_3" model="account.report.line">
+                        <field name="name">3. Supplies of goods and services in the republic of croatia at a rate 25%</field>
+                        <field name="code">hr13</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_3_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.3_base</field>
+                            </record>
+                            <record id="tax_report_line_II_3_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.3_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 4 -->
+                    <record id="tax_report_line_II_4" model="account.report.line">
+                        <field name="name">4. Supplies received in the republic of croatia in respect of which the receiver calculates vat (domestic reverse charge)</field>
+                        <field name="code">hr14</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_4_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.4_base</field>
+                            </record>
+                            <record id="tax_report_line_II_4_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.4_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 5 -->
+                    <record id="tax_report_line_II_5" model="account.report.line">
+                        <field name="name">5. Acquisition of goods within the eu at a rate 5%</field>
+                        <field name="code">hr15</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_5_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.5_base</field>
+                            </record>
+                            <record id="tax_report_line_II_5_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.5_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 6 -->
+                    <record id="tax_report_line_II_6" model="account.report.line">
+                        <field name="name">6. Acquisition of goods within the eu at a rate 13%</field>
+                        <field name="code">hr16</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_6_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.6_base</field>
+                            </record>
+                            <record id="tax_report_line_II_6_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.6_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 7 -->
+                    <record id="tax_report_line_II_7" model="account.report.line">
+                        <field name="name">7. Acquisition of goods within the eu at a rate 25%</field>
+                        <field name="code">hr17</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_7_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.7_base</field>
+                            </record>
+                            <record id="tax_report_line_II_7_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.7_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 8 -->
+                    <record id="tax_report_line_II_8" model="account.report.line">
+                        <field name="name">8. Services received from eu at a rate 5%</field>
+                        <field name="code">hr18</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_8_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.8_base</field>
+                            </record>
+                            <record id="tax_report_line_II_8_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.8_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 9 -->
+                    <record id="tax_report_line_II_9" model="account.report.line">
+                        <field name="name">9. Services received from eu at a rate 13%</field>
+                        <field name="code">hr19</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_9_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.9_base</field>
+                            </record>
+                            <record id="tax_report_line_II_9_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.9_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 10 -->
+                    <record id="tax_report_line_II_10" model="account.report.line">
+                        <field name="name">10. Services received from eu at a rate 25%</field>
+                        <field name="code">hr20</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_10_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.10_base</field>
+                            </record>
+                            <record id="tax_report_line_II_10_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.10_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 11 -->
+                    <record id="tax_report_line_II_11" model="account.report.line">
+                        <field name="name">11. Supplies of goods and services received from taxable persons not established in the republic of croatia at a rate 5%</field>
+                        <field name="code">hr21</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_11_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.11_base</field>
+                            </record>
+                            <record id="tax_report_line_II_11_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.11_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 12 -->
+                    <record id="tax_report_line_II_12" model="account.report.line">
+                        <field name="name">12. Supplies of goods and services received from taxable persons not established in the republic of croatia at a rate 13%</field>
+                        <field name="code">hr22</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_12_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.12_base</field>
+                            </record>
+                            <record id="tax_report_line_II_12_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.12_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 13 -->
+                    <record id="tax_report_line_II_13" model="account.report.line">
+                        <field name="name">13. Supplies of goods and services received from taxable persons not established in the republic of croatia at a rate 25%</field>
+                        <field name="code">hr23</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_13_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.13_base</field>
+                            </record>
+                            <record id="tax_report_line_II_13_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.13_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 14 -->
+                    <record id="tax_report_line_II_14" model="account.report.line">
+                        <field name="name">14. Subsequent exemption on exportation related to personal  passenger transportation</field>
+                        <field name="code">hr24</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_14_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.14_base</field>
+                            </record>
+                            <record id="tax_report_line_II_14_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.14_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- Sub Section 15 -->
+                    <record id="tax_report_line_II_15" model="account.report.line">
+                        <field name="name">15. Vat calculated on importation</field>
+                        <field name="code">hr25</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_II_15_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.15_base</field>
+                            </record>
+                            <record id="tax_report_line_II_15_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">II.15_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <!-- Section III -->
+            <record id="tax_report_title_calculed_vat" model="account.report.line">
+                <field name="name">III. Calculated input vat – total amount (1.+2.+3.+4.+5.+6.+7.+8.+9.+10.+11.+12.+13. +14.+15.)</field>
+                <field name="code">c_III_total</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_III_0_tag_column1" model="account.report.expression">
+                        <field name="label">tax_base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">hr26.tax_base + hr27.tax_base + hr28.tax_base + hr29.tax_base + hr30.tax_base + hr31.tax_base + hr32.tax_base + hr33.tax_base + hr34.tax_base + hr35.tax_base + hr36.tax_base + hr37.tax_base + hr38.tax_base + hr39.tax_base</field>
+                    </record>
+                    <record id="tax_report_line_III_0_tag_column2" model="account.report.expression">
+                        <field name="label">tax_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">hr26.tax_amount + hr27.tax_amount + hr28.tax_amount + hr29.tax_amount + hr30.tax_amount + hr31.tax_amount + hr32.tax_amount + hr33.tax_amount + hr34.tax_amount + hr35.tax_amount + hr36.tax_amount + hr37.tax_amount + hr38.tax_amount + hr39.tax_amount + hr40.tax_amount</field>
+                    </record>
+                </field>
+                <!-- Sub Section 1 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_1" model="account.report.line">
+                        <field name="name">1. Input vat related to supplies received in the country at a rate 5%</field>
+                        <field name="code">hr26</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_1_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.1_base</field>
+                            </record>
+                            <record id="tax_report_line_III_1_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.1_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 2 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_2" model="account.report.line">
+                        <field name="name">2. Input vat related to supplies received in the country at a rate 13%</field>
+                        <field name="code">hr27</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_2_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.2_base</field>
+                            </record>
+                            <record id="tax_report_line_III_2_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.2_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 3 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_3" model="account.report.line">
+                        <field name="name">3. Input vat related to supplies received in the country at a rate 25%</field>
+                        <field name="code">hr28</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_3_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.3_base</field>
+                            </record>
+                            <record id="tax_report_line_III_3_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.3_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 4 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_4" model="account.report.line">
+                        <field name="name">4. Input vat related to supplies received in the country in respect of which the receiver calculates vat (domestic reverse charge)</field>
+                        <field name="code">hr29</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_4_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.4_base</field>
+                            </record>
+                            <record id="tax_report_line_III_4_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.4_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 5 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_5" model="account.report.line">
+                        <field name="name">5. Input vat related to acquisition of goods within the eu at a rate 5%</field>
+                        <field name="code">hr30</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_5_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.5_base</field>
+                            </record>
+                            <record id="tax_report_line_III_5_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.5_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 6 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_6" model="account.report.line">
+                        <field name="name">6. Input vat related to acquisition of goods within the eu at a rate 13%</field>
+                        <field name="code">hr31</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_6_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.6_base</field>
+                            </record>
+                            <record id="tax_report_line_III_6_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.6_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 7 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_7" model="account.report.line">
+                        <field name="name">7. Input vat related to acquisition of goods within the eu at a rate 25%</field>
+                        <field name="code">hr32</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_7_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.7_base</field>
+                            </record>
+                            <record id="tax_report_line_III_7_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.7_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 8 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_8" model="account.report.line">
+                        <field name="name">8. Input vat related to services received from eu at a rate 5%</field>
+                        <field name="code">hr33</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_8_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.8_base</field>
+                            </record>
+                            <record id="tax_report_line_III_8_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.8_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 9 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_9" model="account.report.line">
+                        <field name="name">9. Input vat related to services received from eu at a rate 13%</field>
+                        <field name="code">hr34</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_9_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.9_base</field>
+                            </record>
+                            <record id="tax_report_line_III_9_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.9_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 10 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_10" model="account.report.line">
+                        <field name="name">10. Input vat related to services received from eu at a rate 25%</field>
+                        <field name="code">hr35</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_10_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.10_base</field>
+                            </record>
+                            <record id="tax_report_line_III_10_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                            <field name="formula">III.10_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 11 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_11" model="account.report.line">
+                        <field name="name">11. Input vat related to supplies of goods and services received from non-established taxable persons at a rate 5%</field>
+                        <field name="code">hr36</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_11_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.11_base</field>
+                            </record>
+                            <record id="tax_report_line_III_11_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                            <field name="formula">III.11_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 12 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_12" model="account.report.line">
+                        <field name="name">12. Input vat related to supplies of goods and services received from non-established taxable persons at a rate 13%</field>
+                        <field name="code">hr37</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_12_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.12_base</field>
+                            </record>
+                            <record id="tax_report_line_III_12_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                            <field name="formula">III.12_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 13 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_13" model="account.report.line">
+                        <field name="name">13. Input vat related to supplies of goods and services received from non-established taxable persons at a rate 25%</field>
+                        <field name="code">hr38</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_13_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.13_base</field>
+                            </record>
+                            <record id="tax_report_line_III_13_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                            <field name="formula">III.13_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 14 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_14" model="account.report.line">
+                        <field name="name">14. Input vat related to importation</field>
+                        <field name="code">hr39</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_14_tag_column1" model="account.report.expression">
+                                <field name="label">tax_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">III.14_base</field>
+                            </record>
+                            <record id="tax_report_line_III_14_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                            <field name="formula">III.14_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+                <!-- Sub Section 15 -->
+                <field name="children_ids">
+                     <record id="tax_report_line_III_15" model="account.report.line">
+                        <field name="name">15. Adjustments of deductions</field>
+                        <field name="code">hr40</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_III_15_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">tax_tags</field>
+                            <field name="formula">III.15_tax</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+            </record>
+            <!-- Section IV -->
+            <record id="tax_report_title_vat_liab" model="account.report.line">
+                <field name="name">IV. Vat liability in the calculation period: to pay (ii. - iii.) or to refund (iii. - ii.)</field>
+                <field name="code">c_IV_total</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_IV_0_tag_column2" model="account.report.expression">
+                        <field name="label">tax_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">hr41.tax_amount + hr42.tax_amount</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_line_IV_1" model="account.report.line">
+                        <field name="name">1. To pay</field>
+                        <field name="code">hr41</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_IV_1_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">c_II_total.tax_amount - c_III_total.tax_amount</field>
+                                <field name="subformula">if_above(HRK(0))</field>
+                            </record>
+                        </field>
+                     </record>
+                    <record id="tax_report_line_IV_2" model="account.report.line">
+                        <field name="name">2. To refund</field>
+                        <field name="code">hr42</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_IV_2_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">c_III_total.tax_amount - c_II_total.tax_amount</field>
+                                <field name="subformula">if_above(HRK(0))</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+            </record>
+            <!-- Section V -->
+            <record id="tax_report_title_prev_calculation" model="account.report.line">
+                <field name="name">V. According to the previous calculation: unpaid vat to the day of submitting of this return-overpaid-tax credit</field>
+                <field name="code">c_V_total</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_V_0_tag_column2" model="account.report.expression">
+                        <field name="label">tax_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">hr43.tax_amount + hr44.tax_amount </field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_line_V_1" model="account.report.line">
+                        <field name="name">1. Claims for the difference of higher input tax than liabilities in the taxation period</field>
+                        <field name="code">hr43</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_V_1_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">1407</field>
+                            </record>
+                        </field>
+                     </record>
+                    <record id="tax_report_line_V_2" model="account.report.line">
+                        <field name="name">2. Liability for the difference between tax and input tax in the taxation period</field>
+                        <field name="code">hr44</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_V_2_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">account_codes</field>
+                                <field name="formula">-2407</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+            </record>
+            <!-- Section VI -->
+            <record id="tax_report_title_total_dif" model="account.report.line">
+                <field name="name">VI. Total difference: to pay/to refund</field>
+                <field name="code">c_VI_total</field>
+                <field name="expression_ids">
+                    <record id="tax_report_line_VI_0_tag_column2" model="account.report.expression">
+                        <field name="label">tax_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">hr45.tax_amount + hr46.tax_amount</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_line_VI_1" model="account.report.line">
+                        <field name="name">1. Total to pay</field>
+                        <field name="code">hr45</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_VI_1_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">hr41.tax_amount - hr42.tax_amount + hr43.tax_amount - hr44.tax_amount</field>
+                                <field name="subformula">if_above(HRK(0))</field>
+                            </record>
+                        </field>
+                     </record>
+                    <record id="tax_report_line_VI_2" model="account.report.line">
+                        <field name="name">2. Total to refund</field>
+                        <field name="code">hr46</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_line_VI_2_tag_column2" model="account.report.expression">
+                                <field name="label">tax_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">-hr41.tax_amount + hr42.tax_amount - hr43.tax_amount + hr44.tax_amount</field>
+                                <field name="subformula">if_above(HRK(0))</field>
+                            </record>
+                        </field>
+                     </record>
+                </field>
+            </record>
+            <!-- Section VII -->
+             <record id="tax_report_title_annual_deductible" model="account.report.line">
+                <field name="name">VII. Annual deductible proportion(%)</field>
+             </record>
         </field>
     </record>
 </odoo>
