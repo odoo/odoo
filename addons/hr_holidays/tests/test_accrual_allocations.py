@@ -525,7 +525,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2022-01-01'):
             allocation._update_accrual()
-            self.assertEqual(allocation.number_of_days, 0, 'There number of days should be reset')
+            self.assertEqual(allocation.number_of_days, 1, 'The number of days should be reset')
 
     def test_unused_accrual_postponed(self):
         # 1 accrual with 2 levels and level transition after
@@ -717,6 +717,36 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         allocation.action_confirm()
         allocation.action_validate()
         with freeze_time('2022-4-4'):
+            allocation._update_accrual()
+        self.assertEqual(allocation.number_of_days, 4, "Invalid number of days")
+
+    def test_accrual_lost_first_january(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'level_ids': [
+                (0, 0, {
+                    'start_count': 0,
+                    'start_type': 'day',
+                    'added_value': 3,
+                    'added_value_type': 'days',
+                    'frequency': 'yearly',
+                    'maximum_leave': 12,
+                    'action_with_unused_accruals': 'lost',
+                })
+            ],
+        })
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Accrual Allocation - Test',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+            'date_from': datetime.date(2019, 1, 1),
+        })
+        allocation.action_confirm()
+        allocation.action_validate()
+        with freeze_time('2022-4-1'):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 3, "Invalid number of days")
 
