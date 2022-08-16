@@ -127,3 +127,45 @@ class PaymentTransaction(models.Model):
             self._set_error(
                 "Mollie: " + _("Received data with invalid payment status: %s", payment_status)
             )
+
+        self._process_mollie_refund()  # Process mollie refund
+
+    def _process_mollie_refund(self):
+        """ Fetch refund data and process refund status
+
+        Mollie calls webhook for the source transaction when related refund is processed or failed.
+        See more at https://docs.mollie.com/overview/webhooks#payments-api
+        """
+        for refund_tx in self.child_transaction_ids.filtered(lambda r: r.state == 'pending' and r.operation == 'refund'):
+            refund_data = self.acquirer_id._mollie_make_request(f'/payments/{self.acquirer_reference}/refunds/{refund_tx.acquirer_reference}', method="GET")
+            if refund_data.get('status') == 'failed':
+                refund_tx._set_canceled()
+            elif refund_data.get('status') == 'refunded':
+                refund_tx._set_done()
+
+    def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
+        """ Override of payment to send a refund request to Mollie.
+
+        Note: self.ensure_one()
+
+        :param float amount_to_refund: The amount to refund
+        :param bool create_refund_transaction: Whether a refund transaction should be created or not
+        :return: The refund transaction if any
+        :rtype: recordset of `payment.transaction`
+        """
+        if self.provider != 'mollie':
+            return super()._send_refund_request(
+                amount_to_refund=amount_to_refund,
+                create_refund_transaction=create_refund_transaction
+            )
+
+        refund_tx = super()._send_refund_request(
+            amount_to_refund=amount_to_refund, create_refund_transaction=True
+        )
+
+        # Make the refund request to mollie
+        refund_data = {'amount': {'value': "%.2f" % amount_to_refund, 'currency': refund_tx.currency_id.name}}
+        refund = self.acquirer_id._mollie_make_request(f'/payments/{self.acquirer_reference}/refunds', data=refund_data, method="POST")
+        refund_tx.acquirer_reference = refund.get('id')
+        refund_tx._set_pending()
+        return refund_tx

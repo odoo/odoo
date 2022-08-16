@@ -25,6 +25,15 @@ class PaymentProvider(models.Model):
         required_if_provider="mollie", groups="base.group_system"
     )
 
+    #=== COMPUTE METHODS ===#
+
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda acq: acq.provider == 'mollie').update({
+            'support_refund': 'partial',
+        })
+
     #=== BUSINESS METHODS ===#
 
     def _get_supported_currencies(self):
