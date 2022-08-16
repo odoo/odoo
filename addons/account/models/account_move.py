@@ -416,6 +416,7 @@ class AccountMove(models.Model):
             accounting_date = self._get_accounting_date(self.invoice_date, has_tax)
             if accounting_date != self.date:
                 self.date = accounting_date
+                self.invoice_date = accounting_date
                 self._onchange_currency()
             else:
                 self._onchange_recompute_dynamic_lines()
