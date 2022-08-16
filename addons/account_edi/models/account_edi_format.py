@@ -638,6 +638,3 @@ class AccountEdiFormat(models.Model):
     def _format_error_message(self, error_title, errors):
         bullet_list_msg = ''.join('<li>%s</li>' % html_escape(msg) for msg in errors)
         return '%s<ul>%s</ul>' % (error_title, bullet_list_msg)
-
-    def _is_account_edi_ubl_cii_available(self):
-        return hasattr(self, '_infer_xml_builder_from_tree')
