@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import shutil
+import subprocess
 import tempfile
 import threading
 import traceback
@@ -26,6 +27,7 @@ import odoo.sql_db
 import odoo.tools
 from odoo.sql_db import db_connect
 from odoo.release import version_info
+from odoo.tools import find_pg_tool, exec_pg_environ
 
 _logger = logging.getLogger(__name__)
 
@@ -229,8 +231,8 @@ def dump_db(db_name, stream, backup_format='zip'):
 
     _logger.info('DUMP DB: %s format %s', db_name, backup_format)
 
-    cmd = ['pg_dump', '--no-owner']
-    cmd.append(db_name)
+    cmd = [find_pg_tool('pg_dump'), '--no-owner', db_name]
+    env = exec_pg_environ()
 
     if backup_format == 'zip':
         with tempfile.TemporaryDirectory() as dump_dir:
@@ -242,7 +244,7 @@ def dump_db(db_name, stream, backup_format='zip'):
                 with db.cursor() as cr:
                     json.dump(dump_db_manifest(cr), fh, indent=4)
             cmd.insert(-1, '--file=' + os.path.join(dump_dir, 'dump.sql'))
-            odoo.tools.exec_pg_command(*cmd)
+            subprocess.run(cmd, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT, check=True)
             if stream:
                 odoo.tools.osutil.zip_dir(dump_dir, stream, include_dir=False, fnct_sort=lambda file_name: file_name != 'dump.sql')
             else:
@@ -252,7 +254,7 @@ def dump_db(db_name, stream, backup_format='zip'):
                 return t
     else:
         cmd.insert(-1, '--format=c')
-        stdin, stdout = odoo.tools.exec_pg_command_pipe(*cmd)
+        stdout = subprocess.Popen(cmd, env=env, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE).stdout
         if stream:
             shutil.copyfileobj(stdout, stream)
         else:
@@ -302,11 +304,13 @@ def restore_db(db, dump_file, copy=False):
             pg_cmd = 'pg_restore'
             pg_args = ['--no-owner', dump_file]
 
-        args = []
-        args.append('--dbname=' + db)
-        pg_args = args + pg_args
-
-        if odoo.tools.exec_pg_command(pg_cmd, *pg_args):
+        r = subprocess.run(
+            [find_pg_tool(pg_cmd), '--dbname=' + db, *pg_args],
+            env=exec_pg_environ(),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.STDOUT,
+        )
+        if r.returncode != 0:
             raise Exception("Couldn't restore database")
 
         registry = odoo.modules.registry.Registry.new(db)

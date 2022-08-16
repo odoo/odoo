@@ -74,6 +74,7 @@ def find_in_path(name):
     return which(name, path=os.pathsep.join(path))
 
 def _exec_pipe(prog, args, env=None):
+    warnings.warn("Since 16.0, just use `subprocess`.", DeprecationWarning, stacklevel=3)
     cmd = (prog,) + args
     # on win32, passing close_fds=True is not compatible
     # with redirecting std[in/err/out]
@@ -82,6 +83,7 @@ def _exec_pipe(prog, args, env=None):
     return pop.stdin, pop.stdout
 
 def exec_command_pipe(name, *args):
+    warnings.warn("Since 16.0, use `subprocess` directly.", DeprecationWarning, stacklevel=2)
     prog = find_in_path(name)
     if not prog:
         raise Exception('Command `%s` not found.' % name)
@@ -124,6 +126,7 @@ def exec_pg_environ():
     return env
 
 def exec_pg_command(name, *args):
+    warnings.warn("Since 16.0, use `subprocess` directly.", DeprecationWarning, stacklevel=2)
     prog = find_pg_tool(name)
     env = exec_pg_environ()
     with open(os.devnull) as dn:
@@ -133,6 +136,7 @@ def exec_pg_command(name, *args):
             raise Exception('Postgres subprocess %s error %s' % (args2, rc))
 
 def exec_pg_command_pipe(name, *args):
+    warnings.warn("Since 16.0, use `subprocess` directly.", DeprecationWarning, stacklevel=2)
     prog = find_pg_tool(name)
     env = exec_pg_environ()
     return _exec_pipe(prog, args, env)
