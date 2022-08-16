@@ -948,3 +948,53 @@ class TestSaleOrder(TestSaleCommon):
         })
         self.assertEqual(sale_order.order_line.price_subtotal, 49.44, "Subtotal should be equal to 192 * (1 - 0.7425)")
         self.assertEqual(sale_order.order_line.discount, 74.25)
+
+    def test_sale_order_analytic_tag_change(self):
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_tags')
+
+        analytic_account_super = self.env['account.analytic.account'].create({'name': 'Super Account'})
+        analytic_account_great = self.env['account.analytic.account'].create({'name': 'Great Account'})
+        analytic_tag_super = self.env['account.analytic.tag'].create({'name': 'Super Tag'})
+        analytic_tag_great = self.env['account.analytic.tag'].create({'name': 'Great Tag'})
+        super_product = self.env['product.product'].create({'name': 'Super Product'})
+        great_product = self.env['product.product'].create({'name': 'Great Product'})
+        product_no_account = self.env['product.product'].create({'name': 'Product No Account'})
+        self.env['account.analytic.default'].create([
+            {
+                'analytic_id': analytic_account_super.id,
+                'product_id': super_product.id,
+                'analytic_tag_ids': [analytic_tag_super.id],
+            },
+            {
+                'analytic_id': analytic_account_great.id,
+                'product_id': great_product.id,
+                'analytic_tag_ids': [analytic_tag_great.id],
+            },
+        ])
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        sol = self.env['sale.order.line'].create({
+            'name': super_product.name,
+            'product_id': super_product.id,
+            'order_id': sale_order.id,
+        })
+
+        self.assertEqual(sol.analytic_tag_ids.id, analytic_tag_super.id, "The analytic tag should be set to 'Super Tag'")
+        sol.write({'product_id': great_product.id})
+        self.assertEqual(sol.analytic_tag_ids.id, analytic_tag_great.id, "The analytic tag should be set to 'Great Tag'")
+        sol.write({'product_id': product_no_account.id})
+        self.assertFalse(sol.analytic_tag_ids.id, "The analytic account should not be set")
+
+        so_no_analytic_account = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        sol_no_analytic_account = self.env['sale.order.line'].create({
+            'name': super_product.name,
+            'product_id': super_product.id,
+            'order_id': so_no_analytic_account.id,
+            'analytic_tag_ids': False,
+        })
+        so_no_analytic_account.action_confirm()
+        self.assertFalse(sol_no_analytic_account.analytic_tag_ids.id, "The compute should not overwrite what the user has set.")
