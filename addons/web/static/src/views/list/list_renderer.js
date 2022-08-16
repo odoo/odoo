@@ -527,6 +527,17 @@ export class ListRenderer extends Component {
         return aggregates;
     }
 
+    formatAggregateValue(group, column) {
+        const { widget, type, rawAttrs } = column;
+        const aggregateValue = group.aggregates[column.name];
+        const formatter = formatters.get(widget, false) || formatters.get(type, false);
+        const formatOptions = {
+            digits: rawAttrs.digits ? JSON.parse(rawAttrs.digits) : undefined,
+            escape: true,
+        };
+        return formatter ? formatter(aggregateValue, formatOptions) : aggregateValue;
+    }
+
     getGroupLevel(group) {
         return this.props.list.groupBy.length - group.list.groupBy.length - 1;
     }
