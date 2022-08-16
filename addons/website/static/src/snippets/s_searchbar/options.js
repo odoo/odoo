@@ -22,6 +22,18 @@ options.registry.SearchBar = options.Class.extend({
                     defaultOrder.click(); // close
                 }
             }});
+
+            // Reset display options.
+            const displayOptions = new Set();
+            for (const optionEl of this.$el[0].querySelectorAll('[data-dependencies="limit_opt"] [data-attribute-name^="display"]')) {
+                displayOptions.add(optionEl.dataset.attributeName);
+            }
+            const scopeName = this.$el[0].querySelector(`[data-set-search-type="${widgetValue}"]`).dataset.name;
+            for (const displayOption of displayOptions) {
+                this.$target[0].dataset[displayOption] = this.$el[0].querySelector(
+                    `[data-attribute-name="${displayOption}"][data-dependencies="${scopeName}"]`
+                ) ? 'true' : '';
+            }
         }
     },
 
