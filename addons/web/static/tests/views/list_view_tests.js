@@ -14619,4 +14619,21 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(target, ".o_data_row", 3);
     });
+
+    QUnit.test("Formatted group operator", async function (assert) {
+        serverData.models.foo.records[0].qux = 0.4;
+        serverData.models.foo.records[1].qux = 0.2;
+        serverData.models.foo.records[2].qux = 0.01;
+        serverData.models.foo.records[3].qux = 0.48;
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="qux" widget="percentage"/></tree>',
+            groupBy: ["bar"],
+        });
+        const [td1, td2] = target.querySelectorAll("td.o_list_number");
+        assert.strictEqual(td1.textContent, "48%");
+        assert.strictEqual(td2.textContent, "61%");
+    });
 });
