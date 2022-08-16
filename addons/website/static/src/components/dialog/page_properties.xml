@@ -60,7 +60,7 @@
         <p>Are you sure you want to delete this page ?</p>
         <p class="text-warning">Don't forget to update all links referring to this page.</p>
         <PageDependencies pageId="props.pageId" mode="'collapse'"/>
-        <CheckBox onChange.bind="onConfirmCheckboxChange">
+        <CheckBox value="state.confirm" onChange.bind="onConfirmCheckboxChange">
             <p class="text-warning">I am sure about this.</p>
         </CheckBox>
 
@@ -73,6 +73,13 @@
             </button>
         </t>
     </WebsiteDialog>
+</t>
+
+<t t-name="website.PagePropertiesDialog" t-inherit="web.FormViewDialog" owl="1">
+    <xpath expr="//t[@t-set-slot='footer']" position="inside">
+        <button class="btn btn-link order-last ms-auto" t-on-click="clonePage"><i class="fa fa-fw fa-clone"/>Duplicate Page</button>
+        <button class="btn btn-link order-last" t-on-click="deletePage"><i class="fa fa-fw fa-trash"/>Delete Page</button>
+    </xpath>
 </t>
 
 </templates>
