@@ -96,7 +96,7 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'line_ids': [line1],
             'type_id': requisition_type.id,
             'vendor_id': vendor2.id,
-            'currency_id': self.env.ref("base.USD").id,
+            'currency_id': self.env.user.company_id.currency_id.id,
         })
         requisition_blanket.action_in_progress()
 
@@ -182,13 +182,13 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
             'line_ids': [line1],
             'type_id': requisition_type.id,
             'vendor_id': vendor1.id,
-            'currency_id': self.env.ref("base.USD").id,
+            'currency_id': self.env.user.company_id.currency_id.id,
         })
         requisition_2 = self.env['purchase.requisition'].create({
             'line_ids': [line2],
             'type_id': requisition_type.id,
             'vendor_id': vendor1.id,
-            'currency_id': self.env.ref("base.USD").id,
+            'currency_id': self.env.user.company_id.currency_id.id,
         })
         requisition_1.action_in_progress()
         requisition_2.action_in_progress()
