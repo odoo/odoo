@@ -83,6 +83,7 @@ class MrpProduction(models.Model):
         domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]",
         required=True, check_company=True, index=True)
     use_create_components_lots = fields.Boolean(related='picking_type_id.use_create_components_lots')
+    use_auto_consume_components_lots = fields.Boolean(related='picking_type_id.use_auto_consume_components_lots')
     location_src_id = fields.Many2one(
         'stock.location', 'Components Location',
         compute='_compute_locations', store=True, check_company=True,
@@ -1036,7 +1037,14 @@ class MrpProduction(models.Model):
         for move in (self.move_raw_ids | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
             if move._should_bypass_set_qty_producing() or not move.product_uom:
                 continue
+
             new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
+            if self.use_auto_consume_components_lots and move.has_tracking in ('lot', 'serial'):
+                if float_compare(move.reserved_availability, 0, precision_rounding=move.product_uom.rounding) <= 0:
+                    continue
+                else:
+                    new_qty = min(new_qty, move.reserved_availability)
+
             move.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
             move.move_line_ids = move._set_quantity_done_prepare_vals(new_qty)
 

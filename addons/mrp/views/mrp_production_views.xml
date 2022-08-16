@@ -342,7 +342,8 @@
                                         decoration-bf="not manual_consumption"
                                         decoration-success="not is_done and (quantity_done - should_consume_qty == 0)"
                                         decoration-warning="not is_done and (quantity_done - should_consume_qty &gt; 0.0001)"
-                                        attrs="{'column_invisible': [('parent.state', '=', 'draft')], 'readonly': [('has_tracking', '!=','none')]}"/>
+                                        attrs="{'column_invisible': [('parent.state', '=', 'draft')], 'readonly': [('has_tracking', '!=','none')]}"
+                                        force_save="1"/>
                                     <field name="manual_consumption" invisible="1" force_save="1"/>
                                     <field name="show_details_visible" invisible="1"/>
                                     <field name="lot_ids" widget="many2many_tags"
