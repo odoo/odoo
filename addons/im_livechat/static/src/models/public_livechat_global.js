@@ -79,6 +79,9 @@ registerModel({
         hasLoadedQWebTemplate: attr({
             default: false,
         }),
+        history: attr({
+            default: null,
+        }),
         isAvailable: attr({
             default: false,
         }),

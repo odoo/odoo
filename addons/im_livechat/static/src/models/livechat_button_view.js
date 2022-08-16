@@ -485,7 +485,7 @@ registerModel({
                         publicLivechat: insertAndReplace({ data: livechatData }),
                     });
                     return this.openChatWindow().then(() => {
-                        if (!this.history) {
+                        if (!this.messaging.publicLivechatGlobal.history) {
                             this.widget._sendWelcomeMessage();
                         }
                         this.widget._renderMessages();
@@ -634,8 +634,8 @@ registerModel({
                     params: { uuid: channel.uuid, limit: 100 },
                 });
                 history.reverse();
-                this.update({ history });
-                for (const message of this.history) {
+                this.messaging.publicLivechatGlobal.update({ history });
+                for (const message of this.messaging.publicLivechatGlobal.history) {
                     message.body = Markup(message.body);
                 }
             } else {
@@ -671,14 +671,14 @@ registerModel({
         async _willStartChatbot() {
             if (this.rule && !!this.chatbot) {
                 // noop
-            } else if (this.history !== null && this.history.length === 0) {
+            } else if (this.messaging.publicLivechatGlobal.history !== null && this.messaging.publicLivechatGlobal.history.length === 0) {
                 this.update({
                     livechatInit: await this.messaging.rpc({
                         route: '/im_livechat/init',
                         params: { channel_id: this.channelId },
                     }),
                 });
-            } else if (this.history !== null && this.history.length !== 0) {
+            } else if (this.messaging.publicLivechatGlobal.history !== null && this.messaging.publicLivechatGlobal.history.length !== 0) {
                 const sessionCookie = get_cookie('im_livechat_session');
                 if (sessionCookie) {
                     this.update({ sessionCookie });
@@ -705,7 +705,7 @@ registerModel({
                 // -> initialize necessary state
                 // -> batch welcome message (see '_sendWelcomeChatbotMessage')
                 set_cookie('im_livechat_auto_popup', '', -1);
-                this.update({ history: clear() });
+                this.messaging.publicLivechatGlobal.update({ history: clear() });
                 this.update({ rule: this.livechatInit.rule });
             } else if (this.chatbotState === 'restore_session') {
                 // we landed on a website page and a chatbot script is currently running
@@ -756,9 +756,6 @@ registerModel({
         }),
         headerBackgroundColor: attr({
             compute: '_computeHeaderBackgroundColor',
-        }),
-        history: attr({
-            default: null,
         }),
         inputPlaceholder: attr({
             compute: '_computeInputPlaceholder',

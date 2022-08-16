@@ -27,8 +27,8 @@ const LivechatButton = Widget.extend({
     },
     start() {
         this.$el.text(this.messaging.publicLivechatGlobal.livechatButtonView.buttonText);
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.history) {
-            for (const m of this.messaging.publicLivechatGlobal.livechatButtonView.history) {
+        if (this.messaging.publicLivechatGlobal.history) {
+            for (const m of this.messaging.publicLivechatGlobal.history) {
                 this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(m);
             }
             this.messaging.publicLivechatGlobal.livechatButtonView.openChat();
