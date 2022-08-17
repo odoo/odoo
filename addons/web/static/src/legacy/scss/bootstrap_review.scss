@@ -103,6 +103,17 @@
     cursor: pointer;
 }
 
+// Disable RTL for the dropdown position
+.dropdown-menu {
+    &[x-placement^="top"],
+    &[x-placement^="right"],
+    &[x-placement^="bottom"],
+    &[x-placement^="left"] {
+        /*rtl:ignore*/
+        right: auto;
+    }
+}
+
 // Disable RTL for the popover position
 .popover {
     right: auto#{"/*rtl:ignore*/"};
