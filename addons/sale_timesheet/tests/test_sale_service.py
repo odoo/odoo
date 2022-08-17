@@ -784,3 +784,92 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.sale_order.action_confirm()
         project_allocated_hours = self.sale_order.order_line[0].project_id.allocated_hours
         self.assertEqual(30, project_allocated_hours, 'current set the project allocated hours.')
+
+    def test_compute_project_and_task_button_with_ts(self):
+        """ This test ensures that the button are correctly computed when there is a timesheet service product on a SO. The behavior was not modified in sale_timesheet, but since
+        the timesheet product case can not be tested in sale_project, we have to add the test here."""
+        sale_order_1 = self.env['sale.order'].with_context(tracking_disable=True).create([{
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+        }])
+        # delivered timesheet
+        line_1 = self.env['sale.order.line'].create({
+            'product_id': self.product_service_delivered_timesheet.id,
+            'order_id': sale_order_1.id,
+        })
+        sale_order_1.action_confirm()
+        self.assertTrue(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on timesheet' on the sale order, the button should be displayed")
+        self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
+        self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
+        line_1.project_id = self.project_global.id
+        sale_order_1._compute_show_project_and_task_button()
+        self.assertFalse(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be hidden")
+        self.assertTrue(sale_order_1.show_project_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be displayed")
+        self.assertTrue(sale_order_1.show_task_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be displayed")
+
+    def test_compute_show_timesheet_button(self):
+        """ This test ensures that the hours recorded button is correctly computed. If there is a service product with an invoice policy of prepaid or timesheet, and there is
+        at least on project linked to the SO, then the button should be displayed """
+        sale_order_1, sale_order_2 = self.env['sale.order'].with_context(tracking_disable=True).create([{
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+        }, {
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+        }])
+        # consumable product, delivered milestone, and delivered manual
+        self.env['sale.order.line'].create([{
+            'product_id': self.product_consumable.id,
+            'order_id': sale_order_1.id,
+        }, {
+            'product_id': self.product_service_delivered_milestone.id,
+            'order_id': sale_order_1.id,
+        }, {
+            'product_id': self.product_service_delivered_manual.id,
+            'order_id': sale_order_1.id,
+        }])
+        sale_order_1.action_confirm()
+        self.assertFalse(sale_order_1.show_hours_recorded_button, "There is no service product service with the correct service_policy set on 'delivered on timesheet' on the sale order, the button should be hidden")
+        # adds a delivered timesheet product to the SO
+        line_4 = self.env['sale.order.line'].create({
+            'product_id': self.product_service_delivered_timesheet.id,
+            'order_id': sale_order_1.id,
+        })
+        self.assertFalse(sale_order_1.show_hours_recorded_button, "There is a product service with the service_policy set on 'delivered on timesheet' but no project on the sale order, the button should be hidden")
+        line_4.project_id = self.project_global
+        sale_order_1._compute_show_hours_recorded_button()
+        self.assertTrue(sale_order_1.show_hours_recorded_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be displayed")
+
+        line_1 = self.env['sale.order.line'].create({
+            'product_id': self.product_service_ordered_prepaid.id,
+            'order_id': sale_order_2.id,
+        })
+        sale_order_2.action_confirm()
+        self.assertFalse(sale_order_2.show_hours_recorded_button, "There is a product service with the service_policy set on 'delivered on timesheet' but no project on the sale order, the button should be hidden")
+        line_1.project_id = self.project_global
+        sale_order_2._compute_show_hours_recorded_button()
+        self.assertTrue(sale_order_2.show_hours_recorded_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be displayed")
+        # remove the project from the so and ensure the SO is back to its previous state
+        line_1.project_id = False
+        sale_order_2._compute_show_hours_recorded_button()
+        self.assertFalse(sale_order_2.show_hours_recorded_button, "There is a product service with the service_policy set on 'delivered on timesheet' but no project on the sale order, the button should be hidden")
+
+        # adds a task whose sale item is a sale order line from the SO, and adds a timesheet in that task. This should enable the display of the button
+        task = self.env['project.task'].create({
+            'name': 'Test Task',
+            'project_id': self.project_global.id,
+            'sale_line_id': line_1.id,
+        })
+        self.env['account.analytic.line'].create({
+            'name': "timesheet",
+            'unit_amount': 5,
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'employee_id': self.employee_user.id,
+        })
+        sale_order_2._compute_timesheet_count()
+        sale_order_2._compute_show_hours_recorded_button()
+        self.assertTrue(sale_order_2.show_hours_recorded_button, "There is a product service with the service_policy set on 'delivered on timesheet' and a project on the sale order, the button should be displayed")

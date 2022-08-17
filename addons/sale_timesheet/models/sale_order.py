@@ -20,6 +20,8 @@ class SaleOrder(models.Model):
     timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration',
         help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit", compute_sudo=True,
         groups="hr_timesheet.group_hr_timesheet_user")
+    show_hours_recorded_button = fields.Boolean(compute="_compute_show_hours_recorded_button", groups="hr_timesheet.group_hr_timesheet_user")
+
 
     def _compute_timesheet_count(self):
         timesheets_per_so = {
@@ -63,6 +65,21 @@ class SaleOrder(models.Model):
                 # We want to display only one time the warning for each SOL
                 upsellable_lines.write({'has_displayed_warning_upsell': True})
 
+    def _compute_show_hours_recorded_button(self):
+        show_button_ids = self._get_order_with_valid_service_product()
+        for order in self:
+            order.show_hours_recorded_button = order.timesheet_count or order.project_count and order.id in show_button_ids
+
+    def _get_order_with_valid_service_product(self):
+        return self.env['sale.order.line']._read_group([
+            ('order_id', 'in', self.ids),
+            ('state', 'in', ['sale', 'done']),
+            ('is_service', '=', True),
+            '|',
+                ('product_id.service_type', 'not in', ['milestones', 'manual']),
+                ('product_id.invoice_policy', '!=', 'delivery'),
+        ], aggregates=['order_id:array_agg'])[0][0]
+
     def _get_prepaid_service_lines_to_upsell(self):
         """ Retrieve all sols which need to display an upsell activity warning in the SO
 
@@ -85,22 +102,38 @@ class SaleOrder(models.Model):
 
     def action_view_timesheet(self):
         self.ensure_one()
+        if not self.order_line:
+            return {'type': 'ir.actions.act_window_close'}
+
         action = self.env["ir.actions.actions"]._for_xml_id("sale_timesheet.timesheet_action_from_sales_order")
-        action['context'] = {
-            'search_default_billable_timesheet': True
+        default_sale_line = next(sale_line for sale_line in self.order_line if sale_line.is_service and sale_line.product_id.service_policy in ['ordered_prepaid', 'delivered_timesheet'])
+        context = {
+            'search_default_billable_timesheet': True,
+            'default_is_so_line_edited': True,
+            'default_so_line': default_sale_line.id,
         }  # erase default filters
-        if self.order_line:
-            tasks = self.order_line.task_id._filter_access_rules_python('write')
-            if tasks:
-                action['context']['default_task_id'] = tasks[0].id
-            else:
-                projects = self.order_line.project_id._filter_access_rules_python('write')
-                if projects:
-                    action['context']['default_project_id'] = projects[0].id
-        if self.timesheet_count > 0:
-            action['domain'] = [('so_line', 'in', self.order_line.ids)]
+
+        tasks = self.order_line.task_id._filter_access_rules_python('write')
+        if tasks:
+            context['default_task_id'] = tasks[0].id
         else:
-            action = {'type': 'ir.actions.act_window_close'}
+            projects = self.order_line.project_id._filter_access_rules_python('write')
+            if projects:
+                context['default_project_id'] = projects[0].id
+            elif self.project_ids:
+                context['default_project_id'] = self.project_ids[0].id
+        action.update({
+            'context': context,
+            'domain': [('so_line', 'in', self.order_line.ids)],
+            'help': _("""
+                <p class="o_view_nocontent_smiling_face">
+                    No activities found. Let's start a new one!
+                </p><p>
+                    Track your working hours by projects every day and invoice this time to your customers.
+                </p>
+            """)
+        })
+
         return action
 
     def _create_invoices(self, grouped=False, final=False, date=None):

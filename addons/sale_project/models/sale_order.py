@@ -21,6 +21,9 @@ class SaleOrder(models.Model):
     project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_user')
     milestone_count = fields.Integer(compute='_compute_milestone_count')
     is_product_milestone = fields.Boolean(compute='_compute_is_product_milestone')
+    show_create_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user')
+    show_project_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user')
+    show_task_button = fields.Boolean(compute='_compute_show_project_and_task_button', groups='project.group_project_user')
 
     def _compute_milestone_count(self):
         read_group = self.env['project.milestone']._read_group(
@@ -35,6 +38,18 @@ class SaleOrder(models.Model):
     def _compute_is_product_milestone(self):
         for order in self:
             order.is_product_milestone = order.order_line.product_id.filtered(lambda p: p.service_policy == 'delivered_milestones')
+
+    def _compute_show_project_and_task_button(self):
+        is_project_manager = self.env.user.has_group('project.group_project_manager')
+        show_button_ids = self.env['sale.order.line']._read_group([
+            ('order_id', 'in', self.ids),
+            ('order_id.state', 'not in', ['draft', 'sent']),
+            ('product_id.detailed_type', '=', 'service'),
+        ], aggregates=['order_id:array_agg'])[0][0]
+        for order in self:
+            order.show_project_button = order.id in show_button_ids and order.project_count
+            order.show_task_button = order.show_project_button or order.tasks_count
+            order.show_create_project_button = is_project_manager and order.id in show_button_ids and not order.project_count
 
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
@@ -62,6 +77,7 @@ class SaleOrder(models.Model):
             projects = order.order_line.mapped('product_id.project_id')
             projects |= order.order_line.mapped('project_id')
             projects |= order.project_id
+            projects = projects.filtered('active')
             projects |= projects_per_so[order.id or order._origin.id]
             if not is_project_manager:
                 projects = projects._filter_access_rules('read')
@@ -88,56 +104,84 @@ class SaleOrder(models.Model):
 
     def action_view_task(self):
         self.ensure_one()
+        if not self.order_line:
+            return {'type': 'ir.actions.act_window_close'}
 
         list_view_id = self.env.ref('project.view_task_tree2').id
         form_view_id = self.env.ref('project.view_task_form2').id
+        kanban_view_id = self.env.ref('project.view_task_kanban_inherit_view_default_project').id
 
-        action = {'type': 'ir.actions.act_window_close'}
-        task_projects = self.tasks_ids.mapped('project_id')
-        if len(task_projects) == 1 and len(self.tasks_ids) > 1:  # redirect to task of the project (with kanban stage, ...)
-            action = self.with_context(active_id=task_projects.id).env['ir.actions.actions']._for_xml_id(
-                'project.act_project_project_2_project_task_all')
-            action['domain'] = [('id', 'in', self.tasks_ids.ids)]
-            if action.get('context'):
-                eval_context = self.env['ir.actions.actions']._get_eval_context()
-                eval_context.update({'active_id': task_projects.id})
-                action_context = safe_eval(action['context'], eval_context)
-                action_context.update(eval_context)
-                action['context'] = action_context
-        else:
-            action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
-            action['context'] = {}  # erase default context to avoid default filter
-            if len(self.tasks_ids) > 1:  # cross project kanban task
-                action['views'] = [[False, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']]
-            elif len(self.tasks_ids) == 1:  # single task -> form view
-                action['views'] = [(form_view_id, 'form')]
-                action['res_id'] = self.tasks_ids.id
-        # filter on the task of the current SO
-        action.setdefault('context', {})
-        action['context'].update({'search_default_sale_order_id': self.id})
+        action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
+        if self.tasks_count > 1:  # cross project kanban task
+            action['views'] = [[kanban_view_id, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']]
+        else:  # 1 or 0 tasks -> form view
+            action['views'] = [(form_view_id, 'form')]
+            action['res_id'] = self.tasks_ids.id
+        # set default project
+        default_line = next(sol for sol in self.order_line if sol.product_id.detailed_type == 'service')
+        default_project_id = default_line.project_id.id or self.project_id.id or self.project_ids[:1].id
+
+        action['context'] = {
+            'search_default_sale_order_id': self.id,
+            'default_sale_order_id': self.id,
+            'default_sale_line_id': default_line.id,
+            'default_partner_id': self.partner_id.id,
+            'default_project_id': default_project_id,
+            'default_user_ids': [self.env.uid],
+        }
         return action
+
+    def action_create_project(self):
+        self.ensure_one()
+        if not self.order_line:
+            return {'type': 'ir.actions.act_window_close'}
+
+        sorted_line = self.order_line.sorted('sequence')
+        default_sale_line = next(sol for sol in sorted_line if sol.product_id.detailed_type == 'service')
+        return {
+            **self.env["ir.actions.actions"]._for_xml_id("project.open_create_project"),
+            'context': {
+                'default_sale_order_id': self.id,
+                'default_sale_line_id': default_sale_line.id,
+                'default_partner_id': self.partner_id.id,
+                'default_user_ids': [self.env.uid],
+                'default_allow_billable': 1,
+                'hide_allow_billable': True,
+                'default_company_id': self.company_id.id,
+                'generate_milestone': default_sale_line.product_id.service_policy == 'delivered_milestones',
+            },
+        }
 
     def action_view_project_ids(self):
         self.ensure_one()
-        view_form_id = self.env.ref('project.edit_project').id
-        view_kanban_id = self.env.ref('project.view_project_kanban').id
+        if not self.order_line:
+            return {'type': 'ir.actions.act_window_close'}
+
+        sorted_line = self.order_line.sorted('sequence')
+        default_sale_line = next(sol for sol in sorted_line if sol.product_id.detailed_type == 'service')
         action = {
             'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', self.project_ids.ids)],
-            'view_mode': 'kanban,form',
             'name': _('Projects'),
+            'domain': ['|', ('sale_order_id', '=', self.id), ('id', 'in', self.project_ids.ids)],
             'res_model': 'project.project',
+            'views': [(False, 'kanban'), (False, 'tree'), (False, 'form')],
+            'view_mode': 'kanban,tree,form',
+            'context': {
+                **self._context,
+                'default_partner_id': self.partner_id.id,
+                'default_sale_line_id': default_sale_line.id,
+                'default_allow_billable': 1,
+            }
         }
         if len(self.project_ids) == 1:
-            action.update({'views': [(view_form_id, 'form')], 'res_id': self.project_ids.id})
-        else:
-            action['views'] = [(view_kanban_id, 'kanban'), (view_form_id, 'form')]
+            action.update({'views': [(False, 'form')], 'res_id': self.project_ids.id})
         return action
 
     def action_view_milestone(self):
         self.ensure_one()
         default_project = self.project_ids and self.project_ids[0]
-        default_sale_line = default_project.sale_line_id or self.order_line and self.order_line[0]
+        sorted_line = self.order_line.sorted('sequence')
+        default_sale_line = next(sol for sol in sorted_line if sol.is_service and sol.product_id.service_policy == 'delivered_milestones')
         return {
             'type': 'ir.actions.act_window',
             'name': _('Milestones'),
@@ -154,8 +198,8 @@ class SaleOrder(models.Model):
             """),
             'context': {
                 **self.env.context,
-                'default_project_id' : default_project.id,
-                'default_sale_line_id' : default_sale_line.id,
+                'default_project_id': default_project.id,
+                'default_sale_line_id': default_sale_line.id,
             }
         }
 
