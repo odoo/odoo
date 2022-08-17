@@ -24,11 +24,11 @@
                         Connect your Outlook account
                     </button>
                     <button type="object"
-                        name="open_microsoft_outlook_uri" class="btn-link px-0 ml-2"
+                        name="open_microsoft_outlook_uri" class="btn-link px-0 ms-2"
                         attrs="{'invisible': ['|', '|', ('is_microsoft_outlook_configured', '=', False), ('server_type', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}">
                         <i class="fa fa-cog" title="Edit Settings"/>
                     </button>
-                    <button class="alert alert-warning d-block mt-2 text-left"
+                    <button class="alert alert-warning d-block mt-2 text-start"
                         icon="fa-arrow-right" type="action" role="alert"
                         name="%(base.res_config_setting_act_window)d"
                         attrs="{'invisible': ['|', ('is_microsoft_outlook_configured', '=', True), ('server_type', '!=', 'outlook')]}">
