@@ -701,22 +701,44 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
         }).then(() => this.trigger_up('request_save', {reload: true, optionSelector: this.data.selector}));
     },
 
-    /**
-     * @override
-     */
-    setImageWidth(previewMode, widgetValue, params) {
-        this._updateWebsiteConfig({
-            product_page_image_width: widgetValue,
+    _getZoomOptionData() {
+        return this._userValueWidgets.find(widget => {
+            return widget.options && widget.options.dataAttributes && widget.options.dataAttributes.name === "o_wsale_zoom_mode";
         });
     },
 
     /**
      * @override
      */
-    setImageLayout(previewMode, widgetValue, params) {
-        this._updateWebsiteConfig({
-            product_page_image_layout: widgetValue,
-        });
+    async setImageWidth(previewMode, widgetValue, params) {
+        const zoomOption = this._getZoomOptionData();
+        const updateWidth = this._updateWebsiteConfig.bind(this, { product_page_image_width: widgetValue });
+        if (!zoomOption || widgetValue !== "100_pc") {
+            updateWidth();
+        } else {
+            const defaultZoomOption = "website_sale.product_picture_magnify_click";
+            await this._customizeWebsiteData(defaultZoomOption, { possibleValues: zoomOption._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
+            updateWidth();
+        }
+    },
+
+    /**
+     * @override
+     */
+    async setImageLayout(previewMode, widgetValue, params) {
+        const zoomOption = this._getZoomOptionData();
+        const updateLayout = this._updateWebsiteConfig.bind(this, { product_page_image_layout: widgetValue });
+        if (!zoomOption) {
+            updateLayout();
+        } else {
+            const imageWidthOption = this.productDetailMain.dataset.image_width;
+            let defaultZoomOption = widgetValue === "grid" ? "website_sale.product_picture_magnify_click" : "website_sale.product_picture_magnify_hover";
+            if (imageWidthOption === "100_pc" && defaultZoomOption === "website_sale.product_picture_magnify_hover") {
+                defaultZoomOption = "website_sale.product_picture_magnify_click";
+            }
+            await this._customizeWebsiteData(defaultZoomOption, { possibleValues: zoomOption._methodsParams.optionsPossibleValues["customizeWebsiteViews"] }, true);
+            updateLayout();
+        }
     },
 
     /**
@@ -846,12 +868,25 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
     },
 
     async _computeWidgetVisibility(widgetName, params) {
+        const hasImages = this.productDetailMain.dataset.image_width != 'none';
+        const isFullImage = this.productDetailMain.dataset.image_width == '100_pc';
         switch (widgetName) {
             case 'o_wsale_thumbnail_pos':
-                return Boolean(this.productPageCarousel);
+                return Boolean(this.productPageCarousel) && hasImages;
             case 'o_wsale_grid_spacing':
             case 'o_wsale_grid_columns':
-                return Boolean(this.productPageGrid);
+                return Boolean(this.productPageGrid) && hasImages;
+            case 'o_wsale_image_layout':
+            case 'o_wsale_zoom_click':
+            case 'o_wsale_zoom_none':
+            case 'o_wsale_replace_main_image':
+            case 'o_wsale_add_extra_images':
+            case 'o_wsale_clear_extra_images':
+            case 'o_wsale_zoom_mode':
+                return hasImages;
+            case 'o_wsale_zoom_hover':
+            case 'o_wsale_zoom_both':
+                return hasImages && !isFullImage;
         }
         return this._super(widgetName, params);
     }
