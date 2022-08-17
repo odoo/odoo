@@ -4356,6 +4356,17 @@ class AccountMoveLine(models.Model):
         return result
 
     @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        if operator == 'ilike':
+            args = ['|', '|',
+                    ('name', 'ilike', name),
+                    ('move_id', 'ilike', name),
+                    ('product_id', 'ilike', name)]
+            return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+
+        return super()._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+
+    @api.model
     def invalidate_cache(self, fnames=None, ids=None):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:
@@ -4808,9 +4819,9 @@ class AccountMoveLine(models.Model):
         # Fix residual amounts.
         to_reconcile = _add_lines_to_exchange_difference_vals(self, exchange_diff_move_vals)
 
-        # Fix cash basis entries.
+        # Fix cash basis entries, only if not coming from the move reversal wizard.
         is_cash_basis_needed = self[0].account_internal_type in ('receivable', 'payable')
-        if is_cash_basis_needed:
+        if is_cash_basis_needed and not self._context.get('move_reverse_cancel'):
             _add_cash_basis_lines_to_exchange_difference_vals(self, exchange_diff_move_vals)
 
         # ==========================================================================
