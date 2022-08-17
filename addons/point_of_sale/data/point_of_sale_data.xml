@@ -76,6 +76,12 @@
             <field name="pos_config_ids" eval="[(6, False, [ref('point_of_sale.pos_config_main')])]"/>
         </record>
 
+        <record model="pos.bill" id="0_25">
+            <field name="name">0.25</field>
+            <field name="value">0.25</field>
+            <field name="pos_config_ids" eval="[(6, False, [ref('point_of_sale.pos_config_main')])]"/>
+        </record>
+
         <record model="pos.bill" id="0_50">
             <field name="name">0.50</field>
             <field name="value">0.50</field>
@@ -127,12 +133,6 @@
         <record model="pos.bill" id="200_00">
             <field name="name">200.00</field>
             <field name="value">200.00</field>
-            <field name="pos_config_ids" eval="[(6, False, [ref('point_of_sale.pos_config_main')])]"/>
-        </record>
-
-        <record model="pos.bill" id="500_00">
-            <field name="name">500.00</field>
-            <field name="value">500.00</field>
             <field name="pos_config_ids" eval="[(6, False, [ref('point_of_sale.pos_config_main')])]"/>
         </record>
 
