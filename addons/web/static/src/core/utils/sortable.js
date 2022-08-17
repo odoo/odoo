@@ -263,12 +263,12 @@ export function useSortable(params) {
      * Safely executes a handler from the `params`, so that the drag sequence can
      * be interrupted if an error occurs.
      * @param {string} callbackName
-     * @param  {...any} args
+     * @param {Record<any, any>} arg
      */
-    const execHandler = (callbackName, ...args) => {
+    const execHandler = (callbackName, arg) => {
         if (typeof params[callbackName] === "function") {
             try {
-                params[callbackName](...args);
+                params[callbackName](arg);
             } catch (err) {
                 dragStop(true, true);
                 throw err;
@@ -290,7 +290,7 @@ export function useSortable(params) {
                 element.after(ghost);
             }
         }
-        execHandler("onElementEnter", element);
+        execHandler("onElementEnter", { element });
     };
 
     /**
@@ -299,7 +299,7 @@ export function useSortable(params) {
      */
     const onElementMouseleave = (ev) => {
         const element = ev.currentTarget;
-        execHandler("onElementLeave", element);
+        execHandler("onElementLeave", { element });
     };
 
     /**
@@ -309,7 +309,7 @@ export function useSortable(params) {
     const onGroupMouseenter = (ev) => {
         const group = ev.currentTarget;
         group.appendChild(ghost);
-        execHandler("onGroupEnter", group);
+        execHandler("onGroupEnter", { group });
     };
 
     /**
@@ -318,7 +318,7 @@ export function useSortable(params) {
      */
     const onGroupMouseleave = (ev) => {
         const group = ev.currentTarget;
-        execHandler("onGroupLeave", group);
+        execHandler("onGroupLeave", { group });
     };
 
     /**
@@ -443,7 +443,7 @@ export function useSortable(params) {
             }
         }
 
-        execHandler("onStart", currentGroup, currentElement);
+        execHandler("onStart", { element: currentElement, group: currentGroup });
 
         // Ghost is initially added right after the current element.
         currentElement.after(ghost);
@@ -484,13 +484,13 @@ export function useSortable(params) {
     const dragStop = (cancelled, inErrorState) => {
         if (started) {
             if (!inErrorState) {
-                execHandler("onStop", currentGroup, currentElement);
+                execHandler("onStop", { element: currentElement, group: currentGroup });
                 const previous = ghost.previousElementSibling;
                 const next = ghost.nextElementSibling;
                 if (!cancelled && previous !== currentElement && next !== currentElement) {
                     execHandler("onDrop", {
-                        group: currentGroup,
                         element: currentElement,
+                        group: currentGroup,
                         previous,
                         next,
                         parent: groupSelector && ghost.closest(groupSelector),
