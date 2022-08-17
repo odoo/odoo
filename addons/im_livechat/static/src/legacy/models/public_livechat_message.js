@@ -362,6 +362,14 @@ const PublicLivechatMessage = Class.extend({
         return !this._isMyselfAuthor();
     },
 
+    isVisitorTheAuthor() {
+        return !this.hasAuthor() || this._isMyselfAuthor();
+    },
+
+    isOperatorTheAuthor() {
+        return this.hasAuthor() && !this._isMyselfAuthor();
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

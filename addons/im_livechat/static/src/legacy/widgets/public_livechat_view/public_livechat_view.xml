@@ -136,7 +136,7 @@
         @param {integer} [options.selectedMessageID]
     -->
     <t t-name="im_livechat.legacy.mail.widget.Thread.Message">
-        <div t-if="!message.isEmpty()" t-att-class="'o_thread_message ' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion ' : ' o_mail_not_discussion ')" t-att-data-message-id="message.getID()">
+        <div t-if="!message.isEmpty()" t-att-class="'o_thread_message o_PublicLivechatMessage ' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion ' : ' o_mail_not_discussion ') + (message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '')">
             <div t-if="options.displayAvatars" class="o_thread_message_sidebar">
                 <t t-if="message.hasAuthor()">
                     <div t-if="displayAuthorMessages[message.getID()]" class="o_thread_message_sidebar_image">
@@ -163,26 +163,27 @@
                 </span>
             </div>
             <div class="o_thread_message_core">
-                <p t-if="displayAuthorMessages[message.getID()]" class="o_mail_info text-muted">
+                <p t-if="displayAuthorMessages[message.getID()]" t-attf-class="o_mail_info text-muted o_PublicLivechatMessage_header {{ message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '' }}">
                     <t t-if="message.isNote()">
                         Note by
                     </t>
+                    <t t-if="!message.isVisitorTheAuthor()">
+                        <strong t-if="message.hasAuthor()"
+                                data-oe-model="res.partner" t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
+                                t-attf-class="o_thread_author o_PublicLivechatMessage_headerAuthor #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}">
+                            <t t-esc="message.getDisplayedAuthor()"/>
+                        </strong>
+                        <strong t-elif="message.hasEmailFrom()">
+                            <a class="text-muted" t-attf-href="mailto:#{message.getEmailFrom()}?subject=Re: #{message.hasSubject() ? message.getSubject() : ''}">
+                                <t t-esc="message.getEmailFrom()"/>
+                            </a>
+                        </strong>
+                        <strong t-else="" class="o_thread_author o_PublicLivechatMessage_headerAuthor">
+                            <t t-esc="message.getDisplayedAuthor()"/>
+                        </strong>
+                    </t>
 
-                    <strong t-if="message.hasAuthor()"
-                            data-oe-model="res.partner" t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
-                            t-attf-class="o_thread_author #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}">
-                        <t t-esc="message.getDisplayedAuthor()"/>
-                    </strong>
-                    <strong t-elif="message.hasEmailFrom()">
-                        <a class="text-muted" t-attf-href="mailto:#{message.getEmailFrom()}?subject=Re: #{message.hasSubject() ? message.getSubject() : ''}">
-                            <t t-esc="message.getEmailFrom()"/>
-                        </a>
-                    </strong>
-                    <strong t-else="" class="o_thread_author">
-                        <t t-esc="message.getDisplayedAuthor()"/>
-                    </strong>
-
-                    - <small class="o_mail_timestamp" t-att-title="message.getDate().format(dateFormat)"><t t-esc="message.getTimeElapsed()"/></small>
+                    <span t-if="!message.isVisitorTheAuthor()" class="o_PublicLivechatMessage_headerDatePrefix">-</span> <small class="o_mail_timestamp o_PublicLivechatMessage_headerDate" t-att-title="message.getDate().format(dateFormat)"><t t-esc="message.getTimeElapsed()"/></small>
                     <t t-if="message.isLinkedToDocumentThread() and options.displayDocumentLinks">
                         <small>on</small> <a t-att-href="message.getURL()" t-att-data-oe-model="message.getDocumentModel()" t-att-data-oe-id="message.getDocumentID()" class="o_document_link"><t t-esc="message.getDocumentName()"/></a>
                     </t>
@@ -192,14 +193,19 @@
                            t-att-data-message-id="message.getID()" title="Mark as Read" role="img" aria-label="Mark as Read"/>
                     </span>
                 </p>
-                <div class="o_thread_message_content">
-                    <t t-out="message.getBody()"/>
-                    <t t-if="message.hasTrackingValues()">
-                        <t t-if="message.hasSubtypeDescription()">
-                            <p><t t-esc="message.getSubtypeDescription()"/></p>
-                        </t>
-                        <t t-call="im_livechat.legacy.mail.widget.Thread.MessageTracking"/>
-                    </t>
+                <div t-att-data-message-id="message.getID()" t-attf-class="o_PublicLivechatMessage_bubbleWrap {{ message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '' }} {{ message.isOperatorTheAuthor() ? 'o-isOperatorTheAuthor' : '' }}">
+                    <div t-attf-class="o_PublicLivechatMessage_bubble {{ message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '' }} {{ message.isOperatorTheAuthor() ? 'o-isOperatorTheAuthor' : '' }} {{ !message.isEmpty() ? 'o-isContentNonEmpty' : '' }}">
+                        <div t-attf-class="o_PublicLivechatMessage_background {{ message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '' }} {{ message.isOperatorTheAuthor() ? 'o-isOperatorTheAuthor' : '' }}"/>
+                        <div class="o_thread_message_content o_PublicLivechatMessage_content">
+                            <t t-out="message.getBody()"/>
+                            <t t-if="message.hasTrackingValues()">
+                                <t t-if="message.hasSubtypeDescription()">
+                                    <p><t t-esc="message.getSubtypeDescription()"/></p>
+                                </t>
+                                <t t-call="im_livechat.legacy.mail.widget.Thread.MessageTracking"/>
+                            </t>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

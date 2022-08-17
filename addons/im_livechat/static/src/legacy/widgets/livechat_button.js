@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import config from 'web.config';
 import time from 'web.time';
 import utils from 'web.utils';
 import Widget from 'web.Widget';
@@ -21,40 +20,8 @@ const LivechatButton = Widget.extend({
         this._super(parent);
         this.messaging = messaging;
     },
-    async willStart() {
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({ widget: this });
-    },
     start() {
-        this.$el.text(this.messaging.publicLivechatGlobal.livechatButtonView.buttonText);
-        if (this.messaging.publicLivechatGlobal.history) {
-            for (const m of this.messaging.publicLivechatGlobal.history) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(m);
-            }
-            this.messaging.publicLivechatGlobal.livechatButtonView.openChat();
-        } else if (!config.device.isMobile && this.messaging.publicLivechatGlobal.rule.action === 'auto_popup') {
-            const autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
-            if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                    autoOpenChatTimeout: setTimeout(
-                        this.messaging.publicLivechatGlobal.livechatButtonView.openChat,
-                        this.messaging.publicLivechatGlobal.rule.auto_popup_timer * 1000,
-                    ),
-                });
-            }
-        }
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.buttonBackgroundColor) {
-            this.$el.css('background-color', this.messaging.publicLivechatGlobal.livechatButtonView.buttonBackgroundColor);
-        }
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.buttonTextColor) {
-            this.$el.css('color', this.messaging.publicLivechatGlobal.livechatButtonView.buttonTextColor);
-        }
-
-        // If website_event_track installed, put the livechat banner above the PWA banner.
-        const pwaBannerHeight = $('.o_pwa_install_banner').outerHeight(true);
-        if (pwaBannerHeight) {
-            this.$el.css('bottom', pwaBannerHeight + 'px');
-        }
-
+        this.messaging.publicLivechatGlobal.livechatButtonView.start();
         return this._super();
     },
 
@@ -94,10 +61,10 @@ const LivechatButton = Widget.extend({
      * @private
      */
      _renderMessages() {
-        const shouldScroll = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded && this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.isAtBottom();
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.render();
+        const shouldScroll = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded && this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom();
+        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.render();
         if (shouldScroll) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
+            this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
         }
     },
     /**
@@ -135,12 +102,12 @@ const LivechatButton = Widget.extend({
      */
     _onCloseChatWindow(ev) {
         ev.stopPropagation();
-        const isComposerDisabled = this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled');
+        const isComposerDisabled = this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled');
         const shouldAskFeedback = !isComposerDisabled && this.messaging.publicLivechatGlobal.messages.find(function (message) {
             return message.id !== '_welcome';
         });
         if (shouldAskFeedback) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.toggleFold(false);
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.toggleFold(false);
             this.messaging.publicLivechatGlobal.livechatButtonView.askFeedback();
         } else {
             this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
@@ -176,7 +143,7 @@ const LivechatButton = Widget.extend({
      */
     _onUpdatedTypingPartners(ev) {
         ev.stopPropagation();
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.renderHeader();
+        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.renderHeader();
     },
     /**
      * @private
@@ -184,7 +151,7 @@ const LivechatButton = Widget.extend({
      */
     _onUpdatedUnreadCounter(ev) {
         ev.stopPropagation();
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.renderHeader();
+        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.renderHeader();
     },
 });
 
