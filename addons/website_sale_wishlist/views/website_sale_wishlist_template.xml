@@ -200,7 +200,7 @@
                                         <td class='text-center td-wish-btn align-middle'>
                                             <input name="product_id" t-att-value="wish.product_id.id" type="hidden"/>
                                             <a t-if="combination_info['prevent_zero_price_sale']" t-att-href="website.contact_us_button_url" class="btn btn-primary btn_cta">Contact Us</a>
-                                            <button t-else="" type="button" role="button" class="btn btn-secondary btn-block o_wish_add mb4" >
+                                            <button id="add_to_cart_button" t-else="" type="button" role="button" class="btn btn-secondary btn-block o_wish_add mb4" >
                                                 Add <span class='d-none d-md-inline'>to Cart</span>
                                             </button>
                                         </td>

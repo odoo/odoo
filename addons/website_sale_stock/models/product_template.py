@@ -48,3 +48,6 @@ class ProductTemplate(models.Model):
             })
 
         return combination_info
+
+    def _is_sold_out(self):
+        return self.product_variant_id._is_sold_out()
