@@ -331,10 +331,10 @@ class DiscussController(http.Controller):
         return {
             'id': message_sudo.id,
             'messageReactionGroups': [('insert' if len(reactions) > 0 else 'insert-and-unlink', {
-                'messageId': message_sudo.id,
                 'content': content,
                 'count': len(reactions),
                 'guests': guests,
+                'message': [('insert-and-replace', {'id', message_sudo.id})],
                 'partners': partners,
             })],
         }
@@ -359,10 +359,10 @@ class DiscussController(http.Controller):
         return {
             'id': message_sudo.id,
             'messageReactionGroups': [('insert' if len(reactions) > 0 else 'insert-and-unlink', {
-                'messageId': message_sudo.id,
                 'content': content,
                 'count': len(reactions),
                 'guests': guests,
+                'message': [('insert-and-replace', {'id': message_sudo.id})],
                 'partners': partners,
             })],
         }

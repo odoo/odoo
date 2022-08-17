@@ -650,10 +650,10 @@ class Channel(models.Model):
         self.env['bus.bus']._sendone(self, 'mail.message/insert', {
             'id': message.id,
             'messageReactionGroups': [('insert' if len(reactions) > 0 else 'insert-and-unlink', {
-                'messageId': message.id,
                 'content': content,
                 'count': len(reactions),
                 'guests': guests,
+                'message': [('insert-and-replace', {'id': message.id})],
                 'partners': partners,
             })],
         })
@@ -671,10 +671,10 @@ class Channel(models.Model):
         self.env['bus.bus']._sendone(self, 'mail.message/insert', {
             'id': message.id,
             'messageReactionGroups': [('insert' if len(reactions) > 0 else 'insert-and-unlink', {
-                'messageId': message.id,
                 'content': content,
                 'count': len(reactions),
                 'guests': guests,
+                'message': [('insert-and-replace', {'id': message.id})],
                 'partners': partners,
             })],
         })

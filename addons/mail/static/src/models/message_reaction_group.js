@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 import { sprintf } from '@web/core/utils/strings';
 
@@ -31,13 +30,6 @@ registerModel({
                 (this.messaging.currentPartner && this.partners.includes(this.messaging.currentPartner)) ||
                 (this.messaging.currentGuest && this.guests.includes(this.messaging.currentGuest))
             );
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeMessage() {
-            return insertAndReplace({ id: this.messageId });
         },
         /**
          * @private
@@ -88,13 +80,8 @@ registerModel({
             default: false,
         }),
         message: one('Message', {
-            compute: '_computeMessage',
             identifying: true,
             inverse: 'messageReactionGroups',
-        }),
-        messageId: attr({
-            readonly: true,
-            required: true,
         }),
         /**
          * States the partners that have used this reaction on this message.
