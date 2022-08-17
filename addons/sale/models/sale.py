@@ -724,7 +724,7 @@ class SaleOrder(models.Model):
         if len(invoice_vals_list) < len(self):
             SaleOrderLine = self.env['sale.order.line']
             for invoice in invoice_vals_list:
-                sequence = 1
+                sequence = self.env['account.move.line'].default_get(['sequence']).get('sequence')
                 for line in invoice['invoice_line_ids']:
                     line[2]['sequence'] = SaleOrderLine._get_invoice_line_sequence(new=sequence, old=line[2]['sequence'])
                     sequence += 1
@@ -1513,7 +1513,7 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         res = {
             'display_type': self.display_type,
-            'sequence': self.sequence,
+            'sequence': self.env['account.move.line'].default_get(['sequence']).get('sequence'),
             'name': self.name,
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
