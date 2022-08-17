@@ -38,7 +38,7 @@
         <field name="arch" type="xml">
             <xpath expr="//setting" position="before">
                 <field name="company_id" invisible="1"/>
-                <setting help="Invoice your time and material to customers">
+                <setting help="Invoice your time and material to customers" invisible="context.get('hide_allow_billable', False)">
                     <field name="allow_billable"/>
                     <div attrs="{'invisible': [('allow_billable', '=', False)]}">
                         <label for="partner_id"/>

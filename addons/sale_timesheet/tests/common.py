@@ -254,6 +254,16 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
             'taxes_id': False,
             'property_account_income_id': cls.account_sale.id,
         })
+        cls.product_service_delivered_timesheet = cls.env['product.product'].create({
+            'name': "Service timesheet",
+            'standard_price': 11,
+            'list_price': 13,
+            'type': 'service',
+            'service_tracking': 'no',
+            'project_id': False,
+            'invoice_policy': 'delivery',
+            'service_type': 'timesheet',
+        })
 
     def setUp(self):
         super().setUp()

@@ -579,6 +579,18 @@ class Project(models.Model):
         return not self.allow_billable
 
     def action_view_tasks(self):
+        if self.env.context.get('generate_milestone'):
+            line_id = self.env.context.get('default_sale_line_id')
+            default_line = self.env['sale.order.line'].browse(line_id)
+            milestone = self.env['project.milestone'].create({
+                'name': default_line.name,
+                'project_id': self.id,
+                'sale_line_id': line_id,
+                'quantity_percentage': 1,
+            })
+            if default_line.product_id.service_tracking == 'task_in_project':
+                default_line.task_id.milestone_id = milestone.id
+
         action = super().action_view_tasks()
         action['context']['hide_partner'] = self._get_hide_partner()
         return action

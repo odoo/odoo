@@ -118,7 +118,44 @@ class TestSaleProjectCommon(TestSaleCommon):
             'taxes_id': False,
             'property_account_income_id': cls.account_sale.id,
         })
-
+        price_vals = {
+            'standard_price': 11,
+            'list_price': 13,
+        }
+        service_vals = {
+            'type': 'service',
+            'service_tracking': 'no',
+            'project_id': False,
+        }
+        (
+            cls.product_service_ordered_prepaid,
+            cls.product_service_delivered_milestone,
+            cls.product_service_delivered_manual,
+            cls.product_consumable,
+        ) = cls.env['product.product'].create([{
+            'name': "Service prepaid",
+            **price_vals,
+            **service_vals,
+            'invoice_policy': 'order',
+            'service_type': 'manual',
+        }, {
+            'name': "Service milestone",
+            **price_vals,
+            **service_vals,
+            'invoice_policy': 'delivery',
+            'service_type': 'milestones',
+        }, {
+            'name': "Service manual",
+            **price_vals,
+            **service_vals,
+            'invoice_policy': 'delivery',
+            'service_type': 'manual',
+        }, {
+            'name': "Consumable",
+            **price_vals,
+            'type': 'consu',
+            'invoice_policy': 'order',
+        }])
         # -- devliered_milestones (delivered, milestones)
         product_milestone_vals = {
             'type': 'service',

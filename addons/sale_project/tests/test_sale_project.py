@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests.common import TransactionCase, users
+from odoo.tests.common import new_test_user
+from .common import TestSaleProjectCommon
+from odoo.tests.common import tagged
 
-
-class TestSaleProject(TransactionCase):
+@tagged('post_install', '-at_install')
+class TestSaleProject(TestSaleProjectCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -207,14 +209,12 @@ class TestSaleProject(TransactionCase):
         self.product_order_service3.type = 'service'
         self.assertTrue(sale_order_line.is_service, "As the product is a service, the SOL should be a service")
 
-    @users('demo')
     def test_cancel_so_linked_to_project(self):
         """ Test that cancelling a SO linked to a project will not raise an error """
         # Ensure user don't have edit right access to the project
         group_sale_manager = self.env.ref('sales_team.group_sale_manager')
         group_project_user = self.env.ref('project.group_project_user')
         self.env.user.write({'groups_id': [(6, 0, [group_sale_manager.id, group_project_user.id])]})
-
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -230,7 +230,83 @@ class TestSaleProject(TransactionCase):
 
         sale_order.action_confirm()
         self.assertEqual(self.project_global.tasks.sale_line_id.id, sale_order_line.id, "The project tasks should be linked to the SOL from the SO")
-
-        self.project_global.sale_line_id = sale_order_line
+        #use of sudo() since the env.user does not have the access right to edit projects.
+        self.project_global.sudo().sale_line_id = sale_order_line
         sale_order.with_context({'disable_cancel_warning': True}).action_cancel()
         self.assertFalse(self.project_global.sale_line_id, "The project should not be linked to the SOL anymore")
+
+    def test_compute_project_and_task_button(self):
+        """
+            Ensures that when a sale order has at least one sol with a service product whose service-policy is either delivered on milestone or ordered prepaid, then the
+            show_create_project_button is set to True. If the sale order also has one project linked to it, then the show_project_and_task_button should be True, and the show_create_button
+            should be updated to False
+        """
+        sale_order_1 = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+        })
+        sale_order_2 = sale_order_1.copy()
+        sale_order_3 = sale_order_1.copy()
+        (sale_order_1 | sale_order_2 | sale_order_3).action_confirm()
+        # consumable product, manual service product
+        self.env['sale.order.line'].create([{
+            'product_id': self.product_consumable.id,
+            'order_id': sale_order_1.id,
+        }])
+        self.assertFalse(sale_order_1.show_create_project_button, "There is no service product with one of the correct service_policy on the sale order, the button should be hidden")
+        self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
+        self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
+        # add a milestone product
+        line_delivered_milestone = self.env['sale.order.line'].create({
+            'product_id': self.product_service_delivered_milestone.id,
+            'order_id': sale_order_1.id,
+        })
+        # the user does not have project creation right
+        user_wrong_group = new_test_user(self.env, groups='sales_team.group_sale_manager,project.group_project_user', login='wendy', name='wendy')
+        sale_order_1.with_user(user_wrong_group)._compute_show_project_and_task_button()
+        self.assertFalse(sale_order_1.show_create_project_button, "The user does not have the right to create a new project, the button should be hidden")
+        self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
+        self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
+        # the user has project creation right
+        sale_order_1._compute_show_project_and_task_button()
+        self.assertTrue(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on milestone' on the sale order, the button should be displayed")
+        self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
+        self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
+        # add a project to the SO
+        line_delivered_milestone.project_id = self.project_global
+        sale_order_1._compute_show_project_and_task_button()
+        self.assertFalse(sale_order_1.show_create_project_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be hidden")
+        self.assertTrue(sale_order_1.show_project_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be displayed")
+        self.assertTrue(sale_order_1.show_task_button, "There is a product service with the service_policy set on 'delivered on milestone' and a project on the sale order, the button should be displayed")
+
+        # add an ordered_prepaid service product
+        line_prepaid = self.env['sale.order.line'].create({
+            'product_id': self.product_service_ordered_prepaid.id,
+            'order_id': sale_order_2.id,
+        })
+        sale_order_2._compute_show_project_and_task_button()
+        self.assertTrue(sale_order_2.show_create_project_button, "There is a product service with the service_policy set on 'ordered_prepaid' on the sale order, the button should be displayed")
+        self.assertFalse(sale_order_2.show_project_button, "There is no project on the sale order, the button should be hidden")
+        self.assertFalse(sale_order_2.show_task_button, "There is no project on the sale order, the button should be hidden")
+        # create a new task, whose sale order item is a sol of the SO
+        self.env['project.task'].create({
+            'name': 'Test Task',
+            'project_id': self.project_global.id,
+            'sale_line_id': line_prepaid.id,
+        })
+        sale_order_2._compute_tasks_ids()
+        sale_order_2._compute_show_project_and_task_button()
+        self.assertTrue(sale_order_2.show_create_project_button, "There is a product service with the service_policy set on 'ordered_prepaid' on the sale order, the button should be displayed")
+        self.assertFalse(sale_order_2.show_project_button, "There is no project on the sale order, the button should be hidden")
+        self.assertTrue(sale_order_2.show_task_button, "There is no project on the sale order and there is a task whose sale item is one of the sale_line of the SO, the button should be displayed")
+
+        # add a manual service product
+        self.env['sale.order.line'].create({
+            'product_id': self.product_service_delivered_manual.id,
+            'order_id': sale_order_3.id,
+        })
+        sale_order_3._compute_show_project_and_task_button()
+        self.assertTrue(sale_order_3.show_create_project_button, "There is a product service with the service_policy set on 'manual' on the sale order, the button should be displayed")
+        self.assertFalse(sale_order_3.show_project_button, "There is no project on the sale order, the button should be hidden")
+        self.assertFalse(sale_order_3.show_task_button, "There is no project on the sale order, the button should be hidden")
