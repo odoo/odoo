@@ -68,3 +68,26 @@
 .o_Composer_buttonDiscard {
     border: $border-width solid lighten($gray-400, 5%);
 }
+
+.o_Message_highlightIndicator {
+    width: 4px;
+    background-color: $o-enterprise-primary-color;
+}
+
+.o_Reply_to_content {
+    background-color: rgba($o-enterprise-primary-color, .1);
+
+    .o_Message_content {
+        p, div, em {
+            display: inline;
+            margin: 0;
+        }
+
+        br {
+            content: "";
+            &:after {
+                content: " ";
+            }
+        }
+    }
+}

@@ -29,12 +29,32 @@
                 </t>
                 <t t-if="composerView.hasHeader">
                     <div class="o_Composer_coreHeader text-truncate" t-att-class="{ 'small p-2': composerView.isInChatWindow or composerView.isInDiscuss }">
-                        <t t-if="composerView.threadView and composerView.threadView.replyingToMessageView">
-                            <span class="cursor-pointer" t-on-click="composerView.onClickReplyingToMessage">
-                                Replying to <b t-esc="composerView.threadView.replyingToMessageView.message.authorName"/>
+                        <div class="d-flex" t-if="composerView.threadView and composerView.threadView.replyingToMessageView">
+                            <t t-set="replyingToMessageView" t-value="composerView.threadView.replyingToMessageView"/>
+                            <span class="o_Reply_to_content position-relative flex-grow-1 overflow-hidden cursor-pointer rounded-start-2" t-on-click="composerView.onClickReplyingToMessage">
+                                <div class="o_Message_highlightIndicator position-absolute top-0 start-0 h-100"/>
+                                <div class="o_Message_core my-1 mx-2 ps-1">
+                                    <div class="o_Message_header d-flex">
+                                        <b class="o_Message_authorName text-truncate" t-out="replyingToMessageView.message.authorName"/>
+                                    </div>
+                                    <div class="o_Message_content text-truncate" t-ref="content">
+                                        <div t-if="!replyingToMessageView.message.isBodyEmpty" class="o_Message_prettyBody">
+                                            <t t-out="replyingToMessageView.message.prettyBodyAsMarkup"/>
+                                        </div>
+                                        <div t-else="" class="text-muted">
+                                            <t t-foreach="replyingToMessageView.attachmentList.attachments" t-as="attachment" t-key="attachment.localId">
+                                                <em>
+                                                    "<t t-out="attachment.displayName"/>"
+                                                </em>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
                             </span>
-                            <i t-if="composerView.threadView.thread !== messaging.inbox.thread" class="o_Composer_cancelReply fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="composerView.onClickStopReplying"/>
-                        </t>
+                            <div t-if="composerView.threadView.thread !== messaging.inbox.thread" class="d-flex align-items-center rounded-end-2 cursor-pointer bg-300" title="Stop replying" t-on-click="composerView.onClickStopReplying">
+                                <i class="o_Composer_cancelReply fa fa-lg fa-times mx-1 px-2"/>
+                            </div>
+                        </div>
                         <t t-if="composerView.hasThreadName">
                             <span class="o_Composer_threadName">
                                 on: <b><t t-esc="composerView.composer.activeThread.displayName"/></b>
