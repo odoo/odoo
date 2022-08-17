@@ -9,15 +9,18 @@ import struct
 import selectors
 import threading
 import time
-from collections import deque
-from contextlib import suppress
+from collections import defaultdict, deque
+from contextlib import closing, suppress
 from enum import IntEnum
 from itertools import count
 from weakref import WeakSet
 
 from werkzeug.exceptions import BadRequest, HTTPException
 
+from odoo import api
 from odoo.http import Response
+from odoo.modules.registry import Registry
+from odoo.service import model as service_model
 from odoo.service.server import CommonServer
 from odoo.tools import config
 
@@ -101,6 +104,16 @@ class RateLimitExceededException(Exception):
     Raised when a client exceeds the number of request in a given
     time.
     """
+
+
+# ------------------------------------------------------
+# WEBSOCKET LIFECYCLE
+# ------------------------------------------------------
+
+
+class LifecycleEvent(IntEnum):
+    OPEN = 0
+    CLOSE = 1
 
 
 # ------------------------------------------------------
@@ -201,6 +214,7 @@ class CloseFrame(Frame):
 
 class Websocket:
     _instances = WeakSet()
+    _event_callbacks = defaultdict(set)
     # Maximum size for a message in bytes, whether it is sent as one
     # frame or many fragmented ones.
     MESSAGE_MAX_SIZE = 2 ** 20
@@ -214,7 +228,9 @@ class Websocket:
     # How many seconds between each request.
     RL_DELAY = float(config['websocket_rate_limit_delay'])
 
-    def __init__(self, socket):
+    def __init__(self, socket, session):
+        # Session linked to the current websocket connection.
+        self._session = session
         self._socket = socket
         self._close_sent = False
         self._close_received = False
@@ -227,6 +243,7 @@ class Websocket:
         self._incoming_frame_timestamps = deque(maxlen=type(self).RL_BURST)
         self.state = ConnectionState.OPEN
         type(self)._instances.add(self)
+        self._trigger_lifecycle_event(LifecycleEvent.OPEN)
 
     # ------------------------------------------------------
     # PUBLIC METHODS
@@ -283,6 +300,16 @@ class Websocket:
             self._enqueue_close_frame(code, reason)
         else:
             self._terminate()
+
+    @classmethod
+    def onopen(cls, func):
+        cls._event_callbacks[LifecycleEvent.OPEN].add(func)
+        return func
+
+    @classmethod
+    def onclose(cls, func):
+        cls._event_callbacks[LifecycleEvent.CLOSE].add(func)
+        return func
 
     # ------------------------------------------------------
     # PRIVATE METHODS
@@ -485,6 +512,7 @@ class Websocket:
         self._selector.close()
         self._socket.close()
         self.state = ConnectionState.CLOSED
+        self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
 
     def _handle_control_frame(self, frame):
         if frame.opcode is Opcode.PING:
@@ -546,6 +574,25 @@ class Websocket:
         for websocket in cls._instances:
             if websocket.state is ConnectionState.OPEN:
                 websocket.disconnect(CloseCode.GOING_AWAY)
+
+    def _trigger_lifecycle_event(self, event_type):
+        """
+        Trigger a lifecycle event that is, call every function
+        registered for this event type. Every callback is given both the
+        environment and the related websocket.
+        """
+        registry = Registry(self._session.db)
+        with closing(registry.cursor()) as cr:
+            env = api.Environment(cr, self._session.uid, self._session.context)
+            for callback in type(self)._event_callbacks[event_type]:
+                try:
+                    service_model.retrying(functools.partial(callback, env, self), env)
+                except Exception:
+                    _logger.warning(
+                        'Error during Websocket %s callback',
+                        LifecycleEvent(event_type).name,
+                        exc_info=True
+                    )
 
 
 class TimeoutReason(IntEnum):
@@ -640,7 +687,7 @@ class WebsocketConnectionHandler:
         response = cls._get_handshake_response(request.httprequest.headers)
         response.call_on_close(functools.partial(
             cls._serve_forever,
-            Websocket(request.httprequest.environ['socket']),
+            Websocket(request.httprequest.environ['socket'], request.session),
         ))
         return response
 
