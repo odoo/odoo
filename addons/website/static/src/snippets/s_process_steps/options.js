@@ -76,14 +76,16 @@ options.registry.StepsConnector = options.Class.extend({
             const stepSize = this._getStepColSize(steps[i]);
             const nextStepSize = this._getStepColSize(steps[i + 1]);
             const nextStepPadding = this._getStepColPadding(steps[i + 1]);
-
-            connectorEl.style.left = `calc(50% + ${stepMainElementRect.width / 2}px)`;
-            connectorEl.style.height = `${stepMainElementRect.height}px`;
-            connectorEl.style.width = `calc(${100 * (stepSize / 2 + nextStepPadding + nextStepSize / 2) / stepSize}% - ${stepMainElementRect.width / 2}px - ${nextStepMainElementRect.width / 2}px)`;
-            connectorEl.classList.toggle('d-none', nextStepMainElementRect.top > stepMainElementRect.bottom);
-            const {height, width} = connectorEl.getBoundingClientRect();
-            connectorEl.setAttribute('viewBox', `0 0 ${width} ${height}`);
-            connectorEl.querySelector('path').setAttribute('d', this._getPath(type, width, height));
+            
+            if(connectorEl){
+                connectorEl.style.left = `calc(50% + ${stepMainElementRect.width / 2}px)`;
+                connectorEl.style.height = `${stepMainElementRect.height}px`;
+                connectorEl.style.width = `calc(${100 * (stepSize / 2 + nextStepPadding + nextStepSize / 2) / stepSize}% - ${stepMainElementRect.width / 2}px - ${nextStepMainElementRect.width / 2}px)`;
+                connectorEl.classList.toggle('d-none', nextStepMainElementRect.top > stepMainElementRect.bottom);
+                const {height, width} = connectorEl.getBoundingClientRect();
+                connectorEl.setAttribute('viewBox', `0 0 ${width} ${height}`);
+                connectorEl.querySelector('path').setAttribute('d', this._getPath(type, width, height));
+            }
         }
     },
     /**
