@@ -164,13 +164,15 @@
                     <field name="legend_normal" invisible="1"/>
                     <field name="legend_done" invisible="1"/>
                     <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                    <field name="kanban_state" widget="state_selection" class="ml-3 float-right"/>
-                    <field name="website_image" widget="image" class="oe_avatar"/>
-                    <div class="oe_title">
-                        <label for="name"/>
-                        <h1>
-                            <field name="name" placeholder="e.g. Inspiring Business Talk"/>
-                        </h1>
+                    <div class="d-flex mb-3">
+                        <div class="flex-grow-1">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Inspiring Business Talk"/>
+                            </h1>
+                        </div>
+                        <field name="website_image" widget="image" class="oe_avatar mx-4"/>
+                        <field name="kanban_state" widget="state_selection"/>
                     </div>
                     <group>
                         <group>
