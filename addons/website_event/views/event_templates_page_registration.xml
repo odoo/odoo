@@ -42,27 +42,24 @@
                         <div class="o_wevent_sidebar_block">
                             <h6 class="o_wevent_sidebar_title">Date &amp; Time</h6>
                             <div class="d-flex">
-                                <h5 t-field="event.date_begin" class="my-1 me-1 oe_hide_on_date_edit" t-options="{'tz_name': event.date_tz, 'date_only': 'true', 'format': 'EEEE'}"/>
-                                <h5 class="my-1 oe_hide_on_date_edit" t-field="event.date_begin" t-options="{'tz_name': event.date_tz, 'date_only': 'true', 'format': 'long'}" itemprop="startDate" t-att-datetime="event.date_begin"/>
+                                <h5 t-field="event.date_begin" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'EEEE MMMM dd, YYYY'}" t-att-datetime="event.date_begin"/>
                             </div>
                             <t t-if="not event.is_one_day">Start -</t>
-                            <span t-field="event.date_begin" t-options="{'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                            <span t-out="event.date_begin" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
                             <t t-if="event.is_one_day">
                                 <i class="fa fa-long-arrow-right mx-1"/>
-                                <span t-field="event.date_end" t-options="{'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
-                                (<span t-out="event.date_tz"/>)
                             </t>
                             <t t-else="">
                                 (<span t-out="event.date_tz"/>)
                                 <i class="fa fa-long-arrow-down d-block text-muted mx-3 my-2" style="font-size: 1.5rem"/>
                                 <div class="d-flex">
-                                    <h5 t-field="event.date_end" class="my-1 me-1 oe_hide_on_date_edit" t-options="{'tz_name': event.date_tz, 'date_only': 'true', 'format': 'EEEE'}"/>
-                                    <h5 class="my-1 oe_hide_on_date_edit" t-field="event.date_end" t-options="{'tz_name': event.date_tz, 'date_only': 'true', 'format': 'long'}"/>
+                                    <h5 t-field="event.date_end" class="my-1" t-options="{'tz_name': event.date_tz, 'format': 'EEEE MMMM dd, YYYY'}"/>
                                 </div>
                                 <t t-if="not event.is_one_day">End -</t>
-                                <span t-field="event.date_end" t-options="{'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
-                                (<span t-out="event.date_tz"/>)
                             </t>
+                            <span t-if="not event.is_one_day" t-out="event.date_end" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                            <span t-else="" t-field="event.date_end" t-options="{'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}" t-att-datetime="event.date_end"/>
+                            (<span t-out="event.date_tz"/>)
 
                             <div class="dropdown">
                                 <i class="fa fa-calendar me-1"/>
