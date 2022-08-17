@@ -6,7 +6,6 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
-import { qweb } from 'web.core';
 import { get_cookie, set_cookie, unaccent } from 'web.utils';
 
 registerModel({
@@ -54,7 +53,7 @@ registerModel({
             }
         },
         askFeedback() {
-            this.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled', true);
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled', true);
             this.messaging.publicLivechatGlobal.update({ feedbackView: {} });
             /**
              * When we enter the "ask feedback" process of the chat, we hide some elements that become
@@ -66,59 +65,28 @@ registerModel({
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed = true;
-                this.chatbotSaveSession();
+                this.messaging.publicLivechatGlobal.chatbot.saveSession();
             }
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
-            this.chatWindow.legacyChatWindow.$('.o_composer_text_field')
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field')
                 .removeClass('d-none')
                 .val('');
-        },
-        /**
-         * Once the script ends, adds a visual element at the end of the chat window allowing to restart
-         * the whole script.
-         */
-        chatbotEndScript() {
-            if (
-                this.messaging.publicLivechatGlobal.chatbot.currentStep &&
-                this.messaging.publicLivechatGlobal.chatbot.currentStep.data &&
-                this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed
-            ) {
-                // don't touch anything if the user has closed the conversation, let the chat window
-                // handle the display
-                return;
-            }
-            this.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click', this.onChatbotRestartScript);
-        },
-        /**
-         * Register current chatbot step state into localStorage to be able to resume if the visitor
-         * goes to another website page or if he refreshes his page.
-         *
-         * (Will not work if the visitor switches browser but his livechat session will not be restored
-         *  anyway in that case, since it's stored into a cookie).
-         */
-        chatbotSaveSession() {
-            localStorage.setItem('im_livechat.chatbot.state.uuid_' + this.messaging.publicLivechatGlobal.publicLivechat.uuid, JSON.stringify({
-                '_chatbot': this.messaging.publicLivechatGlobal.chatbot.data,
-                '_chatbotCurrentStep': this.messaging.publicLivechatGlobal.chatbot.currentStep.data,
-            }));
         },
         /**
          * Restart the script and then trigger the "next step" (which will be the first of the script
          * in this case).
          */
         async onChatbotRestartScript(ev) {
-            this.chatWindow.legacyChatWindow.$('.o_composer_text_field').removeClass('d-none');
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field').removeClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
 
-            if (this.chatbotNextStepTimeout) {
-                clearTimeout(this.chatbotNextStepTimeout);
+            if (this.messaging.publicLivechatGlobal.chatbot.nextStepTimeout) {
+                clearTimeout(this.messaging.publicLivechatGlobal.chatbot.nextStepTimeout);
             }
 
-            if (this.chatbotWelcomeMessageTimeout) {
-                clearTimeout(this.chatbotWelcomeMessageTimeout);
+            if (this.messaging.publicLivechatGlobal.chatbot.welcomeMessageTimeout) {
+                clearTimeout(this.messaging.publicLivechatGlobal.chatbot.welcomeMessageTimeout);
             }
 
             const postedMessage = await this.messaging.rpc({
@@ -134,41 +102,16 @@ registerModel({
             }
 
             this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: clear() });
-            this.chatbotSetIsTyping();
-            this.update({
-                chatbotNextStepTimeout: setTimeout(
-                    this.widget._chatbotTriggerNextStep.bind(this.widget),
+            this.messaging.publicLivechatGlobal.chatbot.setIsTyping();
+            this.messaging.publicLivechatGlobal.chatbot.update({
+                nextStepTimeout: setTimeout(
+                    this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
                     this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                 ),
             });
         },
-        /**
-         * See 'chatbotSaveSession'.
-         *
-         * We retrieve the livechat uuid from the session cookie since the livechat Widget is not yet
-         * initialized when we restore the chatbot state.
-         *
-         * We also clear any older keys that store a previously saved chatbot session.
-         * (In that case we clear the actual browser's local storage, we don't use the localStorage
-         * object as it does not allow browsing existing keys, see 'local_storage.js'.)
-         */
-        chatbotRestoreSession() {
-            const browserLocalStorage = window.localStorage;
-            if (browserLocalStorage && browserLocalStorage.length) {
-                for (let i = 0; i < browserLocalStorage.length; i++) {
-                    const key = browserLocalStorage.key(i);
-                    if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.messaging.publicLivechatGlobal.chatbotSessionCookieKey) {
-                        browserLocalStorage.removeItem(key);
-                    }
-                }
-            }
-            const chatbotState = localStorage.getItem(this.messaging.publicLivechatGlobal.chatbotSessionCookieKey);
-            if (chatbotState) {
-                this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: { data: this.messaging.publicLivechatGlobal.localStorageChatbotState._chatbotCurrentStep } });
-            }
-        },
         closeChat() {
-            this.update({ chatWindow: clear() });
+            this.messaging.publicLivechatGlobal.update({ chatWindow: clear() });
             set_cookie('im_livechat_session', "", -1); // remove cookie
         },
         /**
@@ -191,41 +134,13 @@ registerModel({
             }
         },
         async openChatWindow() {
-            this.update({ chatWindow: {} });
-            await this.chatWindow.legacyChatWindow.appendTo($('body'));
+            this.messaging.publicLivechatGlobal.update({ chatWindow: {} });
+            await this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.appendTo($('body'));
             const cssProps = { bottom: 0 };
             cssProps[this.messaging.locale.textDirection === 'rtl' ? 'left' : 'right'] = 0;
-            this.chatWindow.legacyChatWindow.$el.css(cssProps);
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$el.css(cssProps);
             this.widget.$el.hide();
             this._openChatWindowChatbot();
-        },
-        /**
-         * Adds a small "is typing" animation into the chat window.
-         *
-         * @param {boolean} [isWelcomeMessage=false]
-         */
-        chatbotSetIsTyping(isWelcomeMessage = false) {
-            if (this.isTypingTimeout) {
-                clearTimeout(this.isTypingTimeout);
-            }
-            this.widget._chatbotDisableInput('');
-            this.update({
-                isTypingTimeout: setTimeout(
-                    () => {
-                        this.chatWindow.legacyChatWindow.$('.o_mail_thread_content').append(
-                            $(qweb.render('im_livechat.legacy.chatbot.is_typing_message', {
-                                'chatbotImageSrc': `/im_livechat/operator/${
-                                    this.messaging.publicLivechatGlobal.publicLivechat.operator.id
-                                }/avatar`,
-                                'chatbotName': this.messaging.publicLivechatGlobal.chatbot.name,
-                                'isWelcomeMessage': isWelcomeMessage,
-                            }))
-                        );
-                        this.chatWindow.publicLivechatView.widget.scrollToBottom();
-                    },
-                    this.messaging.publicLivechatGlobal.chatbot.messageDelay / 3,
-                ),
-            });
         },
         /**
          * @param {Object} message
@@ -234,6 +149,37 @@ registerModel({
             await this._sendMessageChatbotBefore();
             await this._sendMessage(message);
             this._sendMessageChatbotAfter();
+        },
+        start() {
+            this.widget.$el.text(this.buttonText);
+            if (this.messaging.publicLivechatGlobal.history) {
+                for (const m of this.messaging.publicLivechatGlobal.history) {
+                    this.addMessage(m);
+                }
+                this.openChat();
+            } else if (!this.messaging.device.isSmall && this.messaging.publicLivechatGlobal.rule.action === 'auto_popup') {
+                const autoPopupCookie = get_cookie('im_livechat_auto_popup');
+                if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
+                    this.update({
+                        autoOpenChatTimeout: setTimeout(
+                            this.openChat,
+                            this.messaging.publicLivechatGlobal.rule.auto_popup_timer * 1000,
+                        ),
+                    });
+                }
+            }
+            if (this.buttonBackgroundColor) {
+                this.widget.$el.css('background-color', this.buttonBackgroundColor);
+            }
+            if (this.buttonTextColor) {
+                this.widget.$el.css('color', this.buttonTextColor);
+            }
+    
+            // If website_event_track installed, put the livechat banner above the PWA banner.
+            const pwaBannerHeight = $('.o_pwa_install_banner').outerHeight(true);
+            if (pwaBannerHeight) {
+                this.widget.$el.css('bottom', pwaBannerHeight + 'px');
+            }
         },
         /**
          * @private
@@ -256,16 +202,6 @@ registerModel({
          */
         _computeButtonTextColor() {
             return this.messaging.publicLivechatGlobal.options.button_text_color;
-        },
-        /**
-         * @private
-         * @returns {integer|FieldCommand}
-         */
-        _computeChatbotMessageDelay() {
-            if (this.messaging.publicLivechatGlobal.isWebsiteLivechatChatbotFlow) {
-                return 100;
-            }
-            return clear();
         },
         /**
          * @private
@@ -333,10 +269,10 @@ registerModel({
             if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
                 return true;
             }
-            if (this.messaging.publicLivechatGlobal.chatbotState === 'welcome') {
+            if (this.messaging.publicLivechatGlobal.chatbot.state === 'welcome') {
                 return true;
             }
-            if (this.messaging.publicLivechatGlobal.localStorageChatbotState) {
+            if (this.messaging.publicLivechatGlobal.chatbot.localStorageState) {
                 return true;
             }
             return clear();
@@ -361,7 +297,7 @@ registerModel({
          */
         _computeServerUrl() {
             if (this.isChatbot) {
-                return this.messaging.publicLivechatGlobal.chatbotServerUrl;
+                return this.messaging.publicLivechatGlobal.chatbot.serverUrl;
             }
             return this.messaging.publicLivechatGlobal.serverUrl;
         },
@@ -449,8 +385,8 @@ registerModel({
          */
         _openChatWindowChatbot() {
             window.addEventListener('resize', () => {
-                if (this.chatWindow) {
-                    this.chatWindow.publicLivechatView.widget.scrollToBottom();
+                if (this.messaging.publicLivechatGlobal.chatWindow) {
+                    this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
                 }
             });
 
@@ -493,13 +429,13 @@ registerModel({
                 }
                 this.closeChat();
             }
-            this.chatWindow.publicLivechatView.widget.scrollToBottom();
+            this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
         },
         /**
          * @private
          */
         _sendMessageChatbotAfter() {
-            if (this.isChatbotRedirecting) {
+            if (this.messaging.publicLivechatGlobal.chatbot.isRedirecting) {
                 return;
             }
             if (
@@ -513,19 +449,19 @@ registerModel({
                 ) {
                     return; // operator has taken over the conversation, let them speak
                 } else if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
-                    this.widget._debouncedChatbotAwaitUserInput();
+                    this.messaging.publicLivechatGlobal.chatbot.debouncedAwaitUserInput();
                 } else if (!this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
-                    this.chatbotSetIsTyping();
-                    this.update({
-                        chatbotNextStepTimeout: setTimeout(
-                            this.widget._chatbotTriggerNextStep.bind(this.widget),
+                    this.messaging.publicLivechatGlobal.chatbot.setIsTyping();
+                    this.messaging.publicLivechatGlobal.chatbot.update({
+                        nextStepTimeout: setTimeout(
+                            this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
                             this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                         ),
                     });
                 } else {
-                    this.chatbotEndScript();
+                    this.messaging.publicLivechatGlobal.chatbot.endScript();
                 }
-                this.chatbotSaveSession();
+                this.messaging.publicLivechatGlobal.chatbot.saveSession();
             }
         },
         /**
@@ -533,7 +469,7 @@ registerModel({
          * - If the conversation has been forwarded to an operator
          *   Then there is nothing to do, we let them speak
          * - If we are currently on a 'free_input_multi' step
-         *   Await more user input (see #_chatbotAwaitUserInput() for details)
+         *   Await more user input (see #Chatbot/awaitUserInput for details)
          * - Otherwise we continue the script or end it if it's the last step
          *
          * We also save the current session state.
@@ -569,10 +505,6 @@ registerModel({
         }),
         chatbotNextStepTimeout: attr(),
         chatbotWelcomeMessageTimeout: attr(),
-        chatWindow: one('PublicLivechatWindow', {
-            inverse: 'livechatButtonViewOwner',
-            isCausal: true,
-        }),
         currentPartnerId: attr({
             compute: '_computeCurrentPartnerId',
         }),
@@ -593,9 +525,6 @@ registerModel({
             compute: '_computeIsChatbot',
             default: false,
         }),
-        isChatbotRedirecting: attr({
-            default: false,
-        }),
         isOpenChatDebounced: attr({
             compute: '_computeIsOpenChatDebounced',
             default: true,
@@ -614,7 +543,6 @@ registerModel({
         serverUrl: attr({
             compute: '_computeServerUrl',
         }),
-        testChatbotData: attr(),
         titleColor: attr({
             compute: '_computeTitleColor',
         }),

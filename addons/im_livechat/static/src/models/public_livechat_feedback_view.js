@@ -16,7 +16,7 @@ registerModel({
                     this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
                 ),
             });
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.replaceContentWith(this.widget);
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.replaceContentWith(this.widget);
             this.widget.on('feedback_sent', null, this._onFeedbackSent);
             this.widget.on('send_message', null, this._onSendMessage);
         },

@@ -26,7 +26,7 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
             },
         });
         this.messaging.publicLivechatGlobal.update({ isTestChatbot: true });
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({ testChatbotData: chatbotData.chatbot });
+        this.messaging.publicLivechatGlobal.update({ testChatbotData: chatbotData.chatbot });
         this.messaging.publicLivechatGlobal.chatbot.update({
             currentStep: {
                 data: this.messaging.publicLivechatGlobal.chatbot.lastWelcomeStep,
@@ -52,7 +52,7 @@ publicWidget.registry.livechatChatbotTestScript = publicWidget.Widget.extend({
         const messaging = await this.env.services.messaging.get();
         return this._super(...arguments).then(() => {
             messaging.update({
-                publicLivechatGlobal: { isAvailable: true, chatbotServerUrl: this.$el.data().serverUrl },
+                publicLivechatGlobal: { isAvailable: true, chatbot: { serverUrl: this.$el.data().serverUrl } },
             });
             this.livechatButton = new LivechatButtonTestChatbot(this, messaging, this.$el.data());
             this.livechatButton.appendTo(document.body);

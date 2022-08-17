@@ -11,7 +11,7 @@ registerModel({
         _created() {
             this.update({
                 legacyChatWindow: new PublicLivechatWindow(
-                    this.livechatButtonViewOwner.widget,
+                    this.messaging.publicLivechatGlobal.livechatButtonView.widget,
                     this.messaging,
                     this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
                 ),
@@ -40,7 +40,7 @@ registerModel({
         legacyChatWindow: attr({
             default: null,
         }),
-        livechatButtonViewOwner: one('LivechatButtonView', {
+        publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,
             inverse: 'chatWindow',
         }),

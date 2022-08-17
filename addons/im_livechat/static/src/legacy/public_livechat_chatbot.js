@@ -19,14 +19,6 @@ const _t = core._t;
  *   message for a couple seconds and then trigger the next step of the script
  */
  LivechatButton.include({
-    init() {
-        this._super(...arguments);
-
-        // debounced to let the user type several sentences, see '_chatbotAwaitUserInput' for details
-        this._debouncedChatbotAwaitUserInput = _.debounce(
-            this._chatbotAwaitUserInput.bind(this),
-            10000);
-    },
 
     //--------------------------------------------------------------------------
     // Private - Chatbot specifics
@@ -42,41 +34,12 @@ const _t = core._t;
     _chatbotAddMessage(message, options) {
         message.body = utils.Markup(message.body);
         this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(message, options);
-        if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.isAtBottom()) {
+        if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom()) {
             this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: increment() });
         }
 
         if (!options || !options.skipRenderMessages) {
             this._renderMessages();
-        }
-    },
-
-    /**
-     * This method will be transformed into a 'debounced' version (see init).
-     *
-     * The purpose is to handle steps of type 'free_input_multi', that will let the user type in
-     * multiple lines of text before the bot goes to the next step.
-     *
-     * Every time a 'keydown' is detected into the input, or every time a message is sent, we call
-     * this debounced method, which will give the user about 10 seconds to type more text before
-     * the next step is triggered.
-     *
-     * First we check if the last message was sent by the user, to make sure we always let him type
-     * at least one message before moving on.
-     */
-    _chatbotAwaitUserInput() {
-        if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
-            if (this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
-            } else {
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
-                this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                    chatbotNextStepTimeout: setTimeout(
-                        this._chatbotTriggerNextStep.bind(this),
-                        this.messaging.publicLivechatGlobal.chatbot.messageDelay,
-                    )
-                });
-            }
         }
     },
 
@@ -131,7 +94,7 @@ const _t = core._t;
      * @private
      */
     _chatbotDisableInput(disableText) {
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_composer_text_field')
+        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field')
             .prop('disabled', true)
             .addClass('text-center fst-italic bg-200')
             .val(disableText);
@@ -141,7 +104,7 @@ const _t = core._t;
      * @private
      */
     _chatbotEnableInput() {
-        const $composerTextField = this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_composer_text_field');
+        const $composerTextField = this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field');
         $composerTextField
             .prop('disabled', false)
             .removeClass('text-center fst-italic bg-200')
@@ -186,17 +149,17 @@ const _t = core._t;
      */
     _chatbotProcessStep() {
         if (this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
+            this.messaging.publicLivechatGlobal.chatbot.endScript();
         } else if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'forward_operator'
                    && this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_operator_found) {
             this._chatbotEnableInput();
         }  else if (this.messaging.publicLivechatGlobal.chatbot.isExpectingUserInput) {
             if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
                 // user has already typed a message in -> trigger next step
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
-                this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                    chatbotNextStepTimeout: setTimeout(
-                        this._chatbotTriggerNextStep.bind(this),
+                this.messaging.publicLivechatGlobal.chatbot.setIsTyping();
+                this.messaging.publicLivechatGlobal.chatbot.update({
+                    nextStepTimeout: setTimeout(
+                        this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
                         this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                     ),
                 });
@@ -215,19 +178,19 @@ const _t = core._t;
 
             if (triggerNextStep) {
                 let nextStepDelay = this.messaging.publicLivechatGlobal.chatbot.messageDelay;
-                if (this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_typing').length !== 0) {
+                if (this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_typing').length !== 0) {
                     // special case where we already have a "is typing" message displayed
                     // can happen when the previous step did not trigger any message posted from the bot
                     // e.g: previous step was "forward_operator" and no-one is available
                     // -> in that case, don't wait and trigger the next step immediately
                     nextStepDelay = 0;
                 } else {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
+                    this.messaging.publicLivechatGlobal.chatbot.setIsTyping();
                 }
 
-                this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                    chatbotNextStepTimeout: setTimeout(
-                        this._chatbotTriggerNextStep.bind(this),
+                this.messaging.publicLivechatGlobal.chatbot.update({
+                    nextStepTimeout: setTimeout(
+                        this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
                         nextStepDelay,
                     ),
                 });
@@ -235,7 +198,7 @@ const _t = core._t;
         }
 
         if (!this.messaging.publicLivechatGlobal.chatbot.hasRestartButton) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
         }
      },
     /**
@@ -256,7 +219,7 @@ const _t = core._t;
 
         if (emailValidResult.success) {
             this.messaging.publicLivechatGlobal.chatbot.currentStep.data.is_email_valid = true;
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
+            this.messaging.publicLivechatGlobal.chatbot.saveSession();
 
             return true;
         } else {
@@ -268,50 +231,6 @@ const _t = core._t;
 
             return false;
         }
-    },
-    /**
-     * Triggers the next step of the script by calling the associated route.
-     * This will receive the next step and call step processing.
-     *
-     * @private
-     */
-    async _chatbotTriggerNextStep() {
-        let triggerNextStep = true;
-        if (
-            this.messaging.publicLivechatGlobal.chatbot.currentStep &&
-            this.messaging.publicLivechatGlobal.chatbot.currentStep.data &&
-            this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'question_email'
-        ) {
-            triggerNextStep = await this._chatbotValidateEmail();
-        }
-
-        if (!triggerNextStep) {
-            return;
-        }
-
-        const nextStep = await session.rpc('/chatbot/step/trigger', {
-            channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
-            chatbot_script_id: this.messaging.publicLivechatGlobal.chatbot.scriptId,
-        });
-
-        if (nextStep) {
-            if (nextStep.chatbot_posted_message) {
-                this._chatbotAddMessage(nextStep.chatbot_posted_message);
-            }
-
-            this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: { data: nextStep.chatbot_step } });
-
-            this._chatbotProcessStep();
-        } else {
-            // did not find next step -> end the script
-            this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_is_last = true;
-            this._renderMessages();
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
-        }
-
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
-
-        return nextStep;
     },
     /**
      * Returns the 'this.messaging.publicLivechatGlobal.messages' filtered on our special 'welcome' ones.
@@ -350,11 +269,11 @@ const _t = core._t;
 
         const self = this;
 
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
+        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
             $(this).on('click', self._onChatbotOptionClicked.bind(self));
         });
 
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').on('click',
+        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').on('click',
             this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript
         );
 
@@ -374,7 +293,7 @@ const _t = core._t;
         if (this.messaging.publicLivechatGlobal.livechatButtonView.isChatbot) {
             this._sendWelcomeChatbotMessage(
                 0,
-                this.messaging.publicLivechatGlobal.chatbotState === 'welcome' ? 0 : this.messaging.publicLivechatGlobal.chatbot.messageDelay,
+                this.messaging.publicLivechatGlobal.chatbot.state === 'welcome' ? 0 : this.messaging.publicLivechatGlobal.chatbot.messageDelay,
             );
         } else {
             this._super(...arguments);
@@ -429,11 +348,11 @@ const _t = core._t;
 
         if (stepIndex + 1 < this.messaging.publicLivechatGlobal.chatbot.welcomeSteps.length) {
             if (welcomeMessageDelay !== 0) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping(true);
+                this.messaging.publicLivechatGlobal.chatbot.setIsTyping(true);
             }
 
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                chatbotWelcomeMessageTimeout: setTimeout(() => {
+            this.messaging.publicLivechatGlobal.chatbot.update({
+                welcomeMessageTimeout: setTimeout(() => {
                     this._sendWelcomeChatbotMessage(stepIndex + 1, welcomeMessageDelay);
                     this._renderMessages();
                 }, welcomeMessageDelay),
@@ -463,7 +382,7 @@ const _t = core._t;
             this.messaging.publicLivechatGlobal.chatbot.currentStep.data &&
             this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi'
         ) {
-            this._debouncedChatbotAwaitUserInput();
+            this.messaging.publicLivechatGlobal.chatbot.debouncedAwaitUserInput();
         }
     },
 
@@ -486,7 +405,7 @@ const _t = core._t;
         const selectedAnswer = $target.data('chatbotStepAnswerId');
 
         const redirectLink = $target.data('chatbotStepRedirectLink');
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({ isChatbotRedirecting: !!redirectLink });
+        this.messaging.publicLivechatGlobal.chatbot.update({ isRedirecting: !!redirectLink });
 
         await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage({
             content: $target.text().trim(),
@@ -508,7 +427,7 @@ const _t = core._t;
         stepMessage.legacyPublicLivechatMessage.setChatbotStepAnswerId(selectedAnswer);
         this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_selected_answer_id = selectedAnswer;
         this._renderMessages();
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
+        this.messaging.publicLivechatGlobal.chatbot.saveSession();
 
         const saveAnswerPromise = session.rpc('/chatbot/answer/save', {
             channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,

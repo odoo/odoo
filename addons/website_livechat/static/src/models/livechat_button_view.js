@@ -16,7 +16,7 @@ patchRecordMethods('LivechatButtonView', {
      * @override
      */
     async onChatbotRestartScript(ev) {
-        if (this.messaging.publicLivechatGlobal.isWebsiteLivechatChatbotFlow) {
+        if (this.messaging.publicLivechatGlobal.chatbot.isWebsiteLivechatTourFlow) {
             this.messaging.publicLivechatGlobal.update({ messages: clear() });
             this.widget._renderMessages();
         }
@@ -45,7 +45,7 @@ patchRecordMethods('LivechatButtonView', {
             return this._super();
         }
         this.messaging.publicLivechatGlobal.update({
-            publicLivechat: { data: this.testChatbotData.channel },
+            publicLivechat: { data: this.messaging.publicLivechatGlobal.testChatbotData.channel },
         });
         await this.openChatWindow();
         this.widget._sendWelcomeMessage();
