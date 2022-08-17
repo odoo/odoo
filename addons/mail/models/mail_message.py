@@ -870,11 +870,11 @@ class Message(models.Model):
             for reaction in message_sudo.reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
             reaction_groups = [('insert-and-replace', [{
-                'messageId': message_sudo.id,
                 'content': content,
                 'count': len(reactions),
-                'partners': [('insert-and-replace', [{'id': partner.id, 'name': partner.name} for partner in reactions.partner_id])],
                 'guests': [('insert-and-replace', [{'id': guest.id, 'name': guest.name} for guest in reactions.guest_id])],
+                'message': [('insert-and-replace', {'id': message_sudo.id})],
+                'partners': [('insert-and-replace', [{'id': partner.id, 'name': partner.name} for partner in reactions.partner_id])],
             } for content, reactions in reactions_per_content.items()])]
             if format_reply and message_sudo.model == 'mail.channel' and message_sudo.parent_id:
                 vals['parentMessage'] = message_sudo.parent_id.message_format(format_reply=False)[0]
