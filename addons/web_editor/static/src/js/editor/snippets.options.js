@@ -31,9 +31,11 @@ const {
     createDataURL,
     isGif,
 } = require('web_editor.image_processing');
+const OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
 
 var qweb = core.qweb;
 var _t = core._t;
+const preserveCursor = OdooEditorLib.preserveCursor;
 
 /**
  * @param {HTMLElement} el
@@ -4624,7 +4626,9 @@ registry.layout_column = SnippetOptionWidget.extend({
         const previousNbColumns = this.$('> .row').children().length;
         let $row = this.$('> .row');
         if (!$row.length) {
+            const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
             $row = this.$target.contents().wrapAll($('<div class="row"><div class="col-lg-12"/></div>')).parent().parent();
+            restoreCursor();
         }
 
         const nbColumns = parseInt(widgetValue);
@@ -4634,7 +4638,9 @@ registry.layout_column = SnippetOptionWidget.extend({
         // TODO: make this more generic in activate_snippet event handler.
         await new Promise(resolve => setTimeout(resolve));
         if (nbColumns === 0) {
+            const restoreCursor = preserveCursor(this.$target[0].ownerDocument);
             $row.contents().unwrap().contents().unwrap();
+            restoreCursor();
             this.trigger_up('activate_snippet', {$snippet: this.$target});
         } else if (previousNbColumns === 0) {
             this.trigger_up('activate_snippet', {$snippet: this.$('> .row').children().first()});
