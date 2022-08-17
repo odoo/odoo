@@ -8,22 +8,22 @@ import { attr, one } from '@mail/model/model_field';
  * message is used as iterating field.
  */
 registerModel({
-    name: 'MessageListViewMessageViewItem',
+    name: 'MessageListViewItem',
     fields: {
         isSquashed: attr({
             required: true,
         }),
         message: one('Message', {
             identifying: true,
-            inverse: 'messageListViewMessageViewItems',
+            inverse: 'messageListViewItems',
         }),
         messageListViewOwner: one('MessageListView', {
             identifying: true,
-            inverse: 'messageListViewMessageViewItems',
+            inverse: 'messageListViewItems',
         }),
         messageView: one('MessageView', {
             default: {},
-            inverse: 'messageListViewMessageViewItemOwner',
+            inverse: 'messageListViewItemOwner',
             isCausal: true,
             readonly: true,
             required: true,

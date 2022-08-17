@@ -1300,7 +1300,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     // send a command that leads to receiving a transient message
     await insertText('.o_ComposerTextInput_textarea', "/who");
     await click('.o_Composer_buttonSend');
-    const transientMessage = messaging.discuss.threadViewer.threadView.messageListView.messageListViewMessageViewItems[0].message;
+    const transientMessage = messaging.discuss.threadViewer.threadView.messageListView.messageListViewItems[0].message;
 
     // composer is focused by default, we remove that focus
     document.querySelector('.o_ComposerTextInput_textarea').blur();

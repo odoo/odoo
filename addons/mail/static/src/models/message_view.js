@@ -136,8 +136,8 @@ registerModel({
          */
         replyTo() {
             // When already replying to this messageView, discard the reply.
-            if (this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView === this) {
-                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.composerView.discard();
+            if (this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView === this) {
+                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.composerView.discard();
                 return;
             }
             this.message.originThread.update({
@@ -145,7 +145,7 @@ registerModel({
                     isLog: !this.message.is_discussion && !this.message.is_notification,
                 },
             });
-            this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.update({
+            this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.update({
                 replyingToMessageView: this,
                 composerView: {
                     doFocus: true,
@@ -177,8 +177,8 @@ registerModel({
          * Stops editing this message.
          */
         stopEditing() {
-            if (this.messageListViewMessageViewItemOwner && this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.composerView && !this.messaging.device.isMobileDevice) {
-                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.composerView.update({ doFocus: true });
+            if (this.messageListViewItemOwner && this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.composerView && !this.messaging.device.isMobileDevice) {
+                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.composerView.update({ doFocus: true });
             }
             this.update({
                 composerForEditing: clear(),
@@ -225,7 +225,7 @@ registerModel({
          * @returns {string|FieldCommand}
          */
         _computeExtraClass() {
-            if (this.messageListViewMessageViewItemOwner) {
+            if (this.messageListViewItemOwner) {
                 return 'o_MessageList_item o_MessageList_message';
             }
             return clear();
@@ -245,9 +245,9 @@ registerModel({
                 return false;
             }
             if (
-                this.messageListViewMessageViewItemOwner &&
-                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
-                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.correspondent === this.message.author
+                this.messageListViewItemOwner &&
+                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
+                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.correspondent === this.message.author
             ) {
                 return false;
             }
@@ -276,10 +276,10 @@ registerModel({
          */
         _computeIsInDiscuss() {
             return Boolean(
-                this.messageListViewMessageViewItemOwner &&
+                this.messageListViewItemOwner &&
                 (
-                    this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discuss ||
-                    this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discussPublicView
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discuss ||
+                    this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.discussPublicView
                 )
             );
         },
@@ -289,8 +289,8 @@ registerModel({
          */
         _computeIsInChatWindow() {
             return Boolean(
-                this.messageListViewMessageViewItemOwner &&
-                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.chatWindow
+                this.messageListViewItemOwner &&
+                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.chatWindow
             );
         },
         /**
@@ -299,8 +299,8 @@ registerModel({
          */
         _computeIsInChatter() {
             return Boolean(
-                this.messageListViewMessageViewItemOwner &&
-                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.chatter
+                this.messageListViewItemOwner &&
+                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.threadViewer.chatter
             );
         },
         /**
@@ -339,9 +339,9 @@ registerModel({
                             this.message.isCurrentUserOrGuestAuthor
                         ) ||
                         (
-                            this.messageListViewMessageViewItemOwner &&
-                            this.messageListViewMessageViewItemOwner.messageListViewOwner.thread.channel &&
-                            this.messageListViewMessageViewItemOwner.messageListViewOwner.thread.channel.channel_type === 'chat'
+                            this.messageListViewItemOwner &&
+                            this.messageListViewItemOwner.messageListViewOwner.thread.channel &&
+                            this.messageListViewItemOwner.messageListViewOwner.thread.channel.channel_type === 'chat'
                         )
                     )
                 )
@@ -353,8 +353,8 @@ registerModel({
          */
         _computeIsSelected() {
             return Boolean(
-                this.messageListViewMessageViewItemOwner &&
-                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView === this
+                this.messageListViewItemOwner &&
+                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView === this
             );
         },
         /**
@@ -362,8 +362,8 @@ registerModel({
          * @returns {boolean|FieldCommand}
          */
         _computeIsSquashed() {
-            if (this.messageListViewMessageViewItemOwner) {
-                return this.messageListViewMessageViewItemOwner.isSquashed;
+            if (this.messageListViewItemOwner) {
+                return this.messageListViewItemOwner.isSquashed;
             }
             return clear();
         },
@@ -372,8 +372,8 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeMessage() {
-            if (this.messageListViewMessageViewItemOwner) {
-                return this.messageListViewMessageViewItemOwner.message;
+            if (this.messageListViewItemOwner) {
+                return this.messageListViewItemOwner.message;
             }
             if (this.deleteMessageConfirmViewOwner) {
                 return this.deleteMessageConfirmViewOwner.message;
@@ -406,9 +406,9 @@ registerModel({
         _computeMessageSeenIndicatorView() {
             if (
                 this.message.isCurrentUserOrGuestAuthor &&
-                this.messageListViewMessageViewItemOwner &&
-                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
-                this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.hasSeenIndicators
+                this.messageListViewItemOwner &&
+                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
+                this.messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread.hasSeenIndicators
             ) {
                 return {};
             }
@@ -595,7 +595,7 @@ registerModel({
             inverse: 'messageView',
             isCausal: true,
         }),
-        messageListViewMessageViewItemOwner: one('MessageListViewMessageViewItem', {
+        messageListViewItemOwner: one('MessageListViewItem', {
             identifying: true,
             inverse: 'messageView',
         }),
