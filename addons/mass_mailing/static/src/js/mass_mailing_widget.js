@@ -124,6 +124,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         // We don't want to drop snippets directly within the wysiwyg.
         this.$content.removeClass('o_editable');
         initializeDesignTabCss(this.wysiwyg.getEditable());
+        this.wysiwyg.getEditable().find('img').attr('loading', '');
     },
     /**
      * Returns true if the editable area is empty.
@@ -159,11 +160,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
             this.value = this.recordData[this.nodeOptions['inline-field']];
         }
         return this._super.apply(this, arguments);
-    },
-    _createWysiwygInstance: async function () {
-        const res = await this._super(...arguments);
-        this.wysiwyg.getEditable().find('img').attr('loading', '');
-        return res;
     },
 
     /**
