@@ -364,7 +364,7 @@ export function deserializeDateTime(value) {
  * @returns {string}
  */
 export function serializeDate(value) {
-    return value.setZone("utc").toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" });
+    return value.toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" });
 }
 
 /**
