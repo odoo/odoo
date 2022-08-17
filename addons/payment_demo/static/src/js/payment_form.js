@@ -15,13 +15,13 @@ odoo.define('payment_demo.payment_form', require => {
          *
          * @override method from payment.payment_form_mixin
          * @private
-         * @param {string} provider - The provider of the acquirer
-         * @param {number} acquirerId - The id of the acquirer handling the transaction
+         * @param {string} code - The code of the provider
+         * @param {number} providerId - The id of the provider handling the transaction
          * @param {object} processingValues - The processing values of the transaction
          * @return {Promise}
          */
-        _processDirectPayment: function (provider, acquirerId, processingValues) {
-            if (provider !== 'demo') {
+        _processDirectPayment: function (code, providerId, processingValues) {
+            if (code !== 'demo') {
                 return this._super(...arguments);
             }
 
@@ -44,13 +44,13 @@ odoo.define('payment_demo.payment_form', require => {
          *
          * @override method from payment.payment_form_mixin
          * @private
-         * @param {string} provider - The provider of the selected payment option's acquirer
+         * @param {string} code - The code of the selected payment option's provider
          * @param {integer} paymentOptionId - The id of the selected payment option
          * @param {string} flow - The online payment flow of the selected payment option
          * @return {Promise}
          */
-        _prepareInlineForm: function (provider, paymentOptionId, flow) {
-            if (provider !== 'demo') {
+        _prepareInlineForm: function (code, paymentOptionId, flow) {
+            if (code !== 'demo') {
                 return this._super(...arguments);
             } else if (flow === 'token') {
                 return Promise.resolve();

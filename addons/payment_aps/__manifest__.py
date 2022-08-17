@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': "Payment Acquirer: Amazon Payment Services",
+    'name': "Payment Provider: Amazon Payment Services",
     'version': '1.0',
-    'category': 'Accounting/Payment Acquirers',
+    'category': 'Accounting/Payment Providers',
     'sequence': 347,
     'summary': "Amazon Payment Services' online payment provider covering the MENA region.",
     'depends': ['payment'],
@@ -11,7 +11,7 @@
         'views/payment_aps_templates.xml',
         'views/payment_views.xml',
 
-        'data/payment_acquirer_data.xml',
+        'data/payment_provider_data.xml',
     ],
     'application': True,
     'post_init_hook': 'post_init_hook',

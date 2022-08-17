@@ -26,7 +26,7 @@ class PaymentRefundWizard(models.TransientModel):
         string="Refund Amount", compute='_compute_amount_to_refund', store=True, readonly=False
     )
     currency_id = fields.Many2one(string="Currency", related='transaction_id.currency_id')
-    support_refund = fields.Selection(related='transaction_id.acquirer_id.support_refund')
+    support_refund = fields.Selection(related='transaction_id.provider_id.support_refund')
     has_pending_refund = fields.Boolean(
         string="Has a pending refund", compute='_compute_has_pending_refund'
     )

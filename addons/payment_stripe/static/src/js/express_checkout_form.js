@@ -12,20 +12,20 @@ paymentExpressCheckoutForm.include({
      *
      * @override method from payment.express_form
      * @private
-     * @param {Object} acquirerData - The acquirer-specific data.
+     * @param {Object} providerData - The provider-specific data.
      * @return {Promise}
      */
-    async _prepareExpressCheckoutForm(acquirerData) {
-        if (acquirerData.provider !== 'stripe') {
+    async _prepareExpressCheckoutForm(providerData) {
+        if (providerData.providerCode !== 'stripe') {
             return this._super(...arguments);
         }
 
         const isShippingInformationRequired = this._isShippingInformationRequired();
         const stripeJS = Stripe(
-            acquirerData.stripePublishableKey, _prepareStripeOptions(acquirerData)
+            providerData.stripePublishableKey, _prepareStripeOptions(providerData)
         );
         this.stripeExpressCheckoutForm = stripeJS.paymentRequest({
-            country: acquirerData.countryCode,
+            country: providerData.countryCode,
             currency: this.txContext.currencyName,
             total: {
                 label: this.txContext.merchantName,
@@ -57,11 +57,11 @@ paymentExpressCheckoutForm.include({
             const canMakePayment = await this.stripeExpressCheckoutForm.canMakePayment();
             if (canMakePayment) {
                 paymentRequestButton.mount(
-                    `#o_stripe_express_checkout_container_${acquirerData.acquirerId}`
+                    `#o_stripe_express_checkout_container_${providerData.providerId}`
                 );
             } else {
                 document.querySelector(
-                    `#o_stripe_express_checkout_container_${acquirerData.acquirerId}`
+                    `#o_stripe_express_checkout_container_${providerData.providerId}`
                 ).style.display = 'none';
             }
         })();
@@ -102,7 +102,7 @@ paymentExpressCheckoutForm.include({
             // Call the transaction route to create the transaction and retrieve the client secret.
             const { client_secret } = await this._rpc({
                 route: this.txContext.transactionRoute,
-                params: this._prepareTransactionRouteParams(acquirerData.acquirerId),
+                params: this._prepareTransactionRouteParams(providerData.providerId),
             });
             // Confirm the PaymentIntent without handling eventual next actions.
             const { paymentIntent, error: confirmError } = await stripeJS.confirmCardPayment(
@@ -206,13 +206,13 @@ paymentExpressCheckoutForm.include({
      *
      * @override method from payment.express_form
      * @private
-     * @param {Object} acquirerData - The acquirer-specific data.
+     * @param {Object} providerData - The provider-specific data.
      * @param {number} newAmount - The new amount.
      * @param {number} newMinorAmount - The new minor amount.
      * @return {undefined}
      */
-    _updateAmount(acquirerData, newAmount, newMinorAmount) {
-        if (acquirerData.provider !== 'stripe') {
+    _updateAmount(providerData, newAmount, newMinorAmount) {
+        if (providerData.providerCode !== 'stripe') {
             return this._super(...arguments);
         }
 

@@ -11,18 +11,18 @@ from odoo.addons.account_payment.tests.common import AccountPaymentCommon
 class TestAccountPayment(AccountPaymentCommon):
 
     def test_no_amount_available_for_refund_when_not_supported(self):
-        self.acquirer.support_refund = False
+        self.provider.support_refund = False
         tx = self._create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment
         self.assertEqual(
             tx.payment_id.amount_available_for_refund,
             0,
-            msg="The value of `amount_available_for_refund` should be 0 when the acquirer doesn't "
+            msg="The value of `amount_available_for_refund` should be 0 when the provider doesn't "
                 "support refunds."
         )
 
     def test_full_amount_available_for_refund_when_not_yet_refunded(self):
-        self.acquirer.support_refund = 'full_only'  # Should simply not be False
+        self.provider.support_refund = 'full_only'  # Should simply not be False
         tx = self._create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment
         self.assertAlmostEqual(
@@ -34,7 +34,7 @@ class TestAccountPayment(AccountPaymentCommon):
         )
 
     def test_full_amount_available_for_refund_when_refunds_are_pending(self):
-        self.acquirer.write({
+        self.provider.write({
             'support_refund': 'full_only',  # Should simply not be False
             'support_manual_capture': True,  # To create transaction in the 'authorized' state
         })
@@ -58,7 +58,7 @@ class TestAccountPayment(AccountPaymentCommon):
         )
 
     def test_no_amount_available_for_refund_when_fully_refunded(self):
-        self.acquirer.support_refund = 'full_only'  # Should simply not be False
+        self.provider.support_refund = 'full_only'  # Should simply not be False
         tx = self._create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment
         self._create_transaction(
@@ -77,7 +77,7 @@ class TestAccountPayment(AccountPaymentCommon):
         )
 
     def test_no_full_amount_available_for_refund_when_partially_refunded(self):
-        self.acquirer.support_refund = 'partial'
+        self.provider.support_refund = 'partial'
         tx = self._create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment
         self._create_transaction(
@@ -98,7 +98,7 @@ class TestAccountPayment(AccountPaymentCommon):
         )
 
     def test_refunds_count(self):
-        self.acquirer.support_refund = 'full_only'  # Should simply not be False
+        self.provider.support_refund = 'full_only'  # Should simply not be False
         tx = self._create_transaction('redirect', state='done')
         tx._reconcile_after_done()  # Create the payment
         for reference_index, operation in enumerate(
@@ -127,7 +127,7 @@ class TestAccountPayment(AccountPaymentCommon):
             'date': '2019-01-01',
             'currency_id': self.currency.id,
             'partner_id': self.partner.id,
-            'journal_id': self.acquirer.journal_id.id,
+            'journal_id': self.provider.journal_id.id,
             'payment_method_line_id': self.inbound_payment_method_line.id,
         })
         payment_with_token = payment_without_token.copy()

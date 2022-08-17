@@ -25,12 +25,12 @@ checkoutForm.include({
      *
      * @override method from payment.payment_form_mixin
      * @private
-     * @param {string} provider - The provider of the payment option's acquirer
+     * @param {string} code - The code of the payment option's provider
      * @param {number} paymentOptionId - The id of the payment option handling the transaction
      * @param {string} flow - The online payment flow of the transaction
      * @return {Promise}
      */
-    _processPayment: function (provider, paymentOptionId, flow) {
+    _processPayment: function (code, paymentOptionId, flow) {
         if ($('.o_donation_payment_form').length) {
             const errorFields = {};
             if (!this.$('input[name="email"]')[0].checkValidity()) {
@@ -69,12 +69,12 @@ checkoutForm.include({
      *
      * @override method from payment.payment_form_mixin
      * @private
-     * @param {string} provider - The provider of the selected payment option's acquirer
+     * @param {string} code - The code of the selected payment option's provider
      * @param {number} paymentOptionId - The id of the selected payment option
      * @param {string} flow - The online payment flow of the selected payment option
      * @return {object} The extended transaction route params
      */
-    _prepareTransactionRouteParams: function (provider, paymentOptionId, flow) {
+    _prepareTransactionRouteParams: function (code, paymentOptionId, flow) {
         const transactionRouteParams = this._super(...arguments);
         return $('.o_donation_payment_form').length ? {
             ...transactionRouteParams,
@@ -104,7 +104,7 @@ checkoutForm.include({
         this.txContext.amount = amount;
      },
     /**
-     * Update the fees associated to each acquirer.
+     * Update the fees associated to each provider.
      *
      * Called upon change of any parameter that might impact the fees (marked with
      * .o_wpayment_fee_impact).
@@ -118,32 +118,32 @@ checkoutForm.include({
         if (targetId.indexOf("amount") >= 0) {
             this.txContext.amount = ev.target.value;
         }
-        const acquirerIds = [];
+        const providerIds = [];
         for (const card of this.$('.o_payment_option_card:has(.o_payment_fee)')) {
             const radio = $(card).find('input[name="o_payment_radio"]');
-            if (radio.data("paymentOptionType") === 'acquirer') {
-                acquirerIds.push(radio.data("paymentOptionId"));
+            if (radio.data("paymentOptionType") === 'provider') {
+                providerIds.push(radio.data("paymentOptionId"));
             }
         }
         const countryId = this.$('select[name="country_id"]').val();
-        if (acquirerIds && this.txContext.amount) {
+        if (providerIds && this.txContext.amount) {
             this._rpc({
-                route: '/donation/get_acquirer_fees',
+                route: '/donation/get_provider_fees',
                 params: {
-                    'acquirer_ids': acquirerIds,
+                    'provider_ids': providerIds,
                     'amount': this.txContext.amount !== undefined
                         ? parseFloat(this.txContext.amount) : null,
                     'currency_id': this.txContext.currencyId
                         ? parseInt(this.txContext.currencyId) : null,
                     'country_id': countryId,
                 },
-            }).then(feesPerAcquirer => {
+            }).then(feesPerProvider => {
                 for (const card of this.$('.o_payment_option_card:has(.o_payment_fee)')) {
                     const radio = $(card).find('input[name="o_payment_radio"]');
-                    if (radio.data("paymentOptionType") === 'acquirer') {
-                        const acquirerId = radio.data("paymentOptionId");
+                    if (radio.data("paymentOptionType") === 'provider') {
+                        const providerId = radio.data("paymentOptionId");
                         const chunk = $(card).find('.o_payment_fee .oe_currency_value')[0];
-                        chunk.innerText = (feesPerAcquirer[acquirerId] || 0).toFixed(2);
+                        chunk.innerText = (feesPerProvider[providerId] || 0).toFixed(2);
                     }
                 }
             }).guardedCatch(error => {

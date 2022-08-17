@@ -11,18 +11,18 @@ class PaymentToken(models.Model):
     _order = 'partner_id, id desc'
     _description = 'Payment Token'
 
-    acquirer_id = fields.Many2one(
-        string="Acquirer Account", comodel_name='payment.acquirer', required=True)
-    provider = fields.Selection(related='acquirer_id.provider')
+    provider_id = fields.Many2one(
+        string="provider Account", comodel_name='payment.provider', required=True)
+    provider_code = fields.Selection(related='provider_id.code')
     payment_details = fields.Char(
         string="Payment Details", help="The clear part of the payment method's payment details.",
     )
     partner_id = fields.Many2one(string="Partner", comodel_name='res.partner', required=True)
     company_id = fields.Many2one(  # Indexed to speed-up ORM searches (from ir_rule or others)
-        related='acquirer_id.company_id', store=True, index=True)
-    acquirer_ref = fields.Char(
-        string="Acquirer Reference", help="The acquirer reference of the token of the transaction",
-        required=True)  # This is not the same thing as the acquirer reference of the transaction
+        related='provider_id.company_id', store=True, index=True)
+    provider_ref = fields.Char(
+        string="Provider Reference", help="The provider reference of the token of the transaction",
+        required=True)  # This is not the same thing as the provider reference of the transaction
     transaction_ids = fields.One2many(
         string="Payment Transactions", comodel_name='payment.transaction', inverse_name='token_id')
     verified = fields.Boolean(string="Verified")
@@ -33,27 +33,27 @@ class PaymentToken(models.Model):
     @api.model_create_multi
     def create(self, values_list):
         for values in values_list:
-            if 'acquirer_id' in values:
-                acquirer = self.env['payment.acquirer'].browse(values['acquirer_id'])
+            if 'provider_id' in values:
+                provider = self.env['payment.provider'].browse(values['provider_id'])
 
-                # Include acquirer-specific create values
-                values.update(self._get_specific_create_values(acquirer.provider, values))
+                # Include provider-specific create values
+                values.update(self._get_specific_create_values(provider.code, values))
             else:
                 pass  # Let psycopg warn about the missing required field
 
         return super().create(values_list)
 
     @api.model
-    def _get_specific_create_values(self, provider, values):
-        """ Complete the values of the `create` method with acquirer-specific values.
+    def _get_specific_create_values(self, provider_code, values):
+        """ Complete the values of the `create` method with provider-specific values.
 
-        For an acquirer to add its own create values, it must overwrite this method and return a
-        dict of values. Acquirer-specific values take precedence over those of the dict of generic
+        For a provider to add its own create values, it must overwrite this method and return a
+        dict of values. Provider-specific values take precedence over those of the dict of generic
         create values.
 
-        :param str provider: The provider of the acquirer managing the token
+        :param str provider_code: The code of the provider managing the token
         :param dict values: The original create values
-        :return: The dict of acquirer-specific create values
+        :return: The dict of provider-specific create values
         :rtype: dict
         """
         return dict()

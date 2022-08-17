@@ -28,7 +28,7 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
                 'payment_type': 'inbound'
             })
 
-        cls.dummy_acquirer.journal_id = cls.company_data['default_journal_bank'].id,
+        cls.dummy_provider.journal_id = cls.company_data['default_journal_bank'].id,
 
         cls.account = cls.company.account_journal_payment_credit_account_id
         cls.invoice = cls.env['account.move'].create({
@@ -60,23 +60,23 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
     #=== Utils ===#
 
     @classmethod
-    def _prepare_acquirer(cls, provider='none', company=None, update_values=None):
-        """ Override of `payment` to prepare and return the first acquirer matching the given
+    def _prepare_provider(cls, provider_code='none', company=None, update_values=None):
+        """ Override of `payment` to prepare and return the first provider matching the given
         provider and company.
 
-        If no acquirer is found in the given company, we duplicate the one from the base company.
-        All other acquirers belonging to the same company are disabled to avoid any interferences.
+        If no provider is found in the given company, we duplicate the one from the base company.
+        All other providers belonging to the same company are disabled to avoid any interferences.
 
-        :param str provider: The provider of the acquirer to prepare.
-        :param recordset company: The company of the acquirer to prepare, as a `res.company` record.
-        :param dict update_values: The values used to update the acquirer.
-        :return: The acquirer to prepare, if found.
-        :rtype: recordset of `payment.acquirer`
+        :param str provider_code: The code of the provider to prepare.
+        :param recordset company: The company of the provider to prepare, as a `res.company` record.
+        :param dict update_values: The values used to update the provider.
+        :return: The provider to prepare, if found.
+        :rtype: recordset of `payment.provider`
         """
-        acquirer = super()._prepare_acquirer(provider, company, update_values)
-        if not acquirer.journal_id:
-            acquirer.journal_id = cls.env['account.journal'].search(
-                [('company_id', '=', acquirer.company_id.id), ('type', '=', 'bank')],
+        provider = super()._prepare_provider(provider_code, company, update_values)
+        if not provider.journal_id:
+            provider.journal_id = cls.env['account.journal'].search(
+                [('company_id', '=', provider.company_id.id), ('type', '=', 'bank')],
                 limit=1,
             )
-        return acquirer
+        return provider

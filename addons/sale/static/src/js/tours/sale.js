@@ -41,7 +41,7 @@ tour.register("sale_tour", {
     content: _t("Good job, let's continue."),
     position: "top", // dot NOT move to bottom, it would cause a resize flicker
 }, {
-    trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_sale_onboarding_payment_acquirer]',
+    trigger: 'a.o_onboarding_step_action.btn[data-method=action_open_sale_onboarding_payment_provider]',
     extra_trigger: ".o_sale_order",
     content: _t("To speed up order confirmation, we can activate electronic signatures or payments."),
     position: "bottom",

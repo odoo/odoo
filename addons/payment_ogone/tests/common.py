@@ -9,7 +9,7 @@ class OgoneCommon(PaymentCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.ogone = cls._prepare_acquirer('ogone', update_values={
+        cls.ogone = cls._prepare_provider('ogone', update_values={
             'ogone_pspid': 'dummy',
             'ogone_userid': 'dummy',
             'ogone_password': 'dummy',
@@ -18,7 +18,7 @@ class OgoneCommon(PaymentCommon):
             'ogone_hash_function': 'sha1',
         })
 
-        cls.acquirer = cls.ogone
+        cls.provider = cls.ogone
         cls.currency = cls.currency_euro
 
         cls.notification_data = {

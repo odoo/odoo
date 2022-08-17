@@ -59,7 +59,7 @@ class PaymentCommon(TransactionCase):
             'country_id': cls.country_belgium.id,
         })
 
-        # Create a dummy acquirer to allow basic tests without any specific acquirer implementation
+        # Create a dummy provider to allow basic tests without any specific provider implementation
         arch = """
         <form action="dummy" method="post">
             <input type="hidden" name="view_id" t-att-value="viewid"/>
@@ -72,16 +72,16 @@ class PaymentCommon(TransactionCase):
             'arch': arch,
         })
 
-        cls.dummy_acquirer = cls.env['payment.acquirer'].create({
-            'name': "Dummy Acquirer",
-            'provider': 'none',
+        cls.dummy_provider = cls.env['payment.provider'].create({
+            'name': "Dummy Provider",
+            'code': 'none',
             'state': 'test',
             'is_published': True,
             'allow_tokenization': True,
             'redirect_form_view_id': redirect_form.id,
         })
 
-        cls.acquirer = cls.dummy_acquirer
+        cls.provider = cls.dummy_provider
         cls.amount = 1111.11
         cls.company = cls.env.company
         cls.company_id = cls.company.id
@@ -102,7 +102,7 @@ class PaymentCommon(TransactionCase):
         super().setUp()
         if self.account_payment_installed:
             # disable account payment generation if account_payment is installed
-            # because the accounting setup of acquirers is not managed in this common
+            # because the accounting setup of providers is not managed in this common
             self.reconcile_after_done_patcher = patch(
                 'odoo.addons.account_payment.models.payment_transaction.PaymentTransaction._reconcile_after_done',
             )
@@ -120,44 +120,44 @@ class PaymentCommon(TransactionCase):
         return currency
 
     @classmethod
-    def _prepare_acquirer(cls, provider='none', company=None, update_values=None):
-        """ Prepare and return the first acquirer matching the given provider and company.
+    def _prepare_provider(cls, code='none', company=None, update_values=None):
+        """ Prepare and return the first provider matching the given provider and company.
 
-        If no acquirer is found in the given company, we duplicate the one from the base company.
+        If no provider is found in the given company, we duplicate the one from the base company.
 
-        All other acquirers belonging to the same company are disabled to avoid any interferences.
+        All other providers belonging to the same company are disabled to avoid any interferences.
 
-        :param str provider: The provider of the acquirer to prepare
-        :param recordset company: The company of the acquirer to prepare, as a `res.company` record
-        :param dict update_values: The values used to update the acquirer
-        :return: The acquirer to prepare, if found
-        :rtype: recordset of `payment.acquirer`
+        :param str code: The code of the provider to prepare
+        :param recordset company: The company of the provider to prepare, as a `res.company` record
+        :param dict update_values: The values used to update the provider
+        :return: The provider to prepare, if found
+        :rtype: recordset of `payment.provider`
         """
         company = company or cls.env.company
         update_values = update_values or {}
 
-        acquirer = cls.env['payment.acquirer'].sudo().search(
-            [('provider', '=', provider), ('company_id', '=', company.id)], limit=1
+        provider = cls.env['payment.provider'].sudo().search(
+            [('code', '=', code), ('company_id', '=', company.id)], limit=1
         )
-        if not acquirer:
-            base_acquirer = cls.env['payment.acquirer'].sudo().search(
-                [('provider', '=', provider)], limit=1
+        if not provider:
+            base_provider = cls.env['payment.provider'].sudo().search(
+                [('code', '=', code)], limit=1
             )
-            if not base_acquirer:
-                _logger.error("no payment.acquirer found for provider %s", provider)
-                return cls.env['payment.acquirer']
+            if not base_provider:
+                _logger.error("no payment.provider found for code %s", code)
+                return cls.env['payment.provider']
             else:
-                acquirer = base_acquirer.copy({'company_id': company.id})
+                provider = base_provider.copy({'company_id': company.id})
 
         update_values['state'] = 'test'
-        acquirer.write(update_values)
-        return acquirer
+        provider.write(update_values)
+        return provider
 
     def _create_transaction(self, flow, sudo=True, **values):
         default_values = {
             'amount': self.amount,
             'currency_id': self.currency.id,
-            'acquirer_id': self.acquirer.id,
+            'provider_id': self.provider.id,
             'reference': self.reference,
             'operation': f'online_{flow}',
             'partner_id': self.partner.id,
@@ -167,9 +167,9 @@ class PaymentCommon(TransactionCase):
     def _create_token(self, sudo=True, **values):
         default_values = {
             'payment_details': "1234",
-            'acquirer_id': self.acquirer.id,
+            'provider_id': self.provider.id,
             'partner_id': self.partner.id,
-            'acquirer_ref': "Acquirer Ref (TEST)",
+            'provider_ref': "provider Ref (TEST)",
             'active': True,
         }
         return self.env['payment.token'].sudo(sudo).create(dict(default_values, **values))

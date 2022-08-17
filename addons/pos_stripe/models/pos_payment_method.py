@@ -34,7 +34,7 @@ class PosPaymentMethod(models.Model):
 
     @api.model
     def _get_stripe_secret_key(self):
-        stripe_secret_key = self.env['payment.acquirer'].search([('provider', '=', 'stripe')], limit=1).stripe_secret_key
+        stripe_secret_key = self.env['payment.provider'].search([('code', '=', 'stripe')], limit=1).stripe_secret_key
 
         if not stripe_secret_key:
             raise ValidationError(_('Complete the Stripe onboarding.'))
@@ -108,11 +108,11 @@ class PosPaymentMethod(models.Model):
         raise UserError(_("Unexpected error between us and Stripe."))
 
     def action_stripe_key(self):
-        res_id = self.env['payment.acquirer'].search([('provider', '=', 'stripe')], limit=1).id
+        res_id = self.env['payment.provider'].search([('code', '=', 'stripe')], limit=1).id
         # Redirect
         return {
             'name': _('Stripe'),
-            'res_model': 'payment.acquirer',
+            'res_model': 'payment.provider',
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_id': res_id,

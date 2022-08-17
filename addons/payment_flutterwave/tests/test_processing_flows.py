@@ -65,7 +65,7 @@ class TestProcessingFlows(FlutterwaveCommon, PaymentHttpCommon):
         self._assert_does_not_raise(
             Forbidden,
             FlutterwaveController._verify_notification_signature,
-            self.acquirer.flutterwave_webhook_secret,
+            self.provider.flutterwave_webhook_secret,
             tx,
         )
 

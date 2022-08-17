@@ -89,7 +89,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect')
         self.env['payment.transaction']._handle_notification_data('paypal', self.notification_data)
         self.assertEqual(tx.state, 'done')
-        self.assertEqual(tx.acquirer_reference, self.notification_data['txn_id'])
+        self.assertEqual(tx.provider_reference, self.notification_data['txn_id'])
 
         # Pending transaction
         self.reference = 'Test Transaction 2'
@@ -156,8 +156,8 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
             self.assertEqual(origin_check_mock.call_count, 1)
 
     def test_paypal_neutralize(self):
-        self.env['payment.acquirer']._neutralize()
+        self.env['payment.provider']._neutralize()
 
-        self.assertEqual(self.acquirer.paypal_email_account, False)
-        self.assertEqual(self.acquirer.paypal_seller_account, False)
-        self.assertEqual(self.acquirer.paypal_pdt_token, False)
+        self.assertEqual(self.provider.paypal_email_account, False)
+        self.assertEqual(self.provider.paypal_seller_account, False)
+        self.assertEqual(self.provider.paypal_pdt_token, False)

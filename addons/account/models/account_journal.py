@@ -126,7 +126,7 @@ class AccountJournal(models.Model):
         copy=False,
         check_company=True,
         help="Manual: Get paid by any method outside of Odoo.\n"
-        "Payment Acquirers: Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+        "Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
         "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
         "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
     )
@@ -901,7 +901,7 @@ class AccountJournal(models.Model):
         This getter is here to allow filtering the payment method lines if needed in other modules.
         It does NOT serve as a general getter to get the lines.
 
-        For example, it'll be extended to filter out lines from inactive payment acquirers in the payment module.
+        For example, it'll be extended to filter out lines from inactive payment providers in the payment module.
         :param payment_type: either inbound or outbound, used to know which lines to return
         :return: Either the inbound or outbound payment method lines
         """

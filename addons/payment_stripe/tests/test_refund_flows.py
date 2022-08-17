@@ -14,19 +14,19 @@ from odoo.addons.payment_stripe.tests.common import StripeCommon
 class TestRefundFlows(StripeCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
-    def test_refund_id_is_set_as_acquirer_reference(self):
-        """ Test that the id of the refund object is set as the acquirer reference of the refund
+    def test_refund_id_is_set_as_provider_reference(self):
+        """ Test that the id of the refund object is set as the provider reference of the refund
         transaction. """
         source_tx = self._create_transaction('redirect', state='done')
         with patch(
-            'odoo.addons.payment_stripe.models.payment_acquirer.PaymentAcquirer'
+            'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
             '._stripe_make_request', return_value=self.refund_object
         ):
             source_tx._send_refund_request()
         refund_tx = self.env['payment.transaction'].search(
             [('source_transaction_id', '=', source_tx.id)]
         )
-        self.assertEqual(refund_tx.acquirer_reference, self.refund_object['id'])
+        self.assertEqual(refund_tx.provider_reference, self.refund_object['id'])
 
     @mute_logger(
         'odoo.addons.payment_stripe.controllers.main',
@@ -37,7 +37,7 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
         (`charge.refund.updated` event) triggers the processing of the notification data. """
         source_tx = self._create_transaction('redirect', state='done')
         source_tx._create_refund_transaction(
-            amount_to_refund=source_tx.amount, acquirer_reference=self.refund_object['id']
+            amount_to_refund=source_tx.amount, provider_reference=self.refund_object['id']
         )
         url = self._build_url(StripeController._webhook_url)
         with patch(

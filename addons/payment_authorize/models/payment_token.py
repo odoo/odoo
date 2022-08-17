@@ -22,4 +22,3 @@ class PaymentToken(models.Model):
         help="The type of payment method this token is linked to.",
         selection=[("credit_card", "Credit Card"), ("bank_account", "Bank Account (USA Only)")],
     )
-

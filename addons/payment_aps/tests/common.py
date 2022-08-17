@@ -9,17 +9,17 @@ class APSCommon(PaymentHttpCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.aps = cls._prepare_acquirer('aps', update_values={
+        cls.aps = cls._prepare_provider('aps', update_values={
             'aps_merchant_identifier': '123456abc',
             'aps_access_code': 'dummy',
             'aps_sha_request': 'dummy',
             'aps_sha_response': 'dummy',
         })
 
-        cls.acquirer = cls.aps
+        cls.provider = cls.aps
 
         cls.notification_data = {
-            'access_code': cls.acquirer.aps_access_code,
+            'access_code': cls.provider.aps_access_code,
             'amount': cls.amount,
             'authorization_code': '123456',
             'card_holder_name': 'Mitchell',
@@ -32,7 +32,7 @@ class APSCommon(PaymentHttpCommon):
             'expiry_date': '2212',
             'fort_id': '169996210006464984',
             'language': 'en',
-            'merchant_identifier': cls.acquirer.aps_merchant_identifier,
+            'merchant_identifier': cls.provider.aps_merchant_identifier,
             'merchant_reference': cls.reference,
             'payment_option': 'VISA',
             'response_code': '14000',

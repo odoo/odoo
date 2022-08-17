@@ -11,7 +11,7 @@ class MercadoPagoCommon(PaymentCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.acquirer = cls._prepare_acquirer('mercado_pago', update_values={
+        cls.provider = cls._prepare_provider('mercado_pago', update_values={
             'mercado_pago_access_token': 'TEST-4850554046279901-TEST-TEST',
         })
         cls.payment_id = '123456'

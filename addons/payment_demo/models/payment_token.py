@@ -28,6 +28,6 @@ class PaymentToken(models.Model):
         :return: The demo token name.
         :rtype: str
         """
-        if self.provider != 'demo':
+        if self.provider_code != 'demo':
             return super()._build_display_name(*args, should_pad=should_pad, **kwargs)
         return super()._build_display_name(*args, should_pad=False, **kwargs)

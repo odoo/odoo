@@ -33,11 +33,11 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
     def test_tx_state_after_send_capture_request(self):
-        self.acquirer.capture_manually = True
+        self.provider.capture_manually = True
         tx = self._create_transaction('redirect', state='authorized')
 
         with patch(
-            'odoo.addons.payment_stripe.models.payment_acquirer.PaymentAcquirer'
+            'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
             '._stripe_make_request',
             return_value={'status': 'succeeded'},
         ):
@@ -48,11 +48,11 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
     def test_tx_state_after_send_void_request(self):
-        self.acquirer.capture_manually = True
+        self.provider.capture_manually = True
         tx = self._create_transaction('redirect', state='authorized')
 
         with patch(
-            'odoo.addons.payment_stripe.models.payment_acquirer.PaymentAcquirer'
+            'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
             '._stripe_make_request',
             return_value={'status': 'canceled'},
         ):
@@ -87,7 +87,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             'odoo.addons.payment_stripe.controllers.main.StripeController'
             '._verify_notification_signature'
         ), patch(
-            'odoo.addons.payment_stripe.models.payment_acquirer.PaymentAcquirer'
+            'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
             '._stripe_make_request',
             return_value=payment_method_response,
         ), patch(
@@ -115,19 +115,19 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             self.assertEqual(signature_check_mock.call_count, 1)
 
     def test_stripe_neutralize(self):
-        self.env['payment.acquirer']._neutralize()
+        self.env['payment.provider']._neutralize()
 
-        self.assertEqual(self.acquirer.stripe_secret_key, False)
-        self.assertEqual(self.acquirer.stripe_publishable_key, False)
-        self.assertEqual(self.acquirer.stripe_webhook_secret, False)
+        self.assertEqual(self.provider.stripe_secret_key, False)
+        self.assertEqual(self.provider.stripe_publishable_key, False)
+        self.assertEqual(self.provider.stripe_webhook_secret, False)
 
     def test_onboarding_action_redirect_to_url(self):
-        """ Test that the action generate and return an URL when the acquirer is disabled. """
+        """ Test that the action generate and return an URL when the provider is disabled. """
         with patch.object(
-            type(self.env['payment.acquirer']), '_stripe_fetch_or_create_connected_account',
+            type(self.env['payment.provider']), '_stripe_fetch_or_create_connected_account',
             return_value={'id': 'dummy'},
         ), patch.object(
-            type(self.env['payment.acquirer']), '_stripe_create_account_link',
+            type(self.env['payment.provider']), '_stripe_create_account_link',
             return_value='https://dummy.url',
         ):
             onboarding_url = self.stripe.action_stripe_connect_account()
@@ -136,21 +136,21 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
     def test_only_create_webhook_if_not_already_done(self):
         """ Test that a webhook is created only if the webhook secret is not already set. """
         self.stripe.stripe_webhook_secret = False
-        with patch.object(type(self.env['payment.acquirer']), '_stripe_make_request') as mock:
+        with patch.object(type(self.env['payment.provider']), '_stripe_make_request') as mock:
             self.stripe.action_stripe_create_webhook()
             self.assertEqual(mock.call_count, 1)
 
     def test_do_not_create_webhook_if_already_done(self):
         """ Test that no webhook is created if the webhook secret is already set. """
         self.stripe.stripe_webhook_secret = 'dummy'
-        with patch.object(type(self.env['payment.acquirer']), '_stripe_make_request') as mock:
+        with patch.object(type(self.env['payment.provider']), '_stripe_make_request') as mock:
             self.stripe.action_stripe_create_webhook()
             self.assertEqual(mock.call_count, 0)
 
     def test_create_account_link_pass_required_parameters(self):
         """ Test that the generation of an account link includes all the required parameters. """
         with patch.object(
-            type(self.env['payment.acquirer']), '_stripe_make_proxy_request',
+            type(self.env['payment.provider']), '_stripe_make_proxy_request',
             return_value={'url': 'https://dummy.url'},
         ) as mock:
             self.stripe._stripe_create_account_link('dummy', 'dummy')

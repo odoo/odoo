@@ -12,26 +12,26 @@ from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_sips.controllers.main import SipsController
-from odoo.addons.payment_sips.models.payment_acquirer import SUPPORTED_CURRENCIES
+from odoo.addons.payment_sips.models.payment_provider import SUPPORTED_CURRENCIES
 from odoo.addons.payment_sips.tests.common import SipsCommon
 
 
 @tagged('post_install', '-at_install')
 class SipsTest(SipsCommon, PaymentHttpCommon):
 
-    def test_compatible_acquirers(self):
+    def test_compatible_providers(self):
         for curr in SUPPORTED_CURRENCIES:
             currency = self._prepare_currency(curr)
-            acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+            providers = self.env['payment.provider']._get_compatible_providers(
                 self.company.id, self.partner.id, self.amount, currency_id=currency.id
             )
-            self.assertIn(self.sips, acquirers)
+            self.assertIn(self.sips, providers)
 
         unsupported_currency = self._prepare_currency('VEF')
-        acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+        providers = self.env['payment.provider']._get_compatible_providers(
             self.company.id, self.partner.id, self.amount, currency_id=unsupported_currency.id
         )
-        self.assertNotIn(self.sips, acquirers)
+        self.assertNotIn(self.sips, providers)
 
     # freeze time for consistent singularize_prefix behavior during the test
     @freeze_time("2011-11-02 12:00:21")
@@ -77,7 +77,7 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
         tx = self._create_transaction('redirect')
         self.env['payment.transaction']._handle_notification_data('sips', self.notification_data)
         self.assertEqual(tx.state, 'done')
-        self.assertEqual(tx.acquirer_reference, self.reference)
+        self.assertEqual(tx.provider_reference, self.reference)
 
         # Cancelled transaction
         old_reference = self.reference
@@ -140,7 +140,7 @@ class SipsTest(SipsCommon, PaymentHttpCommon):
         self.assertRaises(Forbidden, SipsController._verify_notification_signature, payload, tx)
 
     def test_sips_neutralize(self):
-        self.env['payment.acquirer']._neutralize()
+        self.env['payment.provider']._neutralize()
 
-        self.assertEqual(self.acquirer.sips_merchant_id, False)
-        self.assertEqual(self.acquirer.sips_secret, False)
+        self.assertEqual(self.provider.sips_merchant_id, False)
+        self.assertEqual(self.provider.sips_secret, False)

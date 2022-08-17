@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Demo Payment Acquirer',
+    'name': 'Demo Payment Provider',
     'version': '2.0',
     'category': 'Hidden',
     'description': """
-This module adds a simple payment acquirer allowing to make demo payments.
+This module adds a simple payment provider allowing to make demo payments.
 It should never be used in production environment. Make sure to disable it before going live.
 """,
     'depends': ['payment'],
@@ -14,7 +14,7 @@ It should never be used in production environment. Make sure to disable it befor
         'views/payment_templates.xml',
         'views/payment_token_views.xml',
         'views/payment_transaction_views.xml',
-        'data/payment_acquirer_data.xml',
+        'data/payment_provider_data.xml',
     ],
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',

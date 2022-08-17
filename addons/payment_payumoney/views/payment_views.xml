@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="payment_acquirer_form" model="ir.ui.view">
-        <field name="name">PayUMoney Acquirer Form</field>
-        <field name="model">payment.acquirer</field>
-        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">PayUMoney Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='provider_creation_warning']" position="after">
                 <div class="alert alert-danger"
                      role="alert"
-                     attrs="{'invisible': [('provider', '!=', 'payumoney')]}">
+                     attrs="{'invisible': [('code', '!=', 'payumoney')]}">
                     This provider is deprecated.
                     Consider disabling it and moving to <strong>Razorpay</strong>.
                 </div>
             </xpath>
-            <group name="acquirer" position="inside">
-                <group attrs="{'invisible': [('provider', '!=', 'payumoney')]}">
-                    <field name="payumoney_merchant_key" attrs="{'required':[ ('provider', '=', 'payumoney'), ('state', '!=', 'disabled')]}"/>
-                    <field name="payumoney_merchant_salt" attrs="{'required':[ ('provider', '=', 'payumoney'), ('state', '!=', 'disabled')]}" password="True"/>
+            <group name="code" position="inside">
+                <group attrs="{'invisible': [('code', '!=', 'payumoney')]}">
+                    <field name="payumoney_merchant_key" attrs="{'required':[ ('code', '=', 'payumoney'), ('state', '!=', 'disabled')]}"/>
+                    <field name="payumoney_merchant_salt" attrs="{'required':[ ('code', '=', 'payumoney'), ('state', '!=', 'disabled')]}" password="True"/>
                 </group>
             </group>
         </field>

@@ -9,7 +9,7 @@ class RazorpayCommon(PaymentCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.acquirer = cls._prepare_acquirer('razorpay', update_values={
+        cls.provider = cls._prepare_provider('razorpay', update_values={
             'razorpay_key_id': 'rzp_123',
             'razorpay_key_secret': 'Y63AyP9eL91',
             'razorpay_webhook_secret': 'coincoin_motherducker',

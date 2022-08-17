@@ -10,16 +10,16 @@ from odoo import api, SUPERUSER_ID
 def post_init_hook(cr, registry):
     """ Create `account.payment.method` records for the installed payment providers. """
     env = api.Environment(cr, SUPERUSER_ID, {})
-    PaymentAcquirer = env['payment.acquirer']
-    installed_providers = PaymentAcquirer.search([('module_id.state', '=', 'installed')])
-    for provider_code in set(installed_providers.mapped('provider')):
-        PaymentAcquirer._setup_payment_method(provider_code)
+    PaymentProvider = env['payment.provider']
+    installed_providers = PaymentProvider.search([('module_id.state', '=', 'installed')])
+    for code in set(installed_providers.mapped('code')):
+        PaymentProvider._setup_payment_method(code)
 
 
 def uninstall_hook(cr, registry):
     """ Delete `account.payment.method` records created for the installed payment providers. """
     env = api.Environment(cr, SUPERUSER_ID, {})
-    installed_providers = env['payment.acquirer'].search([('module_id.state', '=', 'installed')])
+    installed_providers = env['payment.provider'].search([('module_id.state', '=', 'installed')])
     env['account.payment.method'].search([
         ('code', 'in', installed_providers.mapped('provider')),
         ('payment_type', '=', 'inbound'),

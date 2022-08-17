@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="payment_acquirer_form_razorpay" model="ir.ui.view">
-        <field name="name">Razorpay Acquirer Form</field>
-        <field name="model">payment.acquirer</field>
-        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+    <record id="payment_provider_form_razorpay" model="ir.ui.view">
+        <field name="name">Razorpay Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <group name="acquirer" position='inside'>
+            <group name="code" position='inside'>
                 <group name="razorpay_credentials"
-                       attrs="{'invisible': [('provider', '!=', 'razorpay')]}">
+                       attrs="{'invisible': [('code', '!=', 'razorpay')]}">
                     <field name="razorpay_key_id"
                            string="Key Id"
-                           attrs="{'required': [('provider', '=', 'razorpay'), ('state', '!=', 'disabled')]}"/>
+                           attrs="{'required': [('code', '=', 'razorpay'), ('state', '!=', 'disabled')]}"/>
                     <field name="razorpay_key_secret"
                            string="Key Secret"
-                           attrs="{'required': [('provider', '=', 'razorpay'), ('state', '!=', 'disabled')]}"
+                           attrs="{'required': [('code', '=', 'razorpay'), ('state', '!=', 'disabled')]}"
                            password="True"/>
                     <field name="razorpay_webhook_secret"
                            string="Webhook Secret"
-                           attrs="{'required': [('provider', '=', 'razorpay'), ('state', '!=', 'disabled')]}"
+                           attrs="{'required': [('code', '=', 'razorpay'), ('state', '!=', 'disabled')]}"
                            password="True"/>
                 </group>
             </group>

@@ -224,7 +224,7 @@ class ResCompany(models.Model):
 
     # YTI FIXME: Define only one method that returns {'account': [], 'sale': [], ...}
     def get_account_invoice_onboarding_steps_states_names(self):
-        """ Necessary to add/edit steps from other modules (payment acquirer in this case). """
+        """ Necessary to add/edit steps from other modules (payment provider in this case). """
         return [
             'base_onboarding_company_state',
             'account_onboarding_invoice_layout_state',
