@@ -587,6 +587,7 @@
                                 <field name="require_payment"/>
                                 <field name="reference" readonly="1" attrs="{'invisible': [('reference', '=', False)]}"/>
                                 <field name="client_order_ref"/>
+                                <field name="client_order_date"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             </group>
                             <group name="sale_info" string="Invoicing and Payments">

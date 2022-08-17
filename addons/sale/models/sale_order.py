@@ -81,6 +81,7 @@ class SaleOrder(models.Model):
         default='draft')
 
     client_order_ref = fields.Char(string="Customer Reference", copy=False)
+    client_order_date = fields.Char(string="Customer Reference Date", copy=False)
     create_date = fields.Datetime(  # Override of default create_date field from ORM
         string="Creation Date", index=True, readonly=True)
     commitment_date = fields.Datetime(
