@@ -133,7 +133,7 @@ export class ORM {
         return this.call(model, "name_get", [ids], { context: ctx });
     }
 
-    read(model, ids, fields, ctx) {
+    read(model, ids, fields, ctx, load) {
         validatePrimitiveList("ids", "number", ids);
         if (fields) {
             validatePrimitiveList("fields", "string", fields);
@@ -141,7 +141,11 @@ export class ORM {
         if (!ids.length) {
             return Promise.resolve([]);
         }
-        return this.call(model, "read", [ids, fields], { context: ctx });
+        const kwargs = { context: ctx };
+        if (load !== undefined) {
+            kwargs.load = load;
+        }
+        return this.call(model, "read", [ids, fields], kwargs);
     }
 
     readGroup(model, domain, fields, groupby, options = {}, ctx = {}) {
@@ -173,7 +177,7 @@ export class ORM {
             validatePrimitiveList("fields", "string", fields);
         }
         const kwargs = { context: ctx, domain, fields };
-        assignOptions(kwargs, options, ["offset", "limit", "order"]);
+        assignOptions(kwargs, options, ["offset", "limit", "order", "load"]);
         return this.call(model, "search_read", [], kwargs);
     }
 
