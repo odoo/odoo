@@ -37,6 +37,11 @@ export class TextField extends Component {
                 parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
             heightOffset = borderHeight + paddingHeight;
         }
+        const previousStyle = {
+            borderTopWidth: style.borderTopWidth,
+            borderBottomWidth: style.borderBottomWidth,
+            padding: style.padding,
+        };
         Object.assign(textarea.style, {
             height: "auto",
             borderTopWidth: 0,
@@ -45,12 +50,7 @@ export class TextField extends Component {
         });
         textarea.style.height = "auto";
         const height = Math.max(this.minimumHeight, textarea.scrollHeight + heightOffset);
-        Object.assign(textarea.style, {
-            height: `${height}px`,
-            borderTopWidth: style.borderTopWidth,
-            borderBottomWidth: style.borderBottomWidth,
-            padding: style.padding,
-        });
+        Object.assign(textarea.style, previousStyle, { height: `${height}px` });
     }
 
     onInput() {
