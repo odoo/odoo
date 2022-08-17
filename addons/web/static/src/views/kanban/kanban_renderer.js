@@ -56,47 +56,16 @@ export class KanbanRenderer extends Component {
                 connectGroups: () => this.canMoveRecords,
                 cursor: "move",
                 // Hooks
-                onStart: (group, element) => {
+                onStart: (params) => {
+                    const { element, group } = params;
                     dataRecordId = element.dataset.id;
-                    if (group) {
-                        dataGroupId = group.dataset.id;
-                    }
-                    element.classList.add("o_dragged", "shadow");
+                    dataGroupId = group && group.dataset.id;
+                    return this.onSortStart(params);
                 },
-                onGroupEnter: (group) => {
-                    group.classList.add("o_kanban_hover");
-                    group.classList.remove("bg-100");
-                },
-                onGroupLeave: (group) => {
-                    group.classList.remove("o_kanban_hover");
-                    group.classList.add("bg-100");
-                },
-                onStop: (group, element) => {
-                    group && group.classList && group.classList.remove("o_kanban_hover");
-                    element.classList.remove("o_dragged", "shadow");
-                },
-                onDrop: async ({ element, previous, parent }) => {
-                    element.classList.remove("o_record_draggable");
-                    if (
-                        !this.props.list.isGrouped ||
-                        parent.classList.contains("o_kanban_hover") ||
-                        parent.dataset.id === element.parentElement.dataset.id
-                    ) {
-                        parent && parent.classList && parent.classList.remove("o_kanban_hover");
-                        while (previous && !previous.dataset.id) {
-                            previous = previous.previousElementSibling;
-                        }
-                        const refId = previous ? previous.dataset.id : null;
-                        const targetGroupId = parent && parent.dataset.id;
-                        await this.props.list.moveRecord(
-                            dataRecordId,
-                            dataGroupId,
-                            refId,
-                            targetGroupId
-                        );
-                    }
-                    element.classList.add("o_record_draggable");
-                },
+                onStop: this.onSortStop,
+                onGroupEnter: this.onSortRecordGroupEnter,
+                onGroupLeave: this.onSortRecordGroupLeave,
+                onDrop: (params) => this.onSortRecordDrop(dataRecordId, dataGroupId, params),
             });
             useSortable({
                 enable: () => this.canResequenceGroups,
@@ -106,17 +75,13 @@ export class KanbanRenderer extends Component {
                 handle: ".o_column_title",
                 cursor: "move",
                 // Hooks
-                onStart: (_group, element) => {
+                onStart: (params) => {
+                    const { element } = params;
                     dataGroupId = element.dataset.id;
-                    element.classList.add("o_dragged", "shadow");
+                    return this.onSortStart(params);
                 },
-                onStop: (_group, element) => element.classList.remove("o_dragged", "shadow"),
-                onDrop: async ({ element, previous }) => {
-                    element.classList.remove("o_group_draggable");
-                    const refId = previous ? previous.dataset.id : null;
-                    await this.props.list.resequence(dataGroupId, refId);
-                    element.classList.add("o_group_draggable");
-                },
+                onStop: this.onSortStop,
+                onDrop: (params) => this.onSortGroupDrop(dataGroupId, params),
             });
         }
 
@@ -486,6 +451,89 @@ export class KanbanRenderer extends Component {
     onGroupClick(group) {
         if (!this.env.isSmall && group.isFolded) {
             group.toggle();
+        }
+    }
+
+    /**
+     * @param {string} dataGroupId
+     * @param {Object} params
+     * @param {HTMLElement} params.element
+     * @param {HTMLElement} [params.group]
+     * @param {HTMLElement} [params.next]
+     * @param {HTMLElement} [params.parent]
+     * @param {HTMLElement} [params.previous]
+     */
+    async onSortGroupDrop(dataGroupId, { element, previous }) {
+        element.classList.remove("o_group_draggable");
+        const refId = previous ? previous.dataset.id : null;
+        await this.props.list.resequence(dataGroupId, refId);
+        element.classList.add("o_group_draggable");
+    }
+
+    /**
+     * @param {string} dataRecordId
+     * @param {string} dataGroupId
+     * @param {Object} params
+     * @param {HTMLElement} params.element
+     * @param {HTMLElement} [params.group]
+     * @param {HTMLElement} [params.next]
+     * @param {HTMLElement} [params.parent]
+     * @param {HTMLElement} [params.previous]
+     */
+    async onSortRecordDrop(dataRecordId, dataGroupId, { element, parent, previous }) {
+        element.classList.remove("o_record_draggable");
+        if (
+            !this.props.list.isGrouped ||
+            parent.classList.contains("o_kanban_hover") ||
+            parent.dataset.id === element.parentElement.dataset.id
+        ) {
+            parent && parent.classList && parent.classList.remove("o_kanban_hover");
+            while (previous && !previous.dataset.id) {
+                previous = previous.previousElementSibling;
+            }
+            const refId = previous ? previous.dataset.id : null;
+            const targetGroupId = parent && parent.dataset.id;
+            await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, targetGroupId);
+        }
+        element.classList.add("o_record_draggable");
+    }
+
+    /**
+     * @param {Object} params
+     * @param {HTMLElement} params.group
+     */
+    onSortRecordGroupEnter({ group }) {
+        group.classList.add("o_kanban_hover");
+        group.classList.remove("bg-100");
+    }
+
+    /**
+     * @param {Object} params
+     * @param {HTMLElement} params.group
+     */
+    onSortRecordGroupLeave({ group }) {
+        group.classList.remove("o_kanban_hover");
+        group.classList.add("bg-100");
+    }
+
+    /**
+     * @param {Object} params
+     * @param {HTMLElement} params.element
+     * @param {HTMLElement} [params.group]
+     */
+    onSortStart({ element }) {
+        element.classList.add("o_dragged", "shadow");
+    }
+
+    /**
+     * @param {Object} params
+     * @param {HTMLElement} params.element
+     * @param {HTMLElement} [params.group]
+     */
+    onSortStop({ element, group }) {
+        element.classList.remove("o_dragged", "shadow");
+        if (group) {
+            group.classList.remove("o_kanban_hover");
         }
     }
 
