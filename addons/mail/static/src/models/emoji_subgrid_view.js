@@ -40,6 +40,7 @@ registerModel({
         },
     },
     fields: {
+        component: attr(),
         emojiCategoryView: one('EmojiCategoryView', {
             required: true,
             readonly: true,
@@ -56,9 +57,14 @@ registerModel({
             readonly: true,
             isCausal: true,
         }),
-        categoryNameRef: attr(),
+        shouldNameBeSticky: attr({
+            default: false
+        }),
         name: attr({
             compute: '_computeCategoryName',
+        }),
+        emojiPickerViewAsVisible: one('EmojiPickerView', {
+            inverse: 'visibleSubgridViews',
         }),
     }
 });

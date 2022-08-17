@@ -5,6 +5,10 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 const { Component } = owl;
 
 export class EmojiPickerView extends Component {
+    setup() {
+
+
+    }
     /**
      * @returns {EmojiPickerView}
      */

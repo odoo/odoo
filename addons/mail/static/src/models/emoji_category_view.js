@@ -11,10 +11,10 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick() {
-            if (!this.emojiSubgridView.categoryNameRef.el) {
+            if (!this.emojiSubgridView.component.root.el) {
                 return;
             }
-            this.emojiSubgridView.categoryNameRef.el.scrollIntoView();
+            this.emojiSubgridView.component.root.el.scrollIntoView();
             this.emojiCategoryBarViewOwner.emojiPickerViewOwner.emojiSearchBar.reset();
         },
         /**

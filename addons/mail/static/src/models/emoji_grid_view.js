@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { many, one } from '@mail/model/model_field';
+import { attr, many, one } from '@mail/model/model_field';
 import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
@@ -17,6 +17,7 @@ registerModel({
         }
     },
     fields: {
+        component: attr(),
         emojiPickerViewOwner: one('EmojiPickerView', {
             inverse: 'emojiGridView',
             readonly: true,
@@ -28,5 +29,6 @@ registerModel({
             readonly: true,
             isCausal: true,
         }),
+        thresholdLineForStickyRef: attr(),
     },
 });

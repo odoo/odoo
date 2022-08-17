@@ -248,6 +248,8 @@ export class ModelField {
         } else if (newVal instanceof Array && newVal[0] instanceof FieldCommand) {
             return newVal;
         } else if (this.fieldType === 'relation') {
+            debugger;
+            if (typeof newVal.map !== 'function') { debugger; }
             // Deprecated. Used only to support old syntax: `[...[name, value]]` command
             return newVal.map(([name, value]) => new FieldCommand(name, value));
         } else {
