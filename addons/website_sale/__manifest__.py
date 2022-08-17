@@ -59,6 +59,8 @@
             'website_sale/static/src/js/website_sale_tracking.js',
             'website/static/lib/multirange/multirange_custom.js',
             'website_sale/static/src/js/website_sale_category_link.js',
+            'website_sale/static/src/xml/website_sale_image_viewer.xml',
+            'website_sale/static/src/js/components/website_sale_image_viewer.js',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',

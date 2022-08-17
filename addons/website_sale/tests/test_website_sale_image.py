@@ -202,6 +202,14 @@ class TestWebsiteSaleImage(odoo.tests.HttpCase):
 
         # self.env.cr.commit()  # uncomment to save the product to test in browser
 
+        # Make sure we have zoom on click
+        self.env['ir.ui.view'].with_context(active_test=False).search(
+            [('key', 'in', ('website_sale.product_picture_magnify_hover', 'website_sale.product_picture_magnify_click', 'website_sale.product_picture_magnify_both'))]
+        ).write({'active': False})
+        self.env['ir.ui.view'].with_context(active_test=False).search(
+            [('key', '=', 'website_sale.product_picture_magnify_click')]
+        ).write({'active': True})
+
         self.start_tour("/", 'shop_zoom', login="admin")
 
         # CASE: unlink move image to fallback if fallback image empty

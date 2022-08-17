@@ -630,7 +630,7 @@
                         t-att-data-image_width="website.product_page_image_width"
                         t-att-data-image_layout="website.product_page_image_layout">
                         <t t-set="image_cols" t-value="website._get_product_page_proportions()"/>
-                        <div t-attf-class="col-lg-#{image_cols[0]} mt-lg-4 o_wsale_product_images" t-if="website.product_page_image_width != 'none'">
+                        <div t-attf-class="col-lg-#{image_cols[0]} mt-lg-4 o_wsale_product_images position-relative" t-if="website.product_page_image_width != 'none'">
                             <t t-call="website_sale.shop_product_images"/>
                         </div>
                         <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
@@ -770,17 +770,26 @@
         </xpath>
     </template>
 
-    <template inherit_id='website_sale.product' id="product_picture_magnify" name="Image Zoom">
-        <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
+    <!-- Product options: Zoom -->
+    <template inherit_id='website_sale.product' id="product_picture_magnify_hover" name="Automatic Image Zoom">
+        <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
+            <attribute name="data-ecom-zoom-auto">1</attribute>
             <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
         </xpath>
     </template>
 
-    <template inherit_id='website_sale.product' id="product_picture_magnify_auto" active="False" name="Automatic Image Zoom">
-        <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
-            <attribute name="data-ecom-zoom-auto">1</attribute>
+    <template inherit_id='website_sale.product' id="product_picture_magnify_click" active="False" name="Image Zoom On Click">
+        <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
+            <attribute name="data-ecom-zoom-click">1</attribute>
             <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
+        </xpath>
+    </template>
 
+    <template inherit_id='website_sale.product' id="product_picture_magnify_both" active="False" name="Automatic Image Zoom And On Click">
+        <xpath expr='//div[hasclass("o_wsale_product_page")]' position='attributes'>
+            <attribute name="data-ecom-zoom-auto">1</attribute>
+            <attribute name="data-ecom-zoom-click">1</attribute>
+            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
         </xpath>
     </template>
 
@@ -1992,7 +2001,7 @@
     </template>
 
     <template id="website_sale.shop_product_image">
-        <div t-if="product_image._name == 'product.image' and product_image.embed_code" t-att-class="image_classes + 'ratio ratio-16x9'">
+        <div t-if="product_image._name == 'product.image' and product_image.embed_code" t-att-class="image_classes + ' ratio ratio-16x9'">
             <t t-out="product_image.embed_code"/>
         </div>
         <div t-else="" t-field="product_image.image_1920" t-att-class="image_classes + ' oe_unmovable'" t-options='{"widget": "image", "preview_image": "image_1024", "class": "oe_unmovable product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920", "itemprop": "image"}'/>
