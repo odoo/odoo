@@ -194,7 +194,7 @@ QUnit.module(
                 parseDateTime("invalid value");
             }, /is not a correct/);
 
-            let expected = "2019-01-13T10:05:45.000Z";
+            const expected = "2019-01-13T10:05:45.000Z";
             let dateStr = "01/13/2019 10:05:45";
             assert.equal(parseDateTime(dateStr).toISO(), expected, "Date with leading 0");
             dateStr = "1/13/2019 10:5:45";
@@ -411,11 +411,7 @@ QUnit.module(
             patchDate(2022, 1, 21, 0, 0, 0);
             const date = DateTime.now();
             assert.strictEqual(date.toFormat("yyyy-MM-dd"), "2022-02-21");
-            assert.strictEqual(
-                serializeDate(date),
-                "2022-02-20",
-                "serializeDate should output an UTC converted string"
-            );
+            assert.strictEqual(serializeDate(date), "2022-02-21");
         });
 
         QUnit.test("serializeDate with different numbering system", async (assert) => {
@@ -531,7 +527,7 @@ QUnit.module(
                 };
                 Object.assign(legacy.session, sessionPatch);
                 registerCleanup(() => {
-                    for (let key in sessionPatch) {
+                    for (const key in sessionPatch) {
                         delete legacy.session[key];
                     }
                     Object.assign(legacy.session, initialSession);
