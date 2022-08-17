@@ -137,8 +137,6 @@ registerModel({
         discuss: one('Discuss', {
             identifying: true,
             inverse: 'discussView',
-            readonly: true,
-            required: true,
         }),
         historyView: one('DiscussSidebarMailboxView', {
             default: insertAndReplace(),

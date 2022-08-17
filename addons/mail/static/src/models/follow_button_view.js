@@ -65,7 +65,6 @@ registerModel({
         chatterOwner: one('Chatter', {
             identifying: true,
             inverse: 'followButtonView',
-            readonly: true,
         }),
         isDisabled: attr({
             compute: '_computeIsDisabled',

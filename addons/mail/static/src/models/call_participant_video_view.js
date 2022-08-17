@@ -39,8 +39,6 @@ registerModel({
         callParticipantCardOwner: one('CallParticipantCard', {
             identifying: true,
             inverse: 'callParticipantVideoView',
-            readonly: true,
-            required: true,
         }),
         rtcSession: one('RtcSession', {
             compute: '_computeRtcSession',

@@ -8,8 +8,6 @@ registerModel({
     fields: {
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         ratingImageUrl: attr({
             readonly: true,

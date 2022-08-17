@@ -21,8 +21,6 @@ registerModel({
          */
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         payload: attr({
             readonly: true,

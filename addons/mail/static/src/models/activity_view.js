@@ -170,14 +170,10 @@ registerModel({
         activity: one('Activity', {
             identifying: true,
             inverse: 'activityViews',
-            required: true,
-            readonly: true,
         }),
         activityBoxView: one('ActivityBoxView', {
             identifying: true,
             inverse: 'activityViews',
-            readonly: true,
-            required: true,
         }),
         /**
          * Determines whether the details are visible.

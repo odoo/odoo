@@ -139,7 +139,6 @@ registerModel({
         attachmentBoxViewOwner: one('AttachmentBoxView', {
             identifying: true,
             inverse: 'attachmentList',
-            readonly: true,
         }),
         /**
          * States the attachment cards that are displaying this nonImageAttachments.
@@ -174,7 +173,6 @@ registerModel({
         composerViewOwner: one('ComposerView', {
             identifying: true,
             inverse: 'attachmentList',
-            readonly: true,
         }),
         /**
          * States the attachment that are an image.
@@ -224,7 +222,6 @@ registerModel({
         messageViewOwner: one('MessageView', {
             identifying: true,
             inverse: 'attachmentList',
-            readonly: true,
         }),
         /**
          * States the attachment that are not an image.

@@ -62,8 +62,6 @@ registerModel({
          */
         frequency: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         tickInterval: attr({
             compute: '_computeTickInterval',

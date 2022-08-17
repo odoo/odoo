@@ -108,8 +108,6 @@ registerModel({
          */
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         /**
          * Determine whether the visitor is connected or not.

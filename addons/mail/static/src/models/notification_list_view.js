@@ -179,7 +179,6 @@ registerModel({
         discussOwner: one('Discuss', {
             identifying: true,
             inverse: 'notificationListView',
-            readonly: true,
         }),
         filter: attr({
             compute: '_computeFilter',
@@ -190,7 +189,6 @@ registerModel({
         messagingMenuOwner: one('MessagingMenu', {
             identifying: true,
             inverse: 'notificationListView',
-            readonly: true,
         }),
         notificationGroupViews: many('NotificationGroupView', {
             compute: '_computeNotificationGroupViews',

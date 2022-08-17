@@ -42,8 +42,6 @@ registerModel({
         chatter: one('Chatter', {
             identifying: true,
             inverse: 'topbar',
-            readonly: true,
-            required: true,
         }),
     },
 });

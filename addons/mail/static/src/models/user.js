@@ -177,8 +177,6 @@ registerModel({
         }),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         /**
          * Determines whether this user is an internal user. An internal user is

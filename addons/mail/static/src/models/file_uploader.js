@@ -190,22 +190,18 @@ registerModel({
         activityView: one('ActivityView', {
             identifying: true,
             inverse: 'fileUploader',
-            readonly: true,
         }),
         attachmentBoxView: one('AttachmentBoxView', {
             identifying: true,
             inverse: 'fileUploader',
-            readonly: true,
         }),
         chatterOwner: one('Chatter', {
             identifying: true,
             inverse: 'fileUploader',
-            readonly: true,
         }),
         composerView: one('ComposerView', {
             identifying: true,
             inverse: 'fileUploader',
-            readonly: true,
         }),
         fileInput: attr({
             compute: '_computeFileInput',

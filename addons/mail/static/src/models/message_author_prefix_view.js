@@ -45,12 +45,10 @@ registerModel({
         threadNeedactionPreviewViewOwner: one('ThreadNeedactionPreviewView', {
             identifying: true,
             inverse: 'messageAuthorPrefixView',
-            readonly: true,
         }),
         threadPreviewViewOwner: one('ThreadPreviewView', {
             identifying: true,
             inverse: 'messageAuthorPrefixView',
-            readonly: true,
         }),
     },
 });

@@ -18,8 +18,6 @@ registerModel({
         rtcSession: one('RtcSession', {
             identifying: true,
             inverse: 'rtcDataChannel',
-            readonly: true,
-            required: true,
         }),
     },
 });

@@ -1949,8 +1949,6 @@ registerModel({
         }),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         invitationLink: attr({
             compute: '_computeInvitationLink',
@@ -2146,8 +2144,6 @@ registerModel({
         }),
         model: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         model_name: attr(),
         moduleIcon: attr(),

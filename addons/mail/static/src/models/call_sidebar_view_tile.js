@@ -10,13 +10,9 @@ registerModel({
         callSidebarViewOwner: one('CallSidebarView', {
             identifying: true,
             inverse: 'sidebarTiles',
-            readonly: true,
-            required: true,
         }),
         channelMember: one('ChannelMember', {
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         participantCard: one('CallParticipantCard', {
             default: insertAndReplace(),

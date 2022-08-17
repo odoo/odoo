@@ -10,13 +10,9 @@ registerModel({
         callMainViewOwner: one('CallMainView', {
             identifying: true,
             inverse: 'mainTiles',
-            readonly: true,
-            required: true,
         }),
         channelMember: one('ChannelMember', {
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         participantCard: one('CallParticipantCard', {
             default: insertAndReplace(),

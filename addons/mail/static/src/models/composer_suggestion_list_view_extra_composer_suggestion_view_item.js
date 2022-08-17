@@ -15,8 +15,6 @@ registerModel({
         composerSuggestionListViewOwner: one('ComposerSuggestionListView', {
             identifying: true,
             inverse: 'composerSuggestionListViewExtraComposerSuggestionViewItems',
-            readonly: true,
-            required: true,
         }),
         composerSuggestionView: one('ComposerSuggestionView', {
             default: insertAndReplace(),
@@ -28,8 +26,6 @@ registerModel({
         suggestable: one('ComposerSuggestable', {
             identifying: true,
             inverse: 'composerSuggestionListViewExtraComposerSuggestionViewItems',
-            readonly: true,
-            required: true,
         }),
     },
 });

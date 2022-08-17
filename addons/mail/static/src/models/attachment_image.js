@@ -115,8 +115,6 @@ registerModel({
          */
         attachment: one('Attachment', {
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         attachmentDeleteConfirmDialog: one('Dialog', {
             inverse: 'attachmentImageOwnerAsAttachmentDeleteConfirm',
@@ -128,8 +126,6 @@ registerModel({
         attachmentList: one('AttachmentList', {
             identifying: true,
             inverse: 'attachmentImages',
-            readonly: true,
-            required: true,
         }),
         /**
          * Determines whether `this` should display a download button.

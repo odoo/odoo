@@ -37,8 +37,6 @@ registerModel({
         notificationListViewOwner: one('NotificationListView', {
             identifying: true,
             inverse: 'notificationRequestView',
-            required: true,
-            readonly: true,
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',

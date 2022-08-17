@@ -9,8 +9,6 @@ registerModel({
     fields: {
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         addressInfo: attr(),
         contact: one('TestContact', {
@@ -24,8 +22,6 @@ registerModel({
     fields: {
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         address: one('TestAddress', {
             inverse: 'contact',
@@ -50,8 +46,6 @@ registerModel({
     fields: {
         description: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
     },
 });
@@ -61,8 +55,6 @@ registerModel({
     fields: {
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         title: attr(),
         difficulty: attr({

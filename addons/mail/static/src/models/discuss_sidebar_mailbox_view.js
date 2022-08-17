@@ -29,17 +29,14 @@ registerModel({
         discussViewOwnerAsHistory: one('DiscussView', {
             identifying: true,
             inverse: 'historyView',
-            readonly: true,
         }),
         discussViewOwnerAsInbox: one('DiscussView', {
             identifying: true,
             inverse: 'inboxView',
-            readonly: true,
         }),
         discussViewOwnerAsStarred: one('DiscussView', {
             identifying: true,
             inverse: 'starredView',
-            readonly: true,
         }),
         mailbox: one('Mailbox', {
             compute: '_computeMailbox',

@@ -230,8 +230,6 @@ registerModel({
         threadView: one('ThreadView', {
             identifying: true,
             inverse: 'callView',
-            readonly: true,
-            required: true,
         }),
     },
     onChanges: [

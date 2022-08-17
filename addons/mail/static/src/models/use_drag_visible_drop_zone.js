@@ -71,12 +71,10 @@ registerModel({
         chatterOwner: one('Chatter', {
             identifying: true,
             inverse: 'useDragVisibleDropZone',
-            readonly: true,
         }),
         composerViewOwner: one('ComposerView', {
             identifying: true,
             inverse: 'useDragVisibleDropZone',
-            readonly: true,
         }),
         /**
          * Counts how many drag enter/leave happened globally. This is the only

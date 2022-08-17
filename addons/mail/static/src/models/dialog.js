@@ -184,7 +184,6 @@ registerModel({
         attachmentCardOwnerAsAttachmentDeleteConfirm: one('AttachmentCard', {
             identifying: true,
             inverse: 'attachmentDeleteConfirmDialog',
-            readonly: true,
         }),
         attachmentDeleteConfirmView: one('AttachmentDeleteConfirmView', {
             compute: '_computeAttachmentDeleteConfirmView',
@@ -194,12 +193,10 @@ registerModel({
         attachmentImageOwnerAsAttachmentDeleteConfirm: one('AttachmentImage', {
             identifying: true,
             inverse: 'attachmentDeleteConfirmDialog',
-            readonly: true,
         }),
         attachmentListOwnerAsAttachmentView: one('AttachmentList', {
             identifying: true,
             inverse: 'attachmentListViewDialog',
-            readonly: true,
         }),
         attachmentViewer: one('AttachmentViewer', {
             compute: '_computeAttachmentViewer',
@@ -224,7 +221,6 @@ registerModel({
         followerOwnerAsSubtypeList: one('Follower', {
             identifying: true,
             inverse: 'followerSubtypeListDialog',
-            readonly: true,
         }),
         followerSubtypeList: one('FollowerSubtypeList', {
             compute: '_computeFollowerSubtypeList',
@@ -243,7 +239,6 @@ registerModel({
         messageActionListOwnerAsDeleteConfirm: one('MessageActionList', {
             identifying: true,
             inverse: 'deleteConfirmDialog',
-            readonly: true,
         }),
         /**
          * Content of dialog that is directly linked to a record that models

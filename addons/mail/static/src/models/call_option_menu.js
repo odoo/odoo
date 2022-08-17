@@ -68,8 +68,6 @@ registerModel({
         callActionListView: one('CallActionListView', {
             identifying: true,
             inverse: 'callOptionMenu',
-            readonly: true,
-            required: true,
         }),
         callView: one('CallView', {
             related: 'callActionListView.callView',

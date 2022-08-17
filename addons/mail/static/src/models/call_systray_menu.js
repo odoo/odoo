@@ -31,8 +31,6 @@ registerModel({
         rtc: one('Rtc', {
             identifying: true,
             inverse: 'callSystrayMenu',
-            readonly: true,
-            required: true,
         }),
     },
 });

@@ -380,8 +380,6 @@ registerModel({
          */
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         /**
          * Channels on which this session is inviting the current partner,
