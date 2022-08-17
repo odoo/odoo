@@ -49,48 +49,6 @@ registerModel({
             return this.options.channel_id;
         },
         /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeChatbot() {
-            if (this.isTestChatbot) {
-                return { data: this.testChatbotData.chatbot };
-            }
-            if (this.chatbotState === 'init') {
-                return { data: this.rule.chatbot };
-            }
-            if (this.chatbotState === 'welcome') {
-                return { data: this.livechatInit.rule.chatbot };
-            }
-            if (this.chatbotState === 'restore_session' && this.localStorageChatbotState) {
-                return { data: this.localStorageChatbotState._chatbot };
-            }
-            return clear();
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeChatbotSessionCookieKey() {
-            if (!this.sessionCookie) {
-                return clear();
-            }
-            return 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.sessionCookie).uuid;
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeChatbotState() {
-            if (this.rule && !!this.rule.chatbot) {
-                return 'init';
-            }
-            if (this.livechatInit && this.livechatInit.rule.chatbot) {
-                return 'welcome';
-            }
-            return clear();
-        },
-        /**
          * Compares the last message of the conversation to this livechat's operator id.
          *
          * @private
@@ -124,20 +82,6 @@ registerModel({
                 return {};
             }
             return clear();
-        },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeLocalStorageChatbotState() {
-            if (!this.sessionCookie) {
-                return clear();
-            }
-            const data = localStorage.getItem(this.chatbotSessionCookieKey);
-            if (!data) {
-                return clear();
-            }
-            return JSON.parse(data);
         },
         async _willStart() {
             const cookie = get_cookie('im_livechat_session');
@@ -197,13 +141,13 @@ registerModel({
                 const sessionCookie = get_cookie('im_livechat_session');
                 if (sessionCookie) {
                     this.update({ sessionCookie });
-                    if (localStorage.getItem(this.chatbotSessionCookieKey)) {
-                        this.update({ chatbotState: 'restore_session' });
+                    if (localStorage.getItem(this.chatbot.sessionCookieKey)) {
+                        this.chatbot.update({ state: 'restore_session' });
                     }
                 }
             }
 
-            if (this.chatbotState === 'init') {
+            if (this.chatbot.state === 'init') {
                 // we landed on a website page where a channel rule is configured to run a chatbot.script
                 // -> initialize necessary state
                 if (this.rule.chatbot_welcome_steps && this.rule.chatbot_welcome_steps.length !== 0) {
@@ -213,7 +157,7 @@ registerModel({
                         },
                     });
                 }
-            } else if (this.chatbotState === 'welcome') {
+            } else if (this.chatbot.state === 'welcome') {
                 // we landed on a website page and a chatbot script was initialized on a previous one
                 // however the end-user did not interact with the bot ( :( )
                 // -> remove cookie to force opening the popup again
@@ -222,10 +166,10 @@ registerModel({
                 set_cookie('im_livechat_auto_popup', '', -1);
                 this.update({ history: clear() });
                 this.update({ rule: this.livechatInit.rule });
-            } else if (this.chatbotState === 'restore_session') {
+            } else if (this.chatbot.state === 'restore_session') {
                 // we landed on a website page and a chatbot script is currently running
-                // -> restore the user's session (see 'chatbotRestoreSession')
-                this.livechatButtonView.chatbotRestoreSession();
+                // -> restore the user's session (see 'Chatbot/restoreSession')
+                this.chatbot.restoreSession();
             }
         },
     },
@@ -247,16 +191,13 @@ registerModel({
             compute: '_computeChannelId',
         }),
         chatbot: one('Chatbot', {
-            compute: '_computeChatbot',
+            default: {},
             inverse: 'publicLivechatGlobalOwner',
             isCausal: true,
         }),
-        chatbotServerUrl: attr(),
-        chatbotSessionCookieKey: attr({
-            compute: '_computeChatbotSessionCookieKey',
-        }),
-        chatbotState: attr({
-            compute: '_computeChatbotState',
+        chatWindow: one('PublicLivechatWindow', {
+            inverse: 'publicLivechatGlobalOwner',
+            isCausal: true,
         }),
         feedbackView: one('PublicLivechatFeedbackView', {
             inverse: 'publicLivechatGlobalOwner',
@@ -281,9 +222,6 @@ registerModel({
         isTestChatbot: attr({
             default: false,
         }),
-        isWebsiteLivechatChatbotFlow: attr({
-            default: false,
-        }),
         lastMessage: one('PublicLivechatMessage', {
             compute: '_computeLastMessage',
         }),
@@ -293,9 +231,6 @@ registerModel({
             isCausal: true,
         }),
         livechatInit: attr(),
-        localStorageChatbotState: attr({
-            compute: '_computeLocalStorageChatbotState',
-        }),
         messages: many('PublicLivechatMessage'),
         notificationHandler: one('PublicLivechatGlobalNotificationHandler', {
             inverse: 'publicLivechatGlobalOwner',
@@ -313,5 +248,6 @@ registerModel({
             default: '',
         }),
         sessionCookie: attr(),
+        testChatbotData: attr(),
     },
 });

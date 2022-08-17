@@ -616,3 +616,110 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 .o_livechat_no_rating {
     opacity: 0.5;
 }
+
+.o_PublicLivechatMessage {
+    display: flex;
+    position: relative;
+    
+    &.o-isVisitorTheAuthor {
+        flex-direction: row-reverse !important;
+    }
+}
+
+.o_PublicLivechatMessage_content {
+    word-break: break-word;
+    word-wrap: break-word;
+}
+
+.o_PublicLivechatMessage_header {
+    display: flex;
+    align-items: center;
+
+    &.o-isVisitorTheAuthor {
+        justify-content: flex-end !important;
+    }
+}
+
+.o_PublicLivechatMessage_headerAuthor {
+    margin-right: map-get($spacers, 2);
+}
+
+.o_PublicLivechatMessage_headerDate {
+    opacity: 50%;
+}
+
+.o_PublicLivechatMessage_headerDatePrefix {
+    opacity: 50%;
+    margin-right: map-get($spacers, 1) / 2;
+}
+
+.o_PublicLivechatMessage_bubbleWrap {
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+
+    &.o-isVisitorTheAuthor {
+        justify-content: flex-end;
+        margin-left: map-get($spacers, 4);
+    }
+    
+    &.o-isOperatorTheAuthor {
+        margin-right: map-get($spacers, 4);
+    }
+}
+
+.o_PublicLivechatMessage_bubble {
+    position: relative;
+
+    &.o-isContentNonEmpty {
+        padding: map-get($spacers, 4) / 2;
+    }
+
+    &.o-isVisitorTheAuthor {
+        margin-left: map-get($spacers, 2);
+    }
+    
+    &.o-isOperatorTheAuthor {
+        margin-right: map-get($spacers, 2);
+    }
+
+}
+
+.o_PublicLivechatMessage_background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity .5s ease-out;
+    margin-right: map-get($spacers, 5);
+    border-bottom-right-radius: 0.6rem !important;
+    border-bottom-left-radius: 0.6rem !important;
+    border: 1px solid #C9CCD2 !important;
+
+    &.o-isVisitorTheAuthor {
+        border-bottom-left-radius: 0.6rem !important;
+        border-top-left-radius: 0.6rem !important;
+        opacity: 50%;
+        border-color: #198754 !important;
+        background-color: rgba(40, 167, 69, 0.5) !important;
+        color: #000;
+        opacity: 25%;
+    }
+
+    &.o-isOperatorTheAuthor {
+        border-top-right-radius: 0.6rem !important;
+        border-bottom-right-radius: 0.6rem !important;
+        border-color: #17a2b8 !important;
+        background-color: rgba(23, 162, 184, 0.5) !important;
+        color: #000;
+        opacity: 15%
+    }
+}
+
+.o_PublicLivechatWindow_composer {
+    padding: map-get($spacers, 2);
+    outline: none;
+    border: 0;
+    border-top: 1px solid lightgray;
+}
