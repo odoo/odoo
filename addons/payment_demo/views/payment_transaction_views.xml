@@ -12,20 +12,20 @@
                         type="object"
                         name="action_demo_set_done"
                         class="oe_highlight"
-                        attrs="{'invisible': ['|', '|', ('provider', '!=', 'demo'), ('capture_manually', '=', False), ('state', '!=', 'pending')]}"/>
+                        attrs="{'invisible': ['|', '|', ('provider_code', '!=', 'demo'), ('capture_manually', '=', False), ('state', '!=', 'pending')]}"/>
                 <button string="Confirm"
                         type="object"
                         name="action_demo_set_done"
                         class="oe_highlight"
-                        attrs="{'invisible': ['|', '|', ('provider', '!=', 'demo'), ('capture_manually', '=', True), ('state', '!=', 'pending')]}"/>
+                        attrs="{'invisible': ['|', '|', ('provider_code', '!=', 'demo'), ('capture_manually', '=', True), ('state', '!=', 'pending')]}"/>
                 <button string="Cancel"
                         type="object"
                         name="action_demo_set_canceled"
-                        attrs="{'invisible': ['|', ('provider', '!=', 'demo'), ('state', '!=', 'pending')]}"/>
+                        attrs="{'invisible': ['|', ('provider_code', '!=', 'demo'), ('state', '!=', 'pending')]}"/>
                 <button string="Set to Error"
                         type="object"
                         name="action_demo_set_error"
-                        attrs="{'invisible': ['|', ('provider', '!=', 'demo'), ('state', '!=', 'pending')]}"/>
+                        attrs="{'invisible': ['|', ('provider_code', '!=', 'demo'), ('state', '!=', 'pending')]}"/>
             </header>
         </field>
     </record>

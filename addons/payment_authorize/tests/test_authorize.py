@@ -13,20 +13,20 @@ from .common import AuthorizeCommon
 @tagged('post_install', '-at_install')
 class AuthorizeTest(AuthorizeCommon):
 
-    def test_compatible_acquirers(self):
+    def test_compatible_providers(self):
         # Note: in the test common, 'USD' is specified as authorize_currency_id
         unsupported_currency = self._prepare_currency('CHF')
-        acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+        providers = self.env['payment.provider']._get_compatible_providers(
             self.company.id, self.partner.id, self.amount, currency_id=unsupported_currency.id
         )
-        self.assertNotIn(self.authorize, acquirers)
-        acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+        self.assertNotIn(self.authorize, providers)
+        providers = self.env['payment.provider']._get_compatible_providers(
             self.company.id, self.partner.id, self.amount, currency_id=self.currency_usd.id
         )
-        self.assertIn(self.authorize, acquirers)
+        self.assertIn(self.authorize, providers)
 
     def test_processing_values(self):
-        """Test custom 'access_token' processing_values for authorize acquirer."""
+        """Test custom 'access_token' processing_values for authorize provider."""
         tx = self._create_transaction(flow='direct')
         with mute_logger('odoo.addons.payment.models.payment_transaction'), \
             patch(
@@ -48,9 +48,9 @@ class AuthorizeTest(AuthorizeCommon):
         self.assertEqual(self.authorize._get_validation_currency(), self.currency_usd)
 
     def test_authorize_neutralize(self):
-        self.env['payment.acquirer']._neutralize()
+        self.env['payment.provider']._neutralize()
 
-        self.assertEqual(self.acquirer.authorize_login, False)
-        self.assertEqual(self.acquirer.authorize_transaction_key, False)
-        self.assertEqual(self.acquirer.authorize_signature_key, False)
-        self.assertEqual(self.acquirer.authorize_client_key, False)
+        self.assertEqual(self.provider.authorize_login, False)
+        self.assertEqual(self.provider.authorize_transaction_key, False)
+        self.assertEqual(self.provider.authorize_signature_key, False)
+        self.assertEqual(self.provider.authorize_client_key, False)

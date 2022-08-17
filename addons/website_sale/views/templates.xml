@@ -1629,7 +1629,7 @@
 
     <template id="payment" name="Payment">
         <t t-call="website.layout">
-            <t t-set="additional_title">Shop - Select Payment Acquirer</t>
+            <t t-set="additional_title">Shop - Select Payment Provider</t>
             <t t-set="no_footer" t-value="1"/>
 
             <div id="wrap">
@@ -1661,7 +1661,7 @@
                             <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>
 
                             <t t-if="website_sale_order.amount_total">
-                                <div t-if="acquirers or tokens" id="payment_method" class="mt-3">
+                                <div t-if="providers or tokens" id="payment_method" class="mt-3">
                                     <h3 class="mb24">Pay with </h3>
                                     <t t-call="payment.checkout">
                                         <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
@@ -1674,11 +1674,11 @@
                                 </div>
                             </t>
 
-                            <div t-if="not acquirers" class="mt-2">
+                            <div t-if="not providers" class="mt-2">
                                 <a role="button" class="btn-link"
                                     groups="base.group_system"
                                     t-attf-href="/web#action=#{payment_action_id}">
-                                        <i class="fa fa-arrow-right"></i> Add payment acquirers
+                                        <i class="fa fa-arrow-right"></i> Add payment providers
                                 </a>
                             </div>
                             <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method" name="o_website_sale_free_cart">
@@ -1844,7 +1844,7 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
-                                                <t t-esc="order.get_portal_last_transaction().acquirer_id.sudo().name" />
+                                                <t t-esc="order.get_portal_last_transaction().provider_id.sudo().name" />
                                             </td>
                                             <td class="text-end" width="100">
                                                 <strong>Total:</strong>
@@ -1939,17 +1939,17 @@
                 'bg-danger'}">
                 <div class="card-header">
                     <a role="button" groups="base.group_system" class="btn btn-sm btn-link text-white float-end" target="_blank" aria-label="Edit" title="Edit"
-                            t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.acquirer', payment_tx_id.acquirer_id.id, 'payment.action_payment_acquirer')">
+                            t-att-href="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % ('payment.provider', payment_tx_id.provider_id.id, 'payment.action_payment_provider')">
                         <i class="fa fa-pencil"></i>
                     </a>
                     <t t-if="payment_tx_id.state == 'pending'">
-                        <t t-out="payment_tx_id.acquirer_id.sudo().pending_msg"/>
+                        <t t-out="payment_tx_id.provider_id.sudo().pending_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'done'">
-                        <span t-if='payment_tx_id.acquirer_id.sudo().done_msg' t-out="payment_tx_id.acquirer_id.sudo().done_msg"/>
+                        <span t-if='payment_tx_id.provider_id.sudo().done_msg' t-out="payment_tx_id.provider_id.sudo().done_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'cancel'">
-                        <t t-out="payment_tx_id.acquirer_id.sudo().cancel_msg"/>
+                        <t t-out="payment_tx_id.provider_id.sudo().cancel_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'authorized'">
                         <span>Your payment has been authorized.</span>
@@ -1958,11 +1958,11 @@
                         <span t-esc="payment_tx_id.state_message"/>
                     </t>
                 </div>
-                <t t-if="payment_tx_id.provider == 'transfer'">
+                <t t-if="payment_tx_id.provider_code == 'transfer'">
                     <div t-if="order.reference" class="card-body">
                         <b>Communication: </b><span t-esc='order.reference'/>
                     </div>
-                    <div t-if="payment_tx_id.acquirer_id.sudo().qr_code">
+                    <div t-if="payment_tx_id.provider_id.sudo().qr_code">
                         <t t-set="qr_code" t-value="payment_tx_id.company_id.partner_id.bank_ids[:1].build_qr_code_base64(order.amount_total,payment_tx_id.reference, None, payment_tx_id.currency_id, payment_tx_id.partner_id)"/>
                         <div class="card-body" t-if="qr_code">
                             <h3>Or scan me with your banking app.</h3>

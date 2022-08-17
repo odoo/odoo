@@ -27,7 +27,7 @@ odoo.define('payment.payment_form_mixin', require => {
                 this._displayInlineForm(checkedRadio);
                 this._enableButton();
             } else {
-                this._setPaymentFlow(); // Initialize the payment flow to let acquirers overwrite it
+                this._setPaymentFlow(); // Initialize the payment flow to let providers overwrite it
             }
         },
 
@@ -117,7 +117,7 @@ odoo.define('payment.payment_form_mixin', require => {
         _displayInlineForm: function (radio) {
             this._hideInlineForms(); // Collapse previously opened inline forms
             this._hideError(); // The error is only relevant until it is hidden with its inline form
-            this._setPaymentFlow(); // Reset the payment flow to let acquirers overwrite it
+            this._setPaymentFlow(); // Reset the payment flow to let providers overwrite it
 
             // Extract contextual values from the radio button
             const provider = this._getProviderFromRadio(radio);
@@ -181,7 +181,7 @@ odoo.define('payment.payment_form_mixin', require => {
         /**
          * Determine and return the online payment flow of the selected payment option.
          *
-         * As some acquirers implement both the direct payment and the payment with redirection, the
+         * As some providers implement both the direct payment and the payment with redirection, the
          * flow cannot be inferred from the radio button only. The radio button only indicates
          * whether the payment option is a token. If not, the transaction context is looked up to
          * determine whether the flow is 'direct' or 'redirect'.
@@ -208,7 +208,7 @@ odoo.define('payment.payment_form_mixin', require => {
          *
          * @private
          * @param {HTMLInputElement} radio - The radio button linked to the payment option
-         * @return {number} The acquirer id or the token id or of the payment option linked to the
+         * @return {number} The provider id or the token id or of the payment option linked to the
          *                  radio button.
          */
         _getPaymentOptionIdFromRadio: radio => $(radio).data('payment-option-id'),
@@ -223,7 +223,7 @@ odoo.define('payment.payment_form_mixin', require => {
         _getProviderFromRadio: radio => $(radio).data('provider'),
 
         /**
-         * Remove the error in the acquirer form.
+         * Remove the error in the provider form.
          *
          * @private
          * @return {jQuery} The removed error
@@ -280,16 +280,16 @@ odoo.define('payment.payment_form_mixin', require => {
         /**
          * Prepare the params to send to the transaction route.
          *
-         * For an acquirer to overwrite generic params or to add acquirer-specific ones, it must
+         * For a provider to overwrite generic params or to add provider-specific ones, it must
          * override this method and return the extended transaction route params.
          *
          * @private
-         * @param {string} provider - The provider of the selected payment option's acquirer
+         * @param {string} code - The code of the selected payment option provider
          * @param {number} paymentOptionId - The id of the selected payment option
          * @param {string} flow - The online payment flow of the selected payment option
          * @return {object} The transaction route params
          */
-        _prepareTransactionRouteParams: function (provider, paymentOptionId, flow) {
+        _prepareTransactionRouteParams: function (code, paymentOptionId, flow) {
             return {
                 'payment_option_id': paymentOptionId,
                 'reference_prefix': this.txContext.referencePrefix !== undefined
@@ -310,49 +310,49 @@ odoo.define('payment.payment_form_mixin', require => {
         },
 
         /**
-         * Prepare the acquirer-specific inline form of the selected payment option.
+         * Prepare the provider-specific inline form of the selected payment option.
          *
-         * For an acquirer to manage an inline form, it must override this method. When the override
+         * For a provider to manage an inline form, it must override this method. When the override
          * is called, it must lookup the parameters to decide whether it is necessary to prepare its
          * inline form. Otherwise, the call must be sent back to the parent method.
          *
          * @private
-         * @param {string} provider - The provider of the selected payment option's acquirer
+         * @param {string} code - The code of the selected payment option's provider
          * @param {number} paymentOptionId - The id of the selected payment option
          * @param {string} flow - The online payment flow of the selected payment option
          * @return {Promise}
          */
-        _prepareInlineForm: (provider, paymentOptionId, flow) => Promise.resolve(),
+        _prepareInlineForm: (code, paymentOptionId, flow) => Promise.resolve(),
 
         /**
          * Process the payment.
          *
-         * For an acquirer to do pre-processing work on the transaction processing flow, or to
+         * For a provider to do pre-processing work on the transaction processing flow, or to
          * define its entire own flow that requires re-scheduling the RPC to the transaction route,
          * it must override this method.
          * If only post-processing work is needed, an override of `_processRedirectPayment`,
          * `_processDirectPayment` or `_processTokenPayment` might be more appropriate.
          *
          * @private
-         * @param {string} provider - The provider of the payment option's acquirer
+         * @param {string} code - The code of the payment option's provider
          * @param {number} paymentOptionId - The id of the payment option handling the transaction
          * @param {string} flow - The online payment flow of the transaction
          * @return {Promise}
          */
-        _processPayment: function (provider, paymentOptionId, flow) {
+        _processPayment: function (code, paymentOptionId, flow) {
             // Call the transaction route to create a tx and retrieve the processing values
             return this._rpc({
                 route: this.txContext.transactionRoute,
-                params: this._prepareTransactionRouteParams(provider, paymentOptionId, flow),
+                params: this._prepareTransactionRouteParams(code, paymentOptionId, flow),
             }).then(processingValues => {
                 if (flow === 'redirect') {
                     return this._processRedirectPayment(
-                        provider, paymentOptionId, processingValues
+                        code, paymentOptionId, processingValues
                     );
                 } else if (flow === 'direct') {
-                    return this._processDirectPayment(provider, paymentOptionId, processingValues);
+                    return this._processDirectPayment(code, paymentOptionId, processingValues);
                 } else if (flow === 'token') {
-                    return this._processTokenPayment(provider, paymentOptionId, processingValues);
+                    return this._processTokenPayment(code, paymentOptionId, processingValues);
                 }
             }).guardedCatch(error => {
                 error.event.preventDefault();
@@ -365,32 +365,32 @@ odoo.define('payment.payment_form_mixin', require => {
         },
 
         /**
-         * Execute the acquirer-specific implementation of the direct payment flow.
+         * Execute the provider-specific implementation of the direct payment flow.
          *
-         * For an acquirer to redefine the processing of the direct payment flow, it must override
+         * For a provider to redefine the processing of the direct payment flow, it must override
          * this method.
          *
          * @private
-         * @param {string} provider - The provider of the acquirer
-         * @param {number} acquirerId - The id of the acquirer handling the transaction
+         * @param {string} code - The code of the provider
+         * @param {number} providerId - The id of the provider handling the transaction
          * @param {object} processingValues - The processing values of the transaction
          * @return {Promise}
          */
-        _processDirectPayment: (provider, acquirerId, processingValues) => Promise.resolve(),
+        _processDirectPayment: (code, providerId, processingValues) => Promise.resolve(),
 
         /**
          * Redirect the customer by submitting the redirect form included in the processing values.
          *
-         * For an acquirer to redefine the processing of the payment with redirection flow, it must
+         * For a provider to redefine the processing of the payment with redirection flow, it must
          * override this method.
          *
          * @private
-         * @param {string} provider - The provider of the acquirer
-         * @param {number} acquirerId - The id of the acquirer handling the transaction
+         * @param {string} code - The code of the provider
+         * @param {number} providerId - The id of the provider handling the transaction
          * @param {object} processingValues - The processing values of the transaction
          * @return {undefined}
          */
-        _processRedirectPayment: (provider, acquirerId, processingValues) => {
+        _processRedirectPayment: (code, providerId, processingValues) => {
             // Append the redirect form to the body
             const $redirectForm = $(processingValues.redirect_form_html).attr(
                 'id', 'o_payment_redirect_form'
@@ -404,16 +404,16 @@ odoo.define('payment.payment_form_mixin', require => {
         /**
          * Redirect the customer to the status route.
          *
-         * For an acquirer to redefine the processing of the payment by token flow, it must override
+         * For a provider to redefine the processing of the payment by token flow, it must override
          * this method.
          *
          * @private
-         * @param {string} provider - The provider of the token's acquirer
+         * @param {string} provider_code - The code of the token's provider
          * @param {number} tokenId - The id of the token handling the transaction
          * @param {object} processingValues - The processing values of the transaction
          * @return {undefined}
          */
-        _processTokenPayment: (provider, tokenId, processingValues) => {
+        _processTokenPayment: (provider_code, tokenId, processingValues) => {
             // The flow is already completed as payments by tokens are immediately processed
             window.location = '/payment/status';
         },
@@ -421,7 +421,7 @@ odoo.define('payment.payment_form_mixin', require => {
         /**
          * Set the online payment flow for the selected payment option.
          *
-         * For an acquirer to manage direct payments, it must call this method from within its
+         * For a provider to manage direct payments, it must call this method from within its
          * override of `_prepareInlineForm` to declare its payment flow for the selected payment
          * option.
          *
@@ -460,7 +460,7 @@ odoo.define('payment.payment_form_mixin', require => {
         //--------------------------------------------------------------------------
 
         /**
-         * Hide all extra payment icons of the acquirer linked to the clicked button.
+         * Hide all extra payment icons of the provider linked to the clicked button.
          *
          * Called when clicking on the "show less" button.
          *
@@ -480,7 +480,7 @@ odoo.define('payment.payment_form_mixin', require => {
         },
 
         /**
-         * Display all the payment icons of the acquirer linked to the clicked button.
+         * Display all the payment icons of the provider linked to the clicked button.
          *
          * Called when clicking on the "show more" button.
          *

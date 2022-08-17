@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <!-- Acquirers -->
+    <!-- Providers -->
 
-    <record id="payment_acquirer_company_rule" model="ir.rule">
-        <field name="name">Access acquirers in own companies only</field>
-        <field name="model_id" ref="payment.model_payment_acquirer"/>
+    <record id="payment_provider_company_rule" model="ir.rule">
+        <field name="name">Access providers in own companies only</field>
+        <field name="model_id" ref="payment.model_payment_provider"/>
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 

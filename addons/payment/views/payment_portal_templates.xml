@@ -5,11 +5,11 @@
     <template id="pay_meth_link" inherit_id="portal.portal_layout">
         <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
             <t t-set="partner" t-value="request.env.user.partner_id"/>
-            <t t-set="acquirers_allowing_tokenization"
-               t-value="request.env['payment.acquirer'].sudo()._get_compatible_acquirers(request.env.company.id, partner.id, 0., force_tokenization=True, is_validation=True)"/>
+            <t t-set="providers_allowing_tokenization"
+               t-value="request.env['payment.provider'].sudo()._get_compatible_providers(request.env.company.id, partner.id, 0., force_tokenization=True, is_validation=True)"/>
             <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
             <!-- Only show the link if a token can be created or if one already exists -->
-            <div t-if="acquirers_allowing_tokenization or existing_tokens"
+            <div t-if="providers_allowing_tokenization or existing_tokens"
                  class='manage_payment_method mt16'>
                 <a href="/my/payment_method">Manage payment methods</a>
             </div>
@@ -40,7 +40,7 @@
                             <div t-elif="not partner_id" class="alert alert-warning">
                                 <strong>Warning</strong> You must be logged in to pay.
                             </div>
-                            <div t-elif="not acquirers and not tokens" class="alert alert-warning">
+                            <div t-elif="not providers and not tokens" class="alert alert-warning">
                                 <strong>No suitable payment option could be found.</strong><br/>
                                 If you believe that it is an error, please contact the website administrator.
                             </div>
@@ -76,9 +76,9 @@
                     <!-- Manage page -->
                     <div class="row">
                         <div class="col-lg-7">
-                            <t t-if="acquirers or tokens" t-call="payment.manage"/>
+                            <t t-if="providers or tokens" t-call="payment.manage"/>
                             <div t-else="" class="alert alert-warning">
-                                <p><strong>No suitable payment acquirer could be found.</strong></p>
+                                <p><strong>No suitable payment provider could be found.</strong></p>
                                 <p>If you believe that it is an error, please contact the website administrator.</p>
                             </div>
                         </div>
@@ -156,7 +156,7 @@
                                 <hr/>
                                 <div class="row">
                                     <div class="col-md-5 text-muted">
-                                        Processed by <t t-esc="tx.acquirer_id.sudo().name"/>
+                                        Processed by <t t-esc="tx.provider_id.sudo().name"/>
                                     </div>
                                     <div class="col-md-4 offset-md-3 mt-2 ps-0">
                                         <a role="button"

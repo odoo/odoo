@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="payment_acquirer_form" model="ir.ui.view">
-        <field name="name">Ogone Acquirer Form</field>
-        <field name="model">payment.acquirer</field>
-        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Ogone Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='provider_creation_warning']" position="after">
                 <div class="alert alert-danger"
                      role="alert"
-                     attrs="{'invisible': [('provider', '!=', 'ogone')]}">
+                     attrs="{'invisible': [('code', '!=', 'ogone')]}">
                     This provider is deprecated.
                     Consider disabling it and moving to <strong>Stripe</strong>.
                 </div>
             </xpath>
-            <group name="acquirer" position="inside">
-                <group attrs="{'invisible': [('provider', '!=', 'ogone')]}">
-                    <field name="ogone_pspid" attrs="{'required':[('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>
-                    <field name="ogone_userid" attrs="{'required':[('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>
-                    <field name="ogone_password" attrs="{'required':[('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}" password="True"/>
-                    <field name="ogone_shakey_in" attrs="{'required':[('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}" password="True"/>
-                    <field name="ogone_shakey_out" attrs="{'required':[('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}" password="True"/>
-                    <field name="ogone_hash_function" attrs="{'required':[('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}" groups="base.group_no_one"/>
+            <group name="code" position="inside">
+                <group attrs="{'invisible': [('code', '!=', 'ogone')]}">
+                    <field name="ogone_pspid" attrs="{'required':[('code', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>
+                    <field name="ogone_userid" attrs="{'required':[('code', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>
+                    <field name="ogone_password" attrs="{'required':[('code', '=', 'ogone'), ('state', '!=', 'disabled')]}" password="True"/>
+                    <field name="ogone_shakey_in" attrs="{'required':[('code', '=', 'ogone'), ('state', '!=', 'disabled')]}" password="True"/>
+                    <field name="ogone_shakey_out" attrs="{'required':[('code', '=', 'ogone'), ('state', '!=', 'disabled')]}" password="True"/>
+                    <field name="ogone_hash_function" attrs="{'required':[('code', '=', 'ogone'), ('state', '!=', 'disabled')]}" groups="base.group_no_one"/>
                 </group>
             </group>
         </field>

@@ -7,8 +7,8 @@
         <field name="logo" type="base64" file="l10n_ar_website_sale/static/description/icon.png"/>
         <field name="domain" model="ir.config_parameter" eval="obj().env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
     </record>
-    <function model="payment.acquirer" name="copy">
-        <value eval="[ref('payment.payment_acquirer_transfer')]"/>
+    <function model="payment.provider" name="copy">
+        <value eval="[ref('payment.payment_provider_transfer')]"/>
         <value eval="{'company_id': ref('l10n_ar.company_ri'), 'state': 'enabled'}"/>
     </function>
     <function model="product.pricelist" name="write">

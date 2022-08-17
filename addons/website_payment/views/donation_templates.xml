@@ -3,7 +3,7 @@
 
     <template id="payment_checkout" inherit_id="payment.checkout">
         <!-- Make available anchor to inject donation form content -->
-        <xpath expr="//form/t[@t-set='acquirer_count']" position="before">
+        <xpath expr="//form/t[@t-set='provider_count']" position="before">
             <t t-if="is_donation">
                 <t t-set="donation_confirm_button_icon_class" t-valuef="fa-gift"/>
                 <t t-set="donation_confirm_button_label">Donate Now</t>
@@ -87,7 +87,7 @@
             </t>
         </xpath>
         <!-- Make fee badges recognizable so that they can be updated upon amount changes -->
-        <xpath expr="//t[@t-if='fees_by_acquirer.get(acquirer)']/span" position="attributes">
+        <xpath expr="//t[@t-if='fees_by_provider.get(provider)']/span" position="attributes">
             <attribute name="class" add="o_payment_fee" separator=" "/>
         </xpath>
         <!-- Adapt Pay confirm button -->
@@ -118,7 +118,7 @@
                             <div t-elif="not currency" class="alert alert-warning">
                                 <strong>Warning</strong> The currency is missing or incorrect.
                             </div>
-                            <div t-elif="not acquirers and not tokens" class="alert alert-warning">
+                            <div t-elif="not providers and not tokens" class="alert alert-warning">
                                 <strong>No suitable payment option could be found.</strong><br/>
                                 If you believe that it is an error, please contact the website administrator.
                             </div>

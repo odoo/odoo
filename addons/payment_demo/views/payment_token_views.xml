@@ -7,9 +7,9 @@
         <field name="inherit_id" ref="payment.payment_token_form"/>
         <field name="arch" type="xml">
             <group name="general_information" position="inside">
-                <field name="provider" invisible="1"/>
+                <field name="provider_code" invisible="1"/>
                 <field name="demo_simulated_state"
-                       attrs="{'invisible': [('provider', '!=', 'demo')], 'required': [('provider', '=', 'demo')]}"/>
+                       attrs="{'invisible': [('provider_code', '!=', 'demo')], 'required': [('provider_code', '=', 'demo')]}"/>
             </group>
         </field>
     </record>

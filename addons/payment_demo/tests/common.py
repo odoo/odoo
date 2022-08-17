@@ -9,7 +9,7 @@ class PaymentDemoCommon(PaymentCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.acquirer = cls._prepare_acquirer(provider='demo')
+        cls.provider = cls._prepare_provider(code='demo')
 
         cls.notification_data = {
             'reference': cls.reference,

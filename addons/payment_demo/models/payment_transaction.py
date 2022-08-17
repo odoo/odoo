@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    capture_manually = fields.Boolean(related='acquirer_id.capture_manually')
+    capture_manually = fields.Boolean(related='provider_id.capture_manually')
 
     #=== ACTION METHODS ===#
 
@@ -25,7 +25,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
-        if self.provider != 'demo':
+        if self.provider_code != 'demo':
             return
 
         notification_data = {'reference': self.reference, 'simulated_state': 'done'}
@@ -39,7 +39,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
-        if self.provider != 'demo':
+        if self.provider_code != 'demo':
             return
 
         notification_data = {'reference': self.reference, 'simulated_state': 'cancel'}
@@ -53,7 +53,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         self.ensure_one()
-        if self.provider != 'demo':
+        if self.provider_code != 'demo':
             return
 
         notification_data = {'reference': self.reference, 'simulated_state': 'error'}
@@ -69,7 +69,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._send_payment_request()
-        if self.provider != 'demo':
+        if self.provider_code != 'demo':
             return
 
         if not self.token_id:
@@ -89,7 +89,7 @@ class PaymentTransaction(models.Model):
         :return: The refund transaction if any
         :rtype: recordset of `payment.transaction`
         """
-        if self.provider != 'demo':
+        if self.provider_code != 'demo':
             return super()._send_refund_request(
                 create_refund_transaction=create_refund_transaction, **kwargs
             )
@@ -108,7 +108,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._send_capture_request()
-        if self.provider != 'demo':
+        if self.provider_code != 'demo':
             return
 
         notification_data = {
@@ -126,27 +126,27 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._send_void_request()
-        if self.provider != 'demo':
+        if self.provider_code != 'demo':
             return
 
         notification_data = {'reference': self.reference, 'simulated_state': 'cancel'}
         self._handle_notification_data('demo', notification_data)
 
-    def _get_tx_from_notification_data(self, provider, notification_data):
+    def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on dummy data.
 
-        :param str provider: The provider of the acquirer that handled the transaction
+        :param str provider_code: The code of the provider that handled the transaction
         :param dict notification_data: The dummy notification data
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_notification_data(provider, notification_data)
-        if provider != 'demo' or len(tx) == 1:
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
+        if provider_code != 'demo' or len(tx) == 1:
             return tx
 
         reference = notification_data.get('reference')
-        tx = self.search([('reference', '=', reference), ('provider', '=', 'demo')])
+        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'demo')])
         if not tx:
             raise ValidationError(
                 "Demo: " + _("No transaction found matching reference %s.", reference)
@@ -163,13 +163,13 @@ class PaymentTransaction(models.Model):
         :raise: ValidationError if inconsistent data were received
         """
         super()._process_notification_data(notification_data)
-        if self.provider != 'demo':
+        if self.provider_code != 'demo':
             return
 
         if self.tokenize:
             # The reasons why we immediately tokenize the transaction regardless of the state rather
             # than waiting for the payment method to be validated ('authorized' or 'done') like the
-            # other payment acquirers do are:
+            # other payment providers do are:
             # - To save the simulated state and payment details on the token while we have them.
             # - To allow customers to create tokens whose transactions will always end up in the
             #   said simulated state.
@@ -204,10 +204,10 @@ class PaymentTransaction(models.Model):
 
         state = notification_data['simulated_state']
         token = self.env['payment.token'].create({
-            'acquirer_id': self.acquirer_id.id,
+            'provider_id': self.provider_id.id,
             'payment_details': notification_data['payment_details'],
             'partner_id': self.partner_id.id,
-            'acquirer_ref': 'fake acquirer reference',
+            'provider_ref': 'fake provider reference',
             'verified': True,
             'demo_simulated_state': state,
         })

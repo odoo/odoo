@@ -19,8 +19,8 @@ class PaymentPortalOnsite(PaymentPortal):
 
         # This should never be triggered unless the user intentionally forges a request.
         if sale_order.carrier_id.delivery_type != 'onsite' and (
-            transaction.acquirer_id.provider == 'custom'
-            and transaction.acquirer_id.custom_mode == 'onsite'
+            transaction.provider_id.code == 'custom'
+            and transaction.provider_id.custom_mode == 'onsite'
         ):
             raise ValidationError(_("You cannot pay onsite if the delivery is not onsite"))
 

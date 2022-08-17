@@ -48,31 +48,31 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     _isShippingInformationRequired: () => false,
 
     /**
-     * Prepare the acquirer-specific express checkout form based on the provided data.
+     * Prepare the provider-specific express checkout form based on the provided data.
      *
-     * For an acquirer to manage an express checkout form, it must override this method.
+     * For an provider to manage an express checkout form, it must override this method.
      *
      * @private
-     * @param {Object} acquirerData - The acquirer-specific data.
+     * @param {Object} providerData - The provider-specific data.
      * @return {Promise}
      */
-    async _prepareExpressCheckoutForm(acquirerData) {
+    async _prepareExpressCheckoutForm(providerData) {
         return Promise.resolve();
     },
 
     /**
      * Prepare the params to send to the transaction route.
      *
-     * For an acquirer to overwrite generic params or to add acquirer-specific ones, it must
+     * For an provider to overwrite generic params or to add provider-specific ones, it must
      * override this method and return the extended transaction route params.
      *
      * @private
-     * @param {number} acquirerId - The id of the acquirer handling the transaction.
+     * @param {number} providerId - The id of the provider handling the transaction.
      * @returns {object} - The transaction route params
      */
-    _prepareTransactionRouteParams(acquirerId) {
+    _prepareTransactionRouteParams(providerId) {
         return {
-            'payment_option_id': parseInt(acquirerId),
+            'payment_option_id': parseInt(providerId),
             'reference_prefix': this.txContext.referencePrefix &&
                                 this.txContent.referencePrefix.toString(),
             'currency_id': this.txContext.currencyId &&
@@ -107,15 +107,15 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
     /**
      * Update the amount of the express checkout form.
      *
-     * For an acquirer to manage an express form, it must override this method.
+     * For a provider to manage an express form, it must override this method.
      *
      * @private
-     * @param {Object} acquirerData - The acquirer-specific data.
+     * @param {Object} providerData - The provider-specific data.
      * @param {number} newAmount - The new amount.
      * @param {number} newMinorAmount - The new minor amount.
      * @return {undefined}
      */
-    _updateAmount(acquirerData, newAmount, newMinorAmount) {},
+    _updateAmount(providerData, newAmount, newMinorAmount) {},
 
 });
 

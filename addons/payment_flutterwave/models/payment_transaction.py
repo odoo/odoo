@@ -25,15 +25,15 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one() from `_get_processing_values`
 
         :param dict processing_values: The generic and specific processing values of the transaction
-        :return: The dict of acquirer-specific processing values.
+        :return: The dict of provider-specific processing values.
         :rtype: dict
         """
         res = super()._get_specific_rendering_values(processing_values)
-        if self.provider != 'flutterwave':
+        if self.provider_code != 'flutterwave':
             return res
 
         # Initiate the payment and retrieve the payment link data.
-        base_url = self.acquirer_id.get_base_url()
+        base_url = self.provider_id.get_base_url()
         payload = {
             'tx_ref': self.reference,
             'amount': self.amount,
@@ -49,7 +49,7 @@ class PaymentTransaction(models.Model):
                 'logo': urls.url_join(base_url, f'web/image/res.company/{self.company_id.id}/logo'),
             },
         }
-        payment_link_data = self.acquirer_id._flutterwave_make_request('payments', payload=payload)
+        payment_link_data = self.provider_id._flutterwave_make_request('payments', payload=payload)
 
         # Extract the payment link URL and embed it in the redirect form.
         rendering_values = {
@@ -66,7 +66,7 @@ class PaymentTransaction(models.Model):
         :raise UserError: If the transaction is not linked to a token.
         """
         super()._send_payment_request()
-        if self.provider != 'flutterwave':
+        if self.provider_code != 'flutterwave':
             return
 
         # Prepare the payment request to Flutterwave.
@@ -75,7 +75,7 @@ class PaymentTransaction(models.Model):
 
         first_name, last_name = payment_utils.split_partner_name(self.partner_name)
         data = {
-            'token': self.token_id.acquirer_ref,
+            'token': self.token_id.provider_ref,
             'email': self.token_id.flutterwave_customer_email,
             'amount': self.amount,
             'currency': self.currency_id.name,
@@ -87,7 +87,7 @@ class PaymentTransaction(models.Model):
         }
 
         # Make the payment request to Flutterwave.
-        response_content = self.acquirer_id._flutterwave_make_request(
+        response_content = self.provider_id._flutterwave_make_request(
             'tokenized-charges', payload=data
         )
 
@@ -98,25 +98,25 @@ class PaymentTransaction(models.Model):
         )
         self._handle_notification_data('flutterwave', response_content['data'])
 
-    def _get_tx_from_notification_data(self, provider, notification_data):
+    def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on Flutterwave data.
 
-        :param str provider: The provider of the acquirer that handled the transaction.
+        :param str provider_code: The code of the provider that handled the transaction.
         :param dict notification_data: The notification data sent by the provider.
         :return: The transaction if found.
         :rtype: recordset of `payment.transaction`
         :raise ValidationError: If inconsistent data were received.
         :raise ValidationError: If the data match no transaction.
         """
-        tx = super()._get_tx_from_notification_data(provider, notification_data)
-        if provider != 'flutterwave' or len(tx) == 1:
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
+        if provider_code != 'flutterwave' or len(tx) == 1:
             return tx
 
         reference = notification_data.get('tx_ref')
         if not reference:
             raise ValidationError("Flutterwave: " + _("Received data with missing reference."))
 
-        tx = self.search([('reference', '=', reference), ('provider', '=', 'flutterwave')])
+        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'flutterwave')])
         if not tx:
             raise ValidationError(
                 "Flutterwave: " + _("No transaction found matching reference %s.", reference)
@@ -133,17 +133,17 @@ class PaymentTransaction(models.Model):
         :raise ValidationError: If inconsistent data were received.
         """
         super()._process_notification_data(notification_data)
-        if self.provider != 'flutterwave':
+        if self.provider_code != 'flutterwave':
             return
 
         # Verify the notification data.
-        verification_response_content = self.acquirer_id._flutterwave_make_request(
+        verification_response_content = self.provider_id._flutterwave_make_request(
             'transactions/verify_by_reference', payload={'tx_ref': self.reference}, method='GET'
         )
         verified_data = verification_response_content['data']
 
         # Process the verified notification data.
-        self.acquirer_reference = verified_data['id']
+        self.provider_reference = verified_data['id']
         payment_status = verified_data['status'].lower()
         if payment_status in PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
@@ -177,10 +177,10 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         token = self.env['payment.token'].create({
-            'acquirer_id': self.acquirer_id.id,
+            'provider_id': self.provider_id.id,
             'payment_details': notification_data['card']['last_4digits'],
             'partner_id': self.partner_id.id,
-            'acquirer_ref': notification_data['card']['token'],
+            'provider_ref': notification_data['card']['token'],
             'flutterwave_customer_email': notification_data['customer']['email'],
             'verified': True,  # The payment is confirmed, so the payment method is valid.
         })

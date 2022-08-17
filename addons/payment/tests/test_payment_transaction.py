@@ -9,7 +9,7 @@ from odoo.addons.payment.tests.common import PaymentCommon
 class TestPaymentTransaction(PaymentCommon):
 
     def test_refunds_count(self):
-        self.acquirer.support_refund = 'full_only'  # Should simply not be False
+        self.provider.support_refund = 'full_only'  # Should simply not be False
         tx = self._create_transaction('redirect', state='done')
         for reference_index, operation in enumerate(
             ('online_redirect', 'online_direct', 'online_token', 'validation', 'refund')
@@ -29,7 +29,7 @@ class TestPaymentTransaction(PaymentCommon):
         )
 
     def test_refund_transaction_values(self):
-        self.acquirer.support_refund = 'partial'
+        self.provider.support_refund = 'partial'
         tx = self._create_transaction('redirect', state='done')
 
         # Test the default values of a full refund transaction

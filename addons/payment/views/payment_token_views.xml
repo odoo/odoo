@@ -20,8 +20,8 @@
                         <field name="partner_id" />
                     </group>
                     <group name="technical_information">
-                        <field name="acquirer_id"/>
-                        <field name="acquirer_ref"/>
+                        <field name="provider_id"/>
+                        <field name="provider_ref"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                 </sheet>
@@ -36,8 +36,8 @@
             <tree string="Payment Tokens">
                 <field name="payment_details"/>
                 <field name="partner_id"/>
-                <field name="acquirer_id" readonly="1"/>
-                <field name="acquirer_ref" readonly="1"/>
+                <field name="provider_id" readonly="1"/>
+                <field name="provider_ref" readonly="1"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
             </tree>
         </field>
@@ -52,7 +52,7 @@
                 <separator/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 <group expand="1" string="Group By">
-                    <filter string="Acquirer" name="acquirer_id" context="{'group_by': 'acquirer_id'}"/>
+                    <filter string="Provider" name="provider_id" context="{'group_by': 'provider_id'}"/>
                     <filter string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"/>
                     <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                 </group>

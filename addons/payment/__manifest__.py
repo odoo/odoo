@@ -1,21 +1,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Payment Acquirer',
+    'name': 'Payment Provider',
     'version': '2.0',
     'category': 'Hidden',
-    'summary': 'Base Module for Payment Acquirers',
-    'description': """Payment Acquirer Base Module""",
+    'summary': 'Base Module for Payment Providers',
+    'description': """Payment Provider Base Module""",
     'depends': ['portal'],
     'data': [
         'data/payment_icon_data.xml',
-        'data/payment_acquirer_data.xml',
+        'data/payment_provider_data.xml',
         'data/payment_cron.xml',
 
         'views/payment_portal_templates.xml',
         'views/payment_templates.xml',
 
-        'views/payment_acquirer_views.xml',
+        'views/payment_provider_views.xml',
         'views/payment_icon_views.xml',
         'views/payment_transaction_views.xml',
         'views/payment_token_views.xml',  # Depends on `action_payment_transaction_linked_to_token`
@@ -43,7 +43,7 @@
             'payment/static/src/js/post_processing.js',
         ],
         'web.assets_backend': [
-            'payment/static/src/scss/payment_acquirer.scss',
+            'payment/static/src/scss/payment_provider.scss',
         ],
     },
     'license': 'LGPL-3',

@@ -13,28 +13,28 @@ odoo.define('payment_authorize.payment_form', require => {
     const authorizeMixin = {
 
         /**
-         * Return all relevant inline form inputs based on the payment method type of the acquirer.
+         * Return all relevant inline form inputs based on the payment method type of the provider.
          *
          * @private
-         * @param {number} acquirerId - The id of the selected acquirer
+         * @param {number} providerId - The id of the selected provider
          * @return {Object} - An object mapping the name of inline form inputs to their DOM element
          */
-        _getInlineFormInputs: function (acquirerId) {
+        _getInlineFormInputs: function (providerId) {
             if (this.authorizeInfo.payment_method_type === "credit_card") {
                 return {
-                    card: document.getElementById(`o_authorize_card_${acquirerId}`),
-                    month: document.getElementById(`o_authorize_month_${acquirerId}`),
-                    year: document.getElementById(`o_authorize_year_${acquirerId}`),
-                    code: document.getElementById(`o_authorize_code_${acquirerId}`),
+                    card: document.getElementById(`o_authorize_card_${providerId}`),
+                    month: document.getElementById(`o_authorize_month_${providerId}`),
+                    year: document.getElementById(`o_authorize_year_${providerId}`),
+                    code: document.getElementById(`o_authorize_code_${providerId}`),
                 };
             } else {
                 return {
-                    accountName: document.getElementById(`o_authorize_account_name_${acquirerId}`),
+                    accountName: document.getElementById(`o_authorize_account_name_${providerId}`),
                     accountNumber: document.getElementById(
-                        `o_authorize_account_number_${acquirerId}`
+                        `o_authorize_account_number_${providerId}`
                     ),
-                    abaNumber: document.getElementById(`o_authorize_aba_number_${acquirerId}`),
-                    accountType: document.getElementById(`o_authorize_account_type_${acquirerId}`),
+                    abaNumber: document.getElementById(`o_authorize_aba_number_${providerId}`),
+                    accountType: document.getElementById(`o_authorize_account_type_${providerId}`),
                 };
             }
         },
@@ -43,11 +43,11 @@ odoo.define('payment_authorize.payment_form', require => {
          * Return the credit card or bank data to pass to the Accept.dispatch request.
          *
          * @private
-         * @param {number} acquirerId - The id of the selected acquirer
+         * @param {number} providerId - The id of the selected provider
          * @return {Object} - Data to pass to the Accept.dispatch request
          */
-        _getPaymentDetails: function (acquirerId) {
-            const inputs = this._getInlineFormInputs(acquirerId);
+        _getPaymentDetails: function (providerId) {
+            const inputs = this._getInlineFormInputs(providerId);
             if (this.authorizeInfo.payment_method_type === 'credit_card') {
                 return {
                     cardData: {
@@ -74,13 +74,13 @@ odoo.define('payment_authorize.payment_form', require => {
          *
          * @override method from payment.payment_form_mixin
          * @private
-         * @param {string} provider - The provider of the selected payment option's acquirer
+         * @param {string} provider - The provider of the selected payment option's provider
          * @param {number} paymentOptionId - The id of the selected payment option
          * @param {string} flow - The online payment flow of the selected payment option
          * @return {Promise}
          */
-        _prepareInlineForm: function (provider, paymentOptionId, flow) {
-            if (provider !== 'authorize') {
+        _prepareInlineForm: function (code, paymentOptionId, flow) {
+            if (code !== 'authorize') {
                 return this._super(...arguments);
             }
 
@@ -92,15 +92,15 @@ odoo.define('payment_authorize.payment_form', require => {
 
             let acceptJSUrl = 'https://js.authorize.net/v1/Accept.js';
             return this._rpc({
-                route: '/payment/authorize/get_acquirer_info',
+                route: '/payment/authorize/get_provider_info',
                 params: {
-                    'acquirer_id': paymentOptionId,
+                    'provider_id': paymentOptionId,
                 },
-            }).then(acquirerInfo => {
-                if (acquirerInfo.state !== 'enabled') {
+            }).then(providerInfo => {
+                if (providerInfo.state !== 'enabled') {
                     acceptJSUrl = 'https://jstest.authorize.net/v1/Accept.js';
                 }
-                this.authorizeInfo = acquirerInfo;
+                this.authorizeInfo = providerInfo;
             }).then(() => {
                 ajax.loadJS(acceptJSUrl);
             }).guardedCatch((error) => {
@@ -118,13 +118,13 @@ odoo.define('payment_authorize.payment_form', require => {
          *
          * @override method from payment.payment_form_mixin
          * @private
-         * @param {string} provider - The provider of the payment option's acquirer
+         * @param {string} code - The code of the payment option's provider
          * @param {number} paymentOptionId - The id of the payment option handling the transaction
          * @param {string} flow - The online payment flow of the transaction
          * @return {Promise}
          */
-        _processPayment: function (provider, paymentOptionId, flow) {
-            if (provider !== 'authorize' || flow === 'token') {
+        _processPayment: function (code, paymentOptionId, flow) {
+            if (code !== 'authorize' || flow === 'token') {
                 return this._super(...arguments); // Tokens are handled by the generic flow
             }
 
@@ -153,11 +153,11 @@ odoo.define('payment_authorize.payment_form', require => {
          * Handle the response from Authorize.Net and initiate the payment.
          *
          * @private
-         * @param {number} acquirerId - The id of the selected acquirer
+         * @param {number} providerId - The id of the selected provider
          * @param {object} response - The payment nonce returned by Authorized.Net
          * @return {Promise}
          */
-        _responseHandler: function (acquirerId, response) {
+        _responseHandler: function (providerId, response) {
             if (response.messages.resultCode === 'Error') {
                 let error = "";
                 response.messages.message.forEach(msg => error += `${msg.code}: ${msg.text}\n`);
@@ -172,7 +172,7 @@ odoo.define('payment_authorize.payment_form', require => {
             // Create the transaction and retrieve the processing values
             return this._rpc({
                 route: this.txContext.transactionRoute,
-                params: this._prepareTransactionRouteParams('authorize', acquirerId, 'direct'),
+                params: this._prepareTransactionRouteParams('authorize', providerId, 'direct'),
             }).then(processingValues => {
                 // Initiate the payment
                 return this._rpc({
@@ -198,11 +198,11 @@ odoo.define('payment_authorize.payment_form', require => {
          * Checks that all payment inputs adhere to the DOM validation constraints.
          *
          * @private
-         * @param {number} acquirerId - The id of the selected acquirer
+         * @param {number} providerId - The id of the selected provider
          * @return {boolean} - Whether all elements pass the validation constraints
          */
-        _validateFormInputs: function (acquirerId) {
-            const inputs = Object.values(this._getInlineFormInputs(acquirerId));
+        _validateFormInputs: function (providerId) {
+            const inputs = Object.values(this._getInlineFormInputs(providerId));
             return inputs.every(element => element.reportValidity());
         },
 

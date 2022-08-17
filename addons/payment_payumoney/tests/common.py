@@ -9,13 +9,13 @@ class PayumoneyCommon(PaymentCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.payumoney = cls._prepare_acquirer('payumoney', update_values={
+        cls.payumoney = cls._prepare_provider('payumoney', update_values={
             'payumoney_merchant_key': 'dummy',
             'payumoney_merchant_salt': 'dummy',
         })
 
         # Override default values
-        cls.acquirer = cls.payumoney
+        cls.provider = cls.payumoney
         cls.currency = cls._prepare_currency('INR')
 
         cls.notification_data = {

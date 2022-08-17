@@ -77,7 +77,7 @@ class FlutterwaveController(http.Controller):
             raise Forbidden()
 
         # Compare the received signature with the expected signature.
-        expected_signature = tx_sudo.acquirer_id.flutterwave_webhook_secret
+        expected_signature = tx_sudo.provider_id.flutterwave_webhook_secret
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received notification with invalid signature.")
             raise Forbidden()

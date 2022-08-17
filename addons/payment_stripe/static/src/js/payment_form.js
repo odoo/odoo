@@ -12,13 +12,13 @@ odoo.define('payment_stripe.payment_form', require => {
          *
          * @override method from payment.payment_form_mixin
          * @private
-         * @param {string} provider - The provider of the payment option's acquirer
+         * @param {string} code - The code of the payment option
          * @param {number} paymentOptionId - The id of the payment option handling the transaction
          * @param {object} processingValues - The processing values of the transaction
          * @return {undefined}
          */
-        _processRedirectPayment: function (provider, paymentOptionId, processingValues) {
-            if (provider !== 'stripe') {
+        _processRedirectPayment: function (code, paymentOptionId, processingValues) {
+            if (code !== 'stripe') {
                 return this._super(...arguments);
             }
 

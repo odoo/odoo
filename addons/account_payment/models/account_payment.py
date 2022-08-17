@@ -18,7 +18,7 @@ class AccountPayment(models.Model):
         string="Saved Payment Token", comodel_name='payment.token', domain="""[
             ('id', 'in', suitable_payment_token_ids),
         ]""",
-        help="Note that only tokens from acquirers allowing to capture the amount are available.")
+        help="Note that only tokens from providers allowing to capture the amount are available.")
     amount_available_for_refund = fields.Monetary(compute='_compute_amount_available_for_refund')
 
     # == Display purpose fields ==
@@ -48,7 +48,7 @@ class AccountPayment(models.Model):
     def _compute_amount_available_for_refund(self):
         for payment in self:
             tx_sudo = payment.payment_transaction_id.sudo()
-            if tx_sudo.acquirer_id.support_refund and tx_sudo.operation != 'refund':
+            if tx_sudo.provider_id.support_refund and tx_sudo.operation != 'refund':
                 # Only consider refund transactions that are confirmed by summing the amounts of
                 # payments linked to such refund transactions. Indeed, should a refund transaction
                 # be stuck forever in a transient state (due to webhook failure, for example), the
@@ -71,9 +71,9 @@ class AccountPayment(models.Model):
             if payment.use_electronic_payment_method:
                 payment.suitable_payment_token_ids = self.env['payment.token'].sudo().search([
                     ('company_id', '=', payment.company_id.id),
-                    ('acquirer_id.capture_manually', '=', False),
+                    ('provider_id.capture_manually', '=', False),
                     ('partner_id', 'in', related_partner_ids.ids),
-                    ('acquirer_id', '=', payment.payment_method_line_id.payment_acquirer_id.id),
+                    ('provider_id', '=', payment.payment_method_line_id.payment_provider_id.id),
                 ])
             else:
                 payment.suitable_payment_token_ids = [Command.clear()]
@@ -82,8 +82,8 @@ class AccountPayment(models.Model):
     def _compute_use_electronic_payment_method(self):
         for payment in self:
             # Get a list of all electronic payment method codes.
-            # These codes are comprised of 'electronic' and the providers of each payment acquirer.
-            codes = [key for key in dict(self.env['payment.acquirer']._fields['provider']._description_selection(self.env))]
+            # These codes are comprised of 'electronic' and the providers of each payment provider.
+            codes = [key for key in dict(self.env['payment.provider']._fields['code']._description_selection(self.env))]
             payment.use_electronic_payment_method = payment.payment_method_code in codes
 
     def _compute_refunds_count(self):
@@ -103,7 +103,7 @@ class AccountPayment(models.Model):
 
     @api.onchange('partner_id', 'payment_method_line_id', 'journal_id')
     def _onchange_set_payment_token_id(self):
-        codes = [key for key in dict(self.env['payment.acquirer']._fields['provider']._description_selection(self.env))]
+        codes = [key for key in dict(self.env['payment.provider']._fields['code']._description_selection(self.env))]
         if not (self.payment_method_code in codes and self.partner_id and self.journal_id):
             self.payment_token_id = False
             return
@@ -117,20 +117,20 @@ class AccountPayment(models.Model):
         self.payment_token_id = self.env['payment.token'].sudo().search([
             ('company_id', '=', self.company_id.id),
             ('partner_id', 'in', related_partner_ids.ids),
-            ('acquirer_id.capture_manually', '=', False),
-            ('acquirer_id', '=', self.payment_method_line_id.payment_acquirer_id.id),
+            ('provider_id.capture_manually', '=', False),
+            ('provider_id', '=', self.payment_method_line_id.payment_provider_id.id),
          ], limit=1)
 
     #=== ACTION METHODS ===#
 
     def action_post(self):
         # Post the payments "normally" if no transactions are needed.
-        # If not, let the acquirer update the state.
+        # If not, let the provider update the state.
 
         payments_need_tx = self.filtered(
             lambda p: p.payment_token_id and not p.payment_transaction_id
         )
-        # creating the transaction require to access data on payment acquirers, not always accessible to users
+        # creating the transaction require to access data on payment providers, not always accessible to users
         # able to create payments
         transactions = payments_need_tx.sudo()._create_payment_transaction()
 
@@ -203,7 +203,7 @@ class AccountPayment(models.Model):
     def _prepare_payment_transaction_vals(self, **extra_create_values):
         self.ensure_one()
         return {
-            'acquirer_id': self.payment_token_id.acquirer_id.id,
+            'provider_id': self.payment_token_id.provider_id.id,
             'reference': self.ref,
             'amount': self.amount,
             'currency_id': self.currency_id.id,

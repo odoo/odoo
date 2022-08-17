@@ -85,12 +85,12 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         })
 
     def _get_tx_context(self, response, form_name):
-        """Extracts txContext & other form info (acquirer & token ids)
+        """Extracts txContext & other form info (provider & token ids)
         from a payment response (with manage/checkout html form)
 
         :param response: http Response, with a payment form as text
         :param str form_name: o_payment_manage / o_payment_checkout
-        :return: Transaction context (+ acquirer_ids & token_ids)
+        :return: Transaction context (+ provider_ids & token_ids)
         :rtype: dict
         """
         # Need to specify an HTML parser as parser
@@ -114,20 +114,20 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
                 values[formatted_key] = formatted_val
 
         payment_options_inputs = html_tree.xpath("//input[@name='o_payment_radio']")
-        acquirer_ids = []
+        provider_ids = []
         token_ids = []
         for p_o_input in payment_options_inputs:
             data = dict()
             for key, val in p_o_input.items():
                 if key.startswith('data-'):
                     data[key[5:]] = val
-            if data['payment-option-type'] == 'acquirer':
-                acquirer_ids.append(int(data['payment-option-id']))
+            if data['payment-option-type'] == 'provider':
+                provider_ids.append(int(data['payment-option-id']))
             else:
                 token_ids.append(int(data['payment-option-id']))
 
         values.update({
-            'acquirer_ids': acquirer_ids,
+            'provider_ids': provider_ids,
             'token_ids': token_ids,
         })
 
@@ -199,7 +199,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         """ Prepare the basic payment/transaction route values.
 
         :param int payment_option_id: The payment option handling the transaction, as a
-                                      `payment.acquirer` id or a `payment.token` id
+                                      `payment.provider` id or a `payment.token` id
         :param str flow: The payment flow
         :return: The route values
         :rtype: dict

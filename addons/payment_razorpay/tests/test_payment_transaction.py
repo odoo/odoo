@@ -46,7 +46,7 @@ class TestPaymentTransaction(RazorpayCommon):
         """ Test that a refund transaction is created when processing refund notification data
         without reference. """
         source_tx = self._create_transaction(
-            'redirect', state='done', acquirer_reference=self.payment_id
+            'redirect', state='done', provider_reference=self.payment_id
         )
         refund_tx = self.env['payment.transaction']._get_tx_from_notification_data(
             'razorpay', dict(self.refund_data, entity_type='refund')
@@ -63,7 +63,7 @@ class TestPaymentTransaction(RazorpayCommon):
         successful payment. """
         tx = self._create_transaction('redirect')
         with patch(
-            'odoo.addons.payment_razorpay.models.payment_acquirer.PaymentAcquirer'
+            'odoo.addons.payment_razorpay.models.payment_provider.PaymentProvider'
             '._razorpay_make_request', return_value=self.payment_data
         ):
             tx._process_notification_data(self.payment_data)

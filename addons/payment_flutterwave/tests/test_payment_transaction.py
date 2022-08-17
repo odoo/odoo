@@ -15,7 +15,7 @@ class TestPaymentTransaction(FlutterwaveCommon):
         """ Test that the rendered values are conform to the transaction fields. """
         tx = self._create_transaction(flow='redirect')
         with patch(
-            'odoo.addons.payment_flutterwave.models.payment_acquirer.PaymentAcquirer'
+            'odoo.addons.payment_flutterwave.models.payment_provider.PaymentProvider'
             '._flutterwave_make_request', return_value={'data': {'link': 'https://dummy.com'}}
         ):
             rendering_values = tx._get_specific_rendering_values(None)
@@ -40,7 +40,7 @@ class TestPaymentTransaction(FlutterwaveCommon):
         successful payment. """
         tx = self._create_transaction(flow='redirect')
         with patch(
-            'odoo.addons.payment_flutterwave.models.payment_acquirer.PaymentAcquirer'
+            'odoo.addons.payment_flutterwave.models.payment_provider.PaymentProvider'
             '._flutterwave_make_request', return_value=self.verification_data
         ):
             tx._process_notification_data(self.redirect_notification_data)
@@ -51,7 +51,7 @@ class TestPaymentTransaction(FlutterwaveCommon):
         include token data. """
         tx = self._create_transaction(flow='redirect', tokenize=True)
         with patch(
-            'odoo.addons.payment_flutterwave.models.payment_acquirer.PaymentAcquirer'
+            'odoo.addons.payment_flutterwave.models.payment_provider.PaymentProvider'
             '._flutterwave_make_request', return_value=self.verification_data
         ), patch(
             'odoo.addons.payment_flutterwave.models.payment_transaction.PaymentTransaction'

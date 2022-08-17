@@ -9,14 +9,14 @@ class PayULatamCommon(PaymentCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.payulatam = cls._prepare_acquirer('payulatam', update_values={
+        cls.payulatam = cls._prepare_provider('payulatam', update_values={
             'payulatam_account_id': 'dummy',
             'payulatam_merchant_id': 'dummy',
             'payulatam_api_key': 'dummy',
         })
 
         # Override default values
-        cls.acquirer = cls.payulatam
+        cls.provider = cls.payulatam
         cls.currency = cls.currency_euro
 
         cls.async_notification_data = {

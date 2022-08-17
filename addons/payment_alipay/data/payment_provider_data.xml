@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_alipay" model="payment.provider">
+        <field name="name">Alipay</field>
+        <field name="display_as">Credit Card (powered by Alipay)</field>
+        <field name="image_128" type="base64" file="payment_alipay/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_alipay"/>
+        <!-- https://intl.alipay.com/ihome/home/about/buy.htm?topic=paymentMethods -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_icon_cc_jcb'),
+                   ref('payment.payment_icon_cc_mastercard'),
+                   ref('payment.payment_icon_cc_western_union'),
+                   ref('payment.payment_icon_cc_webmoney'),
+                   ref('payment.payment_icon_cc_visa'),
+               ])]"/>
+        <field name="code">alipay</field>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+    </record>
+
+</odoo>

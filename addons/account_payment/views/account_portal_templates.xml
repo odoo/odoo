@@ -48,7 +48,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div t-if="acquirers or tokens" id="payment_method" class="text-start col-md-13">
+                            <div t-if="providers or tokens" id="payment_method" class="text-start col-md-13">
                                 <t t-call="payment.checkout"/>
                             </div>
                             <div t-else="" class="alert alert-warning">
@@ -125,8 +125,8 @@
         <xpath expr="//a[hasclass('close')]" position="after">
             <t t-if="success == 'pay_invoice'">
                 <t t-set="payment_tx_id" t-value="invoice.get_portal_last_transaction()"/>
-                <span t-if='payment_tx_id.acquirer_id.sudo().done_msg' t-out="payment_tx_id.acquirer_id.sudo().done_msg"/>
-                <div t-if="payment_tx_id.acquirer_id.sudo().pending_msg and payment_tx_id.provider == 'transfer' and invoice.ref">
+                <span t-if='payment_tx_id.provider_id.sudo().done_msg' t-out="payment_tx_id.provider_id.sudo().done_msg"/>
+                <div t-if="payment_tx_id.provider_id.sudo().pending_msg and payment_tx_id.provider_code == 'transfer' and invoice.ref">
                     <b>Communication: </b><span t-esc='invoice.ref'/>
                 </div>
             </t>

@@ -64,7 +64,7 @@ class PaymentTransaction(models.Model):
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
     @api.model
-    def _compute_reference_prefix(self, provider, separator, **values):
+    def _compute_reference_prefix(self, provider_code, separator, **values):
         """ Compute the reference prefix from the transaction values.
 
         If the `values` parameter has an entry with 'invoice_ids' as key and a list of (4, id, O) or
@@ -73,7 +73,7 @@ class PaymentTransaction(models.Model):
 
         Note: This method should be called in sudo mode to give access to documents (INV, SO, ...).
 
-        :param str provider: The provider of the acquirer handling the transaction
+        :param str provider_code: The code of the provider handling the transaction
         :param str separator: The custom separator used to separate data references
         :param dict values: The transaction values used to compute the reference prefix. It should
                             have the structure {'invoice_ids': [(X2M command), ...], ...}.
@@ -87,7 +87,7 @@ class PaymentTransaction(models.Model):
             invoices = self.env['account.move'].browse(invoice_ids).exists()
             if len(invoices) == len(invoice_ids):  # All ids are valid
                 return separator.join(invoices.mapped('name'))
-        return super()._compute_reference_prefix(provider, separator, **values)
+        return super()._compute_reference_prefix(provider_code, separator, **values)
 
     def _set_canceled(self, state_message=None):
         """ Update the transactions' state to 'cancel'.
@@ -134,16 +134,16 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-        payment_method_line = self.acquirer_id.journal_id.inbound_payment_method_line_ids\
-            .filtered(lambda l: l.code == self.provider)
+        payment_method_line = self.provider_id.journal_id.inbound_payment_method_line_ids\
+            .filtered(lambda l: l.code == self.provider_code)
         payment_values = {
             'amount': abs(self.amount),  # A tx may have a negative amount, but a payment must >= 0
             'payment_type': 'inbound' if self.amount > 0 else 'outbound',
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.commercial_partner_id.id,
             'partner_type': 'customer',
-            'journal_id': self.acquirer_id.journal_id.id,
-            'company_id': self.acquirer_id.company_id.id,
+            'journal_id': self.provider_id.journal_id.id,
+            'company_id': self.provider_id.company_id.id,
             'payment_method_line_id': payment_method_line.id,
             'payment_token_id': self.token_id.id,
             'payment_transaction_id': self.id,

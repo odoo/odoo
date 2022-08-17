@@ -19,15 +19,15 @@ from odoo.addons.payment_ogone.tests.common import OgoneCommon
 class OgoneTest(OgoneCommon, PaymentHttpCommon):
 
     def test_incompatibility_with_validation_operation(self):
-        acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+        providers = self.env['payment.provider']._get_compatible_providers(
             self.company.id, self.partner.id, 0., is_validation=True
         )
-        self.assertNotIn(self.ogone, acquirers)
+        self.assertNotIn(self.ogone, providers)
 
     @freeze_time('2011-11-02 12:00:21')  # Freeze time for consistent singularization behavior
     def test_reference_is_singularized(self):
         """ Test singularization of reference prefixes. """
-        reference = self.env['payment.transaction']._compute_reference(self.ogone.provider)
+        reference = self.env['payment.transaction']._compute_reference(self.ogone.code)
         self.assertEqual(
             reference, 'tx-20111102120021', "transaction reference was not correctly singularized"
         )
@@ -36,7 +36,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
     def test_reference_is_stripped_at_max_length(self):
         """ Test stripping of reference prefixes of length > 40 chars. """
         reference = self.env['payment.transaction']._compute_reference(
-            self.ogone.provider,
+            self.ogone.code,
             prefix='this is a reference of more than 40 characters to annoy ogone',
         )
         self.assertEqual(reference, 'this is a reference of mo-20111102120021')
@@ -50,7 +50,7 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
 
         invoice = self.env['account.move'].create({})
         reference = self.env['payment.transaction']._compute_reference(
-            self.ogone.provider, invoice_ids=[Command.set([invoice.id])]
+            self.ogone.code, invoice_ids=[Command.set([invoice.id])]
         )
         self.assertEqual(reference, 'MISC/2011/11/0001-20111102120021')
 
@@ -166,10 +166,10 @@ class OgoneTest(OgoneCommon, PaymentHttpCommon):
         )
 
     def test_ogone_neutralize(self):
-        self.env['payment.acquirer']._neutralize()
+        self.env['payment.provider']._neutralize()
 
-        self.assertEqual(self.acquirer.ogone_pspid, False)
-        self.assertEqual(self.acquirer.ogone_userid, False)
-        self.assertEqual(self.acquirer.ogone_password, False)
-        self.assertEqual(self.acquirer.ogone_shakey_in, False)
-        self.assertEqual(self.acquirer.ogone_shakey_out, False)
+        self.assertEqual(self.provider.ogone_pspid, False)
+        self.assertEqual(self.provider.ogone_userid, False)
+        self.assertEqual(self.provider.ogone_password, False)
+        self.assertEqual(self.provider.ogone_shakey_in, False)
+        self.assertEqual(self.provider.ogone_shakey_out, False)

@@ -22,7 +22,7 @@ class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
     def test_processing_notification_data_authorizes_transaction(self):
         """ Test that the transaction state is set to 'authorize' when the notification data
         indicate a successful payment and manual capture is enabled. """
-        self.acquirer.capture_manually = True
+        self.provider.capture_manually = True
         tx = self._create_transaction('direct')
         tx._process_notification_data(self.notification_data)
         self.assertEqual(tx.state, 'authorized')

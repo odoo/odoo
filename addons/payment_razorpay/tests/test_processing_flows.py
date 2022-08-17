@@ -81,7 +81,7 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
         """ Test the verification of a webhook notification with a valid signature. """
         tx = self._create_transaction('redirect')
         with patch(
-            'odoo.addons.payment_razorpay.models.payment_acquirer.PaymentAcquirer'
+            'odoo.addons.payment_razorpay.models.payment_provider.PaymentProvider'
             '._razorpay_calculate_signature', return_value='valid_signature'
         ):
             self._assert_does_not_raise(
@@ -110,7 +110,7 @@ class TestProcessingFlows(RazorpayCommon, PaymentHttpCommon):
         """ Test the verification of a notification with an invalid signature. """
         tx = self._create_transaction('redirect')
         with patch(
-            'odoo.addons.payment_razorpay.models.payment_acquirer.PaymentAcquirer'
+            'odoo.addons.payment_razorpay.models.payment_provider.PaymentProvider'
             '._razorpay_calculate_signature', return_value='valid_signature'
         ):
             self.assertRaises(

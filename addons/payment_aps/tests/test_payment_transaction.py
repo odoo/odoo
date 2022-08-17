@@ -24,8 +24,8 @@ class TestPaymentTransaction(APSCommon):
         converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency)
         expected_values = {
             'command': 'PURCHASE',
-            'access_code': self.acquirer.aps_access_code,
-            'merchant_identifier': self.acquirer.aps_merchant_identifier,
+            'access_code': self.provider.aps_access_code,
+            'merchant_identifier': self.provider.aps_merchant_identifier,
             'merchant_reference': tx.reference,
             'amount': str(converted_amount),
             'currency': self.currency.name,
@@ -33,7 +33,7 @@ class TestPaymentTransaction(APSCommon):
             'customer_email': tx.partner_id.email_normalized,
             'return_url': self._build_url(APSController._return_url),
             'signature': '8f4e295359a578f05fdc6c275829128e7b93440e6c7d13179c1e16cc579c6111',
-            'api_url': self.acquirer._aps_get_api_url(),
+            'api_url': self.provider._aps_get_api_url(),
         }
         self.assertDictEqual(tx._get_specific_rendering_values(None), expected_values)
 

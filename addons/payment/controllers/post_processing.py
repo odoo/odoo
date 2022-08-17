@@ -58,11 +58,11 @@ class PaymentPostProcessing(http.Controller):
         for tx in monitored_txs:
             display_message = None
             if tx.state == 'pending':
-                display_message = tx.acquirer_id.pending_msg
+                display_message = tx.provider_id.pending_msg
             elif tx.state == 'done':
-                display_message = tx.acquirer_id.done_msg
+                display_message = tx.provider_id.done_msg
             elif tx.state == 'cancel':
-                display_message = tx.acquirer_id.cancel_msg
+                display_message = tx.provider_id.cancel_msg
             display_values_list.append({
                 'display_message': display_message,
                 **tx._get_post_processing_values(),

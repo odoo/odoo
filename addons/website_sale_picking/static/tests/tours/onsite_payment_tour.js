@@ -22,7 +22,7 @@ tour.register('onsite_payment_tour', {
         content: 'Click on onsite delivery carrier',
         trigger: '.o_delivery_carrier_select:contains("On Site")'
     }, {
-        content: 'Click on on site payment acquirer',
+        content: 'Click on on site payment provider',
         trigger: '.o_payment_option_card:contains("Pay in store when picking the product")'
     }, {
         content: 'Click the pay button',
@@ -64,7 +64,7 @@ tour.register('onsite_payment_tour', {
         content: 'Click on onsite delivery carrier',
         trigger: '.o_delivery_carrier_select:contains("On Site")'
     }, {
-        content: 'Click on on site payment acquirer',
+        content: 'Click on on site payment provider',
         trigger: '.o_payment_option_card:contains("Pay in store when picking the product")'
     }, {
         content: 'Click the pay button',

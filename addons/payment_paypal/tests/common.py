@@ -9,13 +9,13 @@ class PaypalCommon(PaymentCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.paypal = cls._prepare_acquirer('paypal', update_values={
+        cls.paypal = cls._prepare_provider('paypal', update_values={
             'paypal_email_account': 'dummy@test.mail.com',
             'fees_active': False,
         })
 
         # Override default values
-        cls.acquirer = cls.paypal
+        cls.provider = cls.paypal
         cls.currency = cls.currency_euro
 
         cls.notification_data = {

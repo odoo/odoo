@@ -5,7 +5,7 @@ from . import analytic
 from . import account_move
 from . import account_move_line
 from . import crm_team
-from . import payment_acquirer
+from . import payment_provider
 from . import payment_transaction
 from . import product_product
 from . import product_template

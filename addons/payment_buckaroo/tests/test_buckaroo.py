@@ -48,10 +48,10 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         tx = self._create_transaction(flow='redirect')
         tx._handle_notification_data('buckaroo', notification_data)
         self.assertEqual(tx.state, 'done')
-        self.assertEqual(tx.acquirer_reference, notification_data.get('brq_transactions'))
+        self.assertEqual(tx.provider_reference, notification_data.get('brq_transactions'))
         tx._handle_notification_data('buckaroo', notification_data)
         self.assertEqual(tx.state, 'done', 'Buckaroo: validation did not put tx into done state')
-        self.assertEqual(tx.acquirer_reference, notification_data.get('brq_transactions'))
+        self.assertEqual(tx.provider_reference, notification_data.get('brq_transactions'))
 
         self.reference = 'Test Transaction 2'
         tx = self._create_transaction(flow='redirect')
@@ -128,7 +128,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
 
     def test_signature_is_computed_based_on_lower_case_data_keys(self):
         """ Test that lower case keys are used to execute the case-insensitive sort. """
-        computed_signature = self.acquirer._buckaroo_generate_digital_sign({
+        computed_signature = self.provider._buckaroo_generate_digital_sign({
             'brq_a': '1',
             'brq_b': '2',
             'brq_c_first': '3',
@@ -142,7 +142,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         )
 
     def test_buckaroo_neutralize(self):
-        self.env['payment.acquirer']._neutralize()
+        self.env['payment.provider']._neutralize()
 
-        self.assertEqual(self.acquirer.buckaroo_website_key, False)
-        self.assertEqual(self.acquirer.buckaroo_secret_key, False)
+        self.assertEqual(self.provider.buckaroo_website_key, False)
+        self.assertEqual(self.provider.buckaroo_secret_key, False)

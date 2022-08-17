@@ -30,11 +30,11 @@
                             <field name="amount"/>
                             <field name="fees" attrs="{'invisible': [('fees', '=', 0.0)]}"/>
                             <field name="currency_id" invisible="1"/>
-                            <field name="acquirer_id"/>
+                            <field name="provider_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <!-- Used by some acquirer-specific views -->
-                            <field name="provider" invisible="1"/>
-                            <field name="acquirer_reference"/>
+                            <!-- Used by some provider-specific views -->
+                            <field name="provider_code" invisible="1"/>
+                            <field name="provider_reference"/>
                             <field name="token_id" attrs="{'invisible': [('token_id', '=', False)]}"/>
                             <field name="create_date"/>
                             <field name="last_state_change"/>
@@ -69,7 +69,7 @@
             <tree string="Payment Transactions" create="false">
                 <field name="reference"/>
                 <field name="create_date"/>
-                <field name="acquirer_id"/>
+                <field name="provider_id"/>
                 <field name="partner_id"/>
                 <field name="partner_name"/>
                 <!-- Needed to display the currency of the amounts -->
@@ -117,11 +117,11 @@
         <field name="arch" type="xml">
             <search>
                 <field name="reference"/>
-                <field name="acquirer_id"/>
+                <field name="provider_id"/>
                 <field name="partner_id"/>
                 <field name="partner_name"/>
                 <group expand="1" string="Group By">
-                    <filter string="Acquirer" name="acquirer_id" context="{'group_by': 'acquirer_id'}"/>
+                    <filter string="Provider" name="provider_id" context="{'group_by': 'provider_id'}"/>
                     <filter string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"/>
                     <filter string="Status" name="state" context="{'group_by': 'state'}"/>
                     <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>

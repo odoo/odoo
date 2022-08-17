@@ -22,7 +22,7 @@ class ResCompany(models.Model):
         ('digital_signature', 'Sign online'),
         ('paypal', 'PayPal'),
         ('stripe', 'Stripe'),
-        ('other', 'Pay with another payment acquirer'),
+        ('other', 'Pay with another payment provider'),
         ('manual', 'Manual Payment'),
     ], string="Sale onboarding selected payment method")
 
@@ -32,10 +32,10 @@ class ResCompany(models.Model):
         self.env.company.sale_quotation_onboarding_state = 'closed'
 
     @api.model
-    def action_open_sale_onboarding_payment_acquirer(self):
+    def action_open_sale_onboarding_payment_provider(self):
         """ Called by onboarding panel above the quotation list."""
         self.env.company.get_chart_of_accounts_or_fail()
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_open_sale_onboarding_payment_acquirer_wizard")
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_open_sale_payment_provider_onboarding_wizard")
         return action
 
     def _mark_payment_onboarding_step_as_done(self):

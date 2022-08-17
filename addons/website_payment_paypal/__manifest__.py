@@ -4,7 +4,7 @@
 {
     'name': 'Website - Payment Paypal',
     'version': '1.0',
-    'category': 'Accounting/Payment Acquirers',
+    'category': 'Accounting/Payment Providers',
     'sequence': 365,
     'summary': 'Website - Payment Paypal',
     'depends': ['website_payment', 'payment_paypal'],

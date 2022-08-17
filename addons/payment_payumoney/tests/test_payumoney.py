@@ -14,16 +14,16 @@ from odoo.addons.payment_payumoney.tests.common import PayumoneyCommon
 @tagged('post_install', '-at_install')
 class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
 
-    def test_compatible_acquirers(self):
-        acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+    def test_compatible_providers(self):
+        providers = self.env['payment.provider']._get_compatible_providers(
             self.company.id, self.partner.id, self.amount, currency_id=self.currency.id
         )
-        self.assertIn(self.payumoney, acquirers)
+        self.assertIn(self.payumoney, providers)
 
-        acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+        providers = self.env['payment.provider']._get_compatible_providers(
             self.company.id, self.partner.id, self.amount, currency_id=self.currency_euro.id
         )
-        self.assertNotIn(self.payumoney, acquirers)
+        self.assertNotIn(self.payumoney, providers)
 
     def test_redirect_form_values(self):
         tx = self._create_transaction(flow='redirect')
@@ -83,7 +83,7 @@ class PayUMoneyTest(PayumoneyCommon, PaymentHttpCommon):
         )
 
     def test_payumoney_neutralize(self):
-        self.env['payment.acquirer']._neutralize()
+        self.env['payment.provider']._neutralize()
 
-        self.assertEqual(self.acquirer.payumoney_merchant_key, False)
-        self.assertEqual(self.acquirer.payumoney_merchant_salt, False)
+        self.assertEqual(self.provider.payumoney_merchant_key, False)
+        self.assertEqual(self.provider.payumoney_merchant_salt, False)

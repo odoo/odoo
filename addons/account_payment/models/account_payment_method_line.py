@@ -8,35 +8,35 @@ from odoo.osv import expression
 class AccountPaymentMethodLine(models.Model):
     _inherit = "account.payment.method.line"
 
-    payment_acquirer_id = fields.Many2one(
-        comodel_name='payment.acquirer',
-        compute='_compute_payment_acquirer_id',
+    payment_provider_id = fields.Many2one(
+        comodel_name='payment.provider',
+        compute='_compute_payment_provider_id',
         store=True
     )
-    payment_acquirer_state = fields.Selection(
-        related='payment_acquirer_id.state'
+    payment_provider_state = fields.Selection(
+        related='payment_provider_id.state'
     )
 
     @api.depends('payment_method_id')
-    def _compute_payment_acquirer_id(self):
-        acquirers = self.env['payment.acquirer'].sudo().search([
-            ('provider', 'in', self.mapped('code')),
+    def _compute_payment_provider_id(self):
+        providers = self.env['payment.provider'].sudo().search([
+            ('code', 'in', self.mapped('code')),
             ('company_id', 'in', self.journal_id.company_id.ids),
         ])
 
-        # Make sure to pick the active acquirer, if any.
-        acquirers_map = dict()
-        for acquirer in acquirers:
-            current_value = acquirers_map.get((acquirer.provider, acquirer.company_id), False)
+        # Make sure to pick the active provider, if any.
+        providers_map = dict()
+        for provider in providers:
+            current_value = providers_map.get((provider.code, provider.company_id), False)
             if current_value and current_value.state != 'disabled':
                 continue
 
-            acquirers_map[(acquirer.provider, acquirer.company_id)] = acquirer
+            providers_map[(provider.code, provider.company_id)] = provider
 
         for line in self:
             code = line.payment_method_id.code
             company = line.journal_id.company_id
-            line.payment_acquirer_id = acquirers_map.get((code, company), False)
+            line.payment_provider_id = providers_map.get((code, company), False)
 
     @api.model
     def _get_payment_method_domain(self, code):
@@ -46,19 +46,19 @@ class AccountPaymentMethodLine(models.Model):
 
         unique = information.get('mode') == 'unique'
         if unique:
-            company_ids = self.env['payment.acquirer'].sudo().search([('provider', '=', code)]).mapped('company_id')
+            company_ids = self.env['payment.provider'].sudo().search([('code', '=', code)]).mapped('company_id')
             if company_ids:
                 domain = expression.AND([domain, [('company_id', 'in', company_ids.ids)]])
 
         return domain
 
-    def action_open_acquirer_form(self):
+    def action_open_provider_form(self):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Acquirer'),
+            'name': _('Provider'),
             'view_mode': 'form',
-            'res_model': 'payment.acquirer',
+            'res_model': 'payment.provider',
             'target': 'current',
-            'res_id': self.payment_acquirer_id.id
+            'res_id': self.payment_provider_id.id
         }

@@ -843,7 +843,7 @@ class SaleOrder(models.Model):
     def action_done(self):
         for order in self:
             tx = order.sudo().transaction_ids._get_last()
-            if tx and tx.state == 'pending' and tx.acquirer_id.provider == 'transfer':
+            if tx and tx.state == 'pending' and tx.provider_id.code == 'transfer':
                 tx._set_done()
                 tx.write({'is_post_processed': True})
         self.write({'state': 'done'})
@@ -1270,13 +1270,13 @@ class SaleOrder(models.Model):
     def payment_action_capture(self):
         """ Capture all transactions linked to this sale order. """
         payment_utils.check_rights_on_recordset(self)
-        # In sudo mode because we need to be able to read on acquirer fields.
+        # In sudo mode because we need to be able to read on provider fields.
         self.authorized_transaction_ids.sudo().action_capture()
 
     def payment_action_void(self):
         """ Void all transactions linked to this sale order. """
         payment_utils.check_rights_on_recordset(self)
-        # In sudo mode because we need to be able to read on acquirer fields.
+        # In sudo mode because we need to be able to read on provider fields.
         self.authorized_transaction_ids.sudo().action_void()
 
     def get_portal_last_transaction(self):

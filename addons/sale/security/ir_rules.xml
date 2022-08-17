@@ -158,9 +158,9 @@
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
-    <record id="sale_payment_acquirer_onboarding_wizard_rule" model="ir.rule">
-        <field name="name">Payment Acquier Onboarding Wizard Rule</field>
-        <field name="model_id" ref="model_sale_payment_acquirer_onboarding_wizard"/>
+    <record id="sale_payment_provider_onboarding_wizard_rule" model="ir.rule">
+        <field name="name">Payment Provider Onboarding Wizard Rule</field>
+        <field name="model_id" ref="model_sale_payment_provider_onboarding_wizard"/>
         <field name="domain_force">[('create_uid', '=', user.id)]</field>
     </record>
 

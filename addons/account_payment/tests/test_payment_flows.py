@@ -34,7 +34,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         }
         route_values.update({
             'flow': 'direct',
-            'payment_option_id': self.acquirer.id,
+            'payment_option_id': self.provider.id,
             'tokenization_requested': False,
         })
         with mute_logger('odoo.addons.payment.models.payment_transaction'):

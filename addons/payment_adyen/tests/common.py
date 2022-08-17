@@ -9,7 +9,7 @@ class AdyenCommon(PaymentCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.adyen = cls._prepare_acquirer('adyen', update_values={
+        cls.adyen = cls._prepare_provider('adyen', update_values={
             'adyen_merchant_account': 'dummy',
             'adyen_api_key': 'dummy',
             'adyen_client_key': 'dummy',
@@ -19,7 +19,7 @@ class AdyenCommon(PaymentCommon):
         })
 
         # Override default values
-        cls.acquirer = cls.adyen
+        cls.provider = cls.adyen
 
         cls.psp_reference = '0123456789ABCDEF'
         cls.original_reference = 'FEDCBA9876543210'
@@ -46,7 +46,7 @@ class AdyenCommon(PaymentCommon):
             ]
         }
 
-    def _create_transaction(self, *args, acquirer_reference=None, **kwargs):
-        if not acquirer_reference:
-            acquirer_reference = self.psp_reference
-        return super()._create_transaction(*args, acquirer_reference=acquirer_reference, **kwargs)
+    def _create_transaction(self, *args, provider_reference=None, **kwargs):
+        if not provider_reference:
+            provider_reference = self.psp_reference
+        return super()._create_transaction(*args, provider_reference=provider_reference, **kwargs)

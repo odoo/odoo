@@ -19,7 +19,7 @@ class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
     @api.model
-    def _compute_reference(self, provider, prefix=None, separator='-', **kwargs):
+    def _compute_reference(self, provider_code, prefix=None, separator='-', **kwargs):
         """ Override of `payment` to ensure that AsiaPay requirements for references are satisfied.
 
         AsiaPay requirements for references are as follows:
@@ -29,14 +29,14 @@ class PaymentTransaction(models.Model):
           references by suffixing a sequence number.
         - References must be at most 35 characters long.
 
-        :param str provider: The provider of the acquirer handling the transaction.
+        :param str provider_code: The code of the provider handling the transaction.
         :param str prefix: The custom prefix used to compute the full reference.
         :param str separator: The custom separator used to separate the prefix from the suffix.
         :return: The unique reference for the transaction.
         :rtype: str
         """
-        if provider != 'asiapay':
-            return super()._compute_reference(provider, prefix=prefix, **kwargs)
+        if provider_code != 'asiapay':
+            return super()._compute_reference(provider_code, prefix=prefix, **kwargs)
 
         if not prefix:
             # If no prefix is provided, it could mean that a module has passed a kwarg intended for
@@ -44,9 +44,9 @@ class PaymentTransaction(models.Model):
             # We call it manually here because singularizing the prefix would generate a default
             # value if it was empty, hence preventing the method from ever being called and the
             # transaction from received a reference named after the related document.
-            prefix = self.sudo()._compute_reference_prefix(provider, separator, **kwargs) or None
+            prefix = self.sudo()._compute_reference_prefix(provider_code, separator, **kwargs) or None
         prefix = payment_utils.singularize_reference_prefix(prefix=prefix, max_length=35)
-        return super()._compute_reference(provider, prefix=prefix, **kwargs)
+        return super()._compute_reference(provider_code, prefix=prefix, **kwargs)
 
     def _get_specific_rendering_values(self, processing_values):
         """ Override of `payment` to return AsiaPay-specific rendering values.
@@ -55,7 +55,7 @@ class PaymentTransaction(models.Model):
 
         :param dict processing_values: The generic and specific processing values of the
                                        transaction.
-        :return: The dict of acquirer-specific processing values.
+        :return: The dict of provider-specific processing values.
         :rtype: dict
         """
         def get_language_code(lang_):
@@ -77,18 +77,18 @@ class PaymentTransaction(models.Model):
             return language_code_
 
         res = super()._get_specific_rendering_values(processing_values)
-        if self.provider != 'asiapay':
+        if self.provider_code != 'asiapay':
             return res
 
-        base_url = self.acquirer_id.get_base_url()
+        base_url = self.provider_id.get_base_url()
         # The lang is taken from the context rather than from the partner because it is not required
         # to be logged in to make a payment, and because the lang is not always set on the partner.
         lang = self._context.get('lang') or 'en_US'
         rendering_values = {
-            'merchant_id': self.acquirer_id.asiapay_merchant_id,
+            'merchant_id': self.provider_id.asiapay_merchant_id,
             'amount': self.amount,
             'reference': self.reference,
-            'currency_code': const.CURRENCY_MAPPING[self.acquirer_id.asiapay_currency_id.name],
+            'currency_code': const.CURRENCY_MAPPING[self.provider_id.asiapay_currency_id.name],
             'mps_mode': 'SCP',
             'return_url': urls.url_join(base_url, AsiaPayController._return_url),
             'payment_type': 'N',
@@ -96,25 +96,25 @@ class PaymentTransaction(models.Model):
             'payment_method': 'ALL',
         }
         rendering_values.update({
-            'secure_hash': self.acquirer_id._asiapay_calculate_signature(
+            'secure_hash': self.provider_id._asiapay_calculate_signature(
                 rendering_values, incoming=False
             ),
-            'api_url': self.acquirer_id._asiapay_get_api_url()
+            'api_url': self.provider_id._asiapay_get_api_url()
         })
         return rendering_values
 
-    def _get_tx_from_notification_data(self, provider, notification_data):
+    def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of `payment` to find the transaction based on AsiaPay data.
 
-        :param str provider: The provider of the acquirer that handled the transaction.
+        :param str provider_code: The code of the provider that handled the transaction.
         :param dict notification_data: The notification data sent by the provider.
         :return: The transaction if found.
         :rtype: recordset of `payment.transaction`
         :raise ValidationError: If inconsistent data are received.
         :raise ValidationError: If the data match no transaction.
         """
-        tx = super()._get_tx_from_notification_data(provider, notification_data)
-        if provider != 'asiapay' or len(tx) == 1:
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
+        if provider_code != 'asiapay' or len(tx) == 1:
             return tx
 
         reference = notification_data.get('Ref')
@@ -123,7 +123,7 @@ class PaymentTransaction(models.Model):
                 "AsiaPay: " + _("Received data with missing reference %(ref)s.", ref=reference)
             )
 
-        tx = self.search([('reference', '=', reference), ('provider', '=', 'asiapay')])
+        tx = self.search([('reference', '=', reference), ('provider_code', '=', 'asiapay')])
         if not tx:
             raise ValidationError(
                 "AsiaPay: " + _("No transaction found matching reference %s.", reference)
@@ -141,10 +141,10 @@ class PaymentTransaction(models.Model):
         :raise ValidationError: If inconsistent data are received.
         """
         super()._process_notification_data(notification_data)
-        if self.provider != 'asiapay':
+        if self.provider_code != 'asiapay':
             return
 
-        self.acquirer_reference = notification_data.get('PayRef')
+        self.provider_reference = notification_data.get('PayRef')
 
         success_code = notification_data.get('successcode')
         primary_response_code = notification_data.get('prc')

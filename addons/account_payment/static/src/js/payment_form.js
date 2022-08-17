@@ -15,12 +15,12 @@ odoo.define('account_payment.payment_form', require => {
          *
          * @override method from payment.payment_form_mixin
          * @private
-         * @param {string} provider - The provider of the selected payment option's acquirer.
+         * @param {string} code - The provider code of the selected payment option.
          * @param {number} paymentOptionId - The id of the selected payment option.
          * @param {string} flow - The online payment flow of the selected payment option.
          * @return {object} The extended transaction route params.
          */
-        _prepareTransactionRouteParams: function (provider, paymentOptionId, flow) {
+        _prepareTransactionRouteParams: function (code, paymentOptionId, flow) {
             const transactionRouteParams = this._super(...arguments);
             return {
                 ...transactionRouteParams,

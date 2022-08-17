@@ -62,7 +62,7 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
         successful payment. """
         tx = self._create_transaction(flow='redirect')
         with patch(
-            'odoo.addons.payment_mercado_pago.models.payment_acquirer.PaymentAcquirer'
+            'odoo.addons.payment_mercado_pago.models.payment_provider.Paymentprovider'
             '._mercado_pago_make_request', return_value=self.verification_data
         ):
             tx._process_notification_data(self.redirect_notification_data)

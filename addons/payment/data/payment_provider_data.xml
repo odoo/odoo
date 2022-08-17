@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_adyen" model="payment.provider">
+        <field name="name">Adyen</field>
+        <field name="display_as">Credit Card (powered by Adyen)</field>
+        <field name="image_128" type="base64" file="payment_adyen/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_adyen"/>
+        <!-- https://www.adyen.com/payment-methods -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_icon_cc_bancontact'),
+                   ref('payment.payment_icon_cc_maestro'),
+                   ref('payment.payment_icon_cc_mastercard'),
+                   ref('payment.payment_icon_cc_visa'),
+                   ref('payment.payment_icon_cc_discover'),
+                   ref('payment.payment_icon_cc_diners_club_intl'),
+                   ref('payment.payment_icon_cc_jcb'),
+                   ref('payment.payment_icon_cc_unionpay'),
+               ])]"/>
+    </record>
+
+    <record id="payment_provider_aps" model="payment.provider">
+        <field name="name">Amazon Payment Services</field>
+        <field name="display_as">Amazon Payment Services</field>
+        <field name="image_128" type="base64" file="payment_aps/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_aps"/>
+        <!-- https://paymentservices.amazon.com/docs/EN/24.html -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                        ref('payment.payment_icon_cc_mastercard'),
+                        ref('payment.payment_icon_cc_visa'),
+                        ref('payment.payment_icon_sadad'),
+                        ref('payment.payment_icon_mada'),
+                    ])]"/>
+    </record>
+
+    <record id="payment_provider_asiapay" model="payment.provider">
+        <field name="name">Asiapay</field>
+        <field name="display_as">Credit Card (powered by Asiapay)</field>
+        <field name="image_128" type="base64" file="payment_asiapay/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_asiapay"/>
+        <!-- See https://www.asiapay.com/payment.html#option -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                    ref('payment.payment_icon_cc_mastercard'),
+                    ref('payment.payment_icon_cc_visa'),
+                    ref('payment.payment_icon_cc_unionpay'),
+               ])]"/>
+    </record>
+
+    <record id="payment_provider_authorize" model="payment.provider">
+        <field name="name">Authorize.net</field>
+        <field name="display_as">Credit Card (powered by Authorize)</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_authorize/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_authorize"/>
+        <!-- https://www.authorize.net/solutions/merchantsolutions/onlinemerchantaccount/ -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_icon_cc_maestro'),
+                   ref('payment.payment_icon_cc_mastercard'),
+                   ref('payment.payment_icon_cc_discover'),
+                   ref('payment.payment_icon_cc_diners_club_intl'),
+                   ref('payment.payment_icon_cc_jcb'),
+                   ref('payment.payment_icon_cc_visa'),
+               ])]"/>
+    </record>
+
+    <record id="payment_provider_buckaroo" model="payment.provider">
+        <field name="name">Buckaroo</field>
+        <field name="display_as">Credit Card (powered by Buckaroo)</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_buckaroo/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_buckaroo"/>
+        <!-- https://www.buckaroo-payments.com/products/payment-methods/ -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_icon_cc_bancontact'),
+                   ref('payment.payment_icon_cc_maestro'),
+                   ref('payment.payment_icon_cc_mastercard'),
+                   ref('payment.payment_icon_cc_visa'),
+                   ref('payment.payment_icon_cc_american_express'),
+               ])]"/>
+    </record>
+
+    <record id="payment_provider_demo" model="payment.provider">
+        <field name="name">Demo</field>
+        <field name="sequence">40</field>
+        <field name="image_128" type="base64" file="payment_demo/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_demo"/>
+    </record>
+
+    <record id="payment_provider_flutterwave" model="payment.provider">
+        <field name="name">Flutterwave</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_flutterwave/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_flutterwave"/>
+        <!-- https://developer.flutterwave.com/docs/collecting-payments/payment-methods/ -->
+        <field name="payment_icon_ids" eval="[(6, 0, [
+                ref('payment.payment_icon_cc_visa'),
+                ref('payment.payment_icon_cc_mastercard'),
+                ref('payment.payment_icon_cc_american_express'),
+                ref('payment.payment_icon_mpesa'),
+                ref('payment.payment_icon_airtel_money'),
+                ref('payment.payment_icon_mtn_mobile_money'),
+                ref('payment.payment_icon_barter_by_flutterwave'),
+            ])]"/>
+    </record>
+
+    <record id="payment_provider_mercado_pago" model="payment.provider">
+        <field name="name">Mercado Pago</field>
+        <field name="display_as">Credit Card (powered by Mercado Pago)</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_mercado_pago/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_mercado_pago"/>
+
+         <!-- Payment methods must be fetched from the API. See
+            https://www.mercadopago.com.ar/developers/en/reference/payment_methods/_payment_methods/
+        -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                    ref('payment.payment_icon_cc_mastercard'),
+                    ref('payment.payment_icon_cc_visa'),
+                    ref('payment.payment_icon_cc_american_express'),
+                    ref('payment.payment_icon_bbva_bancomer'),
+                    ref('payment.payment_icon_citibanamex')
+               ])]"/>
+    </record>
+
+    <record id="payment_provider_mollie" model="payment.provider">
+        <field name="name">Mollie</field>
+        <field name="image_128" type="base64" file="payment_mollie/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_mollie"/>
+        <!-- https://www.mollie.com/en/payments -->
+        <field name="payment_icon_ids" eval="[(6, 0, [
+                ref('payment.payment_icon_cc_visa'),
+                ref('payment.payment_icon_cc_american_express'),
+                ref('payment.payment_icon_cc_maestro'),
+                ref('payment.payment_icon_cc_mastercard'),
+                ref('payment.payment_icon_cc_bancontact'),
+                ref('payment.payment_icon_cc_eps'),
+                ref('payment.payment_icon_cc_giropay'),
+                ref('payment.payment_icon_cc_p24'),
+                ref('payment.payment_icon_cc_ideal'),
+                ref('payment.payment_icon_paypal'),
+                ref('payment.payment_icon_apple_pay'),
+                ref('payment.payment_icon_sepa'),
+                ref('payment.payment_icon_kbc')
+            ])]"/>
+
+    </record>
+
+    <record id="payment_provider_paypal" model="payment.provider">
+        <field name="name">PayPal</field>
+        <field name="image_128" type="base64" file="payment_paypal/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_paypal"/>
+        <!-- https://www.paypal.com/us/selfhelp/article/Which-credit-cards-can-I-accept-with-PayPal-Merchant-Services-FAQ1525#business -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_icon_cc_maestro'),
+                   ref('payment.payment_icon_cc_mastercard'),
+                   ref('payment.payment_icon_cc_discover'),
+                   ref('payment.payment_icon_cc_diners_club_intl'),
+                   ref('payment.payment_icon_cc_jcb'),
+                   ref('payment.payment_icon_cc_american_express'),
+                   ref('payment.payment_icon_cc_unionpay'),
+                   ref('payment.payment_icon_cc_visa'),
+               ])]"/>
+    </record>
+
+    <record id="payment_provider_razorpay" model="payment.provider">
+        <field name="name">Razorpay</field>
+        <field name="display_as">Credit &amp; Debit Card, UPI (Powered by Razorpay)</field>
+        <field name="image_128" type="base64" file="payment_razorpay/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_razorpay"/>
+        <!-- https://razorpay.com/docs/payments/payment-methods/#supported-payment-methods -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_icon_cc_maestro'),
+                   ref('payment.payment_icon_cc_mastercard'),
+                   ref('payment.payment_icon_cc_rupay'),
+                   ref('payment.payment_icon_cc_diners_club_intl'),
+                   ref('payment.payment_icon_cc_american_express'),
+                   ref('payment.payment_icon_cc_visa')
+               ])]"/>
+    </record>
+
+    <record id="payment_provider_sepa_direct_debit" model="payment.provider">
+        <field name="name">SEPA Direct Debit</field>
+        <field name="sequence">20</field>
+        <field name="image_128"
+               type="base64"
+               file="base/static/img/icons/payment_sepa_direct_debit.png"/>
+        <field name="module_id" ref="base.module_payment_sepa_direct_debit"/>
+    </record>
+
+    <record id="payment_provider_sips" model="payment.provider">
+        <field name="name">Sips</field>
+        <field name="display_as">Credit Card (powered by Sips)</field>
+        <field name="image_128" type="base64" file="payment_sips/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_sips"/>
+        <!-- See http://sips.worldline.com/en-us/home/features/payment-types-and-acquirers.html -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_icon_cc_maestro'),
+                   ref('payment.payment_icon_cc_mastercard'),
+                   ref('payment.payment_icon_cc_discover'),
+                   ref('payment.payment_icon_cc_diners_club_intl'),
+                   ref('payment.payment_icon_cc_jcb'),
+                   ref('payment.payment_icon_cc_american_express'),
+                   ref('payment.payment_icon_cc_bancontact'),
+                   ref('payment.payment_icon_cc_unionpay'),
+                   ref('payment.payment_icon_cc_visa'),
+               ])]"/>
+    </record>
+
+    <record id="payment_provider_stripe" model="payment.provider">
+        <field name="name">Stripe</field>
+        <field name="display_as">Credit &amp; Debit Card</field>
+        <field name="image_128" type="base64" file="payment_stripe/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_stripe"/>
+        <!--
+            See https://stripe.com/payments/payment-methods-guide
+            See https://support.goteamup.com/hc/en-us/articles/115002089349-Which-cards-and-payment-types-can-I-accept-with-Stripe-
+        -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                   ref('payment.payment_icon_cc_maestro'),
+                   ref('payment.payment_icon_cc_mastercard'),
+                   ref('payment.payment_icon_cc_discover'),
+                   ref('payment.payment_icon_cc_diners_club_intl'),
+                   ref('payment.payment_icon_cc_jcb'),
+                   ref('payment.payment_icon_cc_american_express'),
+                   ref('payment.payment_icon_cc_visa'),
+               ])]"/>
+    </record>
+
+    <record id="payment_provider_transfer" model="payment.provider">
+        <field name="name">Wire Transfer</field>
+        <field name="sequence">30</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_custom/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_custom"/>
+    </record>
+
+</odoo>

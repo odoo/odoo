@@ -99,7 +99,7 @@ class RazorpayController(http.Controller):
             raise Forbidden()
 
         # Compare the received signature with the expected signature.
-        expected_signature = tx_sudo.acquirer_id._razorpay_calculate_signature(
+        expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(
             notification_data, is_redirect=is_redirect
         )
         if not hmac.compare_digest(received_signature, expected_signature):

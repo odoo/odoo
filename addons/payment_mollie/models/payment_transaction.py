@@ -24,19 +24,19 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one() from `_get_processing_values`
 
         :param dict processing_values: The generic and specific processing values of the transaction
-        :return: The dict of acquirer-specific rendering values
+        :return: The dict of provider-specific rendering values
         :rtype: dict
         """
         res = super()._get_specific_rendering_values(processing_values)
-        if self.provider != 'mollie':
+        if self.provider_code != 'mollie':
             return res
 
         payload = self._mollie_prepare_payment_request_payload()
         _logger.info("sending '/payments' request for link creation:\n%s", pprint.pformat(payload))
-        payment_data = self.acquirer_id._mollie_make_request('/payments', data=payload)
+        payment_data = self.provider_id._mollie_make_request('/payments', data=payload)
 
-        # The acquirer reference is set now to allow fetching the payment status after redirection
-        self.acquirer_reference = payment_data.get('id')
+        # The provider reference is set now to allow fetching the payment status after redirection
+        self.provider_reference = payment_data.get('id')
 
         # Extract the checkout URL from the payment data and add it with its query parameters to the
         # rendering values. Passing the query parameters separately is necessary to prevent them
@@ -54,7 +54,7 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         user_lang = self.env.context.get('lang')
-        base_url = self.acquirer_id.get_base_url()
+        base_url = self.provider_id.get_base_url()
         redirect_url = urls.url_join(base_url, MollieController._return_url)
         webhook_url = urls.url_join(base_url, MollieController._webhook_url)
 
@@ -72,21 +72,21 @@ class PaymentTransaction(models.Model):
             'webhookUrl': f'{webhook_url}?ref={self.reference}',
         }
 
-    def _get_tx_from_notification_data(self, provider, notification_data):
+    def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on Mollie data.
 
-        :param str provider: The provider of the acquirer that handled the transaction
+        :param str provider_code: The code of the provider that handled the transaction
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_notification_data(provider, notification_data)
-        if provider != 'mollie' or len(tx) == 1:
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
+        if provider_code != 'mollie' or len(tx) == 1:
             return tx
 
         tx = self.search(
-            [('reference', '=', notification_data.get('ref')), ('provider', '=', 'mollie')]
+            [('reference', '=', notification_data.get('ref')), ('provider_code', '=', 'mollie')]
         )
         if not tx:
             raise ValidationError("Mollie: " + _(
@@ -103,11 +103,11 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._process_notification_data(notification_data)
-        if self.provider != 'mollie':
+        if self.provider_code != 'mollie':
             return
 
-        payment_data = self.acquirer_id._mollie_make_request(
-            f'/payments/{self.acquirer_reference}', method="GET"
+        payment_data = self.provider_id._mollie_make_request(
+            f'/payments/{self.provider_reference}', method="GET"
         )
         payment_status = payment_data.get('status')
 

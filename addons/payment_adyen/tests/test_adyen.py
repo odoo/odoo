@@ -41,15 +41,15 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_send_refund_request(self):
-        self.acquirer.support_refund = 'full_only'  # Should simply not be False
+        self.provider.support_refund = 'full_only'  # Should simply not be False
         tx = self._create_transaction(
-            'redirect', state='done', acquirer_reference='source_reference'
+            'redirect', state='done', provider_reference='source_reference'
         )
         tx._reconcile_after_done()  # Create the payment
 
         # Send the refund request
         with patch(
-            'odoo.addons.payment_adyen.models.payment_acquirer.PaymentAcquirer._adyen_make_request',
+            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
             new=lambda *args, **kwargs: {'pspReference': "refund_reference", 'status': "received"}
         ):
             tx._send_refund_request()
@@ -65,20 +65,20 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
                 "until a success notification is sent"
         )
         self.assertNotEqual(
-            refund_tx.acquirer_reference,
-            tx.acquirer_reference,
-            msg="The acquirer reference of the refund transaction should be different from that of "
+            refund_tx.provider_reference,
+            tx.provider_reference,
+            msg="The provider reference of the refund transaction should be different from that of "
                 "the source transaction."
         )
 
     def test_get_tx_from_notification_data_returns_refund_tx(self):
         source_tx = self._create_transaction(
-            'direct', state='done', acquirer_reference=self.original_reference
+            'direct', state='done', provider_reference=self.original_reference
         )
         refund_tx = self._create_transaction(
             'direct',
             reference='RefundTx',
-            acquirer_reference=self.psp_reference,
+            provider_reference=self.psp_reference,
             amount=-source_tx.amount,
             operation='refund',
             source_transaction_id=source_tx.id
@@ -98,7 +98,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_get_tx_from_notification_data_creates_refund_tx_when_missing(self):
         source_tx = self._create_transaction(
-            'direct', state='done', acquirer_reference=self.original_reference
+            'direct', state='done', provider_reference=self.original_reference
         )
         data = dict(
             self.webhook_notification_payload,
@@ -117,11 +117,11 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_tx_state_after_send_capture_request(self):
-        self.acquirer.capture_manually = True
+        self.provider.capture_manually = True
         tx = self._create_transaction('direct', state='authorized')
 
         with patch(
-            'odoo.addons.payment_adyen.models.payment_acquirer.PaymentAcquirer._adyen_make_request',
+            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
             return_value={'status': 'received'},
         ):
             tx._send_capture_request()
@@ -134,11 +134,11 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     @mute_logger('odoo.addons.payment_adyen.models.payment_transaction')
     def test_tx_state_after_send_void_request(self):
-        self.acquirer.capture_manually = True
+        self.provider.capture_manually = True
         tx = self._create_transaction('direct', state='authorized')
 
         with patch(
-            'odoo.addons.payment_adyen.models.payment_acquirer.PaymentAcquirer._adyen_make_request',
+            'odoo.addons.payment_adyen.models.payment_provider.PaymentProvider._adyen_make_request',
             return_value={'status': 'received'},
         ):
             tx._send_void_request()
@@ -155,7 +155,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertEqual(tx.state, 'done')
 
     def test_webhook_notification_authorizes_transaction(self):
-        self.acquirer.capture_manually = True
+        self.provider.capture_manually = True
         tx = self._create_transaction('direct')
         self._webhook_notification_flow(self.webhook_notification_batch_data)
         self.assertEqual(
@@ -166,9 +166,9 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_webhook_notification_captures_transaction(self):
-        self.acquirer.capture_manually = True
+        self.provider.capture_manually = True
         tx = self._create_transaction(
-            'direct', state='authorized', acquirer_reference=self.original_reference
+            'direct', state='authorized', provider_reference=self.original_reference
         )
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
             'NotificationRequestItem': dict(self.webhook_notification_payload, eventCode='CAPTURE')
@@ -181,7 +181,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_webhook_notification_cancels_transaction(self):
         tx = self._create_transaction(
-            'direct', state='pending', acquirer_reference=self.original_reference
+            'direct', state='pending', provider_reference=self.original_reference
         )
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
             'NotificationRequestItem': dict(
@@ -197,7 +197,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_webhook_notification_refunds_transaction(self):
         source_tx = self._create_transaction(
-            'direct', state='done', acquirer_reference=self.original_reference
+            'direct', state='done', provider_reference=self.original_reference
         )
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
             'NotificationRequestItem': dict(
@@ -232,7 +232,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_failed_webhook_capture_notification_leaves_transaction_authorized(self):
         tx = self._create_transaction(
-            'direct', state='authorized', acquirer_reference=self.original_reference
+            'direct', state='authorized', provider_reference=self.original_reference
         )
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
             'NotificationRequestItem': dict(
@@ -260,7 +260,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
 
     def test_failed_webhook_refund_notification_sets_refund_transaction_in_error(self):
         source_tx = self._create_transaction(
-            'direct', state='done', acquirer_reference=self.original_reference
+            'direct', state='done', provider_reference=self.original_reference
         )
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
             'NotificationRequestItem': dict(
@@ -336,8 +336,8 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         self.assertRaises(Forbidden, AdyenController._verify_notification_signature, payload, tx)
 
     def test_adyen_neutralize(self):
-        self.env['payment.acquirer']._neutralize()
+        self.env['payment.provider']._neutralize()
 
-        self.assertEqual(self.acquirer.adyen_merchant_account, False)
-        self.assertEqual(self.acquirer.adyen_api_key, False)
-        self.assertEqual(self.acquirer.adyen_hmac_key, False)
+        self.assertEqual(self.provider.adyen_merchant_account, False)
+        self.assertEqual(self.provider.adyen_api_key, False)
+        self.assertEqual(self.provider.adyen_hmac_key, False)
