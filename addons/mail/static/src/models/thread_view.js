@@ -155,7 +155,7 @@ registerModel({
                 return clear();
             }
             const { length, [length - 1]: messageListViewItem } = this.messageListView.messageListViewItems;
-            return messageListViewItem ? messageListViewItem.messageView : clear();
+            return messageListViewItem && messageListViewItem.messageView ? messageListViewItem.messageView : clear();
         },
         /**
          * @private

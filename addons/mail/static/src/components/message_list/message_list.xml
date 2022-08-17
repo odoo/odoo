@@ -62,7 +62,8 @@
                                 <t t-set="current_day" t-value="message_day"/>
                             </div>
                         </t>
-                        <Message record="messageListViewItem.messageView"/>
+                        <NotificationMessageView t-if="messageListViewItem.notificationMessageView" record="messageListViewItem.notificationMessageView"/>
+                        <Message t-if="messageListViewItem.messageView" record="messageListViewItem.messageView"/>
                     </t>
                 </t>
                 <!-- LOADING (if order desc)-->

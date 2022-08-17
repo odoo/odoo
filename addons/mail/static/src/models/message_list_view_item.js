@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 
 /**
  * Models a relation between a message list view and a message view where
@@ -9,6 +10,28 @@ import { attr, one } from '@mail/model/model_field';
  */
 registerModel({
     name: 'MessageListViewItem',
+    recordMethods: {
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeNotificationMessageView() {
+            if (this.message.message_type === 'notification' && this.message.originThread.channel) {
+                return {};
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeMessageView() {
+            if (this.message.message_type !== 'notification' || !this.message.originThread.channel) {
+                return {};
+            }
+            return clear();
+        },
+    },
     fields: {
         isSquashed: attr({
             required: true,
@@ -21,12 +44,15 @@ registerModel({
             identifying: true,
             inverse: 'messageListViewItems',
         }),
-        messageView: one('MessageView', {
-            default: {},
+        notificationMessageView: one('NotificationMessageView', {
+            compute: '_computeNotificationMessageView',
             inverse: 'messageListViewItemOwner',
             isCausal: true,
-            readonly: true,
-            required: true,
+        }),
+        messageView: one('MessageView', {
+            compute: '_computeMessageView',
+            inverse: 'messageListViewItemOwner',
+            isCausal: true,
         }),
     },
 });
