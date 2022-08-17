@@ -76,10 +76,10 @@ class Survey(models.Model):
     question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_page_and_question_ids")
     question_count = fields.Integer('# Questions', compute="_compute_page_and_question_ids")
     questions_layout = fields.Selection([
-        ('one_page', 'One page with all the questions'),
+        ('page_per_question', 'One page per question'),
         ('page_per_section', 'One page per section'),
-        ('page_per_question', 'One page per question')],
-        string="Pagination", required=True, default='one_page')
+        ('one_page', 'One page with all the questions')],
+        string="Pagination", required=True, default='page_per_question')
     questions_selection = fields.Selection([
         ('all', 'All questions'),
         ('random', 'Randomized per Section')],
@@ -200,7 +200,7 @@ class Survey(models.Model):
         }
         stat = dict((cid, dict(default_vals, answer_score_avg_total=0.0)) for cid in self.ids)
         UserInput = self.env['survey.user_input']
-        base_domain = ['&', ('survey_id', 'in', self.ids), ('test_entry', '!=', True)]
+        base_domain = [('survey_id', 'in', self.ids)]
 
         read_group_res = UserInput._read_group(base_domain, ['survey_id', 'state'], ['survey_id', 'state', 'scoring_percentage', 'scoring_success'], lazy=False)
         for item in read_group_res:
@@ -953,7 +953,7 @@ class Survey(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'name': "Test Survey",
-            'target': 'new',
+            'target': 'self',
             'url': '/survey/test/%s' % self.access_token,
         }
 
@@ -961,8 +961,7 @@ class Survey(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('survey.action_survey_user_input')
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
-                    'search_default_completed': 1,
-                    'search_default_not_test': 1})
+                    'search_default_completed': 1})
         action['context'] = ctx
         return action
 
@@ -970,16 +969,14 @@ class Survey(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('survey.action_survey_user_input')
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
-                    'search_default_scoring_success': 1,
-                    'search_default_not_test': 1})
+                    'search_default_scoring_success': 1})
         action['context'] = ctx
         return action
 
     def action_survey_user_input(self):
         action = self.env['ir.actions.act_window']._for_xml_id('survey.action_survey_user_input')
         ctx = dict(self.env.context)
-        ctx.update({'search_default_survey_id': self.ids[0],
-                    'search_default_not_test': 1})
+        ctx.update({'search_default_survey_id': self.ids[0]})
         action['context'] = ctx
         return action
 
