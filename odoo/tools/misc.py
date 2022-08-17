@@ -1015,6 +1015,12 @@ class Collector(dict):
         if val not in vals:
             self[key] = vals + (val,)
 
+    def discard_keys_and_values(self, excludes):
+        for key in excludes:
+            self.pop(key, None)
+        for key, vals in list(self.items()):
+            self[key] = tuple(val for val in vals if val not in excludes)
+
 
 class StackMap(MutableMapping):
     """ A stack of mappings behaving as a single mapping, and used to implement
