@@ -2219,7 +2219,7 @@ body.editor_enable.editor_has_snippets {
                 &, > .o_overlay_move_options, .o_overlay_edit_options {
                     display: flex;
                 }
-                .o_overlay_move_options > *, .o_overlay_edit_options > *, > we-button {
+                .o_overlay_move_options > *, .o_overlay_edit_options > *:not(span), .o_overlay_edit_options > span > *, > we-button {
                     @extend %we-generic-button;
                     margin: 0 1px 0;
                     min-width: 22px;
@@ -2252,13 +2252,8 @@ body.editor_enable.editor_has_snippets {
                     background-repeat: no-repeat;
                 }
                 &:hover {
-                    .o_overlay_move_options > *, .o_overlay_edit_options > *, > we-button {
+                    .o_overlay_move_options > *, .o_overlay_edit_options > *:not(span), > we-button {
                         @include o-hover-opacity(.6);
-
-                        &:hover {
-                            border-color: mix($o-we-handles-accent-color, $o-we-sidebar-content-field-pressed-bg, .4);
-                            background-color: $o-we-sidebar-content-field-pressed-bg;
-                        }
                     }
                 }
             }

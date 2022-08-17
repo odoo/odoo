@@ -1463,9 +1463,18 @@ const DisableOverlayButtonOption = options.Class.extend({
         // TODO refactor in master
         const className = 'oe_snippet_' + buttonName;
         this.$overlay.add(this.$overlay.data('$optionsSection')).on('click', '.' + className, this.preventButton);
-        const $button = this.$overlay.add(this.$overlay.data('$optionsSection')).find('.' + className);
-        $button.attr('title', message).tooltip({delay: 0});
-        $button.removeClass(className); // Disable the functionnality
+        const $buttons = this.$overlay.add(this.$overlay.data('$optionsSection')).find('.' + className);
+        for (const buttonEl of $buttons) {
+            // For a disabled element to display a tooltip, it must be wrapped
+            // into a non-disabled element which holds the tooltip.
+            buttonEl.classList.add('o_disabled');
+            const spanEl = buttonEl.ownerDocument.createElement('span');
+            spanEl.setAttribute('tabindex', 0);
+            spanEl.setAttribute('title', message);
+            buttonEl.replaceWith(spanEl);
+            spanEl.appendChild(buttonEl);
+            Tooltip.getOrCreateInstance(spanEl, {delay: 0});
+        }
     },
 
     preventButton: function (event) {
