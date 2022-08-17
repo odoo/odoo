@@ -8,11 +8,12 @@
                 <data>
                     <xpath expr="//button[@name='action_view_task']" position="after">
                         <field name="timesheet_count" invisible="1"/>
+                        <field name="show_hours_recorded_button" invisible="1"/>
                         <button type="object"
                            name="action_view_timesheet"
                            class="oe_stat_button"
                            icon="fa-clock-o"
-                           attrs="{'invisible': [('timesheet_count', '=', 0)]}"
+                           attrs="{'invisible': [('show_hours_recorded_button', '=', False)]}"
                            groups="hr_timesheet.group_hr_timesheet_user">
                            <div class="o_stat_info">
                                <span class="o_stat_value">

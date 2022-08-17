@@ -859,6 +859,30 @@
             </field>
         </record>
 
+        <record id="view_task_kanban_inherit_view_default_project" model="ir.ui.view" >
+            <field name="name">project.task.kanban.sale.order</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <kanban position="attributes">
+                    <attribute name="quick_create_view">project.quick_create_task_form_inherit_view_default_project</attribute>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="quick_create_task_form_inherit_view_default_project" model="ir.ui.view">
+            <field name="name">project.task.form.quick.create.sale.order.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="quick_create_task_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="project_id" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </field>
+            </field>
+        </record>
+
         <record id="action_view_my_task" model="ir.actions.act_window">
             <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
