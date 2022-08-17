@@ -184,8 +184,6 @@ registerModel({
         }),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         isActive: attr({
             default: true,

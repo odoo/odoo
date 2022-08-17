@@ -21,8 +21,6 @@ registerModel({
         publicLivechatWindowOwner: one('PublicLivechatWindow', {
             identifying: true,
             inverse: 'publicLivechatView',
-            readonly: true,
-            required: true,
         }),
         widget: attr(),
     },

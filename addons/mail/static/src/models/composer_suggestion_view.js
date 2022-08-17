@@ -117,12 +117,10 @@ registerModel({
         composerSuggestionListViewExtraComposerSuggestionViewItemOwner: one('ComposerSuggestionListViewExtraComposerSuggestionViewItem', {
             identifying: true,
             inverse: 'composerSuggestionView',
-            readonly: true,
         }),
         composerSuggestionListViewMainComposerSuggestionViewItemOwner: one('ComposerSuggestionListViewMainComposerSuggestionViewItem', {
             identifying: true,
             inverse: 'composerSuggestionView',
-            readonly: true,
         }),
         /**
          * The text that identifies this suggestion in a mention.

@@ -71,8 +71,6 @@ registerModel({
     fields: {
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         /**
          *  The keyword to use a specific canned response.

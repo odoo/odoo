@@ -181,7 +181,6 @@ registerModel({
         activityViewOwnerAsMarkDone: one('ActivityView', {
             identifying: true,
             inverse: 'markDonePopoverView',
-            readonly: true,
         }),
         /**
          * HTML element that is used as anchor position for this popover view.
@@ -209,7 +208,6 @@ registerModel({
         composerViewOwnerAsEmoji: one('ComposerView', {
             identifying: true,
             inverse: 'emojisPopoverView',
-            readonly: true,
         }),
         /**
          * Determines the record that is content of this popover view.
@@ -254,7 +252,6 @@ registerModel({
         messageActionListOwnerAsReaction: one('MessageActionList', {
             identifying: true,
             inverse: 'reactionPopoverView',
-            readonly: true,
         }),
         /**
          * Position of the popover view relative to its anchor point.
@@ -270,7 +267,6 @@ registerModel({
         threadViewTopbarOwnerAsInvite: one('ThreadViewTopbar', {
             identifying: true,
             inverse: 'invitePopoverView',
-            readonly: true,
         }),
     },
 });

@@ -33,8 +33,6 @@ registerModel({
         chatter: one('Chatter', {
             identifying: true,
             inverse: 'activityBoxView',
-            readonly: true,
-            required: true,
         }),
         isActivityListVisible: attr({
             default: true,

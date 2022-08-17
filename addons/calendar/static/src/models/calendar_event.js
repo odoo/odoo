@@ -25,8 +25,6 @@ registerModel({
         }),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         name: attr(),
         start: attr(),

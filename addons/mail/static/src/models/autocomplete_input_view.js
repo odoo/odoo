@@ -89,7 +89,6 @@ registerModel({
         chatWindowOwnerAsNewMessage: one('ChatWindow', {
             identifying: true,
             inverse: 'newMessageAutocompleteInputView',
-            readonly: true,
         }),
         component: attr(),
         customClass: attr({
@@ -99,12 +98,10 @@ registerModel({
         discussSidebarCategoryOwnerAsAddingItem: one('DiscussSidebarCategory', {
             identifying: true,
             inverse: 'addingItemAutocompleteInputView',
-            readonly: true,
         }),
         discussViewOwnerAsMobileAddItemHeader: one('DiscussView', {
             identifying: true,
             inverse: 'mobileAddItemHeaderAutocompleteInputView',
-            readonly: true,
         }),
         isFocusOnMount: attr({
             compute: '_computeIsFocusOnMount',
@@ -117,7 +114,6 @@ registerModel({
         messagingMenuOwnerAsMobileNewMessageInput: one('MessagingMenu', {
             identifying: true,
             inverse: 'mobileNewMessageAutocompleteInputView',
-            readonly: true,
         }),
         placeholder: attr({
             compute: '_computePlaceholder',

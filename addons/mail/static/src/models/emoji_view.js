@@ -36,14 +36,10 @@ registerModel({
         emoji: one('Emoji', {
             identifying: true,
             inverse: 'emojiViews',
-            readonly: true,
-            required: true,
         }),
         emojiGridView: one('EmojiGridView', {
             identifying: true,
             inverse: 'emojiViews',
-            readonly: true,
-            required: true,
         }),
         isHovered: attr({
             default: false,

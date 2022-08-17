@@ -121,8 +121,6 @@ registerModel({
         composerViewOwner: one('ComposerView', {
             identifying: true,
             inverse: 'composerSuggestionListView',
-            readonly: true,
-            required: true,
         }),
         /**
          * Determines whether the currently active suggestion should be scrolled

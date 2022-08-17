@@ -53,14 +53,10 @@ registerModel({
         notificationGroup: one('NotificationGroup', {
             identifying: true,
             inverse: 'notificationGroupViews',
-            readonly: true,
-            required: true,
         }),
         notificationListViewOwner: one('NotificationListView', {
             identifying: true,
             inverse: 'notificationGroupViews',
-            readonly: true,
-            required: true,
         }),
     },
 });

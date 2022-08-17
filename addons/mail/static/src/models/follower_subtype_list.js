@@ -70,7 +70,6 @@ registerModel({
             identifying: true,
             inverse: 'followerSubtypeList',
             isCausal: true,
-            readonly: true,
         }),
         follower: one('Follower', {
             related: 'dialogOwner.followerOwnerAsSubtypeList',

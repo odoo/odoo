@@ -96,7 +96,6 @@ registerModel({
         attachmentOwner: one("Attachment", {
             identifying: true,
             inverse: 'attachmentViewerViewable',
-            readonly: true,
         }),
         accessToken: attr({
             compute: "_computeAccessToken",

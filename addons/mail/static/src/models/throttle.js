@@ -73,7 +73,6 @@ registerModel({
         threadAsThrottleNotifyCurrentPartnerTypingStatus: one('Thread', {
             identifying: true,
             inverse: 'throttleNotifyCurrentPartnerTypingStatus',
-            readonly: true,
         }),
     },
 });

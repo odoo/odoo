@@ -9,12 +9,10 @@ addFields('Throttle', {
     qunitTestOwner1: one('QUnitTest', {
         identifying: true,
         inverse: 'throttle1',
-        readonly: true,
     }),
     qunitTestOwner2: one('QUnitTest', {
         identifying: true,
         inverse: 'throttle2',
-        readonly: true,
     }),
 });
 

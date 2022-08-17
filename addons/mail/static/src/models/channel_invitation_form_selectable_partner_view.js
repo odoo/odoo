@@ -19,14 +19,10 @@ registerModel({
         channelInvitationFormOwner: one('ChannelInvitationForm', {
             identifying: true,
             inverse: 'selectablePartnerViews',
-            readonly: true,
-            required: true,
         }),
         partner: one('Partner', {
             identifying: true,
             inverse: 'channelInvitationFormSelectablePartnerViews',
-            readonly: true,
-            required: true,
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',

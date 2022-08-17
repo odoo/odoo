@@ -25,8 +25,6 @@ registerModel({
         messageViewOwner: one('MessageView', {
             identifying: true,
             inverse: 'messageSeenIndicatorView',
-            readonly: true,
-            required: true,
         }),
         messageSeenIndicator: one('MessageSeenIndicator', {
             compute: '_computeMessageSeenIndicator',

@@ -128,8 +128,6 @@ registerModel({
          */
         name: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         suggestable: one('ComposerSuggestable', {
             default: insertAndReplace(),

@@ -84,7 +84,6 @@ registerModel({
         userSetting: one('UserSetting', {
             identifying: true,
             inverse: 'callSettingsMenu',
-            readonly: true,
         }),
     },
 });

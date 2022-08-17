@@ -44,8 +44,6 @@ registerModel({
         livechatButtonViewOwner: one('LivechatButtonView', {
             identifying: true,
             inverse: 'chatWindow',
-            readonly: true,
-            required: true,
         }),
         publicLivechatView: one('PublicLivechatView', {
             default: insertAndReplace(),

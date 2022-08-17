@@ -187,8 +187,6 @@ registerModel({
         messageView: one('MessageView', {
             identifying: true,
             inverse: 'messageActionList',
-            readonly: true,
-            required: true,
         }),
         /**
          * Determines the reaction popover that is active on this message action list.

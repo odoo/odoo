@@ -330,8 +330,6 @@ registerModel({
         filename: attr(),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         /**
          * States whether this attachment is deletable.

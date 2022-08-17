@@ -31,8 +31,6 @@ registerModel({
         }),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         partner_id: one('Partner', {
             inverse: 'volumeSetting',

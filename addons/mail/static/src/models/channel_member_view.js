@@ -48,14 +48,10 @@ registerModel({
         channelMemberListCategoryViewOwner: one('ChannelMemberListCategoryView', {
             identifying: true,
             inverse: 'channelMemberViews',
-            readonly: true,
-            required: true,
         }),
         channelMember: one('ChannelMember', {
             identifying: true,
             inverse: 'channelMemberViews',
-            readonly: true,
-            required: true,
         }),
         hasOpenChat: attr({
             compute: '_computeHasOpenChat',

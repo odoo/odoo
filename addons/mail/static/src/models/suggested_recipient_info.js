@@ -65,7 +65,6 @@ registerModel({
          */
         id: attr({
             identifying: true,
-            readonly: true,
         }),
         /**
          * Determines whether `this` will be added to recipients when posting a

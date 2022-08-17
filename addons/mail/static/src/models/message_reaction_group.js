@@ -75,8 +75,6 @@ registerModel({
     fields: {
         content: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         count: attr({
             required: true,
@@ -93,8 +91,6 @@ registerModel({
             compute: '_computeMessage',
             identifying: true,
             inverse: 'messageReactionGroups',
-            readonly: true,
-            required: true,
         }),
         messageId: attr({
             readonly: true,

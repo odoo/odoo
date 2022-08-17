@@ -10,7 +10,6 @@ addFields('DiscussSidebarCategory', {
     discussAsLivechat: one('Discuss', {
         identifying: true,
         inverse: 'categoryLivechat',
-        readonly: true,
     }),
 });
 

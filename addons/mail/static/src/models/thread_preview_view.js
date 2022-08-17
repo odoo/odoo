@@ -108,8 +108,6 @@ registerModel({
         notificationListViewOwner: one('NotificationListView', {
             identifying: true,
             inverse: 'threadPreviewViews',
-            readonly: true,
-            required: true,
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
@@ -120,8 +118,6 @@ registerModel({
         thread: one('Thread', {
             identifying: true,
             inverse: 'threadPreviewViews',
-            readonly: true,
-            required: true,
         }),
     },
 });

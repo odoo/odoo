@@ -610,8 +610,6 @@ registerModel({
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,
             inverse: 'livechatButtonView',
-            readonly: true,
-            required: true,
         }),
         serverUrl: attr({
             compute: '_computeServerUrl',

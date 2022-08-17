@@ -13,8 +13,6 @@ registerModel({
          */
         partner: one('Partner', {
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         /**
          * Thread (channel) that this seen info is related to.
@@ -22,8 +20,6 @@ registerModel({
         thread: one('Thread', {
             inverse: 'partnerSeenInfos',
             identifying: true,
-            readonly: true,
-            required: true,
         }),
     },
 });

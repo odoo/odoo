@@ -164,8 +164,6 @@ registerModel({
          */
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         /**
          * Partner related to this employee.

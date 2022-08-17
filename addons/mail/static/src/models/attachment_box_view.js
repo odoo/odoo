@@ -36,8 +36,6 @@ registerModel({
         chatter: one('Chatter', {
             identifying: true,
             inverse: 'attachmentBoxView',
-            readonly: true,
-            required: true,
         }),
         /**
          * States the OWL component displaying this attachment box.

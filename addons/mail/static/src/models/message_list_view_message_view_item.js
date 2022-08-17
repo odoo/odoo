@@ -17,14 +17,10 @@ registerModel({
         message: one('Message', {
             identifying: true,
             inverse: 'messageListViewMessageViewItems',
-            readonly: true,
-            required: true,
         }),
         messageListViewOwner: one('MessageListView', {
             identifying: true,
             inverse: 'messageListViewMessageViewItems',
-            readonly: true,
-            required: true,
         }),
         messageView: one('MessageView', {
             default: insertAndReplace(),

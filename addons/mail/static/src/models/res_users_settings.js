@@ -11,8 +11,6 @@ registerModel({
     fields: {
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         is_discuss_sidebar_category_channel_open: attr({
             default: true,

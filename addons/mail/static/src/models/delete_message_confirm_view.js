@@ -45,8 +45,6 @@ registerModel({
         dialogOwner: one('Dialog', {
             identifying: true,
             inverse: 'deleteMessageConfirmView',
-            readonly: true,
-            required: true,
         }),
         message: one('Message', {
             compute: '_computeMessage',

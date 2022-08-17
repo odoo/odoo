@@ -158,8 +158,6 @@ registerModel({
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,
             inverse: 'chatbot',
-            readonly: true,
-            required: true,
         }),
         scriptId: attr({
             compute: '_computeScriptId',

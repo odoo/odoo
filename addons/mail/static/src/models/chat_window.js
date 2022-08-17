@@ -660,7 +660,6 @@ registerModel({
         managerAsNewMessage: one('ChatWindowManager', {
             identifying: true,
             inverse: 'newMessageChatWindow',
-            readonly: true,
         }),
         name: attr({
             compute: '_computeName',
@@ -684,7 +683,6 @@ registerModel({
         thread: one('Thread', {
             identifying: true,
             inverse: 'chatWindow',
-            readonly: true,
         }),
         /**
          * States the `ThreadView` displaying `this.thread`.

@@ -289,8 +289,6 @@ registerModel({
         icon: attr(),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         isCurrentPartnerAssignee: attr({
             compute: '_computeIsCurrentPartnerAssignee',

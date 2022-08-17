@@ -25,8 +25,6 @@ registerModel({
         data: attr(),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         legacyPublicLivechatMessage: attr(),
     },

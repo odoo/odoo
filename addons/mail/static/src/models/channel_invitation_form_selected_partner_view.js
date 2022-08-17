@@ -9,14 +9,10 @@ registerModel({
         channelInvitationFormOwner: one('ChannelInvitationForm', {
             identifying: true,
             inverse: 'selectedPartnerViews',
-            readonly: true,
-            required: true,
         }),
         partner: one('Partner', {
             identifying: true,
             inverse: 'channelInvitationFormSelectedPartnerViews',
-            readonly: true,
-            required: true,
         }),
     },
 });

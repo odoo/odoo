@@ -13,7 +13,6 @@ registerModel({
         activityViewOwner: one('ActivityView', {
             identifying: true,
             inverse: 'clockWatcher',
-            readonly: true,
         }),
         clock: one('Clock', {
             inverse: 'watchers',
@@ -22,7 +21,6 @@ registerModel({
         messageViewOwner: one('MessageView', {
             identifying: true,
             inverse: 'clockWatcher',
-            readonly: true,
         }),
     },
 });

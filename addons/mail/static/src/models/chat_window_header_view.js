@@ -29,8 +29,6 @@ registerModel({
         chatWindowOwner: one('ChatWindow', {
             identifying: true,
             inverse: 'chatWindowHeaderView',
-            readonly: true,
-            required: true,
         }),
     },
 });

@@ -527,8 +527,6 @@ registerModel({
         threadViewer: one('ThreadViewer', {
             identifying: true,
             inverse: 'threadView',
-            readonly: true,
-            required: true,
         }),
         /**
          * Determines the top bar of this thread view, if any.

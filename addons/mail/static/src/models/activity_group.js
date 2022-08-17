@@ -46,8 +46,6 @@ registerModel({
         irModel: one('ir.model', {
             identifying: true,
             inverse: 'activityGroup',
-            readonly: true,
-            required: true,
         }),
         overdue_count: attr({
             default: 0,

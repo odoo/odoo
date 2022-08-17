@@ -12,8 +12,6 @@ registerModel({
         displayName: attr(),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
     },
 });

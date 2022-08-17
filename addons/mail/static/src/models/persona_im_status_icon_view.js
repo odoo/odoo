@@ -46,37 +46,30 @@ registerModel({
         channelInvitationFormSelectablePartnerViewOwner: one('ChannelInvitationFormSelectablePartnerView', {
             identifying: true,
             inverse: 'personaImStatusIconView',
-            readonly: true,
         }),
         channelMemberViewOwner: one('ChannelMemberView', {
             identifying: true,
             inverse: 'personaImStatusIconView',
-            readonly: true,
         }),
         composerSuggestionViewOwner: one('ComposerSuggestionView', {
             identifying: true,
             inverse: 'personaImStatusIconView',
-            readonly: true,
         }),
         messageViewOwner: one('MessageView', {
             identifying: true,
             inverse: 'personaImStatusIconView',
-            readonly: true,
         }),
         notificationRequestViewOwner: one('NotificationRequestView', {
             identifying: true,
             inverse: 'personaImStatusIconView',
-            readonly: true,
         }),
         threadNeedactionPreviewViewOwner: one('ThreadNeedactionPreviewView', {
             identifying: true,
             inverse: 'personaImStatusIconView',
-            readonly: true,
         }),
         threadPreviewViewOwner: one('ThreadPreviewView', {
             identifying: true,
             inverse: 'personaImStatusIconView',
-            readonly: true,
         }),
         persona: one('Persona', {
             compute: '_computePersona',

@@ -81,8 +81,6 @@ registerModel({
         }),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         isStreaming: attr({
             compute: '_computeIsStreaming',

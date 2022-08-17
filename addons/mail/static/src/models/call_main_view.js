@@ -164,8 +164,6 @@ registerModel({
         callView: one('CallView', {
             identifying: true,
             inverse: 'callMainView',
-            required: true,
-            readonly: true,
         }),
         channel: one('Thread', {
             related: 'callView.channel',

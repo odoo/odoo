@@ -118,17 +118,14 @@ registerModel({
         messagingAsHistory: one('Messaging', {
             identifying: true,
             inverse: 'history',
-            readonly: true,
         }),
         messagingAsInbox: one('Messaging', {
             identifying: true,
             inverse: 'inbox',
-            readonly: true,
         }),
         messagingAsStarred: one('Messaging', {
             identifying: true,
             inverse: 'starred',
-            readonly: true,
         }),
         name: attr({
             compute: '_computeName',

@@ -36,8 +36,6 @@ registerModel({
         thread: one('Thread', {
             identifying: true,
             inverse: 'callInviteRequestPopup',
-            readonly: true,
-            required: true,
         }),
     },
 });

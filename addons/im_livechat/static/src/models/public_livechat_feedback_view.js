@@ -36,8 +36,6 @@ registerModel({
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,
             inverse: 'feedbackView',
-            readonly: true,
-            required: true,
         }),
         widget: attr(),
     },

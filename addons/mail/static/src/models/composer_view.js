@@ -1379,7 +1379,6 @@ registerModel({
         chatter: one('Chatter', {
             identifying: true,
             inverse: 'composerView',
-            readonly: true,
         }),
         /**
          * States the OWL component of this composer view.
@@ -1545,7 +1544,6 @@ registerModel({
         messageViewInEditing: one('MessageView', {
             identifying: true,
             inverse: 'composerViewInEditing',
-            readonly: true,
         }),
         /**
          * This is the invisible textarea used to compute the composer height
@@ -1613,7 +1611,6 @@ registerModel({
         threadView: one('ThreadView', {
             identifying: true,
             inverse: 'composerView',
-            readonly: true,
         }),
         useDragVisibleDropZone: one('UseDragVisibleDropZone', {
             default: insertAndReplace(),

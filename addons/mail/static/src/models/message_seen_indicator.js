@@ -258,8 +258,6 @@ registerModel({
          */
         message: one('Message', {
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         partnersThatHaveFetched: many('Partner', {
             compute: '_computePartnersThatHaveFetched',
@@ -277,8 +275,6 @@ registerModel({
         thread: one('Thread', {
             identifying: true,
             inverse: 'messageSeenIndicators',
-            readonly: true,
-            required: true,
         }),
     },
 });

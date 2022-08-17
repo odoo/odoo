@@ -170,7 +170,6 @@ registerModel({
         mainViewTileOwner: one('CallMainViewTile', {
             identifying: true,
             inverse: 'participantCard',
-            readonly: true,
         }),
         /**
          * Determines if this card has to be displayed in a minimized form.
@@ -206,7 +205,6 @@ registerModel({
         sidebarViewTileOwner: one('CallSidebarViewTile', {
             identifying: true,
             inverse: 'participantCard',
-            readonly: true,
         }),
         callParticipantVideoView: one('CallParticipantVideoView', {
             compute: '_computeCallParticipantVideoView',

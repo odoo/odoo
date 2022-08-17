@@ -61,7 +61,6 @@ registerModel({
         chatWindowOwner: one('ChatWindow', {
             identifying: true,
             inverse: 'channelMemberListView',
-            readonly: true,
         }),
         offlineCategoryView: one('ChannelMemberListCategoryView', {
             compute: '_computeOfflineCategoryView',
@@ -76,7 +75,6 @@ registerModel({
         threadViewOwner: one('ThreadView', {
             identifying: true,
             inverse: 'channelMemberListView',
-            readonly: true,
         }),
     },
 });

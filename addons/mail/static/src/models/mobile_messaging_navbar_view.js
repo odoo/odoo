@@ -99,12 +99,10 @@ registerModel({
         discuss: one('Discuss', {
             identifying: true,
             inverse: 'mobileMessagingNavbarView',
-            readonly: true,
         }),
         messagingMenu: one('MessagingMenu', {
             identifying: true,
             inverse: 'mobileMessagingNavbarView',
-            readonly: true,
         }),
         /**
          * Ordered list of tabs that this navbar has.

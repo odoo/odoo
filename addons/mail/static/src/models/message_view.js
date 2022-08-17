@@ -473,7 +473,6 @@ registerModel({
         deleteMessageConfirmViewOwner: one('DeleteMessageConfirmView', {
             identifying: true,
             inverse: 'messageView',
-            readonly: true,
         }),
         /**
          * Determines whether this message view should be highlighted at next
@@ -600,7 +599,6 @@ registerModel({
         messageListViewMessageViewItemOwner: one('MessageListViewMessageViewItem', {
             identifying: true,
             inverse: 'messageView',
-            readonly: true,
         }),
         messageSeenIndicatorView: one('MessageSeenIndicatorView', {
             compute: '_computeMessageSeenIndicatorView',

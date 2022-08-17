@@ -126,8 +126,6 @@ registerModel({
         threadViewOwner: one('ThreadView', {
             identifying: true,
             inverse: 'messageListView',
-            readonly: true,
-            required: true,
         }),
     },
 });

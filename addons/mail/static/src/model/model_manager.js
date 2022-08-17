@@ -506,14 +506,23 @@ export class ModelManager {
                         throw new Error(`Relational field "${model}/${fieldName}" has "sort" with a relation of type "${field.relationType}" but "sort" is only supported for "many".`);
                     }
                 }
-                // 3. Computed field.
+                // 3. Check for redundant attributes on identifying fields.
+                if (field.identifying) {
+                    if ('readonly' in field) {
+                        throw new Error(`Identifying field(${fieldName}) on ${model} has unnecessary "readonly" attribute (readonly is implicit for identifying fields).`);
+                    }
+                    if ('required' in field && model.identifyingMode === 'and') {
+                        throw new Error(`Identifying field(${fieldName}) on ${model} has unnecessary "required" attribute (required is implicit for AND identifying fields).`);
+                    }
+                }
+                // 4. Computed field.
                 if (field.compute && !(typeof field.compute === 'string')) {
                     throw new Error(`Property "compute" of field(${fieldName}) on ${model} must be a string (instance method name).`);
                 }
                 if (field.compute && !(model.prototype[field.compute])) {
                     throw new Error(`Property "compute" of field(${fieldName}) on ${model} does not refer to an instance method of this model.`);
                 }
-                // 4. Related field.
+                // 5. Related field.
                 if (field.compute && field.related) {
                     throw new Error(`field(${fieldName}) on ${model} cannot be a related and compute field at the same time.`);
                 }
@@ -623,9 +632,6 @@ export class ModelManager {
                 const field = model.__fieldMap[identifyingField];
                 if (!field) {
                     throw new Error(`Identifying field "${identifyingField}" is not a field on ${model}.`);
-                }
-                if (!field.readonly) {
-                    throw new Error(`Identifying field "${identifyingField}" on ${model} is lacking readonly.`);
                 }
                 if (field.to) {
                     if (field.relationType !== 'one') {
@@ -1084,6 +1090,7 @@ export class ModelManager {
                 // Allows the inverse of an identifying field to be
                 // automatically generated.
                 isCausal: field.identifying,
+                model: this.models[field.to],
             },
         ));
         return inverseField;
@@ -1196,6 +1203,7 @@ export class ModelManager {
             for (const [fieldName, fieldData] of registry.get(model.name).get('fields')) {
                 model.fields[fieldName] = new ModelField(Object.assign({}, fieldData, {
                     fieldName,
+                    model,
                 }));
                 if (fieldData.sum) {
                     const [relationFieldName, contributionFieldName] = fieldData.sum.split('.');

@@ -49,8 +49,6 @@ registerModel({
          */
         attachment: one('Attachment', {
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         attachmentDeleteConfirmDialog: one('Dialog', {
             inverse: 'attachmentCardOwnerAsAttachmentDeleteConfirm',
@@ -62,8 +60,6 @@ registerModel({
         attachmentList: one('AttachmentList', {
             identifying: true,
             inverse: 'attachmentCards',
-            readonly: true,
-            required: true,
         }),
         hasMultipleActions: attr({
             compute: '_computeHasMultipleActions',

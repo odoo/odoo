@@ -227,8 +227,6 @@ registerModel({
         category: one('DiscussSidebarCategory', {
             identifying: true,
             inverse: 'categoryItems',
-            readonly: true,
-            required: true,
         }),
         /**
          * Determines the contribution of this discuss sidebar category item to
@@ -290,8 +288,6 @@ registerModel({
         thread: one('Thread', {
             identifying: true,
             inverse: 'discussSidebarCategoryItem',
-            readonly: true,
-            required: true,
         }),
     },
 });

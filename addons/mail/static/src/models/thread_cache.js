@@ -360,8 +360,6 @@ registerModel({
         thread: one('Thread', {
             identifying: true,
             inverse: 'cache',
-            readonly: true,
-            required: true,
         }),
         /**
          * States the 'ThreadView' that are currently displaying `this`.

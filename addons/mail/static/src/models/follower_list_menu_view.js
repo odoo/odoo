@@ -49,7 +49,6 @@ registerModel({
         chatterOwner: one('Chatter', {
             identifying: true,
             inverse: 'followerListMenuView',
-            readonly: true,
         }),
         followerViews: many('FollowerView', {
             compute: '_computeFollowerViews',

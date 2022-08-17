@@ -29,14 +29,10 @@ registerModel({
         emojiCategory: one('EmojiCategory', {
             identifying: true,
             inverse: 'emojiCategoryViews',
-            readonly: true,
-            required: true,
         }),
         emojiCategoryBarViewOwner: one('EmojiCategoryBarView', {
             identifying: true,
             inverse: 'emojiCategoryViews',
-            readonly: true,
-            required: true,
         }),
         emojiCategoryBarViewOwnerAsActiveByUser: one('EmojiCategoryBarView', {
             inverse: 'activeByUserCategoryView',

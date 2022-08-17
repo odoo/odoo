@@ -47,8 +47,6 @@ registerModel({
         }),
         id: attr({
             identifying: true,
-            required: true,
-            readonly: true,
         }),
         im_status: attr(),
         isOnline: attr({

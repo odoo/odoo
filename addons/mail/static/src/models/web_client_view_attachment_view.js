@@ -57,8 +57,6 @@ registerModel({
         component: attr(),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         iframeViewerPdfRef: attr(),
         thread: one('Thread', {

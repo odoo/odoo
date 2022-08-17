@@ -137,8 +137,6 @@ registerModel({
         discussPublicView: one('DiscussPublicView', {
             identifying: true,
             inverse: 'welcomeView',
-            readonly: true,
-            required: true,
         }),
         /**
          * States the OWL ref the to input element containing the

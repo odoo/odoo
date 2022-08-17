@@ -59,8 +59,6 @@ registerModel({
         emojiPickerViewOwner: one('EmojiPickerView', {
             identifying: true,
             inverse: 'emojiCategoryBarView',
-            readonly: true,
-            required: true,
         }),
     },
 });

@@ -9,6 +9,5 @@ addFields('ClockWatcher', {
     qunitTestOwner: one('QUnitTest', {
         identifying: true,
         inverse: 'clockWatcher',
-        readonly: true,
     }),
 });

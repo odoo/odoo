@@ -43,8 +43,6 @@ registerModel({
         }),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         isDefault: attr({
             default: false,

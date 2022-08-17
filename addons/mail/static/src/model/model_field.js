@@ -21,6 +21,7 @@ export class ModelField {
         identifying = false,
         inverse,
         isCausal = false,
+        model,
         readonly = false,
         related,
         relationType,
@@ -69,6 +70,7 @@ export class ModelField {
          * relation is removed, the related record is automatically deleted.
          */
         this.isCausal = isCausal;
+        this.model = model;
         /**
          * Determines whether the field is read only. Read only field
          * can't be updated once the record is created.
@@ -137,6 +139,12 @@ export class ModelField {
          * model name this relation refers to.
          */
         this.to = to;
+        if (this.identifying) {
+            this.readonly = true;
+            if (model.identifyingMode === 'and') {
+                this.required = true;
+            }
+        }
     }
 
     /**

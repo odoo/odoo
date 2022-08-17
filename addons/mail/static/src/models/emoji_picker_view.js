@@ -24,8 +24,6 @@ registerModel({
         popoverViewOwner: one('PopoverView', {
             identifying: true,
             inverse: 'emojiPickerView',
-            readonly: true,
-            required: true,
         }),
     },
 });

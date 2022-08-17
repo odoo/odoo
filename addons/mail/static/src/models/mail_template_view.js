@@ -27,13 +27,9 @@ registerModel({
         activityViewOwner: one('ActivityView', {
             identifying: true,
             inverse: 'mailTemplateViews',
-            readonly: true,
-            required: true,
         }),
         mailTemplate: one('MailTemplate', {
             identifying: true,
-            readonly: true,
-            required: true,
         }),
     },
 });
