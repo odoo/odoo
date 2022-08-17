@@ -109,7 +109,8 @@ class AccountMove(models.Model):
             def get_entry_line(label, balance=None):
                 account = random.choice(accounts)
                 currency = account.currency_id != account.company_id.currency_id and account.currency_id or random.choice(currencies)
-                balance = balance or round(random.uniform(-10000, 10000))
+                if balance is None:
+                    balance = round(random.uniform(-10000, 10000))
                 return Command.create({
                     'name': 'label_%s' % label,
                     'balance': balance,
