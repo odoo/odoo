@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="website_page_properties_view_form" model="ir.ui.view">
+        <field name="name">website.page.properties.form.view</field>
+        <field name="model">website.page.properties</field>
+        <field name="arch" type="xml">
+            <form>
+                <notebook>
+                    <page string="Name">
+                        <group class="mt-4">
+                            <field name="page_id" invisible="1"/>
+                            <field name="website_id" invisible="1"/>
+                            <field name="url_change" invisible="1"/>
+                            <field name="name" widget="page_name"/>
+                            <field name="url" widget="page_url"/>
+                            <field name="enable_redirect" widget="boolean_toggle" attrs="{'invisible': [('url_change', '=', False)]}"/>
+                            <field name="redirect_type" attrs="{'invisible': ['|', ('enable_redirect', '=', False), ('url_change', '=', False)]}"/>
+                        </group>
+                    </page>
+                    <page string="Publish">
+                        <group class="mt-4">
+                            <field name="is_in_menu" widget="boolean_toggle"/>
+                            <field name="is_homepage" widget="boolean_toggle"/>
+                            <field name="website_indexed" widget="boolean_toggle" help="Hide this page from search results"/>
+                            <field name="is_published" widget="boolean_toggle"/>
+                            <field name="date_publish" widget="datetime"/>
+                            <field name="visibility"/>
+                            <field name="visibility_password_display" attrs="{'invisible': [('visibility', '!=', 'password')], 'required': [('visibility', '=', 'password')]}" password="True"/>
+                            <field name="groups_id" attrs="{'invisible': [('visibility', '!=', 'restricted_group')]}" widget="many2many_tags"/>
+                        </group>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+</odoo>

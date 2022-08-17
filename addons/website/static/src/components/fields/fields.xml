@@ -9,7 +9,7 @@
         <div class="d-flex">
             <div
                 class="input-group-text rounded-start text-lowercase border-0"
-                t-esc="serverUrl.length > 30 ? serverUrl.slice(0,14) + '..' + serverUrl.slice(-14) : serverUrl"
+                t-esc="serverUrl.length > 30 ? serverUrl.slice(0,14) + '..' + serverUrl.slice(-14) : serverUrl + '/'"
             />
             <input
                 class="o_input"
@@ -21,23 +21,8 @@
                 t-ref="input"
             />
         </div>
-        <div t-if="enableRedirect">
-            <div class="d-flex mt-4">
-                <Switch
-                    extraClasses="'me-auto'"
-                    label="'Redirect Old URL'"
-                    value="state.redirect_old_url"
-                    onChange="(value) => this.onChangeRedirectOldUrl(value)"
-                />
-                <PageDependencies pageId="props.record.resId" mode="'popover'"/>
-            </div>
-            <div t-if="state.redirect_old_url" class="d-flex mt-4">
-                <label class="my-0 me-4 fw-bold" for="redirect_type">Type</label>
-                <select class="o_input w-50" id="redirect_type" t-model="state.redirect_type" t-on-change="updateValues">
-                    <option value="301">301 Moved permanently</option>
-                    <option value="302">302 Moved temporarily</option>
-                </select>
-            </div>
+        <div t-if="urlChanged" class="mt-4">
+            <PageDependencies pageId="resId" mode="'popover'"/>
         </div>
     </t>
 </t>
@@ -57,7 +42,7 @@
             t-ref="input"
         />
         <div t-if="warnAboutCall" class="mt-4">
-            <PageDependencies pageId="props.record.resId" mode="'popover'" type="'key'"/>
+            <PageDependencies pageId="resId" mode="'popover'" type="'key'"/>
         </div>
     </t>
 </t>

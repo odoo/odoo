@@ -47,7 +47,7 @@ patch(NavBar.prototype, 'website_navbar', {
                 isDisplayed: () => this.canShowPageProperties(),
                 getProps: () => ({
                     onRecordSaved: (record) => {
-                        return this.orm.read('website.page', [record.resId], ['url']).then(res => {
+                        return this.orm.read('website.page', [record.context.active_id], ['url']).then(res => {
                             this.websiteService.goToWebsite({websiteId: record.data.website_id[0], path: res[0]['url']});
                         });
                     },

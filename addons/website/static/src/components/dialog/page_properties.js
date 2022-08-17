@@ -165,7 +165,8 @@ export class PagePropertiesDialog extends FormViewDialog {
         this.dialog = useService('dialog');
         this.website = useService('website');
 
-        this.viewProps.resId = this.resId;
+        this.viewProps.resId = false;
+        this.viewProps.context.active_id = this.resId;
     }
 
     get resId() {
@@ -201,7 +202,7 @@ PagePropertiesDialog.props = {
 
 PagePropertiesDialog.defaultProps = {
     ...FormViewDialog.defaultProps,
-    resModel: 'website.page',
+    resModel: 'website.page.properties',
     title: _t("Page Properties"),
     size: 'md',
     context: {

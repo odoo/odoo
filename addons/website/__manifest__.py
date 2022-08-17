@@ -104,6 +104,7 @@
         'views/ir_model_views.xml',
         'views/res_partner_views.xml',
         'wizard/base_language_install_views.xml',
+        'wizard/website_page_properties_views.xml',
         'wizard/website_robots.xml',
     ],
     'demo': [

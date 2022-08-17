@@ -4,47 +4,38 @@ import {PageDependencies} from '@website/components/dialog/page_properties';
 import {standardFieldProps} from '@web/views/fields/standard_field_props';
 import {useInputField} from '@web/views/fields/input_field_hook';
 import {useService} from '@web/core/utils/hooks';
-import {Switch} from '@website/components/switch/switch';
 import AbstractFieldOwl from 'web.AbstractFieldOwl';
 import fieldRegistry from 'web.field_registry_owl';
 import {registry} from '@web/core/registry';
 import {formatChar} from '@web/views/fields/formatters';
 
-const {Component, useState, onWillStart} = owl;
+const {Component, useState, onWillStart, useEffect} = owl;
 
 /**
- * Displays website page dependencies and URL redirect options when the page URL
- * is updated.
+ * Displays website page dependencies when the page URL is updated.
  */
 class PageUrlField extends Component {
     setup() {
-        this.state = useState({
-            redirect_old_url: false,
-            url: this.props.value,
-            redirect_type: '301',
-        });
-        useInputField({getValue: () => this.props.value.url || this.props.value});
-
+        this.urlChanged = false;
         this.serverUrl = window.location.origin;
-        this.pageUrl = this.props.value;
-    }
+        this.pageUrl = this.props.value.replace(/^\//g, '');
+        this.resId = this.props.record.context.active_id;
 
-    get enableRedirect() {
-        return this.state.url !== this.pageUrl;
-    }
+        this.state = useState({
+            url: this.pageUrl,
+        });
+        useInputField({getValue: () => this.props.value});
 
-    onChangeRedirectOldUrl(value) {
-        this.state.redirect_old_url = value;
-        this.updateValues();
-    }
-
-    updateValues() {
-        // HACK: update redirect data from the URL field.
-        // TODO: remove this and use a transient model with redirect fields.
-        this.props.update(this.state);
+        useEffect(
+            () => {
+                this.urlChanged = this.state.url !== this.pageUrl;
+                this.props.update(this.state.url);
+            },
+            () => [this.state.url]
+        );
     }
 }
-PageUrlField.components = {Switch, PageDependencies};
+PageUrlField.components = {PageDependencies};
 PageUrlField.template = 'website.PageUrlField';
 PageUrlField.props = {
     ...standardFieldProps,
@@ -74,6 +65,7 @@ class PageNameField extends Component {
 
         this.pageName = this.props.value;
         this.supportedMimetypes = {};
+        this.resId = this.props.record.context.active_id;
 
         onWillStart(() => this.onWillStart());
     }
