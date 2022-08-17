@@ -21,9 +21,6 @@ const LivechatButton = Widget.extend({
         this._super(parent);
         this.messaging = messaging;
     },
-    async willStart() {
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({ widget: this });
-    },
     start() {
         this.$el.text(this.messaging.publicLivechatGlobal.livechatButtonView.buttonText);
         if (this.messaging.publicLivechatGlobal.history) {
