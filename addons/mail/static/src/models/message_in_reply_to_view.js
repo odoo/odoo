@@ -13,19 +13,19 @@ registerModel({
          */
         onClickReply(ev) {
             markEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo');
-            const messageListViewMessageViewItem = this.messageView && this.messageView.messageListViewMessageViewItemOwner;
+            const messageListViewItem = this.messageView && this.messageView.messageListViewItemOwner;
             const parentMessage = this.messageView.message.parentMessage;
-            if (!messageListViewMessageViewItem || !parentMessage) {
+            if (!messageListViewItem || !parentMessage) {
                 return;
             }
-            const parentMessageListViewMessageViewItem = this.messaging.models['MessageListViewMessageViewItem'].findFromIdentifyingData({
+            const parentMessageListViewItem = this.messaging.models['MessageListViewItem'].findFromIdentifyingData({
                 message: parentMessage,
-                messageListViewOwner: messageListViewMessageViewItem.messageListViewOwner,
+                messageListViewOwner: messageListViewItem.messageListViewOwner,
             });
-            if (!parentMessageListViewMessageViewItem) {
+            if (!parentMessageListViewItem) {
                 return;
             }
-            parentMessageListViewMessageViewItem.messageView.update({ doHighlight: true });
+            parentMessageListViewItem.messageView.update({ doHighlight: true });
         },
         /**
          * @private

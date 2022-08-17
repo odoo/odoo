@@ -113,7 +113,7 @@ registerModel({
         /**
          * States the message views used to display this thread view owner's messages.
          */
-        messageListViewMessageViewItems: many('MessageListViewMessageViewItem', {
+        messageListViewItems: many('MessageListViewItem', {
             compute: '_computeMessageListViewMessageViewItems',
             inverse: 'messageListViewOwner',
             isCausal: true,
