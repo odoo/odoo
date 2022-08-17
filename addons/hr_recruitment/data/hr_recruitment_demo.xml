@@ -338,7 +338,7 @@
         <field name="model">hr.applicant</field>
         <field name="res_id" ref="hr_case_advertisement"/>
         <field name="date" eval="DateTime.now() - relativedelta(days=3)"/>
-        <field name="body" type="xml">
+        <field name="body" type="html">
             <p>Hello!<br />
             I will surely refer to this application as it is by your reference and <br />
             will try to conduct an interview within a very short time<br />
@@ -355,7 +355,7 @@
         <field name="subject">Refuse Application</field>
         <field name="model">hr.applicant</field>
         <field name="res_id" ref="hr_case_salesman0"/>
-        <field name="body" type="xml">
+        <field name="body" type="html">
             <p>Hello,</p>
             <p>I have checked this application but it does not match with our requirements. We don't need to proceed further and we should refuse this application.</p>
             <p>Kind regards,</p>
@@ -368,7 +368,7 @@
         <field name="subject">Refuse Application</field>
         <field name="model">hr.applicant</field>
         <field name="res_id" ref="hr_case_dev0"/>
-        <field name="body" type="xml">
+        <field name="body" type="html">
             <p>Hello,</p>
             <p>This applicant has excellent skills and would greatly fit in the RD Team!</p>
             <p>Kind regards,</p>
@@ -380,7 +380,7 @@
     <record id="msg_case_fresher0_aplicant" model="mail.message">
         <field name="model">hr.applicant</field>
         <field name="res_id" ref="hr_case_fresher0"/>
-        <field name="body" type="xml">
+        <field name="body" type="html">
             <p>Hello,</p>
             <p>We should move further for this application as early as possible.</p>
             <p>Kind regards,</p>
@@ -392,7 +392,7 @@
     <record id="msg_case_advertisement_aplicant" model="mail.message">
         <field name="model">hr.applicant</field>
         <field name="res_id" ref="hr_case_advertisement"/>
-        <field name="body" type="xml">
+        <field name="body" type="html">
             <p>Hello,</p>
             <p>The first interview was good. Skilled and open minded applicant.</p>
             <p>I think we should consider hiring him.</p>
@@ -405,7 +405,7 @@
     <record id="msg_case_mkt1_1" model="mail.message">
         <field name="model">hr.applicant</field>
         <field name="res_id" ref="hr_case_mkt1"/>
-        <field name="body" type="xml">
+        <field name="body" type="html">
             <p>Hello,</p>
             <p>The first interview was good. I will propose a second interview</p>
             <p>Kind regards,</p>
@@ -417,7 +417,7 @@
     <record id="msg_case_mkt1_2" model="mail.message">
         <field name="model">hr.applicant</field>
         <field name="res_id" ref="hr_case_mkt1"/>
-        <field name="body" type="xml">
+        <field name="body" type="html">
             <p>Hello,</p>
             <p>After the second interview, I think we should consider hiring him.</p>
             <p>Kind regards,</p>
