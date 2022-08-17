@@ -10,12 +10,12 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick(ev) {
-            if (this.emojiSubgridView.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionListOwnerAsReaction) {
-                this.emojiSubgridView.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionListOwnerAsReaction.onClickReaction(ev);
+            if (this.emojiSubgridViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionListOwnerAsReaction) {
+                this.emojiSubgridViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.messageActionListOwnerAsReaction.onClickReaction(ev);
                 return;
             }
-            if (this.emojiSubgridView.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji) {
-                this.emojiSubgridView.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(ev);
+            if (this.emojiSubgridViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji) {
+                this.emojiSubgridViewOwner.emojiGridViewOwner.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji.onClickEmoji(ev);
                 return;
             }
         },
@@ -43,7 +43,7 @@ registerModel({
             identifying: true,
             inverse: 'emojiViews',
         }),
-        emojiSubgridView: one('EmojiSubgridView', {
+        emojiSubgridViewOwner: one('EmojiSubgridView', {
             identifying: true,
             inverse: 'emojiViews',
         }),

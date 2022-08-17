@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiSubgridView',
@@ -24,13 +23,14 @@ registerModel({
         /**
          * @private
          * @returns {boolean}
-         * Filters amoji according to the current search terms.
+         * Filters emoji according to the current search terms.
          */
         _filterEmoji(emoji) {
             return (emoji._isStringInEmojiKeywords(this.emojiGridViewOwner.emojiPickerViewOwner.emojiSearchBar.currentSearch));
         },
     },
     fields: {
+        component: attr(),
         emojiCategoryView: one('EmojiCategoryView', {
             identifying: true,
             inverse: "emojiSubgridView",
@@ -42,13 +42,15 @@ registerModel({
         }),
         emojiViews: many('EmojiView', {
             compute: '_computeEmojiViews',
-            inverse: 'emojiSubgridView',
+            inverse: 'emojiSubgridViewOwner',
             readonly: true,
             isCausal: true,
         }),
-        categoryNameRef: attr(),
         name: attr({
             compute: '_computeCategoryName',
+        }),
+        emojiPickerViewAsVisible: one('EmojiPickerView', {
+            inverse: 'visibleSubgridViews',
         }),
     }
 });

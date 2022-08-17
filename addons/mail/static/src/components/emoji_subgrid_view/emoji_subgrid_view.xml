@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.EmojiSubgridView" owl="1">
-        <div class="o_EmojiSubgridView overflow-auto" t-if="emojiSubgridView.emojiViews.length > 0" t-attf-class="{{ className }}" t-ref="root">
-            <span class="o_emojiSubgridView_name" t-esc="props.record.name" t-ref="name"/>
+        <div class="o_EmojiSubgridView" t-if="emojiSubgridView.emojiViews.length > 0" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_EmojiSubgridView_name" t-att-class="{ 'position-sticky top-0': props.record.emojiCategoryView.emojiCategory === props.record.emojiCategoryView.emojiCategoryBarViewOwner.emojiPickerViewOwner.activeCategory }" t-esc="props.record.name"/>
             <div class="o_EmojiSubgridView_emojiGrid">
                 <t t-foreach="emojiSubgridView.emojiViews" t-as="emojiView" t-key="emojiView.localId">
                     <Emoji className="'o_EmojiSubgrid_emoji'" record="emojiView"/>
