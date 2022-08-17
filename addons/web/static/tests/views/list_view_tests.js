@@ -14652,4 +14652,62 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row:first-child td.o_list_button", 1);
         await click(target, ".o_data_row:first-child td.o_list_button");
     });
+
+    QUnit.test("Click on action button during record creation", async (assert) => {
+        assert.expect(13);
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: /* xml */ `
+                <tree editable="top">
+                    <field name="foo" />
+                    <button string="Oui" class="o_custom_action" type="action" name="my_custom_action" />
+                </tree>
+            `,
+            async mockRPC(route, { action_id }) {
+                if (route === "/web/action/load") {
+                    assert.step(action_id);
+                    return false;
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_data_row", 4);
+
+        // Create new record and input a value
+        await click(target, ".o_list_button_add");
+        await editInput(target, "[name=foo] input", "azer");
+
+        assert.containsN(target, ".o_data_row", 5);
+        assert.containsOnce(target, ".o_selected_row");
+        assert.ok(target.querySelector(".o_data_row .o_custom_action").disabled);
+
+        // Since you cannot actually click on a disabled button in the browser,
+        // it should be good enough to only click the containing cell.
+        // It is safer however to ensure that manually dispatching a click on the
+        // disabled button does not trigger the action button either.
+        await click(target, ".o_data_row:first-child .o_custom_action");
+        await click(target, ".o_data_row:first-child .o_list_button");
+
+        // Record should still be in edition
+        assert.containsN(target, ".o_data_row", 5);
+        assert.containsOnce(target, ".o_selected_row");
+
+        // Save the record
+        await click(target, ".o_list_button_save");
+
+        assert.containsN(target, ".o_data_row", 5);
+        assert.containsNone(target, ".o_selected_row");
+        assert.strictEqual(target.querySelector(".o_data_row").textContent, "azerOui");
+
+        // By this point there should have been no button action call
+        assert.verifySteps([]);
+        assert.notOk(target.querySelector(".o_data_row .o_custom_action").disabled);
+
+        await click(target, ".o_data_row:first-child .o_custom_action");
+
+        assert.verifySteps(["my_custom_action"]);
+    });
 });
