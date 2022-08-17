@@ -57,6 +57,7 @@ class TestUi(TestUICommon):
             'title': 'Furniture Creation Certification',
             'access_token': '5632a4d7-48cf-aaaa-8c52-2174d58cf50b',
             'access_mode': 'public',
+            'questions_layout': 'one_page',
             'users_can_go_back': True,
             'users_login_required': True,
             'scoring_type': 'scoring_with_answers',
