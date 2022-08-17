@@ -43,6 +43,12 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         cls.uom_unit.write({
             'name': 'Test-Unit',
             'rounding': 0.01})
+        cls.uom_ten = cls.UoM.create({
+            'name': 'Test-Ten',
+            'category_id': cls.categ_unit.id,
+            'factor_inv': 10,
+            'uom_type': 'bigger',
+            'rounding': 0.001})
         cls.uom_dozen = cls.UoM.create({
             'name': 'Test-DozenA',
             'category_id': cls.categ_unit.id,
@@ -1848,3 +1854,77 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
 
         price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
         self.assertEqual(price, 10)
+
+    def test_kit_decrease_sol_qty(self):
+        """
+        Create and confirm a SO with a qty. Increasing/Decreasing the SOL qty
+        should update the qty on the delivery. Then, process the delivery, make
+        a return and adapt the SOL qty -> there should not be any new picking
+        """
+        stock_location = self.company_data['default_warehouse'].lot_stock_id
+        custo_location = self.env.ref('stock.stock_location_customers')
+
+        grp_uom = self.env.ref('uom.group_uom')
+        self.env.user.write({'groups_id': [(4, grp_uom.id)]})
+
+        # 100 kit_3 = 100 x compo_f + 200 x compo_g
+        self.env['stock.quant']._update_available_quantity(self.component_f, stock_location, 100)
+        self.env['stock.quant']._update_available_quantity(self.component_g, stock_location, 200)
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner_a
+        with so_form.order_line.new() as line:
+            line.product_id = self.kit_3
+            line.product_uom_qty = 7
+            line.product_uom = self.uom_ten
+        so = so_form.save()
+        so.action_confirm()
+
+        delivery = so.picking_ids
+        self.assertRecordValues(delivery.move_ids, [
+            {'product_id': self.component_f.id, 'product_uom_qty': 70},
+            {'product_id': self.component_g.id, 'product_uom_qty': 140},
+        ])
+
+        # Decrease
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 6
+        self.assertRecordValues(delivery.move_ids, [
+            {'product_id': self.component_f.id, 'product_uom_qty': 60},
+            {'product_id': self.component_g.id, 'product_uom_qty': 120},
+        ])
+
+        # Increase
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 10
+        self.assertRecordValues(delivery.move_ids, [
+            {'product_id': self.component_f.id, 'product_uom_qty': 100},
+            {'product_id': self.component_g.id, 'product_uom_qty': 200},
+        ])
+
+        delivery.action_set_quantities_to_reservation()
+        delivery.button_validate()
+
+        # Return 2 [uom_ten] x kit_3
+        return_wizard_form = Form(self.env['stock.return.picking'].with_context(active_ids=delivery.ids, active_id=delivery.id, active_model='stock.picking'))
+        return_wizard = return_wizard_form.save()
+        return_wizard.product_return_moves[0].quantity = 20
+        return_wizard.product_return_moves[1].quantity = 40
+        action = return_wizard.create_returns()
+        return_picking = self.env['stock.picking'].browse(action['res_id'])
+        return_picking.action_set_quantities_to_reservation()
+        return_picking.button_validate()
+
+        # Adapt the SOL qty according to the delivered one
+        with Form(so) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 8
+
+        self.assertRecordValues(so.picking_ids.move_ids, [
+            {'product_id': self.component_f.id, 'location_dest_id': custo_location.id, 'quantity_done': 100, 'state': 'done'},
+            {'product_id': self.component_g.id, 'location_dest_id': custo_location.id, 'quantity_done': 200, 'state': 'done'},
+            {'product_id': self.component_f.id, 'location_dest_id': stock_location.id, 'quantity_done': 20, 'state': 'done'},
+            {'product_id': self.component_g.id, 'location_dest_id': stock_location.id, 'quantity_done': 40, 'state': 'done'},
+        ])
