@@ -30,8 +30,6 @@ registerModel({
         }),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         messageOwner: one('Message', {
             inverse: 'trackingValues',

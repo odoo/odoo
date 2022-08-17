@@ -409,8 +409,6 @@ registerModel({
         }),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         im_status: attr(),
         isImStatusSet: attr({

@@ -85,8 +85,6 @@ registerModel({
         dialogOwner: one('Dialog', {
             identifying: true,
             inverse: 'attachmentDeleteConfirmView',
-            readonly: true,
-            required: true,
         }),
     },
 });

@@ -11,8 +11,6 @@ registerModel({
         }),
         categoryName: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         emojiCategoryViews: many('EmojiCategoryView', {
             inverse: 'emojiCategory',

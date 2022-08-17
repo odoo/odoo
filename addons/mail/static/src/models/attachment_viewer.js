@@ -251,7 +251,6 @@ registerModel({
             identifying: true,
             inverse: 'attachmentViewer',
             isCausal: true,
-            readonly: true,
         }),
         /**
          * Style of the image (scale + rotation).

@@ -131,8 +131,6 @@ registerModel({
         }),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         isFailure: attr({
             compute: '_computeIsFailure',

@@ -115,12 +115,10 @@ registerModel({
         callMainViewAsShowOverlay: one('CallMainView', {
             identifying: true,
             inverse: 'showOverlayTimer',
-            readonly: true,
         }),
         chatterOwnerAsAttachmentsLoader: one('Chatter', {
             identifying: true,
             inverse: 'attachmentsLoaderTimer',
-            readonly: true,
         }),
         /**
          * Duration, in milliseconds, until timer times out and calls the
@@ -134,38 +132,31 @@ registerModel({
         messagingOwnerAsFetchImStatusTimer: one('Messaging', {
             identifying: true,
             inverse: 'fetchImStatusTimer',
-            readonly: true,
         }),
         messageViewOwnerAsHighlight: one('MessageView', {
             identifying: true,
             inverse: 'highlightTimer',
-            readonly: true,
         }),
         otherMemberLongTypingInThreadTimerOwner: one('OtherMemberLongTypingInThreadTimer', {
             identifying: true,
             inverse: 'timer',
             isCausal: true,
-            readonly: true,
         }),
         rtcSessionOwnerAsBroadcast: one('RtcSession', {
             identifying: true,
             inverse: 'broadcastTimer',
-            readonly: true,
         }),
         threadAsCurrentPartnerInactiveTypingTimerOwner: one('Thread', {
             identifying: true,
             inverse: 'currentPartnerInactiveTypingTimer',
-            readonly: true,
         }),
         threadAsCurrentPartnerLongTypingTimerOwner: one('Thread', {
             identifying: true,
             inverse: 'currentPartnerLongTypingTimer',
-            readonly: true,
         }),
         throttleOwner: one('Throttle', {
             identifying: true,
             inverse: 'cooldownTimer',
-            readonly: true,
         }),
         /**
          * Internal reference of `setTimeout()` that is used to invoke function

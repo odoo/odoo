@@ -187,7 +187,6 @@ registerModel({
         messageViewInEditing: one('MessageView', {
             identifying: true,
             inverse: 'composerForEditing',
-            readonly: true,
         }),
         /**
          * Placeholder displayed in the composer textarea when it's empty
@@ -221,7 +220,6 @@ registerModel({
         thread: one('Thread', {
             identifying: true,
             inverse: 'composer',
-            readonly: true,
         }),
     },
 });

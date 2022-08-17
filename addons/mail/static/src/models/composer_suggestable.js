@@ -10,12 +10,10 @@ registerModel({
         cannedResponse: one('CannedResponse', {
             identifying: true,
             inverse: 'suggestable',
-            readonly: true,
         }),
         channelCommand: one('ChannelCommand', {
             identifying: true,
             inverse: 'suggestable',
-            readonly: true,
         }),
         composerSuggestionListViewExtraComposerSuggestionViewItems: many('ComposerSuggestionListViewExtraComposerSuggestionViewItem', {
             inverse: 'suggestable',
@@ -28,12 +26,10 @@ registerModel({
         partner: one('Partner', {
             identifying: true,
             inverse: 'suggestable',
-            readonly: true,
         }),
         thread: one('Thread', {
             identifying: true,
             inverse: 'suggestable',
-            readonly: true,
         }),
     },
 });

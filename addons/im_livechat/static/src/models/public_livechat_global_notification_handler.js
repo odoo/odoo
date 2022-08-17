@@ -97,8 +97,6 @@ registerModel({
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,
             inverse: 'notificationHandler',
-            readonly: true,
-            required: true,
         }),
     },
 });

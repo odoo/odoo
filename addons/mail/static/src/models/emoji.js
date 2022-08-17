@@ -38,8 +38,6 @@ registerModel({
         }),
         unicode: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
     },
 });

@@ -96,12 +96,10 @@ registerModel({
         chatterOwner: one('Chatter', {
             identifying: true,
             inverse: 'dropZoneView',
-            readonly: true,
         }),
         composerViewOwner: one('ComposerView', {
             identifying: true,
             inverse: 'dropZoneView',
-            readonly: true,
         }),
         /**
          * Counts how many drag enter/leave happened on self and children. This

@@ -92,8 +92,6 @@ registerModel({
         channel_type: attr(),
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         memberCount: attr({
             related: 'thread.memberCount',

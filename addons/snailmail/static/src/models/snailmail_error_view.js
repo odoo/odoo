@@ -60,8 +60,6 @@ registerModel({
         dialogOwner: one('Dialog', {
             identifying: true,
             inverse: 'snailmailErrorView',
-            readonly: true,
-            required: true,
         }),
         hasCreditsError: attr({
             compute: '_computeHasCreditsError',

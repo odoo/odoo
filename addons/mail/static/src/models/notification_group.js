@@ -113,7 +113,6 @@ registerModel({
         }),
         notification_type: attr({
             identifying: true,
-            readonly: true,
         }),
         notifications: many('Notification', {
             inverse: 'notificationGroup',
@@ -124,11 +123,9 @@ registerModel({
         }),
         res_id: attr({
             identifying: true,
-            readonly: true,
         }),
         res_model: attr({
             identifying: true,
-            readonly: true,
         }),
         res_model_name: attr(),
         /**

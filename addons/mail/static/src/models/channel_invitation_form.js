@@ -238,7 +238,6 @@ registerModel({
         chatWindow: one('ChatWindow', {
             identifying: true,
             inverse: 'channelInvitationForm',
-            readonly: true,
         }),
         /**
          * States the OWL component of this channel invitation form.
@@ -275,7 +274,6 @@ registerModel({
             identifying: true,
             inverse: 'channelInvitationForm',
             isCausal: true,
-            readonly: true,
         }),
         /**
          * States the OWL ref of the "search" input of this channel invitation

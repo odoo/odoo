@@ -106,8 +106,6 @@ registerModel({
         popoverViewOwner: one('PopoverView', {
             identifying: true,
             inverse: 'activityMarkDonePopoverContentView',
-            readonly: true,
-            required: true,
         }),
     },
 });

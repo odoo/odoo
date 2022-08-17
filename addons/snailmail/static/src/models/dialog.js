@@ -10,7 +10,6 @@ addFields('Dialog', {
     messageViewOwnerAsSnailmailError: one('MessageView', {
         identifying: true,
         inverse: 'snailmailErrorDialog',
-        readonly: true,
     }),
     snailmailErrorView: one('SnailmailErrorView', {
         compute: '_computeSnailmailErrorView',

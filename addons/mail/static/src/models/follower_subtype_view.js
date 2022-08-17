@@ -26,14 +26,10 @@ registerModel({
         followerSubtypeListOwner: one('FollowerSubtypeList', {
             identifying: true,
             inverse: 'followerSubtypeViews',
-            readonly: true,
-            required: true,
         }),
         subtype: one('FollowerSubtype', {
             identifying: true,
             inverse: 'followerSubtypeViews',
-            readonly: true,
-            required: true,
         }),
     },
 });

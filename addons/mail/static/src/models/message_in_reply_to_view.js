@@ -61,8 +61,6 @@ registerModel({
         messageView: one('MessageView', {
             identifying: true,
             inverse: 'messageInReplyToView',
-            readonly: true,
-            required: true,
         }),
     },
 });

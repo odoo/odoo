@@ -175,7 +175,6 @@ registerModel({
         welcomeView: one('WelcomeView', {
             identifying: true,
             inverse: 'callDemoView',
-            readonly: true,
         }),
     },
 });

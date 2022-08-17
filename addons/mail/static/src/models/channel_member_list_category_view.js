@@ -79,12 +79,10 @@ registerModel({
         channelMemberListViewOwnerAsOffline: one('ChannelMemberListView', {
             identifying: true,
             inverse: 'offlineCategoryView',
-            readonly: true,
         }),
         channelMemberListViewOwnerAsOnline: one('ChannelMemberListView', {
             identifying: true,
             inverse: 'onlineCategoryView',
-            readonly: true,
         }),
         channelMemberViews: many('ChannelMemberView', {
             compute: '_computeChannelMemberViews',

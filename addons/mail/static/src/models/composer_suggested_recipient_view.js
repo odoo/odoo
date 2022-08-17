@@ -9,14 +9,10 @@ registerModel({
         composerSuggestedRecipientListViewOwner: one('ComposerSuggestedRecipientListView', {
             identifying: true,
             inverse: 'composerSuggestedRecipientViews',
-            readonly: true,
-            required: true,
         }),
         suggestedRecipientInfo: one('SuggestedRecipientInfo', {
             identifying: true,
             inverse: 'composerSuggestedRecipientViews',
-            readonly: true,
-            required: true,
         }),
     },
 });

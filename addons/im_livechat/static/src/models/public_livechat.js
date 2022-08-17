@@ -94,8 +94,6 @@ registerModel({
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,
             inverse: 'publicLivechat',
-            readonly: true,
-            required: true,
         }),
         name: attr({
             compute: '_computeName',

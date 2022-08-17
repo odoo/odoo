@@ -28,8 +28,6 @@ registerModel({
         iconUrl: attr(),
         id: attr({
             identifying: true,
-            required: true,
-            readonly: true,
         }),
         model: attr({
             required: true,

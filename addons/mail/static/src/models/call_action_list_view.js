@@ -151,8 +151,6 @@ registerModel({
         callMainView: one('CallMainView', {
             identifying: true,
             inverse: 'callActionListView',
-            readonly: true,
-            required: true,
         }),
         callView: one('CallView', {
             related: 'callMainView.callView',

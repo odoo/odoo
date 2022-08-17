@@ -26,8 +26,6 @@ registerModel({
         emojiPickerViewOwner: one('EmojiPickerView', {
             identifying: true,
             inverse: 'emojiGridView',
-            readonly: true,
-            required: true,
         }),
         emojiViews: many('EmojiView', {
             compute: '_computeEmojiViews',

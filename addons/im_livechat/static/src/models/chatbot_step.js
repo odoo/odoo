@@ -9,8 +9,6 @@ registerModel({
         chabotOwner: one('Chatbot', {
             identifying: true,
             inverse: 'currentStep',
-            readonly: true,
-            required: true,
         }),
         data: attr(),
     },

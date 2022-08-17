@@ -75,12 +75,10 @@ registerModel({
         chatter: one('Chatter', {
             identifying: true,
             inverse: 'threadViewer',
-            readonly: true,
         }),
         chatWindow: one('ChatWindow', {
             identifying: true,
             inverse: 'threadViewer',
-            readonly: true,
         }),
         /**
          * true if the viewer is in a compact format, like in a chat window.
@@ -91,12 +89,10 @@ registerModel({
         discuss: one('Discuss', {
             identifying: true,
             inverse: 'threadViewer',
-            readonly: true,
         }),
         discussPublicView: one('DiscussPublicView', {
             identifying: true,
             inverse: 'threadViewer',
-            readonly: true,
         }),
         /**
          * Determines which extra class this thread view component should have.

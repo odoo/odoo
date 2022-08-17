@@ -64,8 +64,6 @@ registerModel({
         composerViewOwner: one('ComposerView', {
             identifying: true,
             inverse: 'composerSuggestedRecipientListView',
-            readonly: true,
-            required: true,
         }),
         hasShowMoreButton: attr({
             default: false,

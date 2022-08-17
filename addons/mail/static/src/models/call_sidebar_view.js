@@ -19,8 +19,6 @@ registerModel({
         callView: one('CallView', {
             identifying: true,
             inverse: 'callSidebarView',
-            readonly: true,
-            required: true,
         }),
         sidebarTiles: many('CallSidebarViewTile', {
             compute: '_computeSidebarTiles',

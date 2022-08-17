@@ -9,12 +9,10 @@ addFields('Timer', {
     qunitTestOwner1: one('QUnitTest', {
         identifying: true,
         inverse: 'timer1',
-        readonly: true,
     }),
     qunitTestOwner2: one('QUnitTest', {
         identifying: true,
         inverse: 'timer2',
-        readonly: true,
     }),
 });
 

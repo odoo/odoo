@@ -61,8 +61,6 @@ registerModel({
          */
         filename: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         /**
          * Path to the audio file.
@@ -70,8 +68,6 @@ registerModel({
         path: attr({
             default: '/mail/static/src/audio/',
             identifying: true,
-            readonly: true,
-            required: true,
         }),
     },
 });

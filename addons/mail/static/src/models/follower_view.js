@@ -39,14 +39,10 @@ registerModel({
         follower: one('Follower', {
             identifying: true,
             inverse: 'followerViews',
-            readonly: true,
-            required: true,
         }),
         followerListMenuViewOwner: one('FollowerListMenuView', {
             identifying: true,
             inverse: 'followerViews',
-            readonly: true,
-            required: true,
         }),
     },
 });

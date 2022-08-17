@@ -15,14 +15,10 @@ registerModel({
         partner: one('Partner', {
             identifying: true,
             inverse: 'otherMemberLongTypingInThreadTimers',
-            readonly: true,
-            required: true,
         }),
         thread: one('Thread', {
             identifying: true,
             inverse: 'otherMembersLongTypingTimers',
-            readonly: true,
-            required: true,
         }),
         timer: one('Timer', {
             default: insertAndReplace(),

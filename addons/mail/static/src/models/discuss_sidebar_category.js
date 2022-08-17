@@ -379,12 +379,10 @@ registerModel({
         discussAsChannel: one('Discuss', {
             identifying: true,
             inverse: 'categoryChannel',
-            readonly: true,
         }),
         discussAsChat: one('Discuss', {
             identifying: true,
             inverse: 'categoryChat',
-            readonly: true,
         }),
         /**
          * Determines the filtered and sorted discuss sidebar category items

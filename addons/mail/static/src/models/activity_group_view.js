@@ -79,14 +79,10 @@ registerModel({
         activityGroup: one('ActivityGroup', {
             identifying: true,
             inverse: 'activityGroupViews',
-            readonly: true,
-            required: true,
         }),
         activityMenuViewOwner: one('ActivityMenuView', {
             identifying: true,
             inverse: 'activityGroupViews',
-            readonly: true,
-            required: true,
         }),
     },
 });

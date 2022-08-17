@@ -698,8 +698,6 @@ registerModel({
         threadView: one('ThreadView', {
             identifying: true,
             inverse: 'topbar',
-            readonly: true,
-            required: true,
         }),
     },
 });

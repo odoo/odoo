@@ -60,8 +60,6 @@ registerModel({
         rtcSession: one('RtcSession', {
             identifying: true,
             inverse: 'rtcPeerConnection',
-            readonly: true,
-            required: true,
         }),
     },
     onChanges: [

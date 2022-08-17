@@ -43,7 +43,6 @@ registerModel({
         guest: one('Guest', {
             identifying: true,
             inverse: 'persona',
-            readonly: true,
         }),
         im_status: attr({
             compute: '_computeImStatus',
@@ -56,7 +55,6 @@ registerModel({
         partner: one('Partner', {
             identifying: true,
             inverse: 'persona',
-            readonly: true,
         }),
     },
 });

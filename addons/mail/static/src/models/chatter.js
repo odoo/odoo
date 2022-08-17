@@ -439,8 +439,6 @@ registerModel({
          */
         id: attr({
             identifying: true,
-            readonly: true,
-            required: true,
         }),
         /**
          * Determiners whether the attachment box is visible initially.

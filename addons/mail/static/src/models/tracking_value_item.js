@@ -92,12 +92,10 @@ registerModel({
         trackingValueAsNewValue: one('TrackingValue', {
             identifying: true,
             inverse: 'newValue',
-            readonly: true,
         }),
         trackingValueAsOldValue: one('TrackingValue', {
             identifying: true,
             inverse: 'oldValue',
-            readonly: true,
         }),
         /**
          * The original value of the tracking value item.
