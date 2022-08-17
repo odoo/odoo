@@ -195,6 +195,36 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertEqual(allocation.number_of_days, 1, 'There should be 1 day allocated.')
             self.assertEqual(allocation.nextcall, next_date, 'The next call date of the cron should be November 1st')
 
+    def test_frequency_monthly_2(self):
+        with freeze_time('2022-08-17'):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'level_ids': [(0, 0, {
+                    'start_count': 0,
+                    'start_type': 'day',
+                    'added_value': 2.09,
+                    'added_value_type': 'days',
+                    'frequency': 'monthly',
+                    'maximum_leave': 10000
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 0,
+                'allocation_type': 'accrual',
+                'date_from': '2022-06-01',
+            })
+            self.setAllocationCreateDate(allocation.id, '2022-08-17 16:00:00')
+            allocation.action_confirm()
+            allocation.action_validate()
+            self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
+            self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 6.27, 'There should be 6.27 days allocated. because we went through 3 beginnings of months')
+
     def test_frequency_biyearly(self):
         with freeze_time('2021-09-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({

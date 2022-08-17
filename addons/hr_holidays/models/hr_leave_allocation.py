@@ -415,7 +415,7 @@ class HolidaysAllocation(models.Model):
                     allocation.nextcall = min(second_level_start_date, allocation.nextcall)
                 allocation._message_log(body=first_allocation)
             days_added_per_level = defaultdict(lambda: 0)
-            while allocation.nextcall <= today:
+            while allocation.lastcall < today:
                 (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
                 nextcall = current_level._get_next_date(allocation.nextcall)
                 # Since _get_previous_date returns the given date if it corresponds to a call date
