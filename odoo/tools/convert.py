@@ -585,6 +585,9 @@ form: module.record_id""" % (xml_id,)
                             # We do not want to write on the field since we will write
                             # on the childrens' parents later
                             continue
+                    elif field_type == 'html':
+                        if field.get('type') == 'xml':
+                            _logger.warning('HTML field %r is declared as `type="xml"`', f_name)
             res[f_name] = f_val
         if extra_vals:
             res.update(extra_vals)
