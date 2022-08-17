@@ -25,11 +25,11 @@ odoo.define('point_of_sale.MoneyDetailsPopup', function(require) {
         }
         get firstHalfMoneyDetails() {
             const moneyDetailsKeys = Object.keys(this.state.moneyDetails).sort((a, b) => a - b);
-            return moneyDetailsKeys.slice(0, moneyDetailsKeys.length/2);
+            return moneyDetailsKeys.slice(0, Math.ceil(moneyDetailsKeys.length/2));
         }
         get lastHalfMoneyDetails() {
             const moneyDetailsKeys = Object.keys(this.state.moneyDetails).sort((a, b) => a - b);
-            return moneyDetailsKeys.slice(moneyDetailsKeys.length/2, moneyDetailsKeys.length);
+            return moneyDetailsKeys.slice(Math.ceil(moneyDetailsKeys.length/2), moneyDetailsKeys.length);
         }
         updateMoneyDetailsAmount() {
             let total = Object.entries(this.state.moneyDetails).reduce((total, money) => total + money[0] * money[1], 0);
