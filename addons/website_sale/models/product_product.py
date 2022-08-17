@@ -83,9 +83,6 @@ class Product(models.Model):
         # the template extra images here
         return variant_images + self.product_tmpl_id._get_images()[1:]
 
-    def _is_sold_out(self):
-        combination_info = self.with_context(website_sale_stock_get_quantity=True).product_tmpl_id._get_combination_info(product_id=self.id)
-        return combination_info['product_type'] == 'product' and combination_info['free_qty'] <= 0
 
     def _website_show_quick_add(self):
         website = self.env['website'].get_current_website()

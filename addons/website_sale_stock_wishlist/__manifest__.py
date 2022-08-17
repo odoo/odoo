@@ -13,7 +13,7 @@ Allow the user to select if he wants to receive email notifications when a produ
         'website_sale_wishlist',
     ],
     'data': [
-        'views/templates.xml',
+        'views/website_sale_stock_wishlist_templates.xml',
         'data/template_email.xml',
         'data/ir_cron_data.xml',
     ],

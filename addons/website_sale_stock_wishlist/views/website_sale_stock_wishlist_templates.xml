@@ -10,5 +10,15 @@
                 <small><i t-attf-class="fa #{'fa-check-square-o' if notify else 'fa-square-o'}"></i> Be notified when back in stock</small>
             </button>
         </xpath>
+        <xpath expr="//button[@id='add_to_cart_button']" position="replace">
+            <t t-set="is_sold_out"
+               t-value="not wish.product_id.allow_out_of_stock_order and wish.product_id._is_sold_out()"/>
+            <button id="add_to_cart_button"
+                    class="btn btn-secondary btn-block o_wish_add mb4"
+                    t-att-disabled="is_sold_out">
+                Add
+                <span class='d-none d-md-inline'>to Cart</span>
+            </button>
+        </xpath>
     </template>
 </odoo>

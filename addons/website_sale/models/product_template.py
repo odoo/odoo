@@ -377,8 +377,6 @@ class ProductTemplate(models.Model):
             if product.id:
                 product.website_url = "/shop/%s" % slug(product)
 
-    def _is_sold_out(self):
-        return self.product_variant_id._is_sold_out()
 
     def _get_website_ribbon(self):
         if self.website_ribbon_id:
