@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="payment_acquirer_form" model="ir.ui.view">
-        <field name="name">Alipay Acquirer Form</field>
-        <field name="model">payment.acquirer</field>
-        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Alipay Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[@id='provider_creation_warning']" position="after">
                 <div class="alert alert-danger"
                      role="alert"
-                     attrs="{'invisible': [('provider', '!=', 'alipay')]}">
+                     attrs="{'invisible': [('code', '!=', 'alipay')]}">
                     This provider is deprecated.
                     Consider disabling it and moving to <strong>Asiapay</strong>.
                 </div>
             </xpath>
-            <group name="acquirer" position="inside">
-                <group attrs="{'invisible': [('provider', '!=', 'alipay')]}">
+            <group name="code" position="inside">
+                <group attrs="{'invisible': [('code', '!=', 'alipay')]}">
                     <field name="alipay_payment_method" widget="radio"/>
                     <field name="alipay_seller_email"
-                           attrs="{'invisible': [('alipay_payment_method', '=', 'standard_checkout')], 'required': [('provider', '=', 'alipay'), ('alipay_payment_method', '=', 'express_checkout')]}"/>
+                           attrs="{'invisible': [('alipay_payment_method', '=', 'standard_checkout')], 'required': [('code', '=', 'alipay'), ('alipay_payment_method', '=', 'express_checkout')]}"/>
                     <field name="alipay_merchant_partner_id"/>
                     <field name="alipay_md5_signature_key" password="True"/>
                 </group>

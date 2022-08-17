@@ -12,7 +12,7 @@ from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_payulatam.controllers.main import PayuLatamController
-from odoo.addons.payment_payulatam.models.payment_acquirer import SUPPORTED_CURRENCIES
+from odoo.addons.payment_payulatam.models.payment_provider import SUPPORTED_CURRENCIES
 from odoo.addons.payment_payulatam.tests.common import PayULatamCommon
 
 
@@ -20,25 +20,25 @@ from odoo.addons.payment_payulatam.tests.common import PayULatamCommon
 class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
 
     def test_compatibility_with_supported_currencies(self):
-        """ Test that the PayULatam acquirer is compatible with all supported currencies. """
+        """ Test that the PayULatam provider is compatible with all supported currencies. """
         for supported_currency_code in SUPPORTED_CURRENCIES:
             supported_currency = self._prepare_currency(supported_currency_code)
-            compatible_acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+            compatible_providers = self.env['payment.provider']._get_compatible_providers(
                 self.company.id, self.partner.id, self.amount, currency_id=supported_currency.id
             )
-            self.assertIn(self.payulatam, compatible_acquirers)
+            self.assertIn(self.payulatam, compatible_providers)
 
     def test_incompatibility_with_unsupported_currency(self):
-        """ Test that the PayULatam acquirer is not compatible with an unsupported currency. """
-        compatible_acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+        """ Test that the PayULatam provider is not compatible with an unsupported currency. """
+        compatible_providers = self.env['payment.provider']._get_compatible_providers(
             self.company.id, self.partner.id, self.amount, currency_id=self.currency_euro.id
         )
-        self.assertNotIn(self.payulatam, compatible_acquirers)
+        self.assertNotIn(self.payulatam, compatible_providers)
 
     @freeze_time('2011-11-02 12:00:21')  # Freeze time for consistent singularization behavior
     def test_reference_is_singularized(self):
         """ Test singularization of reference prefixes. """
-        reference = self.env['payment.transaction']._compute_reference(self.payulatam.provider)
+        reference = self.env['payment.transaction']._compute_reference(self.payulatam.code)
         self.assertEqual(
             reference, 'tx-20111102120021', "transaction reference was not correctly singularized"
         )
@@ -51,7 +51,7 @@ class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
 
         invoice = self.env['account.move'].create({})
         reference = self.env['payment.transaction']._compute_reference(
-            self.payulatam.provider, invoice_ids=[Command.set([invoice.id])]
+            self.payulatam.code, invoice_ids=[Command.set([invoice.id])]
         )
         self.assertEqual(reference, 'MISC/2011/11/0001-20111102120021')
 
@@ -142,18 +142,18 @@ class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
         self.env['payment.transaction']._handle_notification_data('payulatam', payulatam_post_data)
         self.assertEqual(tx.state, 'pending', 'Payulatam: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.state_message, payulatam_post_data['message'], 'Payulatam: wrong state message after receiving a valid pending notification')
-        self.assertEqual(tx.acquirer_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'Payulatam: wrong txn_id after receiving a valid pending notification')
+        self.assertEqual(tx.provider_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'Payulatam: wrong txn_id after receiving a valid pending notification')
 
         # Reset the transaction
         tx.write({
             'state': 'draft',
-            'acquirer_reference': False})
+            'provider_reference': False})
 
         # Validate the transaction ('approved' state)
         payulatam_post_data['lapTransactionState'] = 'APPROVED'
         self.env['payment.transaction']._handle_notification_data('payulatam', payulatam_post_data)
         self.assertEqual(tx.state, 'done', 'Payulatam: wrong state after receiving a valid pending notification')
-        self.assertEqual(tx.acquirer_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'Payulatam: wrong txn_id after receiving a valid pending notification')
+        self.assertEqual(tx.provider_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'Payulatam: wrong txn_id after receiving a valid pending notification')
 
     @mute_logger('odoo.addons.payment_payulatam.controllers.main')
     def test_webhook_notification_confirms_transaction(self):
@@ -213,8 +213,8 @@ class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
         )
 
     def test_payulatam_neutralize(self):
-        self.env['payment.acquirer']._neutralize()
+        self.env['payment.provider']._neutralize()
 
-        self.assertEqual(self.acquirer.payulatam_merchant_id, False)
-        self.assertEqual(self.acquirer.payulatam_account_id, False)
-        self.assertEqual(self.acquirer.payulatam_api_key, False)
+        self.assertEqual(self.provider.payulatam_merchant_id, False)
+        self.assertEqual(self.provider.payulatam_account_id, False)
+        self.assertEqual(self.provider.payulatam_api_key, False)

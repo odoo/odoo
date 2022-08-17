@@ -3,13 +3,13 @@
 {
     'name': 'Custom Payment Modes',
     'version': '2.0',
-    'category': 'Accounting/Payment Acquirers',
-    'summary': 'Payment Acquirer: Custom payment modes',
+    'category': 'Accounting/Payment Providers',
+    'summary': 'Payment Provider: Custom payment modes',
     'depends': ['payment'],
     'data': [
         'views/payment_custom_templates.xml',
         'views/payment_views.xml',
-        'data/payment_acquirer_data.xml',
+        'data/payment_provider_data.xml',
     ],
     'assets': {
         'web.assets_frontend': [

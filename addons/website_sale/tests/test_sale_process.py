@@ -68,33 +68,33 @@ class TestUi(HttpCaseWithUserDemo):
 
     def test_02_admin_checkout(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
-            self.skipTest("Transfer acquirer is not installed")
+            self.skipTest("Transfer provider is not installed")
 
-        transfer_acquirer = self.env.ref('payment.payment_acquirer_transfer')
-        transfer_acquirer.write({
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_acquirer._transfer_ensure_pending_msg_is_set()
+        transfer_provider._transfer_ensure_pending_msg_is_set()
         self.start_tour("/", 'shop_buy_product', login="admin")
 
     def test_03_demo_checkout(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
-            self.skipTest("Transfer acquirer is not installed")
+            self.skipTest("Transfer provider is not installed")
 
-        transfer_acquirer = self.env.ref('payment.payment_acquirer_transfer')
-        transfer_acquirer.write({
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_acquirer._transfer_ensure_pending_msg_is_set()
+        transfer_provider._transfer_ensure_pending_msg_is_set()
         self.start_tour("/", 'shop_buy_product', login="demo")
 
     def test_04_admin_website_sale_tour(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
-            self.skipTest("Transfer acquirer is not installed")
+            self.skipTest("Transfer provider is not installed")
 
-        self.env.ref('payment.payment_acquirer_transfer').write({
+        self.env.ref('payment.payment_provider_transfer').write({
             'state': 'enabled',
             'is_published': True,
         })

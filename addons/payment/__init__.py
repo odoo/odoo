@@ -8,11 +8,11 @@ from . import wizards
 from odoo import api, SUPERUSER_ID
 
 
-def setup_provider(cr, registry, provider_code):
+def setup_provider(cr, registry, code):
     env = api.Environment(cr, SUPERUSER_ID, {})
-    env['payment.acquirer']._setup_provider(provider_code)
+    env['payment.provider']._setup_provider(code)
 
 
-def reset_payment_acquirer(cr, registry, provider):
+def reset_payment_provider(cr, registry, code):
     env = api.Environment(cr, SUPERUSER_ID, {})
-    env['payment.acquirer']._remove_provider(provider)
+    env['payment.provider']._remove_provider(code)

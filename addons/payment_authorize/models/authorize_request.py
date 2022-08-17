@@ -24,20 +24,20 @@ class AuthorizeAPI:
 
     AUTH_ERROR_STATUS = '3'
 
-    def __init__(self, acquirer):
-        """Initiate the environment with the acquirer data.
+    def __init__(self, provider):
+        """Initiate the environment with the provider data.
 
-        :param recordset acquirer: payment.acquirer account that will be contacted
+        :param recordset provider: payment.provider account that will be contacted
         """
-        if acquirer.state == 'enabled':
+        if provider.state == 'enabled':
             self.url = 'https://api.authorize.net/xml/v1/request.api'
         else:
             self.url = 'https://apitest.authorize.net/xml/v1/request.api'
 
-        self.state = acquirer.state
-        self.name = acquirer.authorize_login
-        self.transaction_key = acquirer.authorize_transaction_key
-        self.payment_method_type = acquirer.authorize_payment_method_type
+        self.state = provider.state
+        self.name = provider.authorize_login
+        self.transaction_key = provider.authorize_transaction_key
+        self.payment_method_type = provider.authorize_payment_method_type
 
     def _make_request(self, operation, data=None):
         request = {
@@ -249,7 +249,7 @@ class AuthorizeAPI:
                 'profile': {
                     'customerProfileId': token.authorize_profile,
                     'paymentProfile': {
-                        'paymentProfileId': token.acquirer_ref,
+                        'paymentProfileId': token.provider_ref,
                     }
                 },
             }
@@ -334,7 +334,7 @@ class AuthorizeAPI:
         })
         return self._format_response(response, 'refund')
 
-    # Acquirer configuration: fetch authorize_client_key & currencies
+    # Provider configuration: fetch authorize_client_key & currencies
     def merchant_details(self):
         """ Retrieves the merchant details and generate a new public client key if none exists.
 

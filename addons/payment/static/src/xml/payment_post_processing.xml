@@ -53,7 +53,7 @@
                             <small class="list-group-item-text">
                                 <t t-if="tx['display_message']">
                                     <!-- display_message is the content of the HTML field associated
-                                    with the current transaction state, set on the acquirer. -->
+                                    with the current transaction state, set on the provider. -->
                                     <t t-out="tx['display_message']"/>
                                 </t>
                                 <t t-else="">
@@ -74,7 +74,7 @@
                             <small class="list-group-item-text">
                                 <t t-if="tx['display_message']">
                                     <!-- display_message is the content of the HTML field associated
-                                    with the current transaction state, set on the acquirer. -->
+                                    with the current transaction state, set on the provider. -->
                                     <t t-out="tx['display_message']"/>
                                 </t>
                                 <t t-else="">
@@ -99,11 +99,11 @@
                             <small class="list-group-item-text">
                                 <t t-if="tx['display_message']">
                                     <!-- display_message is the content of the HTML field associated
-                                    with the current transaction state, set on the acquirer. -->
+                                    with the current transaction state, set on the provider. -->
                                     <t t-out="tx['display_message']"/>
                                 </t>
                                 <t t-else="">
-                                    We are waiting for the payment acquirer to confirm the payment.
+                                    We are waiting for the payment provider to confirm the payment.
                                 </t>
                             </small>
                         </a>

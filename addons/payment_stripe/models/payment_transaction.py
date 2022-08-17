@@ -28,17 +28,17 @@ class PaymentTransaction(models.Model):
         Note: self.ensure_one() from `_get_processing_values`
 
         :param dict processing_values: The generic processing values of the transaction
-        :return: The dict of acquirer-specific processing values
+        :return: The dict of provider-specific processing values
         :rtype: dict
         """
         res = super()._get_specific_processing_values(processing_values)
-        if self.provider != 'stripe' or self.operation == 'online_token':
+        if self.provider_code != 'stripe' or self.operation == 'online_token':
             return res
 
         if self.operation == 'online_redirect':
             checkout_session = self._stripe_create_checkout_session()
             return {
-                'publishable_key': stripe_utils.get_publishable_key(self.acquirer_id),
+                'publishable_key': stripe_utils.get_publishable_key(self.provider_id),
                 'session_id': checkout_session['id'],
             }
         else:  # Express checkout.
@@ -56,11 +56,11 @@ class PaymentTransaction(models.Model):
         """
         # Filter payment method types by available payment method
         existing_pms = [pm.name.lower() for pm in self.env['payment.icon'].search([])]
-        linked_pms = [pm.name.lower() for pm in self.acquirer_id.payment_icon_ids]
+        linked_pms = [pm.name.lower() for pm in self.provider_id.payment_icon_ids]
         pm_filtered_pmts = filter(
             lambda pmt: pmt.name == 'card'
             # If the PM (payment.icon) record related to a PMT doesn't exist, don't filter out the
-            # PMT because the user couldn't even have linked it to the acquirer in the first place.
+            # PMT because the user couldn't even have linked it to the provider in the first place.
             or (pmt.name in linked_pms or pmt.name not in existing_pms),
             PAYMENT_METHOD_TYPES
         )
@@ -89,7 +89,7 @@ class PaymentTransaction(models.Model):
         # Create the session according to the operation and return it
         customer = self._stripe_create_customer()
         common_session_values = self._get_common_stripe_session_values(pmt_values, customer)
-        base_url = self.acquirer_id.get_base_url()
+        base_url = self.provider_id.get_base_url()
         if self.operation == 'online_redirect':
             return_url = f'{urls.url_join(base_url, StripeController._checkout_return_url)}' \
                          f'?reference={urls.url_quote_plus(self.reference)}'
@@ -97,8 +97,8 @@ class PaymentTransaction(models.Model):
             # 1. attach the payment method to the created customer
             # 2. trigger a 3DS check if one if required, while the customer is still present
             future_usage = 'off_session' if self.tokenize else None
-            capture_method = 'manual' if self.acquirer_id.capture_manually else 'automatic'
-            checkout_session = self.acquirer_id._stripe_make_request(
+            capture_method = 'manual' if self.provider_id.capture_manually else 'automatic'
+            checkout_session = self.provider_id._stripe_make_request(
                 'checkout/sessions', payload={
                     **common_session_values,
                     'mode': 'payment',
@@ -121,7 +121,7 @@ class PaymentTransaction(models.Model):
             return_url = f'{urls.url_join(base_url, StripeController._validation_return_url)}' \
                          f'?reference={urls.url_quote_plus(self.reference)}' \
                          f'&checkout_session_id={{CHECKOUT_SESSION_ID}}'
-            checkout_session = self.acquirer_id._stripe_make_request(
+            checkout_session = self.provider_id._stripe_make_request(
                 'checkout/sessions', payload={
                     **common_session_values,
                     'mode': 'setup',
@@ -138,7 +138,7 @@ class PaymentTransaction(models.Model):
         :return: The Customer
         :rtype: dict
         """
-        customer = self.acquirer_id._stripe_make_request(
+        customer = self.provider_id._stripe_make_request(
             'customers', payload={
                 'address[city]': self.partner_city or None,
                 'address[country]': self.partner_country_id.code or None,
@@ -181,7 +181,7 @@ class PaymentTransaction(models.Model):
         :raise: UserError if the transaction is not linked to a token
         """
         super()._send_payment_request()
-        if self.provider != 'stripe':
+        if self.provider_code != 'stripe':
             return
 
         if not self.token_id:
@@ -214,13 +214,13 @@ class PaymentTransaction(models.Model):
             if not self.token_id.stripe_payment_method:  # Pre-SCA token -> migrate it
                 self.token_id._stripe_sca_migrate_customer()
 
-            response = self.acquirer_id._stripe_make_request(
+            response = self.provider_id._stripe_make_request(
                 'payment_intents',
                 payload=self._stripe_prepare_payment_intent_payload(payment_by_token=True),
                 offline=self.operation == 'offline',
             )
         else:  # 'online_direct' (express checkout).
-            response = self.acquirer_id._stripe_make_request(
+            response = self.provider_id._stripe_make_request(
                 'payment_intents',
                 payload=self._stripe_prepare_payment_intent_payload(),
             )
@@ -251,12 +251,12 @@ class PaymentTransaction(models.Model):
             'amount': payment_utils.to_minor_currency_units(self.amount, self.currency_id),
             'currency': self.currency_id.name.lower(),
             'description': self.reference,
-            'capture_method': 'manual' if self.acquirer_id.capture_manually else 'automatic',
+            'capture_method': 'manual' if self.provider_id.capture_manually else 'automatic',
         }
         if payment_by_token:
             payment_intent_payload.update(
                 confirm=True,
-                customer=self.token_id.acquirer_ref,
+                customer=self.token_id.provider_ref,
                 off_session=True,
                 payment_method=self.token_id.stripe_payment_method,
             )
@@ -273,7 +273,7 @@ class PaymentTransaction(models.Model):
         :return: The refund transaction, if any.
         :rtype: recordset of `payment.transaction`
         """
-        if self.provider != 'stripe':
+        if self.provider_code != 'stripe':
             return super()._send_refund_request(
                 amount_to_refund=amount_to_refund,
                 create_refund_transaction=create_refund_transaction,
@@ -283,9 +283,9 @@ class PaymentTransaction(models.Model):
         )
 
         # Make the refund request to stripe.
-        data = self.acquirer_id._stripe_make_request(
+        data = self.provider_id._stripe_make_request(
             'refunds', payload={
-                'charge': self.acquirer_reference,
+                'charge': self.provider_reference,
                 'amount': payment_utils.to_minor_currency_units(
                     -refund_tx.amount,  # Refund transactions' amount is negative, inverse it.
                     refund_tx.currency_id,
@@ -311,11 +311,11 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._send_capture_request()
-        if self.provider != 'stripe':
+        if self.provider_code != 'stripe':
             return
 
         # Make the capture request to Stripe
-        payment_intent = self.acquirer_id._stripe_make_request(
+        payment_intent = self.provider_id._stripe_make_request(
             f'payment_intents/{self.stripe_payment_intent}/capture'
         )
         _logger.info(
@@ -338,11 +338,11 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._send_void_request()
-        if self.provider != 'stripe':
+        if self.provider_code != 'stripe':
             return
 
         # Make the void request to Stripe
-        payment_intent = self.acquirer_id._stripe_make_request(
+        payment_intent = self.provider_id._stripe_make_request(
             f'payment_intents/{self.stripe_payment_intent}/cancel'
         )
         _logger.info(
@@ -357,29 +357,29 @@ class PaymentTransaction(models.Model):
         )
         self._handle_notification_data('stripe', notification_data)
 
-    def _get_tx_from_notification_data(self, provider, notification_data):
+    def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of payment to find the transaction based on Stripe data.
 
-        :param str provider: The provider of the acquirer that handled the transaction
+        :param str provider_code: The code of the provider that handled the transaction
         :param dict notification_data: The notification data sent by the provider
         :return: The transaction if found
         :rtype: recordset of `payment.transaction`
         :raise: ValidationError if inconsistent data were received
         :raise: ValidationError if the data match no transaction
         """
-        tx = super()._get_tx_from_notification_data(provider, notification_data)
-        if provider != 'stripe' or len(tx) == 1:
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
+        if provider_code != 'stripe' or len(tx) == 1:
             return tx
 
         reference = notification_data.get('reference')
         if reference:
-            tx = self.search([('reference', '=', reference), ('provider', '=', 'stripe')])
+            tx = self.search([('reference', '=', reference), ('provider_code', '=', 'stripe')])
         elif notification_data.get('event_type') == 'charge.refund.updated':
             # The webhook notifications sent for `charge.refund.updated` events only contain a
             # refund object that has no 'description' (the merchant reference) field. We thus search
-            # the transaction by its acquirer reference which is the refund id for refund txs.
+            # the transaction by its provider reference which is the refund id for refund txs.
             refund_id = notification_data['object_id']  # The object is a refund.
-            tx = self.search([('acquirer_reference', '=', refund_id), ('provider', '=', 'stripe')])
+            tx = self.search([('provider_reference', '=', refund_id), ('provider_code', '=', 'stripe')])
         else:
             raise ValidationError("Stripe: " + _("Received data with missing merchant reference"))
 
@@ -403,18 +403,18 @@ class PaymentTransaction(models.Model):
         :raise: ValidationError if inconsistent data were received
         """
         super()._process_notification_data(notification_data)
-        if self.provider != 'stripe':
+        if self.provider_code != 'stripe':
             return
 
-        # Handle the acquirer reference and the status.
+        # Handle the provider reference and the status.
         if self.operation == 'validation':
             status = notification_data.get('setup_intent', {}).get('status')
         elif self.operation == 'refund':
-            self.acquirer_reference = notification_data['refund']['id']
+            self.provider_reference = notification_data['refund']['id']
             status = notification_data['refund']['status']
         else:  # 'online_redirect', 'online_token', 'offline'
             if 'charge' in notification_data:  # The online_redirect operation may include a charge.
-                self.acquirer_reference = notification_data['charge']['id']
+                self.provider_reference = notification_data['charge']['id']
             status = notification_data.get('payment_intent', {}).get('status')
         if not status:
             raise ValidationError(
@@ -481,10 +481,10 @@ class PaymentTransaction(models.Model):
             return
 
         token = self.env['payment.token'].create({
-            'acquirer_id': self.acquirer_id.id,
+            'provider_id': self.provider_id.id,
             'payment_details': payment_method['card'].get('last4'),
             'partner_id': self.partner_id.id,
-            'acquirer_ref': customer_id,
+            'provider_ref': customer_id,
             'verified': True,
             'stripe_payment_method': payment_method_id,
         })

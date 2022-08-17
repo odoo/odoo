@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="payment_acquirer_form" model="ir.ui.view">
-        <field name="name">Adyen Acquirer Form</field>
-        <field name="model">payment.acquirer</field>
-        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Adyen Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
-            <xpath expr='//group[@name="acquirer"]' position='inside'>
-                <group attrs="{'invisible': [('provider', '!=', 'adyen')]}">
-                    <field name="adyen_merchant_account" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
-                    <field name="adyen_api_key" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}" password="True"/>
-                    <field name="adyen_client_key" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
-                    <field name="adyen_hmac_key" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}" password="True"/>
-                    <field name="adyen_checkout_api_url" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
-                    <field name="adyen_recurring_api_url" attrs="{'required':[('provider', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
+            <group name="code" position='inside'>
+                <group attrs="{'invisible': [('code', '!=', 'adyen')]}">
+                    <field name="adyen_merchant_account" attrs="{'required':[('code', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
+                    <field name="adyen_api_key" attrs="{'required':[('code', '=', 'adyen'), ('state', '!=', 'disabled')]}" password="True"/>
+                    <field name="adyen_client_key" attrs="{'required':[('code', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
+                    <field name="adyen_hmac_key" attrs="{'required':[('code', '=', 'adyen'), ('state', '!=', 'disabled')]}" password="True"/>
+                    <field name="adyen_checkout_api_url" attrs="{'required':[('code', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
+                    <field name="adyen_recurring_api_url" attrs="{'required':[('code', '=', 'adyen'), ('state', '!=', 'disabled')]}"/>
                 </group>
-            </xpath>
-            <xpath expr='//group[@name="acquirer_config"]' position='before'>
-                <div attrs="{'invisible':['|', ('provider', '!=', 'adyen'), ('capture_manually', '=', False)]}"
+            </group>
+            <group name="provider_config" position='before'>
+                <div attrs="{'invisible':['|', ('code', '!=', 'adyen'), ('capture_manually', '=', False)]}"
                      class="alert alert-warning"
                      role="alert">
                     <strong>Warning:</strong> To capture the amount manually, you also need to set
                     the Capture Delay to manual on your Adyen account settings.
-                    <a href="https://www.odoo.com/documentation/master/applications/finance/payment_acquirers/adyen.html#place-a-hold-on-a-card"
+                    <a href="https://www.odoo.com/documentation/master/applications/finance/payment_providers/adyen.html#place-a-hold-on-a-card"
                        title="Learn More"
                        target="_blank">Learn More</a>
                 </div>
-            </xpath>
+            </group>
         </field>
     </record>
 

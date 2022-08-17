@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Alipay Payment Acquirer',
-    'category': 'Accounting/Payment Acquirers',
+    'name': 'Alipay Payment Provider',
+    'category': 'Accounting/Payment Providers',
     'version': '2.0',
     'sequence': 345,
     'summary': "This module is deprecated.",
@@ -10,7 +10,7 @@
     'data': [
         'views/payment_alipay_templates.xml',
         'views/payment_views.xml',
-        'data/payment_acquirer_data.xml',
+        'data/payment_provider_data.xml',
     ],
     'application': False,
     'pre_init_hook': 'pre_init_hook',

@@ -10,7 +10,7 @@ class AlipayCommon(PaymentCommon):
         super().setUpClass()
 
         cls.currency_yuan = cls._prepare_currency('CNY')
-        cls.alipay = cls._prepare_acquirer('alipay', update_values={
+        cls.alipay = cls._prepare_provider('alipay', update_values={
             'alipay_merchant_partner_id': 'dummy',
             'alipay_md5_signature_key': 'dummy',
             'alipay_seller_email': 'dummy',
@@ -18,7 +18,7 @@ class AlipayCommon(PaymentCommon):
         })
 
         # override defaults for helpers
-        cls.acquirer = cls.alipay
+        cls.provider = cls.alipay
         cls.currency = cls.currency_yuan
 
         cls.notification_data = {

@@ -35,22 +35,22 @@ class PaymentLinkWizard(models.TransientModel):
     description = fields.Char("Payment Ref")
     link = fields.Char(string="Payment Link", compute='_compute_link')
     company_id = fields.Many2one('res.company', compute='_compute_company_id')
-    available_acquirer_ids = fields.Many2many(
-        comodel_name='payment.acquirer',
-        string="Payment Acquirers Available",
-        compute='_compute_available_acquirer_ids',
+    available_provider_ids = fields.Many2many(
+        comodel_name='payment.provider',
+        string="Payment Providers Available",
+        compute='_compute_available_provider_ids',
         compute_sudo=True,
     )
-    has_multiple_acquirers = fields.Boolean(
-        string="Has Multiple Acquirers",
-        compute='_compute_has_multiple_acquirers',
+    has_multiple_providers = fields.Boolean(
+        string="Has Multiple Providers",
+        compute='_compute_has_multiple_providers',
     )
-    payment_acquirer_selection = fields.Selection(
-        string="Allow Payment Acquirer",
-        help="If a specific payment acquirer is selected, customers will only be allowed to pay "
+    payment_provider_selection = fields.Selection(
+        string="Allow Payment Provider",
+        help="If a specific payment provider is selected, customers will only be allowed to pay "
              "via this one. If 'All' is selected, customers can pay via any available payment "
-             "acquirer.",
-        selection='_selection_payment_acquirer_selection',
+             "provider.",
+        selection='_selection_payment_provider_selection',
         default='all',
         required=True,
     )
@@ -69,9 +69,9 @@ class PaymentLinkWizard(models.TransientModel):
             link.company_id = record.company_id if 'company_id' in record else False
 
     @api.depends('company_id', 'partner_id', 'currency_id')
-    def _compute_available_acquirer_ids(self):
+    def _compute_available_provider_ids(self):
         for link in self:
-            link.available_acquirer_ids = link._get_payment_acquirer_available(
+            link.available_provider_ids = link._get_payment_provider_available(
                 res_model=link.res_model,
                 res_id=link.res_id,
                 company_id=link.company_id.id,
@@ -80,9 +80,9 @@ class PaymentLinkWizard(models.TransientModel):
                 currency_id=link.currency_id.id,
             )
 
-    def _selection_payment_acquirer_selection(self):
-        """ Specify available acquirers in the selection field.
-        :return: The selection list of available acquirers.
+    def _selection_payment_provider_selection(self):
+        """ Specify available providers in the selection field.
+        :return: The selection list of available providers.
         :rtype: list[tuple]
         """
         defaults = self.default_get(['res_model', 'res_id'])
@@ -96,7 +96,7 @@ class PaymentLinkWizard(models.TransientModel):
             partner_id = related_document.partner_id
             currency_id = related_document.currency_id
             selection.extend(
-                self._get_payment_acquirer_available(
+                self._get_payment_provider_available(
                     res_model=res_model,
                     res_id=res_id,
                     company_id=company_id.id,
@@ -107,18 +107,18 @@ class PaymentLinkWizard(models.TransientModel):
             )
         return selection
 
-    def _get_payment_acquirer_available(self, **kwargs):
-        """ Select and return the acquirers matching the criteria.
+    def _get_payment_provider_available(self, **kwargs):
+        """ Select and return the providers matching the criteria.
 
-        :return: The compatible acquirers
-        :rtype: recordset of `payment.acquirer`
+        :return: The compatible providers
+        :rtype: recordset of `payment.provider`
         """
-        return self.env['payment.acquirer'].sudo()._get_compatible_acquirers(**kwargs)
+        return self.env['payment.provider'].sudo()._get_compatible_providers(**kwargs)
 
-    @api.depends('available_acquirer_ids')
-    def _compute_has_multiple_acquirers(self):
+    @api.depends('available_provider_ids')
+    def _compute_has_multiple_providers(self):
         for link in self:
-            link.has_multiple_acquirers = len(link.available_acquirer_ids) > 1
+            link.has_multiple_providers = len(link.available_provider_ids) > 1
 
     def _get_access_token(self):
         self.ensure_one()
@@ -128,7 +128,7 @@ class PaymentLinkWizard(models.TransientModel):
 
     @api.depends(
         'description', 'amount', 'currency_id', 'partner_id', 'company_id',
-        'payment_acquirer_selection',
+        'payment_provider_selection',
     )
     def _compute_link(self):
         for payment_link in self:
@@ -140,8 +140,8 @@ class PaymentLinkWizard(models.TransientModel):
                 'access_token': self._get_access_token(),
                 **self._get_additional_link_values(),
             }
-            if payment_link.payment_acquirer_selection != 'all':
-                url_params['acquirer_id'] = str(payment_link.payment_acquirer_selection)
+            if payment_link.payment_provider_selection != 'all':
+                url_params['provider_id'] = str(payment_link.payment_provider_selection)
             payment_link.link = f'{base_url}/payment/pay?{urls.url_encode(url_params)}'
 
     def _get_additional_link_values(self):

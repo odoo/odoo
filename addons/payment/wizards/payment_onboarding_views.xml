@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="payment_acquirer_onboarding_wizard_form" model="ir.ui.view">
-        <field name="name">payment.acquirer.onboarding.wizard.form</field>
-        <field name="model">payment.acquirer.onboarding.wizard</field>
+    <record id="payment_provider_onboarding_wizard_form" model="ir.ui.view">
+        <field name="name">payment.provider.onboarding.wizard.form</field>
+        <field name="model">payment.provider.onboarding.wizard</field>
         <field name="arch" type="xml">
-            <form string="Choose a payment method" class="o_onboarding_payment_acquirer_wizard">
+            <form string="Choose a payment method" class="o_onboarding_payment_provider_wizard">
                 <div class="container">
                     <div class="row align-items-start">
                         <div class="col col-4" name="left-column">
@@ -25,7 +25,7 @@
                                     <span>Start selling directly without an account; an email will be sent by Paypal to create your new account and collect your payments.</span>
                                 </p>
                                 <p attrs="{'invisible': [('paypal_user_type', '=', 'new_user')]}">
-                                    <a href="https://www.odoo.com/documentation/master/applications/finance/payment_acquirers/paypal.html" target="_blank">
+                                    <a href="https://www.odoo.com/documentation/master/applications/finance/payment_providers/paypal.html" target="_blank">
                                         <span><i class="fa fa-arrow-right"/> How to configure your PayPal account</span>
                                     </a>
                                 </p>

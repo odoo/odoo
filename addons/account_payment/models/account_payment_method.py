@@ -10,10 +10,10 @@ class AccountPaymentMethod(models.Model):
     @api.model
     def _get_payment_method_information(self):
         res = super()._get_payment_method_information()
-        for provider, _desc in self.env['payment.acquirer']._fields['provider'].selection:
-            if provider in ('none', 'transfer'):
+        for code, _desc in self.env['payment.provider']._fields['code'].selection:
+            if code in ('none', 'transfer'):
                 continue
-            res[provider] = {
+            res[code] = {
                 'mode': 'unique',
                 'domain': [('type', '=', 'bank')],
             }

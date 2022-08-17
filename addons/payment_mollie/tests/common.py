@@ -9,10 +9,10 @@ class MollieCommon(PaymentCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.mollie = cls._prepare_acquirer('mollie', update_values={
+        cls.mollie = cls._prepare_provider('mollie', update_values={
             'mollie_api_key': 'dummy',
         })
-        cls.acquirer = cls.mollie
+        cls.provider = cls.mollie
         cls.currency = cls.currency_euro
 
         cls.notification_data = {

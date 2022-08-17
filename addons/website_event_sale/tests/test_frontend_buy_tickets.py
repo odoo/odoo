@@ -16,9 +16,9 @@ class TestUi(HttpCaseWithUserDemo):
         super().setUp()
 
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
-            self.skipTest("Transfer acquirer is not installed")
+            self.skipTest("Transfer provider is not installed")
 
-        self.env.ref('payment.payment_acquirer_transfer').write({
+        self.env.ref('payment.payment_provider_transfer').write({
             'state': 'enabled',
             'is_published': True,
         })
@@ -80,7 +80,7 @@ class TestUi(HttpCaseWithUserDemo):
 
     def test_admin(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
-            self.skipTest("Transfer acquirer is not installed")
+            self.skipTest("Transfer provider is not installed")
 
         # Seen that:
         # - this test relies on demo data that are entirely in USD (pricelists)
@@ -89,38 +89,38 @@ class TestUi(HttpCaseWithUserDemo):
         # we have to force company currency as USDs only for this test
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [self.env.ref('base.USD').id, self.env.ref('base.main_company').id])
 
-        transfer_acquirer = self.env.ref('payment.payment_acquirer_transfer')
-        transfer_acquirer.write({
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_acquirer._transfer_ensure_pending_msg_is_set()
+        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         self.start_tour("/", 'event_buy_tickets', login="admin")
 
     def test_demo(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
-            self.skipTest("Transfer acquirer is not installed")
+            self.skipTest("Transfer provider is not installed")
 
-        transfer_acquirer = self.env.ref('payment.payment_acquirer_transfer')
-        transfer_acquirer.write({
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_acquirer._transfer_ensure_pending_msg_is_set()
+        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         self.start_tour("/", 'event_buy_tickets', login="demo")
 
     def test_buy_last_ticket(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
-            self.skipTest("Transfer acquirer is not installed")
+            self.skipTest("Transfer provider is not installed")
 
-        transfer_acquirer = self.env.ref('payment.payment_acquirer_transfer')
-        transfer_acquirer.write({
+        transfer_provider = self.env.ref('payment.payment_provider_transfer')
+        transfer_provider.write({
             'state': 'enabled',
             'is_published': True,
         })
-        transfer_acquirer._transfer_ensure_pending_msg_is_set()
+        transfer_provider._transfer_ensure_pending_msg_is_set()
 
         self.start_tour("/", 'event_buy_last_ticket')
 
