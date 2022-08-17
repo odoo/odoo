@@ -21,11 +21,11 @@
                         Connect your Gmail account
                     </button>
                     <button type="object"
-                        name="open_google_gmail_uri" class="btn-link px-0 ml-2"
+                        name="open_google_gmail_uri" class="btn-link px-0 ms-2"
                         attrs="{'invisible': ['|', '|', ('google_gmail_uri', '=', False), ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}">
                         <i class="fa fa-cog" title="Edit Settings"/>
                     </button>
-                    <button class="alert alert-warning d-block mt-2 text-left"
+                    <button class="alert alert-warning d-block mt-2 text-start"
                         icon="fa-arrow-right" type="action" role="alert"
                         name="%(base.res_config_setting_act_window)d"
                         attrs="{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_uri', '!=', False)]}">
