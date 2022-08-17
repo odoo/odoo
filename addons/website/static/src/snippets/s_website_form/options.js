@@ -1491,6 +1491,7 @@ const DisableOverlayButtonOption = options.Class.extend({
         this.$overlay.add(this.$overlay.data('$optionsSection')).on('click', '.' + className, this.preventButton);
         const $button = this.$overlay.add(this.$overlay.data('$optionsSection')).find('.' + className);
         $button.attr('title', message).tooltip({delay: 0});
+        // TODO In master: add `o_disabled` but keep actual class.
         $button.removeClass(className); // Disable the functionnality
     },
 
