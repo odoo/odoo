@@ -11,13 +11,10 @@ Also, adds methods to convert values back to Odoo models.
 import babel
 import base64
 import io
-import itertools
 import json
 import logging
 import os
 import re
-import hashlib
-from datetime import datetime
 
 import pytz
 import requests
@@ -29,11 +26,10 @@ from werkzeug import urls
 import odoo.modules
 
 from odoo import _, api, models, fields
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import ustr, posix_to_ldml, pycompat
 from odoo.tools import html_escape as escape
 from odoo.tools.misc import get_lang, babel_locale_parse
-from odoo.addons.base.models import ir_qweb
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
 
@@ -324,7 +320,11 @@ class DateTime(models.AbstractModel):
 
         # parse from string to datetime
         lg = self.env['res.lang']._lang_get(self.env.user.lang) or get_lang(self.env)
-        dt = datetime.strptime(value, '%s %s' % (lg.date_format, lg.time_format))
+        try:
+            datetime_format = f'{lg.date_format} {lg.time_format}'
+            dt = datetime.strptime(value, datetime_format)
+        except ValueError:
+            raise ValidationError(_("The datetime %s does not match the format %s", value, datetime_format))
 
         # convert back from user's timezone to UTC
         tz_name = element.attrib.get('data-oe-original-tz') or self.env.context.get('tz') or self.env.user.tz
