@@ -1,43 +1,41 @@
 /** @odoo-module **/
 
-import viewRegistry from 'web.view_registry';
+import { registry } from "@web/core/registry";
+import { FormController } from "@web/views/form/form_controller";
+import { formView } from "@web/views/form/form_view";
 
-import FormController from "web.FormController";
-import FormView from "web.FormView";
-
-export const AllocationLeaveFormController = FormController.extend({
+export class AllocationLeaveFormController extends FormController {
     /**
      * @override
     */
-    async _applyChanges(dataPointID, changes, event) {
-        const result = await this._super.apply(this, arguments);
-        const formData = event.target.record.data;
+    async save() {
+        const formData = this.model.root.data;
         if (formData.holiday_status_id) {
             let nameSearchContext = {'holiday_status_name_get': false};
             const employee_id = formData.employee_id;
             if (employee_id) {
-                nameSearchContext = {'holiday_status_name_get': true, 'employee_id': employee_id.data.id};
+                nameSearchContext = {'holiday_status_name_get': true, 'employee_id': employee_id[0]};
             }
-            const nameSearch = await this._rpc({
-                model: 'hr.leave.type',
-                method: 'name_get',
-                args: [formData.holiday_status_id.data.id],
-                context: nameSearchContext,
-                limit: 1
-            });
-            if (this.$el.find("div[name='holiday_status_id']").find('input')[0]) {
-                this.$el.find("div[name='holiday_status_id']").find('input')[0].value = nameSearch[0][1];
+            const nameSearch = await this.model.orm.call(
+                'hr.leave.type',
+                'name_get',
+                [formData.holiday_status_id[0]],
+                {
+                    'context': nameSearchContext,
+                }
+            );
+            const holiday_status_field = document.querySelector("div[name='holiday_status_id'] input")[0]
+            if (holiday_status_field) {
+                holiday_status_field.value = nameSearch[0][1];
             }
         }
-        return result;
+        return await super.save(this, arguments);
     }
+}
 
-});
+export const AllocationLeaveFormView = {
+    ...formView,
+    Controller: AllocationLeaveFormController,
+}
 
-export const AllocationLeaveFormView = FormView.extend({
-    config: Object.assign({}, FormView.prototype.config, {
-        Controller: AllocationLeaveFormController,
-    }),
-});
-
-viewRegistry.add('allocation_leave_form', AllocationLeaveFormView);
+registry.category("views").add('allocation_leave_form', AllocationLeaveFormView);
