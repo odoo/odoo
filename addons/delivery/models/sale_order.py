@@ -59,6 +59,10 @@ class SaleOrder(models.Model):
         self._remove_delivery_line()
         for order in self:
             order.carrier_id = carrier.id
+            if order.state in ('sale', 'done'):
+                pending_deliverys = order.picking_ids.filtered(
+                    lambda p: p.state not in ('done', 'cancel') and p.location_id == p.picking_type_id.warehouse_id.lot_stock_id)
+                pending_deliverys.carrier_id = carrier.id
             order._create_delivery_line(carrier, amount)
         return True
 
