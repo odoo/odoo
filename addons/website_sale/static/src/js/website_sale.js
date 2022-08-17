@@ -207,6 +207,8 @@ require("web.zoomodoo");
 const {extraMenuUpdateCallbacks} = require('website.content.menu');
 const dom = require('web.dom');
 const { cartesian } = require('@web/core/utils/arrays');
+const { ComponentWrapper } = require('web.OwlCompatibility');
+const { ProductImageViewerWrapper } = require("@website_sale/js/components/website_sale_image_viewer");
 
 publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
@@ -279,6 +281,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
 
         this.getRedirectOption();
         return def;
+    },
+    destroy() {
+        this._super.apply(this, arguments);
+        this._cleanupZoom();
     },
     /**
      * The selector is different when using list view of variants.
@@ -460,38 +466,97 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             return VariantMixin._getProductId.apply(this, arguments);
         }
     },
+    _getProductImageLayout: function () {
+        return document.querySelector("#product_detail_main").dataset.image_layout;
+    },
+    _getProductImageWidth: function () {
+        return document.querySelector("#product_detail_main").dataset.image_width;
+    },
+    _getProductImageContainerSelector: function () {
+        return {
+            'carousel': "#o-carousel-product",
+            'grid': "#o-grid-product",
+        }[this._getProductImageLayout()];
+    },
+    _getProductImageContainer: function () {
+        return document.querySelector(this._getProductImageContainerSelector());
+    },
+    _isEditorEnabled() {
+        return document.body.classList.contains("editor_enable");
+    },
     /**
      * @private
      */
     _startZoom: function () {
-        // Do not activate image zoom for mobile devices, since it might prevent users from scrolling the page
-        if (!config.device.isMobile) {
-            var autoZoom = $('.ecom-zoomable').data('ecom-zoom-auto') || false,
-            attach = '#o-carousel-product';
-            _.each($('.ecom-zoomable img[data-zoom]'), function (el) {
-                onImageLoaded(el, function () {
-                    var $img = $(el);
-                    $img.zoomOdoo({event: autoZoom ? 'mouseenter' : 'click', attach: attach});
-                    $img.attr('data-zoom', 1);
-                });
-            });
+        // Do not activate image zoom on hover for mobile devices
+        const salePage = document.querySelector(".o_wsale_product_page");
+        if (!salePage || config.device.mobile || this._getProductImageWidth() === "none") {
+            return;
         }
-
-        function onImageLoaded(img, callback) {
-            // On Chrome the load event already happened at this point so we
-            // have to rely on complete. On Firefox it seems that the event is
-            // always triggered after this so we can rely on it.
-            //
-            // However on the "complete" case we still want to keep listening to
-            // the event because if the image is changed later (eg. product
-            // configurator) a new load event will be triggered (both browsers).
-            $(img).on('load', function () {
-                callback();
-            });
-            if (img.complete) {
-                callback();
+        this._cleanupZoom();
+        this.zoomCleanup = [];
+        // Zoom on hover
+        if (salePage.dataset.ecomZoomAuto) {
+            const images = salePage.querySelectorAll("img[data-zoom]");
+            for (const image of images) {
+                const $image = $(image);
+                const callback = () => {
+                    $image.zoomOdoo({
+                        event: "mouseenter",
+                        attach: this._getProductImageContainerSelector(),
+                        preventClicks: salePage.dataset.ecomZoomClick,
+                        attachToTarget: this._getProductImageLayout() === "grid",
+                    });
+                    image.dataset.zoom = 1;
+                };
+                image.addEventListener('load', callback);
+                this.zoomCleanup.push(() => {
+                    image.removeEventListener('load', callback);
+                    const zoomOdoo = $image.data("zoomOdoo");
+                    if (zoomOdoo) {
+                        zoomOdoo.hide();
+                        $image.unbind();
+                    }
+                });
+                if (image.complete) {
+                    callback();
+                }
             }
         }
+        // Zoom on click
+        if (salePage.dataset.ecomZoomClick) {
+            // In this case we want all the images not just the ones that are "zoomables"
+            const images = salePage.querySelectorAll(".product_detail_img");
+            for (const image of images ) {
+                const handler = () => {
+                    if (salePage.dataset.ecomZoomAuto) {
+                        // Remove any flyout
+                        const flyouts = document.querySelectorAll(".zoomodoo-flyout");
+                        for (const flyout of flyouts) {
+                            flyout.remove();
+                        }
+                    }
+                    const dialog = new ComponentWrapper(this, ProductImageViewerWrapper, {
+                        selectedImageIdx: [...images].indexOf(image),
+                        images,
+                    });
+                    dialog.mount(document.body);
+                };
+                image.addEventListener("click", handler);
+                this.zoomCleanup.push(() => {
+                    image.removeEventListener("click", handler);
+                });
+            }
+        }
+    },
+    _cleanupZoom() {
+        if (!this.zoomCleanup || !this.zoomCleanup.length) {
+            return;
+        }
+        for (const cleanup of this.zoomCleanup) {
+            cleanup();
+        }
+        this.zoomCleanup = undefined;
     },
     /**
      * On website, we display a carousel instead of only one image
@@ -500,14 +565,11 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @private
      */
     _updateProductImage: function ($productContainer, displayImage, productId, productTemplateId, newImages, isCombinationPossible) {
-        let $images = $productContainer.find('#o-carousel-product');
-        if (!$images.length) {
-            $images = $productContainer.find("#o-grid-product");
-        }
+        let $images = $productContainer.find(this._getProductImageContainerSelector());
         // When using the web editor, don't reload this or the images won't
         // be able to be edited depending on if this is done loading before
         // or after the editor is ready.
-        if ($images.length && window.location.search.indexOf('enable_editor') === -1) {
+        if ($images.length && !this._isEditorEnabled()) {
             const $newImages = $(newImages);
             $images.after($newImages);
             $images.remove();

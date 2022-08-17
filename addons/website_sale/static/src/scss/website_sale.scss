@@ -516,8 +516,6 @@ a.no-decoration {
 
         .carousel-inner {
             img {
-                height: 100%;
-                width: 100%;
                 object-fit: contain;
             }
         }
@@ -666,21 +664,20 @@ a.no-decoration {
 }
 
 .ecom-zoomable {
-    &:not(.ecom-autozoom) {
-        img[data-zoom] {
+    &[data-ecom-zoom-click] {
+        img.product_detail_img {
             cursor: zoom-in;
         }
     }
-    &.ecom-autozoom {
-        img[data-zoom] {
-            cursor: crosshair;
-        }
+    img[data-zoom] {
+        cursor: zoom-in;
     }
     .o_editable img[data-zoom] {
         cursor: pointer;
     }
     .zoomodoo-flyout {
         box-shadow: 0 0 20px 2px rgba(black, 0.2);
+        z-index: 1050;
     }
 }
 
