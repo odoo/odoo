@@ -194,9 +194,9 @@ QUnit.module("Components", (hooks) => {
                 value: `[("datetime", "=", "2017-03-27 15:42:00")]`,
                 readonly: false,
                 update: (newValue) => {
-                    assert.notStrictEqual(
+                    assert.strictEqual(
                         newValue,
-                        `[("datetime", "=", "2017-03-27 15:42:00")]`,
+                        `[("datetime", "=", "2017-02-26 15:42:00")]`,
                         "datepicker value should have changed"
                     );
                 },
@@ -211,7 +211,7 @@ QUnit.module("Components", (hooks) => {
             document.body.querySelector(
                 `.bootstrap-datetimepicker-widget :not(.today)[data-action="selectDay"]`
             )
-        );
+        ); // => February 26th
         await click(
             document.body.querySelector(`.bootstrap-datetimepicker-widget a[data-action="close"]`)
         );
