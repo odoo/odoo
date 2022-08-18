@@ -157,8 +157,6 @@ class PaymentAcquirer(models.Model):
     )
 
     # Kanban view fields
-    description = fields.Html(
-        string="Description", help="The description shown in the card in kanban view ")
     image_128 = fields.Image(string="Image", max_width=128, max_height=128)
     color = fields.Integer(
         string="Color", help="The color of the card in kanban view", compute='_compute_color',
