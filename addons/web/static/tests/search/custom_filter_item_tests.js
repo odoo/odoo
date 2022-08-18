@@ -441,6 +441,37 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
+    QUnit.test("custom filter date with equal operator", async function (assert) {
+        assert.expect(2);
+
+        const originalZoneName = luxon.Settings.defaultZoneName;
+        luxon.Settings.defaultZoneName = new luxon.FixedOffsetZone.instance(-240);
+        registerCleanup(() => {
+            luxon.Settings.defaultZoneName = originalZoneName;
+        });
+
+        patchDate(2017, 1, 22, 12, 30, 0);
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+        });
+
+        await toggleFilterMenu(target);
+        await toggleAddCustomFilter(target);
+
+        await editConditionField(target, 0, "date_field");
+        await editConditionOperator(target, 0, "=");
+        await editConditionValue(target, 0, "01/01/2017");
+        await applyFilter(target);
+
+        assert.deepEqual(getFacetTexts(target), ['A date is equal to "01/01/2017"']);
+        assert.deepEqual(getDomain(controlPanel), [["date_field", "=", "2017-01-01"]]);
+    });
+
     QUnit.test("custom filter datetime with equal operator", async function (assert) {
         assert.expect(5);
 
