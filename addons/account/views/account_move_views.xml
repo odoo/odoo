@@ -930,7 +930,7 @@
                                         <templates>
                                             <t t-name="kanban-box">
                                                 <div t-attf-class="oe_kanban_card oe_kanban_global_click ps-0 pe-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
-                                                    <t t-if="!record.display_type.raw_value">
+                                                    <t t-if="!['line_note', 'line_section'].includes(record.display_type.raw_value)">
                                                         <div class="row g-0">
                                                             <div class="col-2 pe-3">
                                                                 <img t-att-src="kanban_image('product.product', 'image_128', record.product_id.raw_value)" t-att-title="record.product_id.value" t-att-alt="record.product_id.value" style="max-width: 100%;"/>
