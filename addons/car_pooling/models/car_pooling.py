@@ -6,13 +6,13 @@ class CarPooling(models.Model):
     _name = "car.pooling"
     _description = "Trips"
     _order = "id desc"
-    driver = fields.Many2one('res.users', required=True, readonly=True, string='Driver (Car owner)', index=True, tracking=True, default=lambda self: self.env.user)
+    driver = fields.Many2one('res.users', required=True, readonly=True, string='Driver (Car owner)', index=True, default=lambda self: self.env.user)
     source_city = fields.Char(required=True)
     source_address = fields.Char(required=True)
     destination_city = fields.Char(required=True)
     destination_address = fields.Char(required=True)
     departure_date = fields.Datetime(string="Departure Date and Time", required=True)
-    comments = fields.Text(help="The comments for the trips")
+    comments = fields.Text(help="The comments for the trips", string="Driver's Comments")
     tag = fields.Many2many("car.pooling.tag", string="Tags")
     is_round_trip = fields.Boolean(string="Round Trip")
     return_date = fields.Datetime(string="Return Date and Time")
@@ -216,7 +216,7 @@ class CarPoolingPassenger(models.Model):
     _name = "car.pooling.passenger"
     _description = "Passenger"
     _order = "id desc"
-    passenger = fields.Many2one('res.users', required=True, readonly=True, string='Passenger', index=True, tracking=True, default=lambda self: self.env.user)
+    passenger = fields.Many2one('res.users', required=True, readonly=True, string='Passenger', index=True, default=lambda self: self.env.user)
     trip_id = fields.Many2one('car.pooling', string="Trip", ondelete='cascade')
     status = fields.Selection(string="Status", selection=[("accepted", "Accepted"), ("refused", "Refused")], help="The status of the trip offer")
     accept_count = fields.Integer(readonly=True, string="Number of Refusals")
@@ -286,7 +286,7 @@ class CarPoolingPassengerComments(models.Model):
     _name = "car.pooling.comment"
     _description = "This model is for storing the comments written about a trip"
     _order = "id desc"
-    passenger = fields.Many2one('res.users', required=True, readonly=True, string='Passenger', index=True, tracking=True, default=lambda self: self.env.user)
+    passenger = fields.Many2one('res.users', required=True, readonly=True, string='Passenger', index=True, default=lambda self: self.env.user)
     trip_id = fields.Many2one('car.pooling', string="Trip", ondelete='cascade')
     comment = fields.Text()
     trip_star = fields.Selection(AVAILABLE_PRIORITIES, string="Star")
