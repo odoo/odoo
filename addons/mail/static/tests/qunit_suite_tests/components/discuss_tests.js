@@ -2193,7 +2193,7 @@ QUnit.test('sidebar quick search', async function (assert) {
             .o_DiscussSidebar_categoryChannel .o_DiscussSidebarCategory_item
         `).dataset.threadLocalId,
         messaging.models['Thread'].findFromIdentifyingData({
-            id: pyEnv['mail.channel'].search([['name', '=', 'channel12']]),
+            id: pyEnv['mail.channel'].search([['name', '=', 'channel12']])[0],
             model: 'mail.channel',
         }).localId,
         "should have filtered to a single channel (channel12)"

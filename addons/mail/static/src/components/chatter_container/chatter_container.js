@@ -64,11 +64,17 @@ export class ChatterContainer extends Component {
         if (owl.status(this) === "destroyed") {
             return;
         }
-        const values = { id: this.chatterId, ...props, className: undefined };
+        const values = { id: this.chatterId, ...props };
+        delete values.className;
         if (values.threadId === undefined) {
             values.threadId = clear();
         }
         this.chatter = messaging.models['Chatter'].insert(values);
+        if (owl.status(this) === "destroyed") {
+            // insert might trigger a re-render which might destroy the current component
+            this.chatter.delete();
+            return;
+        }
         /**
          * Refresh the chatter when the parent view is (re)loaded.
          * This serves mainly at loading initial data, but also on reload there

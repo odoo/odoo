@@ -31,29 +31,29 @@ export class Listener {
         this.name = name;
         this.onChange = onChange;
         /**
-         * Set of localIds that have been accessed on model manager between the
+         * Set of records that have been accessed on model manager between the
          * last call to `startListening` and `stopListening` with this listener
          * as parameter.
-         * Each localId has its own way to know the listeners that are observing
+         * Each record has its own way to know the listeners that are observing
          * it (to be able to notify them if it changes). This set holds the
          * inverse of that information, which is useful to be able to remove
-         * this listener (when the need arises) from those localIds without
+         * this listener (when the need arises) from those records without
          * having to verify the presence of this listener on each possible
-         * localId one by one.
+         * record one by one.
          */
-        this.lastObservedLocalIds = new Set();
+        this.lastObservedRecords = new Set();
         /**
-         * Map between localIds and a set of fields on those localIds that have
+         * Map between records and a set of fields on those records that have
          * been accessed on model manager between the last call to
          * `startListening` and `stopListening` with this listener as parameter.
-         * Each field of each localId has its own way to know the listeners that
+         * Each field of each record has its own way to know the listeners that
          * are observing it (to be able to notify them if it changes). This map
          * holds the inverse of that information, which is useful to be able to
          * remove this listener (when the need arises) from those fields without
          * having to verify the presence of this listener on each possible field
          * one by one.
          */
-        this.lastObservedFieldsByLocalId = new Map();
+        this.lastObservedFieldsByRecord = new Map();
         /**
          * Set of model that have been accessed with `all()` on model manager
          * between the last call to `startListening` and `stopListening` with
