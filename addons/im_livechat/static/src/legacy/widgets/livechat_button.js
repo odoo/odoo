@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import config from 'web.config';
 import time from 'web.time';
 import utils from 'web.utils';
 import Widget from 'web.Widget';
@@ -22,36 +21,7 @@ const LivechatButton = Widget.extend({
         this.messaging = messaging;
     },
     start() {
-        this.$el.text(this.messaging.publicLivechatGlobal.livechatButtonView.buttonText);
-        if (this.messaging.publicLivechatGlobal.history) {
-            for (const m of this.messaging.publicLivechatGlobal.history) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(m);
-            }
-            this.messaging.publicLivechatGlobal.livechatButtonView.openChat();
-        } else if (!config.device.isMobile && this.messaging.publicLivechatGlobal.rule.action === 'auto_popup') {
-            const autoPopupCookie = utils.get_cookie('im_livechat_auto_popup');
-            if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                    autoOpenChatTimeout: setTimeout(
-                        this.messaging.publicLivechatGlobal.livechatButtonView.openChat,
-                        this.messaging.publicLivechatGlobal.rule.auto_popup_timer * 1000,
-                    ),
-                });
-            }
-        }
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.buttonBackgroundColor) {
-            this.$el.css('background-color', this.messaging.publicLivechatGlobal.livechatButtonView.buttonBackgroundColor);
-        }
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.buttonTextColor) {
-            this.$el.css('color', this.messaging.publicLivechatGlobal.livechatButtonView.buttonTextColor);
-        }
-
-        // If website_event_track installed, put the livechat banner above the PWA banner.
-        const pwaBannerHeight = $('.o_pwa_install_banner').outerHeight(true);
-        if (pwaBannerHeight) {
-            this.$el.css('bottom', pwaBannerHeight + 'px');
-        }
-
+        this.messaging.publicLivechatGlobal.livechatButtonView.start();
         return this._super();
     },
 
