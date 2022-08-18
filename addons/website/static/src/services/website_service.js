@@ -163,9 +163,6 @@ export const websiteService = {
             set actionJsId(jsId) {
                 actionJsId = jsId;
             },
-            openMenuDialog(Component, props) {
-                return dialog.add(Component, props);
-            },
             goToWebsite({ websiteId, path, edition, translation } = {}) {
                 action.doAction('website.website_preview', {
                     clearBreadcrumbs: true,
