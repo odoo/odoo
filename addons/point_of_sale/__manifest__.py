@@ -106,10 +106,16 @@
         ],
         # This bundle includes the main pos assets.
         'point_of_sale.assets': [
+            'point_of_sale/static/src/scss/pos_variables_extra.scss',
+            ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_backend_helpers'),
+            ('include', 'web._assets_primary_variables'),
+            'web/static/lib/bootstrap/scss/_functions.scss',
+            'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/fonts/fonts.scss',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/daterangepicker/daterangepicker.css',
-            'point_of_sale/static/src/css/pos.css',
+            'point_of_sale/static/src/scss/pos.scss',
             'point_of_sale/static/src/css/pos_receipts.css',
             'point_of_sale/static/src/css/popups/product_info_popup.css',
             'point_of_sale/static/src/css/popups/common.css',

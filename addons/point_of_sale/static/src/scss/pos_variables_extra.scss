@@ -1,0 +1,33 @@
+// This file duplicates variables from web_enterprise/static/src/legacy/scss/primary_variables.scss
+// to force the colors to use those of Enterprise on Community.
+
+$o-gray-100: #f6f7fa !default;
+$o-gray-200: #E0E2E6 !default;
+$o-gray-300: #C9CCD2 !default;
+$o-gray-400: #9DA1AA !default;
+$o-gray-500: #80848F !default;
+$o-gray-600: #626774 !default;
+$o-gray-700: #4A4F59 !default;
+$o-gray-800: #353840 !default;
+$o-gray-900: #212529 !default;
+
+$o-enterprise-color: #714B67 !default;
+$o-enterprise-primary-color: #017e84 !default;
+$o-enterprise-primary-color-light: scale-color($o-enterprise-primary-color, $lightness: 6%) !default;
+
+$o-brand-odoo: $o-enterprise-color !default;
+$o-brand-primary: $o-enterprise-primary-color !default;
+$o-brand-secondary: #8f8f8f !default;
+$o-brand-lightsecondary: $o-gray-100 !default;
+
+$o-list-group-header-color: $o-gray-900 !default;
+$o-list-footer-color: $o-gray-900 !default;
+$o-list-footer-bg-color: white !default;
+
+$o-btn-secondary-bg: white !default;
+$o-btn-secondary-hover-bg: $o-gray-100 !default;
+$o-btn-secondary-hover-border: $o-gray-200 !default;
+
+// Duplicate variable from web_enterprise/static/src/webclient/navbar/navbar.variables.scss
+$o-navbar-badge-bg: $o-enterprise-primary-color-light !default;
+
