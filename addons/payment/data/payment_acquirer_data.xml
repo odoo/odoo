@@ -4,18 +4,8 @@
     <record id="payment_acquirer_adyen" model="payment.acquirer">
         <field name="name">Adyen</field>
         <field name="display_as">Credit Card (powered by Adyen)</field>
-        <field name="image_128" type="base64" file="payment_adyen/static/src/img/adyen_icon.png"/>
+        <field name="image_128" type="base64" file="payment_adyen/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_adyen"/>
-        <field name="description" type="html">
-            <p>
-                A payment gateway to accept online payments via credit cards, debit cards and bank
-                transfers.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
-            </ul>
-        </field>
         <!-- https://www.adyen.com/payment-methods -->
         <field name="payment_icon_ids"
                eval="[(6, 0, [
@@ -35,16 +25,6 @@
         <field name="display_as">Credit Card (powered by Alipay)</field>
         <field name="image_128" type="base64" file="payment_alipay/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_alipay"/>
-        <field name="description" type="html">
-            <p>
-                Alipay is the most popular online payment platform in China. Chinese consumers can
-                buy online using their Alipay eWallet.
-            </p>
-            <ul class="list-inline">
-                <li><i class="fa fa-check"/>Online Payment</li>
-                <li><i class="fa fa-check"/>Payment Status Tracking</li>
-            </ul>
-        </field>
         <!-- https://intl.alipay.com/ihome/home/about/buy.htm?topic=paymentMethods -->
         <field name="payment_icon_ids"
                eval="[(6, 0, [
@@ -59,16 +39,8 @@
     <record id="payment_acquirer_aps" model="payment.acquirer">
         <field name="name">Amazon Payment Services</field>
         <field name="display_as">Amazon Payment Services</field>
-        <field name="image_128" type="base64" file="payment_aps/static/src/img/aps-icon.png"/>
+        <field name="image_128" type="base64" file="payment_aps/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_aps"/>
-        <field name="description" type="html">
-            <p>
-                A payment gateway from Amazon Payment Services to accept online payments.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-            </ul>
-        </field>
         <!-- https://paymentservices.amazon.com/docs/EN/24.html -->
         <field name="payment_icon_ids"
                eval="[(6, 0, [
@@ -98,21 +70,8 @@
         <field name="display_as">Credit Card (powered by Authorize)</field>
         <field name="image_128"
                type="base64"
-               file="payment_authorize/static/src/img/authorize_icon.png"/>
+               file="payment_authorize/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_authorize"/>
-        <field name="description" type="html">
-            <p>
-                A payment gateway to accept online payments via credit cards and e-checks.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Manual Capture</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Embedded Credit Card Form</li>
-            </ul>
-        </field>
         <!-- https://www.authorize.net/solutions/merchantsolutions/onlinemerchantaccount/ -->
         <field name="payment_icon_ids"
                eval="[(6, 0, [
@@ -130,17 +89,8 @@
         <field name="display_as">Credit Card (powered by Buckaroo)</field>
         <field name="image_128"
                type="base64"
-               file="payment_buckaroo/static/src/img/buckaroo_icon.png"/>
+               file="payment_buckaroo/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_buckaroo"/>
-        <field name="description" type="html">
-            <p>
-                A payment gateway to accept online payments via credit cards.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
-            </ul>
-        </field>
         <!-- https://www.buckaroo-payments.com/products/payment-methods/ -->
         <field name="payment_icon_ids"
                eval="[(6, 0, [
@@ -156,20 +106,8 @@
         <field name="name">Flutterwave</field>
         <field name="image_128"
                type="base64"
-               file="payment_flutterwave/static/src/img/flutterwave-logo.png"/>
+               file="payment_flutterwave/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_flutterwave"/>
-        <field name="description" type="html">
-            <p>
-                A payment gateway from Flutterwave to accept online payments.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payments</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
-            </ul>
-        </field>
-
         <!-- https://developer.flutterwave.com/docs/collecting-payments/payment-methods/ -->
         <field name="payment_icon_ids" eval="[(6, 0, [
                 ref('payment.payment_icon_cc_visa'),
@@ -205,18 +143,8 @@
 
     <record id="payment_acquirer_mollie" model="payment.acquirer">
         <field name="name">Mollie</field>
-        <field name="image_128" type="base64" file="payment_mollie/static/src/img/mollie_icon.png"/>
+        <field name="image_128" type="base64" file="payment_mollie/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_mollie"/>
-        <field name="description" type="html">
-            <p>
-                A payment gateway from Mollie to accept online payments.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
-            </ul>
-        </field>
-
         <!-- https://www.mollie.com/en/payments -->
         <field name="payment_icon_ids" eval="[(6, 0, [
                 ref('payment.payment_icon_cc_visa'),
@@ -241,21 +169,8 @@
         <field name="display_as">Credit Card (powered by Ogone)</field>
         <field name="image_128"
                type="base64"
-               file="payment_ogone/static/src/img/ingenico_icon.png"/>
+               file="payment_ogone/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_ogone"/>
-        <field name="description" type="html">
-            <p>
-                Ogone supports a wide range of payment methods: credit cards, debit cards, bank
-                transfers, Bancontact, iDeal, Giropay.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Embedded Credit Card Form</li>
-            </ul>
-        </field>
         <field name="payment_icon_ids"
                eval="[(6, 0, [
                    ref('payment.payment_icon_cc_ideal'),
@@ -268,17 +183,8 @@
 
     <record id="payment_acquirer_paypal" model="payment.acquirer">
         <field name="name">PayPal</field>
-        <field name="image_128" type="base64" file="payment_paypal/static/src/img/paypal_icon.png"/>
+        <field name="image_128" type="base64" file="payment_paypal/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_paypal"/>
-        <field name="description" type="html">
-            <p>
-                PayPal is the easiest way to accept payments via Paypal or credit cards.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
-            </ul>
-        </field>
         <!-- https://www.paypal.com/us/selfhelp/article/Which-credit-cards-can-I-accept-with-PayPal-Merchant-Services-FAQ1525#business -->
         <field name="payment_icon_ids"
                eval="[(6, 0, [
@@ -298,19 +204,8 @@
         <field name="display_as">Credit Card (powered by PayU Latam)</field>
         <field name="image_128"
                type="base64"
-               file="payment_payulatam/static/src/img/payulatam_icon.png"/>
+               file="payment_payulatam/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_payulatam"/>
-        <field name="description" type="html">
-            <p>
-                PayU is a leading financial services provider in Colombia, Argentina, Brazil, Chile,
-                Mexico, Panama, and Peru. It allows merchant to accept local payments with just one
-                account and integration.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
-            </ul>
-        </field>
         <!-- https://www.payulatam.com/medios-de-pago/ -->
         <field name="payment_icon_ids"
                eval="[(6, 0, [
@@ -327,17 +222,8 @@
         <field name="display_as">Credit Card (powered by PayUmoney)</field>
         <field name="image_128"
                type="base64"
-               file="payment_payumoney/static/src/img/payumoney_icon.png"/>
+               file="payment_payumoney/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_payumoney"/>
-        <field name="description" type="html">
-            <p>
-                PayUmoney is an online payments solutions company serving the Indian market.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
-            </ul>
-        </field>
         <!-- See https://www.payumoney.com/selfcare.html?userType=seller
              > Banks & Cards > What options do you have in the Credit Card payment? -->
         <field name="payment_icon_ids"
@@ -373,29 +259,13 @@
                type="base64"
                file="base/static/img/icons/payment_sepa_direct_debit.png"/>
         <field name="module_id" ref="base.module_payment_sepa_direct_debit"/>
-        <field name="description" type="html">
-            <p>
-                SEPA Direct Debit is a Europe-wide Direct Debit system that allows merchants to
-                collect Euro-denominated payments from accounts in the 34 SEPA countries and
-                associated territories.
-            </p>
-        </field>
     </record>
 
     <record id="payment_acquirer_sips" model="payment.acquirer">
         <field name="name">Sips</field>
         <field name="display_as">Credit Card (powered by Sips)</field>
-        <field name="image_128" type="base64" file="payment_sips/static/src/img/sips_icon.png"/>
+        <field name="image_128" type="base64" file="payment_sips/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_sips"/>
-        <field name="description" type="html">
-            <p>
-                A payment gateway from Atos Worldline to accept online payments via credit cards.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
-            </ul>
-        </field>
         <!-- See http://sips.worldline.com/en-us/home/features/payment-types-and-acquirers.html -->
         <field name="payment_icon_ids"
                eval="[(6, 0, [
@@ -414,21 +284,8 @@
     <record id="payment_acquirer_stripe" model="payment.acquirer">
         <field name="name">Stripe</field>
         <field name="display_as">Credit &amp; Debit Card</field>
-        <field name="image_128" type="base64" file="payment_stripe/static/src/img/stripe_icon.png"/>
+        <field name="image_128" type="base64" file="payment_stripe/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_stripe"/>
-        <field name="description" type="html">
-            <p>
-                A payment gateway to accept online payments via credit and debit cards.
-            </p>
-            <ul class="list-inline">
-                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Manual Capture</li>
-                <li class="list-inline-item"><i class="fa fa-check"/>Refunds</li>
-            </ul>
-        </field>
         <!--
             See https://stripe.com/payments/payment-methods-guide
             See https://support.goteamup.com/hc/en-us/articles/115002089349-Which-cards-and-payment-types-can-I-accept-with-Stripe-
@@ -448,14 +305,8 @@
     <record id="payment_acquirer_test" model="payment.acquirer">
         <field name="name">Test</field>
         <field name="sequence">40</field>
-        <field name="image_128" type="base64" file="payment_test/static/src/img/test_logo.jpg"/>
+        <field name="image_128" type="base64" file="payment_test/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_test"/>
-        <field name="description" type="html">
-            <p>
-                A testing payment gateway intended for demonstrating payment flows without the need
-                of creating a seller account or providing payment details.
-            </p>
-        </field>
     </record>
 
     <record id="payment_acquirer_transfer" model="payment.acquirer">
@@ -463,13 +314,8 @@
         <field name="sequence">30</field>
         <field name="image_128"
                type="base64"
-               file="payment_transfer/static/src/img/transfer_icon.png"/>
+               file="payment_transfer/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_transfer"/>
-        <field name="description" type="html">
-            <p>
-                Provide instructions to customers so that they can pay their orders manually.
-            </p>
-        </field>
     </record>
 
 </odoo>
