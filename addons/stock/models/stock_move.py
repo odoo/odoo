@@ -2122,3 +2122,22 @@ class StockMove(models.Model):
                     result[out] = (-remaining, False)
 
         return result
+
+    def action_open_reference(self):
+        """ Open the form view of the move's reference document, if one exists, otherwise open form view of self
+        """
+        self.ensure_one()
+        source = self.picking_id
+        if source and source.check_access_rights('read', raise_exception=False):
+            return {
+                'res_model': source._name,
+                'type': 'ir.actions.act_window',
+                'views': [[False, "form"]],
+                'res_id': source.id,
+            }
+        return {
+            'res_model': self._name,
+            'type': 'ir.actions.act_window',
+            'views': [[False, "form"]],
+            'res_id': self.id,
+        }
