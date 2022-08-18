@@ -1472,6 +1472,8 @@ var SnippetsMenu = Widget.extend({
                 const target = selection.getRangeAt(0).startContainer.parentElement;
                 this._activateSnippet($(target));
             }
+
+            this._updateInvisibleDOM();
         }, 500);
         this.options.wysiwyg.odooEditor.addEventListener('historyUndo', refreshSnippetEditors);
         this.options.wysiwyg.odooEditor.addEventListener('historyRedo', refreshSnippetEditors);
