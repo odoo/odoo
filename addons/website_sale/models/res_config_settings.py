@@ -61,6 +61,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False, required=True)
     website_sale_prevent_zero_price_sale = fields.Boolean(string="Prevent Sale of Zero Priced Product", related='website_id.prevent_zero_price_sale', readonly=False)
     website_sale_contact_us_button_url = fields.Char(string="Button URL", related='website_id.contact_us_button_url', readonly=False)
+    website_sale_enabled_portal_reorder_button = fields.Boolean(string="Re-order From Portal", related='website_id.enabled_portal_reorder_button', readonly=False)
 
     @api.depends('website_id')
     def _compute_terms_url(self):

@@ -46,7 +46,6 @@ class SaleOrder(models.Model):
                     self.shop_warning = _(
                         "Some products became unavailable and your cart has been updated. We're sorry for the inconvenience.")
                 return allowed_line_qty, order_line.shop_warning or self.shop_warning
-
         return super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
 
     def _get_cart_and_free_qty(self, line=None, product=None, **kwargs):
