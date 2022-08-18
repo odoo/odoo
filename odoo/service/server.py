@@ -626,7 +626,7 @@ class ThreadedServer(CommonServer):
 class GeventServer(CommonServer):
     def __init__(self, app):
         super(GeventServer, self).__init__(app)
-        self.port = config['longpolling_port']
+        self.port = config['gevent_port']
         self.httpd = None
 
     def process_limits(self):
