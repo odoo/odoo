@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { TEST_USER_IDS } from '@bus/../tests/helpers/test_constants';
+import { TEST_GROUP_IDS, TEST_USER_IDS } from '@bus/../tests/helpers/test_constants';
 import {
     addFakeModel,
     addModelNamesToFetch,
@@ -52,6 +52,11 @@ insertModelFields('mail.channel', {
     },
     channel_type: { default: 'channel' },
     group_based_subscription: { string: "Group based subscription", type: "boolean" },
+    group_public_id: {
+        default() {
+            return TEST_GROUP_IDS.groupUserId;
+        },
+    },
     uuid: { default: () => _.uniqueId('mail.channel_uuid-') },
 });
 insertModelFields('mail.channel.member', {
