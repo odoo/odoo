@@ -12,7 +12,7 @@
         <!-- Certification Attempts -->
         <xpath expr="//ul[hasclass('o_wprofile_nav_tabs')]" position="inside">
             <li t-if="show_certification_tab" class="nav-item">
-                <a role="tab" aria-controls="certification" href="#profile_tab_content_certification" t-attf-class="nav-link #{ 'active' if active_tab == 'certification' else '' }" data-toggle="tab">
+                <a role="tab" aria-controls="certification" href="#profile_tab_content_certification" t-attf-class="nav-link #{ 'active' if active_tab == 'certification' else '' }" data-bs-toggle="tab">
                     <t t-if="user_inputs" t-out="len(user_inputs)" /> Certification Attempts
                 </a>
             </li>
@@ -52,7 +52,7 @@
                             Attempt n°<t t-out="user_input.attempts_number"/>
                         </div>
                         <div class="col-sm-2">
-                            <span t-attf-class="badge #{ 'badge-primary' if user_input.scoring_success else 'badge-danger'}">
+                            <span t-attf-class="badge #{ 'text-bg-primary' if user_input.scoring_success else 'text-bg-danger'}">
                                 <t t-out="user_input.scoring_percentage"/>%
                             </span>
                         </div>

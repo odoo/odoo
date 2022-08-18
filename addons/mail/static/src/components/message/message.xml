@@ -183,7 +183,7 @@
                                         <p t-esc="messageView.message.subtype_description" class="mb-0"/>
                                     </t>
                                     <t t-if="messageView.message.trackingValues.length > 0">
-                                        <ul class="o_Message_trackingValues mb-0 pl-4">
+                                        <ul class="o_Message_trackingValues mb-0 ps-4">
                                            <t t-foreach="messageView.message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
                                                 <li>
                                                     <TrackingValue value="trackingValue"/>

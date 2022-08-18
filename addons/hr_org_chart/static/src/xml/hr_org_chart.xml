@@ -33,11 +33,11 @@
     <div class="d-flex flex-grow-1 align-items-start justify-content-between position-relative px-3">
         <a t-if="!is_self" t-att-href="employee.link" class="o_employee_redirect d-flex flex-column" t-att-data-employee-id="employee.id">
             <b class="o_media_heading m-0 fs-6" t-esc="employee.name"/>
-            <small class="text-muted font-weight-bold" t-esc="employee.job_title"/>
+            <small class="text-muted fw-bold" t-esc="employee.job_title"/>
         </a>
         <div t-if="is_self" class="d-flex flex-column">
             <h5 class="o_media_heading m-0" t-esc="employee.name"/>
-            <small class="text-muted font-weight-bold" t-esc="employee.job_title"/>
+            <small class="text-muted fw-bold" t-esc="employee.job_title"/>
         </div>
         <button t-if="employee.indirect_sub_count &gt; 0"
                 class="btn p-0 fs-3"

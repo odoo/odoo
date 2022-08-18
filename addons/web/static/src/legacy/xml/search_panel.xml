@@ -86,7 +86,7 @@
             >
             <header
                 class="list-group-item list-group-item-action d-flex align-items-center p-0 border-0"
-                t-att-class="{'active text-900 font-weight-bold': state.active[section.id] === valueId}"
+                t-att-class="{'active text-900 fw-bold': state.active[section.id] === valueId}"
                 t-on-click="() => this._toggleCategory(section, value)"
                 >
                 <div
@@ -105,12 +105,12 @@
                     </button>
                     <span
                         class="o_search_panel_label_title text-truncate"
-                        t-att-class="{'font-weight-bold' : value.bold}"
+                        t-att-class="{'fw-bold' : value.bold}"
                         t-esc="value.display_name"
                         />
                 </div>
                 <small t-if="section.enableCounters and value.__count gt 0"
-                    class="o_search_panel_counter text-muted mx-2 font-weight-bold"
+                    class="o_search_panel_counter text-muted mx-2 fw-bold"
                     t-esc="value.__count"
                 />
             </header>
