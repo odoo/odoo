@@ -8,7 +8,7 @@ import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
 
-const { Component, onWillStart, useRef, useEffect, useState } = owl;
+const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
 
 class BlockIframe extends Component {
     setup() {
@@ -95,22 +95,22 @@ export class WebsitePreview extends Component {
             if (this.props.action.context.params && this.props.action.context.params.with_loader) {
                 this.websiteService.showLoader({ showTips: true });
             }
-
-            return () => {
-                this.websiteService.currentWebsiteId = null;
-                this.websiteService.websiteRootInstance = undefined;
-                this.websiteService.pageDocument = null;
-            };
         }, () => [this.props.action.context.params]);
 
-        useEffect(() => {
+        onMounted(() => {
             this.websiteService.blockIframe(true, 0, 'load-iframe');
             this.iframe.el.addEventListener('load', () => this.websiteService.unblockIframe('load-iframe'), { once: true });
             // For a frontend page, it is better to use the
             // OdooFrameContentLoaded event to unblock the iframe, as it is
             // triggered faster than the load event.
             this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockIframe('load-iframe'), { once: true });
-        }, () => []);
+        });
+
+        onWillUnmount(() => {
+            this.websiteService.currentWebsiteId = null;
+            this.websiteService.websiteRootInstance = undefined;
+            this.websiteService.pageDocument = null;
+        });
     }
 
     get websiteId() {
