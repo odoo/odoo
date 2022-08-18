@@ -1,4 +1,3 @@
-import datetime
 from odoo import models, fields, api
 from odoo.exceptions import UserError, ValidationError
 
@@ -28,8 +27,8 @@ class CarPooling(models.Model):
     def _compute_available_seat(self):
         for record in self:
             record.available_seat = record.capacity - record.filled_seat
-    status= fields.Selection(
-        string= "Status",
+    status = fields.Selection(
+        string="Status",
         selection=[("available", "Available"), ("full", "Full"), ("unavailable", "Unavailable"), ("departed", "Departed"), ('canceled', 'Canceled')],
         default="available")
 
@@ -148,10 +147,10 @@ class CarPooling(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_if_passenger_refused(self):
         if any(record.passenger_ids.status == "accepted" for record in self):
-                msg = "There are some passengers in 'accepted' status for this trip. To delete the trip, please make sure you have refused all accepted book requests."   
-                raise UserError(msg)
+            msg = "There are some passengers in 'accepted' status for this trip. To delete the trip, please make sure you have refused all accepted book requests."
+            raise UserError(msg)
 
-    def write (self,vals):
+    def write(self, vals):
         # on_write for updating capacity. (e.g., what if we update the capacity while it is in full status?)
         if "filled_seat" in vals and "capacity" in vals:
             if vals['capacity'] - vals['filled_seat'] == 0 and self.status not in ('unavailable', 'departed', 'canceled'):
@@ -190,7 +189,7 @@ class CarPooling(models.Model):
         ('seat_no_check', 'CHECK(capacity >= 0)',
          'The seat number cannot be negative!'),
         ('available_seat_check', 'CHECK(filled_seat <= capacity)',
-         "The capacity of the vehicle must be equal to or greater than the number of filled seats! To reduce the capacity, refuse some passengers' accepted requests.")]        
+         "The capacity of the vehicle must be equal to or greater than the number of filled seats! To reduce the capacity, refuse some passengers' accepted requests.")]
 
     # python constraint for return date
     @api.constrains('return_date')
@@ -218,8 +217,8 @@ class CarPoolingPassenger(models.Model):
     _description = "Passenger"
     _order = "id desc"
     passenger = fields.Many2one('res.users', required=True, readonly=True, string='Passenger', index=True, tracking=True, default=lambda self: self.env.user)
-    trip_id = fields.Many2one('car.pooling', string="Trip", ondelete ='cascade')
-    status = fields.Selection(string="Status", selection=[("accepted","Accepted"), ("refused","Refused")], help="The status of the trip offer")
+    trip_id = fields.Many2one('car.pooling', string="Trip", ondelete='cascade')
+    status = fields.Selection(string="Status", selection=[("accepted", "Accepted"), ("refused", "Refused")], help="The status of the trip offer")
     accept_count = fields.Integer(readonly=True, string="Number of Refusals")
     refuse_count = fields.Integer(readonly=True, string="Number of Acceptances")
 
@@ -233,7 +232,7 @@ class CarPoolingPassenger(models.Model):
          'You can only accept a booked trip for a passenger twice!'),
         ('refuse_count_check', 'CHECK(refuse_count <= 2)',
          "You can only refuse a booked trip for a passenger twice!"),
-         ("single_booking_check",'unique(trip_id, passenger)','A passenger can only book a trip once!')
+         ("single_booking_check", 'unique(trip_id, passenger)', 'A passenger can only book a trip once!')
         ]
 
     def action_accept(self):
@@ -288,7 +287,7 @@ class CarPoolingPassengerComments(models.Model):
     _description = "This model is for storing the comments written about a trip"
     _order = "id desc"
     passenger = fields.Many2one('res.users', required=True, readonly=True, string='Passenger', index=True, tracking=True, default=lambda self: self.env.user)
-    trip_id = fields.Many2one('car.pooling', string="Trip", ondelete ='cascade')
+    trip_id = fields.Many2one('car.pooling', string="Trip", ondelete='cascade')
     comment = fields.Text()
     trip_star = fields.Selection(AVAILABLE_PRIORITIES, select=True, string="Star")
 
