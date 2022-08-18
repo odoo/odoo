@@ -14,10 +14,16 @@ odoo.define("website_sale.tour_utils", function (require) {
         };
     }
 
-    function assertCartContains(productName, backend = false) {
+   function assertCartContains({productName, backend, notContains = false} = {}) {
+        let trigger = `a:contains(${productName})`;
+
+        if (notContains) {
+            trigger = `:not(${trigger})`;
+        }
         return {
                 content: `Checking if ${productName} is in the cart`,
-                trigger: `${backend ? "iframe" : ""} a:contains(${productName})`,
+                trigger: `${backend ? "iframe" : ""} ${trigger}`,
+                run: () => {}
             };
     }
 

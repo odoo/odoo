@@ -58,3 +58,11 @@ class SaleOrderLine(models.Model):
     def _show_in_cart(self):
         self.ensure_one()
         return True
+
+    def _is_reorder_allowed(self):
+        self.ensure_one()
+        # TODO: when website_sale_subscription is merged, this should be overridden by both
+        # website_sale_subscription and website_sale_renting instead.
+        if 'temporal_type' in self and self.temporal_type:
+            return False
+        return self.product_id._is_add_to_cart_allowed()

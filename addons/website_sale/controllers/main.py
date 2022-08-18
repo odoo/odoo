@@ -21,6 +21,7 @@ from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers import main
 from odoo.addons.website.controllers.form import WebsiteForm
+from odoo.addons.sale.controllers import portal
 from odoo.osv import expression
 from odoo.tools import lazy
 from odoo.tools.json import scriptsafe as json_scriptsafe
@@ -836,6 +837,12 @@ class WebsiteSale(http.Controller):
             return request.website.sale_get_order().cart_quantity
         return request.session['website_sale_cart_quantity']
 
+    @http.route(['/shop/cart/clear'], type='json', auth="public", website=True)
+    def clear_cart(self):
+        order = request.website.sale_get_order()
+        for line in order.order_line:
+            line.unlink()
+
     # ------------------------------------------------------
     # Checkout
     # ------------------------------------------------------
@@ -1531,3 +1538,46 @@ class PaymentPortal(payment_portal.PaymentPortal):
         self._validate_transaction_for_order(tx_sudo, order_id)
 
         return tx_sudo._get_processing_values()
+
+
+class CustomerPortal(portal.CustomerPortal):
+    def _sale_reorder_get_line_context(self):
+        return {}
+
+    @http.route('/my/orders/reorder_modal_content', type='json', auth='public', website=True)
+    def _get_saleorder_reorder_content_modal(self, order_id, access_token):
+        try:
+            sale_order = self._document_check_access('sale.order', order_id, access_token=access_token)
+        except (AccessError, MissingError):
+            return request.redirect('/my')
+
+        pricelist = request.env['website'].get_current_website().get_current_pricelist()
+        currency = pricelist.currency_id
+        result = {
+            'currency': {
+                'symbol': currency.symbol,
+                'decimal_places': currency.decimal_places,
+                'position': currency.position,
+            },
+            'products': [],
+        }
+        for line in sale_order.order_line:
+            if line.display_type:
+                continue
+            res = {
+                'product_template_id': line.product_id.product_tmpl_id.id,
+                'product_id': line.product_id.id,
+                'type': line.product_id.type,
+                'name': line.product_id.name,
+                'description_sale': line.product_id.description_sale,
+                'qty': line.product_uom_qty,
+                'add_to_cart_allowed': line.with_user(request.env.user).sudo()._is_reorder_allowed(),
+                'has_image': bool(line.product_id.image_128),
+            }
+            if res['add_to_cart_allowed']:
+                res['combinationInfo'] = line.product_id.product_tmpl_id.with_context(**self._sale_reorder_get_line_context())\
+                    ._get_combination_info([], res['product_id'], res['qty'], pricelist)
+            else:
+                res['combinationInfo'] = {}
+            result['products'].append(res)
+        return result
