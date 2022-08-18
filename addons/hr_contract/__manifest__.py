@@ -36,6 +36,7 @@ You can assign several contracts per employee.
     'assets': {
         'web.assets_backend': [
             'hr_contract/static/src/scss/*',
+            'hr_contract/static/src/js/*',
         ],
         'web.assets_qweb': [
             'hr_contract/static/src/xml/*',

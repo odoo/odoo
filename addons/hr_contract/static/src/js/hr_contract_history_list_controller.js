@@ -1,23 +1,24 @@
 /** @odoo-module **/
 
-import ListController from "web.ListController";
-import { _lt } from 'web.core';
+import { useService } from "@web/core/utils/hooks";
+import { ListController } from "@web/views/list/list_controller";
 
-export const HrContractHistoryListController = ListController.extend({
+export class HrContractHistoryListController extends ListController {
+    setup() {
+        super.setup();
+        this.actionService = useService('action');
+    }
 
     /**
      * @override
      */
-    _onCreateRecord(ev) {
-        if (ev) {
-            ev.stopPropagation();
-        }
-        this.do_action({
-            name: _lt('New Employee'),
+    async createRecord({ group } = {}) {
+        this.actionService.doAction({
+            name: this.env._t('New Employee'),
             type: 'ir.actions.act_window',
             res_model: 'hr.employee',
             views: [[false, 'form']],
             view_mode: 'form',
         });
-    },
-});
+    }
+}
