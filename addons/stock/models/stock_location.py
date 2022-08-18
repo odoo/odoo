@@ -8,6 +8,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools.misc import groupby
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare
 
@@ -240,7 +241,15 @@ class Location(models.Model):
             putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.category_id == categ and (package_type in x.package_type_ids or package_type == x.package_type_ids))
             categ = categ.sudo().parent_id
         if package_type:
-            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: not x.product_id and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+            products = self.env.context.get('products')
+            putaway_rules |= self.putaway_rule_ids.filtered(lambda pa: package_type in pa.package_type_ids or package_type == pa.package_type_ids)
+            for dummy, putaways in groupby(putaway_rules, key=lambda pa: (pa.location_out_id.id, pa.storage_category_id)):
+                putaways = self.env['stock.putaway.rule'].concat(*putaways)
+                if any(not p.product_id for p in putaways):
+                    continue
+                if set(products.ids).issubset(set(putaways.product_id.ids)):
+                    continue
+                putaway_rules -= putaways
 
         putaway_location = None
         locations = self.child_internal_location_ids
