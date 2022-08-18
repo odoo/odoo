@@ -1715,7 +1715,7 @@ options.registry.CarouselItem = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    slide: function (previewMode, widgetValue, params) {
+    switchToSlide: function (previewMode, widgetValue, params) {
         switch (widgetValue) {
             case 'left':
                 this.$controls.filter('.carousel-control-prev')[0].click();
