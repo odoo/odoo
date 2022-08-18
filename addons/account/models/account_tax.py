@@ -1123,8 +1123,7 @@ class AccountTax(models.Model):
             to_process.append((base_line, to_update_vals, tax_values_list))
 
         def grouping_key_generator(base_line, tax_values):
-            tax = tax_values['tax_repartition_line'].tax_id
-            source_tax = tax_values['group'] or tax
+            source_tax = tax_values['tax_repartition_line'].tax_id
             return {'tax_group': source_tax.tax_group_id}
 
         global_tax_details = self._aggregate_taxes(to_process, grouping_key_generator=grouping_key_generator)
@@ -1157,21 +1156,14 @@ class AccountTax(models.Model):
         amount_tax = 0.0
 
         subtotal_order = {}
-        groups_by_subtotal = {}
+        groups_by_subtotal = defaultdict(list)
         for tax_group_vals in tax_group_vals_list:
             tax_group = tax_group_vals['tax_group']
 
-            if tax_group.preceding_subtotal:
-                subtotal_title = tax_group.preceding_subtotal
-                sequence = tax_group.sequence + 1 # Avoid sequence = 0 here.
-            else:
-                subtotal_title = _("Untaxed Amount")
-                sequence = 0
+            subtotal_title = tax_group.preceding_subtotal or _("Untaxed Amount")
+            sequence = tax_group.sequence
 
-            if subtotal_title not in subtotal_order:
-                subtotal_order[subtotal_title] = sequence
-                groups_by_subtotal[subtotal_title] = []
-
+            subtotal_order[subtotal_title] = min(subtotal_order.get(subtotal_title, float('inf')), sequence)
             groups_by_subtotal[subtotal_title].append({
                 'group_key': tax_group.id,
                 'tax_group_id': tax_group.id,
@@ -1199,8 +1191,8 @@ class AccountTax(models.Model):
         display_tax_base = len(global_tax_details['tax_details']) == 1 and tax_group_vals['base_amount'] != amount_untaxed
 
         return {
-            'amount_untaxed': amount_untaxed,
-            'amount_total': amount_total,
+            'amount_untaxed': currency.round(amount_untaxed) if currency else amount_untaxed,
+            'amount_total': currency.round(amount_total) if currency else amount_total,
             'formatted_amount_total': formatLang(self.env, amount_total, currency_obj=currency),
             'formatted_amount_untaxed': formatLang(self.env, amount_untaxed, currency_obj=currency),
             'groups_by_subtotal': groups_by_subtotal,
