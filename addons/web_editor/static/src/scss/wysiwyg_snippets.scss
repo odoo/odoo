@@ -2234,7 +2234,7 @@ we-select.o_we_border_preview_aligned_select {
 
 // MANIPULATORS
 #oe_manipulators {
-    position: relative;
+    position: fixed; // Allows to not consider the inner overlays as overflowing the page content
     z-index: $o-we-overlay-zindex;
     pointer-events: none;
 

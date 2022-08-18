@@ -525,9 +525,14 @@ export class Wysiwyg extends Component {
         }
 
         this._initialValue = this.getValue();
-        const $wrapwrap = $('#wrapwrap');
-        if ($wrapwrap.length) {
-            $wrapwrap[0].addEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
+
+        // TODO this code should be reviewed. Previously, it searched for the
+        // wrapwrap and added some scroll handler if found... we are now
+        // continuing to search for it, but it is not clear why. As the wrapwrap
+        // will be removed, this code will not stay for too long anyway.
+        if ($('wrapwrap').length) {
+            this.multiSelectionTarget = $().getScrollingTarget(this.odooEditor.document);
+            this.multiSelectionTarget.addEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
         }
 
         this.$editable.on('click', '[data-oe-field][data-oe-sanitize-prevent-edition]', () => {
@@ -902,10 +907,7 @@ export class Wysiwyg extends Component {
         const $body = $(document.body);
         $body.off('mousemove', this.resizerMousemove);
         $body.off('mouseup', this.resizerMouseup);
-        const $wrapwrap = $('#wrapwrap');
-        if ($wrapwrap.length && this.odooEditor) {
-            $('#wrapwrap')[0].removeEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
-        }
+        this.multiSelectionTarget?.removeEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
         this.$editable?.off('.Wysiwyg');
         this.toolbarEl?.remove();
         this.imageCropEL?.remove();

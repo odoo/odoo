@@ -38,9 +38,11 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
 
                 if (this.agendaScroller) {
                     this._updateAgendaScroll = debounce(this._updateAgendaScroll, 50);
-                    document.querySelector('#wrapwrap.event').addEventListener('scroll',
-                        this._updateAgendaScroll.bind(this)
-                    );
+                    if (document.querySelector('#wrapwrap.event')) {
+                        window.addEventListener('scroll',
+                            this._updateAgendaScroll.bind(this)
+                        );
+                    }
 
                     window.addEventListener('resize', () => {
                         this._updateAgendaScroll();
@@ -63,7 +65,7 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
      * It's meant the show up as a sticky scrollbar at the bottom of the screen, to allow scrolling
      * the agenda horizontally even if you've not reached the bottom of the agenda container.
      * Makes the user experience much smoother.
-     * 
+     *
      * Technically, the code checks "what is the last agenda on the screen" and enables our sticky
      * scrollbar based on that.
      */
@@ -87,8 +89,7 @@ publicWidget.registry.websiteEventTrack = publicWidget.Widget.extend({
 
         if (this.visibleAgenda && this.visibleAgenda.classList.contains('o_we_online_agenda_has_content_hidden')) {
             // need to account for vertical scrollbar width
-            const mainContainer = document.querySelector('#wrapwrap');
-            const verticalScrollbarWidth = mainContainer.offsetWidth - mainContainer.clientWidth;
+            const verticalScrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
             this.agendaScroller.classList.remove('d-none');
             this.agendaScrollerElement.style.width = (this.visibleAgenda.scrollWidth + verticalScrollbarWidth) + 'px';
