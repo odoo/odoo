@@ -2,12 +2,13 @@
 
 import { registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
+import { ModelIndexAnd } from '@mail/model/model_index_and';
+import { ModelIndexXor } from '@mail/model/model_index_xor';
 import { FieldCommand, unlinkAll } from '@mail/model/model_field_command';
 import { RelationSet } from '@mail/model/model_field_relation_set';
 import { Listener } from '@mail/model/model_listener';
 import { followRelations } from '@mail/model/model_utils';
 import { makeDeferred } from '@mail/utils/deferred';
-
 /**
  * Object that manage models and records, notably their update cycle: whenever
  * some records are requested for update (either with model static method
@@ -71,16 +72,14 @@ export class ModelManager {
          */
         this._listenersObservingAllByModel = new Map();
         /**
-         * Map between localId and a set of listeners that are using it. The
-         * following fields use localId instead of record reference because the
-         * listener might try to use a record that doesn't exist yet.
+         * Map between record and a set of listeners that are using it.
          */
-        this._listenersObservingLocalId = new Map();
+        this._listenersObservingRecord = new Map();
         /**
-         * Map between fields of localId and a set of listeners that are
+         * Map between fields of record and a set of listeners that are
          * using it.
          */
-        this._listenersObservingFieldOfLocalId = new Map();
+        this._listenersObservingFieldOfRecord = new Map();
         /**
          * Map of listeners that should be notified at the end of the current
          * update cycle. Value contains list of info to help for debug.
@@ -169,7 +168,7 @@ export class ModelManager {
                 entry.set(listener, [info]);
             }
         }
-        const allRecords = Object.values(model.__records);
+        const allRecords = [...model.__records];
         if (filterFunc) {
             return allRecords.filter(filterFunc);
         }
@@ -213,7 +212,7 @@ export class ModelManager {
      * @returns {boolean}
      */
     exists(model, record) {
-        return Boolean(record.localId);
+        return model.__records.has(record);
     }
 
     /**
@@ -221,45 +220,30 @@ export class ModelManager {
      * identifying data, if it exists.
      *
      * @param {Object} model
-     * @param {Object} data
+     * @param {Object} [data={}]
      * @returns {Record|undefined}
      */
-    findFromIdentifyingData(model, data) {
-        return this.get(model, this._getRecordIndex(model, data));
-    }
-
-    /**
-     * This method returns the record of provided model that matches provided
-     * local id. Useful to convert a local id to a record.
-     * Note that even if there's a record in the system having provided local
-     * id, if the resulting record is not an instance of this model, this getter
-     * assumes the record does not exist.
-     *
-     * @param {Object} model
-     * @param {string} localId
-     * @param {Object} param2
-     * @param {boolean} [param2.isCheckingInheritance=false]
-     * @returns {Record|undefined} record, if exists
-     */
-    get(model, localId, { isCheckingInheritance = false } = {}) {
-        if (!localId) {
+    findFromIdentifyingData(model, data = {}) {
+        const data2 = { ...data };
+        for (const fieldName of model.__identifyingFieldNames) {
+            const field = model.__fieldMap[fieldName];
+            if (data2[field.fieldName] === undefined && field.default !== undefined) {
+                data2[field.fieldName] = field.default;
+            }
+        }
+        const record = model.__recordsIndex.findRecord(this._preInsertIdentifyingFieldsFromData(model, data2));
+        if (!record) {
             return;
         }
-        if (!isCheckingInheritance && this.isDebug) {
-            const modelName = localId.split('(')[0];
-            if (modelName !== model.name) {
-                throw Error(`wrong format of localId ${localId} for ${model}.`);
-            }
-        }
         for (const listener of this._listeners) {
-            listener.lastObservedLocalIds.add(localId);
-            if (!this._listenersObservingLocalId.has(localId)) {
-                this._listenersObservingLocalId.set(localId, new Map());
+            listener.lastObservedRecords.add(record);
+            if (!this._listenersObservingRecord.has(record)) {
+                this._listenersObservingRecord.set(record, new Map());
             }
-            const entry = this._listenersObservingLocalId.get(localId);
+            const entry = this._listenersObservingRecord.get(record);
             const info = {
                 listener,
-                reason: `get record - ${localId}`,
+                reason: `findFromIdentifyingData record - ${record}`,
             };
             if (entry.has(listener)) {
                 entry.get(listener).push(info);
@@ -267,24 +251,7 @@ export class ModelManager {
                 entry.set(listener, [info]);
             }
         }
-        const record = model.__records[localId];
-        if (record) {
-            return record;
-        }
-        if (!isCheckingInheritance) {
-            return;
-        }
-        // support for inherited models (eg. relation targeting `Record`)
-        for (const subModel of Object.values(this.models)) {
-            if (!(subModel.prototype instanceof model)) {
-                continue;
-            }
-            const record = subModel.__records[localId];
-            if (record) {
-                return record;
-            }
-        }
-        return;
+        return record;
     }
 
     /**
@@ -342,18 +309,18 @@ export class ModelManager {
         this._listeners.delete(listener);
         this._listenersToNotifyInUpdateCycle.delete(listener);
         this._listenersToNotifyAfterUpdateCycle.delete(listener);
-        for (const localId of listener.lastObservedLocalIds) {
-            this._listenersObservingLocalId.get(localId).delete(listener);
-            const listenersObservingFieldOfLocalId = this._listenersObservingFieldOfLocalId.get(localId);
-            for (const field of listener.lastObservedFieldsByLocalId.get(localId) || []) {
-                listenersObservingFieldOfLocalId.get(field).delete(listener);
+        for (const record of listener.lastObservedRecords) {
+            this._listenersObservingRecord.get(record).delete(listener);
+            const listenersObservingFieldOfRecord = this._listenersObservingFieldOfRecord.get(record);
+            for (const field of listener.lastObservedFieldsByRecord.get(record) || []) {
+                listenersObservingFieldOfRecord.get(field).delete(listener);
             }
         }
         for (const model of listener.lastObservedAllByModel) {
             this._listenersObservingAllByModel.get(model).delete(listener);
         }
-        listener.lastObservedLocalIds.clear();
-        listener.lastObservedFieldsByLocalId.clear();
+        listener.lastObservedRecords.clear();
+        listener.lastObservedFieldsByRecord.clear();
         listener.lastObservedAllByModel.clear();
     }
 
@@ -436,9 +403,17 @@ export class ModelManager {
         // Make model manager accessible from model.
         model.modelManager = this;
         model.fields = {};
-        // Contains all records. key is local id, while value is the record.
-        model.__records = {};
         model.identifyingMode = definition.get('identifyingMode');
+        model.__records = new Set();
+        model.__recordCount = 0;
+        model.__recordsIndex = (() => {
+            switch (model.identifyingMode) {
+                case 'and':
+                    return new ModelIndexAnd(model);
+                case 'xor':
+                    return new ModelIndexXor(model);
+            }
+        })();
         this._listenersObservingAllByModel.set(model, new Map());
         this.models[model.name] = model;
     }
@@ -650,10 +625,10 @@ export class ModelManager {
     /**
      * @private
      * @param {Object} model
-     * @param {string} localId
      * @returns {Record}
      */
-    _create(model, localId) {
+    _create(model) {
+        const localId = `${model.name}_${++model.__recordCount}`;
         /**
          * Prepare record state. Assign various keys and values that are
          * expected to be found on every record.
@@ -690,17 +665,17 @@ export class ModelManager {
                 }
             }
         }
-        if (!this._listenersObservingLocalId.has(localId)) {
-            this._listenersObservingLocalId.set(localId, new Map());
+        if (!this._listenersObservingRecord.has(record)) {
+            this._listenersObservingRecord.set(record, new Map());
         }
-        this._listenersObservingFieldOfLocalId.set(localId, new Map());
+        this._listenersObservingFieldOfRecord.set(record, new Map());
         for (const field of model.__fieldList) {
-            this._listenersObservingFieldOfLocalId.get(localId).set(field, new Map());
+            this._listenersObservingFieldOfRecord.get(record).set(field, new Map());
         }
         /**
          * Register record.
          */
-        model.__records[record.localId] = record;
+        model.__records.add(record);
         /**
          * Auto-bind record methods so that `this` always refer to the record.
          */
@@ -722,10 +697,10 @@ export class ModelManager {
                 infoList,
             });
         }
-        for (const [listener, infoList] of this._listenersObservingLocalId.get(localId)) {
+        for (const [listener, infoList] of this._listenersObservingRecord.get(record)) {
             this._markListenerToNotify(listener, {
                 listener,
-                reason: `_create: localId - ${record}`,
+                reason: `_create: record - ${record}`,
                 infoList,
             });
         }
@@ -740,7 +715,7 @@ export class ModelManager {
         this._ensureNoLockingListener();
         const model = record.constructor;
         if (!record.exists()) {
-            throw Error(`Cannot delete already deleted record ${record.localId}.`);
+            throw Error(`Cannot delete already deleted record ${record}.`);
         }
         const lifecycleHooks = registry.get(model.name).get('lifecycleHooks');
         if (lifecycleHooks.has('_willDelete')) {
@@ -758,14 +733,15 @@ export class ModelManager {
                 }
             }
         }
+        model.__recordsIndex.removeRecord(record);
         this._createdRecordsComputes.delete(record);
         this._createdRecordsCreated.delete(record);
         this._createdRecordsOnChange.delete(record);
         this._updatedRecordsCheckRequired.delete(record);
-        for (const [listener, infoList] of this._listenersObservingLocalId.get(record.localId)) {
+        for (const [listener, infoList] of this._listenersObservingRecord.get(record)) {
             this._markListenerToNotify(listener, {
                 listener,
-                reason: `_delete: localId - ${record}`,
+                reason: `_delete: record - ${record}`,
                 infoList,
             });
         }
@@ -778,7 +754,7 @@ export class ModelManager {
         }
         delete record.__values;
         delete record.__listeners;
-        delete model.__records[record.localId];
+        model.__records.delete(record);
         delete record.localId;
     }
 
@@ -967,91 +943,6 @@ export class ModelManager {
     }
 
     /**
-     * Returns an index on the given model for the given data.
-     *
-     * @param {Object} model
-     * @param {Object|Record} data insert data or record
-     * @returns {string}
-     */
-    _getRecordIndex(model, data) {
-        const parts = [];
-        switch (model.identifyingMode) {
-            case 'and':
-                for (const fieldName of model.__identifyingFieldNames) {
-                    const fieldValue = this._getValueFromDataOrFromDefault(model, fieldName, data);
-                    if (fieldValue === undefined) {
-                        throw new Error(`Identifying field "${fieldName}" is lacking a value on ${model} with 'and' identifying mode`);
-                    }
-                    parts.push(this._getRecordIndexFromField(model, fieldName, fieldValue));
-                }
-                break;
-            case 'xor': {
-                const [fieldName, fieldValue] = [...model.__identifyingFieldNames].reduce(([fieldName, fieldValue], currentFieldName) => {
-                    const currentFieldValue = this._getValueFromDataOrFromDefault(model, currentFieldName, data);
-                    if (currentFieldValue === undefined) {
-                        return [fieldName, fieldValue];
-                    }
-                    if (fieldName) {
-                        throw new Error(`Identifying field on ${model} with 'xor' identifying mode should have only one of the conditional values given in data. Currently have both "${fieldName}" and "${currentFieldName}".`);
-                    }
-                    return [currentFieldName, currentFieldValue];
-                }, [undefined, undefined]);
-                parts.push(this._getRecordIndexFromField(model, fieldName, fieldValue));
-                break;
-            }
-        }
-        return `${model.name}(${parts.join(', ')})`;
-    }
-
-    /**
-     * Returns the part of the record index that comes from the given fieldName
-     * with the given fieldValue.
-     *
-     * @param {Object} model
-     * @param {string} fieldName
-     * @param {any} fieldValue
-     * @returns {string}
-     */
-    _getRecordIndexFromField(model, fieldName, fieldValue) {
-        const relationTo = model.__fieldMap[fieldName].to;
-        if (!relationTo) {
-            return `${fieldName}: ${fieldValue}`;
-        }
-        const OtherModel = this.models[relationTo];
-        if (fieldValue instanceof OtherModel) {
-            return `${fieldName}: ${this._getRecordIndex(OtherModel, fieldValue)}`;
-        }
-        const fieldValue2 = model.__fieldMap[fieldName].convertToFieldCommandList(fieldValue)[0];
-        if (!(fieldValue2 instanceof FieldCommand)) {
-            throw new Error(`Identifying element "${model}/${fieldName}" is expecting a command for relational field.`);
-        }
-        if (!['link', 'insert', 'replace', 'insert-and-replace'].includes(fieldValue2._name)) {
-            throw new Error(`Identifying element "${model}/${fieldName}" is expecting a command of type "insert-and-replace", "replace", "insert" or "link". "${fieldValue2._name}" was given instead.`);
-        }
-        const relationValue = fieldValue2._value;
-        if (!relationValue) {
-            throw new Error(`Identifying element "${model}/${fieldName}" is lacking a relation value.`);
-        }
-        return `${fieldName}: ${this._getRecordIndex(OtherModel, relationValue)}`;
-    }
-
-    /**
-     * Returns the value for the given fieldName from the provided data if it is
-     * defined or from default value of this field otherwise.
-     *
-     * @param {Object} model
-     * @param {string} fieldName
-     * @param {Object} data
-     * @returns {any}
-     */
-    _getValueFromDataOrFromDefault(model, fieldName, data) {
-        if (data[fieldName] !== undefined) {
-            return data[fieldName];
-        }
-        return model.__fieldMap[fieldName].default;
-    }
-
-    /**
      * @private
      * @param {Object} model
      * @param {Object[]} dataList
@@ -1062,11 +953,12 @@ export class ModelManager {
         this._ensureNoLockingListener();
         const records = [];
         for (const data of dataList) {
-            const localId = this._getRecordIndex(model, data);
-            let record = this.get(model, localId);
+            let record = this.findFromIdentifyingData(model, data);
             if (!record) {
-                record = this._create(model, localId);
-                this._update(record, this._addDefaultData(model, data), { ...options, allowWriteReadonly: true });
+                const data2 = this._preInsertIdentifyingFieldsFromData(model, this._addDefaultData(model, data));
+                record = this._create(model);
+                model.__recordsIndex.addRecord(record, data2);
+                this._update(record, data2, { ...options, allowWriteReadonly: true });
             } else {
                 this._update(record, data, options);
             }
@@ -1134,7 +1026,7 @@ export class ModelManager {
      * @param {ModelField} field
      */
     _markRecordFieldAsChanged(record, field) {
-        for (const [listener, infoList] of this._listenersObservingFieldOfLocalId.get(record.localId).get(field)) {
+        for (const [listener, infoList] of this._listenersObservingFieldOfRecord.get(record).get(field)) {
             this._markListenerToNotify(listener, {
                 listener,
                 reason: `_update: ${field} of ${record}`,
@@ -1181,6 +1073,54 @@ export class ModelManager {
         if (hasChanged) {
             this._flushUpdateCycle();
         }
+    }
+
+    /**
+     * Processes all commands given in data that concerns relation fields that
+     * are identifying to execute their respective "insert-and-replace" commands
+     * and to replace them by corresponding "replace" commands.
+     *
+     * @param {Object} model
+     * @param {Object} [data={}]
+     * @returns {Object}
+     */
+    _preInsertIdentifyingFieldsFromData(model, data) {
+        const data2 = { ...data };
+        for (const [fieldName, value] of Object.entries(data2)) {
+            const field = model.__fieldMap[fieldName];
+            if (!field) {
+                throw new Error(`"${fieldName}" is not a field on "${model}".`);
+            }
+            if (!field.to) {
+                continue;
+            }
+            if (!field.identifying) {
+                continue;
+            }
+            const commands = field.convertToFieldCommandList(value);
+            if (commands.length !== 1) {
+                throw new Error(`Identifying field "${model}/${fieldName}" should receive a single command.`);
+            }
+            const [command] = commands;
+            if (!(command instanceof FieldCommand)) {
+                throw new Error(`Identifying field "${model}/${fieldName}" should receive a command.`);
+            }
+            if (!['insert-and-replace', 'replace'].includes(command._name)) {
+                throw new Error(`Identifying field "${model}/${fieldName}" should receive a "replace" or "insert-and-replace" command.`);
+            }
+            if (command._name === 'replace') {
+                continue;
+            }
+            if (!command._value) {
+                throw new Error(`Identifying field "${model}/${fieldName}" is lacking a relation value.`);
+            }
+            if (typeof command._value[Symbol.iterator] === 'function') {
+                throw new Error(`Identifying field "${model}/${fieldName}" should receive a single data object.`);
+            }
+            const [record] = this._insert(this.models[field.to], [command._value]);
+            data2[fieldName] = record;
+        }
+        return data2;
     }
 
     /**
@@ -1280,24 +1220,24 @@ export class ModelManager {
                     get: function getFieldValue() { // this is bound to record
                         const field = model.__fieldMap[fieldName];
                         if (this.modelManager._listeners.size) {
-                            if (!this.modelManager._listenersObservingLocalId.has(this.localId)) {
-                                this.modelManager._listenersObservingLocalId.set(this.localId, new Map());
+                            if (!this.modelManager._listenersObservingRecord.has(this)) {
+                                this.modelManager._listenersObservingRecord.set(this, new Map());
                             }
-                            const entryLocalId = this.modelManager._listenersObservingLocalId.get(this.localId);
+                            const entryRecord = this.modelManager._listenersObservingRecord.get(this);
                             const reason = `getField - ${field} of ${this}`;
-                            const entryField = this.modelManager._listenersObservingFieldOfLocalId.get(this.localId).get(field);
+                            const entryField = this.modelManager._listenersObservingFieldOfRecord.get(this).get(field);
                             for (const listener of this.modelManager._listeners) {
-                                listener.lastObservedLocalIds.add(this.localId);
+                                listener.lastObservedRecords.add(this);
                                 const info = { listener, reason };
-                                if (entryLocalId.has(listener)) {
-                                    entryLocalId.get(listener).push(info);
+                                if (entryRecord.has(listener)) {
+                                    entryRecord.get(listener).push(info);
                                 } else {
-                                    entryLocalId.set(listener, [info]);
+                                    entryRecord.set(listener, [info]);
                                 }
-                                if (!listener.lastObservedFieldsByLocalId.has(this.localId)) {
-                                    listener.lastObservedFieldsByLocalId.set(this.localId, new Set());
+                                if (!listener.lastObservedFieldsByRecord.has(this)) {
+                                    listener.lastObservedFieldsByRecord.set(this, new Set());
                                 }
-                                listener.lastObservedFieldsByLocalId.get(this.localId).add(field);
+                                listener.lastObservedFieldsByRecord.get(this).add(field);
                                 if (entryField.has(listener)) {
                                     entryField.get(listener).push(info);
                                 } else {
@@ -1324,7 +1264,7 @@ export class ModelManager {
     _update(record, data, options = {}) {
         this._ensureNoLockingListener();
         if (!record.exists()) {
-            throw Error(`Cannot update already deleted record ${record.localId}.`);
+            throw Error(`Cannot update already deleted record ${record}.`);
         }
         const { allowWriteReadonly = false } = options;
         const model = record.constructor;
@@ -1349,7 +1289,7 @@ export class ModelManager {
             }
             const field = model.__fieldMap[fieldName];
             if (!field) {
-                throw new Error(`Cannot create/update record with data unrelated to a field. (record: "${record.localId}", non-field attempted update: "${fieldName}")`);
+                throw new Error(`Cannot create/update record with data unrelated to a field. (record: "${record}", non-field attempted update: "${fieldName}")`);
             }
             const newVal = data[fieldName];
             if (!field.parseAndExecuteCommands(record, newVal, options)) {

@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useModels } from '@mail/component_hooks/use_models';
 // ensure components are registered beforehand.
 import '@mail/components/discuss_public_view/discuss_public_view';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
@@ -13,16 +12,17 @@ export class DiscussPublicViewContainer extends Component {
      * @override
      */
     setup() {
-        useModels();
         super.setup();
-    }
-
-    get discussPublicView() {
-        return this.messaging && this.messaging.models['DiscussPublicView'].findFromIdentifyingData(this.messaging);
-    }
-
-    get messaging() {
-        return this.env.services.messaging.modelManager.messaging;
+        this.env.services.messaging.get().then(messaging => {
+            messaging.models['Thread'].insert(messaging.models['Thread'].convertData(this.props.data.channelData));
+            this.discussPublicView = messaging.models['DiscussPublicView'].insert(this.props.data.discussPublicViewData);
+            if (this.discussPublicView.shouldDisplayWelcomeViewInitially) {
+                this.discussPublicView.switchToWelcomeView();
+            } else {
+                this.discussPublicView.switchToThreadView();
+            }
+            this.render();
+        });
     }
 
 }
@@ -30,4 +30,7 @@ export class DiscussPublicViewContainer extends Component {
 Object.assign(DiscussPublicViewContainer, {
     components: { DiscussPublicView: getMessagingComponent('DiscussPublicView') },
     template: 'mail.DiscussPublicViewContainer',
+    props: {
+        data: Object,
+    },
 });

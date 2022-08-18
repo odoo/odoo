@@ -53,7 +53,7 @@ Component.env = legacyEnv;
     registry.category('wowlToLegacyServiceMappers').add('make_messaging_to_legacy_env', messagingToLegacyEnv);
 
     const mainComponentsRegistry = registry.category('main_components');
-    mainComponentsRegistry.add('DiscussPublicViewContainer', { Component: DiscussPublicViewContainer });
+    mainComponentsRegistry.add('DiscussPublicViewContainer', { Component: DiscussPublicViewContainer, props: { data } });
     // needed by the attachment viewer
     mainComponentsRegistry.add('DialogManagerContainer', { Component: DialogManagerContainer });
     mainComponentsRegistry.add('PopoverManagerContainer', { Component: PopoverManagerContainer });
@@ -76,13 +76,4 @@ Component.env = legacyEnv;
     mapLegacyEnvToWowlEnv(Component.env, env);
     odoo.isReady = true;
     await mount(MainComponentsContainer, document.body, { env, templates, dev: env.debug });
-
-    const messaging = await env.services.messaging.get();
-    messaging.models['Thread'].insert(messaging.models['Thread'].convertData(data.channelData));
-    const discussPublicView = messaging.models['DiscussPublicView'].insert(data.discussPublicViewData);
-    if (discussPublicView.shouldDisplayWelcomeViewInitially) {
-        discussPublicView.switchToWelcomeView();
-    } else {
-        discussPublicView.switchToThreadView();
-    }
 })();

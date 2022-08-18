@@ -850,9 +850,19 @@ export class ModelField {
             throw Error(`${record} is not a record. Did you try to use link() instead of insert() with data?`);
         }
         const otherModel = record.modelManager.models[this.to];
-        if (!otherModel.modelManager.get(otherModel, record.localId, { isCheckingInheritance: true })) {
-            throw Error(`Record ${record.localId} is not valid for relational field ${this.fieldName}.`);
+        if (otherModel.__records.has(record)) {
+            return;
         }
+        // support for inherited models (eg. relation targeting `Record`)
+        for (const subModel of Object.values(this.models)) {
+            if (!(subModel.prototype instanceof otherModel)) {
+                continue;
+            }
+            if (subModel.__records.has(record)) {
+                return;
+            }
+        }
+        throw Error(`Record ${record} is not valid for relational field ${this.fieldName}.`);
     }
 
 }
