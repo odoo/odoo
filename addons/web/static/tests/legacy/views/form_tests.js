@@ -1419,6 +1419,29 @@ QUnit.module('LegacyViews', {
         form.destroy();
     });
 
+    QUnit.test("label ignores the content of the label when present", async function (assert) {
+        await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <label for="bar">customstring</label>
+                            <div>
+                                <field name="bar"/>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>`,
+            res_id: 2,
+        });
+
+        assert.containsOnce(target, "label.o_form_label");
+        assert.strictEqual(target.querySelector("label.o_form_label").textContent, "Bar");
+    });
+
     QUnit.test('input ids for multiple occurrences of fields in form view', async function (assert) {
         // A same field can occur several times in the view, but its id must be
         // unique by occurrence, otherwise there is a warning in the console (in

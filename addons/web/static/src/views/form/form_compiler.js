@@ -79,6 +79,9 @@ export class FormCompiler extends ViewCompiler {
             fieldInfo: `props.archInfo.fieldNodes['${fieldId}']`,
             className: `"${label.className}"`,
         };
+        if (label.hasAttribute("data-no-label")) {
+            return;
+        }
         let labelText = label.textContent || fieldString;
         labelText = labelText
             ? toStringExpression(labelText)
@@ -173,7 +176,11 @@ export class FormCompiler extends ViewCompiler {
                 label,
                 params
             );
-            label.replaceWith(formLabel);
+            if (formLabel) {
+                label.replaceWith(formLabel);
+            } else {
+                label.remove();
+            }
             return formLabel;
         };
         for (const label of labels) {
@@ -405,6 +412,8 @@ export class FormCompiler extends ViewCompiler {
             const string = el.getAttribute("string");
             if (string) {
                 append(label, createTextNode(string));
+            } else if (string === "") {
+                label.setAttribute("data-no-label", "true");
             }
             if (this.encounteredFields[forAttr]) {
                 label = this.encounteredFields[forAttr](label);
@@ -461,7 +470,9 @@ export class FormCompiler extends ViewCompiler {
 
             for (const anchor of child.querySelectorAll("[href^=\\#]")) {
                 const anchorValue = CSS.escape(anchor.getAttribute("href").substring(1));
-                if (!anchorValue.length) continue;
+                if (!anchorValue.length) {
+                    continue;
+                }
                 pageAnchors.push(anchorValue);
                 noteBookAnchors[anchorValue] = {
                     origin: `'${pageId}'`,

@@ -247,7 +247,7 @@ export class SettingsFormCompiler extends FormCompiler {
             label.textContent = labelweak.textContent;
         }
         const res = super.createLabelFromField(fieldId, fieldName, fieldString, label, params);
-        if (labelweak) {
+        if (labelweak || label.hasAttribute("data-no-label")) {
             // the work of pushing the label in the search structure is already done
             return res;
         }
