@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.tools import format_date
 
 from .project_task import CLOSED_STATES
 
@@ -119,3 +120,11 @@ class ProjectMilestone(models.Model):
             milestone_mapping = self.env.context.get('milestone_mapping', {})
             milestone_mapping[self.id] = milestone_copy.id
         return milestone_copy
+
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        if not self._context.get('display_milestone_deadline'):
+            return
+        for milestone in self:
+            if milestone.deadline:
+                milestone.display_name = f'{milestone.display_name} - {format_date(self.env, milestone.deadline)}'

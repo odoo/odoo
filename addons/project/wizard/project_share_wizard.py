@@ -62,6 +62,7 @@ class ProjectShareWizard(models.TransientModel):
         }
 
     def action_send_mail(self):
+        self.env['project.project'].browse(self.res_id).privacy_visibility = 'portal'
         if self.access_mode == 'edit':
             portal_partners = self.partner_ids.filtered('user_ids')
             self.resource_ref._add_collaborators(self.partner_ids)

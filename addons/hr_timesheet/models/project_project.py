@@ -26,9 +26,10 @@ class Project(models.Model):
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.", compute_sudo=True)
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
     is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project')
-    remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Remaining Invoiced Time', compute_sudo=True)
+    remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Remaining Hours', compute_sudo=True)
     is_project_overtime = fields.Boolean('Project in Overtime', compute='_compute_remaining_hours', search='_search_is_project_overtime', compute_sudo=True)
     allocated_hours = fields.Float(string='Allocated Hours')
+    effective_hours = fields.Float(string='Hours Spent', compute='_compute_remaining_hours', compute_sudo=True)
 
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
@@ -81,7 +82,7 @@ class Project(models.Model):
             arch = self.env['account.analytic.line']._apply_time_label(arch, related_model=self._name)
         return arch, view
 
-    @api.depends('allow_timesheets', 'timesheet_ids')
+    @api.depends('allow_timesheets', 'timesheet_ids.unit_amount', 'allocated_hours')
     def _compute_remaining_hours(self):
         timesheets_read_group = self.env['account.analytic.line']._read_group(
             [('project_id', 'in', self.ids)],
@@ -90,7 +91,8 @@ class Project(models.Model):
         )
         timesheet_time_dict = {project.id: unit_amount_sum for project, unit_amount_sum in timesheets_read_group}
         for project in self:
-            project.remaining_hours = project.allocated_hours - timesheet_time_dict.get(project.id, 0)
+            project.effective_hours = round(timesheet_time_dict.get(project.id, 0.0), 2)
+            project.remaining_hours = project.allocated_hours - project.effective_hours
             project.is_project_overtime = project.remaining_hours < 0
 
     @api.model

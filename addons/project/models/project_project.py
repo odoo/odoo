@@ -147,6 +147,7 @@ class Project(models.Model):
         ],
         string='Visibility', required=True,
         default='portal',
+        tracking=True,
         help="People to whom this project and its tasks will be visible.\n\n"
             "- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. "
             "Otherwise, they will only get access to the specific tasks they are following.\n "
@@ -211,6 +212,10 @@ class Project(models.Model):
     milestone_count = fields.Integer(compute='_compute_milestone_count', groups='project.group_project_milestone')
     milestone_count_reached = fields.Integer(compute='_compute_milestone_reached_count', groups='project.group_project_milestone')
     is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded')
+    milestone_progress = fields.Integer("Milestones Reached", compute='_compute_milestone_reached_count', groups="project.group_project_milestone")
+    next_milestone_id = fields.Many2one('project.milestone', compute='_compute_next_milestone_id', groups="project.group_project_milestone")
+    can_mark_milestone_as_done = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone")
+    is_milestone_deadline_exceeded = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone")
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', "The project's start date must be before its end date.")
@@ -226,6 +231,22 @@ class Project(models.Model):
                 limit=1,
             ).id
 
+    @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline')
+    def _compute_next_milestone_id(self):
+        milestone_ids_per_project_id = {
+            project.id: milestone_ids
+            for project, milestone_ids in self.env['project.milestone']._read_group(
+                [('project_id', 'in', self.ids), ('is_reached', '=', False)],
+                ['project_id'],
+                ['id:recordset'],
+            )
+        }
+        for project in self:
+            milestone = milestone_ids_per_project_id.get(project.id, self.env['project.milestone'])[:1]
+            project.next_milestone_id = milestone
+            project.can_mark_milestone_as_done = milestone.can_be_marked_as_done
+            project.is_milestone_deadline_exceeded = milestone.is_deadline_exceeded
+
     def _compute_access_url(self):
         super(Project, self)._compute_access_url()
         for project in self:
@@ -235,7 +256,7 @@ class Project(models.Model):
         super(Project, self)._compute_access_warning()
         for project in self.filtered(lambda x: x.privacy_visibility != 'portal'):
             project.access_warning = _(
-                "The project cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy to 'Visible by following customers' in order to make it accessible by the recipient(s).")
+                "This project is currently restricted to \"Invited internal users\". The project's visibility will be changed to \"invited portal users and all internal users (public)\" in order to make it accessible to the recipients.")
 
     @api.depends_context('uid')
     def _compute_allow_rating(self):
@@ -294,7 +315,7 @@ class Project(models.Model):
         for project in self:
             project.milestone_count = mapped_count.get(project.id, 0)
 
-    @api.depends('milestone_ids.is_reached')
+    @api.depends('milestone_ids.is_reached', 'milestone_count')
     def _compute_milestone_reached_count(self):
         read_group = self.env['project.milestone']._read_group(
             [('project_id', 'in', self.ids), ('is_reached', '=', True)],
@@ -304,6 +325,7 @@ class Project(models.Model):
         mapped_count = {project.id: count for project, count in read_group}
         for project in self:
             project.milestone_count_reached = mapped_count.get(project.id, 0)
+            project.milestone_progress = project.milestone_count and project.milestone_count_reached * 100 // project.milestone_count
 
     @api.depends('milestone_ids', 'milestone_ids.is_reached', 'milestone_ids.deadline', 'allow_milestones')
     def _compute_is_milestone_exceeded(self):
