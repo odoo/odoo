@@ -120,9 +120,11 @@ class MailComposer(models.TransientModel):
         'Type', required=True, default='comment',
         help="Message type: email for email message, notification for system "
              "message, comment for other messages such as user replies")
+    is_log = fields.Boolean('Log as Internal Note')
     subtype_id = fields.Many2one(
         'mail.message.subtype', 'Subtype', ondelete='set null',
         default=lambda self: self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'))
+    notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
     mail_activity_type_id = fields.Many2one('mail.activity.type', 'Mail Activity Type', ondelete='set null')
     # destination
     reply_to = fields.Char('Reply To', help='Reply email address. Setting the reply_to bypasses the automatic thread creation.')
@@ -134,14 +136,12 @@ class MailComposer(models.TransientModel):
         ('new', 'Collect replies on a specific email address')],
         string='Replies', compute='_compute_reply_to_mode', inverse='_inverse_reply_to_mode',
         help="Original Discussion: Answers go in the original document discussion thread. \n Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n This has an impact on the generated message-id.")
-
-    is_log = fields.Boolean('Log as Internal Note') # comment mode only
+    # recipients
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts',
         domain=[('type', '!=', 'private')])
-    # mass mode options
-    notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
+    # sending
     auto_delete = fields.Boolean('Delete Emails',
         help='This option permanently removes any track of email after it\'s been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.')
     auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
@@ -542,8 +542,14 @@ class MailComposer(models.TransientModel):
         """
         if template_id and composition_mode == 'mass_mail':
             template = self.env['mail.template'].browse(template_id)
-            fields = ['subject', 'body_html', 'email_from', 'reply_to', 'mail_server_id']
-            values = dict((field, getattr(template, field)) for field in fields if getattr(template, field))
+            values = dict(
+                (field, getattr(template, field))
+                for field in ['subject', 'body_html',
+                              'email_from',
+                              'reply_to',
+                              'mail_server_id']
+                if getattr(template, field)
+            )
             if template.attachment_ids:
                 values['attachment_ids'] = [att.id for att in template.attachment_ids]
             if template.mail_server_id:
@@ -551,7 +557,11 @@ class MailComposer(models.TransientModel):
         elif template_id:
             values = self.generate_email_for_composer(
                 template_id, [res_id],
-                ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids', 'mail_server_id']
+                ['subject', 'body_html',
+                 'email_from',
+                 'email_cc', 'email_to', 'partner_to', 'reply_to',
+                 'attachment_ids', 'mail_server_id'
+                ]
             )[res_id]
             # transform attachments into attachment_ids; not attached to the document because this will
             # be done further in the posting process, allowing to clean database if email not send
@@ -569,8 +579,23 @@ class MailComposer(models.TransientModel):
             if values.get('attachment_ids', []) or attachment_ids:
                 values['attachment_ids'] = [Command.set(values.get('attachment_ids', []) + attachment_ids)]
         else:
-            default_values = self.with_context(default_composition_mode=composition_mode, default_model=model, default_res_id=res_id).default_get(['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'])
-            values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
+            default_values = self.with_context(
+                default_composition_mode=composition_mode,
+                default_model=model,
+                default_res_id=res_id
+            ).default_get(['composition_mode', 'model', 'res_id', 'parent_id',
+                           'subject', 'body',
+                           'email_from',
+                           'partner_ids', 'reply_to',
+                           'attachment_ids', 'mail_server_id'
+                          ])
+            values = dict(
+                (key, default_values[key])
+                for key in ['subject', 'body',
+                            'email_from',
+                            'partner_ids', 'reply_to',
+                            'attachment_ids', 'mail_server_id'
+                           ] if key in default_values)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
