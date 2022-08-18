@@ -3295,7 +3295,14 @@ var SnippetsMenu = Widget.extend({
         }
         delete data._toMutex;
         ev.stopPropagation();
-        this._buttonClick(() => this._execWithLoadingEffect(() => {
+        this._buttonClick((after) => this._execWithLoadingEffect(() => {
+            const oldOnFailure = data.onFailure;
+            data.onFailure = () => {
+                if (oldOnFailure) {
+                    oldOnFailure();
+                }
+                after();
+            };
             this.trigger_up('request_save', data);
         }, true), this.$el[0].querySelector('button[data-action=save]'));
     },
