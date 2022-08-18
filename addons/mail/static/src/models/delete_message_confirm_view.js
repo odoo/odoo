@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DeleteMessageConfirmView',
@@ -37,7 +37,7 @@ registerModel({
          * @returns {MessageView}
          */
         _computeMessageView() {
-            return this.message ? insertAndReplace({ message: this.message }) : clear();
+            return this.message ? { message: this.message } : clear();
         },
     },
     fields: {

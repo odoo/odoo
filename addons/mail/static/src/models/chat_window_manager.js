@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link } from '@mail/model/model_field_command';
+import { clear, link } from '@mail/model/model_field_command';
 
 const BASE_VISUAL = {
     /**
@@ -86,7 +86,7 @@ registerModel({
         },
         openNewMessage() {
             if (!this.newMessageChatWindow) {
-                this.update({ newMessageChatWindow: insertAndReplace({ manager: this }) });
+                this.update({ newMessageChatWindow: { manager: this } });
             }
             this.newMessageChatWindow.makeActive();
         },
@@ -207,7 +207,7 @@ registerModel({
          */
         _computeHiddenChatWindowHeaderViews() {
             if (this.allOrderedHidden.length > 0) {
-                return insertAndReplace(this.allOrderedHidden.map(chatWindow => ({ chatWindowOwner: chatWindow })));
+                return this.allOrderedHidden.map(chatWindow => ({ chatWindowOwner: chatWindow }));
             }
             return clear();
         },

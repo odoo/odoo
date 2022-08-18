@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { clear, FieldCommand, link, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { IS_RECORD } from '@mail/model/model_core';
 
 /**
  * Class whose instances represent field on a model.
@@ -261,9 +262,20 @@ export class ModelField {
         } else if (newVal instanceof Array && newVal[0] instanceof FieldCommand) {
             return newVal;
         } else if (this.fieldType === 'relation') {
-            if (newVal instanceof Array && newVal[0] && ['clear', 'insert', 'insert-and-replace', 'insert-and-unlink', 'link', 'replace', 'unlink', 'unlink-all'].includes(newVal[0][0])) {
+            if (newVal instanceof Array && newVal[0] instanceof Array && ['clear', 'insert', 'insert-and-replace', 'insert-and-unlink', 'link', 'replace', 'unlink', 'unlink-all'].includes(newVal[0][0])) {
+                // newVal: [['insert', ...], ...]
                 return newVal.map(([name, value]) => new FieldCommand(name, value));
+            } else if (newVal instanceof Array && newVal[0] && !newVal[0][IS_RECORD]) {
+                // newVal: [data, ...]
+                return [new FieldCommand('insert-and-replace', newVal)];
+            } else if (newVal instanceof Array && newVal[0]) {
+                // newVal: [record, ...]
+                return [new FieldCommand('replace', newVal)];
+            } else if (!newVal[IS_RECORD]) {
+                // newVal: data
+                return [new FieldCommand('insert-and-replace', newVal)];
             } else {
+                // newVal: record
                 return [new FieldCommand('replace', newVal)];
             }
         } else {
@@ -846,7 +858,7 @@ export class ModelField {
         if (!record) {
             throw Error(`record is undefined. Did you try to link() or insert() empty value? Considering clear() instead.`);
         }
-        if (!record.modelManager) {
+        if (!record[IS_RECORD]) {
             throw Error(`${record} is not a record. Did you try to use link() instead of insert() with data?`);
         }
         const otherModel = record.modelManager.models[this.to];

@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insert } from '@mail/model/model_field_command';
 import { addLink, htmlToTextContentInline, parseAndTransform } from '@mail/js/utils';
 
 import { session } from '@web/session';
@@ -81,7 +81,7 @@ registerModel({
                 if ('module_icon' in data) {
                     originThreadData.moduleIcon = data.module_icon;
                 }
-                data2.originThread = insertAndReplace(originThreadData);
+                data2.originThread = originThreadData;
             }
             if ('needaction_partner_ids' in data && this.messaging.currentPartner) {
                 data2.isNeedaction = data.needaction_partner_ids.includes(this.messaging.currentPartner.id);
@@ -95,11 +95,11 @@ registerModel({
                 if (!data.parentMessage) {
                     data2.parentMessage = clear();
                 } else {
-                    data2.parentMessage = insertAndReplace(this.convertData(data.parentMessage));
+                    data2.parentMessage = this.convertData(data.parentMessage);
                 }
             }
             if ('recipients' in data) {
-                data2.recipients = insertAndReplace(data.recipients);
+                data2.recipients = data.recipients;
             }
             if ('starred_partner_ids' in data && this.messaging.currentPartner) {
                 data2.isStarred = data.starred_partner_ids.includes(this.messaging.currentPartner.id);

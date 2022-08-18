@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insert, insertAndReplace } from '@mail/model/model_field_command';
+import { insert } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 import { str_to_datetime } from 'web.time';
@@ -27,12 +27,12 @@ QUnit.test('create', async function (assert) {
         name: "General",
     });
     const message = messaging.models['Message'].insert({
-        attachments: insertAndReplace({
+        attachments: {
             filename: "test.txt",
             id: 750,
             mimetype: 'text/plain',
             name: "test.txt",
-        }),
+        },
         author: insert({ id: 5, display_name: "Demo" }),
         body: "<p>Test</p>",
         date: moment(str_to_datetime("2019-05-05 10:00:00")),

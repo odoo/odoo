@@ -2,7 +2,6 @@
 
 import { addFields, patchRecordMethods } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/message_view';
 
@@ -29,10 +28,10 @@ patchRecordMethods('MessageView', {
                 case 'sn_credit':
                     // URL only used in this component, not received at init
                     this.messaging.fetchSnailmailCreditsUrl();
-                    this.update({ snailmailErrorDialog: insertAndReplace() });
+                    this.update({ snailmailErrorDialog: {} });
                     break;
                 case 'sn_error':
-                    this.update({ snailmailErrorDialog: insertAndReplace() });
+                    this.update({ snailmailErrorDialog: {} });
                     break;
                 case 'sn_fields':
                     this.message.openMissingFieldsLetterAction();
@@ -41,12 +40,12 @@ patchRecordMethods('MessageView', {
                     this.message.openFormatLetterAction();
                     break;
                 case 'sn_price':
-                    this.update({ snailmailErrorDialog: insertAndReplace() });
+                    this.update({ snailmailErrorDialog: {} });
                     break;
                 case 'sn_trial':
                     // URL only used in this component, not received at init
                     this.messaging.fetchSnailmailCreditsUrlTrial();
-                    this.update({ snailmailErrorDialog: insertAndReplace() });
+                    this.update({ snailmailErrorDialog: {} });
                     break;
             }
         } else {

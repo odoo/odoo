@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insert, insertAndReplace } from '@mail/model/model_field_command';
+import { insert } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -34,10 +34,10 @@ QUnit.test('create (channel)', async function (assert) {
     assert.notOk(messaging.models['Channel'].findFromIdentifyingData({ id: 100 }));
 
     messaging.models['Thread'].insert({
-        channel: insertAndReplace({
+        channel: {
             channel_type: 'channel',
             id: 100,
-        }),
+        },
         id: 100,
         members: insert([{
             email: "john@example.com",
@@ -84,10 +84,10 @@ QUnit.test('create (chat)', async function (assert) {
     assert.notOk(messaging.models['Channel'].findFromIdentifyingData({ id: 200 }));
 
     messaging.models['Thread'].insert({
-        channel: insertAndReplace({
+        channel: {
             channel_type: 'chat',
             id: 200,
-        }),
+        },
         id: 200,
         members: insert({
             email: "demo@example.com",

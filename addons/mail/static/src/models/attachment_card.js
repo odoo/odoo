@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentCard',
@@ -15,7 +14,7 @@ registerModel({
                 return;
             }
             this.attachmentList.update({
-                attachmentListViewDialog: insertAndReplace(),
+                attachmentListViewDialog: {},
                 selectedAttachment: this.attachment,
             });
         },
@@ -32,7 +31,7 @@ registerModel({
             if (this.attachmentList.composerViewOwner) {
                 this.attachment.remove();
             } else {
-                this.update({ attachmentDeleteConfirmDialog: insertAndReplace() });
+                this.update({ attachmentDeleteConfirmDialog: {} });
             }
         },
         /**

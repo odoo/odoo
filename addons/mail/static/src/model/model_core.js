@@ -10,7 +10,7 @@
  */
 
 export const registry = new Map();
-
+export const IS_RECORD = Symbol("Record");
 
 /**
  * Concats `contextMessage` at the beginning of any error raising when calling

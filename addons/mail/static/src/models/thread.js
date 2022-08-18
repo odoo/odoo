@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, insertAndUnlink, link, unlink } from '@mail/model/model_field_command';
+import { clear, insert, insertAndUnlink, link, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
@@ -124,13 +124,12 @@ registerModel({
 
             // relations
             if ('members' in data) {
-                // The list syntax is kept here because it is used in livechat override
                 if (!data.members) {
-                    data2.members = [clear()];
+                    data2.members = [];
                 } else {
-                    data2.members = [insertAndReplace(data.members.map(memberData =>
+                    data2.members = data.members.map(memberData =>
                         this.messaging.models['Partner'].convertData(memberData)
-                    ))];
+                    );
                 }
             }
             if ('rtc_inviting_session' in data) {
@@ -143,16 +142,14 @@ registerModel({
                 if (!data.seen_partners_info) {
                     data2.partnerSeenInfos = clear();
                 } else {
-                    data2.partnerSeenInfos = insertAndReplace(
-                        data.seen_partners_info.map(
-                            ({ fetched_message_id, partner_id, seen_message_id }) => {
-                                return {
-                                    lastFetchedMessage: fetched_message_id ? insert({ id: fetched_message_id }) : clear(),
-                                    lastSeenMessage: seen_message_id ? insert({ id: seen_message_id }) : clear(),
-                                    partner: insertAndReplace({ id: partner_id }),
-                            };
-                        })
-                    );
+                    data2.partnerSeenInfos = data.seen_partners_info.map(
+                        ({ fetched_message_id, partner_id, seen_message_id }) => {
+                            return {
+                                lastFetchedMessage: fetched_message_id ? insert({ id: fetched_message_id }) : clear(),
+                                lastSeenMessage: seen_message_id ? insert({ id: seen_message_id }) : clear(),
+                                partner: { id: partner_id },
+                        };
+                    });
                     if (data.id || this.id) {
                         const messageIds = data.seen_partners_info.reduce((currentSet, { fetched_message_id, seen_message_id }) => {
                             if (fetched_message_id) {
@@ -164,11 +161,11 @@ registerModel({
                             return currentSet;
                         }, new Set());
                         if (messageIds.size > 0) {
-                            data2.messageSeenIndicators = insertAndReplace([...messageIds].map(messageId => {
+                            data2.messageSeenIndicators = [...messageIds].map(messageId => {
                                 return {
-                                    message: insertAndReplace({ id: messageId }),
+                                    message: { id: messageId },
                                 };
-                            }));
+                            });
                         }
                     }
                 }
@@ -432,10 +429,10 @@ registerModel({
             });
             return this.insert(channelsData.map(channelData =>
                 this.messaging.models['Thread'].convertData({
-                    channel: insertAndReplace({
+                    channel: {
                         channel_type: channelData.channel_type,
                         id: channelData.id,
-                    }),
+                    },
                     id: channelData.id,
                     name: channelData.name,
                 })
@@ -545,23 +542,23 @@ registerModel({
             const values = { hasWriteAccess, mainAttachment, hasReadAccess };
             if (activitiesData) {
                 Object.assign(values, {
-                    activities: insertAndReplace(activitiesData.map(activityData =>
+                    activities: activitiesData.map(activityData =>
                         this.messaging.models['Activity'].convertData(activityData)
-                    )),
+                    ),
                 });
             }
             if (attachmentsData) {
                 Object.assign(values, {
                     areAttachmentsLoaded: true,
                     isLoadingAttachments: false,
-                    originThreadAttachments: insertAndReplace(attachmentsData),
+                    originThreadAttachments: attachmentsData,
                 });
             }
             if (followersData) {
                 Object.assign(values, {
-                    followers: insertAndReplace(followersData.map(followerData =>
+                    followers: followersData.map(followerData =>
                         this.messaging.models['Follower'].convertData(followerData)
-                    )),
+                    ),
                 });
             }
             if (suggestedRecipientsData) {
@@ -578,7 +575,7 @@ registerModel({
                     };
                 });
                 Object.assign(values, {
-                    suggestedRecipientInfoList: insertAndReplace(recipientInfoList),
+                    suggestedRecipientInfoList: recipientInfoList,
                 });
             }
             this.update(values);
@@ -864,7 +861,9 @@ registerModel({
          * Refresh the typing status of the current partner.
          */
         refreshCurrentPartnerIsTyping() {
-            this.update({ currentPartnerInactiveTypingTimer: [clear(), insertAndReplace()] });
+            this.update({
+                currentPartnerInactiveTypingTimer: { doReset: this.currentPartnerInactiveTypingTimer ? true : undefined },
+            });
         },
         /**
          * Called to refresh a registered other member partner that is typing
@@ -888,8 +887,8 @@ registerModel({
         async registerCurrentPartnerIsTyping() {
             // Handling of typing timers.
             this.update({
-                currentPartnerInactiveTypingTimer: insertAndReplace(),
-                currentPartnerLongTypingTimer: insertAndReplace(),
+                currentPartnerInactiveTypingTimer: {},
+                currentPartnerLongTypingTimer: {},
             });
             // Manage typing member relation.
             const currentPartner = this.messaging.currentPartner;
@@ -1063,7 +1062,7 @@ registerModel({
             if (this.mailbox) {
                 return clear();
             }
-            return insertAndReplace();
+            return {};
         },
         /**
          * @private
@@ -1122,7 +1121,7 @@ registerModel({
             if (!discussSidebarCategory) {
                 return clear();
             }
-            return insertAndReplace({ category: discussSidebarCategory });
+            return { category: discussSidebarCategory };
         },
         /**
          * @private
@@ -1221,6 +1220,7 @@ registerModel({
          */
         _computeIsDescriptionEditableByCurrentUser() {
             return Boolean(
+                this.messaging &&
                 this.messaging.currentUser &&
                 this.messaging.currentUser.isInternalUser &&
                 this.isChannelDescriptionChangeable
@@ -1449,7 +1449,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeMessagingMenuAsPinnedAndUnreadChannel() {
-            if (!this.messaging.messagingMenu) {
+            if (!this.messaging || !this.messaging.messagingMenu) {
                 return clear();
             }
             return (this.model === 'mail.channel' && this.isPinned && this.localMessageUnreadCounter > 0)
@@ -1522,7 +1522,7 @@ registerModel({
          */
         _computeCallInviteRequestPopup() {
             if (this.rtcInvitingSession) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -1531,9 +1531,9 @@ registerModel({
          * @returns {Throttle}
          */
         _computeThrottleNotifyCurrentPartnerTypingStatus() {
-            return insertAndReplace({
+            return {
                 func: () => this._notifyCurrentPartnerTypingStatus(),
-            });
+            };
         },
         /**
          * @private
@@ -1625,7 +1625,7 @@ registerModel({
                     }
                 }
                 if (this.isCurrentPartnerTyping && this.currentPartnerLongTypingTimer) {
-                    this.update({ currentPartnerLongTypingTimer: [clear(), insertAndReplace()] });
+                    this.currentPartnerLongTypingTimer.update({ doReset: true });
                 }
             }
             this.update({
@@ -1722,8 +1722,9 @@ registerModel({
          */
         async onCurrentPartnerLongTypingTimeout() {
             this.update({
-                isCurrentPartnerTyping: true,
+                currentPartnerLongTypingTimer: clear(),
                 forceNotifyNextCurrentPartnerTypingStatus: true,
+                isCurrentPartnerTyping: true,
             });
             this.throttleNotifyCurrentPartnerTypingStatus.clear();
             await this.throttleNotifyCurrentPartnerTypingStatus.do();
@@ -1759,7 +1760,7 @@ registerModel({
          */
         avatarCacheKey: attr(),
         cache: one('ThreadCache', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'thread',
             isCausal: true,
             readonly: true,
@@ -2274,7 +2275,7 @@ registerModel({
             default: 0,
         }),
         suggestable: one('ComposerSuggestable', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'thread',
             isCausal: true,
             readonly: true,

@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, link } from '@mail/model/model_field_command';
+import { clear, insert, link } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 const getThreadNextTemporaryId = (function () {
@@ -30,7 +30,10 @@ registerModel({
             }
         },
         onAttachmentsLoadingTimeout() {
-            this.update({ isShowingAttachmentsLoading: true });
+            this.update({
+                attachmentsLoaderTimer: clear(),
+                isShowingAttachmentsLoading: true,
+            });
         },
         /**
          * Handles click on the attach button.
@@ -42,7 +45,7 @@ registerModel({
          * Handles click on the attachments button.
          */
         onClickButtonToggleAttachments() {
-            this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : insertAndReplace() });
+            this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : {} });
         },
         /**
          * Handles click on top bar close button.
@@ -114,7 +117,7 @@ registerModel({
             this.threadView.messageListView.component.onScroll(ev);
         },
         openAttachmentBoxView() {
-            this.update({ attachmentBoxView: insertAndReplace() });
+            this.update({ attachmentBoxView: {} });
         },
         /**
          * Open a dialog to add partners as followers.
@@ -172,12 +175,12 @@ registerModel({
             }
         },
         showLogNote() {
-            this.update({ composerView: insertAndReplace() });
+            this.update({ composerView: {} });
             this.composerView.composer.update({ isLog: true });
             this.focus();
         },
         showSendMessage() {
-            this.update({ composerView: insertAndReplace() });
+            this.update({ composerView: {} });
             this.composerView.composer.update({ isLog: false });
             this.focus();
         },
@@ -187,7 +190,7 @@ registerModel({
          */
         _computeActivityBoxView() {
             if (this.thread && this.thread.hasActivities && this.thread.activities.length > 0) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -197,7 +200,7 @@ registerModel({
          */
         _computeDropZoneView() {
             if (this.useDragVisibleDropZone.isVisible) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -206,7 +209,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeFileUploader() {
-            return this.thread ? insertAndReplace() : clear();
+            return this.thread ? {} : clear();
         },
         /**
          * @private
@@ -214,7 +217,7 @@ registerModel({
          */
         _computeFollowButtonView() {
             if (this.hasFollowers && this.thread && (!this.thread.channel || this.thread.channel.channel_type !== 'chat')) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -224,7 +227,7 @@ registerModel({
          */
         _computeFollowerListMenuView() {
             if (this.hasFollowers && this.thread) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -261,11 +264,11 @@ registerModel({
          * @returns {ThreadViewer}
          */
         _computeThreadViewer() {
-            return insertAndReplace({
+            return {
                 hasThreadView: this.hasThreadView,
                 order: 'desc',
                 thread: this.thread ? this.thread : clear(),
-            });
+            };
         },
         /**
          * @private
@@ -276,7 +279,7 @@ registerModel({
                     this.thread.delete();
                 }
                 this.update({
-                    attachmentBoxView: this.isAttachmentBoxVisibleInitially ? insertAndReplace() : clear(),
+                    attachmentBoxView: this.isAttachmentBoxVisibleInitially ? {} : clear(),
                     thread: insert({
                         // If the thread was considered to have the activity
                         // mixin once, it will have it forever.
@@ -326,7 +329,7 @@ registerModel({
          * @private
          */
         _prepareAttachmentsLoading() {
-            this.update({ attachmentsLoaderTimer: insertAndReplace() });
+            this.update({ attachmentsLoaderTimer: {} });
         },
     },
     fields: {
@@ -486,12 +489,12 @@ registerModel({
             required: true,
         }),
         topbar: one('ChatterTopbar', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'chatter',
             isCausal: true,
         }),
         useDragVisibleDropZone: one('UseDragVisibleDropZone', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'chatterOwner',
             isCausal: true,
             readonly: true,

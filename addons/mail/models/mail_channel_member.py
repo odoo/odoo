@@ -125,24 +125,24 @@ class ChannelMember(models.Model):
         for member in self:
             if member.partner_id:
                 persona = {
-                    'partner': [('insert-and-replace', {
+                    'partner': {
                         'id': member.partner_id.id,
                         'name': member.partner_id.name,
                         'im_status': member.partner_id.im_status,
-                    })],
+                    },
                 }
             if member.guest_id:
                 persona = {
-                    'guest': [('insert-and-replace', {
+                    'guest': {
                         'id': member.guest_id.id,
                         'name': member.guest_id.name,
                         'im_status': member.guest_id.im_status,
-                    })],
+                    },
                 }
             members_formatted_data.append({
                 'id': member.id,
-                'channel':  [('insert-and-replace', {'id': member.channel_id.id})],
-                'persona': [('insert-and-replace', persona)],
+                'channel': {'id': member.channel_id.id},
+                'persona': persona,
             })
         return members_formatted_data
 

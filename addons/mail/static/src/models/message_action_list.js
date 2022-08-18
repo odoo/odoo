@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
@@ -20,7 +20,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickDelete(ev) {
-            this.update({ deleteConfirmDialog: insertAndReplace() });
+            this.update({ deleteConfirmDialog: {} });
         },
         /**
          * @private
@@ -41,7 +41,7 @@ registerModel({
          */
         onClickActionReaction() {
             if (!this.reactionPopoverView) {
-                this.update({ reactionPopoverView: insertAndReplace() });
+                this.update({ reactionPopoverView: {} });
             } else {
                 this.update({ reactionPopoverView: clear() });
             }

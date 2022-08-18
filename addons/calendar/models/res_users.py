@@ -49,7 +49,7 @@ class Users(models.Model):
                 'name': meeting_label,
                 'model': 'calendar.event',
                 'icon': modules.module.get_module_icon(self.env['calendar.event']._original_module),
-                'meetings': [('insert-and-replace', meetings_lines)],
+                'meetings': meetings_lines,
             }
             res.insert(0, meetings_systray)
 

@@ -378,21 +378,21 @@ class TestTrackingInternals(TestMailCommon):
         msg_emp = self.record.message_ids.message_format()
         msg_sudo = self.record.sudo().message_ids.message_format()
         tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids.id)])
-        formattedTrackingValues = [('insert-and-replace', [{
+        formattedTrackingValues = [{
             'changedField': 'Email From',
             'id': tracking_values[0]['id'],
-            'newValue': [('insert-and-replace', {
+            'newValue': {
                 'currencyId': False,
                 'fieldType': 'char',
                 'value': 'X',
-            })],
-            'oldValue': [('insert-and-replace', {
+            },
+            'oldValue': {
                 'currencyId': False,
                 'fieldType': 'char',
                 'value': False,
-            })],
-        }])]
-        self.assertEqual(msg_emp[0].get('trackingValues'), [('insert-and-replace', [])], "should not have protected tracking values")
+            },
+        }]
+        self.assertEqual(msg_emp[0].get('trackingValues'), [], "should not have protected tracking values")
         self.assertEqual(msg_sudo[0].get('trackingValues'), formattedTrackingValues, "should have protected tracking values")
 
         msg_emp = self.record._notify_by_email_prepare_rendering_context(self.record.message_ids, {})

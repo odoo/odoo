@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { insertAndReplace } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 import { patchDate } from '@web/../tests/helpers/utils';
@@ -14,8 +13,8 @@ QUnit.test('Deleting all the watchers of a clock should result in the deletion o
 
     const { messaging } = await start();
     const watcher = messaging.models['ClockWatcher'].insert({
-        clock: insertAndReplace({ frequency: 180 * 1000 }),
-        qunitTestOwner: insertAndReplace(),
+        clock: { frequency: 180 * 1000 },
+        qunitTestOwner: {},
     });
     const { clock } = watcher;
 
@@ -36,8 +35,8 @@ QUnit.test('[technical] Before ticking for the first time, the clock should indi
     patchDate(2016, 8, 8, 14, 55, 15, 352);
 
     const { clock } = messaging.models['ClockWatcher'].insert({
-        clock: insertAndReplace({ frequency: 3600 * 1000 }),
-        qunitTestOwner: insertAndReplace(),
+        clock: { frequency: 3600 * 1000 },
+        qunitTestOwner: {},
     });
     assert.strictEqual(
         clock.date.getFullYear(), // no need to be more precise than the year

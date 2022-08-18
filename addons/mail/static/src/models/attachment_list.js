@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentList',
@@ -25,18 +25,10 @@ registerModel({
             this.update({ selectedAttachment: this.attachments[prevIndex] });
         },
         _computeAttachmentImages() {
-            return insertAndReplace(this.imageAttachments.map(attachment => {
-                return {
-                    attachment,
-                };
-            }));
+            return this.imageAttachments.map(attachment => ({ attachment }));
         },
         _computeAttachmentCards() {
-            return insertAndReplace(this.nonImageAttachments.map(attachment => {
-                return {
-                    attachment,
-                };
-            }));
+            return this.nonImageAttachments.map(attachment => ({ attachment }));
         },
         /**
          * @returns {FieldCommand}

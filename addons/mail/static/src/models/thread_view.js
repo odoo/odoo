@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -88,7 +88,7 @@ registerModel({
          */
         _computeCallView() {
             return (this.thread && this.thread.model === 'mail.channel' && this.thread.rtcSessions.length > 0)
-                ? insertAndReplace()
+                ? {}
                 : clear();
         },
         /**
@@ -97,7 +97,7 @@ registerModel({
          */
         _computeChannelMemberListView() {
             if (this.thread && this.thread.hasMemberListFeature && this.hasMemberList && this.isMemberListOpened) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -112,7 +112,7 @@ registerModel({
             if (this.threadViewer && this.threadViewer.chatter) {
                 return clear();
             }
-            return insertAndReplace();
+            return {};
         },
         /**
          * @private
@@ -160,7 +160,7 @@ registerModel({
             return (
                 (this.thread && this.thread.isTemporary) ||
                 (this.threadCache && this.threadCache.isLoaded)
-            ) ? insertAndReplace() : clear();
+            ) ? {} : clear();
         },
         /**
          * @private
@@ -224,7 +224,7 @@ registerModel({
          * @private
          */
         _computeTopbar() {
-            return this.hasTopbar ? insertAndReplace() : clear();
+            return this.hasTopbar ? {} : clear();
         },
         /**
          * @private

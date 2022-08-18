@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'OtherMemberLongTypingInThreadTimer',
@@ -21,7 +20,7 @@ registerModel({
             inverse: 'otherMembersLongTypingTimers',
         }),
         timer: one('Timer', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'otherMemberLongTypingInThreadTimerOwner',
             isCausal: true,
             required: true,

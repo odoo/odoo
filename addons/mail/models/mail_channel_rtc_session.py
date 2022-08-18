@@ -99,7 +99,7 @@ class MailRtcSession(models.Model):
         self.ensure_one()
         vals = {
             'id': self.id,
-            'channelMember': [('insert-and-replace', self.channel_member_id.mail_channel_member_format()[0])],
+            'channelMember': self.channel_member_id.mail_channel_member_format()[0],
         }
         if complete_info:
             vals.update({

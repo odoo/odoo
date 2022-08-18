@@ -245,7 +245,7 @@ class DiscussController(http.Controller):
         return {
             'id': message_sudo.id,
             'body': message_sudo.body,
-            'attachments': [('insert-and-replace', message_sudo.attachment_ids._attachment_format())],
+            'attachments': message_sudo.attachment_ids._attachment_format(),
         }
 
     @http.route('/mail/attachment/upload', methods=['POST'], type='http', auth='public')
@@ -334,7 +334,7 @@ class DiscussController(http.Controller):
                 'content': content,
                 'count': len(reactions),
                 'guests': guests,
-                'message': [('insert-and-replace', {'id', message_sudo.id})],
+                'message': {'id', message_sudo.id},
                 'partners': partners,
             })],
         }
@@ -362,7 +362,7 @@ class DiscussController(http.Controller):
                 'content': content,
                 'count': len(reactions),
                 'guests': guests,
-                'message': [('insert-and-replace', {'id': message_sudo.id})],
+                'message': {'id': message_sudo.id},
                 'partners': partners,
             })],
         }
