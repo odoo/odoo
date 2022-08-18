@@ -40,7 +40,7 @@ MailGroup.include({
         }
 
         if (this.isMember) {
-            this.$target.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
+            this.$el.find('.o_mg_subscribe_btn').text(_t('Unsubscribe')).removeClass('btn-primary').addClass('btn-outline-primary');
         }
 
         this.$el.data('isMember', this.isMember);
