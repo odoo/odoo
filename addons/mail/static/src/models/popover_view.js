@@ -176,7 +176,6 @@ registerModel({
             compute: '_computeActivityMarkDonePopoverContentView',
             inverse: 'popoverViewOwner',
             isCausal: true,
-            readonly: true,
         }),
         activityViewOwnerAsMarkDone: one('ActivityView', {
             identifying: true,
@@ -196,7 +195,6 @@ registerModel({
             compute: '_computeChannelInvitationForm',
             inverse: 'popoverViewOwner',
             isCausal: true,
-            readonly: true,
         }),
         /**
          * States the OWL component of this popover view.
@@ -239,12 +237,10 @@ registerModel({
             compute: '_computeEmojiPickerView',
             inverse: 'popoverViewOwner',
             isCausal: true,
-            readonly: true,
         }),
         manager: one('PopoverManager', {
             compute: '_computeManager',
             inverse: 'popoverViews',
-            readonly: true,
         }),
         /**
          * If set, this popover view is owned by a message action view.

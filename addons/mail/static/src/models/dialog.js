@@ -234,7 +234,6 @@ registerModel({
         manager: one('DialogManager', {
             compute: '_computeManager',
             inverse: 'dialogs',
-            readonly: true,
         }),
         messageActionViewOwnerAsDeleteConfirm: one('MessageActionView', {
             identifying: true,
@@ -248,7 +247,6 @@ registerModel({
         record: one('Record', {
             compute: '_computeRecord',
             isCausal: true,
-            readonly: true,
             required: true,
         }),
         style: attr({

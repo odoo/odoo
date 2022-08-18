@@ -42,7 +42,6 @@ registerModel({
         }),
         rtcSession: one('RtcSession', {
             compute: '_computeRtcSession',
-            readonly: true,
         }),
     },
 });

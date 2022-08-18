@@ -48,7 +48,6 @@ registerModel({
         }),
         message: one('Message', {
             compute: '_computeMessage',
-            readonly: true,
             required: true,
         }),
         /**
@@ -59,7 +58,6 @@ registerModel({
             compute: '_computeMessageView',
             inverse: 'deleteMessageConfirmViewOwner',
             isCausal: true,
-            readonly: true,
             required: true,
         }),
     },

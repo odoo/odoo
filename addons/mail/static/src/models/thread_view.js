@@ -119,7 +119,7 @@ registerModel({
          */
         _computeHasComposerThreadName() {
             if (this.threadViewer.discuss) {
-                return this.threadViewer.discuss.thread === this.messaging.inbox.thread;
+                return this.threadViewer.discuss.activeThread === this.messaging.inbox.thread;
             }
             return clear();
         },
@@ -448,7 +448,6 @@ registerModel({
         lastMessageView: one('MessageView', {
             compute: '_computeLastMessageView',
             inverse: 'threadViewOwnerAsLastMessageView',
-            readonly: true,
         }),
         /**
          * Most recent message in this ThreadView that has been shown to the
@@ -482,14 +481,12 @@ registerModel({
             compute: '_computeCallView',
             inverse: 'threadView',
             isCausal: true,
-            readonly: true,
         }),
         /**
          * Determines the `Thread` currently displayed by `this`.
          */
         thread: one('Thread', {
             inverse: 'threadViews',
-            readonly: true,
             related: 'threadViewer.thread',
         }),
         /**
@@ -497,7 +494,6 @@ registerModel({
          */
         threadCache: one('ThreadCache', {
             inverse: 'threadViews',
-            readonly: true,
             related: 'threadViewer.threadCache',
         }),
         threadCacheInitialScrollHeight: attr({
@@ -534,7 +530,6 @@ registerModel({
             compute: '_computeTopbar',
             inverse: 'threadView',
             isCausal: true,
-            readonly: true,
         }),
     },
     onChanges: [

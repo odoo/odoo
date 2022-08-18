@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, unlink } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { sprintf } from '@web/core/utils/strings';
 
 registerModel({
@@ -47,47 +47,47 @@ registerModel({
          * @returns {Partner[]}
          */
         _computeMentionedPartners() {
-            const unmentionedPartners = [];
+            const mentionedPartners = [];
             // ensure the same mention is not used multiple times if multiple
             // partners have the same name
             const namesIndex = {};
-            for (const partner of this.mentionedPartners) {
+            for (const partner of this.rawMentionedPartners) {
                 const fromIndex = namesIndex[partner.name] !== undefined
                     ? namesIndex[partner.name] + 1 :
                     0;
                 const index = this.textInputContent.indexOf(`@${partner.name}`, fromIndex);
-                if (index !== -1) {
-                    namesIndex[partner.name] = index;
-                } else {
-                    unmentionedPartners.push(partner);
+                if (index === -1) {
+                    continue;
                 }
+                namesIndex[partner.name] = index;
+                mentionedPartners.push(partner);
             }
-            return unlink(unmentionedPartners);
+            return mentionedPartners;
         },
         /**
          * Detects if mentioned channels are still in the composer text input content
          * and removes them if not.
          *
          * @private
-         * @returns {Partner[]}
+         * @returns {Channels[]}
          */
         _computeMentionedChannels() {
-            const unmentionedChannels = [];
+            const mentionedChannels = [];
             // ensure the same mention is not used multiple times if multiple
             // channels have the same name
             const namesIndex = {};
-            for (const channel of this.mentionedChannels) {
+            for (const channel of this.rawMentionedChannels) {
                 const fromIndex = namesIndex[channel.name] !== undefined
                     ? namesIndex[channel.name] + 1 :
                     0;
                 const index = this.textInputContent.indexOf(`#${channel.name}`, fromIndex);
-                if (index !== -1) {
-                    namesIndex[channel.name] = index;
-                } else {
-                    unmentionedChannels.push(channel);
+                if (index === -1) {
+                    continue;
                 }
+                namesIndex[channel.name] = index;
+                mentionedChannels.push(channel);
             }
-            return unlink(unmentionedChannels);
+            return mentionedChannels;
         },
         /**
          * @private
@@ -129,8 +129,8 @@ registerModel({
         _reset() {
             this.update({
                 attachments: clear(),
-                mentionedChannels: clear(),
-                mentionedPartners: clear(),
+                rawMentionedChannels: clear(),
+                rawMentionedPartners: clear(),
                 textInputContent: clear(),
                 textInputCursorEnd: clear(),
                 textInputCursorStart: clear(),
@@ -144,7 +144,6 @@ registerModel({
     fields: {
         activeThread: one('Thread', {
             compute: '_computeActiveThread',
-            readonly: true,
             required: true,
         }),
         /**
@@ -194,6 +193,8 @@ registerModel({
         placeholder: attr({
             compute: '_computePlaceholder',
         }),
+        rawMentionedChannels: many('Thread'),
+        rawMentionedPartners: many('Partner'),
         /**
          * Determines the extra `Partner` (on top of existing followers)
          * that will receive the message being composed by `this`, and that will

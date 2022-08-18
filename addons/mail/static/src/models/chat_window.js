@@ -697,7 +697,6 @@ registerModel({
             compute: '_computeThreadViewer',
             inverse: 'chatWindow',
             isCausal: true,
-            readonly: true,
             required: true,
         }),
         /**

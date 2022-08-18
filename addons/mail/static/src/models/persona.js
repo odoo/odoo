@@ -46,11 +46,9 @@ registerModel({
         }),
         im_status: attr({
             compute: '_computeImStatus',
-            readonly: true,
         }),
         name: attr({
             compute: '_computeName',
-            readonly: true,
         }),
         partner: one('Partner', {
             identifying: true,

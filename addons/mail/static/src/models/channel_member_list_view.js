@@ -56,7 +56,6 @@ registerModel({
     fields: {
         channel: one('Channel', {
             compute: '_computeChannel',
-            readonly: true,
         }),
         chatWindowOwner: one('ChatWindow', {
             identifying: true,

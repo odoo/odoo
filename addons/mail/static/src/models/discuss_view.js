@@ -111,7 +111,7 @@ registerModel({
         /**
          * @private
          */
-        _onDiscussThreadChanged() {
+        _onDiscussActiveThreadChanged() {
             this.env.services.router.pushState({
                 action: this.discuss.discussView.actionId,
                 active_id: this.discuss.activeId,
@@ -169,8 +169,8 @@ registerModel({
     },
     onChanges: [
         {
-            dependencies: ['discuss.thread'],
-            methodName: '_onDiscussThreadChanged',
+            dependencies: ['discuss.activeThread'],
+            methodName: '_onDiscussActiveThreadChanged',
         },
     ],
 });

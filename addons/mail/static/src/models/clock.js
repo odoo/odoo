@@ -9,22 +9,17 @@ import { attr, many } from '@mail/model/model_field';
 registerModel({
     name: 'Clock',
     lifecycleHooks: {
+        _created() {
+            // The date is set here rather than via a default value so that the
+            // date set at first is the time of the record creation, and not the
+            // time of the model initialization.
+            this.update({ date: new Date() });
+        },
         _willDelete() {
             this.messaging.browser.clearInterval(this.tickInterval);
         },
     },
     recordMethods: {
-        /**
-         * The date is set by a compute rather than using a default value. Thus,
-         * the date set at first is the time of the record creation, and not the
-         * time of the model initialization.
-         *
-         * @private
-         * @returns {Date}
-         */
-        _computeDate() {
-            return new Date();
-        },
         /**
          * @private
          * @returns {integer}
@@ -52,9 +47,7 @@ registerModel({
          * A Date object set to the current date at the time the record is
          * created, then updated at every tick.
          */
-        date: attr({
-            compute: '_computeDate',
-        }),
+        date: attr(),
         /**
          * An integer representing the frequency in milliseconds at which `date`
          * must be recomputed.

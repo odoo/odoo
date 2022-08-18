@@ -20,7 +20,7 @@ registerModel({
          */
         onClick(ev) {
             ev.preventDefault();
-            this.composerSuggestionListViewOwner.update({ activeSuggestionView: this });
+            this.composerSuggestionListViewOwner.update({ rawActiveSuggestionView: this });
             const composerViewOwner = this.composerSuggestionListViewOwner.composerViewOwner;
             composerViewOwner.insertSuggestion();
             composerViewOwner.closeSuggestions();
@@ -132,11 +132,9 @@ registerModel({
             compute: '_computePersonaImStatusIconView',
             inverse: 'composerSuggestionViewOwner',
             isCausal: true,
-            readonly: true,
         }),
         suggestable: one('ComposerSuggestable', {
             compute: '_computeSuggestable',
-            readonly: true,
             required: true,
         }),
         /**

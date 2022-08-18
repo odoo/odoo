@@ -19,7 +19,7 @@ registerModel({
                 this.discuss.update({ activeMobileNavbarTabId: tabId });
                 if (
                     this.discuss.activeMobileNavbarTabId === 'mailbox' &&
-                    (!this.discuss.thread || !this.discuss.thread.mailbox)
+                    (!this.discuss.activeThread || !this.discuss.activeThread.mailbox)
                 ) {
                     this.discuss.update({ thread: this.messaging.inbox.thread });
                 }

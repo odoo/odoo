@@ -208,7 +208,6 @@ registerModel({
         }),
         thread: one('Thread', {
             compute: '_computeThread',
-            readonly: true,
             required: true,
         })
     },

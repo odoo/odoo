@@ -72,7 +72,6 @@ registerModel({
     fields: {
         attachment: one('Attachment', {
             compute: '_computeAttachment',
-            readonly: true,
             required: true,
         }),
         body: attr({

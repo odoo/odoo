@@ -26,6 +26,5 @@ addRecordMethods('ThreadNeedactionPreviewView', {
 addFields('ThreadNeedactionPreviewView', {
     isRating: attr({
         compute: '_computeIsRating',
-        readonly: true,
     }),
 });

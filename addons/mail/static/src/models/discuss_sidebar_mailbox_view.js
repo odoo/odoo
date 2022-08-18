@@ -40,7 +40,6 @@ registerModel({
         }),
         mailbox: one('Mailbox', {
             compute: '_computeMailbox',
-            readonly: true,
             required: true,
         }),
     },

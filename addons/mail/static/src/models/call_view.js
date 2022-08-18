@@ -171,7 +171,6 @@ registerModel({
             compute: '_computeCallSideBarView',
             inverse: 'callView',
             isCausal: true,
-            readonly: true,
         }),
         channel: one('Thread', {
             related: 'threadView.thread',

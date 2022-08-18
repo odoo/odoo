@@ -26,7 +26,6 @@ registerModel({
         emojiViews: many('EmojiView', {
             compute: '_computeEmojiViews',
             inverse: 'emojiGridView',
-            readonly: true,
             isCausal: true,
         }),
     },

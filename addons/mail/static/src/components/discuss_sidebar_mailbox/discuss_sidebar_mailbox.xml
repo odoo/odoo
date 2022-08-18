@@ -3,8 +3,8 @@
     <t t-name="mail.DiscussSidebarMailbox" owl="1">
         <button class="o_DiscussSidebarMailbox btn d-flex align-items-center py-1 px-0 border-0 rounded-0 fw-normal text-dark"
             t-att-class="{
-                'bg-100': discussSidebarMailboxView.mailbox.thread !== messaging.discuss.thread,
-                'o-active bg-200': discussSidebarMailboxView.mailbox.thread === messaging.discuss.thread,
+                'bg-100': discussSidebarMailboxView.mailbox.thread !== messaging.discuss.activeThread,
+                'o-active bg-200': discussSidebarMailboxView.mailbox.thread === messaging.discuss.activeThread,
                 'o-starred-box': discussSidebarMailboxView.mailbox === messaging.starred,
             }" t-attf-class="{{ className }}" t-on-click="discussSidebarMailboxView.mailbox.thread.onClick" t-att-data-mailbox-local-id="discussSidebarMailboxView.mailbox.localId" t-att-data-mailbox-name="discussSidebarMailboxView.mailbox.name"
             t-ref="root"

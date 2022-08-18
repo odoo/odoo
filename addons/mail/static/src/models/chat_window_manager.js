@@ -50,8 +50,7 @@ registerModel({
          *
          */
         closeAll() {
-            const chatWindows = this.allOrdered;
-            for (const chatWindow of chatWindows) {
+            for (const chatWindow of this.chatWindows) {
                 chatWindow.close();
             }
         },
@@ -140,16 +139,15 @@ registerModel({
          * @param {ChatWindow} chatWindow2
          */
         swap(chatWindow1, chatWindow2) {
-            const ordered = this.allOrdered;
-            const index1 = ordered.findIndex(chatWindow => chatWindow === chatWindow1);
-            const index2 = ordered.findIndex(chatWindow => chatWindow === chatWindow2);
+            const index1 = this.chatWindows.findIndex(chatWindow => chatWindow === chatWindow1);
+            const index2 = this.chatWindows.findIndex(chatWindow => chatWindow === chatWindow2);
             if (index1 === -1 || index2 === -1) {
                 return;
             }
-            const _newOrdered = [...this.allOrdered];
+            const _newOrdered = [...this.chatWindows];
             _newOrdered[index1] = chatWindow2;
             _newOrdered[index2] = chatWindow1;
-            this.update({ allOrdered: _newOrdered });
+            this.update({ chatWindows: _newOrdered });
             for (const chatWindow of [chatWindow1, chatWindow2]) {
                 if (chatWindow.threadView) {
                     chatWindow.threadView.addComponentHint('adjust-scroll');
@@ -260,7 +258,7 @@ registerModel({
             if (!this.messaging.device.isSmall && this.messaging.discuss.discussView) {
                 return visual;
             }
-            if (!this.allOrdered.length) {
+            if (!this.chatWindows.length) {
                 return visual;
             }
             const relativeGlobalWindowWidth = this.messaging.device.globalWindowInnerWidth - this.startGapWidth - this.endGapWidth;
@@ -273,10 +271,10 @@ registerModel({
                 maxAmountWithoutHidden = 1;
                 maxAmountWithHidden = 1;
             }
-            if (this.allOrdered.length <= maxAmountWithoutHidden) {
+            if (this.chatWindows.length <= maxAmountWithoutHidden) {
                 // all visible
-                for (let i = 0; i < this.allOrdered.length; i++) {
-                    const chatWindow = this.allOrdered[i];
+                for (let i = 0; i < this.chatWindows.length; i++) {
+                    const chatWindow = this.chatWindows[i];
                     const offset = this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
                     visual.visible.push({ chatWindow, offset });
                 }
@@ -284,24 +282,24 @@ registerModel({
             } else if (maxAmountWithHidden > 0) {
                 // some visible, some hidden
                 for (let i = 0; i < maxAmountWithHidden; i++) {
-                    const chatWindow = this.allOrdered[i];
+                    const chatWindow = this.chatWindows[i];
                     const offset = this.startGapWidth + i * (this.chatWindowWidth + this.betweenGapWidth);
                     visual.visible.push({ chatWindow, offset });
                 }
-                if (this.allOrdered.length > maxAmountWithHidden) {
+                if (this.chatWindows.length > maxAmountWithHidden) {
                     visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
                     visual.hiddenMenuOffset = visual.visible[maxAmountWithHidden - 1].offset
                         + this.chatWindowWidth + this.betweenGapWidth;
                 }
-                for (let j = maxAmountWithHidden; j < this.allOrdered.length; j++) {
-                    visual.hiddenChatWindows.push(this.allOrdered[j]);
+                for (let j = maxAmountWithHidden; j < this.chatWindows.length; j++) {
+                    visual.hiddenChatWindows.push(this.chatWindows[j]);
                 }
                 visual.availableVisibleSlots = maxAmountWithHidden;
             } else {
                 // all hidden
                 visual.isHiddenMenuVisible = !this.messaging.device.isSmall;
                 visual.hiddenMenuOffset = this.startGapWidth;
-                visual.hiddenChatWindows.push(...this.allOrdered);
+                visual.hiddenChatWindows.push(...this.chatWindows);
                 console.warn('cannot display any visible chat windows (screen is too small)');
                 visual.availableVisibleSlots = 0;
             }
@@ -309,12 +307,6 @@ registerModel({
         },
     },
     fields: {
-        /**
-         * List of ordered chat windows.
-         */
-        allOrdered: many('ChatWindow', {
-            compute: '_computeAllOrdered',
-        }),
         allOrderedHidden: many('ChatWindow', {
             compute: '_computeAllOrderedHidden',
         }),

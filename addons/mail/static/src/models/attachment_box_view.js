@@ -31,7 +31,6 @@ registerModel({
             compute: '_computeAttachmentList',
             inverse: 'attachmentBoxViewOwner',
             isCausal: true,
-            readonly: true,
         }),
         chatter: one('Chatter', {
             identifying: true,

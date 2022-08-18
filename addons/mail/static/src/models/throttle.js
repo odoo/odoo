@@ -63,7 +63,6 @@ registerModel({
          */
         duration: attr({
             compute: '_computeDuration',
-            readonly: true,
             required: true,
         }),
         /**

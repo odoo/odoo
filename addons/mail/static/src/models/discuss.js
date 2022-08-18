@@ -192,10 +192,28 @@ registerModel({
          * @returns {string|undefined}
          */
         _computeActiveId() {
+            if (!this.activeThread) {
+                return clear();
+            }
+            return this.threadToActiveId(this.activeThread);
+        },
+        /**
+         * Only mailboxes and pinned channels are allowed in Discuss.
+         *
+         * @private
+         * @returns {FieldCommand|Thread}
+         */
+        _computeActiveThread() {
             if (!this.thread) {
                 return clear();
             }
-            return this.threadToActiveId(this.thread);
+            if (this.thread.channel && this.thread.isPinned) {
+                return this.thread;
+            }
+            if (this.thread.mailbox) {
+                return this.thread;
+            }
+            return clear();
         },
         /**
          * @private
@@ -213,27 +231,17 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string}
-         */
-        _computeAddingChannelValue() {
-            if (!this.discussView) {
-                return "";
-            }
-            return this.addingChannelValue;
-        },
-        /**
-         * @private
          * @returns {boolean}
          */
         _computeHasThreadView() {
-            if (!this.thread || !this.discussView) {
+            if (!this.activeThread || !this.discussView) {
                 return false;
             }
             if (
                 this.messaging.device.isSmall &&
                 (
                     this.activeMobileNavbarTabId !== 'mailbox' ||
-                    !this.thread.mailbox
+                    !this.activeThread.mailbox
                 )
             ) {
                 return false;
@@ -282,24 +290,6 @@ registerModel({
             return (this.messaging.device.isSmall && this.activeMobileNavbarTabId !== 'mailbox') ? {} : clear();
         },
         /**
-         * Only mailboxes and pinned channels are allowed in Discuss.
-         *
-         * @private
-         * @returns {FieldCommand|undefined}
-         */
-        _computeThread() {
-            if (!this.thread) {
-                return clear();
-            }
-            if (this.thread.channel && this.thread.isPinned) {
-                return undefined;
-            }
-            if (this.thread.mailbox) {
-                return undefined;
-            }
-            return clear();
-        },
-        /**
          * @private
          * @returns {ThreadViewer}
          */
@@ -308,7 +298,7 @@ registerModel({
                 hasMemberList: true,
                 hasThreadView: this.hasThreadView,
                 hasTopbar: true,
-                thread: this.thread ? this.thread : clear(),
+                thread: this.activeThread ? this.activeThread : clear(),
             };
         },
     },
@@ -322,6 +312,12 @@ registerModel({
         activeMobileNavbarTabId: attr({
             default: 'mailbox',
         }),
+        /**
+         * Determines the `Thread` that should be displayed by `this`.
+         */
+        activeThread: one('Thread', {
+            compute: '_computeActiveThread',
+        }),
         addChannelInputPlaceholder: attr({
             compute: '_computeAddChannelInputPlaceholder',
         }),
@@ -332,7 +328,6 @@ registerModel({
          * Value that is used to create a channel from the sidebar.
          */
         addingChannelValue: attr({
-            compute: '_computeAddingChannelValue',
             default: "",
         }),
         /**
@@ -424,12 +419,7 @@ registerModel({
         sidebarQuickSearchValue: attr({
             default: "",
         }),
-        /**
-         * Determines the `Thread` that should be displayed by `this`.
-         */
-        thread: one('Thread', {
-            compute: '_computeThread',
-        }),
+        thread: one('Thread'),
         /**
          * States the `ThreadView` displaying `this.thread`.
          */
@@ -443,7 +433,6 @@ registerModel({
             compute: '_computeThreadViewer',
             inverse: 'discuss',
             isCausal: true,
-            readonly: true,
             required: true,
         }),
     },

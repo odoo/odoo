@@ -85,15 +85,12 @@ registerModel({
         inlineLastMessageBody: attr({
             compute: '_computeInlineLastMessageBody',
             default: "",
-            readonly: true,
         }),
         isEmpty: attr({
             compute: '_computeIsEmpty',
-            readonly: true,
         }),
         lastTrackingValue: one('TrackingValue', {
             compute: '_computeLastTrackingValue',
-            readonly: true,
         }),
         /**
          * Reference of the "mark as read" button. Useful to disable the
@@ -113,7 +110,6 @@ registerModel({
             compute: '_computePersonaImStatusIconView',
             inverse: 'threadPreviewViewOwner',
             isCausal: true,
-            readonly: true,
         }),
         thread: one('Thread', {
             identifying: true,

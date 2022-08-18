@@ -72,7 +72,6 @@ registerModel({
          * States the thread view linked to this discuss public view.
          */
         threadView: one('ThreadView', {
-            readonly: true,
             related: 'threadViewer.threadView',
         }),
         /**

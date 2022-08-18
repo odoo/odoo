@@ -43,7 +43,7 @@
                 record="discussView.discuss.threadView"
             />
         </t>
-        <t t-if="!discussView.discuss.thread and (!messaging.device.isSmall or discussView.discuss.activeMobileNavbarTabId === 'mailbox')">
+        <t t-if="!discussView.discuss.activeThread and (!messaging.device.isSmall or discussView.discuss.activeMobileNavbarTabId === 'mailbox')">
             <div class="o_Discuss_noThread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-white">
                 <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
             </div>

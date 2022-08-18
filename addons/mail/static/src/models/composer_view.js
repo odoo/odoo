@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, link, unlink } from '@mail/model/model_field_command';
+import { clear, link } from '@mail/model/model_field_command';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -144,10 +144,10 @@ registerModel({
             // the mention will appear in the target channel, or be notified to
             // the target partner.
             if (this.composerSuggestionListView.activeSuggestionView.suggestable.thread) {
-                Object.assign(updateData, { mentionedChannels: link(this.composerSuggestionListView.activeSuggestionView.suggestable.thread) });
+                Object.assign(updateData, { rawMentionedChannels: link(this.composerSuggestionListView.activeSuggestionView.suggestable.thread) });
             }
             if (this.composerSuggestionListView.activeSuggestionView.suggestable.partner) {
-                Object.assign(updateData, { mentionedPartners: link(this.composerSuggestionListView.activeSuggestionView.suggestable.partner) });
+                Object.assign(updateData, { rawMentionedPartners: link(this.composerSuggestionListView.activeSuggestionView.suggestable.partner) });
             }
             this.composer.update(updateData);
             for (const composerView of this.composer.composerViews) {
@@ -793,23 +793,9 @@ registerModel({
                 return clear();
             }
             if (this.threadView.threadViewer.discuss) {
-                return this.threadView.threadViewer.discuss.thread === this.messaging.inbox.thread;
+                return this.threadView.threadViewer.discuss.activeThread === this.messaging.inbox.thread;
             }
             return clear();
-        },
-        /**
-         * Clears the extra suggestions on closing mentions, and ensures
-         * the extra list does not contain any element already present in the
-         * main list, which is a requirement for the navigation process.
-         *
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeExtraSuggestions() {
-            if (this.suggestionDelimiterPosition === undefined) {
-                return clear();
-            }
-            return unlink(this.mainSuggestions);
         },
         /**
          * @private
@@ -970,17 +956,6 @@ registerModel({
             return clear();
         },
         /**
-         * Clears the main suggestions on closing mentions.
-         *
-         * @private
-         * @returns {Record[]}
-         */
-        _computeMainSuggestions() {
-            if (this.suggestionDelimiterPosition === undefined) {
-                return clear();
-            }
-        },
-        /**
          * @private
          * @returns {string}
          */
@@ -1018,7 +993,7 @@ registerModel({
                     this.messaging.device.isSmall ||
                     (
                         this.messaging.discuss.threadView === this.threadView &&
-                        this.messaging.discuss.thread === this.messaging.inbox.thread
+                        this.messaging.discuss.activeThread === this.messaging.inbox.thread
                     )
                 ) {
                     return ['ctrl-enter', 'meta-enter'];
@@ -1356,7 +1331,18 @@ registerModel({
                 return {};
             }
             return clear();
-        }
+        },
+        /**
+         * @private
+         */
+        _onSuggestionDelimiterPositionChanged() {
+            if (this.suggestionDelimiterPosition === undefined) {
+                this.update({
+                    extraSuggestions: clear(),
+                    mainSuggestions: clear(),
+                });
+            }
+        },
     },
     fields: {
         /**
@@ -1366,7 +1352,6 @@ registerModel({
             compute: '_computeAttachmentList',
             inverse: 'composerViewOwner',
             isCausal: true,
-            readonly: true,
         }),
         /**
          * States the ref to the html node of the emojis button.
@@ -1423,9 +1408,7 @@ registerModel({
             inverse: 'composerViewOwnerAsEmoji',
             isCausal: true,
         }),
-        extraSuggestions: many('ComposerSuggestable', {
-            compute: '_computeExtraSuggestions',
-        }),
+        extraSuggestions: many('ComposerSuggestable'),
         fileUploader: one('FileUploader', {
             default: {},
             inverse: 'composerView',
@@ -1534,9 +1517,7 @@ registerModel({
         textareaLastInputValue: attr({
             default: "",
         }),
-        mainSuggestions: many('ComposerSuggestable', {
-            compute: '_computeMainSuggestions',
-        }),
+        mainSuggestions: many('ComposerSuggestable'),
         /**
          * States the message view on which this composer allows editing (if any).
          */
@@ -1631,6 +1612,10 @@ registerModel({
         {
             dependencies: ['suggestionDelimiterPosition', 'suggestionModelName', 'suggestionSearchTerm', 'composer.activeThread'],
             methodName: '_onChangeUpdateSuggestionList',
+        },
+        {
+            dependencies: ['suggestionDelimiterPosition'],
+            methodName: '_onSuggestionDelimiterPositionChanged',
         },
     ],
 });

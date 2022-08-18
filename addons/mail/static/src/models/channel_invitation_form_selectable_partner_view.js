@@ -28,7 +28,6 @@ registerModel({
             compute: '_computePersonaImStatusIconView',
             inverse: 'channelInvitationFormSelectablePartnerViewOwner',
             isCausal: true,
-            readonly: true,
         }),
     },
 });
