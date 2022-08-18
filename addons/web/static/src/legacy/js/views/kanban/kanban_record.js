@@ -232,11 +232,6 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
      * @private
      */
     _openRecord: function () {
-        if (this.$el.hasClass('o_currently_dragged')) {
-            // this record is currently being dragged and dropped, so we do not
-            // want to open it.
-            return;
-        }
         var editMode = this.$el.hasClass('oe_kanban_global_click_edit');
         this.trigger_up('open_record', {
             id: this.db_id,
@@ -674,6 +669,11 @@ var KanbanRecord = Widget.extend(WidgetAdapterMixin, {
      */
     _onGlobalClick: function (event) {
         if ($(event.target).parents('.o_dropdown_kanban').length) {
+            return;
+        }
+        if (this.$el.hasClass('o_currently_dragged')) {
+            // this record is currently being dragged and dropped, so we do not
+            // want to open it.
             return;
         }
         var trigger = true;
