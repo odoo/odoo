@@ -1664,7 +1664,7 @@ class AccountMove(models.Model):
                         line.account_id = self.journal_id.default_credit_account_id
                     elif self.is_purchase_document(include_receipts=True):
                         line.account_id = self.journal_id.default_debit_account_id
-            if line.product_id and not line._cache.get('name'):
+            if line.product_id and not line._cache.get('name') and not line._origin:
                 line.name = line._get_computed_name()
 
             # Compute the account before the partner_id
