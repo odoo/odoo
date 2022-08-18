@@ -1056,11 +1056,18 @@ class PaymentTransaction(models.Model):
                 "Refund transaction reference: %(ref)s (%(acq_name)s).",
                 amount=formatted_amount, ref=self.reference, acq_name=self.acquirer_id.name
             )
-        else:  # 'online_token'
+        elif self.operation in ('online_token', 'offline'):
             message = _(
                 "A transaction with reference %(ref)s has been initiated using the payment method "
                 "%(token_name)s (%(acq_name)s).",
                 ref=self.reference, token_name=self.token_id.name, acq_name=self.acquirer_id.name
+            )
+        else:  # 'validation'
+            message = _(
+                "A transaction with reference %(ref)s has been initiated to save a new payment "
+                "method (%(acq_name)s)",
+                ref=self.reference,
+                acq_name=self.acquirer_id.name,
             )
         return message
 
