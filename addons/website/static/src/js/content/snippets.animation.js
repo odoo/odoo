@@ -337,7 +337,7 @@ var Animation = publicWidget.Widget.extend({
      * @type {string} [startTarget]
      *       A selector to find the target where to listen for the start events
      *       (if no selector, the window target will be used). If the whole
-     *       $target of the animation should be used, use the 'selector' string.
+     *       element of the animation should be used, use the 'selector' string.
      * @type {string} [endEvents]
      *       The name of the events which trigger the end of the effect (if none
      *       is defined, the animation will stop after a while
@@ -345,7 +345,7 @@ var Animation = publicWidget.Widget.extend({
      * @type {string} [endTarget]
      *       A selector to find the target where to listen for the end events
      *       (if no selector, the startTarget will be used). If the whole
-     *       $target of the animation should be used, use the 'selector' string.
+     *       element of the animation should be used, use the 'selector' string.
      * @type {string} update
      *       A string which refers to a method which will be used as the update
      *       callback for the effect. It receives 3 arguments: the animation
@@ -407,7 +407,7 @@ var Animation = publicWidget.Widget.extend({
             function _findTarget(selector) {
                 if (selector) {
                     if (selector === 'selector') {
-                        return self.$target;
+                        return self.$el;
                     }
                     return self.$(selector);
                 }
@@ -446,7 +446,7 @@ registry.slider = publicWidget.Widget.extend({
         this.$('img').on('load.slider', () => this._computeHeights());
         this._computeHeights();
         // Initialize carousel and pause if in edit mode.
-        this.$target.carousel(this.editableMode ? 'pause' : undefined);
+        this.$el.carousel(this.editableMode ? 'pause' : undefined);
         $(window).on('resize.slider', _.debounce(() => this._computeHeights(), 250));
         return this._super.apply(this, arguments);
     },
@@ -456,8 +456,8 @@ registry.slider = publicWidget.Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         this.$('img').off('.slider');
-        this.$target.carousel('pause');
-        this.$target.removeData('bs.carousel');
+        this.$el.carousel('pause');
+        this.$el.removeData('bs.carousel');
         _.each(this.$('.carousel-item'), function (el) {
             $(el).css('min-height', '');
         });
@@ -539,7 +539,7 @@ registry.Parallax = Animation.extend({
         this.$bg = this.$('> .s_parallax_bg');
 
         // Get parallax speed
-        this.speed = parseFloat(this.$target.attr('data-scroll-background-ratio') || 0);
+        this.speed = parseFloat(this.$el.attr('data-scroll-background-ratio') || 0);
 
         // Reset offset if parallax effect will not be performed and leave
         var noParallaxSpeed = (this.speed === 0 || this.speed === 1);
@@ -554,8 +554,8 @@ registry.Parallax = Animation.extend({
 
         // Initialize parallax data according to snippet and viewport dimensions
         this.viewport = document.body.clientHeight - $('#wrapwrap').position().top;
-        this.visibleArea = [this.$target.offset().top];
-        this.visibleArea.push(this.visibleArea[0] + this.$target.innerHeight() + this.viewport);
+        this.visibleArea = [this.$el.offset().top];
+        this.visibleArea.push(this.visibleArea[0] + this.$el.innerHeight() + this.viewport);
         this.ratio = this.speed * (this.viewport / 10);
 
         // Provide a "safe-area" to limit parallax
@@ -657,7 +657,7 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
         // integrated with Odoo (this refactoring should be done in master).
 
         const proms = [this._super.apply(this, arguments)];
-        let iframeEl = this.$target[0].querySelector(':scope > iframe');
+        let iframeEl = this.el.querySelector(':scope > iframe');
 
         // The following code is only there to ensure compatibility with
         // videos added before bug fixes or new Odoo versions where the
@@ -688,10 +688,10 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
     _generateIframe: function () {
         // Bug fix / compatibility: empty the <div/> element as all information
         // to rebuild the iframe should have been saved on the <div/> element
-        this.$target.empty();
+        this.$el.empty();
 
         // Add extra content for size / edition
-        this.$target.append(
+        this.$el.append(
             '<div class="css_editable_mode_display">&nbsp;</div>' +
             '<div class="media_iframe_video_size">&nbsp;</div>'
         );
@@ -700,7 +700,7 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
         // the src is saved in the 'data-src' attribute or the
         // 'data-oe-expression' one (the latter is used as a workaround in 10.0
         // system but should obviously be reviewed in master).
-        var src = _.escape(this.$target.data('oe-expression') || this.$target.data('src'));
+        var src = _.escape(this.$el.data('oe-expression') || this.$el.data('src'));
         // Validate the src to only accept supported domains we can trust
         var m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
         if (!m) {
@@ -718,7 +718,7 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             frameborder: '0',
             allowfullscreen: 'allowfullscreen',
         })[0];
-        this.$target.append(iframeEl);
+        this.$el.append(iframeEl);
         return iframeEl;
     },
 });
@@ -754,15 +754,15 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
 
         $(window).on('resize.' + this.iframeID, throttledUpdate);
 
-        const $modal = this.$target.closest('.modal');
+        const $modal = this.$el.closest('.modal');
         if ($modal.length) {
             $modal.on('show.bs.modal', () => {
-                const videoContainerEl = this.$target[0].querySelector('.o_bg_video_container');
+                const videoContainerEl = this.el.querySelector('.o_bg_video_container');
                 videoContainerEl.classList.add('d-none');
             });
             $modal.on('shown.bs.modal', () => {
                 this._adjustIframe();
-                const videoContainerEl = this.$target[0].querySelector('.o_bg_video_container');
+                const videoContainerEl = this.el.querySelector('.o_bg_video_container');
                 videoContainerEl.classList.remove('d-none');
             });
         }
@@ -803,8 +803,8 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
         this.$iframe.removeClass('show');
 
         // Adjust the iframe
-        var wrapperWidth = this.$target.innerWidth();
-        var wrapperHeight = this.$target.innerHeight();
+        var wrapperWidth = this.$el.innerWidth();
+        var wrapperHeight = this.$el.innerHeight();
         var relativeRatio = (wrapperWidth / wrapperHeight) / (16 / 9);
         var style = {};
         if (relativeRatio >= 1.0) {
@@ -838,7 +838,7 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
         this.$iframe.one('load', () => {
             this.$bgVideoContainer.find('.o_bg_video_loading').remove();
         });
-        this.$bgVideoContainer.prependTo(this.$target);
+        this.$bgVideoContainer.prependTo(this.$el);
         $oldContainer.remove();
 
         this._adjustIframe();
@@ -964,10 +964,10 @@ registry.anchorSlide = publicWidget.Widget.extend({
      * @private
      */
     _onAnimateClick: function (ev) {
-        if (this.$target[0].pathname !== window.location.pathname) {
+        if (this.el.pathname !== window.location.pathname) {
             return;
         }
-        var hash = this.$target[0].hash;
+        var hash = this.el.hash;
         if (!utils.isValidAnchor(hash)) {
             return;
         }
@@ -1193,7 +1193,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         this.$scrollingElement = $().getScrollingElement();
         // By default, elements are hidden by the css of o_animate.
         // Render elements and trigger the animation then pause it in state 0.
-        this.$animatedElements = this.$target.find('.o_animate');
+        this.$animatedElements = this.$('.o_animate');
         _.each(this.$animatedElements, el => {
             if (el.closest('.dropdown')) {
                 el.classList.add('o_animate_in_dropdown');
@@ -1226,7 +1226,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      */
     destroy() {
         this._super(...arguments);
-        this.$target.find('.o_animate')
+        this.$('.o_animate')
             .removeClass('o_animating o_animated o_animate_preview o_animate_in_dropdown')
             .css({
                 'animation-name': '',
@@ -1315,7 +1315,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      * @param {Element} el
      */
     _scrollWebsiteAnimate(el) {
-        _.each(this.$target.find('.o_animate:not(.o_animate_in_dropdown)'), el => {
+        _.each(this.$('.o_animate:not(.o_animate_in_dropdown)'), el => {
             const $el = $(el);
             const elHeight = el.offsetHeight;
             const animateOnScroll = el.classList.contains('o_animate_on_scroll');
@@ -1328,12 +1328,12 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
             // not really one (eg 'discrete' layout), and should not be used as
             // scrollTop value.
             const scrollTop = document.body.classList.contains('modal-open') ?
-                this.$target.find('.modal:visible').scrollTop() :
+                this.$('.modal:visible').scrollTop() :
                 this.$scrollingElement.scrollTop();
             const elTop = this._getElementOffsetTop(el) - scrollTop;
             let visible;
             const footerEl = el.closest('.o_footer_slideout');
-            const wrapEl = this.$target[0];
+            const wrapEl = this.el;
             if (footerEl && wrapEl.classList.contains('o_footer_effect_enable')) {
                 // Since the footer slideout is always in the viewport but not
                 // always displayed, the way to calculate if an element is
@@ -1417,7 +1417,7 @@ registry.ImagesLazyLoading = publicWidget.Widget.extend({
         // priority). However, the min-height would always be forced even once
         // the image is loaded, which could mess with some layouts relying on
         // the image intrinsic min-height.
-        const imgEls = this.$target[0].querySelectorAll('img[loading="lazy"]');
+        const imgEls = this.el.querySelectorAll('img[loading="lazy"]');
         for (const imgEl of imgEls) {
             // Write initial min-height on the dataset, so that it can also
             // be properly restored on widget destroy.
@@ -1437,7 +1437,7 @@ registry.ImagesLazyLoading = publicWidget.Widget.extend({
      */
     destroy() {
         this._super(...arguments);
-        const imgEls = this.$target[0].querySelectorAll('img[data-lazy-loading-initial-min-height]');
+        const imgEls = this.el.querySelectorAll('img[data-lazy-loading-initial-min-height]');
         for (const imgEl of imgEls) {
             this._restoreImage(imgEl);
         }

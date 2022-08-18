@@ -42,7 +42,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         var self = this;
         this.fadeInOutDelay = 400;
         return this._super.apply(this, arguments).then(function () {
-            self.options = self.$target.find('form').data();
+            self.options = self.$('form').data();
             self.readonly = self.options.readonly;
             self.selectedAnswers = self.options.selectedAnswers;
             self.imgZoomer = false;
@@ -339,10 +339,10 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
     // Custom Events
     // -------------------------------------------------------------------------
-    
+
     /**
      * Changes the tooltip according to the type of the field.
-     * @param {Event} event 
+     * @param {Event} event
      */
     _updateEnterButtonText: function (event) {
         const $target = event.target;

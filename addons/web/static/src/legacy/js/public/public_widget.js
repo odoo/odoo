@@ -104,9 +104,9 @@ var RootWidget = Widget.extend({
 var PublicWidget = Widget.extend({
     /**
      * The selector attribute, if defined, allows to automatically create an
-     * instance of this widget on page load for each DOM element which
-     * matches this selector. The `PublicWidget.$target` element will then be
-     * that particular DOM element. This should be the main way of instantiating
+     * instance of this widget on page load for each DOM element which matches
+     * this selector. The `PublicWidget.$el / el` element will then be that
+     * particular DOM element. This should be the main way of instantiating
      * `PublicWidget` elements.
      *
      * @todo do not make this part of the Widget but rather an info to give when

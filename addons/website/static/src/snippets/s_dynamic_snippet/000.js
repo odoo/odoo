@@ -147,7 +147,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
      * @private
      */
      _getQWebRenderOptions: function () {
-        const dataset = this.$target[0].dataset;
+        const dataset = this.el.dataset;
         const numberOfRecords = parseInt(dataset.numberOfRecords);
         let numberOfElements;
         if (config.device.isMobile) {

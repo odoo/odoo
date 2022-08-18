@@ -278,7 +278,7 @@ publicWidget.registry.RevokeTrustedDeviceButton = publicWidget.Widget.extend({
             this._rpc({
                 model: 'auth_totp.device',
                 method: 'remove',
-                args: [parseInt(this.target.id)]
+                args: [parseInt(this.el.id)]
             })
         );
         window.location = window.location;

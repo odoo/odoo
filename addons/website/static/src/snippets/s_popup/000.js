@@ -82,7 +82,7 @@ const PopupWidget = publicWidget.Widget.extend({
     destroy: function () {
         this._super.apply(this, arguments);
         $(document).off('mouseleave.open_popup');
-        this.$target.find('.modal').modal('hide');
+        this.$el.find('.modal').modal('hide');
         clearTimeout(this.timeout);
     },
 
@@ -94,7 +94,7 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _bindPopup: function () {
-        const $main = this.$target.find('.modal');
+        const $main = this.$el.find('.modal');
 
         let display = $main.data('display');
         let delay = $main.data('showAfter');
@@ -122,7 +122,7 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _hidePopup: function () {
-        this.$target.find('.modal').modal('hide');
+        this.$el.find('.modal').modal('hide');
     },
     /**
      * @private
@@ -131,7 +131,7 @@ const PopupWidget = publicWidget.Widget.extend({
         if (this._popupAlreadyShown || !this._canShowPopup()) {
             return;
         }
-        this.$target.find('.modal').modal('show');
+        this.$el.find('.modal').modal('show');
     },
 
     //--------------------------------------------------------------------------
@@ -152,7 +152,7 @@ const PopupWidget = publicWidget.Widget.extend({
         setCookie(this.el.id, this.cookieValue, nbDays * 24 * 60 * 60, 'required');
         this._popupAlreadyShown = true;
 
-        this.$target.find('.media_iframe_video iframe').each((i, iframe) => {
+        this.$el.find('.media_iframe_video iframe').each((i, iframe) => {
             iframe.src = '';
         });
     },
