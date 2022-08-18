@@ -30,7 +30,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeMessage() {
-            return this.dialogOwner.messageActionListOwnerAsDeleteConfirm.message;
+            return this.dialogOwner.messageActionViewOwnerAsDeleteConfirm.messageAction.messageActionListOwner.message;
         },
         /**
          * @private

@@ -123,7 +123,7 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
     );
     assert.containsNone(
         document.body,
-        '.o_MessageActionList_action',
+        '.o_MessageActionView',
         "should not have any action in action list of message"
     );
 });
