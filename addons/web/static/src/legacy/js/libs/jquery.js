@@ -47,6 +47,8 @@ $.fn.extend({
         });
     },
     /**
+     * @deprecated this will soon be removed: just rely on the fact that the
+     * scrollbar is at its natural position.
      * @returns {jQuery}
      */
     getScrollingElement(document = window.document) {
@@ -71,6 +73,8 @@ $.fn.extend({
         return $baseScrollingElement;
     },
     /**
+     * @deprecated this will soon be removed: just rely on the fact that the
+     * scrollbar is at its natural position.
      * @returns {jQuery}
      */
     getScrollingTarget(contextItem = window.document) {
@@ -110,8 +114,13 @@ $.fn.extend({
 
 // jQuery functions monkey-patching
 
-// Some magic to ensure scrolltop and animate on html/body animate the top level
-// scrollable element even if not html or body.
+// Some magic to ensure scrollTop and animate on html/body animate the top level
+// scrollable element even if not html or body. Note: we should consider
+// removing this as it was only really needed when the #wrapwrap was the one
+// with the scrollbar. Although the rest of the code still use
+// getScrollingElement to be generic so this is consistent. Maybe all of this
+// can live on as long as we continue using jQuery a lot. We can decide of the
+// fate of getScrollingElement and related code the moment we get rid of jQuery.
 const originalScrollTop = $.fn.scrollTop;
 $.fn.scrollTop = function (value) {
     if (value !== undefined && this.filter('html, body').length) {

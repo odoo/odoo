@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { cookie } from "@web/core/browser/cookie";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
+import { scrollTo } from "@web_editor/js/common/scrolling";
 
 import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
@@ -548,7 +549,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         } else {
             var $errorTarget = this.$('.o_survey_error');
             $errorTarget.removeClass("d-none");
-            this._scrollToError($errorTarget);
+            scrollTo($errorTarget[0]);
         }
     },
 
@@ -1246,7 +1247,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         errorKeys.forEach(key => {
             self.$("#" + key + '>.o_survey_question_error').append($('<span>', {text: errors[key]})).addClass("slide_in");
             if (errorKeys[0] === key) {
-                self._scrollToError(self.$('.js_question-wrapper#' + key));
+                scrollTo(self.$('.js_question-wrapper#' + key)[0]);
             }
         });
     },
@@ -1258,19 +1259,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
     _scrollToFirstError: function() {
         const errorElem = this.el.querySelector('.o_survey_question_error :not(:empty)');
         errorElem?.scrollIntoView();
-    },
-
-    _scrollToError: function ($target) {
-        var scrollLocation = $target.offset().top;
-        var navbarHeight = $('.o_main_navbar').height();
-        if (navbarHeight) {
-            // In overflow auto, scrollLocation of target can be negative if target is out of screen (up side)
-            scrollLocation = scrollLocation >= 0 ? scrollLocation - navbarHeight : scrollLocation + navbarHeight;
-        }
-        var scrollinside = $("#wrapwrap").scrollTop();
-        $('#wrapwrap').animate({
-            scrollTop: scrollinside + scrollLocation
-        }, 500);
     },
 
     /**

@@ -180,17 +180,14 @@ export class WebsitePreview extends Component {
         }, () => []);
 
         const toggleIsMobile = () => {
-            const wrapwrapEl = this.iframe.el.contentDocument.querySelector('#wrapwrap');
-            if (wrapwrapEl) {
-                wrapwrapEl.classList.toggle('o_is_mobile', this.websiteContext.isMobile);
-            }
+            this.iframe.el.contentDocument.documentElement
+                .classList.toggle('o_is_mobile', this.websiteContext.isMobile);
         };
-        // Toggle the 'o_is_mobile' class on the wrapwrap when 'isMobile'
-        // changes in the context. (e.g. Click on mobile preview buttons)
+        // Toggle the 'o_is_mobile' class when the context 'isMobile' changes
+        // (e.g. Click on mobile preview buttons).
         useEffect(toggleIsMobile, () => [this.websiteContext.isMobile]);
 
-        // Toggle the 'o_is_mobile' class on the wrapwrap according to
-        // 'isMobile' on iframe load.
+        // Toggle the 'o_is_mobile' class according to 'isMobile' on iframe load
         useEffect(() => {
             this.iframe.el.addEventListener('OdooFrameContentLoaded', toggleIsMobile);
             return () => this.iframe.el.removeEventListener('OdooFrameContentLoaded', toggleIsMobile);
