@@ -50,8 +50,8 @@ registerModel({
             if (this.composerViewOwnerAsEmoji) {
                 return this.composerViewOwnerAsEmoji.buttonEmojisRef;
             }
-            if (this.messageActionListOwnerAsReaction) {
-                return this.messageActionListOwnerAsReaction.actionReactionRef;
+            if (this.messageActionViewOwnerAsReaction) {
+                return this.messageActionViewOwnerAsReaction.actionRef;
             }
             return clear();
         },
@@ -118,7 +118,7 @@ registerModel({
             if (this.composerViewOwnerAsEmoji) {
                 return {};
             }
-            if (this.messageActionListOwnerAsReaction) {
+            if (this.messageActionViewOwnerAsReaction) {
                 return {};
             }
             return clear();
@@ -147,7 +147,7 @@ registerModel({
             if (this.composerViewOwnerAsEmoji) {
                 return 'top';
             }
-            if (this.messageActionListOwnerAsReaction) {
+            if (this.messageActionViewOwnerAsReaction) {
                 return 'top';
             }
             return clear();
@@ -247,9 +247,9 @@ registerModel({
             readonly: true,
         }),
         /**
-         * If set, this popover view is owned by a message action list.
+         * If set, this popover view is owned by a message action view.
          */
-        messageActionListOwnerAsReaction: one('MessageActionList', {
+        messageActionViewOwnerAsReaction: one('MessageActionView', {
             identifying: true,
             inverse: 'reactionPopoverView',
         }),

@@ -10,8 +10,8 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClick(ev) {
-            if (this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.messageActionListOwnerAsReaction) {
-                this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.messageActionListOwnerAsReaction.onClickReaction(ev);
+            if (this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction) {
+                this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.messageActionViewOwnerAsReaction.onClickReaction(ev);
                 return;
             }
             if (this.emojiGridView.emojiPickerViewOwner.popoverViewOwner.composerViewOwnerAsEmoji) {

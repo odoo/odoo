@@ -53,7 +53,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         "should display a single message"
     );
     await click('.o_Message');
-    await click('.o_MessageActionList_actionReply');
+    await click('.o_MessageActionView_actionReplyTo');
     assert.containsOnce(
         document.body,
         '.o_Composer',
@@ -152,7 +152,7 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
     );
     await click('.o_Message');
 
-    await click('.o_MessageActionList_actionReply');
+    await click('.o_MessageActionView_actionReplyTo');
     assert.containsOnce(
         document.body,
         '.o_Composer',
@@ -209,13 +209,13 @@ QUnit.test('reply: discard on reply button toggle', async function (assert) {
     );
 
     await click('.o_Message');
-    await click('.o_MessageActionList_actionReply');
+    await click('.o_MessageActionView_actionReplyTo');
     assert.containsOnce(
         document.body,
         '.o_Composer',
         "should have composer after clicking on reply to message"
     );
-    await click(`.o_MessageActionList_actionReply`);
+    await click(`.o_MessageActionView_actionReplyTo`);
     assert.containsNone(
         document.body,
         '.o_Composer',
@@ -260,7 +260,7 @@ QUnit.test('reply: discard on click away', async function (assert) {
     );
 
     await click('.o_Message');
-    await click('.o_MessageActionList_actionReply');
+    await click('.o_MessageActionView_actionReplyTo');
     assert.containsOnce(
         document.body,
         '.o_Composer',
@@ -356,7 +356,7 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
     );
 
     await click('.o_Message');
-    await click('.o_MessageActionList_actionReply');
+    await click('.o_MessageActionView_actionReplyTo');
     assert.strictEqual(
         document.querySelector('.o_Composer_buttonSend').textContent.trim(),
         "Log",
@@ -422,7 +422,7 @@ QUnit.test('"reply to" composer should send message if message replied to is not
     );
 
     await click('.o_Message');
-    await click('.o_MessageActionList_actionReply');
+    await click('.o_MessageActionView_actionReplyTo');
     assert.strictEqual(
         document.querySelector('.o_Composer_buttonSend').textContent.trim(),
         "Send",

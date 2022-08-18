@@ -95,7 +95,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeDeleteMessageConfirmView() {
-            return this.messageActionListOwnerAsDeleteConfirm ? {} : clear();
+            return this.messageActionViewOwnerAsDeleteConfirm ? {} : clear();
         },
         /**
          * @private
@@ -236,7 +236,7 @@ registerModel({
             inverse: 'dialogs',
             readonly: true,
         }),
-        messageActionListOwnerAsDeleteConfirm: one('MessageActionList', {
+        messageActionViewOwnerAsDeleteConfirm: one('MessageActionView', {
             identifying: true,
             inverse: 'deleteConfirmDialog',
         }),

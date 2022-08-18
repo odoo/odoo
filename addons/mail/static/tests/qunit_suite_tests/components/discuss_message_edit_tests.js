@@ -26,7 +26,7 @@ QUnit.test('click on message edit button should open edit composer', async funct
     });
     await openDiscuss();
     await click('.o_Message');
-    await click('.o_MessageActionList_actionEdit');
+    await click('.o_MessageActionView_actionEdit');
     assert.containsOnce(document.body, '.o_Message_composer', 'click on message edit button should open edit composer');
 });
 
