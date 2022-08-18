@@ -227,6 +227,7 @@ class Location(models.Model):
         no package is specified.
         """
         self = self._check_access_putaway()
+        products = self.env.context.get('products', self.env['product.product'])
         # find package type on package or packaging
         package_type = self.env['stock.package.type']
         if package:
@@ -235,13 +236,12 @@ class Location(models.Model):
             package_type = packaging.package_type_id
 
         putaway_rules = self.env['stock.putaway.rule']
-        putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.product_id == product and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+        putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.product_id in products or x.product_id == product)
         categ = product.categ_id
         while categ:
-            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.category_id == categ and (package_type in x.package_type_ids or package_type == x.package_type_ids))
+            putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.category_id == categ)
             categ = categ.sudo().parent_id
         if package_type:
-            products = self.env.context.get('products')
             putaway_rules |= self.putaway_rule_ids.filtered(lambda pa: package_type in pa.package_type_ids or package_type == pa.package_type_ids)
             for dummy, putaways in groupby(putaway_rules, key=lambda pa: (pa.location_out_id.id, pa.storage_category_id)):
                 putaways = self.env['stock.putaway.rule'].concat(*putaways)
@@ -250,6 +250,9 @@ class Location(models.Model):
                 if set(products.ids).issubset(set(putaways.product_id.ids)):
                     continue
                 putaway_rules -= putaways
+
+            # Put the priority on putaway with the same package_type
+            putaway_rules = putaway_rules.sorted(lambda pa: package_type in pa.package_type_ids or package_type == pa.package_type_ids, reverse=True)
 
         putaway_location = None
         locations = self.child_internal_location_ids
