@@ -784,8 +784,23 @@ class ProductCategory(models.Model):
             new_cost_method = vals.get('property_cost_method')
             new_valuation = vals.get('property_valuation')
 
-
             for product_category in self:
+                property_stock_fields = ['property_stock_account_input_categ_id', 'property_stock_account_output_categ_id', 'property_stock_valuation_account_id']
+                if 'property_valuation' in vals and vals['property_valuation'] == 'manual_periodic' and product_category.property_valuation != 'manual_periodic':
+                    for stock_property in property_stock_fields:
+                        vals[stock_property] = False
+                elif 'property_valuation' in vals and vals['property_valuation'] == 'real_time' and product_category.property_valuation != 'real_time':
+                    company_id = self.env.company
+                    for stock_property in property_stock_fields:
+                        vals[stock_property] = vals.get(stock_property, False) or company_id[stock_property]
+                elif product_category.property_valuation == 'manual_periodic':
+                    for stock_property in property_stock_fields:
+                        if stock_property in vals:
+                            vals.pop(stock_property)
+                else:
+                    for stock_property in property_stock_fields:
+                        if stock_property in vals and vals[stock_property] is False:
+                            vals.pop(stock_property)
                 valuation_impacted = False
                 if new_cost_method and new_cost_method != product_category.property_cost_method:
                     valuation_impacted = True
@@ -825,6 +840,21 @@ class ProductCategory(models.Model):
             account_moves = self.env['account.move'].sudo().create(move_vals_list)
             account_moves._post()
         return res
+
+
+    @api.model
+    def create(self, vals):
+        if 'property_valuation' not in vals or vals['property_valuation'] == 'manual_periodic':
+            vals['property_stock_account_input_categ_id'] = False
+            vals['property_stock_account_output_categ_id'] = False
+            vals['property_stock_valuation_account_id'] = False
+        if 'property_valuation' in vals and vals['property_valuation'] == 'real_time':
+            company_id = self.env.company
+            vals['property_stock_account_input_categ_id'] = vals.get('property_stock_account_input_categ_id', False) or company_id.property_stock_account_input_categ_id
+            vals['property_stock_account_output_categ_id'] = vals.get('property_stock_account_output_categ_id', False) or company_id.property_stock_account_output_categ_id
+            vals['property_stock_valuation_account_id'] = vals.get('property_stock_valuation_account_id', False) or company_id.property_stock_valuation_account_id
+
+        return super().create(vals)
 
     @api.onchange('property_valuation')
     def onchange_property_valuation(self):
