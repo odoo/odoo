@@ -252,7 +252,7 @@ var dom = {
      * @returns {HTMLElement}
      */
     getScrollingElement() {
-        return $().getScrollingElement()[0];
+        return $().getScrollingElement(...arguments)[0];
     },
     /**
      * @param {HTMLElement} el
