@@ -27,4 +27,28 @@ tour.register('snippet_popup_add_remove', {
     in_modal: false,
     trigger: '#wrap.o_editable:not(:has([data-snippet="s_popup"]))',
     run: () => null,
+},
+// Test that undoing dropping the snippet removes the invisible elements panel.
+{
+    content: "Drop the snippet again.",
+    trigger: '#oe_snippets .oe_snippet:has(> [data-snippet="s_popup"]) .oe_snippet_thumbnail',
+    run: "drag_and_drop #wrap",
+}, {
+    content: "The popup should be in the invisible elements panel.",
+    in_modal: false,
+    trigger: '.o_we_invisible_el_panel .o_we_invisible_entry',
+    run: () => null, // It's a check.
+}, {
+    content: "Click on the 'undo' button.",
+    in_modal: false,
+    trigger: '#oe_snippets button[data-action="undo"]',
+}, {
+    content: "Check that the s_popup was removed.",
+    in_modal: false,
+    trigger: '#wrap.o_editable:not(:has([data-snippet="s_popup"]))',
+    run: () => null, // It's a check.
+}, {
+    content: "The invisible elements panel should also be removed.",
+    trigger: '#oe_snippets:has(.o_we_invisible_el_panel.d-none)',
+    run: () => null, // It's a check.
 }]);
