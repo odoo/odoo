@@ -135,8 +135,10 @@ class configmanager(object):
                               "Keep empty to listen on all interfaces (0.0.0.0)")
         group.add_option("-p", "--http-port", dest="http_port", my_default=8069,
                          help="Listen port for the main HTTP service", type="int", metavar="PORT")
-        group.add_option("--longpolling-port", dest="longpolling_port", my_default=8072,
-                         help="Listen port for the longpolling HTTP service", type="int", metavar="PORT")
+        group.add_option("--longpolling-port", dest="longpolling_port", my_default=None,
+                         help="Deprecated alias to the gevent-port option", type="int", metavar="PORT")
+        group.add_option("--gevent-port", dest="gevent_port", my_default=8072,
+                         help="Listen port for the gevent worker", type="int", metavar="PORT")
         group.add_option("--no-http", dest="http_enable", action="store_false", my_default=True,
                          help="Disable the HTTP and Longpolling services entirely")
         group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
@@ -445,7 +447,7 @@ class configmanager(object):
             self.options['server_wide_modules'] = 'base,web'
 
         # if defined do not take the configfile value even if the defined value is None
-        keys = ['http_interface', 'http_port', 'longpolling_port', 'http_enable', 'x_sendfile',
+        keys = ['gevent_port', 'http_interface', 'http_port', 'longpolling_port', 'http_enable', 'x_sendfile',
                 'db_name', 'db_user', 'db_password', 'db_host', 'db_sslmode',
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'from_filter',
@@ -558,6 +560,12 @@ class configmanager(object):
                 "the transient-age-limit option, please use the latter.",
                 DeprecationWarning)
             self.options['transient_age_limit'] = self.options.pop('osv_memory_age_limit')
+        if self.options['longpolling_port']:
+            warnings.warn(
+                "The longpolling-port is a deprecated alias to "
+                "the gevent-port option, please use the latter.",
+                DeprecationWarning)
+            self.options['gevent_port'] = self.options.pop('longpolling_port')
 
     def _is_addons_path(self, path):
         from odoo.modules.module import MANIFEST_NAMES
