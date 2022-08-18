@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ComposerSuggestedRecipientListView',
@@ -34,17 +34,9 @@ registerModel({
                 return clear();
             }
             if (this.hasShowMoreButton) {
-                return insertAndReplace(
-                    this.thread.suggestedRecipientInfoList.map(
-                        suggestedRecipientInfo => ({ suggestedRecipientInfo })
-                    ),
-                );
+                return this.thread.suggestedRecipientInfoList.map(suggestedRecipientInfo => ({ suggestedRecipientInfo }));
             } else {
-                return insertAndReplace(
-                    this.thread.suggestedRecipientInfoList.slice(0, 3).map(
-                        suggestedRecipientInfo => ({ suggestedRecipientInfo })
-                    ),
-                );
+                return this.thread.suggestedRecipientInfoList.slice(0, 3).map(suggestedRecipientInfo => ({ suggestedRecipientInfo }));
             }
         },
         /**

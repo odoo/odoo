@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { registry } from '@mail/model/model_core';
+import { IS_RECORD, registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
 import { ModelIndexAnd } from '@mail/model/model_index_and';
 import { ModelIndexXor } from '@mail/model/model_index_xor';
@@ -642,6 +642,7 @@ export class ModelManager {
             __listeners: [],
             // Field values of record.
             __values: {},
+            [IS_RECORD]: true,
         });
         const record = owl.markRaw(!this.isDebug ? nonProxyRecord : new Proxy(nonProxyRecord, {
             get: function getFromProxy(record, prop) {

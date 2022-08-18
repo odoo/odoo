@@ -94,20 +94,6 @@ function insert(data) {
 }
 
 /**
- * Returns a insert-and-replace command to give to the model manager at create/update.
- * `insertAndReplace` command can be used for relation fields.
- * - Create new record(s) from data if the record(s) do not exist;
- * - or update the record(s) if they can be found from identifying data;
- * - and then replace the record(s) for a relation field.
- *
- * @param {Object|Object[]} [data={}] - data object or data objects array to insert and replace record(s).
- * @returns {FieldCommand}
- */
-function insertAndReplace(data = {}) {
-    return new FieldCommand('insert-and-replace', data);
-}
-
-/**
  * Returns a insert-and-unlink command to give to the model manager at create/update.
  * `insertAndUnlink` command can be used for relation fields.
  * - Create new record(s) from data if the record(s) do not exist;
@@ -179,7 +165,6 @@ export {
     decrement,
     increment,
     insert,
-    insertAndReplace,
     link,
     set,
     unlink,

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insertAndReplace, unlinkAll } from '@mail/model/model_field_command';
+import { unlinkAll } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -13,7 +13,7 @@ QUnit.test('unlinkAll: should set x2one field undefined', async function (assert
 
     const contact = messaging.models['TestContact'].insert({
         id: 10,
-        address: insertAndReplace({ id: 20 }),
+        address: { id: 20 },
     });
     const address = messaging.models['TestAddress'].findFromIdentifyingData({ id: 20 });
     contact.update({ address: unlinkAll() });
@@ -35,9 +35,9 @@ QUnit.test('unlinkAll: should set x2many field an empty array', async function (
 
     const contact = messaging.models['TestContact'].insert({
         id: 10,
-        tasks: insertAndReplace({
+        tasks: {
             id: 20,
-        }),
+        },
     });
     const task = messaging.models['TestTask'].findFromIdentifyingData({ id: 20 });
     contact.update({ tasks: unlinkAll() });

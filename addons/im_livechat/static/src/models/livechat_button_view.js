@@ -4,7 +4,7 @@ import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_me
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
 import { get_cookie, set_cookie, unaccent } from 'web.utils';
@@ -55,7 +55,7 @@ registerModel({
         },
         askFeedback() {
             this.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled', true);
-            this.messaging.publicLivechatGlobal.update({ feedbackView: insertAndReplace() });
+            this.messaging.publicLivechatGlobal.update({ feedbackView: {} });
             /**
              * When we enter the "ask feedback" process of the chat, we hide some elements that become
              * unnecessary and irrelevant (restart / end messages, any text field values, ...).
@@ -164,7 +164,7 @@ registerModel({
             }
             const chatbotState = localStorage.getItem(this.messaging.publicLivechatGlobal.chatbotSessionCookieKey);
             if (chatbotState) {
-                this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: insertAndReplace({ data: this.messaging.publicLivechatGlobal.localStorageChatbotState._chatbotCurrentStep }) });
+                this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: { data: this.messaging.publicLivechatGlobal.localStorageChatbotState._chatbotCurrentStep } });
             }
         },
         closeChat() {
@@ -191,7 +191,7 @@ registerModel({
             }
         },
         async openChatWindow() {
-            this.update({ chatWindow: insertAndReplace() });
+            this.update({ chatWindow: {} });
             await this.chatWindow.legacyChatWindow.appendTo($('body'));
             const cssProps = { bottom: 0 };
             cssProps[this.messaging.locale.textDirection === 'rtl' ? 'left' : 'right'] = 0;
@@ -412,14 +412,14 @@ registerModel({
                     }
                 } else {
                     this.messaging.publicLivechatGlobal.update({
-                        publicLivechat: insertAndReplace({ data: livechatData }),
+                        publicLivechat: { data: livechatData },
                     });
                     return this.openChatWindow().then(() => {
                         if (!this.messaging.publicLivechatGlobal.history) {
                             this.widget._sendWelcomeMessage();
                         }
                         this.widget._renderMessages();
-                        this.messaging.publicLivechatGlobal.update({ notificationHandler: insertAndReplace() });
+                        this.messaging.publicLivechatGlobal.update({ notificationHandler: {} });
 
                         set_cookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
                         set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60);

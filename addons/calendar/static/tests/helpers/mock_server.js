@@ -82,7 +82,7 @@ patch(MockServer.prototype, 'calendar', {
         if (meetingsLines.length) {
             activities.unshift({
                 id: 'calendar.event', // for simplicity
-                meetings: [['insert-and-replace', meetingsLines]],
+                meetings: meetingsLines,
                 model: 'calendar.event',
                 name: 'Today\'s Meetings',
                 type: 'meeting',

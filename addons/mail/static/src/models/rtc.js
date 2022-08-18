@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, unlink } from '@mail/model/model_field_command';
+import { clear, insert, unlink } from '@mail/model/model_field_command';
 import { monitorAudio } from '@mail/utils/media_monitoring';
 import { sprintf } from '@web/core/utils/strings';
 
@@ -490,7 +490,7 @@ registerModel({
                     this._addLogEntry(rtcSession.id, `failed to send on datachannel; dataChannelInfo: ${this._serializeRTCDataChannel(dataChannel)}`, { error: e });
                 }
             };
-            rtcSession.update({ rtcPeerConnection: insertAndReplace({ peerConnection }) });
+            rtcSession.update({ rtcPeerConnection: { peerConnection } });
             this.messaging.models['RtcDataChannel'].insert({
                 dataChannel,
                 rtcSession,
@@ -1211,7 +1211,7 @@ registerModel({
             default: 3000,
         }),
         callSystrayMenu: one('CallSystrayMenu', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'rtc',
             isCausal: true,
         }),

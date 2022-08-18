@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { many, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallSidebarView',
@@ -12,7 +11,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeSidebarTiles() {
-            return insertAndReplace(this.callView.filteredChannelMembers.map(channelMember => ({ channelMember })));
+            return this.callView.filteredChannelMembers.map(channelMember => ({ channelMember }));
         },
     },
     fields: {

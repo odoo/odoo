@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentViewer',
@@ -184,9 +184,9 @@ registerModel({
          */
         _computeAttachmentViewerViewable() {
             if (this.attachmentList) {
-                return insertAndReplace({
+                return {
                     attachmentOwner: this.attachmentList.selectedAttachment,
-                });
+                };
             }
             return clear();
         },
@@ -195,11 +195,9 @@ registerModel({
          */
         _computeAttachmentViewerViewables() {
             if (this.attachmentList) {
-                return insertAndReplace(
-                    this.attachmentList.viewableAttachments.map((attachment) => {
-                        return { attachmentOwner: attachment };
-                    })
-                );
+                return this.attachmentList.viewableAttachments.map(attachment => {
+                    return { attachmentOwner: attachment };
+                });
             }
             return clear();
         },

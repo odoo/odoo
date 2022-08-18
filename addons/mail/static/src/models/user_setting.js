@@ -4,7 +4,7 @@ import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 /**
  * Models various user settings. It is used as a complement to
@@ -286,7 +286,7 @@ registerModel({
          * Model for the component with the controls for RTC related settings.
          */
         callSettingsMenu: one('CallSettingsMenu', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'userSetting',
             isCausal: true,
         }),

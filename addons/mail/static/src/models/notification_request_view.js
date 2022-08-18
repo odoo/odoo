@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 import { sprintf } from '@web/core/utils/strings';
 
@@ -27,7 +27,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computePersonaImStatusIconView() {
-            return this.messaging.partnerRoot && this.messaging.partnerRoot.isImStatusSet ? insertAndReplace() : clear();
+            return this.messaging.partnerRoot && this.messaging.partnerRoot.isImStatusSet ? {} : clear();
         },
     },
     fields: {

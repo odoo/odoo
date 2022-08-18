@@ -869,20 +869,20 @@ class Message(models.Model):
             reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
             for reaction in message_sudo.reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
-            reaction_groups = [('insert-and-replace', [{
+            reaction_groups = [{
                 'content': content,
                 'count': len(reactions),
-                'guests': [('insert-and-replace', [{'id': guest.id, 'name': guest.name} for guest in reactions.guest_id])],
-                'message': [('insert-and-replace', {'id': message_sudo.id})],
-                'partners': [('insert-and-replace', [{'id': partner.id, 'name': partner.name} for partner in reactions.partner_id])],
-            } for content, reactions in reactions_per_content.items()])]
+                'guests': [{'id': guest.id, 'name': guest.name} for guest in reactions.guest_id],
+                'message': {'id': message_sudo.id},
+                'partners': [{'id': partner.id, 'name': partner.name} for partner in reactions.partner_id],
+            } for content, reactions in reactions_per_content.items()]
             if format_reply and message_sudo.model == 'mail.channel' and message_sudo.parent_id:
                 vals['parentMessage'] = message_sudo.parent_id.message_format(format_reply=False)[0]
             allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
             vals.update({
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
-                'attachment_ids': [('insert-and-replace', message_sudo.attachment_ids._attachment_format())] if not legacy else message_sudo.attachment_ids._attachment_format(legacy=True),
-                'trackingValues': [('insert-and-replace', allowed_tracking_ids._tracking_value_format())],
+                'attachment_ids': message_sudo.attachment_ids._attachment_format() if not legacy else message_sudo.attachment_ids._attachment_format(legacy=True),
+                'trackingValues': allowed_tracking_ids._tracking_value_format(),
                 'messageReactionGroups': reaction_groups,
                 'record_name': record_name,
             })
@@ -913,30 +913,30 @@ class Message(models.Model):
                     'body': HTML content of the message
                     'model': u'res.partner',
                     'record_name': u'Agrolait',
-                    'attachment_ids': [('insert-and-replace', [
+                    'attachment_ids': [
                         {
                             'file_type_icon': u'webimage',
                             'id': 45,
                             'name': u'sample.png',
                             'filename': u'sample.png'
                         }
-                    ])],
+                    ],
                     'needaction_partner_ids': [], # list of partner ids
                     'res_id': 7,
-                    'trackingValues': [('insert-and-replace',
+                    'trackingValues': [
                         {
                             'changedField': "Customer",
                             'id': 2965,
-                            'newValue': [('insert-and-replace', {
+                            'newValue': {
                                 'currencyId': "",
                                 'fieldType': 'char',
                                 'value': "Axelor",
-                            })],
-                            'oldValue': [('insert-and-replace', {
+                            ],
+                            'oldValue': {
                                 'currencyId': "",
                                 'fieldType': 'char',
                                 'value': "",
-                            })],
+                            ],
                         }
                     ],
                     'author_id': (3, u'Administrator'),

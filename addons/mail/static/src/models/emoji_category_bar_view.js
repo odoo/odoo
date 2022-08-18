@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { many, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiCategoryBarView',
@@ -22,21 +21,17 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeDefaultActiveCategoryView() {
-            return insertAndReplace({
-                emojiCategory: insertAndReplace({ categoryName: "all" }),
+            return {
+                emojiCategory: { categoryName: "all" },
                 emojiCategoryBarViewOwner: this,
-            });
+            };
         },
         /**
          * @private
          * @returns {FieldCommand}
          */
         _computeEmojiCategoryViews() {
-            return insertAndReplace(
-                this.messaging.emojiRegistry.allCategories.map(emojiCategory => {
-                    return { emojiCategory };
-                })
-            );
+            return this.messaging.emojiRegistry.allCategories.map(emojiCategory => ({ emojiCategory }));
         },
     },
     fields: {

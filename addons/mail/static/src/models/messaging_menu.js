@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessagingMenu',
@@ -125,7 +125,7 @@ registerModel({
          */
          _computeMobileMessagingNavbarView() {
             if (this.messaging.device && this.messaging.device.isSmall) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -135,7 +135,7 @@ registerModel({
          */
         _computeMobileNewMessageAutocompleteInputView() {
             if (this.isOpen && this.messaging.isInitialized && this.messaging.device.isSmall && this.isMobileNewMessageToggled) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -150,7 +150,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeNotificationListView() {
-            return this.isOpen ? insertAndReplace() : clear();
+            return this.isOpen ? {} : clear();
         },
         /**
          * @private

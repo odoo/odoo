@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace } from '@mail/model/model_field_command';
+import { clear, insert } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Notification',
@@ -107,12 +107,12 @@ registerModel({
             // Except for channel where they are also grouped by id because
             // we want to open the actual channel in discuss or chat window
             // and not its kanban/list/form view.
-            return insertAndReplace({
+            return {
                 notification_type: this.notification_type,
                 res_id: thread.model === 'mail.channel' ? thread.id : null,
                 res_model: thread.model,
                 res_model_name: thread.model_name,
-            });
+            };
         },
     },
     fields: {

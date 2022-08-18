@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'TestAddress',
@@ -27,13 +26,13 @@ registerModel({
             inverse: 'contact',
         }),
         favorite: one('TestHobby', {
-            default: insertAndReplace({ description: 'football' }),
+            default: { description: 'football' },
         }),
         hobbies: many('TestHobby', {
-            default: insertAndReplace([
+            default: [
                 { description: 'hiking' },
                 { description: 'fishing' },
-            ]),
+            ],
         }),
         tasks: many('TestTask', {
             inverse: 'responsible'

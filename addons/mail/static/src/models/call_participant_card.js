@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 import { sprintf } from '@web/core/utils/strings';
@@ -145,7 +145,7 @@ registerModel({
          */
         _computeCallParticipantVideoView() {
             if (this.rtcSession && this.rtcSession.videoStream) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },

@@ -634,7 +634,7 @@ class Channel(models.Model):
         self.env['bus.bus']._sendone(self, 'mail.message/insert', {
             'id': message.id,
             'body': message.body,
-            'attachments': [('insert-and-replace', message.attachment_ids._attachment_format())],
+            'attachments': message.attachment_ids._attachment_format(),
         })
         return super()._message_update_content_after_hook(message=message)
 
@@ -653,7 +653,7 @@ class Channel(models.Model):
                 'content': content,
                 'count': len(reactions),
                 'guests': guests,
-                'message': [('insert-and-replace', {'id': message.id})],
+                'message': {'id': message.id},
                 'partners': partners,
             })],
         })
@@ -674,7 +674,7 @@ class Channel(models.Model):
                 'content': content,
                 'count': len(reactions),
                 'guests': guests,
-                'message': [('insert-and-replace', {'id': message.id})],
+                'message': {'id': message.id},
                 'partners': partners,
             })],
         })
@@ -823,7 +823,7 @@ class Channel(models.Model):
                 'rtcSessions': [('insert', rtc_sessions_by_channel.get(channel, []))],
             })
 
-            info['channel'] = [('insert-and-replace', channel_data)]
+            info['channel'] = channel_data
 
             channel_infos.append(info)
         return channel_infos

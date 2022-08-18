@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { escape, sprintf } from '@web/core/utils/strings';
 
 registerModel({
@@ -125,7 +125,7 @@ registerModel({
             });
         },
         open() {
-            this.update({ discussView: insertAndReplace() });
+            this.update({ discussView: {} });
         },
         /**
          * Opens thread from init active id if the thread exists.
@@ -270,7 +270,7 @@ registerModel({
                 this.messaging.device.isSmall &&
                 !(this.threadView && this.threadView.replyingToMessageView)
             ) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -279,7 +279,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeNotificationListView() {
-            return (this.messaging.device.isSmall && this.activeMobileNavbarTabId !== 'mailbox') ? insertAndReplace() : clear();
+            return (this.messaging.device.isSmall && this.activeMobileNavbarTabId !== 'mailbox') ? {} : clear();
         },
         /**
          * Only mailboxes and pinned channels are allowed in Discuss.
@@ -304,12 +304,12 @@ registerModel({
          * @returns {ThreadViewer}
          */
         _computeThreadViewer() {
-            return insertAndReplace({
+            return {
                 hasMemberList: true,
                 hasThreadView: this.hasThreadView,
                 hasTopbar: true,
                 thread: this.thread ? this.thread : clear(),
-            });
+            };
         },
     },
     fields: {
@@ -339,7 +339,7 @@ registerModel({
          * Discuss sidebar category for `channel` type channel threads.
          */
         categoryChannel: one('DiscussSidebarCategory', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'discussAsChannel',
             isCausal: true,
         }),
@@ -347,7 +347,7 @@ registerModel({
          * Discuss sidebar category for `chat` type channel threads.
          */
         categoryChat: one('DiscussSidebarCategory', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'discussAsChat',
             isCausal: true,
         }),

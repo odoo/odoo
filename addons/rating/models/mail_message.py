@@ -35,9 +35,9 @@ class MailMessage(models.Model):
             for vals in message_values:
                 if vals['id'] in rating_by_message_id:
                     rating = rating_by_message_id[vals['id']]
-                    vals['rating'] = [('insert-and-replace', {
+                    vals['rating'] = {
                         'id': rating.id,
                         'ratingImageUrl': rating.rating_image_url,
                         'ratingText': rating.rating_text,
-                    })]
+                    }
         return message_values
