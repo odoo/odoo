@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { DROPDOWN } from "@web/core/dropdown/dropdown";
 import { debounce as debounceFn } from "@web/core/utils/timing";
 
 const { Component } = owl;
@@ -84,6 +85,11 @@ export class ViewButton extends Component {
         this.env.onClickViewButton({
             clickParams: this.clickParams,
             record: this.props.record,
+            beforeExecute: () => {
+                if (this.env[DROPDOWN]) {
+                    this.env[DROPDOWN].close();
+                }
+            },
         });
     }
 
