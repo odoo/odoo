@@ -4,7 +4,7 @@
         <field name="name">hr.applicant.skill.view.form</field>
         <field name="model">hr.applicant.skill</field>
         <field name="arch" type="xml">
-            <form string="Skills">
+            <form string="Skills" class="o_hr_skills_dialog_form">
                 <sheet>
                     <group>
                         <group>
@@ -20,12 +20,12 @@
                                     attrs="{'invisible': ['|', ('skill_id', '=', False), ('skill_type_id', '=', False)]}"/>
                             <div class="o_row"
                                     attrs="{'invisible': ['|', ('skill_id', '=', False), ('skill_type_id', '=', False)]}">
-                                <span class="col-4 ps-0">
+                                <span clas="ps-0" style="flex:1">
                                     <field name="skill_level_id"
                                             attrs="{'readonly': [('skill_id', '=', False)]}"
                                             context="{'from_skill_level_dropdown': True}" />
                                 </span>
-                                <span class="col-8">
+                                <span style="flex:1">
                                     <field name="level_progress" widget="progressbar" class="o_hr_skills_progress" attrs="{'invisible': [('skill_level_id', '=', False)]}" />
                                 </span>
                             </div>
