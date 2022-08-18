@@ -1389,6 +1389,9 @@ def format_date(env, value, lang_code=False, date_format=False):
             value = odoo.fields.Datetime.context_timestamp(env['res.lang'], value)
         else:
             value = odoo.fields.Datetime.from_string(value)
+    elif isinstance(value, datetime.datetime) and not value.tzinfo:
+        # a datetime, convert to correct timezone
+        value = odoo.fields.Datetime.context_timestamp(env['res.lang'], value)
 
     lang = get_lang(env, lang_code)
     locale = babel_locale_parse(lang.code)
