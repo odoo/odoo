@@ -6,6 +6,7 @@ from datetime import date, timedelta
 import requests
 
 from html import unescape
+from markupsafe import Markup
 
 from odoo import models, api, service
 from odoo.tools.translate import _
@@ -47,14 +48,19 @@ class MercuryTransaction(models.Model):
         data['memo'] = "Odoo " + service.common.exp_version()['server_version']
 
     def _do_request(self, template, data):
-        xml_transaction = self.env['ir.qweb']._render(template, data)
-
         if not data['merchant_id'] or not data['merchant_pwd']:
             return "not setup"
 
-        soap_header = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mer="http://www.mercurypay.com"><soapenv:Header/><soapenv:Body><mer:CreditTransaction><mer:tran>'
-        soap_footer = '</mer:tran><mer:pw>' + data['merchant_pwd'] + '</mer:pw></mer:CreditTransaction></soapenv:Body></soapenv:Envelope>'
-        xml_transaction = soap_header + misc.html_escape(xml_transaction) + soap_footer
+        # transaction is str()'ed so it's escaped inside of <mer:tran>
+        xml_transaction = Markup('''<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:mer="http://www.mercurypay.com">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <mer:CreditTransaction>
+      <mer:tran>{transaction}</mer:tran>
+      <mer:pw>{password}</mer:pw>
+    </mer:CreditTransaction>
+  </soapenv:Body>
+</soapenv:Envelope>''').format(transaction=str(self.env['ir.qweb']._render(template, data)), password=data['merchant_pwd'])
 
         response = ''
 
