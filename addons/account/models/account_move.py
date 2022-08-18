@@ -1218,7 +1218,7 @@ class AccountMove(models.Model):
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
 
-    @api.depends('tax_country_id.code')
+    @api.depends('tax_country_id')
     def _compute_tax_country_code(self):
         for record in self:
             record.tax_country_code = record.tax_country_id.code

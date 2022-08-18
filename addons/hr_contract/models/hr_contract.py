@@ -45,7 +45,7 @@ class Contract(models.Model):
     company_id = fields.Many2one('res.company', compute='_compute_employee_contract', store=True, readonly=False,
         default=lambda self: self.env.company, required=True)
     company_country_id = fields.Many2one('res.country', string="Company country", related='company_id.country_id', readonly=True)
-    country_code = fields.Char(related='company_country_id.code', readonly=True)
+    country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     contract_type_id = fields.Many2one('hr.contract.type', "Contract Type")
 
     """
