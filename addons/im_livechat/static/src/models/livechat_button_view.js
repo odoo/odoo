@@ -235,6 +235,37 @@ registerModel({
             await this._sendMessage(message);
             this._sendMessageChatbotAfter();
         },
+        start() {
+            this.widget.$el.text(this.buttonText);
+            if (this.messaging.publicLivechatGlobal.history) {
+                for (const m of this.messaging.publicLivechatGlobal.history) {
+                    this.addMessage(m);
+                }
+                this.openChat();
+            } else if (!this.messaging.device.isSmall && this.messaging.publicLivechatGlobal.rule.action === 'auto_popup') {
+                const autoPopupCookie = get_cookie('im_livechat_auto_popup');
+                if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
+                    this.update({
+                        autoOpenChatTimeout: setTimeout(
+                            this.openChat,
+                            this.messaging.publicLivechatGlobal.rule.auto_popup_timer * 1000,
+                        ),
+                    });
+                }
+            }
+            if (this.buttonBackgroundColor) {
+                this.widget.$el.css('background-color', this.buttonBackgroundColor);
+            }
+            if (this.buttonTextColor) {
+                this.widget.$el.css('color', this.buttonTextColor);
+            }
+    
+            // If website_event_track installed, put the livechat banner above the PWA banner.
+            const pwaBannerHeight = $('.o_pwa_install_banner').outerHeight(true);
+            if (pwaBannerHeight) {
+                this.widget.$el.css('bottom', pwaBannerHeight + 'px');
+            }
+        },
         /**
          * @private
          * @returns {string}
