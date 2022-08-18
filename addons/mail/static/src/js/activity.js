@@ -342,7 +342,7 @@ var BasicActivity = AbstractField.extend({
         var previousActivityTypeID = $markDoneBtn.data('previous-activity-type-id') || false;
         var chainingTypeActivity = $markDoneBtn.data('chaining-type-activity');
 
-        if ($markDoneBtn.data('toggle') === 'collapse') {
+        if ($markDoneBtn[0].dataset.bsToggle === 'collapse') {
             var $actLi = $markDoneBtn.parents('.o_log_activity');
             var $panel = self.$('#o_activity_form_' + activityID);
 
@@ -462,7 +462,7 @@ var BasicActivity = AbstractField.extend({
             ev.stopPropagation();
             if ($btn.data('bs.popover')) {
                 $btn.popover('hide');
-            } else if ($btn.data('toggle') === 'collapse') {
+            } else if ($btn[0].dataset.bsToggle === 'collapse') {
                 self.$('#o_activity_form_' + activityID).collapse('hide');
             }
         });
