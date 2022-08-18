@@ -241,6 +241,8 @@
             'website/static/src/components/dialog/*.scss',
             'website/static/src/components/editor/editor.js',
             'website/static/src/components/editor/editor.scss',
+            'website/static/src/components/navbar/navbar.js',
+            'website/static/src/components/burger_menu/burger_menu.js',
             'website/static/src/components/switch/switch.js',
             'website/static/src/components/switch/switch.scss',
             'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js',
