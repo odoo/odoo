@@ -165,18 +165,15 @@ class LegacyTaxTotalsComponent extends AbstractFieldOwl {
         let amount_tax = 0;
         let subtotals = [];
         for (let subtotal_title of this.totals.value.subtotals_order) {
-            let amount_total = amount_untaxed - amount_tax;
+            let amount_total = amount_untaxed + amount_tax;
             subtotals.push({
                 'name': subtotal_title,
                 'amount': amount_total,
                 'formatted_amount': this._format(amount_total),
             });
-            for (let group_name of Object.keys(this.totals.value.groups_by_subtotal)) {
-                let group = this.totals.value.groups_by_subtotal[group_name];
-                for (let i in group) {
-                    amount_tax = amount_tax + group[i].tax_group_amount;
-                    console.log(amount_tax);
-                }
+            let group = this.totals.value.groups_by_subtotal[subtotal_title];
+            for (let i in group) {
+                amount_tax = amount_tax + group[i].tax_group_amount;
             }
         }
         this.totals.value.subtotals = subtotals;
