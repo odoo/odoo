@@ -8,7 +8,6 @@
             <button class="input-button number-char" t-on-click="() => this.sendInput('3')">3</button>
             <button class="mode-button" t-att-class="{'selected-mode': props.activeMode === 'quantity'}"
                     t-on-click="() => this.changeMode('quantity')">Qty</button>
-            <br />
             <button class="input-button number-char" t-on-click="() => this.sendInput('4')">4</button>
             <button class="input-button number-char" t-on-click="() => this.sendInput('5')">5</button>
             <button class="input-button number-char" t-on-click="() => this.sendInput('6')">6</button>
@@ -18,7 +17,6 @@
                     }"
                     t-att-disabled="!hasManualDiscount"
                     t-on-click="() => this.changeMode('discount')">% Disc</button>
-            <br />
             <button class="input-button number-char" t-on-click="() => this.sendInput('7')">7</button>
             <button class="input-button number-char" t-on-click="() => this.sendInput('8')">8</button>
             <button class="input-button number-char" t-on-click="() => this.sendInput('9')">9</button>
@@ -27,7 +25,6 @@
                     'disabled-mode': !hasPriceControlRights
                 }" t-att-disabled="!hasPriceControlRights"
                     t-on-click="() => this.changeMode('price')">Price</button>
-            <br />
             <button class="input-button numpad-minus" t-att-class="{ 'disabled-mode': props.disableSign }" t-on-click="() => this.sendInput('-')">+/-</button>
             <button class="input-button number-char" t-on-click="() => this.sendInput('0')">0</button>
             <button class="input-button number-char" t-on-click="() => this.sendInput(decimalSeparator)">

@@ -3,6 +3,7 @@
 
     <t t-name="PaymentScreenPaymentLines" owl="1">
             <div class="paymentlines">
+                <p class="title-category">Summary</p>
                 <t t-foreach="props.paymentLines" t-as="line" t-key="line.cid">
                     <t t-if="line.selected">
                         <div class="paymentline selected"
