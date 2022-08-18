@@ -1617,7 +1617,33 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("label uses the string attribute", async function (assert) {
+    QUnit.test(
+        "label with no string attribute gets the default label for the corresponding field",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <label for="bar"/>
+                            <div>
+                                <field name="bar"/>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>`,
+                resId: 2,
+            });
+
+            assert.containsOnce(target, "label.o_form_label");
+            assert.strictEqual(target.querySelector("label.o_form_label").textContent, "Bar");
+        }
+    );
+
+    QUnit.test("label uses the string attribute when present", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1638,6 +1664,51 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, "label.o_form_label");
         assert.strictEqual(target.querySelector("label.o_form_label").textContent, "customstring");
+    });
+
+    QUnit.test("label ignores the content of the label when present", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <label for="bar">customstring</label>
+                            <div>
+                                <field name="bar"/>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(target, "label.o_form_label");
+        assert.strictEqual(target.querySelector("label.o_form_label").textContent, "Bar");
+    });
+
+    QUnit.test("label with empty string attribute doesn't get rendered", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <label for="bar" string=""/>
+                            <div>
+                                <field name="bar"/>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsNone(target, "label.o_form_label");
     });
 
     QUnit.test(
