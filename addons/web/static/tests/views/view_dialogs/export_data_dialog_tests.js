@@ -234,7 +234,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
         assert.hasClass(
             target.querySelector(".modal .o_export_tree_item:nth-child(2) .o_tree_column"),
-            "font-weight-bolder",
+            "fw-bolder",
             "required fields have the right style class"
         );
         // Remove field

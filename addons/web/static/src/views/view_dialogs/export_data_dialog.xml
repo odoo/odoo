@@ -14,7 +14,7 @@
     <t t-name="web.ExportDataItem" owl="1">
         <div t-att-data-field_id="props.field.name" t-attf-class="o_export_tree_item cursor-pointer position-relative ps-4 {{ state.isExpanded ? 'o_expanded mb-2' : '' }}" role="treeitem" t-on-click.stop="onClick" t-on-dblclick="(ev) => !props.isFieldExpandable(props.field) and !this.isFieldSelected(props.field.name) and this.props.onAdd(ev)">
             <span t-if="props.isFieldExpandable(props.field)" t-attf-class="o_expand_parent d-inline-block position-absolute small fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="expandText" />
-            <div t-attf-class="o_tree_column d-flex justify-content-between align-items-center {{ props.field.required ? 'font-weight-bolder' : ''}}">
+            <div t-attf-class="o_tree_column d-flex justify-content-between align-items-center {{ props.field.required ? 'fw-bolder' : ''}}">
                 <span t-if="props.isDebug and props.field.id" class="overflow-hidden" t-esc="`${props.field.string} (${props.field.id})`" />
                 <span t-else="" class="overflow-hidden" t-esc="props.field.string" />
                 <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(props.field.name) ? 'o_inactive opacity-25' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(props.field.name) and this.props.onAdd(ev)" />
@@ -77,17 +77,17 @@
                     <div class="o_exported_lists">
                         <div class="input-group mb-3">
                             <t t-if="state.templateId === 'new_template'">
-                                <label class="pt-2 mb-0 font-weight-bold">Save as: </label>
+                                <label class="pt-2 mb-0 fw-bold">Save as: </label>
                                 <input t-ref="exportList" class="form-control ms-4 o_save_list_name" t-att-placeholder="newTemplateText" />
                             </t>
                             <t t-else="">
-                                <label class="pt-2 mb-0 font-weight-bold">Template: </label>
-                                <select class="form-control ms-4 o_exported_lists_select" t-on-change="onChangeExportList">
+                                <label class="pt-2 mb-0 fw-bold">Template: </label>
+                                <select class="form-select ms-4 o_exported_lists_select" t-on-change="onChangeExportList">
                                     <option />
                                     <t t-foreach="templates" t-as="template" t-key="template.id">
                                         <option t-att-value="template.id" t-esc="template.name or 'undefined'" t-att-selected="state.templateId === template.id" />
                                     </t>
-                                    <option class="font-italic" value="new_template">New template </option>
+                                    <option class="fst-italic" value="new_template">New template </option>
                                 </select>
                             </t>
                             <t t-if="state.isEditingTemplate">
