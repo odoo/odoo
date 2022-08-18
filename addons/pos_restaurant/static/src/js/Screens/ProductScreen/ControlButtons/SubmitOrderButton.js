@@ -52,13 +52,6 @@ odoo.define('pos_restaurant.SubmitOrderButton', function(require) {
     }
     SubmitOrderButton.template = 'SubmitOrderButton';
 
-    ProductScreen.addControlButton({
-        component: SubmitOrderButton,
-        condition: function() {
-            return this.env.pos.config.module_pos_restaurant && this.env.pos.unwatched.printers.length;
-        },
-    });
-
     Registries.Component.add(SubmitOrderButton);
 
     return SubmitOrderButton;

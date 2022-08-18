@@ -9,7 +9,6 @@
                     <div class="pads border-top">
                         <div class="subpads d-flex flex-column">
                             <t t-set="_actionName">Payment</t>
-                            <OrderBtn />
                             <NumpadWidget activeMode="env.pos.numpadMode" />
                             <ActionpadWidget partner="partner" actionName="_actionName" onSwitchPane.bind="switchPane" />
                         </div>
