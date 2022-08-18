@@ -2,7 +2,6 @@
 <odoo>
     <template id="project_sharing_portal" name="My Project">
         <t t-call="portal.frontend_layout">
-            <!-- To add the class on div#wrapwrap to remove the overflow -->
             <t t-set="pageName" t-value="'o_project_sharing_container'"/>
             <t t-set="no_footer" t-value="true"/>
             <t t-call="project.project_sharing"/>

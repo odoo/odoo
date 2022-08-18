@@ -22,7 +22,7 @@ import {
 } from "@website/js/text_processing";
 import { touching } from "@web/core/utils/ui";
 import { ObservingCookieWidgetMixin } from "@website/snippets/observing_cookie_mixin";
-import { scrollTo, closestScrollable } from "@web_editor/js/common/scrolling";
+import { scrollTo } from "@web_editor/js/common/scrolling";
 
 // Initialize fallbacks for the use of requestAnimationFrame,
 // cancelAnimationFrame and performance.now()
@@ -1128,16 +1128,7 @@ registry.FullScreenHeight = publicWidget.Widget.extend({
         // Doing it that way allows to considerer fixed headers, hidden headers,
         // connected users, ...
         const firstContentEl = $('#wrapwrap > main > :first-child')[0]; // first child to consider the padding-top of main
-        // When a modal is open, we remove the "modal-open" class from the body.
-        // This is because this class sets "#wrapwrap" and "<body>" to
-        // "overflow: hidden," preventing the "closestScrollable" function from
-        // correctly recognizing the scrollable element closest to the element
-        // for which the height needs to be calculated. Without this, the
-        // "mainTopPos" variable would be incorrect.
-        const modalOpen = document.body.classList.contains("modal-open");
-        document.body.classList.remove("modal-open");
-        const mainTopPos = firstContentEl.getBoundingClientRect().top + closestScrollable(firstContentEl.parentNode).scrollTop;
-        document.body.classList.toggle("modal-open", modalOpen);
+        const mainTopPos = firstContentEl.getBoundingClientRect().top + document.documentElement.scrollTop;
         return (windowHeight - mainTopPos);
     },
 });
@@ -1176,25 +1167,21 @@ registry.FooterSlideout = publicWidget.Widget.extend({
         const slideoutEffect = $main.outerHeight() >= $(window).outerHeight();
         this.el.classList.toggle('o_footer_effect_enable', slideoutEffect);
 
-        // Add a pixel div over the footer, after in the DOM, so that the
-        // height of the footer is understood by Firefox sticky implementation
-        // (which it seems to not understand because of the combination of 3
-        // items: the footer is the last :visible element in the #wrapwrap, the
-        // #wrapwrap uses flex layout and the #wrapwrap is the element with a
-        // scrollbar).
-        // TODO check if the hack is still needed by future browsers.
-        this.__pixelEl = document.createElement('div');
-        this.__pixelEl.style.width = `1px`;
-        this.__pixelEl.style.height = `1px`;
-        this.__pixelEl.style.marginTop = `-1px`;
-        // On safari, add a background attachment fixed to fix the glitches that
-        // appear when scrolling the page with a footer slide out.
+        // On safari, add a pixel div over the footer, after in the DOM, and add
+        // a background attachment on it as it fixes the glitches that appear
+        // when scrolling the page with a footer slide out.
+        // TODO check if the hack is still needed (might have been fixed when
+        // the scrollbar was restored to its natural position).
         if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+            this.__pixelEl = document.createElement('div');
+            this.__pixelEl.style.width = `1px`;
+            this.__pixelEl.style.height = `1px`;
+            this.__pixelEl.style.marginTop = `-1px`;
             this.__pixelEl.style.backgroundColor = "transparent";
             this.__pixelEl.style.backgroundAttachment = "fixed";
             this.__pixelEl.style.backgroundImage = "url(/website/static/src/img/website_logo.svg)";
+            this.el.appendChild(this.__pixelEl);
         }
-        this.el.appendChild(this.__pixelEl);
 
         return this._super(...arguments);
     },
@@ -1204,7 +1191,9 @@ registry.FooterSlideout = publicWidget.Widget.extend({
     destroy() {
         this._super(...arguments);
         this.el.classList.remove('o_footer_effect_enable');
-        this.__pixelEl.remove();
+        if (this.__pixelEl) {
+            this.__pixelEl.remove();
+        }
     },
 });
 
@@ -1417,8 +1406,8 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         $el.css({'animation-name': animationName , 'animation-play-state': 'paused'});
     },
     /**
-     * Shows/hides the horizontal scrollbar (on the #wrapwrap) and prevents
-     * flicker of the page height (on the slideout footer).
+     * Shows/hides the horizontal scrollbar and prevents flicker of the page
+     * height (on the slideout footer).
      *
      * @private
      * @param {Boolean} add

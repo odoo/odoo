@@ -137,7 +137,7 @@ export function changePaddingSize(direction) {
 /**
  * Checks if an element is visible on the screen, i.e., not masked by another
  * element.
- * 
+ *
  * @param {String} elementSelector The selector of the element to be checked.
  * @returns {Object} The steps required to check if the element is visible.
  */
@@ -547,7 +547,7 @@ export function toggleMobilePreview(toggleOn) {
     const mobileOffSelector = ":not(.o_is_mobile)";
     return [
         {
-            trigger: `:iframe #wrapwrap${toggleOn ? mobileOffSelector : mobileOnSelector}`,
+            trigger: `:iframe html${toggleOn ? mobileOffSelector : mobileOnSelector}`,
         },
         {
             content: `Toggle the mobile preview ${onOrOff}`,
@@ -556,7 +556,7 @@ export function toggleMobilePreview(toggleOn) {
         },
         {
             content: `Check that the mobile preview is ${onOrOff}`,
-            trigger: `:iframe #wrapwrap${toggleOn ? mobileOnSelector : mobileOffSelector}`,
+            trigger: `:iframe html${toggleOn ? mobileOnSelector : mobileOffSelector}`,
         },
     ];
 }

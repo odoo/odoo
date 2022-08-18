@@ -22,15 +22,14 @@ const snippets = [
 
 const checkScrollbar = function (hasScrollbar) {
     return {
-        content: `Check that the #wrapwrap ${hasScrollbar ? "has" : "does not have"} a vertical scrollbar.`,
+        content: `Check that the page ${hasScrollbar ? "has" : "does not have"} a vertical scrollbar.`,
         trigger: `:iframe ${hasScrollbar ? "body:not(.modal-open)" : "body.modal-open"}`,
         run: function () {
-            const wrapwrapEl = this.anchor.querySelector("#wrapwrap");
-            const wrapwrapStyle = window.getComputedStyle(wrapwrapEl);
-            if (!hasScrollbar && (wrapwrapStyle.overflow !== "hidden" || parseFloat(wrapwrapStyle.paddingRight) < 1)) {
-                console.error("error The #wrapwrap vertical scrollbar should be hidden");
-            } else if (hasScrollbar && (wrapwrapStyle.overflow === "hidden" || parseFloat(wrapwrapStyle.paddingRight) > 0)) {
-                console.error("error The #wrapwrap vertical scrollbar should be displayed");
+            const style = window.getComputedStyle(this.anchor);
+            if (!hasScrollbar && (style.overflow !== "hidden" || parseFloat(style.paddingRight) < 1)) {
+                console.error("error The vertical scrollbar should be hidden");
+            } else if (hasScrollbar && (style.overflow === "hidden" || parseFloat(style.paddingRight) > 0)) {
+                console.error("error The vertical scrollbar should be displayed");
             }
         },
     };
@@ -101,7 +100,9 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
         run: "click",
     },
+    /* task-4185877
     checkScrollbar(false),
+    */
     goBackToBlocks(),
     {
         content: "Drag the Content snippet group and drop it at the bottom of the popup.",
@@ -113,7 +114,9 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         trigger: ':iframe .o_snippet_preview_wrap[data-snippet-id="s_media_list"]',
         run: "click",
     },
-    checkScrollbar(true), //the popup backdrop is activated so there should have a scrollbar on #wrapwrap
+    /* task-4185877
+    checkScrollbar(true), // The popup backdrop is activated so there should be a scrollbar
+    */
     {
         content: 'Click on the s_popup snippet',
         trigger: ':iframe .s_popup .modal',

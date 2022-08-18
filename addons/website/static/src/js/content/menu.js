@@ -860,8 +860,6 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
     events: {
         "show.bs.offcanvas #top_menu_collapse, #top_menu_collapse_mobile": "_onCollapseShow",
         "hidden.bs.offcanvas #top_menu_collapse, #top_menu_collapse_mobile": "_onCollapseHidden",
-        "shown.bs.offcanvas #top_menu_collapse_mobile": "_onMobileMenuToggled",
-        "hidden.bs.offcanvas #top_menu_collapse_mobile": "_onMobileMenuToggled",
     },
 
     //--------------------------------------------------------------------------
@@ -886,14 +884,6 @@ publicWidget.registry.HeaderGeneral = publicWidget.Widget.extend({
             this.el.classList.remove("o_top_menu_collapse_shown");
         }
         this.options.wysiwyg?.odooEditor.observerActive("removeCollapseClass");
-    },
-    /**
-     * @private
-     */
-    _onMobileMenuToggled(ev) {
-        // TODO: Fix for Safari. Once the scroll is moved back from the
-        //       #wrapwrap to the body, this code should not be needed anymore.
-        document.querySelector("#wrapwrap").classList.toggle("overflow-hidden");
     },
 });
 
