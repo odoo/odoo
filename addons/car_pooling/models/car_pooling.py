@@ -23,17 +23,17 @@ class CarPooling(models.Model):
     comments_ids = fields.One2many("car.pooling.comment", "trip_id", string="Comments")
     capacity = fields.Integer(string="Number of seats", required=True)
     filled_seat = fields.Integer(string="Number of filled seats", readonly=True)
-    available_seat= fields.Integer(compute="_compute_available_seat", store=True, string="Available seats")
+    available_seat = fields.Integer(compute="_compute_available_seat", store=True, string="Available seats")
     @api.depends("capacity", "filled_seat")
     def _compute_available_seat(self):
         for record in self:
             record.available_seat = record.capacity - record.filled_seat
     status= fields.Selection(
         string= "Status",
-        selection= [("available", "Available"), ("full", "Full"), ("unavailable", "Unavailable"), ("departed", "Departed"), ('canceled', 'Canceled')],
-        default= "available")
+        selection=[("available", "Available"), ("full", "Full"), ("unavailable", "Unavailable"), ("departed", "Departed"), ('canceled', 'Canceled')],
+        default="available")
 
-    name = fields.Char(compute= "_compute_name")
+    name = fields.Char(compute="_compute_name")
     @api.depends('source_city', "destination_city")
     def _compute_name(self):
         for record in self:
@@ -79,15 +79,13 @@ class CarPooling(models.Model):
             for record2 in record.passenger_ids:
                 if record2.passenger == self.env.user:
                     if record2.status == "accepted" or record2.status == "refused":
-                            record.current_user_book_status = record2.status.capitalize()
+                        record.current_user_book_status = record2.status.capitalize()
                     break
-   
+
     is_volunteer = fields.Char(compute="_is_volunteer")
     @api.depends('driver')
     def _is_volunteer(self):
-        print("printing self",self)
         for record in self:
-            print("value", record.driver.is_volunteer)
             record.is_volunteer = record.driver.is_volunteer
 
     car_name = fields.Char(compute="_car_name")
@@ -95,13 +93,13 @@ class CarPooling(models.Model):
     def _car_name(self):
         for record in self:
             record.car_name = record.driver.car_name
-    
+
     Car_model = fields.Char(compute="_car_model")
     @api.depends('driver')
     def _car_model(self):
         for record in self:
             record.Car_model = record.driver.Car_model
-    
+
     car_type = fields.Char(compute="_car_type")
     @api.depends('driver')
     def _car_type(self):
@@ -126,7 +124,6 @@ class CarPooling(models.Model):
         for record in self:
             record.Car_image = record.driver.Car_image
 
- 
     def cancel_action(self):
         # This function is responsible for canceling a trip if the trip is not in "departed" status.
         for record in self:
@@ -144,15 +141,14 @@ class CarPooling(models.Model):
                 record.status = "departed"
     #On write and On-delete and create api to avoid inconsistency (e.g., what if we update the capacity while it is in full status?)
     @api.model
-    def create(self, vals):        
+    def create(self, vals):
         if vals['capacity'] == 0:
             raise UserError("The Number of seats (Vehicle Capacity) should be greater than zero!")
-        return super(CarPooling,self).create(vals)
+        return super(CarPooling, self).create(vals)
     @api.ondelete(at_uninstall=False)
     def _unlink_if_passenger_refused(self):
         if any(record.passenger_ids.status == "accepted" for record in self):
                 msg = "There are some passengers in 'accepted' status for this trip. To delete the trip, please make sure you have refused all accepted book requests."   
-                print("Message:", msg)
                 raise UserError(msg)
 
     def write (self,vals):
@@ -172,8 +168,8 @@ class CarPooling(models.Model):
                 vals["status"] = 'full'
             elif self.capacity - vals['filled_seat'] > 0  and self.status not in ('unavailable', 'departed', 'canceled'):
                 vals["status"] = 'available'
-        super(CarPooling,self).write(vals)
-    
+        super(CarPooling, self).write(vals)
+
     #Book and unbook action with its button such that it inserts the user to the passenger list or removes it from the list
     def book_or_unbook(self):
         for record in self:
@@ -226,7 +222,7 @@ class CarPoolingPassenger(models.Model):
     status = fields.Selection(string="Status", selection=[("accepted","Accepted"), ("refused","Refused")], help="The status of the trip offer")
     accept_count = fields.Integer(readonly=True, string="Number of Refusals")
     refuse_count = fields.Integer(readonly=True, string="Number of Acceptances")
-    
+
     trip_date = fields.Datetime(string="Departure Date and Time", readonly=True)
     trip_driver = fields.Char(string="Driver", readonly=True)
     is_round_trip = fields.Boolean(string="Round Trip", readonly=True)
@@ -269,17 +265,15 @@ class CarPoolingPassenger(models.Model):
             else:
                 raise UserError("No passenger can be removed from a departed or canceled trip.")
         return True
-    
     @api.ondelete(at_uninstall=False)
     def _unlink_if_passenger_refused(self):
         for record in self:
             if record.status == "accepted":
                 if record.trip_id.status != 'departed':
-                    msg = "The book has been accepted. To delete the book, the book request must be first refused by the drive."   
+                    msg = "The book has been accepted. To delete the book, the book request must be first refused by the drive."
                 elif record.trip_id.status == 'departed':
-                    msg = "The trip is in departed status. An accepted book request for a departed trip cannot be removed."   
+                    msg = "The trip is in departed status. An accepted book request for a departed trip cannot be removed."
                 raise UserError(msg)
-        
 ##############################################################
 
 # A model for driver-trip-passanger message should be added
@@ -289,7 +283,6 @@ AVAILABLE_PRIORITIES = [
     ('2', 'Normal'),
     ('3', 'High'),
     ('4', 'Very High')]
-    
 class CarPoolingPassengerComments(models.Model):
     _name = "car.pooling.comment"
     _description = "This model is for storing the comments written about a trip"
@@ -304,13 +297,12 @@ class CarPoolingPassengerComments(models.Model):
     def _get_passenger_uid(self):
         for record in self:
             record.passenger_uid = record.passenger.id
-    
+
     @api.ondelete(at_uninstall=False)
     def _unlink_if_the_same_passenger(self):
         for record in self:
             if record.passenger != self.env.user:
-                msg = "You cannot remove somebody else's comment"   
-                print("Message:", msg)
+                msg = "You cannot remove somebody else's comment"
                 raise UserError(msg)
 
     _sql_constraints = [
