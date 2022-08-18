@@ -195,7 +195,7 @@ class CarPooling(models.Model):
     @api.constrains('return_date')
     def _check_return_date(self):
         for record in self:
-            if record.is_round_trip == True:
+            if record.is_round_trip:
                 if record.return_date <= record.departure_date:
                     raise ValidationError("The return date and Time must be greater than the departure time!")
 
@@ -289,7 +289,7 @@ class CarPoolingPassengerComments(models.Model):
     passenger = fields.Many2one('res.users', required=True, readonly=True, string='Passenger', index=True, tracking=True, default=lambda self: self.env.user)
     trip_id = fields.Many2one('car.pooling', string="Trip", ondelete='cascade')
     comment = fields.Text()
-    trip_star = fields.Selection(AVAILABLE_PRIORITIES, select=True, string="Star")
+    trip_star = fields.Selection(AVAILABLE_PRIORITIES, string="Star")
 
     passenger_uid = fields.Integer(compute="_get_passenger_uid", store=True)
     @api.depends('passenger')
