@@ -586,7 +586,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             };
         }
         if (this._isDirty()) {
-            return this.save().then(callback);
+            return this.save().then(callback, event.data.onFailure);
         } else {
             return callback();
         }
