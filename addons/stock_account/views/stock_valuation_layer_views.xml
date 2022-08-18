@@ -42,7 +42,8 @@
         <field name="model">stock.valuation.layer</field>
         <field name="arch" type="xml">
             <tree default_order="create_date desc, id desc" create="0"
-                  import="0" js_class="inventory_report_list">
+                  import="0" js_class="inventory_report_list"
+                  action="action_open_reference" type="object">
                 <field name="create_date" string="Date" />
                 <field name="reference"/>
                 <field name="product_id" />
