@@ -4279,12 +4279,6 @@ registry.sizing = SnippetOptionWidget.extend({
 
         return def;
     },
-    /**
-     * @override
-     */
-    onFocus: function () {
-        this._onResize();
-    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -4293,8 +4287,17 @@ registry.sizing = SnippetOptionWidget.extend({
     /**
      * @override
      */
+    async updateUI() {
+        this._updateSizingHandles();
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     setTarget: function () {
         this._super(...arguments);
+        // TODO master: _onResize should not be called here, need to check if
+        // updateUI is called when the target is changed
         this._onResize();
     },
 
@@ -4325,6 +4328,13 @@ registry.sizing = SnippetOptionWidget.extend({
      * @param {integer} [current] - current increment in this.grid
      */
     _onResize: function (compass, beginClass, current) {
+        this._updateSizingHandles();
+        this._notifyResizeChange();
+    },
+    /**
+     * @private
+     */
+    _updateSizingHandles: function () {
         var self = this;
 
         // Adapt the resize handles according to the classes and dimensions
@@ -4365,6 +4375,11 @@ registry.sizing = SnippetOptionWidget.extend({
             var direction = $handle.hasClass('n') ? 'top' : 'bottom';
             $handle.height(self.$target.css('padding-' + direction));
         });
+    },
+    /**
+     * @override
+     */
+    async _notifyResizeChange() {
         this.$target.trigger('content_changed');
     },
 });
@@ -4460,6 +4475,12 @@ registry['sizing_x'] = registry.sizing.extend({
                 this.$target.addClass('offset-lg-' + offset);
             }
         }
+        this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    async _notifyResizeChange() {
         this.trigger_up('option_update', {
             optionName: 'StepsConnector',
             name: 'change_column_size',
