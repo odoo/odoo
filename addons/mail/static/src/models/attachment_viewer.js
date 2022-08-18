@@ -6,6 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentViewer',
+    identifyingMode: 'xor',
     recordMethods: {
         /**
          * Close the dialog with this attachment viewer.
