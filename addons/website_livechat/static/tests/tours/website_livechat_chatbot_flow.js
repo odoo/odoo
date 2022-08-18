@@ -1,21 +1,23 @@
 /** @odoo-module */
 
 import tour from "web_tour.tour";
-import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
 
-LivechatButton.include({
+import { patchRecordMethods } from '@mail/model/model_core';
+// ensure that the model definition is loaded before the patch
+import '@im_livechat/models/livechat_button_view';
+
+patchRecordMethods('LivechatButtonView', {
     /**
      * Let us make it a bit faster than the default delay (3500ms).
      * Let us also debounce waiting for more user inputs for only 500ms.
      */
-    start: function () {
+    start() {
         this.messaging.publicLivechatGlobal.update({ isWebsiteLivechatChatbotFlow: true });
-
-        this._debouncedChatbotAwaitUserInput = _.debounce(
-            this._chatbotAwaitUserInput.bind(this),
-            500);
-
-        return this._super(...arguments);
+        this.widget._debouncedChatbotAwaitUserInput = _.debounce(
+            this.widget._chatbotAwaitUserInput.bind(this.widget),
+            500
+        );
+        this._super();
     },
 });
 
