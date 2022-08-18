@@ -34,6 +34,18 @@
                             </span>
                         </t>
                     </div>
+                    <div class="search-bar-container sb-product">
+                        <span t-if="env.isMobile" class="oe_status oe_icon icon" t-on-click="_toggleMobileSearchbar">
+                            <i t-attf-class="fa {{props.mobileSearchBarIsShown ? 'fa-arrow-left' : 'fa-search'}}"/>
+                        </span>
+                        <t t-if="!env.isMobile || props.mobileSearchBarIsShown">
+                            <div class="pos-search-bar">
+                                <i class="fa fa-search" t-on-click="_onPressEnterKey"/>
+                                <input t-ref="search-word-input-product" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
+                                <i class="fa fa-times search-clear-partner" t-on-click="_clearSearch"/>
+                            </div>
+                        </t>
+                    </div>
                 </div>
                 <t t-if="props.subcategories.length > 0 and displayCategImages">
                     <div class="categories position-relative flex-basis-0 flex-grow-1 border-bottom bg-300">
@@ -47,23 +59,6 @@
                     </div>
                 </t>
             </t>
-            <!-- <t t-portal="'.pos .pos-topheader .search-bar-container.sb-product'">
-                <span t-if="env.isMobile" class="oe_status oe_icon icon" t-on-click="_toggleMobileSearchbar">
-                    <i t-attf-class="fa {{props.mobileSearchBarIsShown ? 'fa-arrow-left' : 'fa-search'}}"/>
-                </span>
-                <t t-if="!env.isMobile || props.mobileSearchBarIsShown">
-                    <div class="pos-search-bar">
-                        <i class="fa fa-search" t-on-click="_onPressEnterKey"/>
-                        <input t-ref="search-word-input-product" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
-                        <i class="fa fa-times search-clear-partner" t-on-click="_clearSearch"/>
-                    </div>
-                </t>
-            </t>
-            <t t-portal="'.pos .search-database-button'">
-                <div class="button highlight" t-on-click="_onPressEnterKey">
-                    <i class="fa fa-search"/> Search database
-                </div>
-            </t> -->
         </div>
     </t>
 
