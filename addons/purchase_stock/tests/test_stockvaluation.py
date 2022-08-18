@@ -349,6 +349,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'type': 'general',
         })
         cls.product1.categ_id.write({
+            'property_valuation': 'real_time',
             'property_stock_account_input_categ_id': cls.stock_input_account.id,
             'property_stock_account_output_categ_id': cls.stock_output_account.id,
             'property_stock_valuation_account_id': cls.stock_valuation_account.id,
@@ -779,14 +780,14 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         inv.action_post()
 
         move_lines = inv.line_ids
-        self.assertEqual(len(move_lines), 2)
+        self.assertEqual(len(move_lines), 4)
 
         payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
 
         self.assertEqual(payable_line.amount_currency, -100.0)
         self.assertAlmostEqual(payable_line.balance, -66.67)
 
-        stock_line = move_lines.filtered(lambda l: l.account_id == self.stock_input_account)
+        stock_line = move_lines.filtered(lambda l: l.account_id == self.stock_input_account and l.balance > 0)
         self.assertEqual(stock_line.amount_currency, 100.0)
         self.assertAlmostEqual(stock_line.balance, 66.67)
 
