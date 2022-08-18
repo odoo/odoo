@@ -56,11 +56,6 @@
                             <button attrs="{'invisible': [('module_to_buy', '=', True)]}" type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
                         </div>
                     </div>
-                    <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
-                        <div class="o_payment_acquirer_desc">
-                            <field name="description"/>
-                        </div>
-                    </div>
                     <div attrs="{'invisible': [('id', '!=', False)]}" class="alert alert-warning" role="alert">
                         <strong>Warning</strong> Creating a payment acquirer from the <em>CREATE</em> button is not supported.
                         Please use the <em>Duplicate</em> action instead.
@@ -142,10 +137,10 @@
         <field name="name">payment.acquirer.kanban</field>
         <field name="model">payment.acquirer</field>
         <field name="arch" type="xml">
-            <kanban create="false" quick_create="false" class="o_kanban_payment_acquirer o_kanban_dashboard">
+            <kanban create="false" quick_create="false" class="o_kanban_dashboard">
                 <field name="id"/>
                 <field name="name"/>
-                <field name="description"/>
+                <field name="state"/>
                 <field name="is_published"/>
                 <field name="provider"/>
                 <field name="module_id"/>
@@ -156,28 +151,41 @@
                     <t t-name="kanban-box">
                         <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
                         <t t-set="to_buy" t-value="record.module_to_buy.raw_value === true"/>
+                        <t t-set="is_disabled" t-value="record.state.raw_value=='disabled'"/>
                         <t t-set="is_published" t-value="record.is_published.raw_value === true"/>
-                        <div t-attf-class="oe_kanban_global_click #{kanban_color(record.color.raw_value)}">
-                            <div class="o_payment_acquirer_desc">
-                                <div class="o_kanban_image">
-                                    <img type="open" t-att-src="kanban_image('payment.acquirer', 'image_128', record.id.raw_value)" alt="Acquirer"/>
+                        <t t-set="to_upgrade" t-value="!installed and to_buy"/>
+                        <div t-attf-class="oe_kanban_global_click" class="d-flex p-2">
+                            <div class="o_payment_acquirer_desc d-flex gap-2">
+                                <img type="open"
+                                     t-att-src="kanban_image('payment.acquirer', 'image_128', record.id.raw_value)"
+                                     class="mb-0 o_image_64_max"
+                                     alt="Acquirer"/>
+                                <div class="d-flex flex-column justify-content-between w-100">
+                                    <div class="o_payment_kanban_info">
+                                        <h4 class="mb-0"><t t-esc="record.name.value"/></h4>
+                                        <t t-if="installed">
+                                            <field name="state"
+                                                   widget="label_selection"
+                                                   options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'light'}}"/>
+                                            <t t-if="!is_disabled">
+                                                <span t-if="is_published and installed"
+                                                      class="badge text-bg-success ms-1">
+                                                    Published
+                                                </span>
+                                                <span t-if="!is_published and installed"
+                                                      class="badge text-bg-info ms-1">
+                                                    Unpublished
+                                                </span>
+                                            </t>
+                                        </t>
+                                        <span t-if="to_upgrade" class="badge text-bg-primary ms-1">Enterprise</span>
+                                    </div>
+                                    <div class="o_payment_kanban_button text-end">
+                                        <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-sm btn-primary float-end" name="button_immediate_install">Install</button>
+                                        <button t-if="installed and is_disabled and !selection_mode" type="edit" class="btn btn-sm btn-secondary float-end">Activate</button>
+                                        <button t-if="!installed and to_buy" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-sm btn-primary float-end">Upgrade</button>
+                                    </div>
                                 </div>
-                                <h3 class="mt4"><t t-esc="record.name.value"/></h3>
-                                <t t-if="record.description.raw_value" t-out="record.description.value"/>
-                            </div>
-                            <div class="o_payment_acquirer_bottom">
-                                <t t-if="installed">
-                                    <field name="state" widget="label_selection" options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'danger'}}"/>
-                                </t>
-                                <span t-if="is_published &amp;&amp; installed" class="badge text-bg-success ms-1">Published</span>
-                                <span t-if="!is_published &amp;&amp; installed" class="badge text-bg-danger ms-1">Unpublished</span>
-                                <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-secondary float-end" name="button_immediate_install">Install</button>
-                                <t t-if="!installed and to_buy">
-                                    <button href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" target="_blank" class="btn btn-info btn-sm float_right">Upgrade</button>
-                                    <span class="badge text-bg-primary oe_inline o_enterprise_label">Enterprise</span>
-                                </t>
-                                <button t-if="installed and record.state.raw_value == 'disabled' and !selection_mode" type="edit" class="btn btn-primary float-end">Activate</button>
-                                <button t-if="installed and record.state.raw_value in ['enabled', 'test'] and !selection_mode" type="edit" class="btn btn-primary float-end">Configure</button>
                             </div>
                         </div>
                     </t>
@@ -191,7 +199,7 @@
         <field name="model">payment.acquirer</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name" string="Acquirer" filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self)]"/>
+                <field name="name" string="Acquirer" filter_domain="[('name', 'ilike', self)]"/>
                 <field name="provider"/>
                 <filter name="acquirer_installed" string="Installed" domain="[('module_state', '=', 'installed')]"/>
                 <group expand="0" string="Group By">
