@@ -513,7 +513,7 @@ registry.Parallax = Animation.extend({
      */
     start: function () {
         this._rebuild();
-        $(this.$target[0].ownerDocument.defaultView).on('resize.animation_parallax', _.debounce(this._rebuild.bind(this), 500));
+        $(window).on('resize.animation_parallax', _.debounce(this._rebuild.bind(this), 500));
         return this._super.apply(this, arguments);
     },
     /**
@@ -521,7 +521,7 @@ registry.Parallax = Animation.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        $(this.$target[0].ownerDocument.defaultView).off('.animation_parallax');
+        $(window).off('.animation_parallax');
     },
 
     //--------------------------------------------------------------------------
@@ -553,7 +553,7 @@ registry.Parallax = Animation.extend({
         }
 
         // Initialize parallax data according to snippet and viewport dimensions
-        this.viewport = this.$target[0].ownerDocument.body.clientHeight - $(this.$target[0].ownerDocument).find('#wrapwrap').position().top;
+        this.viewport = document.body.clientHeight - $('#wrapwrap').position().top;
         this.visibleArea = [this.$target.offset().top];
         this.visibleArea.push(this.visibleArea[0] + this.$target.innerHeight() + this.viewport);
         this.ratio = this.speed * (this.viewport / 10);
@@ -1190,7 +1190,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      */
     start() {
         this.lastScroll = 0;
-        this.$scrollingElement = $().getScrollingElement(this.ownerDocument);
+        this.$scrollingElement = $().getScrollingElement();
         // By default, elements are hidden by the css of o_animate.
         // Render elements and trigger the animation then pause it in state 0.
         this.$animatedElements = this.$target.find('.o_animate');
