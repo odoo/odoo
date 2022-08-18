@@ -43,10 +43,9 @@ publicWidget.registry.AccountPortalSidebar = PortalSidebar.extend({
      * @param {object} $el: the iframe
      */
     _updateIframeSize: function ($el) {
-        var $wrapwrap = $el.contents().find('div#wrapwrap');
         // Set it to 0 first to handle the case where scrollHeight is too big for its content.
         $el.height(0);
-        $el.height($wrapwrap[0].scrollHeight);
+        $el.height(document.body.scrollHeight);
 
         // scroll to the right place after iframe resize
         const isAnchor = /^#[\w-]+$/.test(window.location.hash)

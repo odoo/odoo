@@ -1325,6 +1325,7 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
     },
 });
 
+// FIXME
 registry.WebsiteAnimate = publicWidget.Widget.extend({
     selector: '#wrapwrap',
     disabledInEditableMode: false,
