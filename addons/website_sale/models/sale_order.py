@@ -409,3 +409,7 @@ class SaleOrder(models.Model):
         if clear:
             self.shop_warning = ''
         return warn
+
+    def _is_reorder_allowed(self):
+        self.ensure_one()
+        return self.state == 'sale' and any(line._is_reorder_allowed() for line in self.order_line)

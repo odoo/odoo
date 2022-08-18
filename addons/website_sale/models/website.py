@@ -105,6 +105,7 @@ class Website(models.Model):
     prevent_zero_price_sale_text = fields.Char(string="Text to show instead of price", translate=True,
                                                default="Not Available For Sale")
     contact_us_button_url = fields.Char(string="Contact Us Button URL", translate=True, default="/contactus")
+    enabled_portal_reorder_button = fields.Boolean(string="Re-order From Portal")
 
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):

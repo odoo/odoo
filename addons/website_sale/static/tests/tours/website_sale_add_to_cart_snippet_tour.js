@@ -47,8 +47,8 @@ wTourUtils.registerEditionTour('add_to_cart_snippet_tour', {
         wTourUtils.assertPathName('/shop/payment', 'button[name=o_payment_submit_button]'),
 
         wsTourUtils.goToCart({quantity: 4, backend: false}),
-        wsTourUtils.assertCartContains('Acoustic Bloc Screens', false),
-        wsTourUtils.assertCartContains('Conference Chair (Steel)', false),
-        wsTourUtils.assertCartContains('Conference Chair (Aluminium)', false),
+        wsTourUtils.assertCartContains({productName: 'Acoustic Bloc Screens'}),
+        wsTourUtils.assertCartContains({productName: 'Conference Chair (Steel)'}),
+        wsTourUtils.assertCartContains({productName: 'Conference Chair (Aluminium)'}),
     ],
 );
