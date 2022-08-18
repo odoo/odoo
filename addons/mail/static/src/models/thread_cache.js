@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, link, unlink } from '@mail/model/model_field_command';
+import { clear, link } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadCache',
@@ -62,19 +62,13 @@ registerModel({
         },
         /**
          * @private
-         * @returns {Message[]}
+         * @returns {FieldCommand|Message[]}
          */
         _computeFetchedMessages() {
             if (!this.thread) {
                 return clear();
             }
-            const toUnlinkMessages = [];
-            for (const message of this.fetchedMessages) {
-                if (!this.thread.messages.includes(message)) {
-                    toUnlinkMessages.push(message);
-                }
-            }
-            return unlink(toUnlinkMessages);
+            return this.rawFetchedMessages.filter(m => this.thread.messages.includes(m));
         },
         /**
          * @private
@@ -120,7 +114,7 @@ registerModel({
                     message.id > this.lastFetchedMessage.id
                 );
             }
-            return this.fetchedMessages.concat(newerMessages);
+            return [...this.fetchedMessages, ...this.temporaryMessages, ...newerMessages];
         },
         /**
          * @private
@@ -219,7 +213,7 @@ registerModel({
                 return;
             }
             this.update({
-                fetchedMessages: link(messages),
+                rawFetchedMessages: link(messages),
                 hasLoadingFailed: false,
                 isLoaded: true,
                 isLoading: false,
@@ -356,6 +350,8 @@ registerModel({
         orderedNonEmptyMessages: many('Message', {
             compute: '_computeOrderedNonEmptyMessages',
         }),
+        rawFetchedMessages: many('Message'),
+        temporaryMessages: many('Message'),
         thread: one('Thread', {
             identifying: true,
             inverse: 'cache',

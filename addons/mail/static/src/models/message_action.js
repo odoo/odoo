@@ -90,12 +90,10 @@ registerModel({
     fields: {
         isNonCompactActionContribution: attr({
             compute: '_computeIsNonCompactActionContribution',
-            readonly: true,
         }),
         messageActionListOwner: one('MessageActionList', {
             compute: '_computeMessageActionListOwner',
             inverse: 'messageActions',
-            readonly: true,
             required: true,
         }),
         messageActionListOwnerAsDelete: one('MessageActionList', {
@@ -130,7 +128,6 @@ registerModel({
             compute: '_computeMessageActionView',
             inverse: 'messageAction',
             isCausal: true,
-            readonly: true,
         }),
         /**
          * States the listing sequence of the action inside of the aciton list.

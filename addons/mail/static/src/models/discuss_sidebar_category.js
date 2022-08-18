@@ -53,7 +53,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeActiveItem() {
-            const channel = this.messaging.discuss.thread && this.messaging.discuss.thread.channel;
+            const channel = this.messaging.discuss.activeThread && this.messaging.discuss.activeThread.channel;
             if (channel && this.supportedChannelTypes.includes(channel.channel_type)) {
                 return {
                     thread: channel.thread,
@@ -389,7 +389,6 @@ registerModel({
          */
         filteredCategoryItems: many('DiscussSidebarCategoryItem', {
             compute: '_computeFilteredCategoryItems',
-            readonly: true,
         }),
         /**
          * Display name of the category.
@@ -465,7 +464,6 @@ registerModel({
         supportedChannelTypes: attr({
             compute: '_computeSupportedChannelTypes',
             required: true,
-            readonly: true,
         }),
     },
     onChanges: [

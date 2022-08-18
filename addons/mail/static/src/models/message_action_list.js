@@ -166,14 +166,12 @@ registerModel({
         }),
         firstActionView: one('MessageActionView', {
             compute: '_computeFirstActionView',
-            readonly: true,
         }),
         isCompact: attr({
             default: true,
         }),
         lastActionView: one('MessageActionView', {
             compute: '_computeLastActionView',
-            readonly: true,
         }),
         /**
          * States the message on which this action message list operates.
@@ -186,7 +184,6 @@ registerModel({
             isCausal: true,
         }),
         messageActionViews: many('MessageActionView', {
-            readonly: true,
             related: 'messageActions.messageActionView',
             sort: '_sortMessageActionViews',
         }),

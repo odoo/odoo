@@ -1003,6 +1003,7 @@ patch(MockServer.prototype, 'mail', {
             const channelData = {
                 channel_type: channel.channel_type,
                 id: channel.id,
+                memberCount: channel.member_count,
             };
             const res = Object.assign({}, channel, {
                 last_message_id: lastMessageId,

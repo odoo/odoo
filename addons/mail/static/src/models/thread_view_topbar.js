@@ -484,7 +484,6 @@ registerModel({
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
             default: '',
-            readonly: true,
         }),
         /**
          * Determines whether the guest name input needs to be focused.
@@ -583,7 +582,6 @@ registerModel({
          */
         hasGuestNameChanged: attr({
             compute: '_computeHasGuestNameChanged',
-            readonly: true,
         }),
         /**
          * Determines whether description area should display on top bar.

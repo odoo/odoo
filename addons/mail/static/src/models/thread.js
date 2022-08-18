@@ -99,9 +99,6 @@ registerModel({
                 });
                 data2.serverLastMessage = insert(messageData);
             }
-            if ('memberCount' in data) {
-                data2.memberCount = data.memberCount;
-            }
             if ('message_needaction_counter' in data) {
                 data2.message_needaction_counter = data.message_needaction_counter;
             }
@@ -115,7 +112,7 @@ registerModel({
                 data2.public = data.public;
             }
             if ('seen_message_id' in data) {
-                data2.lastSeenByCurrentPartnerMessageId = data.seen_message_id || 0;
+                data2.rawLastSeenByCurrentPartnerMessageId = data.seen_message_id;
             }
             if ('uuid' in data) {
                 data2.uuid = data.uuid;
@@ -1355,15 +1352,15 @@ registerModel({
             const firstMessage = this.orderedMessages[0];
             if (
                 firstMessage &&
-                this.lastSeenByCurrentPartnerMessageId &&
-                this.lastSeenByCurrentPartnerMessageId < firstMessage.id
+                this.rawLastSeenByCurrentPartnerMessageId &&
+                this.rawLastSeenByCurrentPartnerMessageId < firstMessage.id
             ) {
                 // no deduction can be made if there is a gap
-                return this.lastSeenByCurrentPartnerMessageId;
+                return this.rawLastSeenByCurrentPartnerMessageId;
             }
-            let lastSeenByCurrentPartnerMessageId = this.lastSeenByCurrentPartnerMessageId;
+            let lastSeenByCurrentPartnerMessageId = this.rawLastSeenByCurrentPartnerMessageId;
             for (const message of this.orderedMessages) {
-                if (message.id <= this.lastSeenByCurrentPartnerMessageId) {
+                if (message.id <= this.rawLastSeenByCurrentPartnerMessageId) {
                     continue;
                 }
                 if (
@@ -1800,7 +1797,6 @@ registerModel({
             compute: '_computeComposer',
             inverse: 'thread',
             isCausal: true,
-            readonly: true,
         }),
         correspondent: one('Partner', {
             compute: '_computeCorrespondent',
@@ -1868,7 +1864,6 @@ registerModel({
             compute: '_computeDiscussSidebarCategoryItem',
             inverse: 'thread',
             isCausal: true,
-            readonly: true,
         }),
         displayName: attr({
             compute: '_computeDisplayName',
@@ -2096,12 +2091,6 @@ registerModel({
             inverse: 'thread',
         }),
         mainAttachment: one('Attachment'),
-        /**
-         * States the number of members in this thread according to the server.
-         * Guests are excluded from the count.
-         * Only makes sense if this thread is a channel.
-         */
-        memberCount: attr(),
         members: many('Partner', {
             sort: '_sortPartnerMembers',
         }),
@@ -2155,12 +2144,10 @@ registerModel({
         messagingAsRingingThread: one('Messaging', {
             compute: '_computeMessagingAsRingingThread',
             inverse: 'ringingThreads',
-            readonly: true,
         }),
         messagingMenuAsPinnedAndUnreadChannel: one('MessagingMenu', {
             compute: '_computeMessagingMenuAsPinnedAndUnreadChannel',
             inverse: 'pinnedAndUnreadChannels',
-            readonly: true,
         }),
         model: attr({
             identifying: true,
@@ -2238,6 +2225,9 @@ registerModel({
          */
         pendingSeenMessageId: attr(),
         public: attr(),
+        rawLastSeenByCurrentPartnerMessageId: attr({
+            default: 0,
+        }),
         /**
          * If set, the current thread is the thread that hosts the current RTC call.
          */

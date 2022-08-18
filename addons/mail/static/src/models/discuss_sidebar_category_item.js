@@ -96,7 +96,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsActive() {
-            return this.messaging.discuss && this.thread === this.messaging.discuss.thread;
+            return this.messaging.discuss && this.thread === this.messaging.discuss.activeThread;
         },
         /**
          * @private
@@ -234,10 +234,8 @@ registerModel({
          */
         categoryCounterContribution: attr({
             compute: '_computeCategoryCounterContribution',
-            readonly: true,
         }),
         channel: one('Channel', {
-            readonly: true,
             related: 'thread.channel',
         }),
         /**

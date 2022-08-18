@@ -34,7 +34,7 @@ export class DiscussContainer extends Component {
             await this.messaging.initializedPromise;
             if (!this.discuss.isInitThreadHandled) {
                 this.discuss.update({ isInitThreadHandled: true });
-                if (!this.discuss.thread) {
+                if (!this.discuss.activeThread) {
                     this.discuss.openInitThread();
                 }
             }

@@ -305,7 +305,7 @@ registerModel({
                         model: this.threadModel,
                     }),
                 });
-                this.thread.cache.update({ messages: link(message) });
+                this.thread.cache.update({ temporaryMessages: link(message) });
             }
         },
         /**
@@ -484,7 +484,6 @@ registerModel({
             compute: '_computeThreadViewer',
             inverse: 'chatter',
             isCausal: true,
-            readonly: true,
             required: true,
         }),
         topbar: one('ChatterTopbar', {

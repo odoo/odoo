@@ -90,7 +90,7 @@ QUnit.test('create', async function (assert) {
     assert.strictEqual(channel.name, "General");
     const partner = messaging.models['Partner'].findFromIdentifyingData({ id: 5 });
     assert.ok(partner);
-    assert.strictEqual(partner.display_name, "Demo");
+    assert.strictEqual(partner.displayName, "Demo");
     assert.strictEqual(partner.id, 5);
 });
 

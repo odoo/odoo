@@ -491,17 +491,22 @@ export class ModelManager {
                     }
                 }
                 // 4. Computed field.
-                if (field.compute && !(typeof field.compute === 'string')) {
-                    throw new Error(`Property "compute" of field(${fieldName}) on ${model} must be a string (instance method name).`);
-                }
-                if (field.compute && !(model.prototype[field.compute])) {
-                    throw new Error(`Property "compute" of field(${fieldName}) on ${model} does not refer to an instance method of this model.`);
+                if (field.compute) {
+                    if (!(typeof field.compute === 'string')) {
+                        throw new Error(`Property "compute" of field(${fieldName}) on ${model} must be a string (instance method name).`);
+                    }
+                    if (!model.prototype[field.compute]) {
+                        throw new Error(`Property "compute" of field(${fieldName}) on ${model} does not refer to an instance method of this model.`);
+                    }
+                    if ('readonly' in field) {
+                        throw new Error(`Computed field(${fieldName}) on ${model} has unnecessary "readonly" attribute (readonly is implicit for computed fields).`);
+                    }
                 }
                 // 5. Related field.
-                if (field.compute && field.related) {
-                    throw new Error(`field(${fieldName}) on ${model} cannot be a related and compute field at the same time.`);
-                }
                 if (field.related) {
+                    if (field.compute) {
+                        throw new Error(`field(${fieldName}) on ${model} cannot be a related and compute field at the same time.`);
+                    }
                     if (!(typeof field.related === 'string')) {
                         throw new Error(`Property "related" of field(${fieldName}) on ${model} has invalid format.`);
                     }
@@ -542,6 +547,9 @@ export class ModelManager {
                         relatedField.to !== field.to
                     ) {
                         throw new Error(`Related field(${fieldName}) on ${model} has mismatched target model name with its related model field.`);
+                    }
+                    if ('readonly' in field) {
+                        throw new Error(`Related field(${fieldName}) on ${model} has unnecessary "readonly" attribute (readonly is implicit for related fields).`);
                     }
                 }
             }
