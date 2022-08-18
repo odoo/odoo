@@ -1,0 +1,19 @@
+<odoo>
+
+    <record id="trip_tag_action" model="ir.actions.act_window">
+        <field name="name">Trip Tags</field>
+        <field name="res_model">car.pooling.tag</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="trip_tag_tree" model="ir.ui.view">
+    <field name="name">Tag List</field>
+    <field name="model">car.pooling.tag</field>
+    <field name="arch" type="xml">
+        <tree editable="bottom">
+            <field name="name"/>
+        </tree>
+    </field>
+</record>
+
+</odoo>

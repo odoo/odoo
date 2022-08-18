@@ -1,0 +1,36 @@
+    <odoo>
+
+        <record id="passenger_view_tree" model="ir.ui.view">
+            <field name="name">Passenger List</field>
+            <field name="model">car.pooling.passenger</field>
+            <field name="arch" type="xml">
+                <tree  editable="bottom" create="false" edit="false" decoration-success="status=='accepted'" decoration-danger="status=='refused'">
+                    <field name="passenger"/>
+                    <button name="action_accept" string="Accept" type="object" icon="fa-check" attrs="{'invisible': [('status', 'in', ('accepted'))]}"/>
+                    <button name="action_refuse" string="Refuse" type="object" icon="fa-times" attrs="{'invisible': [('status', 'in', ('refused'))]}"/>
+                    <field name="status"/>
+                    <!-- <field name="property_type_id"/> -->
+                </tree>
+            </field>
+        </record>
+
+        <record id="passenger_form" model="ir.ui.view">
+            <field name="name">Passenger</field>
+            <field name="model">car.pooling.passenger</field>
+            <field name="arch" type="xml">
+                <form string="Form Viwe" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <field name="passenger" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="trip_date" readonly='1'/>
+                            <field name="status" readonly='1'/>
+                        </group>
+                    </sheet>
+                </form>
+
+            </field>
+        </record>
+
+    </odoo>

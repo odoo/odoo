@@ -1,0 +1,146 @@
+<odoo>
+
+    <record id="car_pooling_action" model="ir.actions.act_window">
+        <field name="name">Car pooling: Trips</field>
+        <field name="res_model">car.pooling</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_availability': True, 'search_default_current': True}</field>
+    </record>
+
+    <record id="car_pooling_view_tree" model="ir.ui.view">
+        <field name="name">Trips</field>
+        <field name="model">car.pooling</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="status in ('available')"  decoration-warning="status=='full'" decoration-muted="status in ('departed','unavailable')"  decoration-bf="status=='available'" decoration-danger="status=='canceled'">
+                <field name="current_user_is_passenger" invisible='1'/>
+                <field name="is_current_user_driver" invisible='1'/>
+                <button name='book_or_unbook' string='Book' type="object"  attrs="{'invisible':['|','|', ('current_user_is_passenger', '=', True), ('is_current_user_driver','=',True),('status', 'in', ('departed','unavailable','canceled'))]}" class="oe_highlight"/>
+                <button name='book_or_unbook' string='Unbook' type="object" attrs="{'invisible':['|','|', ('current_user_is_passenger', '=', False), ('is_current_user_driver','=',True),('status', 'in', ('departed','unavailable','canceled'))]}" class="btn-danger"/>
+                <field name="driver"/>
+                <field name="available_seat"/>
+                <field name="source_city"/>
+                <field name="source_address"/>
+                <field name="departure_date" />
+                <field name="destination_city"/>
+                <field name="destination_address"/>
+                <field name="status"/>
+                <field name="tag" optional="1"/>
+                <field name="is_round_trip"/>
+                <field name="return_date" />           
+            </tree>
+        </field>
+    </record>
+
+       <record id="trip_form" model="ir.ui.view">
+        <field name="name">Trip Form</field>
+        <field name="model">car.pooling</field>
+        <field name="arch" type="xml">
+            <form string="Form Viwe">
+                <field name="is_current_user_driver" invisible='1'/>
+                <field name="current_user_is_passenger" invisible='1'/>
+
+                <header>
+                        <button name="depart_action" type="object" string="Departed" attrs="{'invisible': ['|',('status', '=', 'canceled'),('is_current_user_driver','=',False)]}"/>
+                        <button name="cancel_action" type="object" string="Cancel" attrs="{'invisible': ['|',('status', '=', 'departed'),('is_current_user_driver','=',False)]}"/> 
+                        <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="name" />
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="driver"/>
+                        </group>
+                        <group>
+                            <field name='current_user_book_status' attrs="{'invisible':['|', ('current_user_is_passenger', '=', False), ('is_current_user_driver','=',True)]}" />
+                            <field name="capacity"  attrs="{'readonly': ['|',('status', 'in', ('departed','unavailable','canceled')),('is_current_user_driver','=',False)]}"/>
+                            <field name="available_seat"  readonly='1'/>
+                            <field name="is_round_trip"  attrs="{'readonly': ['|',('status', 'in', ('departed','unavailable','canceled')),('is_current_user_driver','=',False)]}"/>
+                        </group>
+                        <!-- <separator string="Requirements"/> -->
+                        <notebook  colspan="4">
+                            <page string="Trip Information">
+                                <group >
+                                    <field name="departure_date"  attrs="{'readonly': ['|',('status', 'in', ('departed','unavailable','canceled')),('is_current_user_driver','=',False)]}"/>
+                                    <field name="source_city"  attrs="{'readonly': ['|',('status', 'in', ('departed','unavailable','canceled')),('is_current_user_driver','=',False)]}"/>
+                                    <field name="source_address" attrs="{'readonly': ['|',('status', 'in', ('departed','unavailable','canceled')),('is_current_user_driver','=',False)]}"/>
+                                    <field name="destination_city" attrs="{'readonly': ['|',('status', 'in', ('departed','unavailable','canceled')),('is_current_user_driver','=',False)]}"/>
+                                    <field name="destination_address"  attrs="{'readonly': ['|',('status', 'in', ('departed','unavailable','canceled')),('is_current_user_driver','=',False)]}"/>
+                                    <field name="return_date"  attrs="{'invisible': [('is_round_trip', '=', False)],'readonly': ['|',('status', 'in', ('departed','unavailable','canceled')),('is_current_user_driver','=',False)]}"/>           
+                                </group>
+           
+                            </page>
+                            <page string="Vehicle Information">
+                                <group>
+                                    <group>
+                                        <field name="car_name" readonly='1'/>
+                                        <field name="Car_model" readonly='1'/>
+                                        <field name="car_type" readonly='1'/>
+                                        <field name="car_plate_number" readonly='1'/>
+                                        <field name="car_color"  widget='color' readonly='1'/>
+                                    </group>
+                                    <group>
+                                        <field name="Car_image" widget="image" class="oe_avatar" options='{"preview_image": "Car_image"}' readonly='1'/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Driver Comments">
+                                <group>
+                                    <field name="comments"  attrs="{'readonly': ['|',('status', 'in', ('departed','unavailable','canceled')),('is_current_user_driver','=',False)]}"/> 
+                                </group>
+                            </page>
+                            <page string="Tags">
+                                <group >
+                                    <field name="tag" widget="many2many_tags" options="{'color_field': 'color'}"  attrs="{'readonly': ['|',('status', 'in', ('departed','unavailable','canceled')),('is_current_user_driver','=',False)]}"/>
+                                </group>
+                            </page>
+                            <page string="Passenger"  attrs="{'invisible': [('is_current_user_driver','=',False)]}">
+                                <group>
+                                    <field name="passenger_ids"  attrs="{'readonly': [('status', 'in', ('departed','unavailable','canceled'))]}"/>
+                                </group>
+                            </page>
+                            <page string="Passenger Comments" attrs="{'invisible': ['&amp;','&amp;',('is_current_user_driver', '=', False),('current_user_book_status', '!=', 'Accepted'),('current_user_book_status', '=','Undecided')]}">
+                                <group >
+                                        <field name="comments_ids"  attrs="{'readonly': ['|',('status', 'in', ('unavailable','canceled')),('is_current_user_driver','=',True)]}"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+            </form>
+
+        </field>
+    </record>
+
+    <record id="car_pooling_search" model="ir.ui.view">
+        <field name="name">Car Pooling Search</field>
+        <field name="model">car.pooling</field>
+        <field name="arch" type="xml">
+            <search string="Trip Search">
+                <field name="driver" string="Driver Name" />
+                <field name="departure_date" string="Departure Date and Time."/>
+                <field name="source_city" string="Depart from City" />
+                <field name="source_address" string="Depart from street" />
+                <field name="destination_city" string="Arrive in City"/>
+                <field name="destination_city" string="Arrive in street"/>
+                <field name="available_seat" filter_domain="[('available_seat', '>=', self)]"/>
+                <field name="return_date" string="Return Date and Time."/>
+                <separator/>
+                <filter string="Available Trips" name='availability' domain="[('status','=','available')]"/>
+                <filter string="Full Trips" name='full' domain="[('status','=','full')]"/>
+                <filter string="Departed Trips" name='departed' domain="[('status','=','departed')]"/>
+                <filter string="Many Seats" name='manySeats' domain="[('available_seat','>',2)]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Group by Driver" name="Driver_groupby" context="{'group_by':'driver', 'residual_visible':True}"/>
+                    <filter string="Group by Source City" name="SourceCity_groupby" context="{'group_by':'source_city', 'residual_visible':True}"/>
+                    <filter string="Group by Destination City" name="DestinationCity_groupby" context="{'group_by':'destination_city', 'residual_visible':True}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+
+
+</odoo>

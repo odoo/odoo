@@ -1,0 +1,47 @@
+
+<odoo>
+        <record id="res_users_view_form" model="ir.ui.view">
+            <field name="name">res.users.view.form.inherit.properties</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <!-- find field description and add the field
+                    new_field after it -->
+                <xpath expr="//field[@name='email']" position="after">
+                    <group>
+                        <field name="phone_number" />
+                        <field name="is_volunteer" />
+                    </group>
+                </xpath> 
+                <xpath expr="//page[@name='preferences']" position="after">
+                    <page string="Vehicle Information"  attrs="{'invisible': [('is_volunteer', '=', 'no')]}"> 
+                        <group>
+                             <field name="car_name"/>
+                             <field name="Car_model"/>
+                             <field name="car_type"/>
+                             <field name="car_plate_number"/>
+                             <field name="car_color"  widget='color' />
+                        </group>
+                        <group>
+                            <field name="Car_image" widget="image" class="oe_avatar" options='{"preview_image": "Car_image"}'/>
+                        </group>
+                    </page>
+                    <page string="My Trips as Driver">
+                        <field name="trip_ids" readonly='1'/>
+                        
+                    </page>
+                    <page string="My Booked Trips as Passenger">
+                        <field name="my_book_trip_ids" readonly="1">                            
+                            <tree create="false" edit="false" decoration-success="status=='accepted'" decoration-danger="status=='refused'">
+                                <field name="trip_id"/>
+                                <field name="trip_driver"/>
+                                <field name="trip_date"/>
+                                <field name="status"/>
+                                <field name="is_round_trip" />
+                            </tree>
+                        </field>
+                    </page>
+                </xpath> 
+            </field>
+        </record>
+</odoo>
