@@ -1241,23 +1241,23 @@ QUnit.test('basic rendering of message', async function (assert) {
         "should action list in message"
     );
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_MessageActionList_action`).length,
+        message.querySelectorAll(`:scope .o_MessageActionView`).length,
         3,
         "should have 3 actions in action list of message"
     );
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,
+        message.querySelectorAll(`:scope .o_MessageActionView_actionToggleStar`).length,
         1,
         "should have action to star message"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageActionList_actionReaction',
+        '.o_MessageActionView_actionReaction',
         "should have action to add a reaction"
     );
     assert.containsOnce(
         message,
-        '.o_MessageActionList_actionReply',
+        '.o_MessageActionView_actionReplyTo',
         "should have action to reply to message"
     );
     assert.strictEqual(
@@ -1292,7 +1292,7 @@ QUnit.test('should not be able to reply to temporary/transient messages', async 
     await click('.o_Message');
     assert.containsNone(
         document.body,
-        '.o_MessageActionList_actionReply',
+        '.o_MessageActionView_actionReplyTo',
         "should not have action to reply to temporary/transient messages"
     );
 });
@@ -1383,7 +1383,7 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
         "message 2 should have some actions"
     );
     assert.strictEqual(
-        message2.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,
+        message2.querySelectorAll(`:scope .o_MessageActionView_actionToggleStar`).length,
         1,
         "message 2 should have star action in action list"
     );
@@ -2492,12 +2492,12 @@ QUnit.test('toggle_star message', async function (assert) {
     );
     await afterNextRender(() => message.click());
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,
+        message.querySelectorAll(`:scope .o_MessageActionView_actionToggleStar`).length,
         1,
         "message should have star action"
     );
 
-    await afterNextRender(() => message.querySelector(`:scope .o_MessageActionList_actionStar`).click());
+    await afterNextRender(() => message.querySelector(`:scope .o_MessageActionView_actionToggleStar`).click());
     assert.verifySteps(['rpc:toggle_message_starred']);
     assert.strictEqual(
         document.querySelector(`
@@ -2520,7 +2520,7 @@ QUnit.test('toggle_star message', async function (assert) {
         "message should be starred"
     );
 
-    await afterNextRender(() => message.querySelector(`:scope .o_MessageActionList_actionStar`).click());
+    await afterNextRender(() => message.querySelector(`:scope .o_MessageActionView_actionToggleStar`).click());
     assert.verifySteps(['rpc:toggle_message_starred']);
     assert.strictEqual(
         document.querySelectorAll(`
@@ -2888,27 +2888,27 @@ QUnit.test('rendering of inbox message', async function (assert) {
     );
     await afterNextRender(() => message.click());
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_MessageActionList_action`).length,
+        message.querySelectorAll(`:scope .o_MessageActionView`).length,
         4,
         "should display 4 actions"
     );
     assert.containsOnce(
         document.body,
-        '.o_MessageActionList_actionReaction',
+        '.o_MessageActionView_actionReaction',
         "should have action to add a reaction"
     );
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_MessageActionList_actionStar`).length,
+        message.querySelectorAll(`:scope .o_MessageActionView_actionToggleStar`).length,
         1,
         "should display star action"
     );
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_MessageActionList_actionReply`).length,
+        message.querySelectorAll(`:scope .o_MessageActionView_actionReplyTo`).length,
         1,
         "should display reply action"
     );
     assert.strictEqual(
-        message.querySelectorAll(`:scope .o_MessageActionList_actionMarkRead`).length,
+        message.querySelectorAll(`:scope .o_MessageActionView_actionMarkAsRead`).length,
         1,
         "should display mark as read action"
     );
@@ -3188,7 +3188,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     );
 
     await click('.o_Message');
-    await click('.o_MessageActionList_actionReply');
+    await click('.o_MessageActionView_actionReplyTo');
     assert.ok(
         document.querySelector('.o_Message').classList.contains('o-selected'),
         "message should be selected after clicking on reply icon"
@@ -3428,7 +3428,7 @@ QUnit.test('mark a single message as read should only move this message to "Hist
     await click(`
         .o_Message[data-message-local-id="${
             messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
-        }"] .o_MessageActionList_actionMarkRead
+        }"] .o_MessageActionView_actionMarkAsRead
     `);
     assert.containsOnce(
         document.body,

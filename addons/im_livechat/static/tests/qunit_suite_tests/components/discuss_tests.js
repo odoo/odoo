@@ -411,7 +411,7 @@ QUnit.test('reaction button should not be present on livechat', async function (
     await click('.o_Message');
     assert.containsNone(
         document.body,
-        '.o_MessageActionList_actionReaction',
+        '.o_MessageActionView_actionReaction',
         "should not have action to add a reaction"
     );
 });
@@ -439,7 +439,7 @@ QUnit.test('reply button should not be present on livechat', async function (ass
     await click('.o_Message');
     assert.containsNone(
         document.body,
-        '.o_MessageActionList_actionReply',
+        '.o_MessageActionView_actionReplyTo',
         "should not have reply action"
     );
 });
