@@ -2,11 +2,17 @@
 <templates id="template" xml:space="preserve">
 
      <t t-name="RewardButton" owl="1">
-        <span class="control-button" t-att-class="hasClaimableRewards() ? 'highlight' : ''">
-            <i class="fa fa-star"></i>
-            <span> </span>
-            <span>Reward</span>
-        </span>
+        <t t-if="env.pos.config.use_coupon_programs || env.pos.config.loyalty_program_id || env.pos.config.use_gift_card">
+            <button class="button d-flex flex-row-reverse align-items-center justify-content-between w-100 rounded-0 fw-bold" t-att-class="hasClaimableRewards() ? 'highlight' : ''">
+                <t t-if="!env.isMobile">
+                    <span class="fa-stack">
+                        <i class="fa fa-circle fa-stack-2x text-300"/>
+                        <i class="fa fa-star fa-stack-1x" role="img" aria-label="Reward" title="Reward" />
+                    </span>
+                </t>
+                <span>Reward</span>
+            </button>
+        </t>
     </t>
 
  </templates>

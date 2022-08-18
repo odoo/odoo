@@ -19,22 +19,6 @@
                         Customer
                     </t>
                 </button>
-                <!-- Change below for a Reward buton -->
-                <button class="button d-flex flex-row-reverse align-items-center justify-content-between w-100 rounded-0 fw-bold" t-att-class="{'decentered': isLongName}"
-                        t-on-click="() => this.trigger('click-partner')">
-                    <t t-if="!env.isMobile">
-                        <span class="fa-stack">
-                            <i class="fa fa-circle fa-stack-2x text-300"/>
-                            <i class="fa fa-star fa-stack-1x" role="img" aria-label="Reward" title="Reward" />
-                        </span>
-                    </t>
-                    <t t-if="props.partner">
-                        <t t-esc="props.partner.name" />
-                    </t>
-                    <t t-else="">
-                        Reward
-                    </t>
-                </button>
             </div>
             <div class="actionpad-actions d-flex flex-row">
                 <button class="button pay w-50 d-flex flex-column align-items-center justify-content-center rounded-0 fw-bold text-100" t-on-click="() => this.trigger(props.actionToTrigger or 'click-pay')">
