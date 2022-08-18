@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.fields import Command
 from odoo.tests import tagged
 
 
@@ -538,4 +539,81 @@ class TestTaxTotals(AccountTestInvoicingCommon):
                 },
             ],
             'subtotals_order': ["Untaxed Amount", "PRE GROUP 1", "PRE GROUP 2"],
+        })
+
+    def test_discounted_tax(self):
+        tax_21_exempted = self.env['account.tax'].create({
+            'name': "tax_21_exempted",
+            'amount_type': 'group',
+            'amount': 2.0,
+            'tax_group_id': self.tax_group1.id,
+            'children_tax_ids': [
+                Command.create({
+                    'name': "tax_exempt",
+                    'amount_type': 'percent',
+                    'amount': -2.0,
+                    'include_base_amount': True,
+                    'tax_group_id': self.tax_group_sub1.id,
+                    'sequence': 1,
+                }),
+                Command.create({
+                    'name': "tax_21",
+                    'amount_type': 'percent',
+                    'amount': 21.0,
+                    'tax_group_id': self.tax_group_sub2.id,
+                    'sequence': 2,
+                }),
+                Command.create({
+                    'name': "tax_reapply",
+                    'amount_type': 'percent',
+                    'amount': 2.0,
+                    'is_base_affected': False,
+                    'tax_group_id': self.tax_group_sub3.id,
+                    'sequence': 3,
+                }),
+            ]
+        })
+        self.tax_group_sub1.preceding_subtotal = "Tax exemption"
+        self.tax_group_sub2.preceding_subtotal = "Tax application"
+        self.tax_group_sub3.preceding_subtotal = "Reapply amount"
+
+        document = self._create_document_for_tax_totals_test([
+            (1000 / 0.98, tax_21_exempted),
+        ])
+
+        self.assertTaxTotals(document, {
+            'amount_total': 1230.41,
+            'amount_untaxed': 1020.41,
+            'display_tax_base': False,
+            'groups_by_subtotal': {
+                "Reapply amount": [{
+                    'tax_group_name': self.tax_group_sub3.name,
+                    'tax_group_amount': 20.41,
+                    'tax_group_base_amount': 1020.41,
+                    'tax_group_id': self.tax_group_sub3.id,
+                }],
+                "Tax application": [{
+                    'tax_group_name': self.tax_group_sub2.name,
+                    'tax_group_amount': 210.0,
+                    'tax_group_base_amount': 1000.0,
+                    'tax_group_id': self.tax_group_sub2.id,
+                }],
+                "Tax exemption": [{
+                    'tax_group_name': self.tax_group_sub1.name,
+                    'tax_group_amount': -20.41,
+                    'tax_group_base_amount': 1020.41,
+                    'tax_group_id': self.tax_group_sub1.id,
+                }],
+            },
+            'subtotals': [{
+                'name': "Tax exemption",
+                'amount': 1020.41,
+            }, {
+                'name': "Tax application",
+                'amount': 1000.00,
+            }, {
+                'name': "Reapply amount",
+                'amount': 1210.00,
+            }],
+            'subtotals_order': ["Tax exemption", "Tax application", "Reapply amount"],
         })
