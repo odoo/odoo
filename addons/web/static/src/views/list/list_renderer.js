@@ -798,7 +798,7 @@ export class ListRenderer extends Component {
 
     onButtonCellClicked(record, column, ev) {
         if (!ev.target.closest("button")) {
-            this.onCellClicked(record, column);
+            this.onCellClicked(record, column, ev);
         }
     }
 

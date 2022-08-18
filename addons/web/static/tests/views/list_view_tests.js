@@ -14636,4 +14636,20 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(td1.textContent, "48%");
         assert.strictEqual(td2.textContent, "61%");
     });
+
+    QUnit.test("list view does not crash when clicked button cell", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <button name="a" type="object" icon="fa-car"/>
+                </tree>
+            `,
+        });
+
+        assert.containsN(target, ".o_data_row:first-child td.o_list_button", 1);
+        await click(target, ".o_data_row:first-child td.o_list_button");
+    });
 });
