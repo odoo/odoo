@@ -73,7 +73,6 @@ registerModel({
         }),
         persona: one('Persona', {
             compute: '_computePersona',
-            readonly: true,
             required: true,
         }),
     },

@@ -95,7 +95,6 @@ registerModel({
     fields: {
         activityViewOwner: one('ActivityView', {
             compute: '_computeActivityViewOwner',
-            readonly: true,
         }),
         component: attr(),
         feedbackTextareaRef: attr(),

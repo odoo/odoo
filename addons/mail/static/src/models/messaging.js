@@ -14,6 +14,7 @@ registerModel({
     lifecycleHooks: {
         _created() {
             odoo.__DEBUG__.messaging = this;
+            this.refreshIsNotificationPermissionDefault();
         },
         _willDelete() {
             this.env.bus.removeEventListener('window_focus', this._handleGlobalWindowFocus);
@@ -200,7 +201,10 @@ registerModel({
          * provide an API to detect when this value changes.
          */
         refreshIsNotificationPermissionDefault() {
-            this.update({ isNotificationPermissionDefault: this._computeIsNotificationPermissionDefault() });
+            const browserNotification = this.messaging.browser.Notification;
+            this.update({
+                isNotificationPermissionDefault: Boolean(browserNotification) && browserNotification.permission === 'default',
+            });
         },
         async startFetchImStatus() {
             this.update({
@@ -275,14 +279,6 @@ registerModel({
                 return; // avoid overwrite if already provided (example in tests)
             }
             return new EventBus();
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsNotificationPermissionDefault() {
-            const browserNotification = this.messaging.browser.Notification;
-            return browserNotification ? browserNotification.permission === 'default' : false;
         },
         /**
          * @private
@@ -402,7 +398,6 @@ registerModel({
         initializedPromise: attr({
             compute: '_computeInitializedPromise',
             required: true,
-            readonly: true,
         }),
         initializer: one('MessagingInitializer', {
             default: {},
@@ -426,9 +421,7 @@ registerModel({
          * 'default' state. This means it is allowed to make a request to the
          * user to enable notifications.
          */
-        isNotificationPermissionDefault: attr({
-            compute: '_computeIsNotificationPermissionDefault',
-        }),
+        isNotificationPermissionDefault: attr(),
         locale: one('Locale', {
             default: {},
             isCausal: true,
@@ -446,7 +439,6 @@ registerModel({
          */
         messagingBus: attr({
             compute: '_computeMessagingBus',
-            readonly: true,
             required: true,
         }),
         messagingMenu: one('MessagingMenu', {
@@ -456,7 +448,6 @@ registerModel({
         notificationHandler: one('MessagingNotificationHandler', {
             compute: '_computeNotificationHandler',
             isCausal: true,
-            readonly: true,
         }),
         outOfFocusUnreadMessageCounter: attr({
             default: 0,

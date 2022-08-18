@@ -140,11 +140,21 @@ export class ModelField {
          * model name this relation refers to.
          */
         this.to = to;
+        /**
+         * Automatically make identifying fields readonly (and required for AND
+         * identifying mode).
+         */
         if (this.identifying) {
             this.readonly = true;
             if (model.identifyingMode === 'and') {
                 this.required = true;
             }
+        }
+        /**
+         * Automatically make computes and relateds readonly.
+         */
+        if (this.compute || this.related) {
+            this.readonly = true;
         }
     }
 

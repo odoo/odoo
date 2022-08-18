@@ -340,10 +340,16 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string|undefined}
+         * @returns {string|FieldCommand}
          */
         _computeDisplayName() {
-            return this.display_name || this.user && this.user.display_name;
+            if (this.display_name) {
+                return this.display_name;
+            }
+            if (this.user && this.user.displayName) {
+                return this.user.displayName;
+            }
+            return clear();
         },
         /**
          * @private
@@ -364,7 +370,7 @@ registerModel({
          * @returns {string|undefined}
          */
         _computeNameOrDisplayName() {
-            return this.name || this.display_name;
+            return this.name || this.displayName;
         },
     },
     fields: {
@@ -392,7 +398,8 @@ registerModel({
          * And if a specific name format is required, it should be computed from
          * relevant fields instead.
          */
-        display_name: attr({
+        display_name: attr(),
+        displayName: attr({
             compute: '_computeDisplayName',
             default: "",
         }),
@@ -413,7 +420,6 @@ registerModel({
         im_status: attr(),
         isImStatusSet: attr({
             compute: '_computeIsImStatusSet',
-            readonly: true,
         }),
         /**
          * States whether this partner is online.

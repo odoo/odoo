@@ -12,7 +12,7 @@ registerModel({
          */
         setFirstSuggestionViewActive() {
             const firstSuggestionView = this.suggestionViews[0];
-            this.update({ activeSuggestionView: firstSuggestionView });
+            this.update({ rawActiveSuggestionView: firstSuggestionView });
         },
         /**
          * Sets the last suggestion as active. Main and extra records are
@@ -20,7 +20,7 @@ registerModel({
          */
         setLastSuggestionViewActive() {
             const { length, [length - 1]: lastSuggestionView } = this.suggestionViews;
-            this.update({ activeSuggestionView: lastSuggestionView });
+            this.update({ rawActiveSuggestionView: lastSuggestionView });
         },
         /**
          * Sets the next suggestion as active. Main and extra records are
@@ -36,7 +36,7 @@ registerModel({
                 return;
             }
             const nextSuggestionView = this.suggestionViews[activeElementIndex + 1];
-            this.update({ activeSuggestionView: nextSuggestionView });
+            this.update({ rawActiveSuggestionView: nextSuggestionView });
         },
         /**
          * Sets the previous suggestion as active. Main and extra records are
@@ -52,7 +52,7 @@ registerModel({
                 return;
             }
             const previousSuggestionView = this.suggestionViews[activeElementIndex - 1];
-            this.update({ activeSuggestionView: previousSuggestionView });
+            this.update({ rawActiveSuggestionView: previousSuggestionView });
         },
         /**
          * Adapts the active suggestion it if the active suggestion is no longer
@@ -62,8 +62,8 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeActiveSuggestionView() {
-            if (this.suggestionViews.includes(this.activeSuggestionView)) {
-                return;
+            if (this.suggestionViews.includes(this.rawActiveSuggestionView)) {
+                return this.rawActiveSuggestionView;
             }
             const firstSuggestionView = this.suggestionViews[0];
             return firstSuggestionView;
@@ -120,9 +120,9 @@ registerModel({
         hasToScrollToActiveSuggestionView: attr({
             default: false,
         }),
+        rawActiveSuggestionView: one('ComposerSuggestionView'),
         suggestionViews: many('ComposerSuggestionView', {
             compute: '_computeSuggestionViews',
-            readonly: true,
         })
     },
 });

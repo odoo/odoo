@@ -158,10 +158,16 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string|undefined}
+         * @returns {string|FieldCommand}
          */
         _computeDisplayName() {
-            return this.display_name || this.partner && this.partner.display_name;
+            if (this.display_name) {
+                return this.display_name;
+            }
+            if (this.partner && this.partner.displayName) {
+                return this.partner.displayName;
+            }
+            return clear();
         },
         /**
          * @private
@@ -184,8 +190,10 @@ registerModel({
          * `share` field in python.
          */
         isInternalUser: attr(),
-        display_name: attr({
+        display_name: attr(),
+        displayName: attr({
             compute: '_computeDisplayName',
+            default: "",
         }),
         model: attr({
             default: 'res.user',

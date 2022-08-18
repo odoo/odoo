@@ -24,7 +24,6 @@ registerModel({
         emojiRegistry: one('EmojiRegistry', {
             compute: '_computeEmojiRegistry',
             inverse: 'allEmojis',
-            readonly: true,
             required: true,
         }),
         emojiViews: many('EmojiView', {

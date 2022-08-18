@@ -92,9 +92,10 @@ registerModel({
         id: attr({
             identifying: true,
         }),
-        memberCount: attr({
-            related: 'thread.memberCount',
-        }),
+        /**
+         * States the number of members in this channel according to the server.
+         */
+        memberCount: attr(),
         orderedOfflineMembers: many('ChannelMember', {
             inverse: 'channelAsOfflineMember',
             sort: '_sortMembers',
@@ -107,7 +108,6 @@ registerModel({
             compute: '_computeThread',
             inverse: 'channel',
             isCausal: true,
-            readonly: true,
             required: true,
         }),
         /**

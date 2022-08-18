@@ -328,8 +328,8 @@ registerModel({
             }
             if (this.messaging.currentPartner && this.messaging.currentPartner.id === partner_id) {
                 channel.thread.update({
-                    lastSeenByCurrentPartnerMessageId: last_message_id,
                     pendingSeenMessageId: undefined,
+                    rawLastSeenByCurrentPartnerMessageId: last_message_id,
                 });
             }
         },

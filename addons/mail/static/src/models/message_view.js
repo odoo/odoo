@@ -161,7 +161,7 @@ registerModel({
             const textInputContent = htmlDoc.body.textContent;
             this.update({
                 composerForEditing: {
-                    mentionedPartners: this.message.recipients,
+                    rawMentionedPartners: this.message.recipients,
                     textInputContent,
                     textInputCursorEnd: textInputContent.length,
                     textInputCursorStart: textInputContent.length,
@@ -434,7 +434,6 @@ registerModel({
             compute: '_computeAttachmentList',
             inverse: 'messageViewOwner',
             isCausal: true,
-            readonly: true,
         }),
         authorTitleText: attr({
             compute: '_computeAuthorTitleText',
@@ -578,7 +577,6 @@ registerModel({
             compute: '_computeMessageActionList',
             inverse: 'messageView',
             isCausal: true,
-            readonly: true,
         }),
         /**
          * Determines the message that is displayed by this message view.
@@ -586,7 +584,6 @@ registerModel({
         message: one('Message', {
             compute: '_computeMessage',
             inverse: 'messageViews',
-            readonly: true,
             required: true,
         }),
         /**
@@ -597,7 +594,6 @@ registerModel({
             compute: '_computeMessageInReplyToView',
             inverse: 'messageView',
             isCausal: true,
-            readonly: true,
         }),
         messageListViewMessageViewItemOwner: one('MessageListViewMessageViewItem', {
             identifying: true,
@@ -615,7 +611,6 @@ registerModel({
             compute: '_computePersonaImStatusIconView',
             inverse: 'messageViewOwner',
             isCausal: true,
-            readonly: true,
         }),
         /**
          * States whether this message view is the last one of its thread view.

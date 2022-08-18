@@ -151,7 +151,6 @@ registerModel({
          */
         guestNameInputUniqueId: attr({
             compute: '_computeGuestNameInputUniqueId',
-            readonly: true,
         }),
         /**
          * Determines whether the guest's name has been updated.
@@ -161,7 +160,6 @@ registerModel({
          */
         hasGuestNameChanged: attr({
             compute: '_computeHasGuestNameChanged',
-            readonly: true,
         }),
         /**
          * Determines whether the 'guestNameInput' should be focused the next
@@ -184,7 +182,6 @@ registerModel({
             compute: '_computeCallDemoView',
             inverse: 'welcomeView',
             isCausal: true,
-            readonly: true,
         }),
         /**
          * States the name the guest had when landing on the welcome view.

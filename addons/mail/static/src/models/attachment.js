@@ -408,7 +408,6 @@ registerModel({
         threadsAsAttachmentsInWebClientView: many('Thread', {
             compute: '_computeThreadsAsAttachmentsInWebClientView',
             inverse: 'attachmentsInWebClientView',
-            readonly: true,
         }),
         type: attr(),
         /**

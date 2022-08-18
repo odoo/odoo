@@ -67,7 +67,7 @@ class Channel(models.Model):
         groups='base.group_user')
     rtc_session_ids = fields.One2many('mail.channel.rtc.session', 'channel_id', groups="base.group_system")
     is_member = fields.Boolean('Is Member', compute='_compute_is_member', search='_search_is_member')
-    member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True, help="Excluding guests from count.")
+    member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)
     group_ids = fields.Many2many(
         'res.groups', string='Auto Subscription',
         help="Members of those groups will automatically added as followers. "
@@ -192,7 +192,7 @@ class Channel(models.Model):
             self.env['mail.channel.member'].sudo()._search(user_domain)
         )]
 
-    @api.depends('channel_partner_ids')
+    @api.depends('channel_member_ids')
     def _compute_member_count(self):
         read_group_res = self.env['mail.channel.member']._read_group(domain=[('channel_id', 'in', self.ids)], fields=['channel_id'], groupby=['channel_id'])
         member_count_by_channel_id = {item['channel_id'][0]: item['channel_id_count'] for item in read_group_res}
@@ -332,8 +332,11 @@ class Channel(models.Model):
         # post 'channel left' message as root since the partner just unsubscribed from the channel
         self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
         self.env['bus.bus']._sendone(self, 'mail.channel/insert', {
+            'channel': [('insert-and-replace', {
+                'id': self.id,
+                'memberCount': self.member_count,
+            })],
             'id': self.id,
-            'memberCount': self.member_count,
             'members': [('insert-and-unlink', {'id': partner.id})],
         })
         return result
@@ -414,9 +417,12 @@ class Channel(models.Model):
                         'channel': member.channel_id.sudo().channel_info()[0],
                     }))
             notifications.append((channel, 'mail.channel/insert', {
+                'channel': [('insert-and-replace', {
+                    'id': channel.id,
+                    'memberCount': channel.member_count,
+                })],
                 'id': channel.id,
                 'guestMembers': [('insert', guest_members_data)],
-                'memberCount': channel.member_count,
                 'members': [('insert', members_data)],
             }))
         if invite_to_rtc_call:
@@ -768,6 +774,7 @@ class Channel(models.Model):
             channel_data = {
                 'channel_type': channel.channel_type,
                 'id': channel.id,
+                'memberCount': channel.member_count,
             }
             info = {
                 'avatarCacheKey': channel._get_avatar_cache_key(),
@@ -785,7 +792,6 @@ class Channel(models.Model):
             }
             # add last message preview (only used in mobile)
             info['last_message_id'] = channel_last_message_ids.get(channel.id, False)
-            info['memberCount'] = channel.member_count
             # find the channel member state, if logged user
             if self.env.user and self.env.user.partner_id:
                 info['message_needaction_counter'] = channel.message_needaction_counter
