@@ -253,6 +253,7 @@ class AccountMoveLine(models.Model):
     account_type = fields.Selection(
         related='account_id.account_type',
         string="Internal Type",
+        store=True,
     )
     account_internal_group = fields.Selection(related='account_id.internal_group')
     account_root_id = fields.Many2one(

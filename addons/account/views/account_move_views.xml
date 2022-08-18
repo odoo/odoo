@@ -335,7 +335,7 @@
                     <filter string="Receivable" domain="[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', False)]" help="From Trade Receivable accounts" name="trade_receivable"/>
                     <filter string="Non Trade Payable" domain="[('account_id.account_type', '=', 'liability_payable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_payable" invisible="1"/>
                     <filter string="Non Trade Receivable" domain="[('account_id.account_type', '=', 'asset_receivable'), ('account_id.non_trade', '=', True)]" help="From Non Trade Receivable accounts" name="non_trade_receivable" invisible="1"/>
-                    <filter string="P&amp;L Accounts" domain="[('account_id.internal_group', 'in', ('income', 'expense'))]" help="From P&amp;L accounts" name="pl_accounts"/>
+                    <filter string="P&amp;L Accounts" domain="[('account_id.account_type', 'in', ('income', 'expense'))]" help="From P&amp;L accounts" name="pl_accounts"/>
                     <separator/>
                     <filter string="Date" name="date" date="date"/>
                     <separator/>
@@ -350,6 +350,7 @@
                         <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                         <filter string="Taxes" name="group_by_taxes" domain="[]" context="{'group_by': 'tax_ids'}"/>
                         <filter string="Tax Grid" name="group_by_tax_tags" domain="[]" context="{'group_by': 'tax_tag_ids'}"/>
+                        <filter string="Type" name="group_by_type" domain="[]" context="{'group_by': 'account_type'}"/>
                         <filter string="Matching #" name="group_by_matching" domain="[]" context="{'group_by': 'full_reconcile_id'}"/>
                     </group>
                     <searchpanel class="account_root">
