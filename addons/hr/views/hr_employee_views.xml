@@ -70,7 +70,7 @@
                                     <div role="img" class="fa fa-2xs fa-fw fa-circle text-warning o_button_icon hr_presence" attrs="{'invisible': [('hr_presence_state', '!=', 'to_define')]}" aria-label="Away" title="Away"/>
                                     <div role="img" class="fa fa-2xs fa-fw fa-circle text-danger o_button_icon hr_presence" attrs="{'invisible': [('hr_presence_state', '!=', 'absent')]}" aria-label="Not available" title="Not available"/>
                                 </div>
-                                <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                <a title="Chat" icon="fa-comments" t-on-click.prevent="() => openChat(props.record.resId)" href="#" class="ml8" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
                             </h1>
                             <h2>
                                 <field name="job_title" placeholder="Job Position" />
