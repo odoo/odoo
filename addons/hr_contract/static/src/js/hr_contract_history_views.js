@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import ListView from "web.ListView";
-import viewRegistry from 'web.view_registry';
+import { registry } from "@web/core/registry";
+import { listView } from "@web/views/list/list_view";
 import { HrContractHistoryListController } from "./hr_contract_history_list_controller";
 
-export const HrContractHistoryView = ListView.extend({
-    config: _.extend({}, ListView.prototype.config, {
-        Controller: HrContractHistoryListController,
-    }),
-});
+export const HrContractHistoryView = {
+    ...listView,
+    Controller: HrContractHistoryListController,
+}
 
-viewRegistry.add('hr_contract_history_list', HrContractHistoryView);
+registry.category("views").add('hr_contract_history_list', HrContractHistoryView);
