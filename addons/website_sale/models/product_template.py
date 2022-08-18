@@ -6,6 +6,7 @@ from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.models import ir_http
 from odoo.tools.translate import html_translate
 from odoo.osv import expression
+from markupsafe import Markup
 
 
 class ProductTemplate(models.Model):
@@ -22,6 +23,15 @@ class ProductTemplate(models.Model):
 
     website_description = fields.Html(
         'Description for the website', translate=html_translate,
+        sanitize_overridable=True,
+        sanitize_attributes=False, sanitize_form=False)
+    # This field is a copy on write from `description_sale` to be able to use html formatting on that field.
+    ecommerce_description = fields.Html("Ecommerce Description", translate=html_translate,
+        sanitize_overridable=True,
+        sanitize_attributes=False, sanitize_form=False)
+    # This field is either `ecommerce_description` or `description_sale` depending on ecommerce_description. And is only meant to be edited from the web editor
+    product_page_description = fields.Html("Product Page Description", compute='_compute_product_page_description', inverse='_inverse_product_page_description', readonly=False,
+        translate=html_translate,
         sanitize_overridable=True,
         sanitize_attributes=False, sanitize_form=False)
     alternative_product_ids = fields.Many2many(
@@ -57,6 +67,15 @@ class ProductTemplate(models.Model):
         'Compare to Price',
         digits='Product Price',
         help="The amount will be displayed strikethroughed on the eCommerce product page")
+
+    @api.depends('ecommerce_description', 'description_sale')
+    def _compute_product_page_description(self):
+        for template in self:
+            template.product_page_description = template.ecommerce_description or (template.description_sale and Markup('<p class="text-muted my-2">%s</p>') % template.description_sale) or False
+
+    def _inverse_product_page_description(self):
+        for template in self:
+            template.ecommerce_description = template.product_page_description
 
     @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
     def _compute_base_unit_count(self):
