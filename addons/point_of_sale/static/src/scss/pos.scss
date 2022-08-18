@@ -102,7 +102,7 @@ td {
 }
 .pos textarea:focus {
     outline: none;
-    box-shadow: 0px 0px 0px 3px #6EC89B;
+    box-shadow: 0px 0px 0px 3px $primary;
 }
 
 
@@ -117,12 +117,14 @@ td {
 }
 
 .pos {
+    background: $gray-900;
+    --btn-height-size: 54px;
     direction: ltr;
     padding: 0;
     margin: 0;
     background-color: #f0eeee;
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
-    color: #555555;
+    color: $gray-700;
     font-size: 12px;
     /* Some elements inside .pos are allowed to be moved/resized. When
      * this 'move/resize' event is performed in touch devices, .pos
@@ -155,7 +157,7 @@ td {
     z-index: 999;
     text-align: center;
     font-family: Lato;
-    color: #555555;
+    color: $gray-700;
 }
 
 .pos .loader-feedback{
@@ -192,7 +194,7 @@ td {
 }
 .pos .loader-feedback .button:active{
     color: #222;
-    background: #555555;
+    background: $gray-700;
 }
 /*  ********* Generic Layout Constructs  ********* */
 
@@ -270,7 +272,7 @@ td {
     height: 10px;
 }
 .pos .scroller-container ::-webkit-scrollbar-track{
-    background: rgb(224,224,224);
+    background: $gray-200;
     border-left: solid 1px rgb(200,200,200);
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
@@ -284,16 +286,16 @@ td {
 
 .pos a {
     text-decoration: none;
-    color: #555555;
+    color: $gray-700;
 }
 .pos button, .pos a.button {
     display: inline-block;
     cursor: pointer;
     padding: 4px 10px;
     font-size: 11px;
-    border: 1px solid #cacaca;
-    background: #e2e2e2;
-    border-radius: 3px;
+    border: 1px solid $gray-200;
+    color: $primary;
+    background: #fff;
 }
 .pos ul, .pos ol {
     padding: 0;
@@ -326,14 +328,13 @@ td {
     margin:0;
     padding:0;
     color: gray;
-    background: #875A7B;
+    background: $o-brand-odoo;
     display: flex;
 }
 
 /*  a) The left part of the top-bar */
 
 .pos .pos-branding{
-    min-width: 503px;
     max-width: 503px;
     flex-grow: 1;
     height:100%;
@@ -343,13 +344,13 @@ td {
     line-height:100%;
     vertical-align: middle;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 .pos .pos-logo {
-    height: 35px;
+    height: 50%;
     margin-left: 10px;
-    margin-top: 5px;
-    vertical-align:middle;
+    margin-right: auto;
+    align-self: center;
 }
 .pos .pos-branding .username{
     float:right;
@@ -375,7 +376,7 @@ td {
     overflow-x: auto;
 }
 .pos .pos-rightheader > * {
-    border-right: 1px solid #875A7B;
+    border-right: 1px solid $o-brand-odoo;
 }
 
 .pos .status-buttons {
@@ -425,10 +426,6 @@ td {
     box-shadow: 0px -5px 10px -6px rgb(82,82,82) inset;
     cursor: pointer;
     min-width: 45px;
-}
-
-.pos .order-button:first-child {
-    margin-left: 0px;
 }
 
 .pos .order-button.selected{
@@ -529,7 +526,7 @@ td {
     position: absolute;
     top: 48px;
     bottom: 0;
-    background: #F0EEEE;
+    background: $gray-200;
 }
 
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
@@ -543,7 +540,7 @@ td {
     border-top: 1px solid #ebebeb;
     padding: 8px 16px;
     background-color: #FFFFFF;
-    color: #6ec89b;
+    color: $primary;
 }
 .pos .switchpane .order-info h2 {
     padding: 0px;
@@ -552,7 +549,7 @@ td {
 }
 
 .pos .switchpane .btn-switchpane {
-    background-color: #6ec89b;
+    background-color: $primary;
     border-radius: 0px;
     color: #FFFFFF;
     font-size: 15px;
@@ -567,15 +564,15 @@ td {
 
 .pos .switchpane .btn-switchpane.secondary {
     background-color: #FFFFFF;
-    color: #6ec89b;
+    color: $primary;
 }
 
 .pos .pane-border {
-    border-right: solid 3px #787878;
+    border-right: solid 3px $gray-300;
 }
 
 .pos .leftpane {
-    background: #e2e2e2;
+    background: $gray-200;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -583,8 +580,18 @@ td {
     max-width: 500px;
 }
 
+@media screen and (max-width: 768px) {
+    .pos .product-screen .order,
+    .product-screen .leftpane {
+        max-width: inherit;
+    }
+    .product-screen .leftpane {
+        border-right: none;
+    }
+}
+
 .pos .leftpane .pads {
-    border-top: solid 3px rgb(110, 200, 155);
+    border-top: solid 1px $gray-300;
 }
 
 .pos .leftpane .pads .subpads {
@@ -595,36 +602,34 @@ td {
 /*  ********* The control buttons ********* */
 
 .pos .control-buttons {
-    display: -webkit-flex;
     display: flex;
-    -webkit-flex-flow: row wrap;
     flex-flow: row wrap;
-    padding: 8px 16px 0px 11px;
-    margin-bottom: -6px;
 }
 .pos .popup-control-buttons .control-buttons {
     flex-direction: column;
 }
+.pos .leftpane .control-buttons .control-button {
+    flex: 1 1 29%;
+}
 .pos .control-button {
     -webkit-flex-grow: 1;
     flex-grow: 1;
-    background: #e2e2e2;
-    border: solid 1px #bfbfbf;
+    background: #fff;
+    border-left: solid 1px $gray-300;
+    border-bottom: solid 1px $gray-300;
     display: inline-block;
     line-height: 38px;
     min-width: 80px;
     text-align: center;
-    border-radius: 3px;
     padding: 0px 10px;
-    font-size: 18px;
-    margin-left: 6px;
-    margin-bottom: 6px;
+    font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
     overflow: hidden;
     transition: all linear 150ms;
 }
 .pos .control-button:hover {
-    background: #efefef;
+    background: $gray-200;
 }
 .pos .control-button:active {
     background: black;
@@ -651,8 +656,8 @@ td {
 
 .pos .control-button.highlight,
 .pos .button.highlight {
-    background: #6EC89B !important;
-    border: solid 1px #64AF8A !important;
+    background: $primary !important;
+    border-color: $primary !important;
     color: white !important;
 }
 .pos .control-button.altlight,
@@ -674,76 +679,72 @@ td {
 
 .pos .actionpad {
     padding: 0;
-    margin: 16px;
-    margin-top: 8px;
-    margin-right: 0;
     text-align: center;
     vertical-align: top;
     border: none;
-    border-radius: 0;
-    border-top: 1px solid;
-    border-left: 1px solid;
-    border-color: #bfbfbf;
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
+    border-right: 1px solid $gray-300;
     flex-grow: 1;
+    width: 50%;
 }
 .pos .actionpad .button {
-    --btn-height-size: 54px;
     position: relative;
     display: block;
     height: var(--btn-height-size);
     width: 100%;
     font-weight: bold;
     vertical-align: middle;
-    color: #555555;
+    color: $gray-700;
     font-size: 14px;
-    border-radius: 0;
-    border: none;
-    border-right: 1px solid;
     border-bottom: 1px solid;
     border-color: #bfbfbf;
     transition: all 150ms linear;
 }
-.pos .actionpad .button.pay .pay-circle.highlight {
+.pos .button.validation .pay-circle.highlight {
     color: white;
-    background-color: #6ec89b;
+    background-color: $primary;
 }
 .pos .actionpad .button:hover {
-    background: #efefef;
+    background: $gray-200;
 }
 .pos .actionpad .button:active {
     background: black;
     border-color: black;
     color: white;
 }
-.pos .actionpad .button:first-child {
-    border-top-left-radius: 4px;
-}
-.pos .actionpad .button:last-child {
-    border-bottom-left-radius: 4px;
-}
-.pos .actionpad .button.pay {
+.pos .button.validation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     height: calc(var(--btn-height-size) * 3);
+    border: none;
+    background: $primary;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 150ms linear;
+}
+.pos .button.validation:hover {
+    background: darken($primary, 5%) !important;
 }
 @media screen and (max-width: 768px) {
-    .pos .actionpad .button.pay {
+    .pos .button.validation {
         height: calc(var(--btn-height-size) * 2);
     }
 }
-.pos .actionpad .button.pay .pay-circle {
+.pos .button.validation .pay-circle {
     display: block;
     font-size: 32px;
     line-height: var(--btn-height-size);
     padding-top: 6px;
-    background: rgb(86, 86, 86);
+    background: $gray-900;
     color: white;
     width: 60px;
-    margin: auto;
+    text-align: center;
     border-radius: 30px;
     margin-bottom: 10px;
 }
-.pos .actionpad .button.pay .pay-circle .fa {
+.pos .button.validation .pay-circle .fa {
     position: relative;
     top: -1px;
     left: 3px;
@@ -752,6 +753,8 @@ td {
 .pos .actionpad .button.set-partner{
     padding-left: 40px;
     padding-right: 40px;
+    border-top: none;
+    border-right: none;
 }
 .pos .actionpad .button.set-partner.decentered {
     padding-left: 40px;
@@ -783,66 +786,59 @@ td {
 /*  ********* The Numpad ********* */
 
 .pos .numpad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     text-align: center;
-    width: 216px;
-    margin: 16px;
-    margin-top: 8px;
-    margin-left: 0px;
-    border: none;
-    border-radius: 0;
-    border-top: 1px solid;
-    border-color: #bfbfbf;
-    border-top-right-radius: 4px;
+    flex-grow: 1;
+    width: 50%;
     min-width: 216px;
 }
 .pos .numpad button {
     float: left/*rtl:ignore*/; /* rtlcss forced to keep ltr */
     height: 54px;
-    width: 54px;
-    font-weight: bold;
     vertical-align: middle;
-    color: #555555;
+    color: $gray-700;
     border-radius: 0;
     border: none;
     border-right: 1px solid;
     border-bottom: 1px solid;
-    border-color: #bfbfbf;
+    border-color: $gray-300;
     transition: all 150ms linear;
     padding: unset;
+    width: 100%;
+    font-weight: bold;
 }
 .pos .numpad button:hover {
-    background: #efefef;
+    background: $gray-200;
 }
 .pos .numpad button:active {
     background: black;
     color: white;
     border-color: transparent;
 }
-.pos .numpad button:nth-child(4) {
-    border-top-right-radius: 4px;
-}
-.pos .numpad button:last-child {
-    border-bottom-right-radius: 4px;
-}
 .pos .input-button {
-    font-size: 24px;
+    font-size: map-get($font-sizes, 4);
 }
 .pos .mode-button {
     font-size: 14px;
 }
+.number-char,
+.numpad-minus {
+    width: 54px;
+}
 .pos .mode-button.selected-mode {
     color: white;
-    background: #6EC89B;
+    background: $o-brand-odoo;
     border-color: transparent;
 }
 .pos .mode-button.selected-mode:hover {
-    background: #6EC89B;
+    background: $primary;
     color: white;
     border-color: transparent;
 }
 .pos .numpad .disabled-mode, .pos .numpad .disabled-mode:hover {
-    background: #c7c7c7;
-    color: #a5a1a1;
+    background: $gray-200;
+    color: $gray-500;
     cursor: not-allowed;
 }
 
@@ -855,6 +851,7 @@ td {
     flex-direction: column;
     flex-basis: 25%;
     flex-grow: 1;
+    background: $gray-300;
 }
 
 .pos .products-widget {
@@ -866,6 +863,8 @@ td {
 
 .pos .products-widget .products-widget-control{
     display: grid;
+    z-index: 1;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, .08);
 }
 
 .pos .product-list-container {
@@ -875,12 +874,18 @@ td {
 }
 
 .pos .rightpane-header {
+    display: flex;
+    justify-content: space-between;
     padding: 0;
-    background: #d3d3d3;
+    background: #fff;
     text-align: center;
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
+}
+
+.pos .rightpane-header .breadcrumbs {
+    display: flex;
 }
 
 .pos .green-border-bottom {
@@ -894,21 +899,14 @@ td {
 /*  ********* The product list  ********* */
 
 .pos .product-list {
-    padding: 10px 5px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
+    padding: 3px;
+    gap: 3px;
 }
 .pos .product-list-container .product-list-empty p {
     margin: 10px;
     text-align: center;
-}
-@media screen and (max-width: 768px) {
-    .pos .product-list {
-        padding: 0px;
-        gap: 0px;
-        justify-content: space-between;
-    }
 }
 
 .pos .product-list-scroller{
@@ -938,14 +936,14 @@ td {
 }
 .pos .breadcrumb:last-child {
     padding-right: 3px;
-    border-right: 1px solid #c5c5c5;
 }
 .pos .breadcrumb-button {
     display: inline-block;
     padding: 0 9px;
     vertical-align: top;
-    color: #808080;
-    font-size: 14px;
+    color: $primary;
+    font-size: 12px;
+    font-weight: bold;
     cursor: pointer;
     max-width: 300px;
     overflow: hidden;
@@ -1040,7 +1038,7 @@ td {
 }
 .pos .category-list.simple {
     padding: 0px;
-    background: #cecece;
+    background: #fff;
     display: flex;
     flex: 1;
 }
@@ -1066,13 +1064,12 @@ td {
 .pos .category-simple-button{
     display: inline-block;
     align-items: center;
-    font-size: 14px;
+    font-size: 12px;
+    font-weight: bold;
     padding: 5px 12px;
     cursor: pointer;
     text-align: left;
-    background: rgb(229, 229, 229);
-    border-right: solid 1px #d3d3d3;
-    border-top: solid 1px #d3d3d3;
+    background: #fff;
     max-width: 300px;
     vertical-align: middle;
     white-space: nowrap;
@@ -1135,70 +1132,39 @@ td {
 
 .pos .product {
     position:relative;
-    line-height: 100px;
-    width: 122px;
-    height:115px;
     background:#fff;
-    border: 1px solid #e2e2e2;
-    border-radius: 3px;
-    border-bottom-width: 3px;
     overflow: hidden;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
-.pos .product .product-img {
-    position: relative;
-    width: 120px;
-    height: 100px;
-    background: white;
-    text-align: center;
+.pos .product-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 
 .pos .product .product-img img {
-    max-height: 100px;
-    max-width:  120px;
-    vertical-align: middle;
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
 }
 
 @media screen and (max-width: 768px) {
-    .pos .product {
-        width: 32%;
-        height: auto;
-        margin: 0px !important;
-    }
     .pos .product:active {
-        border: solid 3px #6ec89b;
+        border: solid 3px $primary;
         box-sizing: border-box;
     }
-    .pos .product:after {
-        content: "";
-        display: block;
-        padding-bottom: 100%;
-    }
-    .pos .product .product-img {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-    }
-    .pos .product .product-img img {
-        max-height: none;
-        max-width: none;
-    }
-
 }
 
-
-
 .pos .product .price-tag {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    vertical-align: top;
-    color: white;
-    line-height: 13px;
-    background: #7f82ac;
+    color: $o-brand-odoo;
     padding: 2px 5px;
-    border-radius: 2px;
+    font-weight: bold;
+    padding: 0 map-get($spacers, 2) map-get($spacers, 2);
 }
 
 .pos .product .product-info-button {
@@ -1221,26 +1187,13 @@ td {
 }
 
 .pos .product .product-name {
-    position: absolute;
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-        -ms-box-sizing: border-box;
-            box-sizing: border-box;
-    bottom:0;
-    top:auto;
+    box-sizing: border-box;
     line-height: 14px;
-    width:100%;
     overflow: hidden;
-    text-overflow: ellipsis;
-    background: -webkit-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
-    background:    -moz-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
-    background:     -ms-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
-    /* troublesome in latest webkit
-    background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
-    */
-    /*background:#FFF;*/
-    padding: 3px;
-    padding-top:15px;
+    margin: map-get($spacers, 2);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 }
 
 /*  ********* The BlockUI Component (frontend)  ********* */
@@ -1267,6 +1220,7 @@ td {
     top:0px;
     bottom:0px;
     width:100%;
+    background: $gray-100;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
 }
@@ -1295,12 +1249,12 @@ td {
 .screen .screen-content{
     position: relative;
     margin: 0px auto;
-    max-width: 1024px;
     text-align: left;
     height: 100%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    background: #fff;
 }
 
 .screen .screen-full-width{
@@ -1310,37 +1264,35 @@ td {
     flex-direction: row;
 }
 
-@media screen and (min-width: 1024px) {
-    .screen .screen-content{
-        border-left:  dashed 1px rgb(215,215,215);
-        border-right: dashed 1px rgb(215,215,215);
-    }
-}
-
 .screen .top-content{
     height: 64px;
-    border-bottom: dashed 1px rgb(215,215,215);
+    border-bottom: solid 1px $gray-300;
     text-align: center;
     display: flex;
     padding-right: 10px;
     padding-left: 10px;
 }
+.screen .top-content .search-bar-container {
+    margin-right: -10px;
+}
+.screen .top-content .pos-search-bar {
+    border-left: solid 1px $gray-300;
+}
 .screen .top-content .button {
     line-height: 32px;
     padding: 3px 13px;
-    font-size: 20px;
-    background: rgb(230, 230, 230);
+    font-size: 14px;
     margin-top: 12px;
     margin-bottom: 12px;
     margin-left: 6px;
     margin-right: 6px;
-    border-radius: 3px;
-    border: solid 1px rgb(209, 209, 209);
+    border: solid 1px $gray-200;
+    color: $primary;
     cursor: pointer;
     transition: all 150ms linear;
 }
 .screen .top-content .button:hover {
-    background: #efefef;
+    background: $gray-200;
 }
 .screen .top-content .button:active {
     background: black;
@@ -1348,12 +1300,26 @@ td {
     color: white;
 }
 .screen .top-content .button.highlight {
-    background: rgb(110,200,155);
+    background: $primary;
     color: white;
-    border: solid 1px rgb(110,200,155);
+    border: solid 1px $primary;
 }
 .screen .top-content .button.highlight:hover {
     background: rgb(120,210,165);
+}
+
+.screen .button.next.validation {
+    position: sticky;
+    bottom: 0;
+    height: auto;
+    padding: map-get($spacers, 5) 0;
+}
+.screen .button.next:not(.highlight) {
+    cursor: not-allowed;
+    background: $gray-300;
+    color: $gray-600;
+    opacity: .3;
+    pointer-events: none;
 }
 
 .screen .top-content .top-content-center {
@@ -1369,17 +1335,22 @@ td {
 .screen .left-content{
     overflow-x: hidden;
     overflow-y: auto;
-    border-right: dashed 1px rgb(215,215,215);
+    border-right: solid 1px $gray-300;
     flex-grow: 1;
     min-width: 200px;
 }
 
-.screen .right-content{
-    overflow-x: hidden;
-    overflow-y: auto;
+.screen .center-content{
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+}
+.screen .right-content {
+    flex-grow: 1;
+    min-width: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-left: solid 1px $gray-300;
 }
 
 @media screen and (min-width: 768px) {
@@ -1389,7 +1360,7 @@ td {
 }
 
 .pos .btn-switch-payment {
-    background-color: #6ec89b;
+    background-color: $primary;
     border-radius: 0px;
     color: #FFFFFF;
     font-size: 15px;
@@ -1398,8 +1369,8 @@ td {
     width: 100%;
 }
 .screen .centered-content{
-    border-right: dashed 1px rgb(215,215,215);
-    border-left: dashed 1px rgb(215,215,215);
+    border-right: solid 1px $gray-300;
+    border-left: solid 1px $gray-300;
     overflow-x: hidden;
     overflow-y: auto;
     max-width: 512px;
@@ -1441,6 +1412,33 @@ td {
 
 /* b) The payment screen */
 
+.payment-screen .main-content {
+    display: grid;
+    grid-template-columns: 300px 1fr auto;
+}
+.payment-screen .left-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: inherit;
+    border: none;
+}
+.payment-screen .center-content {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    border: 10px solid $gray-300;
+}
+.payment-screen p.title-category {
+    margin: 0;
+    padding: map-get($spacers, 1) map-get($spacers, 3);
+    background: $gray-300;
+    color: $gray-700;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: $small-font-size;
+    order: 1;
+}
+
 .pos .payment-buttons-container {
     display: flex;
     flex-direction: row;
@@ -1449,63 +1447,54 @@ td {
 
 .pos .payment-numpad {
     box-sizing: border-box;
-    margin: 16px;
     text-align: center;
     flex-grow: 1;
 }
 .pos .payment-numpad .numpad {
-    border-radius: 4px;
     border-top: 1px solid;
     border-left: 1px solid;
-    border-color: #cacaca;
-    width: 296px;
+    border-color: $gray-300;
+    width: 100%;
     height: 100%;
     margin: auto;
 }
 .pos .payment-numpad .numpad button {
-    width: 74px;
-    height: 74px;
+    height: 100%;
+    min-height: 54px;
+    font-size: clamp(map-get($font-sizes, 6), 3vw, 36px);
 }
-.pos .payment-numpad .numpad button:first-child {
-    border-top-left-radius: 4px;
-}
-.pos .payment-numpad .numpad button:nth-child(16) {
-    border-bottom-left-radius: 4px;
+
+.pos .payment-numpad .numpad button:nth-child(16) img {
+    width: 35%;
+    max-width: 64px;
+    height: auto;
 }
 
 .pos .paymentlines-container {
     padding: 16px;
     padding-top: 0;
-    border-bottom: dashed 1px gainsboro;
+    border-bottom: solid 10px $gray-300;
     min-height: 154px;
 }
 
 .pos .paymentlines {
+    display: flex;
+    flex-direction: column-reverse;
     border-spacing: 0px 10px;
     border-collapse: inherit;
-    margin: 16px;
 }
 
 .paymentlines .paymentline:first-child {
     border-top-width: 1px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
 }
-.paymentlines .paymentline:last-child {
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
-}
-
-.pos  .paymentline {
-    background: #e2e2e2;
-    line-height: 74px;
+.pos .paymentline {
+    background: #fff;
     font-size: 16px;
-    border: solid 1px rgb(202, 202, 202);
+    border-bottom: solid 1px $gray-300;
     border-top-width: 0px;
     cursor: pointer;
     display: flex;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding: map-get($spacers, 3) map-get($spacers, 2);
     flex-grow: 1;
     flex-basis: 100%;
 }
@@ -1532,41 +1521,35 @@ td {
   margin-right: 10px;
 }
 .paymentline.selected{
-  background: white;
+  background: $gray-200;
 }
 
 .pos .payment-buttons {
     box-sizing: border-box;
-    margin: 16px;
     padding-left: 0;
     flex-grow: 5;
 }
-.payment-screen .partner-button {
-    margin-bottom: 10px;
-}
 .payment-screen .payment-buttons .button {
-    background: #e2e2e2;
-    line-height: 73px;
+    background: #fff;
     font-size: 16px;
-    padding: 0px 8px;
-    border: solid 1px rgb(200,200,200);
+    padding: map-get($spacers, 3);
+    border-bottom: solid 1px $gray-300;
     border-top-width: 0;
     cursor: pointer;
-    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     position: relative;
+    max-width: 300px;
+    width: 100%;
     transition: background-color, border-color, color 150ms linear;
+    box-sizing: border-box;
 }
 .payment-screen .payment-buttons .button:hover {
-    background-color: #efefef;
+    background-color: $gray-200;
 }
 .payment-screen .payment-buttons .button:first-child {
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
     border-top-width: 1px;
-}
-.payment-screen .payment-buttons .button:last-child {
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
 }
 .payment-screen .payment-buttons .button.highlight:not(:first-child) {
     margin-top: -1px;
@@ -1577,28 +1560,8 @@ td {
     border-color: black;
     color: white;
 }
-.payment-screen .payment-buttons .button.highlight .fa {
-    border-color: rgba(0, 0, 0, 0.109804);
-    background: rgba(0, 0, 0, 0.0980392);
-}
 .payment-screen .payment-buttons .button .fa {
-    position: absolute;
-    left: 11px;
-    top: 50%;
-    width: 48px;
-    height: 48px;
-    line-height: 48px;
-    margin-top: -25px;
-    vertical-align: middle;
-    border-radius: 26px;
-    border: 1px solid rgba(0,0,0,0.2);
-    border-image-source: initial;
-    border-image-slice: initial;
-    border-image-width: initial;
-    border-image-outset: initial;
-    border-image-repeat: initial;
-    background: rgba(255,255,255,0.4);
-    font-size: 20px;
+    margin-right: map-get($spacers, 2);
     transition: all 150ms linear;
 }
 .payment-screen .paymentlines-empty .total {
@@ -1645,24 +1608,86 @@ td {
     font-size: 17px;
     padding-top: 12px;
     padding-bottom: 12px;
-    color: #5c5c5cd1;
+    color: $gray-500;
 }
 
 .payment-status-container .amount.highlight {
     font-weight: bold;
-    color: #6EC89B;
+    color: $primary;
 }
 
 .payment-status-container .label {
     padding-right: 7px;
 }
 
+@media screen and (max-width: 992px) {
+    .payment-screen .main-content {
+        grid-template-columns: 300px 1fr;
+        grid-template-rows: 1fr auto;
+    } 
+    .screen .center-content {
+        border-bottom: none;
+    }
+    .screen .right-content {
+        grid-column: span 2;
+    }
+    .pos .payment-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        background: $gray-300;
+        padding: 10px;
+        gap: 10px;
+    }
+    .pos .payment-buttons > div {
+        flex-grow: 1;
+        flex-basis: 25%;
+        border: 1px solid $gray-300;
+    }
+    .pos .payment-buttons .button {
+        max-width: inherit;
+        text-align: center;
+    }
+    .pos .paymentlines-container {
+        min-height: auto;
+    }
+    .payment-status-container {
+        flex-direction: column-reverse;
+    }
+    .payment-status-container > div:first-child {
+        margin-top: map-get($spacers, 2);
+    }
+}
+
 @media screen and (max-width: 768px) {
-      .pos .paymentlines-container {
-          min-height: 0px;
-          border-bottom: none;
-          padding-bottom: 3px;
-      }
+    .payment-screen .main-content {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+    } 
+    .payment-screen .center-content {
+        grid-template-rows: 1fr;
+    }
+    .payment-screen .left-content,
+    .payment-screen .right-content {
+        justify-content: flex-start;
+        overflow: initial;
+    }
+    .screen .right-content {
+        grid-column: span 1;
+    }
+    .payment-screen .paymentlines-empty .message {
+        padding-bottom: map-get($spacers, 3);
+    }
+    .pos .payment-numpad .numpad button:nth-child(16) img {
+        max-width: 48px;
+    }
+    .pos .paymentlines-container {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        border-bottom: 1px solid $gray-300;
+        min-height: inherit;
+        padding-bottom: 3px;
+    }
       .pos .paymentlines {
         margin-top: 0px;
         margin-bottom: 0px;
@@ -1670,16 +1695,40 @@ td {
       .payment-status-container {
           font-size: 22px;
       }
+      
+}
+
+@media screen and (max-width: 576px) {
+    .pos .payment-buttons {
+        flex-direction: column;
+    }
 }
 
 /* c) The receipt screen */
+
+.pos .receipt-screen .screen-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+}
+
+.pos .receipt-screen .left-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    max-width: inherit;
+}
+
+.pos .receipt-screen .top-content {
+    grid-column: span 2;
+}
 
 .pos .receipt-screen .centered-content .button {
     line-height: 40px;
     padding: 3px 13px;
     font-size: 20px;
     text-align: center;
-    background: rgb(230, 230, 230);
+    background: $gray-200;
     margin: 16px;
     margin-bottom: 0px;
     border-radius: 3px;
@@ -1769,7 +1818,7 @@ td {
 .pos .scale-screen .buy-product{
     text-align: center;
     font-size: 32px;
-    background: rgb(110,200,155);
+    background: $primary;
     color: white;
     border-radius: 3px;
     padding: 16px;
@@ -1837,7 +1886,7 @@ td {
 }
 .pos .partnerlist-screen .partner-list th,
 .pos .partnerlist-screen .partner-list td {
-    padding: 12px 8px;
+    padding: 12px;
 }
 
 .pos .partnerlist-screen .fa.fa.fa-phone,
@@ -1851,7 +1900,7 @@ td {
 }
 
 .pos .partnerlist-screen tr div.company-field {
-    color: #888c8f;
+    opacity: .75;
 }
 
 .pos .partnerlist-screen tr.highlight div.company-field {
@@ -1859,10 +1908,13 @@ td {
 }
 
 .pos .partnerlist-screen tr.highlight div.unselect-tag {
-    font-size: large;
-    color:#555555;
-    font-weight: bold;
-    padding-top: 5px;
+    display: inline-block;
+    color: #fff;
+    padding: 3px 6px;
+    font-size: small;
+    border-radius: 2px;
+    margin-top: 12px;
+    background: rgba(255,255,255,.25);
 }
 
 .pos .partnerlist-screen .partner-list th.partner-line-last-column-placeholder,
@@ -1872,17 +1924,14 @@ td {
 
 .pos .partnerlist-screen .partner-list tr{
     transition: all 150ms linear;
-    background: rgb(230,230,230);
-}
-.pos .partnerlist-screen tr.partner-line:hover {
-    cursor: pointer;
+    background: $gray-200;
 }
 .pos .partnerlist-screen .partner-list thead > tr,
 .pos .partnerlist-screen .partner-list tr:nth-child(even) {
-    background: rgb(247,247,247,0.1);
+    background: rgba(247,247,247,0.1);
 }
 .pos .partnerlist-screen .partner-list tr.highlight{
-    background: rgb(110,200,155);
+    background: $primary;
     color: white;
 }
 .pos .partnerlist-screen .partner-list tr.highlight:active {
@@ -1891,24 +1940,30 @@ td {
 }
 .pos .partnerlist-screen tr.partner-line:hover {
     cursor: pointer;
-    background: rgb(207, 238, 222);
+    background: $primary;
+    color: #fff;
 }
 .pos .partnerlist-screen tr.partner-line:active {
     background-color: black;
     color: white;
 }
 .pos .edit-partner-button:hover {
-    background: #c7c7c7;
+    background: $gray-200;
 }
 .pos .partner-line {
     vertical-align: text-top;
 }
+.pos .partner-line-email .fa {
+    width: 30px;
+    opacity: .75;
+}
 .pos .edit-partner-button {
     margin-top: 6px;
     color: black;
+    font-weight: bold;
 }
 .pos .partner-list tr.partner-line.highlight{
-    background: rgb(110,200,155);
+    background: $primary;
     color: white;
 }
 .pos .partnerlist-screen .partner-details{
@@ -1996,7 +2051,7 @@ td {
     margin-bottom: 4px;
     background: white;
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
-    color: #555555;
+    color: $gray-700;
     width: 340px;
     font-size: 14px;
     box-sizing: border-box;
@@ -2070,20 +2125,25 @@ td {
     -webkit-overflow-scrolling: touch !important;
 }
 
-.pos .order{
+.pos .order {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     background: white;
-    padding-bottom: 8px;
-    padding-top: 8px;
     font-size: 16px;
     text-align: left;
     max-width: 500px;
     -webkit-transform: translate3d(0,0,0);
 }
+.pos .order .orderlines {
+    flex-grow: 1;
+    overflow: auto;
+}
 
 .pos .order .order-empty {
     text-align: center;
     margin: 48px;
-    color: #DDD;
+    color: $gray-200;
 }
 .pos .order .order-empty .fa {
     font-size: 64px;
@@ -2093,19 +2153,14 @@ td {
 }
 
 .pos .order .summary{
+    position: sticky;
+    bottom: 0;
     width:100%;
     text-align:right;
     font-weight: bold;
-    margin-top:20px;
-    margin-bottom:10px;
-}
-.pos .order .summary .line{
-    float: right;
-    margin-right:15px;
-    margin-left: 15px;
-    padding-top:5px;
-    border-top: solid 2px;
-    border-color:#777;
+    padding: map-get($spacers, 2) map-get($spacers, 3);
+    border-top: 1px solid $gray-200;
+    box-sizing: border-box;
 }
 .pos .order .summary .total {
     font-size: 22px;
@@ -2113,7 +2168,6 @@ td {
 .pos .order .summary .line .subentry{
     font-size: 16px;
     font-weight: normal;
-    text-align: center;
 }
 .pos .order .summary .line.empty{
     text-align: right;
@@ -2125,7 +2179,7 @@ td {
     position: absolute;
     left: 20px;
     padding: 10px;
-    color: #6EC89B;
+    color: $primary;
     background: rgba(110, 200, 155, 0.17);
     border-radius: 3px;
 }
@@ -2145,10 +2199,7 @@ td {
 .pos .order .orderline{
     width:100%;
     margin:0px;
-    padding-top:3px;
-    padding-bottom:10px;
-    padding-left:15px;
-    padding-right:15px;
+    padding: 7px 15px;
     cursor: pointer;
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -2170,7 +2221,7 @@ td {
 }
 
 .pos .order .orderline.selected{
-    background: rgba(140,143,183,0.2);
+    background: rgba($primary, 0.2);
     -webkit-transition: background 250ms ease-in-out;
        -moz-transition: background 250ms ease-in-out;
             transition: background 250ms ease-in-out;
@@ -2190,18 +2241,18 @@ td {
     float:right;
 }
 .pos .order .orderline .info-list{
-    color: #888;
+    color: $gray-700;
     margin-left:10px;
 }
 .pos .order .orderline .info-list em{
-    color: #777;
+    color: $gray-700;
     font-weight: bold;
     font-style:normal;
 }
 
 .pos .order .orderline .to-refund-highlight {
     font-weight: bold;
-    color: #6ec89b;
+    color: $primary;
 }
 
 .pos .order .orderline .refund-note {
@@ -2232,7 +2283,7 @@ td {
     font-size: 64px;
     color: #43996E;
     text-shadow: 0px 2px white, 0px 2px 2px rgba(0, 0, 0, 0.27);
-    border-bottom: dashed 1px rgb(215,215,215);
+    border-bottom: solid 1px $gray-300;
 }
 .pos .splitbill-screen .order {
     background: white;
@@ -2252,7 +2303,7 @@ td {
     width: 100%;
 }
 .splitbill-screen .order .orderline.selected{
-    background: rgb(110,200,155);
+    background: $primary;
     color: white;
     -webkit-transition: background 250ms ease-in-out;
        -moz-transition: background 250ms ease-in-out;
@@ -2270,27 +2321,15 @@ td {
     font-size: 24px;
     vertical-align: top;
 }
-.paymentmethods {
-    margin: 16px;
-    display: flex;
-    flex-wrap: wrap;
-}
 .paymentmethods .button {
-    background: #e2e2e2;
-    line-height: 74px;
+    background: #fff;
     font-size: 16px;
-    border: solid 1px rgb(202, 202, 202);
+    border-bottom: solid 1px $gray-300;
     border-top-width: 0px;
     cursor: pointer;
 }
 .paymentmethods .button:first-child {
     border-top-width: 1px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-}
-.paymentmethods .button:last-child {
-    border-bottom-left-radius: 3px;
-    border-bottom-right-radius: 3px;
 }
 .paymentmethods .button:active {
     background: black;
@@ -2298,21 +2337,18 @@ td {
     color: white;
 }
 .paymentmethod .button.active {
-    background: #6EC89B;
+    background: $primary;
     color: white;
-    border-color: #6EC89B;
+    border-color: $primary;
 }
 .paymentmethod {
     display: flex;
-    padding-left: 30px;
-    padding-right: 30px;
     flex-grow: 1;
     flex-basis: 100%;
 }
 .paymentmethod .payment-name {
     flex-grow: 1;
-    margin-left: 10px;
-    margin-right: 10px;
+    padding: map-get($spacers, 3);
 }
 .paymentmethod .payment-amount {
     margin-left: 10px;
@@ -2323,17 +2359,13 @@ td {
   margin-right: 10px;
 }
 .paymentmethod.selected{
-  background: white;
+  background: $gray-200;
 }
 
 @media screen and (max-width: 768px) {
     .paymentmethods {
         margin-top: 0px;
         margin-bottom: 0px;
-    }
-    .paymentmethods .button {
-        border: solid 1px rgb(202, 202, 202);
-        border-radius: 3px;
     }
     .paymentmethod {
         flex-basis: 30%;
@@ -2513,8 +2545,7 @@ td {
     text-align:center;
     font-size:20px;
     font-weight:bold;
-    background-color: #F0EEEE;
-    border-radius: 3px;
+    background-color: #fff;
     box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
     z-index:1200;
     font-family: 'Lato';
@@ -2572,7 +2603,6 @@ td {
     height: 40px;
     line-height:40px;
     text-align:center;
-    border-radius: 2px;
     margin-top:10px;
     margin-right:10px;
 
@@ -2580,12 +2610,17 @@ td {
     font-weight: bold;
 
     cursor: pointer;
-
-    border: solid 1px rgba(60,60,60,0.1);
-
-    background: rgba(0,0,0,0.05);
+    border: 1px solid $gray-200;
+    color: $primary;
 }
 
+.pos .popup-textarea textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+.pos .popup-textarea .popup-textarea-wrap {
+    padding: map-get($spacers, 2);
+}
 .pos .popup .button.dont-show-again {
     width: 130px;
 }
@@ -2654,11 +2689,14 @@ td {
 .pos .popup input:focus,
 .pos .popup-input.active {
     outline: none;
-    box-shadow: 0px 0px 0px 3px #6EC89B;
+    box-shadow: 0px 0px 0px 3px $primary;
 }
-.pos .popup.popup-error {
+.pos .popup.popup-error,
+.pos .popup.popup-error .button {
     background-color: #F3BBBB;
     color: rgb(168, 89, 89);
+}
+.pos .popup.popup-error {
     box-shadow: 0px 10px 20px rgba(92,51,51,0.4);
 }
 .pos .popup.popup-error .title {
@@ -2686,7 +2724,7 @@ td {
     background: rgb(247,247,247);
 }
 .pos .popup.popup-selection .selection-item.selected {
-    background: #6EC89B;
+    background: $primary;
 }
 .pos .popup.popup-number {
     width: 300px;
@@ -2772,7 +2810,7 @@ td {
     height: 4px;
 }
 .pos *::-webkit-scrollbar-track{
-    background: rgb(224,224,224);
+    background: $gray-200;
     border-left: solid 1px rgb(200,200,200);
 }
 .pos *::-webkit-scrollbar-thumb{
@@ -2786,7 +2824,7 @@ td {
     height: 40px;
 }
 .pos.big-scrollbars *::-webkit-scrollbar-track{
-    background: rgb(224,224,224);
+    background: $gray-200;
     border-left: none;
 }
 .pos.big-scrollbars *::-webkit-scrollbar-thumb{
@@ -2885,7 +2923,7 @@ td {
 }
 
 .page-controls > div:hover {
-    color: rgb(110,200,155);
+    color: $primary;
 }
 
 .page-controls .previous {
@@ -3047,7 +3085,7 @@ td {
 
 .pos .orders .header-row{
     display: flex;
-    background: #868686;
+    background: $gray-700;
     color: white;
 }
 
@@ -3058,7 +3096,7 @@ td {
     }
 
     .pos .orders .order-row:nth-child(odd) {
-        background: #DDD;
+        background: $gray-200;
     }
 
     .pos .orders .order-row:nth-child(even) {
@@ -3073,9 +3111,33 @@ td {
     }
 }
 
+@media screen and (max-width: 640px) {
+    .ticket-screen .screen-full-width {
+        flex-direction: column;
+        height: auto;
+        min-height: 100%;
+    }
+    .ticket-screen .controls {
+        position: sticky;
+        top: 0;
+        background: $gray-300;
+    }
+    .ticket-screen .controls button.search {
+        margin: 0;
+    }
+    .ticket-screen .order,
+    .ticket-screen .leftpane {
+        max-width: inherit;
+    }
+
+    .ticket-screen .rightpane {
+        width: auto;
+    }
+}
+
 .pos .orders .order-row:hover, .pos .orders .order-row.highlight {
     color: white;
-    background-color:  rgb(110,200,155);
+    background-color:  $primary;
 }
 
 .pos .orders .col {
@@ -3122,7 +3184,7 @@ td {
 .ticket-screen .empty-order-list {
     text-align: center;
     margin: 48px;
-    color: #adadad;
+    color: $gray-500;
 }
 
 .ticket-screen .empty-order-list h1 {
@@ -3137,7 +3199,7 @@ td {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0px 10px;
+    padding: 0px 10px;
     flex: 0 0 80px;
 }
 
@@ -3151,8 +3213,8 @@ td {
 }
 
 .ticket-screen .controls button.highlight {
-    background: #6EC89B;
-    border: solid 1px #64AF8A;
+    background: $primary;
+    border-color: $primary;
     color: white;
 }
 
@@ -3206,23 +3268,31 @@ td {
     color: #4f5b66;
 }
 
-.ticket-screen .pos-search-bar .search ul {
-    background: white;
+.ticket-screen .pos-search-bar .search .fields {
     position: absolute;
     top: calc(100% + 5px);
     right: 2px;
     left: 2px;
     box-shadow: 1px 1px 3px grey;
+    overflow: auto;
+}
+.ticket-screen .pos-search-bar .search ul {
+    background: white;
     font-size: small;
+    display: inline-block;
+    min-width: 100%;
 }
 
 .ticket-screen .pos-search-bar .search li {
-    color: rgb(1,160,157);
     margin: 0.2em 0;
     padding-top: 0.2em;
     padding-bottom: 0.2em;
     padding-left: 35px;
     text-align: left;
+}
+
+.ticket-screen .pos-search-bar .search li .term {
+    color: $primary;
 }
 
 .ticket-screen .pos-search-bar .search li:hover {
@@ -3275,7 +3345,7 @@ td {
     box-shadow: 1px 1px 5px grey;
     padding: 0.5em 0;
     background: white;
-    color: #555555;
+    color: $gray-700;
 }
 
 .ticket-screen .pos-search-bar .filter ul.options li {
@@ -3321,11 +3391,11 @@ td {
 }
 
 .ticket-button.highlight {
-    background: rgb(104,69,95);
+    background: rgba(0, 0, 0, .08);
 }
 
 .ticket-button:hover {
-    background: rgb(104,69,95);
+    background: rgba(0, 0, 0, .08);
     cursor: pointer;
 }
 
@@ -3339,7 +3409,7 @@ td {
 }
 
 [badge]:after {
-    background: rgb(1,160,157);
+    background: $o-navbar-badge-bg;
     border-radius: 10rem;
     color: #fff;
     content: attr(badge);
@@ -3367,7 +3437,7 @@ td {
 }
 
 .cash-move-button:hover {
-    background: rgb(104,69,95);
+    background: rgba(0, 0, 0, .08);
     cursor: pointer;
 }
 
@@ -3378,41 +3448,46 @@ td {
     align-items: center;
 }
 
-.pos .pos-topheader .pos-search-bar,
+.pos .products-widget .search-bar-container {
+    position: sticky;
+    right: 0;
+}
+
+.pos .rightpane-header .pos-search-bar,
 .pos .partnerlist-screen .pos-search-bar {
     display: flex;
     align-items: center;
-    padding: 2px 10px;
-    background-color: white;
-    border-radius: 5px;
+    padding: 0px 10px;
+    background-color: $gray-100;
+    height: 100%;
     font-size: 16px;
     transition: all linear 150ms;
 }
 
-.pos .pos-topheader .pos-search-bar:focus-within,
+.pos .rightpane-header .pos-search-bar:focus-within,
 .pos .partnerlist-screen .pos-search-bar:focus-within {
-    box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
-    color: rgb(153, 153, 255);
+    background: $gray-200;
 }
 
-.pos .pos-topheader .pos-search-bar input,
+.pos .rightpane-header .pos-search-bar input,
 .pos .partnerlist-screen .pos-search-bar input {
     flex-grow: 1;
     padding: 0 5px;
-    height: 30px;
+    height: 100%;
+    background: none;
     border: none !important;
     outline: none !important;
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
     color: #63717f;
 }
 
-.pos .pos-topheader .pos-search-bar i,
+.pos .rightpane-header .pos-search-bar i,
 .pos .partnerlist-screen .pos-search-bar i {
     cursor: pointer;
     transition: color linear 150ms;
 }
 
-.pos .pos-topheader .pos-search-bar i:active,
+.pos .rightpane-header .pos-search-bar i:active,
 .pos .partnerlist-screen .pos-search-bar i:active {
     color: purple;
 }
@@ -3432,8 +3507,22 @@ td {
 
 .pos .search-bar-container.sb-product {
     width: 75%;
-    max-width: 500px;
+    max-width: 250px;
     justify-content: flex-start;
+}
+
+.pos .search-bar-container.sb-product .icon {
+    height: 100%;
+    border-radius: 0;
+    color: $primary;
+    margin: 0;
+    padding: 0 map-get($spacers, 3);
+    background-color: #fff;
+}
+
+.pos .search-bar-container.sb-product .icon:hover {
+    background: #fff;
+    color: darken($primary, 5%);
 }
 
 .pos .sb-product .pos-search-bar{
@@ -3452,17 +3541,18 @@ td {
 }
 
 .pos .sb-product .icon:hover {
-    background: rgb(104,69,95);
+    background: rgba(0, 0, 0, .08);
 }
 
 .pos .sb-product .icon:active {
-    background: rgb(104,69,95, 0.7);
+    background: rgba(104,69,95, 0.7);
 }
 
 @media screen and (max-width: 768px) {
     .pos .search-bar-container.sb-product {
-        width: 90%;
         max-width: none;
+        width: auto;
+        border-left: 1px solid $gray-200;
     }
 
     .pos .sb-partner .pos-search-bar {
@@ -3510,7 +3600,7 @@ td {
     text-align: center;
     border-radius: 3px;
     cursor: pointer;
-    background: rgb(230, 230, 230);
+    background: $gray-200;
 }
 
 .receipt-screen .default-view .actions .send-email {
@@ -3530,7 +3620,7 @@ td {
     flex: 1;
     padding-left: 1rem;
     border: none;
-    color: #555555;
+    color: $gray-700;
 }
 
 .receipt-screen .default-view .actions .send-email input:focus {
@@ -3541,12 +3631,16 @@ td {
     padding: 1rem 40px;
     margin: 2px;
     border: none;
-    background: rgb(230, 230, 230);
+    background: $gray-200;
+    color: $gray-500;
+}
+.receipt-screen .default-view .actions .send-email button.send:not(.highlight) {
+    cursor: not-allowed;
 }
 
 .receipt-screen .default-view .actions .send-email button.send.highlight {
     color: white;
-    background-color: #6EC89B;
+    background-color: $primary;
 }
 
 .receipt-screen .notice {
@@ -3559,13 +3653,17 @@ td {
 }
 
 .receipt-screen .notice .successful {
-    color: #6EC89B;
+    color: $primary;
 }
 
 .receipt-screen .notice .send-mail-info {
     width: 100%;
     text-align: right;
     font-style: italic;
+}
+
+.receipt-screen .button.validation {
+    grid-column: span 2;
 }
 
 @media screen and (max-width: 768px) {
@@ -3604,7 +3702,7 @@ td {
 }
 
 .pos .pos-topheader .status-buttons > div:hover {
-    background: rgb(104,69,95);
+    background: rgba(0, 0, 0, .08);
 }
 
 @media screen and (max-width: 768px) {
@@ -3645,7 +3743,7 @@ td {
 }
 
 .cash-move .input-amount .input-type.highlight {
-    background: #6EC89B !important;
+    background: $primary !important;
     border: solid 1px #64AF8A !important;
     color: white !important;
 }
@@ -3657,15 +3755,21 @@ td {
 }
 
 .cash-move .input-amount input {
-    width: 200px;
+    width: 100%;
     min-height: auto;
     text-align: right;
     padding-right: 30px;
 }
 
-.cash-move .input-amount .input-field span.currency {
+.cash-move .input-amount .input-field {
     position: relative;
-    left: -20px;
+    flex-grow: 1;
+}
+
+.cash-move .input-amount .input-field span.currency {
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }
 
 .cash-move textarea {

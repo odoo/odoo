@@ -23,7 +23,7 @@
 }
 .floor-selector .button {
     cursor: pointer;
-    border-left: dashed 1px rgb(196,196,196);
+    border-left: solid 1px $gray-400;
     -webkit-flex: 1;
     flex: 1;
 }
@@ -31,7 +31,7 @@
     border-left: none;
 }
 .floor-selector .button.active {
-    background: #6EC89B;
+    background: $o-navbar-badge-bg;
     color: white;
 }
 
@@ -286,7 +286,7 @@
 .pos .order-button.floor-button {
     display: flex;
     align-items: center;
-    background: #6EC89B;
+    background: $o-navbar-badge-bg;
     font-weight: bold;
     font-size: 16px;
     padding-left: 16px;
@@ -345,7 +345,7 @@
     margin: 16px;
 }
 .splitbill-screen.screen .pay-button .button {
-    background: #e2e2e2;
+    background: $gray-200;
     line-height: 74px;
     font-size: 16px;
     border: solid 1px rgb(202, 202, 202);
