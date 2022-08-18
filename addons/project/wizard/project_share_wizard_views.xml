@@ -6,6 +6,7 @@
         <field name="model">project.share.wizard</field>
         <field name="arch" type="xml">
             <form string="Share Project">
+                <p class="alert alert-warning" invisible="access_warning == ''" role="alert"><field name="access_warning"/></p>
                 <p class="text-muted" invisible="access_mode != 'edit'">
                     When sharing a project in edit mode, you are giving people access to the kanban and list views of your tasks.
                     Collaborators will be able to view and modify part of the tasks' information.
@@ -17,7 +18,6 @@
                 <field name="res_model" invisible="1"/>
                 <field name="res_id" invisible="1"/>
                 <field name="display_access_mode" invisible="1" />
-                <p class="alert alert-warning" invisible="access_warning == ''" role="alert"><field name="access_warning"/></p>
                 <group>
                     <field options="{'horizontal': true}" name="access_mode" widget="radio" invisible="not display_access_mode" class="mb-4"/>
                     <field name="share_link" widget="CopyClipboardChar" options="{'string': 'Copy Link'}" invisible="access_mode == 'edit'" string="Link" class="mb-4"/>
@@ -29,7 +29,7 @@
                 </group>
                 <field name="note" placeholder="Add a note" nolabel="1"/>
                 <footer>
-                    <button string="Send" name="action_share_record" invisible="access_warning != ''" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Send" name="action_share_record" type="object" class="btn-primary" data-hotkey="q"/>
                     <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
                 </footer>
             </form>

@@ -225,6 +225,10 @@
                     <field name="name" column_invisible="1"/>
                     <field name="message_needaction" column_invisible="True"/>
                     <field name="active" column_invisible="True"/>
+                    <field name="is_milestone_exceeded" column_invisible="True"/>
+                    <field name="can_mark_milestone_as_done" column_invisible="True"/>
+                    <field name="is_milestone_deadline_exceeded" column_invisible="1"/>
+                    <field name="allow_milestones" column_invisible="True"/>
                     <field name="is_favorite" string="Favorite" nolabel="1" widget="boolean_favorite" optional="hide"/>
                     <field name="display_name" string="Name" class="fw-bold"/>
                     <field name="partner_id" optional="show" string="Customer"/>
@@ -233,6 +237,15 @@
                     <!-- XBO: required modifiers contains a falsy domain to be able to display the daterange without any button to set the date_end -->
                     <field name="date_start" string="Planned Date" widget="daterange" options="{'end_date_field': 'date'}" required="False" optional="hide"/>
                     <field name="date" column_invisible="True" />
+                    <field name="milestone_progress" widget="progressbar"
+                        invisible="milestone_progress == 0 or not allow_milestones"
+                        optional="hide"
+                    />
+                    <field name="next_milestone_id"
+                        decoration-danger="is_milestone_deadline_exceeded" decoration-success="can_mark_milestone_as_done"
+                        optional="hide"
+                        invisible="not allow_milestones"
+                    />
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" column_invisible="True"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
@@ -589,6 +602,7 @@
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
             <field name="domain">[]</field>
+            <field name="context">{'display_milestone_deadline': True}</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
@@ -606,7 +620,7 @@
         <record id="open_view_project_all_group_stage" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
-            <field name="context">{}</field>
+            <field name="context">{'display_milestone_deadline': True}</field>
             <field name="domain">[]</field>
             <field name="view_mode">kanban,tree,form,calendar,activity</field>
             <field name="view_id" ref="view_project_kanban"/>
@@ -645,7 +659,7 @@
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('view_project_config')}),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_project_config_kanban')})]"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
-            <field name="context">{}</field>
+            <field name="context">{'display_milestone_deadline': True}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                    No projects found. Let's create one!
@@ -663,7 +677,7 @@
             <field name="domain">[]</field>
             <field name="view_mode">tree,kanban,form,calendar,activity</field>
             <field name="search_view_id" ref="view_project_project_filter"/>
-            <field name="context">{}</field>
+            <field name="context">{'display_milestone_deadline': True}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                    No projects found. Let's create one!
