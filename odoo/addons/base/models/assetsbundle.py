@@ -414,7 +414,7 @@ class AssetsBundle(object):
                     window.alert(message);
                 }
             })("%s");
-        """ % message.replace('"', '\\"').replace('\n', '&NewLine;')
+        """ % message.replace('"', '\\"').replace('\n', '&NewLine;').replace('\r', '')
 
     def _get_assets_domain_for_already_processed_css(self, assets):
         """ Method to compute the attachments' domain to search the already process assets (css).
