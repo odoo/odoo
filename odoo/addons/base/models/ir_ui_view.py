@@ -1690,13 +1690,13 @@ actual arch.
                 if vnames:
                     name_manager.must_have_fields(vnames, f"{attr}={expr}")
 
-            elif attr == 'data-toggle' and expr == 'tab':
+            elif attr == 'data-bs-toggle' and expr == 'tab':
                 if node.get('role') != 'tab':
-                    msg = 'tab link (data-toggle="tab") must have "tab" role'
+                    msg = 'tab link (data-bs-toggle="tab") must have "tab" role'
                     self._log_view_warning(msg, node)
                 aria_control = node.get('aria-controls') or node.get('t-att-aria-controls')
                 if not aria_control and not node.get('t-attf-aria-controls'):
-                    msg = 'tab link (data-toggle="tab") must have "aria_control" defined'
+                    msg = 'tab link (data-bs-toggle="tab") must have "aria_control" defined'
                     self._log_view_warning(msg, node)
                 if aria_control and '#' in aria_control:
                     msg = 'aria-controls in tablink cannot contains "#"'
