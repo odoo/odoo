@@ -51,7 +51,6 @@ class ProductTemplate(models.Model):
 
     @api.depends('product_variant_ids', 'product_variant_ids.base_unit_count')
     def _compute_base_unit_count(self):
-        self.base_unit_count = 0
         for template in self.filtered(lambda template: len(template.product_variant_ids) == 1):
             template.base_unit_count = template.product_variant_ids.base_unit_count
 
