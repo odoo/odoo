@@ -9,13 +9,18 @@
                 <form string="Compose Email" class="pt-0 pb-0">
                     <group>
                         <!-- truly invisible fields for control and options -->
+                        <field name="author_id" invisible="1"/>
+                        <field name="auto_delete" invisible="1"/>
+                        <field name="auto_delete_message" invisible="1"/>
                         <field name="composition_mode" invisible="1"/>
                         <field name="email_layout_xmlid" invisible="1"/>
-                        <field name="model" invisible="1"/>
-                        <field name="res_id" invisible="1"/>
                         <field name="is_log" invisible="1"/>
-                        <field name="parent_id" invisible="1"/>
                         <field name="mail_server_id" invisible="1"/>
+                        <field name="model" invisible="1"/>
+                        <field name="parent_id" invisible="1"/>
+                        <field name="record_name" invisible="1"/>
+                        <field name="res_id" invisible="1"/>
+                        <field name="subtype_id" invisible="1"/>
                         <!-- visible wizard -->
                         <field name="email_from"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
