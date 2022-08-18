@@ -560,7 +560,9 @@ var dom = {
                 offsetTop = $el.offset().top;
                 el.classList.add('d-none');
             }
-            const elPosition = $scrollable[0].scrollTop + (offsetTop - $scrollable.offset().top);
+            const isDocScrollingEl = $scrollable.is(el.ownerDocument.scrollingElement);
+            const elPosition = offsetTop
+                - ($scrollable.offset().top - (isDocScrollingEl ? 0 : $scrollable[0].scrollTop));
             let offset = options.forcedOffset;
             if (offset === undefined) {
                 offset = (isTopScroll ? dom.scrollFixedOffset() : 0) + (options.extraOffset || 0);
