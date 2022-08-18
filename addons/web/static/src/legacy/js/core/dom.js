@@ -519,11 +519,12 @@ var dom = {
      * Computes the size by which a scrolling point should be decreased so that
      * the top fixed elements of the page appear above that scrolling point.
      *
+     * @return {Document} [document=window.document]
      * @returns {number}
      */
-    scrollFixedOffset() {
+    scrollFixedOffset(document = window.document) {
         let size = 0;
-        for (const el of $('.o_top_fixed_element')) {
+        for (const el of document.querySelectorAll('.o_top_fixed_element')) {
             size += $(el).outerHeight();
         }
         return size;
@@ -552,9 +553,10 @@ var dom = {
         // If $scrollable and $el are not in the same document, we can safely
         // assume $el is in an $iframe. We retrieve it by filtering the list of
         // iframes in $scrollable to keep only the one that contains $el.
-        const isInOneDocument = $scrollable[0].ownerDocument === $el[0].ownerDocument;
+        const scrollDocument = $scrollable[0].ownerDocument;
+        const isInOneDocument = scrollDocument === $el[0].ownerDocument;
         const $iframe = !isInOneDocument && $scrollable.find('iframe').filter((i, node) => $(node).contents().has($el));
-        const $topLevelScrollable = $().getScrollingElement();
+        const $topLevelScrollable = $().getScrollingElement(scrollDocument);
         const isTopScroll = $scrollable.is($topLevelScrollable);
 
         function _computeScrollTop() {
@@ -579,7 +581,7 @@ var dom = {
             }
             let offset = options.forcedOffset;
             if (offset === undefined) {
-                offset = (isTopScroll ? dom.scrollFixedOffset() : 0) + (options.extraOffset || 0);
+                offset = (isTopScroll ? dom.scrollFixedOffset(scrollDocument) : 0) + (options.extraOffset || 0);
             }
             return Math.max(0, elPosition - offset);
         }
