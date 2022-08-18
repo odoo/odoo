@@ -41,7 +41,7 @@ class FleetVehicle(models.Model):
     )
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     country_id = fields.Many2one('res.country', related='company_id.country_id')
-    country_code = fields.Char(related='country_id.code')
+    country_code = fields.Char(related='country_id.code', depends=['country_id'])
     license_plate = fields.Char(tracking=True,
         help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
