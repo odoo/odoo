@@ -1161,7 +1161,7 @@
                         </a>
                     </div>
                     <div class="btn-group btn-group-sm">
-                        <a t-attf-class="btn px-2 border #{not question.can_comment and 'karma_required text-muted'}" t-att-data-karma="question.karma_comment" t-att-data-toggle="question.can_comment and 'collapse' or None"
+                        <a t-attf-class="btn px-2 border #{not question.can_comment and 'karma_required text-muted'}" t-att-data-karma="question.karma_comment" t-att-data-bs-toggle="question.can_comment and 'collapse' or None"
                             t-attf-href="##{_question_comment_collapse_uid}">
                             <i class=" fa fa-comment text-muted me-1"/>Comment
                         </a>
@@ -1343,7 +1343,7 @@
                         <div class="btn-group btn-group-sm">
                             <a t-attf-class="btn border px-2 #{not answer.can_comment and 'karma_required text-muted'}"
                                 t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
-                                t-att-data-toggle="answer.can_comment and 'collapse' or None"
+                                t-att-data-bs-toggle="answer.can_comment and 'collapse' or None"
                                 t-attf-data-bs-target="##{_answer_comment_collapse_uid}">
                                 <i t-attf-class="fa fa-comment text-muted #{not answer.can_comment and 'karma_required'}"/>
                                 Comment

@@ -2543,10 +2543,10 @@ class TestViews(ViewCase):
         self.assertWarning('<form><div class="nav-tabs"/></form>')
 
     def test_valid_simili_tab(self):
-        self.assertValid('<form><a data-toggle="tab" role="tab" aria-controls="test"/></form>')
-        self.assertWarning('<form><a data-toggle="tab" aria-controls="test"/></form>')
-        self.assertWarning('<form><a data-toggle="tab" role="tab"/></form>')
-        self.assertWarning('<form><a data-toggle="tab" role="tab" aria-controls="#test"/></form>')
+        self.assertValid('<form><a data-bs-toggle="tab" role="tab" aria-controls="test"/></form>')
+        self.assertWarning('<form><a data-bs-toggle="tab" aria-controls="test"/></form>')
+        self.assertWarning('<form><a data-bs-toggle="tab" role="tab"/></form>')
+        self.assertWarning('<form><a data-bs-toggle="tab" role="tab" aria-controls="#test"/></form>')
 
     def test_valid_focusable_button(self):
         self.assertValid('<form><a class="btn" role="button"/></form>')
