@@ -92,11 +92,11 @@
                                         specified otherwise.
                                     </span>
                                 </div>
-                                <div class="row mt16" attrs="{'invisible': [('crm_use_auto_assignment', '=', False)]}">
+                                <div class="row flex-row flex-nowrap mt16" attrs="{'invisible': [('crm_use_auto_assignment', '=', False)]}">
                                     <label string="Running" for="crm_auto_assignment_action" class="col-lg-3 o_light_label"/>
                                     <field name="crm_auto_assignment_action"
                                         attrs="{'required': [('crm_use_auto_assignment', '=', True)]}"/>
-                                    <button name="action_crm_assign_leads" type="object" class="btn-link">
+                                    <button name="action_crm_assign_leads" type="object" class="btn-link w-auto">
                                         <i title="Update now" role="img" aria-label="Update now" class="fa fa-fw fa-refresh"></i>
                                     </button>
                                 </div>
