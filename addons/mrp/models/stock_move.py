@@ -551,3 +551,15 @@ class StockMove(models.Model):
         if 'manufacture' in self.product_id._get_rules_from_location(self.location_id).mapped('action'):
             date -= relativedelta(days=self.company_id.manufacturing_lead)
         return date
+
+    def action_open_reference(self):
+        res = super().action_open_reference()
+        source = self.production_id or self.raw_material_production_id
+        if source and source.check_access_rights('read', raise_exception=False):
+            return {
+                'res_model': source._name,
+                'type': 'ir.actions.act_window',
+                'views': [[False, "form"]],
+                'res_id': source.id,
+            }
+        return res
