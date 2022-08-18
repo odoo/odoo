@@ -543,12 +543,12 @@ class MailComposer(models.TransientModel):
         if template_id and composition_mode == 'mass_mail':
             template = self.env['mail.template'].browse(template_id)
             values = dict(
-                (field, getattr(template, field))
+                (field, template[field])
                 for field in ['subject', 'body_html',
                               'email_from',
                               'reply_to',
                               'mail_server_id']
-                if getattr(template, field)
+                if template[field]
             )
             if template.attachment_ids:
                 values['attachment_ids'] = [att.id for att in template.attachment_ids]
