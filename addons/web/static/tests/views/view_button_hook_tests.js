@@ -1,11 +1,14 @@
 /** @odoo-module */
+import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { setupViewRegistries } from "./helpers";
-import { click, getFixture } from "../helpers/utils";
+import { click, getFixture, mount } from "../helpers/utils";
 import { makeTestEnv } from "../helpers/mock_env";
 import { registry } from "@web/core/registry";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
-const { useRef, mount, Component, xml } = owl;
+const { useRef, Component, xml } = owl;
 
 QUnit.module("UseViewButton tests", (hooks) => {
     let target;
@@ -75,5 +78,49 @@ QUnit.module("UseViewButton tests", (hooks) => {
         executeInHandler = false;
         await click(target, ".myComponent");
         assert.verifySteps(["beforeExecuteAction on handler"]);
+    });
+
+    QUnit.test("ViewButton clicked in Dropdown close the Dropdown", async (assert) => {
+        registry.category("services").add(
+            "action",
+            {
+                start() {
+                    return {
+                        doActionButton() {
+                            assert.step("doActionButton");
+                        },
+                    };
+                },
+            },
+            { force: true }
+        );
+
+        class MyComponent extends Component {
+            setup() {
+                const rootRef = useRef("root");
+                useViewButtons({}, rootRef);
+            }
+        }
+        MyComponent.components = { Dropdown, DropdownItem, ViewButton };
+        MyComponent.template = xml`
+            <div t-ref="root" class="myComponent">
+                <Dropdown>
+                    <t t-set-slot="toggler">dropdown</t>
+                    <DropdownItem>
+                        <ViewButton tag="'a'" clickParams="{ type:'action' }" string="'coucou'" record="{ resId: 1 }" />
+                    </DropdownItem>
+                </Dropdown>
+            </div>
+        `;
+
+        const env = await makeTestEnv();
+        await mount(MyComponent, target, { env });
+
+        await click(target, ".dropdown-toggle");
+        assert.containsOnce(target, ".dropdown-menu");
+
+        await click(target, "a[type=action]");
+        assert.verifySteps(["doActionButton"]);
+        assert.containsNone(target, ".dropdown-menu");
     });
 });
