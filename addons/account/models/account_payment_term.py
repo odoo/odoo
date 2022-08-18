@@ -27,8 +27,8 @@ class AccountPaymentTerm(models.Model):
     has_early_payment = fields.Boolean(string="Apply Early Payment Discount", compute="_compute_has_early_payment", readonly=False, store=True)
     percentage_to_discount = fields.Float("Discount", digits='Discount', default=2)
     discount_computation = fields.Selection([
-        ('included', 'Tax included'),
-        ('excluded', 'Tax excluded'),
+        ('included', 'Impact base and tax'),
+        ('excluded', 'Impact base only'),
        ], string='Computation', default='included')
     discount_days = fields.Integer(string='Availability', required=True, default=7)
     discount_account_id = fields.Many2one(comodel_name='account.account', string='Counterpart Account')

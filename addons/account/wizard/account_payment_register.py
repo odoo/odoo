@@ -421,7 +421,7 @@ class AccountPaymentRegister(models.TransientModel):
 
     def _get_early_pay_cash_discount_account(self, payment_values):
         self.ensure_one()
-        if payment_values['payment_type'] == 'inbound':
+        if payment_values['payment_type'] == 'outbound':
             writeoff_account_id = self.company_id.account_journal_cash_discount_income_id
         else:
             writeoff_account_id = self.company_id.account_journal_cash_discount_expense_id
