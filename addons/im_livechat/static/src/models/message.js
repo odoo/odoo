@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { patchModelMethods, patchRecordMethods } from '@mail/model/model_core';
-import { insertAndReplace } from '@mail/model/model_field_command';
 // ensure the model definition is loaded before the patch
 import '@mail/models/message';
 
@@ -15,10 +14,10 @@ patchModelMethods('Message', {
             if (data.author_id[2]) {
                 // flux specific for livechat, a 3rd param is livechat_username
                 // and means 2nd param (display_name) should be ignored
-                data2.author = insertAndReplace({
+                data2.author = {
                     id: data.author_id[0],
                     livechat_username: data.author_id[2],
-                });
+                };
             }
         }
         return data2;

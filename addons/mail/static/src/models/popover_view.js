@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'PopoverView',
@@ -32,7 +32,7 @@ registerModel({
          */
         _computeActivityMarkDonePopoverContentView() {
             if (this.activityViewOwnerAsMarkDone) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -61,7 +61,7 @@ registerModel({
          */
         _computeChannelInvitationForm() {
             if (this.threadViewTopbarOwnerAsInvite) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -116,10 +116,10 @@ registerModel({
          */
         _computeEmojiPickerView() {
             if (this.composerViewOwnerAsEmoji) {
-                return insertAndReplace();
+                return {};
             }
             if (this.messageActionListOwnerAsReaction) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },

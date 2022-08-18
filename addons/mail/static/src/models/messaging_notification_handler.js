@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { decrement, increment, insert, insertAndReplace, unlink } from '@mail/model/model_field_command';
+import { decrement, increment, insert, unlink } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 import { escape, sprintf } from '@web/core/utils/strings';
@@ -175,11 +175,11 @@ registerModel({
             }
             this.messaging.models['ThreadPartnerSeenInfo'].insert({
                 lastFetchedMessage: insert({ id: last_message_id }),
-                partner: insertAndReplace({ id: partner_id }),
+                partner: { id: partner_id },
                 thread: channel.thread,
             });
             this.messaging.models['MessageSeenIndicator'].insert({
-                message: insertAndReplace({ id: last_message_id }),
+                message: { id: last_message_id },
                 thread: channel.thread,
             });
         },
@@ -318,7 +318,7 @@ registerModel({
             if (shouldComputeSeenIndicators) {
                 this.messaging.models['ThreadPartnerSeenInfo'].insert({
                     lastSeenMessage: lastMessage,
-                    partner: insertAndReplace({ id: partner_id }),
+                    partner: { id: partner_id },
                     thread: channel.thread,
                 });
                 this.messaging.models['MessageSeenIndicator'].insert({

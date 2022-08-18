@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { start } from '@mail/../tests/helpers/test_utils';
-import { insertAndReplace } from '@mail/model/model_field_command';
 import { nextTick } from '@mail/utils/utils';
 
 QUnit.module('mail', {}, function () {
@@ -18,7 +17,7 @@ QUnit.test('single call', async function (assert) {
     let hasInvokedFunc = false;
     const throttle = messaging.models['Throttle'].insert({
         func: () => hasInvokedFunc = true,
-        qunitTestOwner1: insertAndReplace(),
+        qunitTestOwner1: {},
     });
     assert.notOk(
         hasInvokedFunc,
@@ -48,7 +47,7 @@ QUnit.test('2nd (throttled) call', async function (assert) {
     let funcCalledAmount = 0;
     const throttle = messaging.models['Throttle'].insert({
         func: () => funcCalledAmount++,
-        qunitTestOwner2: insertAndReplace(),
+        qunitTestOwner2: {},
     });
     throttle.do();
     await nextTick();
@@ -90,7 +89,7 @@ QUnit.test('throttled call reinvocation', async function (assert) {
     let funcCalledAmount = 0;
     const throttle = messaging.models['Throttle'].insert({
         func: () => funcCalledAmount++,
-        qunitTestOwner2: insertAndReplace(),
+        qunitTestOwner2: {},
     });
     throttle.do();
     await nextTick();
@@ -134,7 +133,7 @@ QUnit.test('clear throttled call', async function (assert) {
     let funcCalledAmount = 0;
     const throttle = messaging.models['Throttle'].insert({
         func: () => funcCalledAmount++,
-        qunitTestOwner2: insertAndReplace(),
+        qunitTestOwner2: {},
     });
     throttle.do();
     await nextTick();

@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -44,7 +44,7 @@ QUnit.test('clear: should set x2one field undefined if no default value is given
 
     const contact = messaging.models['TestContact'].insert({
         id: 10,
-        address: insertAndReplace({ id: 20 }),
+        address: { id: 20 },
     });
     const address = messaging.models['TestAddress'].findFromIdentifyingData({ id: 20 });
     contact.update({ address: clear() });
@@ -65,7 +65,7 @@ QUnit.test('clear: should set x2one field the default value', async function (as
     const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].insert({
-        favorite: insertAndReplace({ description: 'pingpong' }),
+        favorite: { description: 'pingpong' },
         id: 10,
     });
     contact.update({ favorite: clear() });
@@ -82,7 +82,7 @@ QUnit.test('clear: should set x2many field empty array if no default value is gi
 
     const contact = messaging.models['TestContact'].insert({
         id: 10,
-        tasks: insertAndReplace({ id: 20 }),
+        tasks: { id: 20 },
     });
     const task = messaging.models['TestTask'].findFromIdentifyingData({ id: 20 });
     contact.update({ tasks: clear() });
@@ -105,9 +105,9 @@ QUnit.test('clear: should set x2many field the default value', async function (a
     const contact = messaging.models['TestContact'].insert({
         id: 10,
         hobbies: [
-            insertAndReplace({ description: 'basketball' }),
-            insertAndReplace({ description: 'running' }),
-            insertAndReplace({ description: 'photographing' }),
+            { description: 'basketball' },
+            { description: 'running' },
+            { description: 'photographing' },
         ],
     });
     contact.update({ hobbies: clear() });

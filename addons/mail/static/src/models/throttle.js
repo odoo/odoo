@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 /**
  * This model defines a "Throttle", which is an abstraction to throttle calls on a
@@ -28,7 +28,7 @@ registerModel({
         async do() {
             if (!this.cooldownTimer) {
                 this.func();
-                this.update({ cooldownTimer: insertAndReplace() });
+                this.update({ cooldownTimer: {} });
             } else {
                 this.update({ shouldInvoke: true });
             }
@@ -37,7 +37,10 @@ registerModel({
             if (this.shouldInvoke) {
                 this.func();
             }
-            this.update({ shouldInvoke: false });
+            this.update({
+                cooldownTimer: clear(),
+                shouldInvoke: false,
+            });
         },
         /**
          * @private

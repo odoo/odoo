@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { isEventHandled } from '@mail/utils/utils';
 
 registerModel({
@@ -39,9 +39,9 @@ registerModel({
          */
         _computePersonaImStatusIconView() {
             if (this.channelMember.persona.guest && this.channelMember.persona.guest.im_status) {
-                return insertAndReplace();
+                return {};
             }
-            return this.channelMember.persona.partner && this.channelMember.persona.partner.isImStatusSet ? insertAndReplace() : clear();
+            return this.channelMember.persona.partner && this.channelMember.persona.partner.isImStatusSet ? {} : clear();
         },
     },
     fields: {

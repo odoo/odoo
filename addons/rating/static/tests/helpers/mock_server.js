@@ -16,11 +16,11 @@ patch(MockServer.prototype, 'rating', {
                 ['message_id', '=', formattedMessage.id],
             ]);
             if (rating) {
-                formattedMessage['rating'] = [['insert-and-replace', {
+                formattedMessage['rating'] = {
                     'id': rating.id,
                     'ratingImageUrl': rating.rating_image_url,
                     'ratingText': rating.rating_text,
-                }]];
+                };
             }
         }
         return formattedMessages;

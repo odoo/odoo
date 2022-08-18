@@ -3,11 +3,15 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
+import { OnChange } from "@mail/model/model_onchange";
 
 registerModel({
     name: 'Timer',
     identifyingMode: 'xor',
     lifecycleHooks: {
+        _created() {
+            this.update({ timeoutId: this.messaging.browser.setTimeout(this._onTimeout, this.duration) });
+        },
         _willDelete() {
             this.messaging.browser.clearTimeout(this.timeoutId);
         },
@@ -49,30 +53,9 @@ registerModel({
         },
         /**
          * @private
-         * @returns {number}
-         */
-        _computeTimeoutId() {
-            if (this.duration === undefined) {
-                return; // ensure duration is computed first
-            }
-            if (this.timeoutId) {
-                return;
-            }
-            return this.messaging.browser.setTimeout(this._onTimeout, this.duration);
-        },
-        /**
-         * @private
          */
         _onTimeout() {
-            this._onTimeoutOwner();
-            if (this.exists()) { // owner might have deleted the timer itself
-                this.delete();
-            }
-        },
-        /**
-         * @private
-         */
-        _onTimeoutOwner() {
+            this.update({ timeoutId: clear() });
             if (this.callMainViewAsShowOverlay) {
                 this.callMainViewAsShowOverlay.onShowOverlayTimeout();
                 return;
@@ -110,6 +93,16 @@ registerModel({
                 return;
             }
         },
+        _onChangeDoReset() {
+            if (!this.doReset) {
+                return;
+            }
+            this.messaging.browser.clearTimeout(this.timeoutId);
+            this.update({
+                doReset: clear(),
+                timeoutId: this.messaging.browser.setTimeout(this._onTimeout, this.duration),
+            });
+        },
     },
     fields: {
         callMainViewAsShowOverlay: one('CallMainView', {
@@ -119,6 +112,9 @@ registerModel({
         chatterOwnerAsAttachmentsLoader: one('Chatter', {
             identifying: true,
             inverse: 'attachmentsLoaderTimer',
+        }),
+        doReset: attr({
+            default: false,
         }),
         /**
          * Duration, in milliseconds, until timer times out and calls the
@@ -162,10 +158,12 @@ registerModel({
          * Internal reference of `setTimeout()` that is used to invoke function
          * when timer times out. Useful to clear it when timer is cleared/reset.
          */
-        timeoutId: attr({
-            compute: '_computeTimeoutId',
-            readonly: true,
-            required: true,
-        }),
+        timeoutId: attr(),
     },
+    onChanges: [
+        new OnChange({
+            dependencies: ["doReset"],
+            methodName: '_onChangeDoReset',
+        }),
+    ],
 });

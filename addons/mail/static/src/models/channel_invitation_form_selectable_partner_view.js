@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ChannelInvitationFormSelectablePartnerView',
@@ -12,7 +12,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computePersonaImStatusIconView() {
-            return this.partner.isImStatusSet ? insertAndReplace() : clear();
+            return this.partner.isImStatusSet ? {} : clear();
         },
     },
     fields: {

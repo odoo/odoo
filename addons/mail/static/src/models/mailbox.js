@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -80,10 +80,10 @@ registerModel({
             if (!threadId) {
                 return clear();
             }
-            return insertAndReplace({
+            return {
                 id: threadId,
                 model: 'mail.box',
-            });
+            };
         },
         _onChangeCounter() {
             if (this !== this.messaging.inbox) {

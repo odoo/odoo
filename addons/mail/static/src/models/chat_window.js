@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
@@ -231,9 +231,9 @@ registerModel({
         onClickShowInviteForm(ev) {
             markEventHandled(ev, 'ChatWindow.onClickCommand');
             this.update({
-                channelInvitationForm: insertAndReplace({
+                channelInvitationForm: {
                     doFocusOnSearchInput: true,
-                }),
+                },
                 isMemberListOpened: false,
             });
             if (!this.messaging.isCurrentUserGuest) {
@@ -348,7 +348,7 @@ registerModel({
          */
         _computeChannelMemberListView() {
             if (this.thread && this.thread.hasMemberListFeature && this.isMemberListOpened) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -463,7 +463,7 @@ registerModel({
          */
         _computeNewMessageAutocompleteInputView() {
             if (this.hasNewMessageForm) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -479,11 +479,11 @@ registerModel({
          * @returns {ThreadViewer}
          */
         _computeThreadViewer() {
-            return insertAndReplace({
+            return {
                 compact: true,
                 hasThreadView: this.hasThreadView,
                 thread: this.thread ? this.thread : clear(),
-            });
+            };
         },
         /**
          * @private
@@ -573,7 +573,7 @@ registerModel({
             isCausal: true,
         }),
         chatWindowHeaderView: one('ChatWindowHeaderView', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'chatWindowOwner',
             isCausal: true,
         }),

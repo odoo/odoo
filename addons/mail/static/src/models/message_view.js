@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
@@ -14,7 +14,7 @@ registerModel({
          */
         highlight() {
             this.update({
-                highlightTimer: [clear(), insertAndReplace()],
+                highlightTimer: { doReset: this.highlightTimer ? true : undefined },
                 isHighlighted: true,
             });
         },
@@ -117,7 +117,10 @@ registerModel({
             }
         },
         onHighlightTimerTimeout() {
-            this.update({ isHighlighted: false });
+            this.update({
+                highlightTimer: clear(),
+                isHighlighted: false,
+            });
         },
         onMouseenter() {
             this.update({ isHovered: true });
@@ -138,15 +141,15 @@ registerModel({
                 return;
             }
             this.message.originThread.update({
-                composer: insertAndReplace({
+                composer: {
                     isLog: !this.message.is_discussion && !this.message.is_notification,
-                }),
+                },
             });
             this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.update({
                 replyingToMessageView: this,
-                composerView: insertAndReplace({
+                composerView: {
                     doFocus: true,
-                }),
+                },
             });
         },
         /**
@@ -157,17 +160,17 @@ registerModel({
             const htmlDoc = parser.parseFromString(this.message.body.replaceAll('<br>', '\n').replaceAll('</br>', '\n'), "text/html");
             const textInputContent = htmlDoc.body.textContent;
             this.update({
-                composerForEditing: insertAndReplace({
+                composerForEditing: {
                     mentionedPartners: this.message.recipients,
                     textInputContent,
                     textInputCursorEnd: textInputContent.length,
                     textInputCursorStart: textInputContent.length,
                     textInputSelectionDirection: 'none',
-                }),
-                composerViewInEditing: insertAndReplace({
+                },
+                composerViewInEditing: {
                     doFocus: true,
                     hasToRestoreContent: true,
-                }),
+                },
             });
         },
         /**
@@ -188,7 +191,7 @@ registerModel({
          */
         _computeAttachmentList() {
             return (this.message && this.message.attachments.length > 0)
-                ? insertAndReplace()
+                ? {}
                 : clear();
         },
         /**
@@ -382,7 +385,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeMessageActionList() {
-            return this.deleteMessageConfirmViewOwner ? clear() : insertAndReplace();
+            return this.deleteMessageConfirmViewOwner ? clear() : {};
         },
         /**
          * @private
@@ -394,7 +397,7 @@ registerModel({
                 this.message.originThread &&
                 this.message.originThread.model === 'mail.channel' &&
                 this.message.parentMessage
-            ) ? insertAndReplace() : clear();
+            ) ? {} : clear();
         },
         /**
          * @private
@@ -407,7 +410,7 @@ registerModel({
                 this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread &&
                 this.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.thread.hasSeenIndicators
             ) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -417,9 +420,9 @@ registerModel({
          */
         _computePersonaImStatusIconView() {
             if (this.message.guestAuthor && this.message.guestAuthor.im_status) {
-                return insertAndReplace();
+                return {};
             }
-            return this.message.author && this.message.author.isImStatusSet ? insertAndReplace() : clear();
+            return this.message.author && this.message.author.isImStatusSet ? {} : clear();
         },
     },
     fields: {
@@ -437,11 +440,11 @@ registerModel({
             compute: '_computeAuthorTitleText',
         }),
         clockWatcher: one('ClockWatcher', {
-            default: insertAndReplace({
-                clock: insertAndReplace({
+            default: {
+                clock: {
                     frequency: 60 * 1000,
-                }),
-            }),
+                },
+            },
             inverse: 'messageViewOwner',
             isCausal: true,
         }),

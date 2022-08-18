@@ -92,14 +92,16 @@ class MailTracking(models.Model):
         tracking_values = [{
             'changedField': tracking.field_desc,
             'id': tracking.id,
-            'newValue': [('insert-and-replace', {
+            'newValue': {
                 'currencyId': tracking.currency_id.id,
                 'fieldType': tracking.field_type,
-                'value': tracking._get_new_display_value()[0]})],
-            'oldValue': [('insert-and-replace', {
+                'value': tracking._get_new_display_value()[0],
+            },
+            'oldValue': {
                 'currencyId': tracking.currency_id.id,
                 'fieldType': tracking.field_type,
-                'value': tracking._get_old_display_value()[0]})],
+                'value': tracking._get_old_display_value()[0],
+            },
         } for tracking in self]
         return tracking_values
 

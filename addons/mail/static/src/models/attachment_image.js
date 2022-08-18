@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
@@ -36,7 +36,7 @@ registerModel({
                 return;
             }
             this.attachmentList.update({
-                attachmentListViewDialog: insertAndReplace(),
+                attachmentListViewDialog: {},
                 selectedAttachment: this.attachment,
             });
         },
@@ -53,7 +53,7 @@ registerModel({
             if (this.attachmentList.composerViewOwner) {
                 this.attachment.remove();
             } else {
-                this.update({ attachmentDeleteConfirmDialog: insertAndReplace() });
+                this.update({ attachmentDeleteConfirmDialog: {} });
             }
         },
         /**

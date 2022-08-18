@@ -47,17 +47,17 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
                             'id': channel_member.rtc_session_ids.id + 1,
-                            'channelMember': [("insert-and-replace", {
+                            'channelMember': {
                                 "id": channel_member.id,
-                                "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
-                                "persona": [("insert-and-replace", {
-                                    "partner": [("insert-and-replace", {
+                                "channel": {"id": channel_member.channel_id.id},
+                                "persona": {
+                                    "partner": {
                                         "id": channel_member.partner_id.id,
                                         "name": channel_member.partner_id.name,
                                         "im_status": channel_member.partner_id.im_status,
-                                    })],
-                                })],
-                            })],
+                                    },
+                                },
+                            },
                             'isCameraOn': False,
                             'isDeaf': False,
                             'isSelfMuted': False,
@@ -73,17 +73,17 @@ class TestChannelInternals(MailCommon):
             'rtcSessions': [
                 ('insert', [{
                     'id': channel_member.rtc_session_ids.id,
-                    'channelMember': [("insert-and-replace", {
+                    'channelMember': {
                         "id": channel_member.id,
-                        "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
-                        "persona": [("insert-and-replace", {
-                            "partner": [("insert-and-replace", {
+                        "channel": {"id": channel_member.channel_id.id},
+                        "persona": {
+                            "partner": {
                                 "id": channel_member.partner_id.id,
                                 "name": channel_member.partner_id.name,
                                 "im_status": channel_member.partner_id.im_status,
-                            })],
-                        })],
-                    })],
+                            },
+                        },
+                    },
                     'isCameraOn': False,
                     'isDeaf': False,
                     'isSelfMuted': False,
@@ -122,17 +122,17 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
                             'id': last_rtc_session_id + 1,
-                            'channelMember': [("insert-and-replace", {
+                            'channelMember': {
                                 "id": channel_member.id,
-                                "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
-                                "persona": [("insert-and-replace", {
-                                    "partner": [("insert-and-replace", {
+                                "channel": {"id": channel_member.channel_id.id},
+                                "persona": {
+                                    "partner": {
                                         "id": channel_member.partner_id.id,
                                         "name": channel_member.partner_id.name,
                                         "im_status": channel_member.partner_id.im_status,
-                                    })],
-                                })],
-                            })],
+                                    },
+                                },
+                            },
                             'isCameraOn': False,
                             'isDeaf': False,
                             'isSelfMuted': False,
@@ -146,14 +146,14 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'invitedMembers': [('insert', [{
                             'id': channel_member_test_user.id,
-                            'channel':  [('insert-and-replace', {'id': channel_member_test_user.channel_id.id})],
-                            'persona': [('insert-and-replace', {
-                                'partner': [('insert-and-replace', {
+                            'channel': {'id': channel_member_test_user.channel_id.id},
+                            'persona': {
+                                'partner': {
                                     'id': channel_member_test_user.partner_id.id,
                                     'name': channel_member_test_user.partner_id.name,
                                     'im_status': channel_member_test_user.partner_id.im_status,
-                                })],
-                            })],
+                                },
+                            },
                         }])],
                     },
                 },
@@ -163,14 +163,14 @@ class TestChannelInternals(MailCommon):
         self.assertIn('invitedMembers', res)
         self.assertEqual(res['invitedMembers'], [('insert', [{
             'id': channel_member_test_user.id,
-            'channel':  [('insert-and-replace', {'id': channel_member_test_user.channel_id.id})],
-            'persona': [('insert-and-replace', {
-                'partner': [('insert-and-replace', {
+            'channel': {'id': channel_member_test_user.channel_id.id},
+            'persona': {
+                'partner': {
                     'id': channel_member_test_user.partner_id.id,
                     'name': channel_member_test_user.partner_id.name,
                     'im_status': channel_member_test_user.partner_id.im_status,
-                })],
-            })],
+                },
+            },
         }])])
 
     @users('employee')
@@ -205,17 +205,17 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
                             'id': last_rtc_session_id + 1,
-                            'channelMember': [("insert-and-replace", {
+                            'channelMember': {
                                 "id": channel_member.id,
-                                "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
-                                "persona": [("insert-and-replace", {
-                                    "partner": [("insert-and-replace", {
+                                "channel": {"id": channel_member.channel_id.id},
+                                "persona": {
+                                    "partner": {
                                         "id": channel_member.partner_id.id,
                                         "name": channel_member.partner_id.name,
                                         "im_status": channel_member.partner_id.im_status,
-                                    })],
-                                })],
-                            })],
+                                    },
+                                },
+                            },
                             'isCameraOn': False,
                             'isDeaf': False,
                             'isSelfMuted': False,
@@ -229,17 +229,17 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'rtcSessions': [('insert', [{
                             'id': last_rtc_session_id + 1,
-                            'channelMember': [("insert-and-replace", {
+                            'channelMember': {
                                 "id": channel_member.id,
-                                "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
-                                "persona": [("insert-and-replace", {
-                                    "partner": [("insert-and-replace", {
+                                "channel": {"id": channel_member.channel_id.id},
+                                "persona": {
+                                    "partner": {
                                         "id": channel_member.partner_id.id,
                                         "name": channel_member.partner_id.name,
                                         "im_status": channel_member.partner_id.im_status,
-                                    })],
-                                })],
-                            })],
+                                    },
+                                },
+                            },
                             'isCameraOn': False,
                             'isDeaf': False,
                             'isSelfMuted': False,
@@ -254,25 +254,25 @@ class TestChannelInternals(MailCommon):
                         'invitedMembers': [('insert', [
                             {
                                 'id': channel_member_test_user.id,
-                                'channel':  [('insert-and-replace', {'id': channel_member_test_user.channel_id.id})],
-                                'persona': [('insert-and-replace', {
-                                    'partner': [('insert-and-replace', {
+                                'channel': {'id': channel_member_test_user.channel_id.id},
+                                'persona': {
+                                    'partner': {
                                         'id': channel_member_test_user.partner_id.id,
                                         'name': channel_member_test_user.partner_id.name,
                                         'im_status': channel_member_test_user.partner_id.im_status,
-                                    })],
-                                })],
+                                    },
+                                },
                             },
                             {
                                 'id': channel_member_test_guest.id,
-                                'channel': [('insert-and-replace', {'id': channel_member_test_guest.channel_id.id})],
-                                'persona': [('insert-and-replace', {
-                                    'guest': [('insert-and-replace', {
+                                'channel': {'id': channel_member_test_guest.channel_id.id},
+                                'persona': {
+                                    'guest': {
                                         'id': channel_member_test_guest.guest_id.id,
                                         'name': channel_member_test_guest.guest_id.name,
                                         'im_status': channel_member_test_guest.guest_id.im_status,
-                                    })],
-                                })],
+                                    },
+                                },
                             },
                         ])],
                     },
@@ -284,25 +284,25 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(res['invitedMembers'], [('insert', [
             {
                 'id': channel_member_test_user.id,
-                'channel':  [('insert-and-replace', {'id': channel_member_test_user.channel_id.id})],
-                'persona': [('insert-and-replace', {
-                    'partner': [('insert-and-replace', {
+                'channel': {'id': channel_member_test_user.channel_id.id},
+                'persona': {
+                    'partner': {
                         'id': channel_member_test_user.partner_id.id,
                         'name': channel_member_test_user.partner_id.name,
                         'im_status': channel_member_test_user.partner_id.im_status,
-                    })],
-                })],
+                    },
+                },
             },
             {
                 'id': channel_member_test_guest.id,
-                'channel': [('insert-and-replace', {'id': channel_member_test_guest.channel_id.id})],
-                'persona': [('insert-and-replace', {
-                    'guest': [('insert-and-replace', {
+                'channel': {'id': channel_member_test_guest.channel_id.id},
+                'persona': {
+                    'guest': {
                         'id': channel_member_test_guest.guest_id.id,
                         'name': channel_member_test_guest.guest_id.name,
                         'im_status': channel_member_test_guest.guest_id.im_status,
-                    })],
-                })],
+                    },
+                },
             },
         ])])
 
@@ -338,14 +338,14 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'invitedMembers': [('insert-and-unlink', [{
                             'id': channel_member_test_user.id,
-                            'channel':  [('insert-and-replace', {'id': channel_member_test_user.channel_id.id})],
-                            'persona': [('insert-and-replace', {
-                                'partner': [('insert-and-replace', {
+                            'channel': {'id': channel_member_test_user.channel_id.id},
+                            'persona': {
+                                'partner': {
                                     'id': channel_member_test_user.partner_id.id,
                                     'name': channel_member_test_user.partner_id.name,
                                     'im_status': channel_member_test_user.partner_id.im_status,
-                                })],
-                            })],
+                                },
+                            },
                         }])],
                     },
                 },
@@ -356,17 +356,17 @@ class TestChannelInternals(MailCommon):
                         'rtcSessions': [('insert', [
                             {
                                 'id': channel_member.rtc_session_ids.id + 1,
-                                'channelMember': [("insert-and-replace", {
+                                'channelMember': {
                                     "id": channel_member_test_user.id,
-                                    "channel": [("insert-and-replace", {"id": channel_member_test_user.channel_id.id})],
-                                    "persona": [("insert-and-replace", {
-                                        "partner": [("insert-and-replace", {
+                                    "channel": {"id": channel_member_test_user.channel_id.id},
+                                    "persona": {
+                                        "partner": {
                                             "id": channel_member_test_user.partner_id.id,
                                             "name": channel_member_test_user.partner_id.name,
                                             "im_status": channel_member_test_user.partner_id.im_status,
-                                        })],
-                                    })],
-                                })],
+                                        },
+                                    },
+                                },
                                 'isCameraOn': False,
                                 'isDeaf': False,
                                 'isSelfMuted': False,
@@ -401,14 +401,14 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'invitedMembers': [('insert-and-unlink', [{
                             'id': channel_member_test_guest.id,
-                            'channel':  [('insert-and-replace', {'id': channel_member_test_guest.channel_id.id})],
-                            'persona': [('insert-and-replace', {
-                                'guest': [('insert-and-replace', {
+                            'channel': {'id': channel_member_test_guest.channel_id.id},
+                            'persona': {
+                                'guest': {
                                     'id': channel_member_test_guest.guest_id.id,
                                     'name': channel_member_test_guest.guest_id.name,
                                     'im_status': channel_member_test_guest.guest_id.im_status,
-                                })],
-                            })],
+                                },
+                            },
                         }])],
                     },
                 },
@@ -419,17 +419,17 @@ class TestChannelInternals(MailCommon):
                         'rtcSessions': [('insert', [
                             {
                                 'id': channel_member.rtc_session_ids.id + 2,
-                                'channelMember': [("insert-and-replace", {
+                                'channelMember': {
                                     "id": channel_member_test_guest.id,
-                                    "channel": [("insert-and-replace", {"id": channel_member_test_guest.channel_id.id})],
-                                    "persona": [("insert-and-replace", {
-                                        "guest": [("insert-and-replace", {
+                                    "channel": {"id": channel_member_test_guest.channel_id.id},
+                                    "persona": {
+                                        "guest": {
                                             "id": channel_member_test_guest.guest_id.id,
                                             "name": channel_member_test_guest.guest_id.name,
                                             'im_status': channel_member_test_guest.guest_id.im_status,
-                                        })],
-                                    })],
-                                })],
+                                        },
+                                    },
+                                },
                                 'isCameraOn': False,
                                 'isDeaf': False,
                                 'isSelfMuted': False,
@@ -473,14 +473,14 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'invitedMembers': [('insert-and-unlink', [{
                             'id': channel_member_test_user.id,
-                            'channel':  [('insert-and-replace', {'id': channel_member_test_user.channel_id.id})],
-                            'persona': [('insert-and-replace', {
-                                'partner': [('insert-and-replace', {
+                            'channel': {'id': channel_member_test_user.channel_id.id},
+                            'persona': {
+                                'partner': {
                                     'id': channel_member_test_user.partner_id.id,
                                     'name': channel_member_test_user.partner_id.name,
                                     'im_status': channel_member_test_user.partner_id.im_status,
-                                })],
-                            })],
+                                },
+                            },
                         }])],
                     },
                 },
@@ -509,14 +509,14 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'invitedMembers': [('insert-and-unlink', [{
                             'id': channel_member_test_guest.id,
-                            'channel':  [('insert-and-replace', {'id': channel_member_test_guest.channel_id.id})],
-                            'persona': [('insert-and-replace', {
-                                'guest': [('insert-and-replace', {
+                            'channel': {'id': channel_member_test_guest.channel_id.id},
+                            'persona': {
+                                'guest': {
                                     'id': channel_member_test_guest.guest_id.id,
                                     'name': channel_member_test_guest.guest_id.name,
                                     'im_status': channel_member_test_guest.guest_id.im_status,
-                                })],
-                            })],
+                                },
+                            },
                         }])],
                     },
                 },
@@ -573,25 +573,25 @@ class TestChannelInternals(MailCommon):
                         'invitedMembers': [('insert-and-unlink', [
                             {
                                 'id': channel_member_test_user.id,
-                                'channel':  [('insert-and-replace', {'id': channel_member_test_user.channel_id.id})],
-                                'persona': [('insert-and-replace', {
-                                    'partner': [('insert-and-replace', {
+                                'channel': {'id': channel_member_test_user.channel_id.id},
+                                'persona': {
+                                    'partner': {
                                         'id': channel_member_test_user.partner_id.id,
                                         'name': channel_member_test_user.partner_id.name,
                                         'im_status': channel_member_test_user.partner_id.im_status,
-                                    })],
-                                })],
+                                    },
+                                },
                             },
                             {
                                 'id': channel_member_test_guest.id,
-                                'channel': [('insert-and-replace', {'id': channel_member_test_guest.channel_id.id})],
-                                'persona': [('insert-and-replace', {
-                                    'guest': [('insert-and-replace', {
+                                'channel': {'id': channel_member_test_guest.channel_id.id},
+                                'persona': {
+                                    'guest': {
                                         'id': channel_member_test_guest.guest_id.id,
                                         'name': channel_member_test_guest.guest_id.name,
                                         'im_status': channel_member_test_guest.guest_id.im_status,
-                                    })],
-                                })],
+                                    },
+                                },
                             },
                         ])],
                     },
@@ -617,7 +617,6 @@ class TestChannelInternals(MailCommon):
         channel_member._rtc_join_call()
         self.env['bus.bus'].sudo().search([]).unlink()
 
-
         with self.mock_bus():
             channel.add_members(partner_ids=test_user.partner_id.ids, guest_ids=test_guest.ids, invite_to_rtc_call=True)
 
@@ -636,7 +635,7 @@ class TestChannelInternals(MailCommon):
                 (self.cr.dbname, 'res.partner', self.user_employee.partner_id.id),  # update of last interest (not asserted below)
                 (self.cr.dbname, 'res.partner', test_user.partner_id.id),  # update of last interest (not asserted below)
                 (self.cr.dbname, 'mail.channel', channel.id),  # new member (guest) (not asserted below)
-                (self.cr.dbname, 'mail.guest', test_guest.id), # channel joined for guest (not asserted below)
+                (self.cr.dbname, 'mail.guest', test_guest.id),  # channel joined for guest (not asserted below)
             ],
             message_items=[
                 {
@@ -645,17 +644,17 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'rtcInvitingSession': [('insert', {
                             'id': channel_member.rtc_session_ids.id,
-                            'channelMember': [("insert-and-replace", {
+                            'channelMember': {
                                 "id": channel_member.id,
-                                "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
-                                "persona": [("insert-and-replace", {
-                                    "partner": [("insert-and-replace", {
+                                "channel": {"id": channel_member.channel_id.id},
+                                "persona": {
+                                    "partner": {
                                         "id": channel_member.partner_id.id,
                                         "name": channel_member.partner_id.name,
                                         "im_status": channel_member.partner_id.im_status,
-                                    })],
-                                })],
-                            })],
+                                    },
+                                },
+                            },
                             'isCameraOn': False,
                             'isDeaf': False,
                             'isSelfMuted': False,
@@ -669,17 +668,17 @@ class TestChannelInternals(MailCommon):
                         'id': channel.id,
                         'rtcInvitingSession': [('insert', {
                             'id': channel_member.rtc_session_ids.id,
-                            'channelMember': [("insert-and-replace", {
+                            'channelMember': {
                                 "id": channel_member.id,
-                                "channel": [("insert-and-replace", {"id": channel_member.channel_id.id})],
-                                "persona": [("insert-and-replace", {
-                                    "partner": [("insert-and-replace", {
+                                "channel": {"id": channel_member.channel_id.id},
+                                "persona": {
+                                    "partner": {
                                         "id": channel_member.partner_id.id,
                                         "name": channel_member.partner_id.name,
                                         "im_status": channel_member.partner_id.im_status,
-                                    })],
-                                })],
-                            })],
+                                    },
+                                },
+                            },
                             'isCameraOn': False,
                             'isDeaf': False,
                             'isSelfMuted': False,
@@ -694,25 +693,25 @@ class TestChannelInternals(MailCommon):
                         'invitedMembers': [('insert', [
                             {
                                 'id': channel_member_test_user.id,
-                                'channel':  [('insert-and-replace', {'id': channel_member_test_user.channel_id.id})],
-                                'persona': [('insert-and-replace', {
-                                    'partner': [('insert-and-replace', {
+                                'channel': {'id': channel_member_test_user.channel_id.id},
+                                'persona': {
+                                    'partner': {
                                         'id': channel_member_test_user.partner_id.id,
                                         'name': channel_member_test_user.partner_id.name,
                                         'im_status': channel_member_test_user.partner_id.im_status,
-                                    })],
-                                })],
+                                    },
+                                },
                             },
                             {
                                 'id': channel_member_test_guest.id,
-                                'channel': [('insert-and-replace', {'id': channel_member_test_guest.channel_id.id})],
-                                'persona': [('insert-and-replace', {
-                                    'guest': [('insert-and-replace', {
+                                'channel': {'id': channel_member_test_guest.channel_id.id},
+                                'persona': {
+                                    'guest': {
                                         'id': channel_member_test_guest.guest_id.id,
                                         'name': channel_member_test_guest.guest_id.name,
                                         'im_status': channel_member_test_guest.guest_id.im_status,
-                                    })],
-                                })],
+                                    },
+                                },
                             },
                         ])],
                     },

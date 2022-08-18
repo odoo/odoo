@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 import { auto_str_to_date, getLangDateFormat, getLangDatetimeFormat } from 'web.time';
 import { sprintf } from '@web/core/utils/strings';
@@ -57,7 +57,7 @@ registerModel({
             }
         },
         onClickMarkDoneButton() {
-            this.update({ markDonePopoverView: this.markDonePopoverView ? clear() : insertAndReplace() });
+            this.update({ markDonePopoverView: this.markDonePopoverView ? clear() : {} });
         },
         /**
          * Handles the click on the upload document button. This open the file
@@ -108,7 +108,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeFileUploader() {
-            return this.activity.category === 'upload_file' ? insertAndReplace() : clear();
+            return this.activity.category === 'upload_file' ? {} : clear();
         },
         /**
          * @private
@@ -139,14 +139,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeMailTemplateViews() {
-            if (this.activity.mailTemplates.length === 0) {
-                return clear();
-            }
-            return insertAndReplace(
-                this.activity.mailTemplates.map(
-                    mailTemplate => ({ mailTemplate })
-                ),
-            );
+            return this.activity.mailTemplates.map(mailTemplate => ({ mailTemplate }));
         },
         /**
          * @private
@@ -188,11 +181,11 @@ registerModel({
             compute: '_computeAssignedUserText',
         }),
         clockWatcher: one('ClockWatcher', {
-            default: insertAndReplace({
-                clock: insertAndReplace({
+            default: {
+                clock: {
                     frequency: 60 * 1000,
-                }),
-            }),
+                },
+            },
             inverse: 'activityViewOwner',
             isCausal: true,
         }),

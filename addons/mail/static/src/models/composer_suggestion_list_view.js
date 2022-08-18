@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ComposerSuggestionListView',
@@ -73,21 +72,13 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeComposerSuggestionListViewExtraComposerSuggestionViewItems() {
-            return insertAndReplace(this.composerViewOwner.extraSuggestions.map(suggestable => {
-                return {
-                    suggestable,
-                };
-            }));
+            return this.composerViewOwner.extraSuggestions.map(suggestable => ({ suggestable }));
         },
         /**
          * @returns {FieldCommand}
          */
         _computeComposerSuggestionListViewMainComposerSuggestionViewItems() {
-            return insertAndReplace(this.composerViewOwner.mainSuggestions.map(suggestable => {
-                return {
-                    suggestable,
-                };
-            }));
+            return this.composerViewOwner.mainSuggestions.map(suggestable => ({ suggestable }));
         },
         /**
          * @returns {FieldCommand}

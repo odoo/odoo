@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 import session from 'web.session';
 
@@ -29,7 +28,7 @@ registerModel({
                 kwargs: { context: session.user_context },
             });
             this.update({
-                activityGroups: insertAndReplace(data.map(vals => this.messaging.models['ActivityGroup'].convertData(vals))),
+                activityGroups: data.map(vals => this.messaging.models['ActivityGroup'].convertData(vals)),
                 extraCount: 0,
             });
         },
@@ -68,11 +67,11 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeActivityGroupViews() {
-            return insertAndReplace(this.activityGroups.map(activityGroup => {
+            return this.activityGroups.map(activityGroup => {
                 return {
                     activityGroup,
                 };
-            }));
+            });
         },
         /**
          * @private

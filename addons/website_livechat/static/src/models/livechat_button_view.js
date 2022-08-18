@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { patchRecordMethods } from '@mail/model/model_core';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@im_livechat/models/livechat_button_view';
 
@@ -45,7 +45,7 @@ patchRecordMethods('LivechatButtonView', {
             return this._super();
         }
         this.messaging.publicLivechatGlobal.update({
-            publicLivechat: insertAndReplace({ data: this.testChatbotData.channel }),
+            publicLivechat: { data: this.testChatbotData.channel },
         });
         await this.openChatWindow();
         this.widget._sendWelcomeMessage();

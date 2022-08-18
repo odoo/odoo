@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadViewer',
@@ -55,7 +55,7 @@ registerModel({
          * @returns {ThreadViewer|undefined}
          */
         _computeThreadView() {
-            return this.hasThreadView ? insertAndReplace() : clear();
+            return this.hasThreadView ? {} : clear();
         },
         /**
          * @private

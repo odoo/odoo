@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 /**
  * Models a relation between a ComposerSuggestionListView and a
@@ -17,7 +16,7 @@ registerModel({
             inverse: 'composerSuggestionListViewMainComposerSuggestionViewItems',
         }),
         composerSuggestionView: one('ComposerSuggestionView', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'composerSuggestionListViewMainComposerSuggestionViewItemOwner',
             isCausal: true,
             readonly: true,

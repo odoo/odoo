@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insert, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
+import { clear, insert, link, unlink } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Follower',
@@ -33,7 +33,7 @@ registerModel({
                 }
             }
             if (data.partner) {
-                data2.partner = insertAndReplace(this.models['Partner'].convertData(data.partner));
+                data2.partner = this.models['Partner'].convertData(data.partner);
             }
             return data2;
         },
@@ -102,7 +102,7 @@ registerModel({
                     this.update({ selectedSubtypes: unlink(subtype) });
                 }
             }
-            this.update({ followerSubtypeListDialog: insertAndReplace() });
+            this.update({ followerSubtypeListDialog: {} });
         },
         /**
          * @param {FollowerSubtype} subtype

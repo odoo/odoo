@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 /**
  * The object below defines a model. Instances of such model (or inherited
@@ -181,7 +180,7 @@ registerModel({
          * manager at creation.
          */
         messaging: one('Messaging', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'allRecords',
             readonly: true,
             required: true,

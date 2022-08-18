@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 registerModel({
@@ -69,7 +69,7 @@ registerModel({
                 this.thread.lastMessage &&
                 this.thread.lastMessage.author
             ) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -78,7 +78,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computePersonaImStatusIconView() {
-            return this.thread.correspondent && this.thread.correspondent.isImStatusSet ? insertAndReplace() : clear();
+            return this.thread.correspondent && this.thread.correspondent.isImStatusSet ? {} : clear();
         },
     },
     fields: {

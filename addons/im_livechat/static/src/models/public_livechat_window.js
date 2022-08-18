@@ -4,7 +4,6 @@ import PublicLivechatWindow from '@im_livechat/legacy/widgets/public_livechat_wi
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'PublicLivechatWindow',
@@ -46,7 +45,7 @@ registerModel({
             inverse: 'chatWindow',
         }),
         publicLivechatView: one('PublicLivechatView', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'publicLivechatWindowOwner',
             isCausal: true,
         }),

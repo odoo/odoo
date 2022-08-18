@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -109,7 +109,10 @@ registerModel({
             });
         },
         onShowOverlayTimeout() {
-            this.update({ showOverlay: false });
+            this.update({
+                showOverlay: false,
+                showOverlayTimer: clear(),
+            });
         },
 
         //----------------------------------------------------------------------
@@ -135,9 +138,9 @@ registerModel({
          */
         _computeMainTiles() {
             if (this.callView.activeRtcSession) {
-                return insertAndReplace([{ channelMember: this.callView.activeRtcSession.channelMember }]);
+                return [{ channelMember: this.callView.activeRtcSession.channelMember }];
             }
-            return insertAndReplace(this.callView.filteredChannelMembers.map(channelMember => ({ channelMember })));
+            return this.callView.filteredChannelMembers.map(channelMember => ({ channelMember }));
         },
         /**
          * Shows the overlay (buttons) for a set a mount of time.
@@ -147,7 +150,7 @@ registerModel({
         _showOverlay() {
             this.update({
                 showOverlay: true,
-                showOverlayTimer: [clear(), insertAndReplace()],
+                showOverlayTimer: { doReset: this.showOverlayTimer ? true : undefined },
             });
         },
     },
@@ -156,7 +159,7 @@ registerModel({
          * The model for the controller (buttons).
          */
         callActionListView: one('CallActionListView', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'callMainView',
             isCausal: true,
             readonly: true,

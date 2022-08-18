@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { insertAndReplace, link } from '@mail/model/model_field_command';
+import { link } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -32,7 +32,7 @@ QUnit.test('link: should replace a record to a non-empty x2one field', async fun
 
     const contact = messaging.models['TestContact'].insert({
         id: 10,
-        address: insertAndReplace({ id: 10 }),
+        address: { id: 10 },
     });
     const address10 = messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
     const address20 = messaging.models['TestAddress'].insert({ id: 20 });
@@ -84,7 +84,7 @@ QUnit.test('link: should link and add a record to a non-empty x2many field', asy
 
     const contact = messaging.models['TestContact'].insert({
         id: 10,
-        tasks: insertAndReplace({ id: 10 }),
+        tasks: { id: 10 },
     });
     const task10 = messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
     const task20 = messaging.models['TestTask'].insert({ id: 20 });

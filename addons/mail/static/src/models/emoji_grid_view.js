@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'EmojiGridView',
@@ -15,11 +15,7 @@ registerModel({
             if (!this.emojiPickerViewOwner.emojiCategoryBarView.activeCategoryView) {
                 return clear();
             }
-            return insertAndReplace(
-                this.emojiPickerViewOwner.emojiCategoryBarView.activeCategoryView.emojiCategory.allEmojis.map(emoji => {
-                    return { emoji };
-                })
-            );
+            return this.emojiPickerViewOwner.emojiCategoryBarView.activeCategoryView.emojiCategory.allEmojis.map(emoji => ({ emoji }));
         },
     },
     fields: {

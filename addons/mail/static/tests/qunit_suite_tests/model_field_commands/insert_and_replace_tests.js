@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { insertAndReplace } from '@mail/model/model_field_command';
 import { start } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
@@ -12,7 +11,7 @@ QUnit.test('insertAndReplace: should create and link a new record for an empty x
     const { messaging } = await start();
 
     const contact = messaging.models['TestContact'].insert({ id: 10 });
-    contact.update({ address: insertAndReplace({ id: 10 }) });
+    contact.update({ address: { id: 10 } });
     const address = messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
     assert.strictEqual(
         contact.address,
@@ -32,10 +31,10 @@ QUnit.test('insertAndReplace: should create and replace a new record for a non-e
 
     const contact = messaging.models['TestContact'].insert({
         id: 10,
-        address: insertAndReplace({ id: 10 }),
+        address: { id: 10 },
     });
     const address10 = messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
-    contact.update({ address: insertAndReplace({ id: 20 }) });
+    contact.update({ address: { id: 20 } });
     const address20 = messaging.models['TestAddress'].findFromIdentifyingData({ id: 20 });
     assert.strictEqual(
         contact.address,
@@ -60,17 +59,17 @@ QUnit.test('insertAndReplace: should update the existing record for an x2one fie
 
     const contact = messaging.models['TestContact'].insert({
         id: 10,
-        address: insertAndReplace({
+        address: {
             id: 10,
             addressInfo: 'address 10',
-        }),
+        },
     });
     const address10 = messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
     contact.update({
-        address: insertAndReplace({
+        address: {
             id: 10,
             addressInfo: 'address 10 updated',
-        }),
+        },
     });
     assert.strictEqual(
         contact.address,
@@ -90,10 +89,10 @@ QUnit.test('insertAndReplace: should create and replace the records for an x2man
 
     const contact = messaging.models['TestContact'].insert({
         id: 10,
-        tasks: insertAndReplace({ id: 10 }),
+        tasks: { id: 10 },
     });
     const task10 = messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
-    contact.update({ tasks: insertAndReplace({ id: 20 }) });
+    contact.update({ tasks: { id: 20 } });
     const task20 = messaging.models['TestTask'].findFromIdentifyingData({ id: 20 });
     assert.strictEqual(
         contact.tasks.length,
@@ -123,18 +122,18 @@ QUnit.test('insertAndReplace: should update and replace the records for an x2man
 
     const contact = messaging.models['TestContact'].insert({
         id: 10,
-        tasks: insertAndReplace([
+        tasks: [
             { id: 10, title: 'task 10' },
             { id: 20, title: 'task 20' },
-        ]),
+        ],
     });
     const task10 = messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
     const task20 = messaging.models['TestTask'].findFromIdentifyingData({ id: 20 });
     contact.update({
-        tasks: insertAndReplace({
+        tasks: {
             id: 10,
             title: 'task 10 updated',
-        }),
+        },
     });
     assert.strictEqual(
         contact.tasks.length,

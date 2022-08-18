@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -12,12 +11,12 @@ registerModel({
             return {
                 actions: data.actions,
                 domain: data.domain,
-                irModel: insertAndReplace({
+                irModel: {
                     iconUrl: data.icon,
                     id: data.id,
                     model: data.model,
                     name: data.name,
-                }),
+                },
                 overdue_count: data.overdue_count,
                 planned_count: data.planned_count,
                 today_count: data.today_count,

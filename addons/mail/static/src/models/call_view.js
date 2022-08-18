@@ -5,7 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallView',
@@ -80,7 +80,7 @@ registerModel({
          */
         _computeCallSideBarView() {
             if (this.activeRtcSession && this.isSidebarOpen && !this.threadView.compact) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -163,7 +163,7 @@ registerModel({
             compute: '_computeAspectRatio',
         }),
         callMainView: one('CallMainView', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'callView',
             isCausal: true,
             readonly: true,

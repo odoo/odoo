@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
+import { clear, link, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
@@ -169,7 +169,7 @@ registerModel({
          */
         onClickButtonEmojis() {
             if (!this.emojisPopoverView) {
-                this.update({ emojisPopoverView: insertAndReplace() });
+                this.update({ emojisPopoverView: {} });
             } else {
                 this.update({ emojisPopoverView: clear() });
             }
@@ -689,7 +689,7 @@ registerModel({
         async updateMessage() {
             const composer = this.composer;
             if (!composer.textInputContent) {
-                this.messageViewInEditing.messageActionList.update({ deleteConfirmDialog: insertAndReplace() });
+                this.messageViewInEditing.messageActionList.update({ deleteConfirmDialog: {} });
                 return;
             }
             const escapedAndCompactContent = escapeAndCompactTextContent(composer.textInputContent);
@@ -720,7 +720,7 @@ registerModel({
          */
         _computeAttachmentList() {
             return (this.composer && this.composer.attachments.length > 0)
-                ? insertAndReplace()
+                ? {}
                 : clear();
         },
         /**
@@ -729,7 +729,7 @@ registerModel({
          */
         _computeComposerSuggestedRecipientListView() {
             if (this.hasHeader && this.hasFollowers && !this.composer.isLog) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -775,7 +775,7 @@ registerModel({
          */
         _computeDropZoneView() {
             if (this.useDragVisibleDropZone.isVisible) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -1354,7 +1354,7 @@ registerModel({
          */
         _computeComposerSuggestionListView() {
             if (this.hasSuggestions) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         }
@@ -1428,7 +1428,7 @@ registerModel({
             compute: '_computeExtraSuggestions',
         }),
         fileUploader: one('FileUploader', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'composerView',
             isCausal: true,
             readonly: true,
@@ -1613,7 +1613,7 @@ registerModel({
             inverse: 'composerView',
         }),
         useDragVisibleDropZone: one('UseDragVisibleDropZone', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'composerViewOwner',
             isCausal: true,
             readonly: true,

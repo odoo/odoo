@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 const getNextGuestNameInputId = (function () {
     let id = 0;
@@ -94,7 +94,7 @@ registerModel({
          */
         _computeCallDemoView() {
             return (this.channel && this.channel.defaultDisplayMode === 'video_full_screen')
-                ? insertAndReplace()
+                ? {}
                 : clear();
         },
         /**

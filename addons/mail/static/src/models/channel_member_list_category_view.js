@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 import { sprintf } from '@web/core/utils/strings';
 
@@ -30,9 +30,7 @@ registerModel({
             if (this.members.length === 0) {
                 return clear();
             }
-            return insertAndReplace(
-                this.members.map(channelMember => ({ channelMember })),
-            );
+            return this.members.map(channelMember => ({ channelMember }));
         },
         /**
          * @private

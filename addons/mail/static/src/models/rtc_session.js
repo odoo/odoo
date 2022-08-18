@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'RtcSession',
@@ -13,6 +13,7 @@ registerModel({
     },
     recordMethods: {
         onBroadcastTimeout() {
+            this.update({ broadcastTimer: clear() });
             this.messaging.rpc(
                 {
                     route: '/mail/rtc/session/update_and_broadcast',
@@ -111,8 +112,10 @@ registerModel({
             if (!this.rtcAsCurrentSession) {
                 return;
             }
-            const data2 = Object.assign({}, data, { broadcastTimer: [clear(), insertAndReplace()] });
-            this.update(data2);
+            this.update({
+                ...data,
+                broadcastTimer: { doReset: this.broadcastTimer ? true : undefined },
+            });
         },
         /**
          * Updates the rtcSession with information on the type of candidate used

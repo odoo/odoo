@@ -43,7 +43,7 @@ class TestImLivechatMessage(TransactionCase):
             rating_id=record_rating.id,
         )
         self.assertEqual(message.message_format(), [{
-            'attachment_ids': [('insert-and-replace', [])],
+            'attachment_ids': [],
             'author_id': (self.users[1].partner_id.id, "test1"),
             'body': message.body,
             'date': message.date,
@@ -53,16 +53,16 @@ class TestImLivechatMessage(TransactionCase):
             'is_note': True,
             'is_notification': False,
             'message_type': 'notification',
-            'messageReactionGroups': [('insert-and-replace', [])],
+            'messageReactionGroups': [],
             'model': 'mail.channel',
             'module_icon': '/mail/static/description/icon.png',
             'needaction_partner_ids': [],
             'notifications': [],
-            'rating': [('insert-and-replace', {
+            'rating': {
                 'id': record_rating.id,
                 'ratingImageUrl': record_rating.rating_image_url,
                 'ratingText': record_rating.rating_text,
-            })],
+            },
             'recipients': [],
             'record_name': "test1 Ernest Employee",
             'res_id': channel_livechat_1.id,
@@ -71,5 +71,5 @@ class TestImLivechatMessage(TransactionCase):
             'subject': False,
             'subtype_description': False,
             'subtype_id': (self.env.ref('mail.mt_note').id, 'Note'),
-            'trackingValues': [('insert-and-replace', [])],
+            'trackingValues': [],
         }])

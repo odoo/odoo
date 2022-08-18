@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessageListView',
@@ -79,7 +79,7 @@ registerModel({
                 });
                 prevMessage = message;
             }
-            return insertAndReplace(messageViewsData);
+            return messageViewsData;
         },
     },
     fields: {

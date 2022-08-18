@@ -6,7 +6,6 @@ import { makeBusServiceToLegacyEnv } from '@bus/services/legacy/make_bus_service
 import { makeMultiTabToLegacyEnv } from '@bus/services/legacy/make_multi_tab_to_legacy_env';
 import { makeFakePresenceService } from '@bus/../tests/helpers/mock_services';
 
-import { insertAndReplace } from '@mail/model/model_field_command';
 import { ChatWindowManagerContainer } from '@mail/components/chat_window_manager_container/chat_window_manager_container';
 import { DialogManagerContainer } from '@mail/components/dialog_manager_container/dialog_manager_container';
 import { DiscussContainer } from '@mail/components/discuss_container/discuss_container';
@@ -82,7 +81,7 @@ function setupMessagingServiceRegistries({
                 disableAnimation: true,
                 loadingBaseDelayDuration,
                 messagingBus,
-                userNotificationManager: insertAndReplace({ canPlayAudio: false }),
+                userNotificationManager: { canPlayAudio: false },
             };
         }
     };

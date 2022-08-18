@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
@@ -130,7 +129,7 @@ registerModel({
             identifying: true,
         }),
         suggestable: one('ComposerSuggestable', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'channelCommand',
             isCausal: true,
             readonly: true,

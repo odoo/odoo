@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Dialog',
@@ -31,10 +31,10 @@ registerModel({
          */
         _computeAttachmentDeleteConfirmView() {
             if (this.attachmentCardOwnerAsAttachmentDeleteConfirm) {
-                return insertAndReplace();
+                return {};
             }
             if (this.attachmentImageOwnerAsAttachmentDeleteConfirm) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -44,7 +44,7 @@ registerModel({
          */
         _computeAttachmentViewer() {
             if (this.attachmentListOwnerAsAttachmentView) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -95,14 +95,14 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeDeleteMessageConfirmView() {
-            return this.messageActionListOwnerAsDeleteConfirm ? insertAndReplace() : clear();
+            return this.messageActionListOwnerAsDeleteConfirm ? {} : clear();
         },
         /**
          * @private
          * @returns {FieldCommand}
          */
         _computeFollowerSubtypeList() {
-            return this.followerOwnerAsSubtypeList ? insertAndReplace() : clear();
+            return this.followerOwnerAsSubtypeList ? {} : clear();
         },
         /**
         /**

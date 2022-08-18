@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
+import { clear, link, unlink } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 import { sprintf } from '@web/core/utils/strings';
@@ -147,7 +147,7 @@ registerModel({
                 }
                 this.update({
                     searchResultCount: count,
-                    selectablePartners: insertAndReplace(partnersData.map(partnerData => this.messaging.models['Partner'].convertData(partnerData))),
+                    selectablePartners: partnersData.map(partnerData => this.messaging.models['Partner'].convertData(partnerData)),
                 });
             } finally {
                 if (this.exists()) {
@@ -201,7 +201,7 @@ registerModel({
             if (this.selectablePartners.length === 0) {
                 return clear();
             }
-            return insertAndReplace(this.selectablePartners.map(partner => ({ partner })));
+            return this.selectablePartners.map(partner => ({ partner }));
         },
         /**
          * @private
@@ -211,7 +211,7 @@ registerModel({
             if (this.selectedPartners.length === 0) {
                 return clear();
             }
-            return insertAndReplace(this.selectedPartners.map(partner => ({ partner })));
+            return this.selectedPartners.map(partner => ({ partner }));
         },
         /**
          * @private

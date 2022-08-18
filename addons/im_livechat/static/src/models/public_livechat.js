@@ -4,7 +4,7 @@ import PublicLivechat from '@im_livechat/legacy/models/public_livechat';
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'PublicLivechat',
@@ -56,10 +56,10 @@ registerModel({
             if (!this.data.operator_pid[0]) {
                 return clear();
             }
-            return insertAndReplace({
+            return {
                 id: this.data.operator_pid[0],
                 name: this.data.operator_pid[1],
-            });
+            };
         },
         /**
          * @private

@@ -2,7 +2,7 @@
 
 import { addFields, addRecordMethods, patchModelMethods, patchRecordMethods } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
-import { clear, insert, link, unlink } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/thread';
 
@@ -57,19 +57,18 @@ patchModelMethods('Thread', {
                  * of polluting the database, it is therefore acceptable and
                  * easier to handle one temporary partner per channel.
                  */
-                data2.members.push(unlink(this.messaging.publicPartners));
-                const partner = this.messaging.models['Partner'].insert(
-                    Object.assign(
-                        this.messaging.models['Partner'].convertData(data.livechat_visitor),
-                        { id: this.messaging.models['Partner'].getNextPublicId() }
-                    )
+                const publicPartnerIds = this.messaging.publicPartners.map(partner => partner.id);
+                data2.members = data2.members.filter(partnerData => !publicPartnerIds.includes(partnerData.id));
+                const partnerData = Object.assign(
+                    this.messaging.models['Partner'].convertData(data.livechat_visitor),
+                    { id: this.messaging.models['Partner'].getNextPublicId() }
                 );
-                data2.members.push(link(partner));
-                data2.correspondent = partner;
+                data2.members.push(partnerData);
+                data2.correspondent = partnerData;
             } else {
                 const partnerData = this.messaging.models['Partner'].convertData(data.livechat_visitor);
-                data2.members.push(insert(partnerData));
-                data2.correspondent = insert(partnerData);
+                data2.members.push(partnerData);
+                data2.correspondent = partnerData;
             }
         }
         return data2;

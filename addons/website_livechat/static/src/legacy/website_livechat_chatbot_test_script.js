@@ -5,8 +5,6 @@ import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
 
-import { insertAndReplace } from '@mail/model/model_field_command';
-
 /**
  * Override of the LivechatButton to create a testing environment for the chatbot script.
  *
@@ -30,9 +28,9 @@ const LivechatButtonTestChatbot = LivechatButton.extend({
         this.messaging.publicLivechatGlobal.update({ isTestChatbot: true });
         this.messaging.publicLivechatGlobal.livechatButtonView.update({ testChatbotData: chatbotData.chatbot });
         this.messaging.publicLivechatGlobal.chatbot.update({
-            currentStep: insertAndReplace({
+            currentStep: {
                 data: this.messaging.publicLivechatGlobal.chatbot.lastWelcomeStep,
-            }),
+            },
         });
     },
 });
@@ -54,7 +52,7 @@ publicWidget.registry.livechatChatbotTestScript = publicWidget.Widget.extend({
         const messaging = await this.env.services.messaging.get();
         return this._super(...arguments).then(() => {
             messaging.update({
-                publicLivechatGlobal: insertAndReplace({ isAvailable: true, chatbotServerUrl: this.$el.data().serverUrl }),
+                publicLivechatGlobal: { isAvailable: true, chatbotServerUrl: this.$el.data().serverUrl },
             });
             this.livechatButton = new LivechatButtonTestChatbot(this, messaging, this.$el.data());
             this.livechatButton.appendTo(document.body);

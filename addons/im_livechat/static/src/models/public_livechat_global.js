@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
 
@@ -54,16 +54,16 @@ registerModel({
          */
         _computeChatbot() {
             if (this.isTestChatbot) {
-                return insertAndReplace({ data: this.testChatbotData.chatbot });
+                return { data: this.testChatbotData.chatbot };
             }
             if (this.chatbotState === 'init') {
-                return insertAndReplace({ data: this.rule.chatbot });
+                return { data: this.rule.chatbot };
             }
             if (this.chatbotState === 'welcome') {
-                return insertAndReplace({ data: this.livechatInit.rule.chatbot });
+                return { data: this.livechatInit.rule.chatbot };
             }
             if (this.chatbotState === 'restore_session' && this.localStorageChatbotState) {
-                return insertAndReplace({ data: this.localStorageChatbotState._chatbot });
+                return { data: this.localStorageChatbotState._chatbot };
             }
             return clear();
         },
@@ -106,7 +106,7 @@ registerModel({
          */
         _computeLivechatButtonView() {
             if (this.isAvailable && this.isAvailableForMe && this.hasLoadedQWebTemplate && this.env.services.public_livechat_service) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -193,9 +193,9 @@ registerModel({
                 // -> initialize necessary state
                 if (this.rule.chatbot_welcome_steps && this.rule.chatbot_welcome_steps.length !== 0) {
                     this.chatbot.update({
-                        currentStep: insertAndReplace({
+                        currentStep: {
                             data: this.chatbot.lastWelcomeStep,
-                        }),
+                        },
                     });
                 }
             } else if (this.chatbotState === 'welcome') {

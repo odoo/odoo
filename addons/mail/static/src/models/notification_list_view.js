@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'NotificationListView',
@@ -67,21 +67,17 @@ registerModel({
             if (this.filter !== 'all') {
                 return clear();
             }
-            return insertAndReplace(
-                this.models['NotificationGroup']
-                    .all()
-                    .sort((group1, group2) => group1.sequence - group2.sequence)
-                    .map(notificationGroup => {
-                        return { notificationGroup };
-                    })
-            );
+            return this.models['NotificationGroup']
+                .all()
+                .sort((group1, group2) => group1.sequence - group2.sequence)
+                .map(notificationGroup => ({ notificationGroup }));
         },
         /**
          * @private
          * @returns {FieldCommand}
          */
         _computeNotificationRequestView() {
-            return (this.filter === 'all' && this.messaging.isNotificationPermissionDefault) ? insertAndReplace() : clear();
+            return (this.filter === 'all' && this.messaging.isNotificationPermissionDefault) ? {} : clear();
         },
         /**
          * @private
@@ -105,63 +101,53 @@ registerModel({
             if (this.filter !== 'all') {
                 return clear();
             }
-            return insertAndReplace(
-                this.messaging.models['Thread']
-                    .all(t => !t.mailbox && t.needactionMessagesAsOriginThread.length > 0)
-                    .sort((t1, t2) => {
-                        if (t1.needactionMessagesAsOriginThread.length > 0 && t2.needactionMessagesAsOriginThread.length === 0) {
-                            return -1;
-                        }
-                        if (t1.needactionMessagesAsOriginThread.length === 0 && t2.needactionMessagesAsOriginThread.length > 0) {
-                            return 1;
-                        }
-                        if (t1.lastNeedactionMessageAsOriginThread && t2.lastNeedactionMessageAsOriginThread) {
-                            return t1.lastNeedactionMessageAsOriginThread.id < t2.lastNeedactionMessageAsOriginThread.id ? 1 : -1;
-                        }
-                        if (t1.lastNeedactionMessageAsOriginThread) {
-                            return -1;
-                        }
-                        if (t2.lastNeedactionMessageAsOriginThread) {
-                            return 1;
-                        }
-                        return t1.id < t2.id ? -1 : 1;
-                    })
-                    .map(thread => {
-                        return { thread };
-                    })
-            );
+            return this.messaging.models['Thread']
+                .all(t => !t.mailbox && t.needactionMessagesAsOriginThread.length > 0)
+                .sort((t1, t2) => {
+                    if (t1.needactionMessagesAsOriginThread.length > 0 && t2.needactionMessagesAsOriginThread.length === 0) {
+                        return -1;
+                    }
+                    if (t1.needactionMessagesAsOriginThread.length === 0 && t2.needactionMessagesAsOriginThread.length > 0) {
+                        return 1;
+                    }
+                    if (t1.lastNeedactionMessageAsOriginThread && t2.lastNeedactionMessageAsOriginThread) {
+                        return t1.lastNeedactionMessageAsOriginThread.id < t2.lastNeedactionMessageAsOriginThread.id ? 1 : -1;
+                    }
+                    if (t1.lastNeedactionMessageAsOriginThread) {
+                        return -1;
+                    }
+                    if (t2.lastNeedactionMessageAsOriginThread) {
+                        return 1;
+                    }
+                    return t1.id < t2.id ? -1 : 1;
+                })
+                .map(thread => ({ thread }));
         },
         /**
          * @private
          * @returns {FieldCommand}
          */
         _computeThreadPreviewViews() {
-            return insertAndReplace(
-                this.filteredThreads
-                    .sort((t1, t2) => {
-                        if (t1.localMessageUnreadCounter > 0 && t2.localMessageUnreadCounter === 0) {
-                            return -1;
-                        }
-                        if (t1.localMessageUnreadCounter === 0 && t2.localMessageUnreadCounter > 0) {
-                            return 1;
-                        }
-                        if (t1.lastMessage && t2.lastMessage) {
-                            return t1.lastMessage.id < t2.lastMessage.id ? 1 : -1;
-                        }
-                        if (t1.lastMessage) {
-                            return -1;
-                        }
-                        if (t2.lastMessage) {
-                            return 1;
-                        }
-                        return t1.id < t2.id ? -1 : 1;
-                    })
-                    .map(thread => {
-                        return {
-                            thread,
-                        };
-                    })
-            );
+            return this.filteredThreads
+                .sort((t1, t2) => {
+                    if (t1.localMessageUnreadCounter > 0 && t2.localMessageUnreadCounter === 0) {
+                        return -1;
+                    }
+                    if (t1.localMessageUnreadCounter === 0 && t2.localMessageUnreadCounter > 0) {
+                        return 1;
+                    }
+                    if (t1.lastMessage && t2.lastMessage) {
+                        return t1.lastMessage.id < t2.lastMessage.id ? 1 : -1;
+                    }
+                    if (t1.lastMessage) {
+                        return -1;
+                    }
+                    if (t2.lastMessage) {
+                        return 1;
+                    }
+                    return t1.id < t2.id ? -1 : 1;
+                })
+                .map(thread => ({ thread }));
         },
         /**
          * Load previews of given thread. Basically consists of fetching all missing

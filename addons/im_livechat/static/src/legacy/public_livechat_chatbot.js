@@ -6,7 +6,7 @@ import time from 'web.time';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-import { increment, insertAndReplace } from '@mail/model/model_field_command';
+import { increment } from '@mail/model/model_field_command';
 
 const _t = core._t;
 
@@ -299,7 +299,7 @@ const _t = core._t;
                 this._chatbotAddMessage(nextStep.chatbot_posted_message);
             }
 
-            this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: insertAndReplace({ data: nextStep.chatbot_step }) });
+            this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: { data: nextStep.chatbot_step } });
 
             this._chatbotProcessStep();
         } else {
@@ -412,12 +412,12 @@ const _t = core._t;
      */
     _sendWelcomeChatbotMessage(stepIndex, welcomeMessageDelay) {
         const chatbotStep = this.messaging.publicLivechatGlobal.chatbot.welcomeSteps[stepIndex];
-        this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: insertAndReplace({ data: chatbotStep }) });
+        this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: { data: chatbotStep } });
 
         if (chatbotStep.chatbot_step_message) {
             this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
                 id: '_welcome_' + stepIndex,
-                is_discussion: true,  // important for css style -> we only want white background for chatbot
+                is_discussion: true, // important for css style -> we only want white background for chatbot
                 author_id: (
                     this.messaging.publicLivechatGlobal.publicLivechat.operator
                     ? [

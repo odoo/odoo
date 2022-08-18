@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'CallActionListView',
@@ -175,7 +175,7 @@ registerModel({
             compute: '_computeMicrophoneButtonTitle',
         }),
         callOptionMenu: one('CallOptionMenu', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'callActionListView',
             isCausal: true,
         }),

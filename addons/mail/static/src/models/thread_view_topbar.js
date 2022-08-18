@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ThreadViewTopbar',
@@ -336,7 +336,7 @@ registerModel({
          * Open the invite popover view in this thread view topbar.
          */
         openInvitePopoverView() {
-            this.update({ invitePopoverView: insertAndReplace() });
+            this.update({ invitePopoverView: {} });
             if (this.messaging.isCurrentUserGuest) {
                 return;
             }

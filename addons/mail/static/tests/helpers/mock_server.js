@@ -533,7 +533,7 @@ patch(MockServer.prototype, 'mail', {
                 [['res_id', '=', thread.id], ['res_model', '=', thread_model]],
             ); // order not done for simplicity
             res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id));
-            res['mainAttachment'] = thread.message_main_attachment_id ? [['insert-and-replace', { 'id': thread.message_main_attachment_id[0] }]] : [['clear']];
+            res['mainAttachment'] = thread.message_main_attachment_id ? { 'id': thread.message_main_attachment_id[0] } : [['clear']];
         }
         if (request_list.includes('followers')) {
             const followers = this.pyEnv['mail.followers'].searchRead([['id', 'in', thread.message_follower_ids || []]]);
@@ -1035,7 +1035,7 @@ patch(MockServer.prototype, 'mail', {
                     res['rtc_inviting_session'] = { 'id': memberOfCurrentUser.rtc_inviting_session_id };
                 }
             }
-            res.channel = [['insert-and-replace', channelData]];
+            res.channel = channelData;
             return res;
         });
     },
@@ -1323,11 +1323,11 @@ patch(MockServer.prototype, 'mail', {
                     { fields: ['id', 'name', 'im_status'] }
                 );
                 persona = {
-                    'partner': [['insert-and-replace', {
+                    'partner': {
                         'id': partner.id,
                         'name': partner.name,
                         'im_status': partner.im_status,
-                    }]],
+                    },
                 };
             }
             if (member.guest_id) {
@@ -1336,15 +1336,15 @@ patch(MockServer.prototype, 'mail', {
                     { fields: ['id', 'name'] }
                 );
                 persona = {
-                    'guest': [['insert-and-replace', {
+                    'guest': {
                         'id': guest.id,
                         'name': guest.name,
-                    }]],
+                    },
                 };
             }
             membersData.push({
                 'id': member.id,
-                'persona': [['insert-and-replace', persona]],
+                'persona': persona,
             });
         }
         return {
@@ -1500,7 +1500,7 @@ patch(MockServer.prototype, 'mail', {
             const attachments = this.getRecords('ir.attachment', [
                 ['id', 'in', message.attachment_ids],
             ]);
-            const formattedAttachments = [['insert-and-replace', this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id))]];
+            const formattedAttachments = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id));
             const allNotifications = this.getRecords('mail.notification', [
                 ['mail_message_id', '=', message.id],
             ]);
@@ -1519,7 +1519,7 @@ patch(MockServer.prototype, 'mail', {
             const trackingValueIds = this.getRecords('mail.tracking.value', [
                 ['id', 'in', message.tracking_value_ids],
             ]);
-            const formattedTrackingValues = [['insert-and-replace', this._mockMailTrackingValue_TrackingValueFormat(trackingValueIds)]];
+            const formattedTrackingValues = this._mockMailTrackingValue_TrackingValueFormat(trackingValueIds);
             const partners = this.getRecords(
                 'res.partner',
                 [['id', 'in', message.partner_ids]],
@@ -2094,14 +2094,14 @@ patch(MockServer.prototype, 'mail', {
         const trackingValues = tracking_value_ids.map(tracking => ({
             changedField: tracking.field_desc,
             id: tracking.id,
-            newValue: [['insert-and-replace', {
+            newValue: {
                 fieldType: tracking.field_type,
                 value: this._mockMailTrackingValue_GetDisplayValue(tracking, 'new')
-            }]],
-            oldValue: [['insert-and-replace', {
+            },
+            oldValue: {
                 fieldType: tracking.field_type,
                 value: this._mockMailTrackingValue_GetDisplayValue(tracking, 'old')
-            }]],
+            },
         }));
         return trackingValues;
     },
@@ -2225,7 +2225,7 @@ patch(MockServer.prototype, 'mail', {
         const filterPredicate = fieldsToFormat ? ([fieldName]) => fieldsToFormat.includes(fieldName) : ([fieldName]) => !ormAutomaticFields.has(fieldName);
         const res = Object.fromEntries(Object.entries(settings).filter(filterPredicate));
         if (Object.prototype.hasOwnProperty.call(res, 'user_id')) {
-            res.user_id = [['insert-and-replace', { id: settings.user_id }]];
+            res.user_id = { id: settings.user_id };
         }
         if (Object.prototype.hasOwnProperty.call(res, 'volume_settings_ids')) {
             const volumeSettings = this._mockResUsersSettingsVolumes_DiscussUsersSettingsVolumeFormat(settings.volume_settings_ids);
@@ -2263,9 +2263,9 @@ patch(MockServer.prototype, 'mail', {
             const [relatedGuest] = this.getRecords('mail.guest', [['id', '=', volumeSettingsRecord.guest_id]]);
             const [relatedPartner] = this.getRecords('res.partner', [['id', '=', volumeSettingsRecord.partner_id]]);
             return {
-                guest_id: relatedGuest ? [['insert-and-replace', { id: relatedGuest.id, name: relatedGuest.name }]] : [['clear']],
+                guest_id: relatedGuest ? { id: relatedGuest.id, name: relatedGuest.name } : [['clear']],
                 id: volumeSettingsRecord.id,
-                partner_id: relatedPartner ? [['insert-and-replace', { id: relatedPartner.id, name: relatedPartner.name }]] : [['clear']],
+                partner_id: relatedPartner ? { id: relatedPartner.id, name: relatedPartner.name } : [['clear']],
                 volume: volumeSettingsRecord.volume,
             };
         });

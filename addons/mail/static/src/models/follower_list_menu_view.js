@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'FollowerListMenuView',
@@ -33,9 +32,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeFollowerViews() {
-            return insertAndReplace(this.chatterOwner.thread.followers.map(follower => {
-                return { follower };
-            }));
+            return this.chatterOwner.thread.followers.map(follower => ({ follower }));
         },
         /**
          * @private

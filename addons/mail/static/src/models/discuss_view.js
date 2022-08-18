@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -105,7 +105,7 @@ registerModel({
                 this.messaging.device.isSmall &&
                 (this.discuss.isAddingChannel || this.discuss.isAddingChat)
             ) {
-                return insertAndReplace();
+                return {};
             }
             return clear();
         },
@@ -139,12 +139,12 @@ registerModel({
             inverse: 'discussView',
         }),
         historyView: one('DiscussSidebarMailboxView', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'discussViewOwnerAsHistory',
             isCausal: true,
         }),
         inboxView: one('DiscussSidebarMailboxView', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'discussViewOwnerAsInbox',
             isCausal: true,
         }),
@@ -163,7 +163,7 @@ registerModel({
          */
         quickSearchInputRef: attr(),
         starredView: one('DiscussSidebarMailboxView', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'discussViewOwnerAsStarred',
             isCausal: true,
         }),

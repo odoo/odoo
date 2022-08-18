@@ -3,7 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 import { makeDeferred } from '@mail/utils/deferred';
 
 import { browser } from '@web/core/browser/browser';
@@ -204,7 +204,9 @@ registerModel({
             this.update({ isNotificationPermissionDefault: this._computeIsNotificationPermissionDefault() });
         },
         async startFetchImStatus() {
-            this.update({ fetchImStatusTimer: [clear(), insertAndReplace()] });
+            this.update({
+                fetchImStatusTimer: { doReset: this.fetchImStatusTimer ? true : undefined },
+            });
             const partnerIds = [];
             for (const partner of this.models['Partner'].all()) {
                 if (partner.im_status !== 'im_partner' && partner.id > 0) {
@@ -307,7 +309,7 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeNotificationHandler() {
-            return insertAndReplace();
+            return {};
         },
         /**
          * @private
@@ -337,7 +339,7 @@ registerModel({
         }),
         cannedResponses: many('CannedResponse'),
         chatWindowManager: one('ChatWindowManager', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
             readonly: true,
         }),
@@ -353,12 +355,12 @@ registerModel({
         currentPartner: one('Partner'),
         currentUser: one('User'),
         device: one('Device', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
             readonly: true,
         }),
         dialogManager: one('DialogManager', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
             readonly: true,
         }),
@@ -369,12 +371,12 @@ registerModel({
             default: false,
         }),
         discuss: one('Discuss', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
             readonly: true,
         }),
         emojiRegistry: one('EmojiRegistry', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
             readonly: true,
         }),
@@ -386,12 +388,12 @@ registerModel({
             default: 50 * 1000,
         }),
         history: one('Mailbox', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'messagingAsHistory',
             isCausal: true,
         }),
         inbox: one('Mailbox', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'messagingAsInbox',
             isCausal: true,
         }),
@@ -404,7 +406,7 @@ registerModel({
             readonly: true,
         }),
         initializer: one('MessagingInitializer', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
             readonly: true,
         }),
@@ -429,7 +431,7 @@ registerModel({
             compute: '_computeIsNotificationPermissionDefault',
         }),
         locale: one('Locale', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
             readonly: true,
         }),
@@ -449,7 +451,7 @@ registerModel({
             required: true,
         }),
         messagingMenu: one('MessagingMenu', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
         }),
         notificationHandler: one('MessagingNotificationHandler', {
@@ -462,7 +464,7 @@ registerModel({
         }),
         partnerRoot: one('Partner'),
         popoverManager: one('PopoverManager', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
             readonly: true,
         }),
@@ -479,7 +481,7 @@ registerModel({
             inverse: 'messagingAsRingingThread',
         }),
         rtc: one('Rtc', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
             readonly: true,
         }),
@@ -488,22 +490,22 @@ registerModel({
             isCausal: true,
         }),
         soundEffects: one('SoundEffects', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
             readonly: true,
         }),
         starred: one('Mailbox', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'messagingAsStarred',
             isCausal: true,
         }),
         userNotificationManager: one('UserNotificationManager', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
             readonly: true,
         }),
         userSetting: one('UserSetting', {
-            default: insertAndReplace(),
+            default: {},
             isCausal: true,
         }),
     },

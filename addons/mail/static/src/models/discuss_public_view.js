@@ -2,7 +2,7 @@
 
 import { attr, one } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
-import { clear, insertAndReplace } from '@mail/model/model_field_command';
+import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DiscussPublicView',
@@ -12,13 +12,13 @@ registerModel({
          */
         async switchToThreadView() {
             this.update({
-                threadViewer: insertAndReplace({
+                threadViewer: {
                     extraClass: 'flex-grow-1',
                     hasMemberList: true,
                     hasThreadView: true,
                     hasTopbar: true,
                     thread: this.channel,
-                }),
+                },
                 welcomeView: clear(),
             });
             if (this.isChannelTokenSecret) {
@@ -36,12 +36,12 @@ registerModel({
         switchToWelcomeView() {
             this.update({
                 threadViewer: clear(),
-                welcomeView: insertAndReplace({
+                welcomeView: {
                     channel: this.channel,
                     isDoFocusGuestNameInput: true,
                     originalGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
                     pendingGuestName: this.messaging.currentGuest && this.messaging.currentGuest.name,
-                }),
+                },
             });
             if (this.welcomeView.callDemoView) {
                 this.welcomeView.callDemoView.enableMicrophone();

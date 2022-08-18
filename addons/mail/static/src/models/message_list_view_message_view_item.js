@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { insertAndReplace } from '@mail/model/model_field_command';
 
 /**
  * Models a relation between a message list view and a message view where
@@ -23,7 +22,7 @@ registerModel({
             inverse: 'messageListViewMessageViewItems',
         }),
         messageView: one('MessageView', {
-            default: insertAndReplace(),
+            default: {},
             inverse: 'messageListViewMessageViewItemOwner',
             isCausal: true,
             readonly: true,
