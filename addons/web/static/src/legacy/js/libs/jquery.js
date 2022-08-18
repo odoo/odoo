@@ -201,13 +201,14 @@ $.fn.scrollTop = function (value) {
         // The caller wants to scroll a set of elements including html and/or
         // body to a specific point -> do that but make sure to add the real
         // top level element to that set of elements if any different is found.
-        originalScrollTop.apply(this.not('html, body').add($().getScrollingElement()), arguments);
+        const $withRealScrollable = this.not('html, body').add($().getScrollingElement(this[0].ownerDocument));
+        originalScrollTop.apply($withRealScrollable, arguments);
         return this;
     } else if (value === undefined && this.eq(0).is('html, body')) {
         // The caller wants to get the scroll point of a set of elements, jQuery
         // will return the scroll point of the first one, if it is html or body
         // return the scroll point of the real top level element.
-        return originalScrollTop.apply($().getScrollingElement(), arguments);
+        return originalScrollTop.apply($().getScrollingElement(this[0].ownerDocument), arguments);
     }
     return originalScrollTop.apply(this, arguments);
 };
@@ -218,7 +219,8 @@ $.fn.animate = function (properties, ...rest) {
         // The caller wants to scroll a set of elements including html and/or
         // body to a specific point -> do that but make sure to add the real
         // top level element to that set of elements if any different is found.
-        originalAnimate.call(this.not('html, body').add($().getScrollingElement()), {'scrollTop': props['scrollTop']}, ...rest);
+        const $withRealScrollable = this.not('html, body').add($().getScrollingElement(this[0].ownerDocument));
+        originalAnimate.call($withRealScrollable, {'scrollTop': props['scrollTop']}, ...rest);
         delete props['scrollTop'];
     }
     if (!Object.keys(props).length) {
