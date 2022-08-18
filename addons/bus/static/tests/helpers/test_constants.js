@@ -1,5 +1,9 @@
 /** @odoo-module **/
 
+export const TEST_GROUP_IDS = {
+    groupUserId: 11,
+};
+
 export const TEST_USER_IDS = {
     partnerRootId: 2,
     currentPartnerId: 3,

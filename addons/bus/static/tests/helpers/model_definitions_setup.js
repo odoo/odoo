@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { TEST_USER_IDS } from '@bus/../tests/helpers/test_constants';
+import { TEST_GROUP_IDS, TEST_USER_IDS } from '@bus/../tests/helpers/test_constants';
 import {
     addModelNamesToFetch,
     insertModelFields,
@@ -29,6 +29,9 @@ insertModelFields('res.partner', {
 //--------------------------------------------------------------------------
 
 insertRecords('res.company', [{ id: 1 }]);
+insertRecords('res.groups', [
+    { id: TEST_GROUP_IDS.groupUserId, name: "Internal User" },
+]);
 insertRecords('res.users', [
     { display_name: "Your Company, Mitchell Admin", id: TEST_USER_IDS.currentUserId, name: "Mitchell Admin", partner_id: TEST_USER_IDS.currentPartnerId, },
     { active: false, display_name: "Public user", id: TEST_USER_IDS.publicUserId, name: "Public user", partner_id: TEST_USER_IDS.publicPartnerId, },
