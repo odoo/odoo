@@ -25,6 +25,7 @@ export class WebsiteSwitcherSystray extends Component {
                     this.websiteService.goToWebsite({ websiteId: website.id });
                 }
             },
+            class: website.id === this.websiteService.currentWebsite.id ? 'active' : '',
         }));
     }
 }

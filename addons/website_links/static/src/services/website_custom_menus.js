@@ -1,19 +1,8 @@
 /** @odoo-module  */
 
-import { patch } from 'web.utils';
-import { NavBar } from '@web/webclient/navbar/navbar';
+import { registry } from '@web/core/registry';
 
-const { onWillStart } = owl;
-
-patch(NavBar.prototype, 'website_links_navbar', {
-    setup() {
-        this._super();
-
-        onWillStart(() => {
-            this.websiteEditingMenus['website_links.menu_link_tracker'] = {
-                openWidget: () => this.websiteService.goToWebsite({ path: `/r?u=${encodeURIComponent(this.websiteService.contentWindow.location.href)}` }),
-                isDisplayed: () => this.websiteService.currentWebsite && this.websiteService.contentWindow,
-            };
-        });
-    },
+registry.category('website_custom_menus').add('website_links.menu_link_tracker', {
+    openWidget: (services) => services.website.goToWebsite({ path: `/r?u=${encodeURIComponent(services.website.contentWindow.location.href)}` }),
+    isDisplayed: (env) => env.services.website.currentWebsite && env.services.website.contentWindow,
 });
