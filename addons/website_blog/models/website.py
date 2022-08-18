@@ -5,6 +5,11 @@ from markupsafe import Markup
 
 from odoo import api, models, _
 from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.addons.website.models.website import SEARCH_TYPE_MODELS
+
+SEARCH_TYPE_MODELS['blogs'] |= 'blog.blog', 'blog.post'
+SEARCH_TYPE_MODELS['blogs_only'] |= 'blog.blog',
+SEARCH_TYPE_MODELS['blog_posts_only'] |= 'blog.post',
 
 
 class Website(models.Model):
@@ -85,11 +90,3 @@ class Website(models.Model):
             else:
                 self.env['website.menu'].create(blog_menu_values)
         super().configurator_set_menu_links(menu_company, module_data)
-
-    def _search_get_details(self, search_type, order, options):
-        result = super()._search_get_details(search_type, order, options)
-        if search_type in ['blogs', 'blogs_only', 'all']:
-            result.append(self.env['blog.blog']._search_get_detail(self, order, options))
-        if search_type in ['blogs', 'blog_posts_only', 'all']:
-            result.append(self.env['blog.post']._search_get_detail(self, order, options))
-        return result

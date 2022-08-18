@@ -3,6 +3,10 @@
 
 from odoo import models, _
 from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.addons.website.models.website import SEARCH_TYPE_MODELS
+
+SEARCH_TYPE_MODELS['events'] |= 'event.event',
+
 
 class Website(models.Model):
     _inherit = "website"
@@ -18,9 +22,3 @@ class Website(models.Model):
             cta_btn_text = _('Next Events')
             return {'cta_btn_text': cta_btn_text, 'cta_btn_href': '/event'}
         return cta_data
-
-    def _search_get_details(self, search_type, order, options):
-        result = super()._search_get_details(search_type, order, options)
-        if search_type in ['events', 'all']:
-            result.append(self.env['event.event']._search_get_detail(self, order, options))
-        return result

@@ -3,6 +3,11 @@
 
 from odoo import models, fields, api, _
 from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.addons.website.models.website import SEARCH_TYPE_MODELS
+
+SEARCH_TYPE_MODELS['forums'] |= 'forum.forum', 'forum.post'
+SEARCH_TYPE_MODELS['forums_only'] |= 'forum.forum',
+SEARCH_TYPE_MODELS['forum_posts_only'] |= 'forum.post',
 
 
 class Website(models.Model):
@@ -29,11 +34,3 @@ class Website(models.Model):
         forum_menu = self.env['website.menu'].search([('url', '=', '/forum'), ('website_id', '=', self.id)])
         forum_menu.unlink()
         super().configurator_set_menu_links(menu_company, module_data)
-
-    def _search_get_details(self, search_type, order, options):
-        result = super()._search_get_details(search_type, order, options)
-        if search_type in ['forums', 'forums_only', 'all']:
-            result.append(self.env['forum.forum']._search_get_detail(self, order, options))
-        if search_type in ['forums', 'forum_posts_only', 'all']:
-            result.append(self.env['forum.post']._search_get_detail(self, order, options))
-        return result

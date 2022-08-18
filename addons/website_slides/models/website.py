@@ -3,6 +3,11 @@
 
 from odoo import fields, models, _
 from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.addons.website.models.website import SEARCH_TYPE_MODELS
+
+SEARCH_TYPE_MODELS['slides'] |= 'slide.channel', 'slide.slide'
+SEARCH_TYPE_MODELS['slide_channels_only'] |= 'slide.channel',
+SEARCH_TYPE_MODELS['slides_only'] |= 'slide.slide',
 
 
 class Website(models.Model):
@@ -14,11 +19,3 @@ class Website(models.Model):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('Courses'), url_for('/slides'), 'website_slides'))
         return suggested_controllers
-
-    def _search_get_details(self, search_type, order, options):
-        result = super()._search_get_details(search_type, order, options)
-        if search_type in ['slides', 'slide_channels_only', 'all']:
-            result.append(self.env['slide.channel']._search_get_detail(self, order, options))
-        if search_type in ['slides', 'slides_only', 'all']:
-            result.append(self.env['slide.slide']._search_get_detail(self, order, options))
-        return result
