@@ -1162,16 +1162,41 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
     def test_payment_method_different_type_single_batch_not_grouped(self):
         """ Test payment methods when paying a bill and a refund with separated payments (1000 + -2000)."""
-        in_refund = self.env['account.move'].create({
-            'move_type': 'in_refund',
-            'date': '2017-01-01',
-            'invoice_date': '2017-01-01',
-            'partner_id': self.partner_a.id,
-            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 1600.0, 'tax_ids': False})],
-        })
-        in_refund.action_post()
+        invoice_1 = self.in_invoice_1
+        invoice_2 = invoice_1.copy({'invoice_date': invoice_1.invoice_date, 'partner_id': self.partner_b.id})
+        refund_1, refund_2 = self.env['account.move'].create([
+            {
+                'move_type': 'in_refund',
+                'date': '2017-01-01',
+                'invoice_date': '2017-01-01',
+                'partner_id': self.partner_a.id,
+                'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 1600.0, 'tax_ids': False})],
+            },
+            {
+                'move_type': 'in_refund',
+                'date': '2017-01-01',
+                'invoice_date': '2017-01-01',
+                'partner_id': self.partner_b.copy({'property_account_position_id': False}).id,
+                'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 1600.0, 'tax_ids': False})],
+            },
+        ])
+        (invoice_2 + refund_1 + refund_2).action_post()
 
-        active_ids = (self.in_invoice_1 + in_refund).ids
+        for moves in ((invoice_1 + invoice_2), (refund_1 + refund_2)):
+            wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=moves.ids).create({
+                'group_payment': False,
+            })
+
+            expected_available_payment_method_lines = wizard.journal_id.inbound_payment_method_line_ids if moves[0].move_type == 'in_refund' else wizard.journal_id.outbound_payment_method_line_ids
+
+            self.assertRecordValues(wizard, [
+                {
+                    'available_payment_method_line_ids': expected_available_payment_method_lines.ids,
+                    'payment_method_line_id': expected_available_payment_method_lines[:1].id,
+                }
+            ])
+
+        active_ids = (invoice_1 + invoice_2 + refund_1 + refund_2).ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'group_payment': False,
         })._create_payments()
@@ -1186,14 +1211,30 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
         self.assertRecordValues(payments[1], [
             {
+                'ref': 'BILL/2017/01/0004',
+                'payment_method_line_id': self.bank_journal_1.outbound_payment_method_line_ids[0].id,
+                'payment_type': 'outbound',
+            }
+        ])
+
+        self.assertRecordValues(payments[2], [
+            {
                 'ref': 'RBILL/2017/01/0002',
                 'payment_method_line_id': self.bank_journal_1.inbound_payment_method_line_ids[0].id,
                 'payment_type': 'inbound',
             },
         ])
 
+        self.assertRecordValues(payments[3], [
+            {
+                'ref': 'RBILL/2017/01/0003',
+                'payment_method_line_id': self.bank_journal_1.inbound_payment_method_line_ids[0].id,
+                'payment_type': 'inbound',
+            },
+        ])
+
         self.assertRecordValues(payments[0].line_ids.sorted('balance'), [
-            # == Payment 1: to pay in_invoice_1 ==
+            # == Payment 1: to pay invoice_1 ==
             # Liquidity line:
             {
                 'debit': 0.0,
@@ -1211,8 +1252,49 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'reconciled': True,
             },
         ])
+
         self.assertRecordValues(payments[1].line_ids.sorted('balance'), [
-            # == Payment 2: to pay in_refund_1 ==
+            # == Payment 2: to pay invoice_2 ==
+            # Payable line:
+            {
+                'debit': 0.0,
+                'credit': 1000.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': -1000.0,
+                'reconciled': False,
+            },
+            # Liquidity line:
+            {
+                'debit': 1000.0,
+                'credit': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': 1000.0,
+                'reconciled': True,
+            },
+        ])
+
+        self.assertRecordValues(payments[2].line_ids.sorted('balance'), [
+            # == Payment 3: to pay refund_1 ==
+            # Liquidity line:
+            {
+                'debit': 0.0,
+                'credit': 1600.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': -1600.0,
+                'reconciled': True,
+            },
+            # Payable line:
+            {
+                'debit': 1600.0,
+                'credit': 0.0,
+                'currency_id': self.company_data['currency'].id,
+                'amount_currency': 1600.0,
+                'reconciled': False,
+            },
+        ])
+
+        self.assertRecordValues(payments[3].line_ids.sorted('balance'), [
+            # == Payment 4: to pay refund_2 ==
             # Payable line:
             {
                 'debit': 0.0,
