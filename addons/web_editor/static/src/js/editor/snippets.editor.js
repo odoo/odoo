@@ -1851,8 +1851,8 @@ var SnippetsMenu = Widget.extend({
         if (!this.$scrollingElement[0]) {
             this.$scrollingElement = $(this.ownerDocument).find('.o_editable');
         }
-        this.$scrollingTarget = this.$scrollingElement.is(this.ownerDocument.scrollingElement)
-            ? $(this.ownerDocument.defaultView)
+        this.$scrollingTarget = this.$scrollingElement.is(this.$body[0].ownerDocument.scrollingElement)
+            ? $(this.$body[0].ownerDocument.defaultView)
             : this.$scrollingElement;
         this._onScrollingElementScroll = _.throttle(() => {
             for (const editor of this.snippetEditors) {
