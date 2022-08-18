@@ -18,14 +18,14 @@ publicWidget.registry.WebsitePaymentDonation = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onFocusAmountInput(ev) {
-        this.$target.find('#other_amount').prop("checked", true);
+        this.$el.find('#other_amount').prop("checked", true);
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onChangeDonationComment(ev) {
-        const $donationComment = this.$target.find('#donation_comment');
+        const $donationComment = this.$el.find('#donation_comment');
         const checked = $(ev.currentTarget).is(':checked');
         $donationComment.toggleClass('d-none', !checked);
         if (!checked) {

@@ -26,8 +26,8 @@ const TableOfContent = publicWidget.Widget.extend({
             extraMenuUpdateCallbacks.splice(indexCallback, 1);
         }
         this._scrollingElement.scrollspy('dispose');
-        this.$target.css('top', '');
-        this.$target.find('.s_table_of_content_navbar').css('top', '');
+        this.$el.css('top', '');
+        this.$el.find('.s_table_of_content_navbar').css('top', '');
         this._super(...arguments);
     },
 
@@ -42,14 +42,14 @@ const TableOfContent = publicWidget.Widget.extend({
         let position = 0;
         const $fixedElements = $('.o_top_fixed_element');
         _.each($fixedElements, el => position += $(el).outerHeight());
-        const isHorizontalNavbar = this.$target.hasClass('s_table_of_content_horizontal_navbar');
-        this.$target.css('top', isHorizontalNavbar ? position : '');
-        this.$target.find('.s_table_of_content_navbar').css('top', isHorizontalNavbar ? '' : position + 20);
+        const isHorizontalNavbar = this.$el.hasClass('s_table_of_content_horizontal_navbar');
+        this.$el.css('top', isHorizontalNavbar ? position : '');
+        this.$el.find('.s_table_of_content_navbar').css('top', isHorizontalNavbar ? '' : position + 20);
         const $mainNavBar = $('#oe_main_menu_navbar');
         position += $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
-        position += isHorizontalNavbar ? this.$target.outerHeight() : 0;
+        position += isHorizontalNavbar ? this.$el.outerHeight() : 0;
         this._scrollingElement = $().getScrollingElement();
-        this._scrollingElement.scrollspy({target: this.$target.find('.s_table_of_content_navbar'), method: 'offset', offset: position + 100, alwaysKeepFirstActive: true});
+        this._scrollingElement.scrollspy({target: this.$el.find('.s_table_of_content_navbar'), method: 'offset', offset: position + 100, alwaysKeepFirstActive: true});
     },
 });
 
