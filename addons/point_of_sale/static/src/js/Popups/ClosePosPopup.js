@@ -6,7 +6,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
     const { identifyError } = require('point_of_sale.utils');
     const { ConnectionLostError, ConnectionAbortedError} = require('@web/core/network/rpc_service')
 
-    const { onWillStart, useState } = owl;
+    const { useState } = owl;
 
     /**
      * This popup needs to be self-dependent because it needs to be called from different place.
@@ -21,48 +21,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             this.state = useState({
                 displayMoneyDetailsPopup: false,
             });
-            onWillStart(this.onWillStart);
-        }
-        async onWillStart() {
-            try {
-                const closingData = await this.rpc({
-                    model: 'pos.session',
-                    method: 'get_closing_control_data',
-                    args: [[this.env.pos.pos_session.id]]
-                });
-                this.ordersDetails = closingData.orders_details;
-                this.paymentsAmount = closingData.payments_amount;
-                this.payLaterAmount = closingData.pay_later_amount;
-                this.openingNotes = closingData.opening_notes;
-                this.defaultCashDetails = closingData.default_cash_details;
-                this.otherPaymentMethods = closingData.other_payment_methods;
-                this.isManager = closingData.is_manager;
-                this.amountAuthorizedDiff = closingData.amount_authorized_diff;
-
-                // component state and refs definition
-                const state = {notes: '', payments: {}};
-                if (this.cashControl) {
-                    state.payments[this.defaultCashDetails.id] = {counted: 0, difference: -this.defaultCashDetails.amount, number: 0};
-                }
-                if (this.otherPaymentMethods.length > 0) {
-                    this.otherPaymentMethods.forEach(pm => {
-                        if (pm.type === 'bank') {
-                            state.payments[pm.id] = {counted: this.env.pos.round_decimals_currency(pm.amount), difference: 0, number: pm.number}
-                        }
-                    })
-                }
-                Object.assign(this.state, state);
-            } catch (error) {
-                super.cancel();
-                if (identifyError(error) instanceof ConnectionLostError) {
-                    this.showPopup('ErrorPopup', {
-                        title: this.env._t('Network Error'),
-                        body: this.env._t('Please check your internet connection and try again.'),
-                    });
-                } else {
-                    throw error;
-                }
-            }
+            Object.assign(this, this.props.info);
         }
         //@override
         async confirm() {
