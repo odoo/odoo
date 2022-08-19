@@ -175,8 +175,14 @@ class Page(models.Model):
         return super(Page, self).unlink()
 
     def write(self, vals):
-        if 'url' in vals and not vals['url'].startswith('/'):
-            vals['url'] = '/' + vals['url']
+        if 'url' in vals:
+            if not vals['url']:
+                # The url field is not declared as required, but we don't want
+                # to have empty URL field. The field is required in 16.0, until
+                # then this will prevent to unset the URL and fallback to `/`
+                vals['url'] = '/'
+            elif not vals['url'].startswith('/'):
+                vals['url'] = '/' + vals['url']
         return super(Page, self).write(vals)
 
     def get_website_meta(self):
