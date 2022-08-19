@@ -1041,10 +1041,6 @@ class Website(models.Model):
             request.session['force_website_id'] = website_id and str(website_id).isdigit() and int(website_id)
 
     @api.model
-    def is_restricted_editor(self):
-        return self.env['ir.model.access'].check('ir.ui.view', 'write', False)
-
-    @api.model
     def is_public_user(self):
         return request.env.user.id == request.website._get_cached('user_id')
 
