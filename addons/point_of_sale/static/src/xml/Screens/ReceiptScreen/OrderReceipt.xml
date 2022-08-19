@@ -88,6 +88,8 @@
                             <span class="price_display pos-receipt-right-align">
                                 <t t-esc="env.pos.format_currency_no_symbol(line.price_display)" />
                             </span>
+                            /
+                            <t t-esc="line.unit_name" />
                         </div>
                     </t>
                     <t t-if="line.pack_lot_lines">
