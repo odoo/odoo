@@ -4,7 +4,10 @@
         @param {im_livechat.legacy.PublicLivechatWindow} widget
     -->
     <t t-name="im_livechat.legacy.PublicLivechatWindow">
-        <div class="o_thread_window o_in_home_menu" t-att-data-thread-id="widget.messaging.publicLivechatGlobal.publicLivechat.id">
+        <div class="o_thread_window o_in_home_menu"
+            t-att-data-thread-id="widget.messaging.publicLivechatGlobal.publicLivechat.id"
+            t-att-data-thread-model='widget.messaging.publicLivechatGlobal.publicLivechat.model'
+        >
             <div class="o_thread_window_header">
                 <t t-call="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
                     <t t-set="status" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.status"/>

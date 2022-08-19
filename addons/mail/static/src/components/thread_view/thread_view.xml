@@ -3,7 +3,15 @@
 
     <t t-name="mail.ThreadView" owl="1">
         <t t-if="threadView">
-            <div class="o_ThreadView position-relative d-flex flex-column bg-100" t-att-class="threadView.extraClass" t-attf-class="{{ className }}" t-att-data-correspondent-id="threadView.thread and threadView.thread.correspondent and threadView.thread.correspondent.id" t-att-data-thread-local-id="threadView.thread and threadView.thread.localId" t-on-focusin="threadView.onFocusin" t-ref="root">
+            <div class="o_ThreadView position-relative d-flex flex-column bg-100"
+                t-att-class="threadView.extraClass"
+                t-attf-class="{{ className }}"
+                t-att-data-correspondent-id="threadView.thread and threadView.thread.correspondent and threadView.thread.correspondent.id"
+                t-att-data-thread-id="threadView.thread and threadView.thread.id"
+                t-att-data-thread-model="threadView.thread and threadView.thread.model"
+                t-on-focusin="threadView.onFocusin"
+                t-ref="root"
+            >
                 <t t-if="threadView.topbar">
                     <ThreadViewTopbar className="'border-bottom'" record="threadView.topbar"/>
                 </t>
