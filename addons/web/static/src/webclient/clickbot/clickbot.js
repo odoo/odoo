@@ -127,7 +127,7 @@
      * @param {function} stopCondition a function that returns a boolean
      * @returns {Promise} that is rejected if the timeout is exceeded
      */
-    function waitForCondition(stopCondition, tl = 10000) {
+    function waitForCondition(stopCondition, tl = 30000) {
         return new Promise(function (resolve, reject) {
             const interval = 250;
             let timeLimit = tl;
