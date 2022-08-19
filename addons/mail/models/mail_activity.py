@@ -557,40 +557,44 @@ class MailActivity(models.Model):
             activity_id = attachment['res_id']
             activity_attachments[activity_id].append(attachment['id'])
 
-        for activity in self:
-            # extract value to generate next activities
-            if activity.chaining_type == 'trigger':
-                vals = activity.with_context(activity_previous_deadline=activity.date_deadline)._prepare_next_activity_values()
-                next_activities_values.append(vals)
+        for model, activity_data in self._classify_by_model().items():
+            records = self.env[model].browse(activity_data['record_ids'])
+            for record, activity in zip(records, activity_data['activities']):
+                # extract value to generate next activities
+                if activity.chaining_type == 'trigger':
+                    vals = activity.with_context(activity_previous_deadline=activity.date_deadline)._prepare_next_activity_values()
+                    next_activities_values.append(vals)
 
-            # post message on activity, before deleting it
-            record = self.env[activity.res_model].browse(activity.res_id)
-            record.message_post_with_view(
-                'mail.message_activity_done',
-                values={
-                    'activity': activity,
-                    'feedback': feedback,
-                    'display_assignee': activity.user_id != self.env.user
-                },
-                subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_activities'),
-                mail_activity_type_id=activity.activity_type_id.id,
-                attachment_ids=[Command.link(attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
-            )
+                # post message on activity, before deleting it
+                _, activity_message = record.message_post_with_view(
+                    'mail.message_activity_done',
+                    values={
+                        'activity': activity,
+                        'feedback': feedback,
+                        'display_assignee': activity.user_id != self.env.user
+                    },
+                    subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_activities'),
+                    mail_activity_type_id=activity.activity_type_id.id,
+                    attachment_ids=[Command.link(attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
+                )
 
-            # Moving the attachments in the message
-            # TODO: Fix void res_id on attachment when you create an activity with an image
-            # directly, see route /web_editor/attachment/add
-            activity_message = record.message_ids[0]
-            message_attachments = self.env['ir.attachment'].browse(activity_attachments[activity.id])
-            if message_attachments:
-                message_attachments.write({
-                    'res_id': activity_message.id,
-                    'res_model': activity_message._name,
-                })
-                activity_message.attachment_ids = message_attachments
-            messages += activity_message
+                # Moving the attachments in the message
+                # TODO: Fix void res_id on attachment when you create an activity with an image
+                # directly, see route /web_editor/attachment/add
+                if activity_attachments[activity.id]:
+                    message_attachments = self.env['ir.attachment'].browse(activity_attachments[activity.id])
+                    if message_attachments:
+                        message_attachments.write({
+                            'res_id': activity_message.id,
+                            'res_model': activity_message._name,
+                        })
+                        activity_message.attachment_ids = message_attachments
+                messages += activity_message
 
-        next_activities = self.env['mail.activity'].create(next_activities_values)
+        next_activities = self.env['mail.activity']
+        if next_activities_values:
+            next_activities = self.env['mail.activity'].create(next_activities_values)
+
         self.unlink()  # will unlink activity, dont access `self` after that
 
         return messages, next_activities
