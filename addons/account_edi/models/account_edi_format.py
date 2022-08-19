@@ -28,7 +28,6 @@ class AccountEdiFormat(models.Model):
         ('unique_code', 'unique (code)', 'This code already exists')
     ]
 
-
     ####################################################
     # Low-level methods
     ####################################################
@@ -51,37 +50,18 @@ class AccountEdiFormat(models.Model):
     # Export method to override based on EDI Format
     ####################################################
 
-    def _get_invoice_edi_content(self, move):
-        ''' Create a bytes literal of the file content representing the invoice - to be overridden by the EDI Format
-        :returns:       bytes literal of the content generated (typically XML).
-        '''
-        return b''
+    def _get_move_applicability(self, move):
+        """ Core function for the EDI processing: it first checks whether the EDI format is applicable on a given
+        move, if so, it then returns a dictionary containing the functions to call for this move.
 
-    def _get_payment_edi_content(self, move):
-        ''' Create a bytes literal of the file content representing the payment - to be overridden by the EDI Format
-        :returns:       bytes literal of the content generated (typically XML).
-        '''
-        return b''
-
-    def _is_required_for_invoice(self, invoice):
-        """ Indicate if this EDI must be generated for the invoice passed as parameter.
-
-        :param invoice: An account.move having the invoice type.
-        :returns:       True if the EDI must be generated, False otherwise.
+        :return: dict mapping str to function (callable)
+        * post:             function called for edi.documents with state 'to_send' (post flow)
+        * cancel:           function called for edi.documents with state 'to_cancel' (cancel flow)
+        * post_batching:    function returning the batching key for the post flow
+        * cancel_batching:  function returning the batching key for the cancel flow
+        * edi_content:      function called when computing the edi_content for an edi.document
         """
-        # TO OVERRIDE
         self.ensure_one()
-        return True
-
-    def _is_required_for_payment(self, payment):
-        """ Indicate if this EDI must be generated for the payment passed as parameter.
-
-        :param payment: An account.move linked to either an account.payment, either an account.bank.statement.line.
-        :returns:       True if the EDI must be generated, False otherwise.
-        """
-        # TO OVERRIDE
-        self.ensure_one()
-        return False
 
     def _needs_web_services(self):
         """ Indicate if the EDI must be generated asynchronously through to some web services.
@@ -111,33 +91,6 @@ class AccountEdiFormat(models.Model):
         """
         return True
 
-    def _support_batching(self, move, state, company):
-        """ Indicate if we can send multiple documents in the same time to the web services.
-        If True, the _post_%s_edi methods will get multiple documents in the same time.
-        Otherwise, these methods will be called with only one record at a time.
-
-        :param move:    The move that we are trying to batch.
-        :param state:   The EDI state of the move.
-        :param company: The company with which we are sending the EDI.
-        :returns:       True if batching is supported, False otherwise.
-        """
-        # TO OVERRIDE
-        return False
-
-    def _get_batch_key(self, move, state):
-        """ Returns a tuple that will be used as key to partitionnate the invoices/payments when creating batches
-        with multiple invoices/payments.
-        The type of move (invoice or payment), its company_id, its edi state and the edi_format are used by default, if
-        no further partition is needed for this format, this method should return (). It's not necessary to repeat those
-        fields in the custom key.
-
-        :param move:    The move to batch.
-        :param state:   The EDI state of the move.
-        :returns: The key to be used when partitionning the batches.
-        """
-        move.ensure_one()
-        return ()
-
     def _check_move_configuration(self, move):
         """ Checks the move and relevant records for potential error (missing data, etc).
 
@@ -146,59 +99,6 @@ class AccountEdiFormat(models.Model):
         """
         # TO OVERRIDE
         return []
-
-    def _post_invoice_edi(self, invoices):
-        """ Create the file content representing the invoice (and calls web services if necessary).
-
-        :param invoices:    A list of invoices to post.
-        :returns:           A dictionary with the invoice as key and as value, another dictionary:
-        * success:          True if the edi was successfully posted.
-        * attachment:       The attachment representing the invoice in this edi_format.
-        * error:            An error if the edi was not successfully posted.
-        * blocking_level:   (optional) How bad is the error (how should the edi flow be blocked ?)
-        """
-        # TO OVERRIDE
-        self.ensure_one()
-        return {}
-
-    def _cancel_invoice_edi(self, invoices):
-        """Calls the web services to cancel the invoice of this document.
-
-        :param invoices:    A list of invoices to cancel.
-        :returns:           A dictionary with the invoice as key and as value, another dictionary:
-        * success:          True if the invoice was successfully cancelled.
-        * error:            An error if the edi was not successfully cancelled.
-        * blocking_level:   (optional) How bad is the error (how should the edi flow be blocked ?)
-        """
-        # TO OVERRIDE
-        self.ensure_one()
-        return {invoice: {'success': True} for invoice in invoices}  # By default, cancel succeeds doing nothing.
-
-    def _post_payment_edi(self, payments):
-        """ Create the file content representing the payment (and calls web services if necessary).
-
-        :param payments:   The payments to post.
-        :returns:           A dictionary with the payment as key and as value, another dictionary:
-        * attachment:       The attachment representing the payment in this edi_format if the edi was successfully posted.
-        * error:            An error if the edi was not successfully posted.
-        * blocking_level:   (optional) How bad is the error (how should the edi flow be blocked ?)
-        """
-        # TO OVERRIDE
-        self.ensure_one()
-        return {}
-
-    def _cancel_payment_edi(self, payments):
-        """Calls the web services to cancel the payment of this document.
-
-        :param payments:  A list of payments to cancel.
-        :returns:         A dictionary with the payment as key and as value, another dictionary:
-        * success:        True if the payment was successfully cancelled.
-        * error:          An error if the edi was not successfully cancelled.
-        * blocking_level: (optional) How bad is the error (how should the edi flow be blocked ?)
-        """
-        # TO OVERRIDE
-        self.ensure_one()
-        return {payment: {'success': True} for payment in payments}  # By default, cancel succeeds doing nothing.
 
     ####################################################
     # Import methods to override based on EDI Format
