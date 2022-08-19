@@ -14,13 +14,14 @@
                             It will be applied at checkout when the customer uses this link.
                         </p>
                     </div>
-                    <field name="share_link" widget="CopyClipboardURL" nolabel="1"/>
                 </group>
-                <hr attrs="{'invisible': ['|', ('website_id', '=', False), ('id', '!=', False)]}"/>
                 <group attrs="{'invisible': [('id', '!=', False)]}">
+                    <group>
                     <field name="website_id" groups="website.group_multi_website" widget="selection"
                            attrs="{'invisible': [('program_website_id', '!=', False)]}"/>
                     <field name="redirect"/>
+                    <field name="share_link" widget="CopyClipboardURL"/>
+                    </group>
                 </group>
                 <footer>
                     <button string="Done" class="btn-primary" special="cancel" data-hotkey="z"/>

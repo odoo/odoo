@@ -85,7 +85,7 @@ class SaleCouponShare(models.TransientModel):
             raise UserError(_("Provide either a coupon or a program."))
 
         return {
-            'name': _('Share Coupon'),
+            'name': _('Share') + ' %s' % (program and dict(program._fields['program_type'].selection).get(program.program_type) or dict(coupon._fields['program_type'].selection).get(coupon.program_type)),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'coupon.share',
