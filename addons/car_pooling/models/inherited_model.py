@@ -30,10 +30,10 @@ class InheritedModel(models.Model):
     car_color = fields.Char(string="Vehicle Color", help="Choose your color")
     Car_image = fields.Binary("Upload Vehicle Image", attachment=True, store=True, help="This field holds the vehicle image ")
 
-    @api.constrains('phone_number')
-    def _check_phone_number(self):
-        for record in self:
-            if record.phone_number != '':
-                if not str(record.phone_number).isdigit() or len(record.phone_number) != 10:
-                    raise ValidationError("Cannot enter invalid phone number")
-        return True
+    # @api.constrains('phone_number')
+    # def _check_phone_number(self):
+    #     for record in self:
+    #         if record.phone_number != '':
+    #             if not str(record.phone_number).isdigit() or len(record.phone_number) != 10:
+    #                 raise ValidationError("Cannot enter invalid phone number")
+    #     return True
