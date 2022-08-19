@@ -18,6 +18,7 @@
     <template id="payment_delivery_methods">
         <input t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False" t-att-class="'d-none' if delivery_nb == 1 else ''"/>
         <label class="label-optional" t-field="delivery.name"/>
+        <t t-set='badge_class' t-value="(delivery_nb != 1 and 'float-end ' or '') + 'badge text-bg-secondary'" />
         <span t-attf-class="#{badge_class} o_wsale_delivery_badge_price">Select to compute delivery rate</span>
         <t t-if="delivery.website_description">
             <div t-field="delivery.website_description" class="text-muted mt8"/>
