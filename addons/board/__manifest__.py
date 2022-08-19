@@ -23,12 +23,10 @@ Allows users to create custom dashboard.
         'web.assets_backend': [
             'board/static/src/**/*.scss',
             'board/static/src/**/*.js',
+            'board/static/src/**/*.xml',
         ],
         'web.qunit_suite_tests': [
             'board/static/tests/**/*',
-        ],
-        'web.assets_qweb': [
-            'board/static/src/**/*.xml',
         ],
     },
     'license': 'LGPL-3',

@@ -34,13 +34,9 @@ This module introduces skills and resumé management for employees.
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'hr_skills/static/src/fields/*.js',
-            'hr_skills/static/src/fields/*.scss',
-            'hr_skills/static/src/views/*.js',
-        ],
-        'web.assets_qweb': [
             'hr_skills/static/src/fields/skills_one2many.xml',
-            'hr_skills/static/src/fields/*.xml',
+            'hr_skills/static/src/fields/*',
+            'hr_skills/static/src/views/*.js',
             'hr_skills/static/src/xml/**/*',
         ],
         'web.assets_tests': [

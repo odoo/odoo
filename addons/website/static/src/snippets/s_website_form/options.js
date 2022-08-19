@@ -13,11 +13,6 @@ const qweb = core.qweb;
 const _t = core._t;
 
 const FormEditor = options.Class.extend({
-    xmlDependencies: [
-        '/website/static/src/xml/website_form_editor.xml',
-        '/google_recaptcha/static/src/xml/recaptcha.xml',
-    ],
-
     //----------------------------------------------------------------------
     // Private
     //----------------------------------------------------------------------

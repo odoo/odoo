@@ -55,16 +55,12 @@
         'web.assets_backend': [
             'hr/static/src/mixins/*.js',
             'hr/static/src/views/**/*.js',
-            'hr/static/src/components/**/*.js',
-            'hr/static/src/components/**/*.scss',
+            'hr/static/src/components/**/*',
             'hr/static/src/user_menu/*.js',
             'hr/static/src/scss/hr.scss',
             'hr/static/src/js/m2x_avatar_employee.js',
             'hr/static/src/js/standalone_m2o_avatar_employee.js',
             'hr/static/src/js/work_permit_upload.js',
-        ],
-        'web.assets_qweb': [
-            'hr/static/src/components/**/*.xml',
             'hr/static/src/xml/*.xml',
         ],
         'web.qunit_suite_tests': [

@@ -18,9 +18,6 @@ function corsIgnoredErrorHandler(env, error) {
 }
 
 WebsiteSaleDeliveryWidget.include({
-    xmlDependencies: (WebsiteSaleDeliveryWidget.prototype.xmlDependencies || []).concat([
-        '/website_sale_delivery_mondialrelay/static/src/xml/website_sale_delivery_mondialrelay.xml',
-    ]),
     events: _.extend({
         "click #btn_confirm_relay": "_onClickBtnConfirmRelay",
     }, WebsiteSaleDeliveryWidget.prototype.events),

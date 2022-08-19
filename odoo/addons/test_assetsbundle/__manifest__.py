@@ -56,9 +56,6 @@
             ('include', 'test_assetsbundle.manifest4'),
         ],
         'test_assetsbundle.manifest_multi_module1': [],
-        'web.qunit_suite_tests': [
-            'test_assetsbundle/static/tests/lazyloading_test.js'
-        ],
         'test_assetsbundle.lazy_test_component': [
             'test_assetsbundle/static/tests/lazy_test_component/**/*',
         ],

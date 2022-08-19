@@ -14,7 +14,6 @@ var Widget = require('web.Widget');
  */
 var NameAndSignature = Widget.extend({
     template: 'web.sign_name_and_signature',
-    xmlDependencies: ['/web/static/src/legacy/xml/name_and_signature.xml'],
     events: {
         // name
         'input .o_web_sign_name_input': '_onInputSignName',

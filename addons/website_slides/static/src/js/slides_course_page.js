@@ -20,8 +20,6 @@ export const SlideCoursePage = publicWidget.Widget.extend({
         'slide_mark_completed': '_onSlideMarkCompleted',
     },
 
-    xmlDependencies: ['/website_slides/static/src/xml/website_slides_sidebar.xml'],
-
     /**
      * Greens up the bullet when the slide is completed
      *

@@ -1,6 +1,5 @@
 /** @odoo-module alias=web.public.root */
 
-import ajax from 'web.ajax';
 import dom from 'web.dom';
 import legacyEnv from 'web.public_env';
 import session from 'web.session';
@@ -22,7 +21,7 @@ import {
 import { standaloneAdapter } from "web.OwlCompatibility";
 
 import { makeEnv, startServices } from "@web/env";
-import { assets, templates } from '@web/core/assets';
+import { setLoadXmlDefaultApp, loadJS, templates } from '@web/core/assets';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
 import { jsonrpc } from '@web/core/network/rpc_service';
@@ -40,7 +39,7 @@ function getLang() {
 }
 var lang = utils.get_cookie('frontend_lang') || getLang(); // FIXME the cookie value should maybe be in the ctx?
 // momentjs don't have config for en_US, so avoid useless RPC
-var localeDef = lang !== 'en_US' ? ajax.loadJS('/web/webclient/locale/' + lang.replace('-', '_')) : Promise.resolve();
+var localeDef = lang !== 'en_US' ? loadJS('/web/webclient/locale/' + lang.replace('-', '_')) : Promise.resolve();
 
 
 /**
@@ -417,7 +416,7 @@ export async function createPublicRoot(RootWidget) {
         translateFn: _t,
         translatableAttributes: ["data-tooltip"],
     });
-    assets.defaultApp = app;
+    setLoadXmlDefaultApp(app);
     await Promise.all([
         app.mount(document.body),
         publicRoot.attachTo(document.body),

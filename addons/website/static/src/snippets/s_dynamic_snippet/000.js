@@ -8,7 +8,6 @@ const {Markup} = require('web.utils');
 
 const DynamicSnippet = publicWidget.Widget.extend({
     selector: '.s_dynamic_snippet',
-    xmlDependencies: ['/website/static/src/snippets/s_dynamic_snippet/000.xml'],
     read_events: {
         'click [data-url]': '_onCallToAction',
     },

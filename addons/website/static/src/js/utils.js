@@ -1,7 +1,6 @@
 odoo.define('website.utils', function (require) {
 'use strict';
 
-var ajax = require('web.ajax');
 var core = require('web.core');
 
 const { qweb, _t } = core;
@@ -165,10 +164,8 @@ function prompt(options, _qweb) {
             text: options
         };
     }
-    var xmlDef;
     if (_.isUndefined(_qweb)) {
         _qweb = 'website.prompt';
-        xmlDef = ajax.loadXML('/website/static/src/xml/website.xml', core.qweb);
     }
     options = _.extend({
         window_title: '',
@@ -185,50 +182,48 @@ function prompt(options, _qweb) {
     options.field_name = options.field_name || options[type];
 
     var def = new Promise(function (resolve, reject) {
-        Promise.resolve(xmlDef).then(function () {
-            var dialog = $(qweb.render(_qweb, options)).appendTo('body');
-            options.$dialog = dialog;
-            var field = dialog.find(options.field_type).first();
-            field.val(options['default']); // dict notation for IE<9
-            field.fillWith = function (data) {
-                if (field.is('select')) {
-                    var select = field[0];
-                    data.forEach(function (item) {
-                        select.options[select.options.length] = new window.Option(item[1], item[0]);
-                    });
-                } else {
-                    field.val(data);
-                }
-            };
-            var init = options.init(field, dialog);
-            Promise.resolve(init).then(function (fill) {
-                if (fill) {
-                    field.fillWith(fill);
-                }
-                dialog.modal('show');
-                field.focus();
-                dialog.on('click', '.btn-primary', function () {
-                    var backdrop = $('.modal-backdrop');
-                    resolve({ val: field.val(), field: field, dialog: dialog });
-                    dialog.modal('hide').remove();
-                        backdrop.remove();
+        var dialog = $(qweb.render(_qweb, options)).appendTo('body');
+        options.$dialog = dialog;
+        var field = dialog.find(options.field_type).first();
+        field.val(options['default']); // dict notation for IE<9
+        field.fillWith = function (data) {
+            if (field.is('select')) {
+                var select = field[0];
+                data.forEach(function (item) {
+                    select.options[select.options.length] = new window.Option(item[1], item[0]);
                 });
-            });
-            dialog.on('hidden.bs.modal', function () {
-                    var backdrop = $('.modal-backdrop');
-                reject();
-                dialog.remove();
+            } else {
+                field.val(data);
+            }
+        };
+        var init = options.init(field, dialog);
+        Promise.resolve(init).then(function (fill) {
+            if (fill) {
+                field.fillWith(fill);
+            }
+            dialog.modal('show');
+            field.focus();
+            dialog.on('click', '.btn-primary', function () {
+                var backdrop = $('.modal-backdrop');
+                resolve({ val: field.val(), field: field, dialog: dialog });
+                dialog.modal('hide').remove();
                     backdrop.remove();
             });
-            if (field.is('input[type="text"], select')) {
-                field.keypress(function (e) {
-                    if (e.which === 13) {
-                        e.preventDefault();
-                        dialog.find('.btn-primary').trigger('click');
-                    }
-                });
-            }
         });
+        dialog.on('hidden.bs.modal', function () {
+                var backdrop = $('.modal-backdrop');
+            reject();
+            dialog.remove();
+                backdrop.remove();
+        });
+        if (field.is('input[type="text"], select')) {
+            field.keypress(function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    dialog.find('.btn-primary').trigger('click');
+                }
+            });
+        }
     });
 
     return def;

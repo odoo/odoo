@@ -26,8 +26,6 @@ Display your booths on your website for the users to register.
         'web.assets_frontend': [
             '/website_event_booth/static/src/js/booth_register.js',
             '/website_event_booth/static/src/scss/website_event_booth.scss',
-        ],
-        'web.assets_qweb': [
             'website_event_booth/static/src/xml/event_booth_registration_templates.xml',
         ],
     },

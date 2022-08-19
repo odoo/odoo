@@ -16,7 +16,6 @@ var qweb = core.qweb;
 
 var PieChart = Widget.extend({
     className: 'o_pie_chart',
-    xmlDependencies: ['/web/static/src/legacy/xml/chart.xml'],
 
     /**
      * @override
@@ -70,7 +69,7 @@ var PieChart = Widget.extend({
     willStart: async function () {
         var self = this;
         const _super = this._super.bind(this, ...arguments);
-        await loadLegacyViews({ rpc: this._rpc.bind(this) });
+        await loadLegacyViews();
         var def1 = _super();
 
         var SubView = viewRegistry.get('graph');

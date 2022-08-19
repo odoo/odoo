@@ -20,7 +20,6 @@ var _t = core._t;
  */
 var PortalChatter = publicWidget.Widget.extend({
     template: 'portal.Chatter',
-    xmlDependencies: ['/portal/static/src/xml/portal_chatter.xml'],
     events: {
         'click .o_portal_chatter_pager_btn': '_onClickPager',
         'click .o_portal_chatter_js_is_internal': 'async _onClickUpdateIsInternal',

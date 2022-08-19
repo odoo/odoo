@@ -50,7 +50,7 @@ const ReplenishReport = clientAction.extend({
         return Promise.all([
             this._super.apply(this, arguments),
             loadWarehouses,
-            loadLegacyViews({ rpc: this._rpc.bind(this) }),
+            loadLegacyViews(),
         ]);
     },
 

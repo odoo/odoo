@@ -9,7 +9,6 @@ var SESSION_CHART_COLORS = require('survey.session_colors');
 var QWeb = core.qweb;
 
 publicWidget.registry.SurveySessionTextAnswers = publicWidget.Widget.extend({
-    xmlDependencies: ['/survey/static/src/xml/survey_session_text_answer_template.xml'],
     init: function (parent, options) {
         this._super.apply(this, arguments);
 

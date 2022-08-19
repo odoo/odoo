@@ -13,7 +13,6 @@ const qweb = core.qweb;
  */
 const ProfilingQwebView = basicFfields.AceEditor.extend({
     template: "web.ProfilingQwebView",
-    xmlDependencies: ["/web/static/src/xml/debug.xml"],
     events: _.extend({}, basicFfields.AceEditor.prototype.events, {
         "click .dropdown-menu a": "_onSelectView",
     }),

@@ -9,7 +9,6 @@ var qweb = core.qweb;
 const GalleryWidget = publicWidget.Widget.extend({
 
     selector: '.s_image_gallery:not(.o_slideshow)',
-    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
     events: {
         'click img': '_onClickImg',
     },
@@ -73,7 +72,6 @@ const GalleryWidget = publicWidget.Widget.extend({
 
 const GallerySliderWidget = publicWidget.Widget.extend({
     selector: '.o_slideshow',
-    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
     disabledInEditableMode: false,
 
     /**

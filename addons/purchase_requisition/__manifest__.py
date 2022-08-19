@@ -32,8 +32,6 @@ are agreements you have with vendors to benefit from a predetermined pricing.
             'purchase_requisition/static/src/js/purchase_order_line_compare_list_controller.js',
             'purchase_requisition/static/src/js/purchase_order_line_compare_list_renderer.js',
             'purchase_requisition/static/src/js/purchase_order_line_compare_list_view.js',
-        ],
-        'web.assets_qweb': [
             'purchase_requisition/static/src/xml/purchase_order_line_compare.xml',
         ],
     },

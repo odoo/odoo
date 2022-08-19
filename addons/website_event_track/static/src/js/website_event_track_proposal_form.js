@@ -9,9 +9,6 @@ var _t = core._t;
 
 publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend({
     selector: '.o_website_event_track_proposal_form',
-    xmlDependencies: [
-        '/website_event_track/static/src/xml/event_track_proposal_templates.xml',
-    ],
     events: {
         'click .o_wetrack_add_contact_information_checkbox': '_onAdvancedContactToggle',
         'input input[name="partner_name"]': '_onPartnerNameInput',

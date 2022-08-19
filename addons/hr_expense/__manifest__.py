@@ -55,18 +55,16 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'assets': {
         'web.assets_backend': [
             'hr_expense/static/src/components/*.js',
+            'hr_expense/static/src/components/*.xml',
             'hr_expense/static/src/mixins/*.js',
             'hr_expense/static/src/views/*.js',
+            'hr_expense/static/src/views/*.xml',
             'hr_expense/static/src/scss/hr_expense.scss',
+            'hr_expense/static/src/xml/**/*',
         ],
         'web.assets_tests': [
             'hr_expense/static/src/js/tours/hr_expense.js',
             'hr_expense/static/tests/tours/expense_upload_tours.js',
-        ],
-        'web.assets_qweb': [
-            'hr_expense/static/src/components/*.xml',
-            'hr_expense/static/src/views/*.xml',
-            'hr_expense/static/src/xml/**/*',
         ],
     },
     'license': 'LGPL-3',

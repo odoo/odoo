@@ -4,7 +4,6 @@ odoo.define('survey.breadcrumb', function (require) {
 var publicWidget = require('web.public.widget');
 
 publicWidget.registry.SurveyBreadcrumbWidget = publicWidget.Widget.extend({
-    xmlDependencies: ['/survey/static/src/xml/survey_breadcrumb_templates.xml'],
     template: "survey.survey_breadcrumb_template",
     events: {
         'click .breadcrumb-item a': '_onBreadcrumbClick',

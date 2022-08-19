@@ -27,8 +27,6 @@
     'assets': {
         'web.assets_backend': [
             'crm_iap_mine/static/src/js/**/*',
-        ],
-        'web.assets_qweb': [
             'crm_iap_mine/static/src/xml/**/*',
         ],
     },

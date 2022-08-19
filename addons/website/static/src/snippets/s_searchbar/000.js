@@ -8,7 +8,6 @@ import {Markup} from 'web.utils';
 
 publicWidget.registry.searchBar = publicWidget.Widget.extend({
     selector: '.o_searchbar_form',
-    xmlDependencies: ['/website/static/src/snippets/s_searchbar/000.xml'],
     events: {
         'input .search-query': '_onInput',
         'focusout': '_onFocusOut',

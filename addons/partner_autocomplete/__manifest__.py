@@ -28,15 +28,13 @@
             'partner_autocomplete/static/src/js/partner_autocomplete_fieldchar.js',
             'partner_autocomplete/static/src/js/partner_autocomplete_many2one.js',
             'partner_autocomplete/static/src/js/web_company_autocomplete.js',
+            'partner_autocomplete/static/src/xml/**/*',
         ],
         'web.tests_assets': [
             'partner_autocomplete/static/lib/**/*',
         ],
         'web.qunit_suite_tests': [
             'partner_autocomplete/static/tests/**/*',
-        ],
-        'web.assets_qweb': [
-            'partner_autocomplete/static/src/xml/**/*',
         ],
     },
     'license': 'LGPL-3',

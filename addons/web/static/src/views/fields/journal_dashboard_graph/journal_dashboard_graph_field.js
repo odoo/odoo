@@ -12,7 +12,7 @@ export class JournalDashboardGraphField extends Component {
         this.canvasRef = useRef("canvas");
         this.data = JSON.parse(this.props.value);
 
-        onWillStart(() => loadJS(["/web/static/lib/Chart/Chart.js"]));
+        onWillStart(() => loadJS("/web/static/lib/Chart/Chart.js"));
 
         useEffect(() => {
             this.renderChart();

@@ -143,7 +143,6 @@ function formatSCSS(scss) {
  */
 var ViewEditor = Widget.extend({
     template: 'web_editor.ace_view_editor',
-    xmlDependencies: ['/web_editor/static/src/xml/ace.xml'],
     jsLibs: [
         '/web/static/lib/ace/ace.js',
         [

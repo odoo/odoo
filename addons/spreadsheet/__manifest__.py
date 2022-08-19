@@ -15,17 +15,18 @@
     'assets': {
         'spreadsheet.o_spreadsheet': [
             'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
+            # Load all o_spreadsheet templates first to allow to inherit them
+            'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml',
+            'spreadsheet/static/src/chart/odoo_menu/chart_figure.xml',
             'spreadsheet/static/src/**/*.js',
-            ('remove', 'spreadsheet/static/src/assets_backend/**/*.js')
+            ('remove', 'spreadsheet/static/src/assets_backend/**/*')
         ],
         'web.assets_backend': [
             'spreadsheet/static/src/**/*.scss',
-            'spreadsheet/static/src/assets_backend/**/*.js'
-        ],
-        'web.assets_qweb': [
-            # Load all o_spreadsheet templates first to allow to inherit them
-            'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml',
             'spreadsheet/static/src/**/*.xml',
+            'spreadsheet/static/src/assets_backend/**/*',
+            ('remove', 'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml'),
+            ('remove', 'spreadsheet/static/src/chart/odoo_menu/chart_figure.xml')
         ],
         'web.qunit_suite_tests': [
             'spreadsheet/static/tests/**/*',

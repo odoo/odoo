@@ -50,7 +50,7 @@ export class GraphRenderer extends Component {
         this.tooltip = null;
         this.legendTooltip = null;
 
-        onWillStart(() => loadJS(["/web/static/lib/Chart/Chart.js"]));
+        onWillStart(() => loadJS("/web/static/lib/Chart/Chart.js"));
 
         useEffect(() => this.renderChart());
         onWillUnmount(this.onWillUnmount);

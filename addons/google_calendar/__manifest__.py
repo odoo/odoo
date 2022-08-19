@@ -21,15 +21,13 @@
             'google_calendar/static/src/js/google_calendar_popover.js',
             'google_calendar/static/src/js/google_calendar.js',
             'google_calendar/static/src/scss/google_calendar.scss',
+            'google_calendar/static/src/xml/*.xml',
         ],
         'web.qunit_suite_tests': [
             'google_calendar/static/tests/**/*',
         ],
         'web.qunit_mobile_suite_tests': [
             'google_calendar/static/tests/mock_server.js',
-        ],
-        'web.assets_qweb': [
-            'google_calendar/static/src/xml/*.xml',
         ],
     },
     'license': 'LGPL-3',

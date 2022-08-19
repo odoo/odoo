@@ -9,9 +9,6 @@ var _t = core._t;
 
 publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     selector: '.o_wbooth_registration',
-    xmlDependencies: [
-        '/website_event_booth/static/src/xml/event_booth_registration_templates.xml',
-    ],
     events: {
         'change input[name="booth_category_id"]': '_onChangeBoothType',
         'change .form-check > input[type="checkbox"]': '_onChangeBooth',
