@@ -1,5 +1,6 @@
-from odoo.exceptions import ValidationError
-from odoo import api, fields, models
+#from odoo.exceptions import ValidationError
+#from odoo import api, fields, models
+from odoo import fields, models
 
 DEFAULT_MESSAGE = "Default message"
 
