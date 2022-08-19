@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<templates id="template" xml:space="preserve">
-    <t t-name="repair.forecastWidget">
-        <span t-if="['draft', 'partially_available', 'assigned', 'cancel', 'done'].includes(move_state)" t-esc="reserved_availability_str"/>
-        <span t-elif="!forecast_expected_date_str and will_be_fulfilled" class="text-success">Available</span>
-        <span t-elif="forecast_expected_date_str and will_be_fulfilled" t-att-class="forecast_is_late ? 'text-danger' : 'text-warning'">Exp <t t-esc="forecast_expected_date_str"/></span>
-        <span t-else="" class="text-danger">Not Available</span>
-        <button t-if="product_type == 'product'" t-att="id ? {} : {'disabled': ''}" class="o_forecast_report_button btn btn-link o_icon_button ms-2" title="Forecasted Report">
-            <i t-attf-class="fa fa-fw fa-area-chart {{ move_state != 'draft' and (!will_be_fulfilled or forecast_is_late) ? 'text-danger' : '' }}"/>
-        </button>
-    </t>
-</templates>
+ <templates id="template" xml:space="preserve">
+
+     <t t-name="repair.ForecastWidget" owl="1">
+         <span t-if="['draft', 'partially_available', 'assigned', 'cancel', 'done'].includes(moveState)"
+               t-esc="reservedAvailability"/>
+         <span t-elif="!forecastExpectedDate and willBeFulfilled" class="text-success">
+             Available
+         </span>
+         <span t-elif="forecastExpectedDate and willBeFulfilled"
+               t-att-class="forecastIsLate ? 'text-danger' : 'text-warning'">
+             Exp <t t-esc="forecastExpectedDate"/>
+         </span>
+         <span t-else="" class="text-danger">Not Available</span>
+         <button t-if="product_type == 'product'" title="Forecasted Report"
+                 t-on-click="_openReport" t-att="resId ? {} : {'disabled': ''}"
+                 class="o_forecast_report_button btn btn-link o_icon_button ms-2">
+             <i class="fa fa-fw fa-area-chart"
+                t-att-class="moveState != 'draft' and (!willBeFulfilled or forecastIsLate) ? 'text-danger' : ''"/>
+         </button>
+     </t>
+
+ </templates>

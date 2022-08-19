@@ -1,50 +1,33 @@
-odoo.define('repair.forecast_widget', function (require) {
-'use strict';
+/** @odoo-module */
 
-const AbstractField = require('web.AbstractField');
-const fieldRegistry = require('web.field_registry');
-const field_utils = require('web.field_utils');
-const utils = require('web.utils');
-const core = require('web.core');
-const QWeb = core.qweb;
+import { FloatField } from '@web/views/fields/float/float_field';
+import { formatDate } from '@web/core/l10n/dates';
+import { formatFloat } from '@web/views/fields/formatters';
+import { registry } from '@web/core/registry';
+import { useService } from '@web/core/utils/hooks';
 
-const RepairForecastWidgetField = AbstractField.extend({
-    supportedFieldTypes: ['float'],
-
-    _render: function () {
-        var data = Object.assign({}, this.record.data, {
-            forecast_availability_str: field_utils.format.float(
-                this.record.data.forecast_availability,
-                this.record.fields.forecast_availability,
-                this.nodeOptions
-            ),
-            reserved_availability_str: field_utils.format.float(
-                this.record.data.reserved_availability,
-                this.record.fields.reserved_availability,
-                this.nodeOptions
-            ),
-            forecast_expected_date_str: field_utils.format.date(
-                this.record.data.forecast_expected_date,
-                this.record.fields.forecast_expected_date
-            ),
-        });
-        console.log('render')
-        console.log(data.forecast_expected_date)
-        console.log(data.schedule_date)
+export class RepairForecastWidgetField extends FloatField {
+    setup() {
+        const { data, fields } = this.props.record;
+        this.actionService = useService('action');
+        this.orm = useService('orm');
+        this.resId = data.id;
+        this.product_type = data.product_type
+        this.reservedAvailability = formatFloat(
+            data.reserved_availability,
+            { ...fields.reserved_availability, ...this.nodeOptions }
+        );
+        this.forecastExpectedDate = formatDate(
+            data.forecast_expected_date,
+            fields.forecast_expected_date
+        );
 
         if (data.forecast_expected_date && data.schedule_date) {
-            console.log(data.schedule_date)
-            data.forecast_is_late = data.forecast_expected_date > data.schedule_date;
+            this.forecastIsLate = data.forecast_expected_date > data.schedule_date;
         }
-        data.will_be_fulfilled = utils.round_decimals(data.forecast_availability, this.record.fields.forecast_availability.digits[1]) >= utils.round_decimals(data.product_qty, this.record.fields.forecast_availability.digits[1]);
-
-        this.$el.html(QWeb.render('repair.forecastWidget', data));
-        this.$('.o_forecast_report_button').on('click', this._onOpenReport.bind(this));
-    },
-
-    isSet: function () {
-        return true;
-    },
+        this.willBeFulfilled = data.forecast_availability >= data.product_qty;
+        this.moveState = data.move_state;
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -52,30 +35,18 @@ const RepairForecastWidgetField = AbstractField.extend({
 
     /**
      * Opens the Forecast Report for the `stock.move` product.
-     *
-     * @param {MouseEvent} ev
      */
-    _onOpenReport: function (ev) {
+    async _openReport(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        if (!this.recordData.id) {
+        if (!this.resId) {
             return;
         }
-        this._rpc({
-            model: 'stock.move',
-            method: 'action_product_forecast_report',
-            args: [this.recordData.id],
-        }).then(action => {
-            action.context = Object.assign(action.context || {}, {
-                active_model: 'product.product',
-                active_id: this.recordData.product_id.res_id,
-            });
-            this.do_action(action);
-        });
-    },
-});
+        const action = await this.orm.call('repair.line', 'action_product_forecast_report', [this.resId]);
+        this.actionService.doAction(action);
+    }
+}
+RepairForecastWidgetField.template = 'repair.ForecastWidget';
+RepairForecastWidgetField.displayName = "Repair Forecast Widget";
 
-fieldRegistry.add('repair_forecast_widget', RepairForecastWidgetField);
-
-return RepairForecastWidgetField;
-});
+registry.category('fields').add('repair_forecast_widget', RepairForecastWidgetField);
