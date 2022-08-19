@@ -5,9 +5,9 @@
         <div class="floor-screen screen">
             <div class="screen-content-flexbox">
                 <t t-if="env.pos.floors.length > 1">
-                    <div class="floor-selector">
+                    <div class="floor-selector w-100 d-flex text-center fs-3">
                         <t t-foreach="env.pos.floors" t-as="floor" t-key="floor.id">
-                            <span class="button button-floor" t-att-class="{ active: floor.id === state.selectedFloorId }" t-on-click="() => this.selectFloor(floor)">
+                            <span class="button button-floor flex-grow-1 py-3 fs-4 cursor-pointer" t-att-class="{ 'active text-bg-dark': floor.id === state.selectedFloorId }" t-on-click="() => this.selectFloor(floor)">
                                 <t t-esc="floor.name" />
                             </span>
                         </t>
@@ -19,21 +19,21 @@
                     t-on-touchstart="_onPinchStart"
                     t-on-touchmove="_onPinchMove"
                     t-on-touchend="_onPinchEnd"
-                    class="floor-map"
+                    class="floor-map position-relative h-100 overflow-auto transition-base"
                     t-ref="floor-map-ref"
                 >
-                    <div t-if="isFloorEmpty" class="empty-floor">
+                    <div t-if="isFloorEmpty" class="empty-floor position-relative w-100 h-100 d-flex flex-wrap align-items-center justify-content-center fs-4 opacity-75">
                         <span>This floor has no tables yet, use the </span>
-                        <i class="fa fa-plus" role="img" aria-label="Add button" title="Add button"></i>
+                        <i class="fa fa-plus d-inline-block p-2 mx-1 rounded-2 bg-dark-light text-white" role="img" aria-label="Add button" title="Add button"></i>
                         <span> button in the editing toolbar to create new tables.</span>
                     </div>
-                    <div t-else="" class="tables">
+                    <div t-else="" class="tables position-relative">
                         <t t-foreach="activeTables" t-as="table" t-key="table.id">
-                            <TableWidget t-if="table.id !== state.selectedTableId" onClick.bind="onSelectTable" table="table" />
+                            <TableWidget t-if="table.id !== state.selectedTableId" onClick.bind="onSelectTable" table="table"/>
                             <EditableTable t-else="" table="table" onSaveTable.bind="onSaveTable" />
                         </t>
                     </div>
-                    <span t-if="env.pos.user.role == 'manager'" class="edit-button editing" t-att-class="{ active: state.isEditMode }" t-on-click.stop="toggleEditMode"
+                    <span t-if="env.pos.user.role == 'manager'" class="edit-button editing position-fixed end-0 m-2 px-3 py-2 rounded-2 text-bg-dark fs-4 text-center cursor-pointer" t-att-class="{ active: state.isEditMode }" t-on-click.stop="toggleEditMode"
                           t-attf-style="top:{{state.floorMapScrollTop}}px;">
                         <i class="fa fa-pencil" role="img" aria-label="Edit" title="Edit"></i>
                     </span>

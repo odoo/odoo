@@ -2,17 +2,19 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="TableWidget" owl="1">
-        <div class="table" t-on-click.stop="() => props.onClick(props.table)">
-            <span class="table-cover" t-att-class="{ full: fill >= 1 }"></span>
-            <span t-att-class="orderCountClass" t-att-hidden="orderCount === 0">
-                <t t-esc="orderCount" />
-            </span>
-            <span class="label">
-                <t t-esc="props.table.name" />
-            </span>
-            <span class="table-seats">
-                <t t-esc="customerCountDisplay" />
-            </span>
+        <div class="table position-absolute text-align-center shadow-lg text-center text-white overflow-hidden cursor_pointer " t-on-click.stop="() => props.onClick(props.table)">
+            <span class="table-cover position-absolute d-block start-0 end-0 bottom-0 bg-dark opacity-25 z-index-0" t-att-class="{ full: fill >= 1 }"></span>
+            <div class="d-flex flex-column h-100 w-100 border-0">
+                <span t-att-class="orderCountClass" t-att-hidden="orderCount === 0">
+                    <t t-esc="orderCount" />
+                </span>
+                <span class="label d-flex align-items-center justify-content-center flex-grow-1 fs-4 lh-base overflow-hidden z-index-1">
+                    <t t-esc="props.table.name" />
+                </span>
+                <span class="table-seats mb-1 mx-auto px-2 rounded-2 border-0 text-bg-dark fw-bold lh-base fs-5 z-index-1 opacity-25 ">
+                    <t t-esc="customerCountDisplay" />
+                </span>
+            </div>
         </div>
     </t>
 

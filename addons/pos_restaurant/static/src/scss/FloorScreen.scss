@@ -1,0 +1,89 @@
+$color-picker-size: 180px;
+$close-picker-size: 32px;
+$table-handle-size: 48px;
+
+/* ------ FLOOR MAP ------- */
+
+.floor-map {
+    box-shadow: 0px 6px 0px -3px rgba(0,0,0,0.07) inset;
+}
+
+.tables {
+    --scale: 1;
+    transform: scale(var(--scale));
+}
+
+@media screen and (min-width: 1024px) {
+    .tables {
+        max-width: 1024px;
+        margin: auto;
+        max-height: 540px;
+        border-radius: 0px 0px 6px 6px;
+        border: dashed 2px rgba(0,0,0,0.1);
+        border-top: none;
+        height: 100%;
+    }
+}
+
+.edit-button.editing {
+    background-color: $gray-800 !important;    
+    &.active {
+        background-color: $o-success !important;
+    } 
+}
+
+.edit-bar {
+    right: 50px;
+}
+
+.edit-button {
+    border-right: solid 1px rgba(255,255,255,0.2);
+
+    &.disabled {
+        cursor:default;
+        
+        > * {
+            opacity: .5;
+        }
+    }
+    &:last-child {
+        border-right: none;
+    }
+ }
+
+.color-picker {
+    width: $color-picker-size;
+    height: $color-picker-size;
+
+    .color {
+        width: calc(#{$color-picker-size} / 3);
+        height: calc(#{$color-picker-size} / 3);
+    }
+}
+
+.close-picker {
+    width: $close-picker-size;
+    height: $close-picker-size;
+    line-height: $close-picker-size;
+    margin-bottom: calc(-1 * (#{$close-picker-size} / 2));
+}
+
+.table-handle {
+    width: $table-handle-size;
+    height: $table-handle-size;
+    left: 50%;
+    top: 50%;
+    /* See o-grab-cursor mixin */
+    cursor: url(/web/static/img/openhand.cur), grab;
+
+    &:hover {
+        width: calc(#{$table-handle-size} * 1.25);
+        height: calc(#{$table-handle-size} * 1.25);
+    }
+ }
+
+.order-count {
+    background-color: $black;
+    height: map-get($spacers, 4);
+    line-height: map-get($spacers, 4);
+}

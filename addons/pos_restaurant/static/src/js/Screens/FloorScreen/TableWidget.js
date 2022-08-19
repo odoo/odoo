@@ -51,11 +51,11 @@ odoo.define('pos_restaurant.TableWidget', function(require) {
                       .filter(o => o.orderlines.length !== 0 || o.paymentlines.length !== 0).length;
         }
         get orderCountClass() {
-            const countClass = { 'order-count': true }
+            const countClass = { 'order-count px-2 mx-auto mt-1 border-0 rounded-2 text-white fs-5 fw-bold z-index-1': true }
             if (this.env.pos.config.iface_printers) {
                 const notifications = this._getNotifications();
-                countClass['notify-printing'] = notifications.printing;
-                countClass['notify-skipped'] = notifications.skipped;
+                countClass['notify-printing text-bg-danger'] = notifications.printing;
+                countClass['notify-skipped text-bg-info'] = notifications.skipped;
             }
             return countClass;
         }

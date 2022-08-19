@@ -4,24 +4,24 @@
     <t t-name="EditableTable" owl="1">
         <Draggable limitArea="'.floor-map'">
             <Resizeable limitArea="'.floor-map'">
-                <div class="table selected" t-on-click.stop="">
-                    <span class="label drag-handle">
+                <div class="table selected position-absolute text-align-center shadow-lg border border-2 border-light fs-4 text-center text-white overflow-hidden cursor_pointer z-index-1" t-on-click.stop="">
+                    <span class="label drag-handle position-relative d-block mh-100 mt-n1 border-0 fs-4 overflow-hidden">
                         <t t-esc="props.table.name" />
                     </span>
-                    <span class="table-seats">
+                    <span class="table-seats position-absolute d-inline-block bottom-0 start-50 translate-middle-x mb-1 px-2 rounded-2 border-0 text-bg-dark opacity-25 fw-bold lh-base fs-5 z-index-1">
                         <t t-esc="props.table.seats" />
                     </span>
                     <t t-if="props.table.shape === 'round'">
-                        <div class="table-handle top resize-handle-n"></div>
-                        <div class="table-handle bottom resize-handle-s"></div>
-                        <div class="table-handle left resize-handle-w"></div>
-                        <div class="table-handle right resize-handle-e"></div>
+                        <div class="table-handle resize-handle-n position-absolute top-0 p-0 rounded-circle shadow bg-white transition-base z-index-1 translate-middle"></div>
+                        <div class="table-handle resize-handle-s position-absolute top-100 p-0 rounded-circle shadow bg-white transition-base z-index-1 translate-middle"></div>
+                        <div class="table-handle resize-handle-w position-absolute start-0 p-0 rounded-circle shadow bg-white transition-base z-index-1 translate-middle"></div>
+                        <div class="table-handle resize-handle-e position-absolute start-100 p-0 rounded-circle shadow bg-white transition-base z-index-1 translate-middle"></div>
                     </t>
                     <t t-if="props.table.shape === 'square'">
-                        <span class='table-handle top right resize-handle-ne'></span>
-                        <span class='table-handle top left resize-handle-nw'></span>
-                        <span class='table-handle bottom right resize-handle-se'></span>
-                        <span class='table-handle bottom left resize-handle-sw'></span>
+                        <span class='table-handle resize-handle-ne position-absolute top-0 start-100 p-0 rounded-circle shadow bg-white transition-base z-index-1 translate-middle'></span>
+                        <span class='table-handle resize-handle-nw position-absolute top-0 start-0 p-0 rounded-circle shadow bg-white transition-base z-index-1 translate-middle'></span>
+                        <span class='table-handle resize-handle-se position-absolute top-100 start-100 p-0 rounded-circle shadow bg-white transition-base z-index-1 translate-middle'></span>
+                        <span class='table-handle resize-handle-sw position-absolute top-100 start-0 p-0 rounded-circle shadow bg-white transition-base z-index-1 translate-middle'></span>
                     </t>
                 </div>
             </Resizeable>
