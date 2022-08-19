@@ -33,8 +33,8 @@ QUnit.test('select another mailbox', async function (assert) {
         "discuss should display a thread initially"
     );
     assert.strictEqual(
-        document.querySelector('.o_Discuss_thread').dataset.threadLocalId,
-        messaging.inbox.thread.localId,
+        document.querySelector('.o_Discuss_thread').dataset.threadId,
+        messaging.inbox.thread.id,
         "inbox mailbox should be opened initially"
     );
     assert.containsOnce(
@@ -54,8 +54,8 @@ QUnit.test('select another mailbox', async function (assert) {
         "discuss should still have a thread after clicking on starred mailbox"
     );
     assert.strictEqual(
-        document.querySelector('.o_Discuss_thread').dataset.threadLocalId,
-        messaging.starred.thread.localId,
+        document.querySelector('.o_Discuss_thread').dataset.threadId,
+        messaging.starred.thread.id,
         "starred mailbox should be opened after clicking on it"
     );
 });

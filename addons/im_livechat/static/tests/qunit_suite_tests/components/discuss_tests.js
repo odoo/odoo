@@ -26,7 +26,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss();
 
     assert.containsOnce(document.body, '.o_Discuss_sidebar',
@@ -43,12 +43,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
         "should have a channel group named 'Livechat'"
     );
     const livechat = groupLivechat.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]
+        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
     `);
     assert.ok(
         livechat,
@@ -295,13 +290,13 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
         "should have 2 livechat items"
     );
     assert.strictEqual(
-        initialLivechats[0].dataset.threadLocalId,
-        livechat12.localId,
+        parseInt(initialLivechats[0].dataset.threadId),
+        livechat12.id,
         "first livechat should be the one with the more recent last activity time"
     );
     assert.strictEqual(
-        initialLivechats[1].dataset.threadLocalId,
-        livechat11.localId,
+        parseInt(initialLivechats[1].dataset.threadId),
+        livechat11.id,
         "second livechat should be the one with the less recent last activity time"
     );
 
@@ -317,13 +312,13 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
         "should have 2 livechat items"
     );
     assert.strictEqual(
-        newLivechats[0].dataset.threadLocalId,
-        livechat11.localId,
+        parseInt(newLivechats[0].dataset.threadId),
+        livechat11.id,
         "first livechat should be the one with the more recent last activity time"
     );
     assert.strictEqual(
-        newLivechats[1].dataset.threadLocalId,
-        livechat12.localId,
+        parseInt(newLivechats[1].dataset.threadId),
+        livechat12.id,
         "second livechat should be the one with the less recent last activity time"
     );
 });

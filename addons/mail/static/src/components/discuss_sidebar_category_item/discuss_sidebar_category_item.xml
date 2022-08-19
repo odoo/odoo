@@ -8,8 +8,8 @@
                     'bg-100': !categoryItem.isActive,
                     'o-active bg-200': categoryItem.isActive,
                     'o-unread': categoryItem.isUnread,
-                }" t-attf-class="{{ className }}" t-on-click="categoryItem.onClick" t-att-data-thread-local-id="categoryItem.thread.localId" t-att-data-thread-name="categoryItem.thread.displayName"
-                t-ref="root"
+                }" t-attf-class="{{ className }}" t-on-click="categoryItem.onClick" t-att-data-thread-id="categoryItem.thread.id" t-att-data-thread-name="categoryItem.thread.displayName"
+                t-att-data-thread-model="categoryItem.thread.model" t-ref="root"
             >
                 <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_avatar ms-4">
                     <div class="o_DiscussSidebarCategoryItem_imageContainer position-relative d-flex">

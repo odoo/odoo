@@ -19,17 +19,12 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     await openDiscuss();
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${messaging.inbox.thread.localId}"]`,
+        `.o_Discuss_thread[data-thread-id="${messaging.inbox.thread.id}"][data-thread-model="mail.box"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]`,
+        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
         "should have the only channel of which user is member in discuss sidebar"
     );
 });
@@ -39,19 +34,13 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { click, messaging, openDiscuss } = await start();
+    const { click, openDiscuss } = await start();
     await openDiscuss();
 
-    const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    await click(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        threadGeneral.localId
-    }"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`);
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_Discuss_thread[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
         "The channel #General is displayed in discuss"
     );
 });
@@ -67,7 +56,7 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
             partner_id: pyEnv.currentPartnerId,
         }]],
     });
-    const { click, messaging, openDiscuss } = await start({
+    const { click, openDiscuss } = await start({
         async mockRPC(route, args) {
             if (args.method === 'action_unfollow') {
                 assert.step('action_unfollow');
@@ -79,13 +68,7 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
     });
     await openDiscuss();
 
-    const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
-    await click(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        threadGeneral.localId
-    }"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`);
     assert.verifySteps([], "action_unfollow is not called yet");
 
     await click('.o_DiscussSidebarCategoryItem_commandLeave');
@@ -97,7 +80,7 @@ QUnit.test('sidebar: pinned channel 3: open channel and leave it', async functio
     );
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
         "The channel must have been removed from discuss sidebar"
     );
     assert.containsOnce(
@@ -114,28 +97,22 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     const mailChannelId1 = pyEnv['mail.channel'].create({});
     const { click, messaging, openDiscuss } = await start();
     await openDiscuss();
-    const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
 
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${messaging.inbox.thread.localId}"]`,
+        `.o_Discuss_thread[data-thread-id="${messaging.inbox.thread.id}"][data-thread-model="mail.box"]`,
         "The Inbox is opened in discuss"
     );
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
         "1 channel is present in discuss sidebar and it is 'general'"
     );
 
-    await click(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        threadGeneral.localId
-    }"]`);
+    await click(`.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`);
     assert.containsOnce(
         document.body,
-        `.o_Discuss_thread[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_Discuss_thread[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
         "The channel #General is opened in discuss"
     );
 
@@ -157,7 +134,7 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     );
     assert.containsNone(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
         "The channel must have been removed from discuss sidebar"
     );
 });
@@ -178,15 +155,12 @@ QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily p
         }]],
         group_based_subscription: true,
     });
-    const { messaging, openDiscuss } = await start();
+    const {openDiscuss } = await start();
     await openDiscuss();
-    const threadGeneral = messaging.models['Thread'].findFromIdentifyingData({
-        id: mailChannelId1,
-        model: 'mail.channel',
-    });
+
     assert.containsOnce(
         document.body,
-        `.o_DiscussSidebarCategoryItem[data-thread-local-id="${threadGeneral.localId}"]`,
+        `.o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
         "The channel #General is in discuss sidebar"
     );
     assert.containsNone(

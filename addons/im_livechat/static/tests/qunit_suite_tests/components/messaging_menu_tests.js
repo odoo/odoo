@@ -23,7 +23,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging } = await start();
+    await start();
     assert.containsOnce(
         document.body,
         '.o_MessagingMenu',
@@ -48,12 +48,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        `.o_ThreadPreview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]`,
+        `.o_ThreadPreview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
         "livechat should be listed in 'all' tab/filter of messaging menu"
     );
 
@@ -67,12 +62,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        `.o_ThreadPreview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]`,
+        `.o_ThreadPreview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
         "livechat should be listed in 'chat' tab/filter of messaging menu"
     );
 });

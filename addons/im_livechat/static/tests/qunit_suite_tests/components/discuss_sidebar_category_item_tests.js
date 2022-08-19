@@ -22,16 +22,11 @@ QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss();
 
     const livechatItem = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]
+        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
     `);
     assert.containsOnce(
         livechatItem,
@@ -60,16 +55,11 @@ QUnit.test('livechat - avatar: should have a partner profile picture for a livec
         channel_type: 'livechat',
         livechat_operator_id: pyEnv.currentPartnerId,
     });
-    const { messaging, openDiscuss } = await start();
+    const { openDiscuss } = await start();
     await openDiscuss();
 
     const livechatItem = document.querySelector(`
-        .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]
+        .o_DiscussSidebarCategoryItem[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
     `);
     assert.containsOnce(
         livechatItem,

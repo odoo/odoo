@@ -228,7 +228,7 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
     ]);
     const imSearchDef = makeDeferred();
     patchUiSize({ width: 1920 });
-    const { click, insertText, messaging } = await start({
+    const { click, insertText } = await start({
         mockRPC(route, args) {
             if (args.method === 'im_search') {
                 imSearchDef.resolve();
@@ -274,12 +274,7 @@ QUnit.test('open chat from "new message" chat window should open chat in place o
 
     // open channel-2
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_NotificationListItem[data-thread-local-id="${
-        messaging.models['Thread'].findFromIdentifyingData({
-            id: mailChannelId2,
-            model: 'mail.channel',
-        }).localId
-    }"]`);
+    await click(`.o_NotificationListItem[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]`);
     assert.containsN(
         document.body,
         '.o_ChatWindow',
@@ -418,7 +413,7 @@ QUnit.test('chat window: basic rendering', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({ name: "General" });
-    const { click, messaging } = await start();
+    const { click } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
     await click(`.o_NotificationList_preview`);
@@ -427,14 +422,10 @@ QUnit.test('chat window: basic rendering', async function (assert) {
         1,
         "should have open a chat window"
     );
-    const chatWindow = document.querySelector(`.o_ChatWindow`);
-    assert.strictEqual(
-        chatWindow.dataset.threadLocalId,
-        messaging.models['Thread'].findFromIdentifyingData({
-            id: mailChannelId1,
-            model: 'mail.channel',
-        }).localId,
-        "should have open a chat window of channel"
+    const chatWindow = document.querySelector(`.o_ChatWindow[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`);
+    assert.ok(
+        chatWindow,
+        'should have open a chat window of channel'
     );
     assert.strictEqual(
         chatWindow.querySelectorAll(`:scope .o_ChatWindow_header`).length,
@@ -1014,16 +1005,11 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'mailChannel1' }, { name: 'mailChannel2' }]);
     patchUiSize({ width: 1920 }); // enough to fit at least 2 chat windows
-    const { click, messaging } = await start();
+    const { click } = await start();
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]
+        .o_NotificationList_preview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
     `);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
@@ -1032,24 +1018,14 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_ChatWindow[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ChatWindow[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
         `).length,
         1,
         "chat window of chat should be open"
     );
     assert.ok(
         document.querySelector(`
-            .o_ChatWindow[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ChatWindow[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
         `).classList.contains('o-focused'),
         "chat window of chat should have focus"
     );
@@ -1057,12 +1033,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId2,
-                model: 'mail.channel',
-            }).localId
-        }"]
+        .o_NotificationList_preview[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
     `);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
@@ -1071,47 +1042,27 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_ChatWindow[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId2,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ChatWindow[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
         `).length,
         1,
         "chat window of channel should be open"
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_ChatWindow[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ChatWindow[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
         `).length,
         1,
         "chat window of chat should still be open"
     );
     assert.ok(
         document.querySelector(`
-            .o_ChatWindow[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId2,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ChatWindow[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
         `).classList.contains('o-focused'),
         "chat window of channel should have focus"
     );
     assert.notOk(
         document.querySelector(`
-            .o_ChatWindow[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ChatWindow[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
         `).classList.contains('o-focused'),
         "chat window of chat should no longer have focus"
     );
@@ -1143,18 +1094,13 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
         { name: 'mailChannel3' },
     ]);
     patchUiSize({ width: 900 }); // enough to fit 2 chat windows but not 3
-    const { click, messaging } = await start();
+    const { click } = await start();
 
     // open, from systray menu, chat windows of channels with Id 1, 2, then 3
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]
+        .o_NotificationList_preview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
     `);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
@@ -1175,12 +1121,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId2,
-                model: 'mail.channel',
-            }).localId
-        }"]
+        .o_NotificationList_preview[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
     `);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
@@ -1201,12 +1142,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId3,
-                model: 'mail.channel',
-            }).localId
-        }"]
+        .o_NotificationList_preview[data-thread-id="${mailChannelId3}"][data-thread-model="mail.channel"]
     `);
     assert.strictEqual(
         document.querySelectorAll(`.o_ChatWindow`).length,
@@ -1225,36 +1161,21 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_ChatWindow[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ChatWindow[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
         `).length,
         1,
         "chat window of channel 1 should be open"
     );
     assert.strictEqual(
         document.querySelectorAll(`
-            .o_ChatWindow[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId3,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ChatWindow[data-thread-id="${mailChannelId3}"][data-thread-model="mail.channel"]
         `).length,
         1,
         "chat window of channel 3 should be open"
     );
     assert.ok(
         document.querySelector(`
-            .o_ChatWindow[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId3,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ChatWindow[data-thread-id="${mailChannelId3}"][data-thread-model="mail.channel"]
         `).classList.contains('o-focused'),
         "chat window of channel 3 should have focus"
     );
@@ -1265,17 +1186,12 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
 
     const pyEnv = await startServer();
     const [mailChannelId1, mailChannelId2] = pyEnv['mail.channel'].create([{ name: 'channel1' }, { name: 'channel2' }]);
-    const { click, messaging } = await start();
+    const { click } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]`
+        .o_NotificationList_preview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`
     );
 
     assert.containsOnce(document.body, '.o_ChatWindow', "Only 1 chatWindow must be opened");
@@ -1307,12 +1223,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     await click(`.o_MessagingMenu_toggler`);
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId2,
-                model: 'mail.channel',
-            }).localId
-        }"]`
+        .o_NotificationList_preview[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]`
     );
 
     assert.containsN(document.body, '.o_ChatWindow', 2, "2 chatWindows must be opened");
@@ -1731,7 +1642,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
         },
     ]);
     patchUiSize({ width: 900 });
-    const { click, messaging } = await start({
+    const { click } = await start({
         mockRPC(route, args) {
             if (route === '/mail/channel/messages') {
                 const { channel_id } = args;
@@ -1748,12 +1659,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
     );
     assert.containsNone(
         document.body,
-        `.o_ChatWindow[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId3,
-                model: 'mail.channel',
-            }).localId
-        }"]`,
+        `.o_ChatWindow[data-thread-id="${mailChannelId3}"][data-thread-model="mail.channel"]`,
         "chat window for Channel #12 should be hidden"
     );
     assert.containsOnce(
@@ -1782,12 +1688,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
     );
     assert.containsOnce(
         document.body,
-        `.o_ChatWindow[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId3,
-                model: 'mail.channel',
-            }).localId
-        }"]`,
+        `.o_ChatWindow[data-thread-id="${mailChannelId3}"][data-thread-model="mail.channel"]`,
         "chat window for Channel #12 should now be visible"
     );
     assert.verifySteps(
@@ -2048,22 +1949,12 @@ QUnit.test('should not have chat window hidden menu in mobile (transition from 2
     await click('.o_MessagingMenu_toggler');
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-            }).localId
-        }"]
+        .o_NotificationList_preview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
     `);
     await click('.o_ChatWindowHeader_commandBack');
     await click(`
         .o_MessagingMenu_dropdownMenu
-        .o_NotificationList_preview[data-thread-local-id="${
-            messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId2,
-                model: 'mail.channel',
-            }).localId
-        }"]
+        .o_NotificationList_preview[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
     `);
     // simulate resize to go into mobile
     await afterNextRender(

@@ -11,7 +11,8 @@
                     'o-isDeviceSmall position-fixed': messaging.device.isSmall,
                     'mw-100 mh-100': !messaging.device.isSmall,
                     'o-new-message': !chatWindow.thread,
-                }" t-att-style="chatWindow.componentStyle" t-on-keydown="chatWindow.onKeydown" t-on-focusout="chatWindow.onFocusout" t-att-data-chat-window-local-id="chatWindow.localId" t-att-data-thread-local-id="chatWindow.thread ? chatWindow.thread.localId : ''" t-ref="root"
+                }" t-att-style="chatWindow.componentStyle" t-on-keydown="chatWindow.onKeydown" t-on-focusout="chatWindow.onFocusout" t-att-data-chat-window-local-id="chatWindow.localId" t-att-data-thread-id="chatWindow.thread ? chatWindow.thread.id : ''" t-ref="root"
+                t-att-data-thread-model="chatWindow.thread ? chatWindow.thread.model : ''"
             >
                 <ChatWindowHeader
                     className="'o_ChatWindow_header flex-grow-0 flex-shrink-0'"
