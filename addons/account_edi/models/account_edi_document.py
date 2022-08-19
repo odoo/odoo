@@ -52,10 +52,10 @@ class AccountEdiDocument(models.Model):
                 config_errors = doc.edi_format_id._check_move_configuration(move)
                 if config_errors:
                     res = base64.b64encode('\n'.join(config_errors).encode('UTF-8'))
-                elif move.is_invoice(include_receipts=True) and doc.edi_format_id._is_required_for_invoice(move):
-                    res = base64.b64encode(doc.edi_format_id._get_invoice_edi_content(doc.move_id))
-                elif move.payment_id and doc.edi_format_id._is_required_for_payment(move):
-                    res = base64.b64encode(doc.edi_format_id._get_payment_edi_content(doc.move_id))
+                else:
+                    move_applicability = doc.edi_format_id._get_move_applicability(move)
+                    if move_applicability and move_applicability.get('edi_content'):
+                        res = base64.b64encode(move_applicability['edi_content'](move))
             doc.edi_content = res
 
     def action_export_xml(self):
@@ -71,52 +71,44 @@ class AccountEdiDocument(models.Model):
         doc_type (invoice or payment) and company_id AND the edi_format_id supports batching, they are grouped
         into a single job.
 
-        :returns:         A list of tuples (documents, doc_type)
-        * documents:      The documents related to this job. If edi_format_id does not support batch, length is one
-        * doc_type:       Are the moves of this job invoice or payments ?
+        :returns:  [{
+            'documents': account.edi.document,
+            'method_to_call': str,
+        }]
         """
-
         # Classify jobs by (edi_format, edi_doc.state, doc_type, move.company_id, custom_key)
         to_process = {}
-        documents = self.filtered(lambda d: d.state in ('to_send', 'to_cancel') and d.blocking_level != 'error')
-        for edi_doc in documents:
-            move = edi_doc.move_id
-            edi_format = edi_doc.edi_format_id
-            if move.is_invoice(include_receipts=True):
-                doc_type = 'invoice'
-            elif move.payment_id or move.statement_line_id:
-                doc_type = 'payment'
-            else:
-                continue
+        for state, edi_flow in (('to_send', 'post'), ('to_cancel', 'cancel')):
+            documents = self.filtered(lambda d: d.state == state and d.blocking_level != 'error')
+            for edi_doc in documents:
+                edi_format = edi_doc.edi_format_id
+                move = edi_doc.move_id
+                move_applicability = edi_doc.edi_format_id._get_move_applicability(move) or {}
 
-            custom_key = edi_format._get_batch_key(edi_doc.move_id, edi_doc.state)
-            key = (edi_format, edi_doc.state, doc_type, move.company_id, custom_key)
-            to_process.setdefault(key, self.env['account.edi.document'])
-            to_process[key] |= edi_doc
-
-        # Order payments/invoice and create batches.
-        invoices = []
-        payments = []
-        for key, documents in to_process.items():
-            edi_format, state, doc_type, company_id, custom_key = key
-            target = invoices if doc_type == 'invoice' else payments
-            batch = self.env['account.edi.document']
-            for doc in documents:
-                if edi_format._support_batching(move=doc.move_id, state=state, company=company_id):
-                    batch |= doc
+                batching_key = [edi_format, state, move.company_id]
+                custom_batching_key = f'{edi_flow}_batching'
+                if move_applicability.get(custom_batching_key):
+                    batching_key += list(move_applicability[custom_batching_key](move))
                 else:
-                    target.append((doc, doc_type))
-            if batch:
-                target.append((batch, doc_type))
-        return invoices + payments
+                    batching_key.append(move.id)
+
+                batch = to_process.setdefault(tuple(batching_key), {
+                    'documents': self.env['account.edi.document'],
+                    'method_to_call': move_applicability.get(edi_flow),
+                })
+                batch['documents'] |= edi_doc
+
+        return list(to_process.values())
 
     @api.model
-    def _process_job(self, documents, doc_type):
+    def _process_job(self, job):
         """Post or cancel move_id (invoice or payment) by calling the related methods on edi_format_id.
         Invoices are processed before payments.
 
-        :param documents: The documents related to this job. If edi_format_id does not support batch, length is one
-        :param doc_type:  Are the moves of this job invoice or payments ?
+        :param job:  {
+            'documents': account.edi.document,
+            'method_to_call': str,
+        }
         """
         def _postprocess_post_edi_results(documents, edi_result):
             attachments_to_unlink = self.env['ir.attachment']
@@ -182,38 +174,36 @@ class AccountEdiDocument(models.Model):
             # supposed to have any traceability from the user.
             attachments_to_unlink.sudo().unlink()
 
+        documents = job['documents']
+        if job['method_to_call']:
+            method_to_call = job['method_to_call']
+        else:
+            method_to_call = lambda moves: {move: {'success': True} for move in moves}
         documents.edi_format_id.ensure_one()  # All account.edi.document of a job should have the same edi_format_id
         documents.move_id.company_id.ensure_one()  # All account.edi.document of a job should be from the same company
         if len(set(doc.state for doc in documents)) != 1:
             raise ValueError('All account.edi.document of a job should have the same state')
 
-        edi_format = documents.edi_format_id
         state = documents[0].state
         documents.move_id.line_ids.flush_recordset()  # manual flush for tax details
-        if doc_type == 'invoice':
-            if state == 'to_send':
-                invoices = documents.move_id
-                with invoices._send_only_when_ready():
-                    edi_result = edi_format._post_invoice_edi(invoices)
-                    _postprocess_post_edi_results(documents, edi_result)
-            elif state == 'to_cancel':
-                edi_result = edi_format._cancel_invoice_edi(documents.move_id)
-                _postprocess_cancel_edi_results(documents, edi_result)
-
-        elif doc_type == 'payment':
-            if state == 'to_send':
-                edi_result = edi_format._post_payment_edi(documents.move_id)
-                _postprocess_post_edi_results(documents, edi_result)
-            elif state == 'to_cancel':
-                edi_result = edi_format._cancel_payment_edi(documents.move_id)
-                _postprocess_cancel_edi_results(documents, edi_result)
+        moves = documents.move_id
+        if state == 'to_send':
+            if all(move.is_invoice(include_receipts=True) for move in moves):
+                with moves._send_only_when_ready():
+                    edi_result = method_to_call(moves)
+            else:
+                edi_result = method_to_call(moves)
+            _postprocess_post_edi_results(documents, edi_result)
+        elif state == 'to_cancel':
+            edi_result = method_to_call(moves)
+            _postprocess_cancel_edi_results(documents, edi_result)
 
     def _process_documents_no_web_services(self):
         """ Post and cancel all the documents that don't need a web service.
         """
         jobs = self.filtered(lambda d: not d.edi_format_id._needs_web_services())._prepare_jobs()
-        for documents, doc_type in jobs:
-            self._process_job(documents, doc_type)
+        for job in jobs:
+            self._process_job(job)
 
     def _process_documents_web_services(self, job_count=None, with_commit=True):
         ''' Post and cancel all the documents that need a web service.
@@ -225,7 +215,8 @@ class AccountEdiDocument(models.Model):
         all_jobs = self.filtered(lambda d: d.edi_format_id._needs_web_services())._prepare_jobs()
         jobs_to_process = all_jobs[0:job_count] if job_count else all_jobs
 
-        for documents, doc_type in jobs_to_process:
+        for job in jobs_to_process:
+            documents = job['documents']
             move_to_lock = documents.move_id
             attachments_potential_unlink = documents.attachment_id.filtered(lambda a: not a.res_model and not a.res_id)
             try:
@@ -245,7 +236,7 @@ class AccountEdiDocument(models.Model):
                     continue
                 else:
                     raise e
-            self._process_job(documents, doc_type)
+            self._process_job(job)
             if with_commit and len(jobs_to_process) > 1:
                 self.env.cr.commit()
 

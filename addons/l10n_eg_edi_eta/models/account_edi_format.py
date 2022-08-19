@@ -311,6 +311,19 @@ class AccountEdiFormat(models.Model):
     def _needs_web_services(self):
         return self.code == 'eg_eta' or super()._needs_web_services()
 
+    def _get_move_applicability(self, move):
+        # EXTENDS account_edi
+        self.ensure_one()
+        if self.code != 'eg_eta':
+            return super()._get_move_applicability(move)
+
+        if move.is_invoice(include_receipts=True) and move.country_code == 'EG':
+            return {
+                'post': self._l10n_eg_edi_post_invoice,
+                'cancel': self._l10n_eg_edi_cancel_invoice,
+                'edi_content': self._l10n_eg_edi_xml_invoice_content,
+            }
+
     def _check_move_configuration(self, invoice):
         errors = super()._check_move_configuration(invoice)
         if self.code != 'eg_eta':
@@ -336,11 +349,7 @@ class AccountEdiFormat(models.Model):
             errors.append(_("Please make sure the EGS/GS1 Barcode is set correctly on all products"))
         return errors
 
-    def _post_invoice_edi(self, invoices):
-        if self.code != 'eg_eta':
-            return super()._post_invoice_edi(invoices)
-        invoice = invoices  # Batching is disabled for this EDI.
-
+    def _l10n_eg_edi_post_invoice(self, invoice):
         # In case we have already sent it, but have not got a final answer yet.
         if invoice.l10n_eg_submission_number:
             return {invoice: self._l10n_eg_get_einvoice_status(invoice)}
@@ -362,16 +371,11 @@ class AccountEdiFormat(models.Model):
             }
         return {invoice: self._l10n_eg_edi_post_invoice_web_service(invoice)}
 
-    def _cancel_invoice_edi(self, invoices):
-        if self.code != 'eg_eta':
-            return super()._cancel_invoice_edi(invoices)
-        invoice = invoices
+    def _l10n_eg_edi_cancel_invoice(self, invoice):
         return {invoice: self._cancel_invoice_edi_eta(invoice)}
 
-    def _get_invoice_edi_content(self, move):
-        if self.code != 'eg_eta':
-            return super()._get_invoice_edi_content(move)
-        return json.dumps(self._l10n_eg_eta_prepare_eta_invoice(move)).encode()
+    def _l10n_eg_edi_xml_invoice_content(self, invoice):
+        return json.dumps(self._l10n_eg_eta_prepare_eta_invoice(invoice)).encode()
 
     def _is_compatible_with_journal(self, journal):
         # OVERRIDE
