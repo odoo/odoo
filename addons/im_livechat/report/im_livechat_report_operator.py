@@ -36,7 +36,7 @@ class ImLivechatReportOperator(models.Model):
                     EXTRACT('epoch' FROM MIN(MO.create_date) - MIN(M.create_date)) AS time_to_answer
                 FROM mail_channel C
                     JOIN mail_message M ON M.res_id = C.id AND M.model = 'mail.channel'
-                    LEFT JOIN mail_message MO ON (MO.res_id = C.id AND M.model = 'mail.channel' AND MO.author_id = C.livechat_operator_id)
+                    LEFT JOIN mail_message MO ON (MO.res_id = C.id AND MO.model = 'mail.channel' AND MO.author_id = C.livechat_operator_id)
                 WHERE C.livechat_channel_id IS NOT NULL
                 GROUP BY C.id, C.livechat_operator_id
             )

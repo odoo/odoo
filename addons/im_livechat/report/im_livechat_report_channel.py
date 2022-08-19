@@ -90,9 +90,9 @@ class ImLivechatReportChannel(models.Model):
                     END as is_unrated,
                     C.livechat_operator_id as partner_id
                 FROM mail_channel C
-                    JOIN mail_message M ON (M.res_id = C.id AND m.model = 'mail.channel')
+                    JOIN mail_message M ON (M.res_id = C.id AND M.model = 'mail.channel')
                     JOIN im_livechat_channel L ON (L.id = C.livechat_channel_id)
-                    LEFT JOIN mail_message MO ON (M.res_id = C.id AND m.model = 'mail.channel' AND MO.author_id = C.livechat_operator_id)
+                    LEFT JOIN mail_message MO ON (MO.res_id = C.id AND MO.model = 'mail.channel' AND MO.author_id = C.livechat_operator_id)
                     LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'mail.channel' and Rate.parent_res_model = 'im_livechat.channel')
                     WHERE C.livechat_operator_id is not null
                 GROUP BY C.livechat_operator_id, C.id, C.name, C.livechat_channel_id, L.name, C.create_date, C.uuid, Rate.rating
