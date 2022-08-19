@@ -43,7 +43,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         report_name = self.env['account.edi.format']._l10n_it_edi_generate_electronic_invoice_filename(self)
 
-        data = "<?xml version='1.0' encoding='UTF-8'?>" + str(self._export_as_xml())
+        data = "<?xml version='1.0' encoding='UTF-8'?>" + str(self._l10n_it_edi_export_invoice_as_xml())
         description = _('Italian invoice: %s', self.move_type)
         attachment = self.env['ir.attachment'].create({
             'name': report_name,
