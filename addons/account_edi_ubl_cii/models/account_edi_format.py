@@ -74,14 +74,6 @@ class AccountEdiFormat(models.Model):
     # Export: Account.edi.format override
     ####################################################
 
-    def _is_required_for_invoice(self, invoice):
-        # EXTENDS account_edi
-        self.ensure_one()
-        if self.code not in FORMAT_CODES:
-            return super()._is_required_for_invoice(invoice)
-
-        return self._is_ubl_cii_available(invoice.company_id) and invoice.move_type in ('out_invoice', 'out_refund')
-
     def _is_compatible_with_journal(self, journal):
         # EXTENDS account_edi
         # the formats appear on the journal only if they are compatible (e.g. NLCIUS only appear for dutch companies)
@@ -98,39 +90,38 @@ class AccountEdiFormat(models.Model):
             return super()._is_enabled_by_default_on_journal(journal)
         return self.code == 'facturx_1_0_05'
 
-    def _post_invoice_edi(self, invoices):
+    def _ubl_cii_post_invoice(self, invoice):
         # EXTENDS account_edi
         self.ensure_one()
 
+        builder = self._get_xml_builder(invoice.company_id)
+        # For now, the errors are not displayed anywhere, don't want to annoy the user
+        xml_content, _ = builder._export_invoice(invoice)
+
+        # DEBUG: send directly to the test platform (the one used by ecosio)
+        #response = self.env['account.edi.common']._check_xml_ecosio(invoice, xml_content, builder._export_invoice_ecosio_schematrons())
+
+        attachment_create_vals = {
+            'name': builder._export_invoice_filename(invoice),
+            'raw': xml_content,
+            'mimetype': 'application/xml',
+        }
+        # we don't want the Factur-X and E-FFF xml to appear in the attachment of the invoice when confirming it
+        # E-FFF will appear after the pdf is generated, Factur-X will never appear (it's contained in the PDF)
+        if self.code not in ['facturx_1_0_05', 'efff_1']:
+            attachment_create_vals.update({'res_id': invoice.id, 'res_model': 'account.move'})
+
+        attachment = self.env['ir.attachment'].create(attachment_create_vals)
+        return {invoice: {'success': True, 'attachment': attachment}}
+
+    def _get_move_applicability(self, move):
+        # EXTENDS account_edi
+        self.ensure_one()
         if self.code not in FORMAT_CODES:
-            return super()._post_invoice_edi(invoices)
+            return super()._get_move_applicability(move)
 
-        res = {}
-        for invoice in invoices:
-            builder = self._get_xml_builder(invoice.company_id)
-            # For now, the errors are not displayed anywhere, don't want to annoy the user
-            xml_content, errors = builder._export_invoice(invoice)
-
-            # DEBUG: send directly to the test platform (the one used by ecosio)
-            #response = self.env['account.edi.common']._check_xml_ecosio(invoice, xml_content, builder._export_invoice_ecosio_schematrons())
-
-            attachment_create_vals = {
-                'name': builder._export_invoice_filename(invoice),
-                'raw': xml_content,
-                'mimetype': 'application/xml',
-            }
-            # we don't want the Factur-X, E-FFF and NLCIUS xml to appear in the attachment of the invoice when confirming it
-            # E-FFF and NLCIUS will appear after the pdf is generated, Factur-X will never appear (it's contained in the PDF)
-            if self.code not in ['facturx_1_0_05', 'efff_1', 'nlcius_1']:
-                attachment_create_vals.update({'res_id': invoice.id, 'res_model': 'account.move'})
-
-            attachment = self.env['ir.attachment'].create(attachment_create_vals)
-            res[invoice] = {
-                'success': True,
-                'attachment': attachment,
-            }
-
-        return res
+        if self._is_ubl_cii_available(move.company_id) and move.move_type in ('out_invoice', 'out_refund'):
+            return {'post': self._ubl_cii_post_invoice}
 
     def _is_embedding_to_invoice_pdf_needed(self):
         # EXTENDS account_edi

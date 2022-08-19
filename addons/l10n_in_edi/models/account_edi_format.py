@@ -27,28 +27,31 @@ class AccountEdiFormat(models.Model):
             return journal.company_id.country_id.code == 'IN'
         return super()._is_enabled_by_default_on_journal(journal)
 
-    def _is_required_for_invoice(self, invoice):
+    def _get_move_applicability(self, move):
+        # EXTENDS account_edi
         self.ensure_one()
-        if self.code == "in_einvoice_1_03":
-            return invoice.is_sale_document() and invoice.country_code == 'IN' and invoice.l10n_in_gst_treatment in (
-                "regular",
-                "composition",
-                "overseas",
-                "special_economic_zone",
-                "deemed_export",
-                "uin_holders",
-            )
-        return super()._is_required_for_invoice(invoice)
+        if self.code != 'in_einvoice_1_03':
+            return super()._get_move_applicability(move)
+
+        if move.is_sale_document() and move.country_code == 'IN' and move.l10n_in_gst_treatment in (
+            "regular",
+            "composition",
+            "overseas",
+            "special_economic_zone",
+            "deemed_export",
+        ):
+            return {
+                'post': self._l10n_in_edi_post_invoice,
+                'cancel': self._l10n_in_edi_cancel_invoice,
+                'edi_content': self._l10n_in_edi_xml_invoice_content,
+            }
 
     def _needs_web_services(self):
         self.ensure_one()
         return self.code == "in_einvoice_1_03" or super()._needs_web_services()
 
-    def _get_invoice_edi_content(self, move):
-        if self.code != "in_einvoice_1_03":
-            return super()._get_invoice_edi_content(move)
-        json_dump = json.dumps(self._l10n_in_edi_generate_invoice_json(move))
-        return json_dump.encode()
+    def _l10n_in_edi_xml_invoice_content(self, invoice):
+        return json.dumps(self._l10n_in_edi_generate_invoice_json(invoice)).encode()
 
     def _l10n_in_edi_extract_digits(self, string):
         if not string:
@@ -88,128 +91,118 @@ class AccountEdiFormat(models.Model):
             _("Buy Credits")
         )
 
-    def _post_invoice_edi(self, invoices):
-        if self.code != "in_einvoice_1_03":
-            return super()._post_invoice_edi(invoices)
-        response = {}
-        res = {}
-        generate_json = self._l10n_in_edi_generate_invoice_json(invoices)
-        response = self._l10n_in_edi_generate(invoices.company_id, generate_json)
+    def _l10n_in_edi_post_invoice(self, invoice):
+        generate_json = self._l10n_in_edi_generate_invoice_json(invoice)
+        response = self._l10n_in_edi_generate(invoice.company_id, generate_json)
         if response.get("error"):
             error = response["error"]
             error_codes = [e.get("code") for e in error]
             if "1005" in error_codes:
                 # Invalid token eror then create new token and send generate request again.
                 # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
-                authenticate_response = self._l10n_in_edi_authenticate(invoices.company_id)
+                authenticate_response = self._l10n_in_edi_authenticate(invoice.company_id)
                 if not authenticate_response.get("error"):
                     error = []
-                    response = self._l10n_in_edi_generate(invoices.company_id, generate_json)
+                    response = self._l10n_in_edi_generate(invoice.company_id, generate_json)
                     if response.get("error"):
                         error = response["error"]
                         error_codes = [e.get("code") for e in error]
             if "2150" in error_codes:
                 # Get IRN by details in case of IRN is already generated
                 # this happens when timeout from the Government portal but IRN is generated
-                response = self._l10n_in_edi_get_irn_by_details(invoices.company_id, {
-                    "doc_type": invoices.move_type == "out_refund" and "CRN" or "INV",
-                    "doc_num": invoices.name,
-                    "doc_date": invoices.invoice_date and invoices.invoice_date.strftime("%d/%m/%Y") or False,
+                response = self._l10n_in_edi_get_irn_by_details(invoice.company_id, {
+                    "doc_type": invoice.move_type == "out_refund" and "CRN" or "INV",
+                    "doc_num": invoice.name,
+                    "doc_date": invoice.invoice_date and invoice.invoice_date.strftime("%d/%m/%Y") or False,
                 })
                 if not response.get("error"):
                     error = []
                     odoobot = self.env.ref("base.partner_root")
-                    invoices.message_post(author_id=odoobot.id, body=_(
+                    invoice.message_post(author_id=odoobot.id, body=_(
                         "Somehow this invoice had been submited to government before." \
                         "<br/>Normally, this should not happen too often" \
                         "<br/>Just verify value of invoice by uploade json to government website " \
                         "<a href='https://einvoice1.gst.gov.in/Others/VSignedInvoice'>here<a>."
                     ))
             if "no-credit" in error_codes:
-                res[invoices] = {
+                return {invoice: {
                     "success": False,
-                    "error": self._l10n_in_edi_get_iap_buy_credits_message(invoices.company_id),
+                    "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
                     "blocking_level": "error",
-                }
+                }}
             elif error:
                 error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in error])
-                res[invoices] = {
+                return {invoice: {
                     "success": False,
                     "error": error_message,
                     "blocking_level": ("404" in error_codes) and "warning" or "error",
-                }
+                }}
         if not response.get("error"):
             json_dump = json.dumps(response.get("data"))
-            json_name = "%s_einvoice.json" % (invoices.name.replace("/", "_"))
+            json_name = "%s_einvoice.json" % (invoice.name.replace("/", "_"))
             attachment = self.env["ir.attachment"].create({
                 "name": json_name,
                 "raw": json_dump.encode(),
                 "res_model": "account.move",
-                "res_id": invoices.id,
+                "res_id": invoice.id,
                 "mimetype": "application/json",
             })
-            res[invoices] = {"success": True, "attachment": attachment}
-        return res
+            return {invoice: {"success": True, "attachment": attachment}}
 
-    def _cancel_invoice_edi(self, invoices):
-        if self.code != "in_einvoice_1_03":
-            return super()._cancel_invoice_edi(invoices)
-        res = {}
-        for invoice in invoices:
-            l10n_in_edi_response_json = invoice._get_l10n_in_edi_response_json()
-            cancel_json = {
-                "Irn": l10n_in_edi_response_json.get("Irn"),
-                "CnlRsn": invoice.l10n_in_edi_cancel_reason,
-                "CnlRem": invoice.l10n_in_edi_cancel_remarks,
-            }
-            response = self._l10n_in_edi_cancel(invoice.company_id, cancel_json)
-            if response.get("error"):
-                error = response["error"]
-                error_codes = [e.get("code") for e in error]
-                if "1005" in error_codes:
-                    # Invalid token eror then create new token and send generate request again.
-                    # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
-                    authenticate_response = self._l10n_in_edi_authenticate(invoice.company_id)
-                    if not authenticate_response.get("error"):
-                        error = []
-                        response = self._l10n_in_edi_cancel(invoice.company_id, cancel_json)
-                        if response.get("error"):
-                            error = response["error"]
-                            error_codes = [e.get("code") for e in error]
-                if "9999" in error_codes:
-                    response = {}
-                    odoobot = self.env.ref("base.partner_root")
-                    invoices.message_post(author_id=odoobot.id, body=_(
-                        "Somehow this invoice had been cancelled to government before." \
-                        "<br/>Normally, this should not happen too often" \
-                        "<br/>Just verify by logging into government website " \
-                        "<a href='https://einvoice1.gst.gov.in'>here<a>."
-                    ))
-                if "no-credit" in error_codes:
-                    res[invoice] = {
-                        "success": False,
-                        "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
-                        "blocking_level": "error",
-                    }
-                else:
-                    error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in error])
-                    res[invoice] = {
-                        "success": False,
-                        "error": error_message,
-                        "blocking_level": ("404" in error_codes) and "warning" or "error",
-                    }
-            if not response.get("error"):
-                json_dump = json.dumps(response.get("data", {}))
-                json_name = "%s_cancel_einvoice.json" % (invoice.name.replace("/", "_"))
-                attachment = self.env["ir.attachment"].create({
-                    "name": json_name,
-                    "raw": json_dump.encode(),
-                    "res_model": "account.move",
-                    "res_id": invoice.id,
-                    "mimetype": "application/json",
-                })
-                res[invoice] = {"success": True, "attachment": attachment}
-        return res
+    def _l10n_in_edi_cancel_invoice(self, invoice):
+        l10n_in_edi_response_json = invoice._get_l10n_in_edi_response_json()
+        cancel_json = {
+            "Irn": l10n_in_edi_response_json.get("Irn"),
+            "CnlRsn": invoice.l10n_in_edi_cancel_reason,
+            "CnlRem": invoice.l10n_in_edi_cancel_remarks,
+        }
+        response = self._l10n_in_edi_cancel(invoice.company_id, cancel_json)
+        if response.get("error"):
+            error = response["error"]
+            error_codes = [e.get("code") for e in error]
+            if "1005" in error_codes:
+                # Invalid token eror then create new token and send generate request again.
+                # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
+                authenticate_response = self._l10n_in_edi_authenticate(invoice.company_id)
+                if not authenticate_response.get("error"):
+                    error = []
+                    response = self._l10n_in_edi_cancel(invoice.company_id, cancel_json)
+                    if response.get("error"):
+                        error = response["error"]
+                        error_codes = [e.get("code") for e in error]
+            if "9999" in error_codes:
+                response = {}
+                odoobot = self.env.ref("base.partner_root")
+                invoice.message_post(author_id=odoobot.id, body=_(
+                    "Somehow this invoice had been cancelled to government before." \
+                    "<br/>Normally, this should not happen too often" \
+                    "<br/>Just verify by logging into government website " \
+                    "<a href='https://einvoice1.gst.gov.in'>here<a>."
+                ))
+            if "no-credit" in error_codes:
+                return {invoice: {
+                    "success": False,
+                    "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
+                    "blocking_level": "error",
+                }}
+            else:
+                error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in error])
+                return {invoice: {
+                    "success": False,
+                    "error": error_message,
+                    "blocking_level": ("404" in error_codes) and "warning" or "error",
+                }}
+        if not response.get("error"):
+            json_dump = json.dumps(response.get("data", {}))
+            json_name = "%s_cancel_einvoice.json" % (invoice.name.replace("/", "_"))
+            attachment = self.env["ir.attachment"].create({
+                "name": json_name,
+                "raw": json_dump.encode(),
+                "res_model": "account.move",
+                "res_id": invoice.id,
+                "mimetype": "application/json",
+            })
+            return {invoice: {"success": True, "attachment": attachment}}
 
     def _l10n_in_validate_partner(self, partner, is_company=False):
         self.ensure_one()
