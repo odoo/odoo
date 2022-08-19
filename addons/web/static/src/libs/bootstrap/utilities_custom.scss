@@ -40,6 +40,17 @@ $utilities-sizes: map-merge(
     )
 );
 
+$order-array: (
+    first: -1,
+    last: $grid-columns + 1,
+) !default;
+@for $i from 1 through $grid-columns {
+    $order-array: map-merge(
+        $order-array,
+        (#{$i}: $i)
+    );
+}
+
 
 $utilities: () !default;
 $utilities: map-merge(
@@ -110,6 +121,12 @@ $utilities: map-merge(
                     map-get(map-get($utilities, "font-family"), "values"),
                     (sans-serif: var(--#{$variable-prefix}font-sans-serif)),
                 ),
+            ),
+        ),
+        "order": map-merge(
+            map-get($utilities, "order"),
+            (
+                values: $order-array,
             ),
         ),
     ),
