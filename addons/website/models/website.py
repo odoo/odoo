@@ -1045,10 +1045,6 @@ class Website(models.Model):
         return self.env['ir.model.access'].check('ir.ui.view', 'write', False)
 
     @api.model
-    def is_user(self):
-        return self.env['ir.model.access'].check('ir.ui.menu', 'read', False)
-
-    @api.model
     def is_public_user(self):
         return request.env.user.id == request.website._get_cached('user_id')
 
