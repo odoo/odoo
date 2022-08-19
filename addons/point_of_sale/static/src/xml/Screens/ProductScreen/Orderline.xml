@@ -81,9 +81,8 @@
             </div>
             <t t-if="props.line.selected">
                 <div class="OrderlineButtons d-flex w-100">
-                    <button class="flex-grow-1 border bg-100 fw-bold">Info</button>
-                    <button class="flex-grow-1 border-top border-bottom bg-100 fw-bold">Customer Note</button>
-                    <button class="flex-grow-1 border bg-100 fw-bold">Internal Note</button>
+                    <button class="flex-grow-1 border bg-100 fw-bold" t-on-click="() => this.trigger('click-product-info')">Info</button>
+                    <button class="flex-grow-1 border bg-100 fw-bold" t-on-click="() => this.trigger('click-customer-note')">Customer Note</button>
                 </div>
             </t>
         </li>

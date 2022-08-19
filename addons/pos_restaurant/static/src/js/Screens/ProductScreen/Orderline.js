@@ -3,9 +3,14 @@ odoo.define('pos_restaurant.Orderline', function(require) {
 
     const Orderline = require('point_of_sale.Orderline');
     const Registries = require('point_of_sale.Registries');
+    const { useListener } = require("@web/core/utils/hooks");
 
     const PosResOrderline = Orderline =>
         class extends Orderline {
+            setup() {
+                super.setup();
+                useListener('click-internal-note', this.onClickInternalNote);
+            }
             /**
              * @override
              */
@@ -37,6 +42,17 @@ odoo.define('pos_restaurant.Orderline', function(require) {
                     this.mp_dbclk_time = new Date().getTime();
                 }
                 super.selectLine();
+            }
+            async onClickInternalNote() {
+                const selectedOrderline = this.env.pos.get_order().get_selected_orderline();
+                const { confirmed, payload: inputNote } = await this.showPopup('TextAreaPopup', {
+                    startingValue: selectedOrderline.get_note(),
+                    title: this.env._t('Add Internal Note'),
+                });
+
+                if (confirmed) {
+                    selectedOrderline.set_note(inputNote);
+                }
             }
         };
 

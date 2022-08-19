@@ -10,6 +10,9 @@
                 </li>
             </t>
         </xpath>
+        <xpath expr="//div[hasclass('OrderlineButtons')]" position="inside">
+          <button class="flex-grow-1 border bg-100 fw-bold" t-on-click="() => this.trigger('click-internal-note')">Internal Note</button>
+        </xpath>
     </t>
 
 </templates>
