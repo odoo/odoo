@@ -6,6 +6,8 @@ var core = require('web.core');
 var mixins = require('web.mixins');
 var utils = require('web.utils');
 const { session } = require('@web/session');
+const { loadJS } = require('@web/core/assets');
+
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -203,7 +205,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             if (files.length !== 0) {
                 var file = files.shift();
                 var url = self.url(file, null);
-                ajax.loadJS(url).then(resolve);
+                loadJS(url).then(resolve);
             } else {
                 resolve();
             }

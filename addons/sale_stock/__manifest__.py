@@ -47,8 +47,6 @@ Preferences
     'assets': {
         'web.assets_backend': [
             'sale_stock/static/src/js/**/*',
-        ],
-        'web.assets_qweb': [
             'sale_stock/static/src/xml/**/*',
         ],
     },

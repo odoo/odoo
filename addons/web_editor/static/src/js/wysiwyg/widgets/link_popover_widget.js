@@ -7,7 +7,6 @@ import { ancestors } from '@web_editor/js/common/wysiwyg_utils';
 
 const LinkPopoverWidget = Widget.extend({
     template: 'wysiwyg.widgets.link.edit.tooltip',
-    xmlDependencies: ['/web_editor/static/src/xml/wysiwyg.xml'],
     events: {
         'click .o_we_remove_link': '_onRemoveLinkClick',
         'click .o_we_edit_link': '_onEditLinkClick',

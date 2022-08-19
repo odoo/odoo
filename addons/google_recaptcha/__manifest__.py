@@ -16,6 +16,7 @@
         'web.assets_frontend': [
             'google_recaptcha/static/src/scss/recaptcha.scss',
             'google_recaptcha/static/src/js/recaptcha.js',
+            'google_recaptcha/static/src/xml/recaptcha.xml',
         ],
     },
     'license': 'LGPL-3',

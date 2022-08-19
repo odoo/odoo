@@ -60,15 +60,13 @@ Print product labels with barcode.
     'assets': {
         'web.assets_backend': [
             'product/static/src/js/**/*',
+            'product/static/src/xml/**/*',
         ],
         'web.report_assets_common': [
             'product/static/src/scss/report_label_sheet.scss',
         ],
         'web.qunit_suite_tests': [
             'product/static/tests/**/*',
-        ],
-        'web.assets_qweb': [
-            'product/static/src/xml/**/*',
         ],
     },
     'license': 'LGPL-3',

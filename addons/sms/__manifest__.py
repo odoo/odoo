@@ -44,8 +44,7 @@ The service is provided by the In App Purchase Odoo platform.
             'sms/static/src/models/*.js',
         ],
         'mail.assets_discuss_public': [
-            'sms/static/src/components/*/*',
-            ('remove', 'sms/static/src/components/phone_field/*'),
+            'sms/static/src/components/sms_button/*',
         ],
         'web.assets_backend': [
             'sms/static/src/js/fields_phone_widget.js',
@@ -55,9 +54,6 @@ The service is provided by the In App Purchase Odoo platform.
         'web.qunit_suite_tests': [
             'sms/static/tests/sms_widget_test.js',
             'sms/static/tests/qunit_suite_tests/**/*.js',
-        ],
-        'web.assets_qweb': [
-            'sms/static/src/components/*/*.xml',
         ],
     },
     'license': 'LGPL-3',

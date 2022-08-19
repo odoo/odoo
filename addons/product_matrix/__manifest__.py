@@ -22,8 +22,6 @@ Please refer to Sale Matrix or Purchase Matrix for the use of this module.
         'web.assets_backend': [
             'product_matrix/static/src/js/section_and_note_widget.js',
             'product_matrix/static/src/scss/product_matrix.scss',
-        ],
-        'web.assets_qweb': [
             'product_matrix/static/src/xml/**/*',
         ],
     },

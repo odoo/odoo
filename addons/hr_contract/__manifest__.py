@@ -35,11 +35,7 @@ You can assign several contracts per employee.
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'hr_contract/static/src/scss/*',
-            'hr_contract/static/src/js/*',
-        ],
-        'web.assets_qweb': [
-            'hr_contract/static/src/xml/*',
+            'hr_contract/static/src/**/*',
         ],
     },
     'license': 'LGPL-3',

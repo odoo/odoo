@@ -801,7 +801,6 @@
 
     publicWidget.registry.websiteSlidesFullscreenPlayer = publicWidget.Widget.extend({
         selector: '.o_wslides_fs_main',
-        xmlDependencies: ['/website_slides/static/src/xml/website_slides_fullscreen.xml', '/website_slides/static/src/xml/website_slides_share.xml'],
         start: function (){
             var proms = [this._super.apply(this, arguments)];
             var fullscreen = new Fullscreen(this, this._getSlides(), this._getCurrentSlideID(), this._extractChannelData());

@@ -42,10 +42,9 @@ If you want to save your employees' time and avoid them to always have coins in 
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'lunch/static/src/components/*.js',
-            'lunch/static/src/components/*.scss',
+            'lunch/static/src/components/*',
             'lunch/static/src/mixins/*.js',
-            'lunch/static/src/views/*.js',
+            'lunch/static/src/views/*',
             'lunch/static/src/scss/lunch_view.scss',
             'lunch/static/src/scss/lunch_kanban.scss',
         ],
@@ -54,10 +53,6 @@ If you want to save your employees' time and avoid them to always have coins in 
         ],
         'web.qunit_suite_tests': [
             'lunch/static/tests/lunch_kanban_tests.js',
-        ],
-        'web.assets_qweb': [
-            'lunch/static/src/components/*.xml',
-            'lunch/static/src/views/*.xml',
         ],
     },
     'license': 'LGPL-3',

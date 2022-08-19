@@ -6,7 +6,6 @@ import publicWidget from 'web.public.widget';
 
 var CourseJoinWidget = publicWidget.Widget.extend({
     template: 'slide.course.join',
-    xmlDependencies: ['/website_slides/static/src/xml/slide_course_join.xml'],
     events: {
         'click .o_wslides_js_course_join_link': '_onClickJoin',
     },

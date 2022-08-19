@@ -1,7 +1,6 @@
 odoo.define('web.basic_fields_tests', function (require) {
 "use strict";
 
-var ajax = require('web.ajax');
 var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
@@ -9069,12 +9068,6 @@ QUnit.module('Legacy basic_fields', {
         await testUtils.fields.editAndTrigger($valInput, 'trente sept virgule neuf', ['input']);
 
         form.destroy();
-    });
-
-    QUnit.module('FieldColor', {
-        before: function () {
-            return ajax.loadXML('/web/static/src/legacy/xml/colorpicker.xml', core.qweb);
-        },
     });
 
     QUnit.test('Field Color: default widget state', async function (assert) {

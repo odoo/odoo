@@ -14,7 +14,6 @@ const _t = core._t;
  * Allows to customize link content and style.
  */
 const Link = Widget.extend({
-    xmlDependencies: ['/web_editor/static/src/xml/wysiwyg.xml'],
     events: {
         'input': '_onAnyChange',
         'change': '_onAnyChange',

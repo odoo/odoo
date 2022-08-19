@@ -19,12 +19,6 @@ const RatingPopupComposer = publicWidget.Widget.extend({
     custom_events: {
         reload_rating_popup_composer: '_onReloadRatingPopupComposer',
     },
-    xmlDependencies: [
-        '/portal/static/src/xml/portal_chatter.xml',
-        '/portal_rating/static/src/xml/portal_chatter.xml',
-        '/portal_rating/static/src/xml/portal_tools.xml',
-        '/portal_rating/static/src/xml/portal_rating_composer.xml',
-    ],
 
     willStart: function (parent) {
         const def = this._super.apply(this, arguments);

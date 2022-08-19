@@ -1,10 +1,10 @@
 odoo.define('google_recaptcha.ReCaptchaV3', function (require) {
 "use strict";
 
-const ajax = require('web.ajax');
 const Class = require('web.Class');
 const core = require('web.core');
 const { session } = require('@web/session');
+const { loadJS } = require('@web/core/assets');
 
 const _t = core._t;
 
@@ -22,7 +22,7 @@ const ReCaptcha = Class.extend({
      */
     loadLibs: function () {
         if (this._publicKey) {
-            this._recaptchaReady = ajax.loadJS(`https://www.recaptcha.net/recaptcha/api.js?render=${this._publicKey}`)
+            this._recaptchaReady = loadJS(`https://www.recaptcha.net/recaptcha/api.js?render=${this._publicKey}`)
                 .then(() => new Promise(resolve => window.grecaptcha.ready(() => resolve())));
             return this._recaptchaReady.then(() => !!document.querySelector('.grecaptcha-badge'));
         }

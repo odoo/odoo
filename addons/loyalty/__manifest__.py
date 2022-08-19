@@ -30,8 +30,6 @@
             'loyalty/static/src/js/loyalty_list_view.js',
             'loyalty/static/src/scss/loyalty.scss',
             'loyalty/static/src/js/filterable_selection_field/filterable_selection_field.js',
-        ],
-        'web.assets_qweb': [
             'loyalty/static/src/xml/loyalty_templates.xml',
         ],
         'web.qunit_suite_tests': [

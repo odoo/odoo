@@ -5,7 +5,7 @@ odoo.define('website.content.snippets.animation', function (require) {
  * Provides a way to start JS code for snippets' initialization and animations.
  */
 
-const ajax = require('web.ajax');
+const { loadJS } = require('@web/core/assets');
 var Class = require('web.Class');
 var config = require('web.config');
 var core = require('web.core');
@@ -624,7 +624,7 @@ const MobileYoutubeAutoplayMixin = {
                     return resolve();
                 };
             });
-            ajax.loadJS('https://www.youtube.com/iframe_api');
+            loadJS('https://www.youtube.com/iframe_api');
         }
 
         return promise;
@@ -725,7 +725,6 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
 
 registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
     selector: '.o_background_video',
-    xmlDependencies: ['/website/static/src/xml/website.background.video.xml'],
     disabledInEditableMode: false,
 
     /**
@@ -849,7 +848,6 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
 
 registry.socialShare = publicWidget.Widget.extend({
     selector: '.oe_social_share',
-    xmlDependencies: ['/website/static/src/xml/website.share.xml'],
     events: {
         'mouseenter': '_onMouseEnter',
     },

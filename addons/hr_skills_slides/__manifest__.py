@@ -23,8 +23,6 @@ This module add completed courses to resumé for employees.
     'assets': {
         'web.assets_backend': [
             'hr_skills_slides/static/src/scss/**/*',
-        ],
-        'web.assets_qweb': [
             'hr_skills_slides/static/src/xml/**/*',
         ],
     },

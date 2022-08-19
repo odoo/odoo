@@ -4,6 +4,7 @@ odoo.define('website.editor.snippets.options', function (require) {
 
 const {ColorpickerWidget} = require('web.Colorpicker');
 var core = require('web.core');
+const { loadBundle } = require("@web/core/assets");
 var Dialog = require('web.Dialog');
 const {Markup, sprintf} = require('web.utils');
 const weUtils = require('web_editor.utils');
@@ -100,8 +101,6 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
 });
 
 const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
-    xmlDependencies: (SelectUserValueWidget.prototype.xmlDependencies || [])
-        .concat(['/website/static/src/xml/website.editor.xml']),
     events: _.extend({}, SelectUserValueWidget.prototype.events || {}, {
         'click .o_we_add_google_font_btn': '_onAddGoogleFontClick',
         'click .o_we_delete_google_font_btn': '_onDeleteGoogleFontClick',
@@ -399,8 +398,6 @@ options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 options.Class.include({
-    xmlDependencies: (options.Class.prototype.xmlDependencies || [])
-        .concat(['/website/static/src/xml/website.editor.xml']),
     custom_events: _.extend({}, options.Class.prototype.custom_events || {}, {
         'google_fonts_custo_request': '_onGoogleFontsCustoRequest',
     }),
@@ -1117,7 +1114,7 @@ options.registry.OptionsTab = options.Class.extend({
      * @see this.selectClass for parameters
      */
     async openCustomCodeDialog(previewMode, widgetValue, params) {
-        const libsProm = this._loadLibs({
+        const libsProm = loadBundle({
             jsLibs: [
                 '/web/static/lib/ace/ace.js',
                 '/web/static/lib/ace/mode-xml.js',
@@ -2526,10 +2523,6 @@ options.registry.HeaderBox = options.registry.Box.extend({
 });
 
 options.registry.CookiesBar = options.registry.SnippetPopup.extend({
-    xmlDependencies: (options.registry.SnippetPopup.prototype.xmlDependencies || []).concat(
-        ['/website/static/src/xml/website.cookies_bar.xml']
-    ),
-
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
