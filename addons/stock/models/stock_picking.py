@@ -329,6 +329,9 @@ class Picking(models.Model):
         'res.partner', 'Contact',
         check_company=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    partner_company_id = fields.Many2one(
+        "res.partner", related="partner_id.parent_id", store=True, readonly=True
+    )
     company_id = fields.Many2one(
         'res.company', string='Company', related='picking_type_id.company_id',
         readonly=True, store=True, index=True)

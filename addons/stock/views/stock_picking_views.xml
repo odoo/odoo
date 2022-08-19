@@ -410,7 +410,7 @@
             <field name="arch" type="xml">
                 <search string="Picking Lists">
                     <field name="name" string="Transfer" filter_domain="['|', ('name', 'ilike', self), ('origin', 'ilike', self)]"/>
-                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="partner_id" filter_domain="['|', ('partner_id', 'child_of', self), ('partner_company_id', 'child_of', self)]"/>
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="picking_type_id"/>
