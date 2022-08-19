@@ -64,7 +64,10 @@ export class TablePicker extends EventTarget {
                     this.options.document.removeEventListener('mousemove', bindMouseMove);
                 };
                 this.options.document.addEventListener('mousemove', bindMouseMove);
-                cell.addEventListener('mousedown', this.selectCell.bind(this));
+                cell.addEventListener('mousedown', (e) => {
+                    this.selectCell();
+                    e.preventDefault();
+                });
             }
         }
 
