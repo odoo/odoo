@@ -55,7 +55,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
             'hr_expense/static/src/mixins/*.js',
             'hr_expense/static/src/views/*.js',
             'hr_expense/static/src/js/expense_views.js',
-            'hr_expense/static/src/js/expense_form_view.js',
             'hr_expense/static/src/js/expense_qr_code_action.js',
             'hr_expense/static/src/js/upload_mixin.js',
             'hr_expense/static/src/scss/hr_expense.scss',
