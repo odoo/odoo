@@ -14,5 +14,5 @@ class MailTemplate(models.Model):
         :return: list with a tuple with the name and base64 content of the attachment
         """
         if document.edi_format_id.code == 'fattura_pa':
-            return []
+            return {}
         return super()._get_edi_attachments(document)
