@@ -557,7 +557,7 @@ class MailActivity(models.Model):
                     'res_model': activity_message._name,
                 })
                 activity_message.attachment_ids = message_attachments
-            messages |= activity_message
+            messages += activity_message
 
         next_activities = self.env['mail.activity'].create(next_activities_values)
         self.unlink()  # will unlink activity, dont access `self` after that

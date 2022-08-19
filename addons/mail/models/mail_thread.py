@@ -2045,7 +2045,7 @@ class MailThread(models.AbstractModel):
 
     def message_post_with_view(self, views_or_xmlid, **kwargs):
         """ Helper method to send a mail / post a message using a view_id """
-        self._message_compose_with_view(views_or_xmlid, **kwargs)
+        return self._message_compose_with_view(views_or_xmlid, **kwargs)
 
     def message_post_with_template(self, template_id, email_layout_xmlid=None, auto_commit=False, **kwargs):
         """ Helper method to send a mail with a template
@@ -2518,7 +2518,7 @@ class MailThread(models.AbstractModel):
                         'is_read': True,  # discard Inbox notification
                         'notification_status': 'ready',
                     } for recipient_id in tocreate_recipient_ids]
-                emails |= new_email
+                emails += new_email
 
         if notif_create_values:
             SafeNotification.create(notif_create_values)
