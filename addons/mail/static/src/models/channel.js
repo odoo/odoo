@@ -75,6 +75,13 @@ registerModel({
                 ['case-insensitive-asc', 'persona.name'],
             ];
         },
+        _computeCommand() {
+            return {
+                name: this.thread.name,
+                action: () => this.thread.open(),
+                options: { category: 'Discuss' },
+            };
+        },
     },
     fields: {
         areAllMembersLoaded: attr({
@@ -89,6 +96,11 @@ registerModel({
             isCausal: true,
         }),
         channel_type: attr(),
+        command: one('Command', {
+            compute: '_computeCommand',
+            inverse: 'channel',
+            isCausal: true,
+        }),
         id: attr({
             identifying: true,
         }),
