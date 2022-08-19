@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, tools, _
+from odoo import models, fields, tools, _
 from odoo.tools import is_html_empty
-
-class MailActivityType(models.Model):
-    _inherit = "mail.activity.type"
-
-    category = fields.Selection(selection_add=[('meeting', 'Meeting')])
 
 
 class MailActivity(models.Model):
