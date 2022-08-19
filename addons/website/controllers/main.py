@@ -270,11 +270,10 @@ class Website(Home):
     def website_configurator(self, step=1, **kwargs):
         if not request.env.user.has_group('website.group_website_designer'):
             raise werkzeug.exceptions.NotFound()
-        website_id = request.env['website'].get_current_website()
-        if website_id.configurator_done:
+        if request.website.configurator_done:
             return request.redirect('/')
-        if request.env.lang != website_id.default_lang_id.code:
-            return request.redirect('/%s%s' % (website_id.default_lang_id.url_code, request.httprequest.path))
+        if request.env.lang != request.website.default_lang_id.code:
+            return request.redirect('/%s%s' % (request.website.default_lang_id.url_code, request.httprequest.path))
         action_url = '/web#action=website.website_configurator&menu_id=%s' % request.env.ref('website.menu_website_configuration').id
         if step > 1:
             action_url += '&step=' + str(step)
