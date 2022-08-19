@@ -33,7 +33,7 @@
             'pos_loyalty/static/src/js/ControlButtons/GiftCardButton.js',
             'pos_loyalty/static/src/js/ControlButtons/ResetProgramsButton.js',
             'pos_loyalty/static/src/js/ControlButtons/PromoCodeButton.js',
-            'pos_loyalty/static/src/js/ControlButtons/RewardButton.js',
+            'pos_loyalty/static/src/js/RewardButton.js',
             'pos_loyalty/static/src/js/Popups/GiftCardPopup.js',
         ],
         'web.assets_tests': [
