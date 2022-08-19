@@ -532,7 +532,7 @@ QUnit.test('filtered previews', async function (assert) {
             res_id: mailChannelId2, // id of related channel
         },
     ]);
-    const { click, messaging } = await start();
+    const { click } = await start();
 
     await click(`.o_MessagingMenu_toggler`);
     assert.strictEqual(
@@ -543,12 +543,7 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ThreadPreview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
         `).length,
         1,
         "should have preview of chat"
@@ -556,12 +551,7 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId2,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ThreadPreview[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
         `).length,
         1,
         "should have preview of channel"
@@ -576,12 +566,7 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ThreadPreview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
         `).length,
         1,
         "should have preview of chat"
@@ -589,12 +574,7 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId2,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ThreadPreview[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
         `).length,
         0,
         "should not have preview of channel"
@@ -612,12 +592,7 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ThreadPreview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
         `).length,
         0,
         "should not have preview of chat"
@@ -625,12 +600,7 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId2,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ThreadPreview[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
         `).length,
         1,
         "should have preview of channel"
@@ -645,12 +615,7 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId1,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ThreadPreview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
         `).length,
         1,
         "should have preview of chat"
@@ -658,12 +623,7 @@ QUnit.test('filtered previews', async function (assert) {
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${
-                messaging.models['Thread'].findFromIdentifyingData({
-                    id: mailChannelId2,
-                    model: 'mail.channel',
-                }).localId
-            }"]
+            .o_ThreadPreview[data-thread-id="${mailChannelId2}"][data-thread-model="mail.channel"]
         `).length,
         1,
         "should have preview of channel"
@@ -934,7 +894,7 @@ QUnit.test('Group chat should be displayed inside the chat section of the messag
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_type: 'group',
     });
-    const { click, messaging } = await start();
+    const { click } = await start();
 
     await click('.o_MessagingMenu_toggler');
     await click(`.o_MessagingMenuTab[data-tab-id="chat"]`);
@@ -942,10 +902,8 @@ QUnit.test('Group chat should be displayed inside the chat section of the messag
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${messaging.models['Thread'].findFromIdentifyingData({
-                id: mailChannelId1,
-                model: 'mail.channel',
-             }).localId}"]`).length,
+            .o_ThreadPreview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]
+        `).length,
         1,
         "should have one preview of group"
     );

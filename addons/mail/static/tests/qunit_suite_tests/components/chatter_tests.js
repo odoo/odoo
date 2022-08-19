@@ -30,7 +30,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
             res_id: resPartnerId1,
         });
     }
-    const { messaging, openView } = await start();
+    const { openView } = await start();
     await openView({
         res_id: resPartnerId1,
         res_model: 'res.partner',
@@ -56,13 +56,10 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
         1,
         "should have a thread in the chatter"
     );
-    assert.strictEqual(
-        document.querySelector(`.o_Chatter_thread`).dataset.threadLocalId,
-        messaging.models['Thread'].findFromIdentifyingData({
-            id: resPartnerId1,
-            model: 'res.partner',
-        }).localId,
-        "thread should have the right thread local id"
+    assert.containsOnce(
+        document.body,
+        `.o_Chatter_thread[data-thread-id="${resPartnerId1}"][data-thread-model="res.partner"]`,
+        "chatter should have the right thread."
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Message`).length,
