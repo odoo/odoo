@@ -7,9 +7,9 @@ const { Component } = owl;
 export class MessageNotificationPopoverContent extends Component {
 
     /**
-     * @returns {MessageView}
+     * @returns {MessageNotificationPopoverContentView}
      */
-    get messageView() {
+    get messageNotificationPopoverContentView() {
         return this.props.record;
     }
 

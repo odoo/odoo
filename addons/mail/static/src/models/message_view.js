@@ -96,6 +96,9 @@ registerModel({
             markEventHandled(ev, 'Message.ClickFailure');
             this.message.openResendAction();
         },
+        onClickNotificationIcon() {
+            this.update({ notificationPopoverView: {} });
+        },
         /**
          * @param {MouseEvent} ev
          */
@@ -228,6 +231,20 @@ registerModel({
             if (this.messageListViewMessageViewItemOwner) {
                 return 'o_MessageList_item o_MessageList_message';
             }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeFailureNotificationIconClassName() {
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeFailureNotificationIconLabel() {
             return clear();
         },
         /**
@@ -411,6 +428,20 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string}
+         */
+        _computeNotificationIconClassName() {
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeNotificationIconLabel() {
+            return clear();
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computePersonaImStatusIconView() {
@@ -481,6 +512,14 @@ registerModel({
          */
         extraClass: attr({
             compute: '_computeExtraClass',
+            default: '',
+        }),
+        failureNotificationIconClassName: attr({
+            compute: '_computeFailureNotificationIconClassName',
+            default: 'fa fa-envelope',
+        }),
+        failureNotificationIconLabel: attr({
+            compute: '_computeFailureNotificationIconLabel',
             default: '',
         }),
         /**
@@ -601,6 +640,19 @@ registerModel({
         }),
         messagingAsClickedMessageView: one('Messaging', {
             inverse: 'clickedMessageView',
+        }),
+        notificationIconClassName: attr({
+            compute: '_computeNotificationIconClassName',
+            default: 'fa fa-envelope-o',
+        }),
+        notificationIconLabel: attr({
+            compute: '_computeNotificationIconLabel',
+            default: '',
+        }),
+        notificationIconRef: attr(),
+        notificationPopoverView: one('PopoverView', {
+            inverse: 'messageViewOwnerAsNotificationContent',
+            isCausal: true,
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',

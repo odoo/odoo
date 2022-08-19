@@ -64,21 +64,21 @@ QUnit.test('Sent', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_SnailmailNotificationPopover',
+        '.o_SnailmailNotificationPopoverContentView',
         "notification popover should be open"
     );
     assert.containsOnce(
         document.body,
-        '.o_SnailmailNotificationPopover_icon',
+        '.o_SnailmailNotificationPopoverContentView_icon',
         "popover should have one icon"
     );
     assert.hasClass(
-        document.querySelector('.o_SnailmailNotificationPopover_icon'),
+        document.querySelector('.o_SnailmailNotificationPopoverContentView_icon'),
         'fa-check',
         "popover should have the sent icon"
     );
     assert.strictEqual(
-        document.querySelector('.o_SnailmailNotificationPopover').textContent.trim(),
+        document.querySelector('.o_SnailmailNotificationPopoverContentView').textContent.trim(),
         "Sent",
         "popover should have the sent text"
     );
@@ -136,21 +136,21 @@ QUnit.test('Canceled', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_SnailmailNotificationPopover',
+        '.o_SnailmailNotificationPopoverContentView',
         "notification popover should be open"
     );
     assert.containsOnce(
         document.body,
-        '.o_SnailmailNotificationPopover_icon',
+        '.o_SnailmailNotificationPopoverContentView_icon',
         "popover should have one icon"
     );
     assert.hasClass(
-        document.querySelector('.o_SnailmailNotificationPopover_icon'),
+        document.querySelector('.o_SnailmailNotificationPopoverContentView_icon'),
         'fa-trash-o',
         "popover should have the canceled icon"
     );
     assert.strictEqual(
-        document.querySelector('.o_SnailmailNotificationPopover').textContent.trim(),
+        document.querySelector('.o_SnailmailNotificationPopoverContentView').textContent.trim(),
         "Canceled",
         "popover should have the canceled text"
     );
@@ -208,21 +208,21 @@ QUnit.test('Pending', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_SnailmailNotificationPopover',
+        '.o_SnailmailNotificationPopoverContentView',
         "notification popover should be open"
     );
     assert.containsOnce(
         document.body,
-        '.o_SnailmailNotificationPopover_icon',
+        '.o_SnailmailNotificationPopoverContentView_icon',
         "popover should have one icon"
     );
     assert.hasClass(
-        document.querySelector('.o_SnailmailNotificationPopover_icon'),
+        document.querySelector('.o_SnailmailNotificationPopoverContentView_icon'),
         'fa-clock-o',
         "popover should have the pending icon"
     );
     assert.strictEqual(
-        document.querySelector('.o_SnailmailNotificationPopover').textContent.trim(),
+        document.querySelector('.o_SnailmailNotificationPopoverContentView').textContent.trim(),
         "Awaiting Dispatch",
         "popover should have the pending text"
     );
