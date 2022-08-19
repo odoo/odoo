@@ -545,6 +545,79 @@ class PosGlobalState extends PosModel {
             i += 1;
         } while(partners.length);
     }
+    async getProductInfo(product, quantity) {
+        const order = this.get_order();
+        try {
+            // check back-end method `get_product_info_pos` to see what it returns
+            // We do this so it's easier to override the value returned and use it in the component template later
+            const productInfo = await this.env.services.rpc({
+                model: 'product.product',
+                method: 'get_product_info_pos',
+                args: [[product.id],
+                    product.get_price(order.pricelist, quantity),
+                    quantity,
+                    this.config.id],
+                kwargs: {context: this.env.session.user_context},
+            });
+
+            const priceWithoutTax = productInfo['all_prices']['price_without_tax'];
+            const margin = priceWithoutTax - product.standard_price;
+            const orderPriceWithoutTax = order.get_total_without_tax();
+            const orderCost = order.get_total_cost();
+            const orderMargin = orderPriceWithoutTax - orderCost;
+
+            const costCurrency = this.format_currency(product.standard_price);
+            const marginCurrency = this.format_currency(margin);
+            const marginPercent = priceWithoutTax ? Math.round(margin/priceWithoutTax * 10000) / 100 : 0;
+            const orderPriceWithoutTaxCurrency = this.format_currency(orderPriceWithoutTax);
+            const orderCostCurrency = this.format_currency(orderCost);
+            const orderMarginCurrency = this.format_currency(orderMargin);
+            const orderMarginPercent = orderPriceWithoutTax ? Math.round(orderMargin/orderPriceWithoutTax * 10000) / 100 : 0;
+            return {
+            costCurrency, marginCurrency, marginPercent, orderPriceWithoutTaxCurrency,
+            orderCostCurrency, orderMarginCurrency, orderMarginPercent,productInfo
+            }
+        } catch (error) {
+            return { error }
+        }
+    }
+    async getClosePosInfo() {
+        try {
+            const closingData = await this.env.services.rpc({
+                model: 'pos.session',
+                method: 'get_closing_control_data',
+                args: [[this.pos_session.id]]
+            });
+            const ordersDetails = closingData.orders_details;
+            const paymentsAmount = closingData.payments_amount;
+            const payLaterAmount = closingData.pay_later_amount;
+            const openingNotes = closingData.opening_notes;
+            const defaultCashDetails = closingData.default_cash_details;
+            const otherPaymentMethods = closingData.other_payment_methods;
+            const isManager = closingData.is_manager;
+            const amountAuthorizedDiff = closingData.amount_authorized_diff;
+            const cashControl = this.config.cash_control;
+
+            // component state and refs definition
+            const state = {notes: '', payments: {}};
+            if (cashControl) {
+                state.payments[defaultCashDetails.id] = {counted: 0, difference: -defaultCashDetails.amount, number: 0};
+            }
+            if (otherPaymentMethods.length > 0) {
+                otherPaymentMethods.forEach(pm => {
+                    if (pm.type === 'bank') {
+                        state.payments[pm.id] = {counted: this.round_decimals_currency(pm.amount), difference: 0, number: pm.number}
+                    }
+                })
+            }
+            return {
+            ordersDetails, paymentsAmount, payLaterAmount, openingNotes, defaultCashDetails, otherPaymentMethods,
+            isManager, amountAuthorizedDiff, state, cashControl
+            }
+        } catch (error) {
+            return { error }
+        }
+    }
     set_start_order(){
         if (this.orders.length && !this.selectedOrder) {
             this.selectedOrder = this.orders[0]
