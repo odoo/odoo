@@ -11,12 +11,13 @@ odoo.define('point_of_sale.ProductInfoButton', function(require) {
             super(...arguments);
             useListener('click', this.onClick);
         }
-        onClick() {
+        async onClick() {
             const orderline = this.env.pos.get_order().get_selected_orderline();
             if (orderline) {
                 const product = orderline.get_product();
                 const quantity = orderline.get_quantity();
-                this.showPopup('ProductInfoPopup', { product, quantity });
+                const info = await this.env.pos.getProductInfo(product, quantity);
+                this.showPopup('ProductInfoPopup', { info: info , product: product });
             }
         }
     }
