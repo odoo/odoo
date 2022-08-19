@@ -458,19 +458,14 @@ class Users(models.Model):
     def onchange_parent_id(self):
         return self.partner_id.onchange_parent_id()
 
-    def _read(self, fields):
-        super(Users, self)._read(fields)
-        if set(USER_PRIVATE_FIELDS).intersection(fields):
+    def _fetch_query(self, query, fields):
+        records = super()._fetch_query(query, fields)
+        if not set(USER_PRIVATE_FIELDS).isdisjoint(field.name for field in fields):
             if self.check_access_rights('write', raise_exception=False):
-                return
-            for record in self:
-                for f in USER_PRIVATE_FIELDS:
-                    try:
-                        record._cache[f]
-                        record._cache[f] = '********'
-                    except Exception:
-                        # skip SpecialValue (e.g. for missing record or access right)
-                        pass
+                return records
+            for fname in USER_PRIVATE_FIELDS:
+                self.env.cache.update(records, self._fields[fname], repeat('********'))
+        return records
 
     @api.constrains('company_id', 'company_ids', 'active')
     def _check_company(self):

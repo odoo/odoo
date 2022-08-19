@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 class SomeObj(models.Model):
     _name = 'test_access_right.some_obj'
@@ -43,10 +43,11 @@ class ObjCateg(models.Model):
 
     name = fields.Char(required=True)
 
-    def search(self, domain, *args, **kwargs):
+    @api.model
+    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
         if self.env.context.get('only_media'):
             domain += [('name', '=', 'Media')]
-        return super(ObjCateg, self).search(domain, **kwargs)
+        return super().search_fetch(domain, field_names, offset, limit, order)
 
 
 class FakeTicket(models.Model):

@@ -193,6 +193,10 @@ class Query(object):
         )
         return query_str, params
 
+    def is_empty(self):
+        """ Return whether the query is known to return nothing. """
+        return self._ids == ()
+
     def get_sql(self):
         """ Returns (query_from, query_where, query_params). """
         tables = [_from_table(table, alias) for alias, table in self._tables.items()]

@@ -603,10 +603,6 @@ class IrAttachment(models.Model):
 
         return self.browse(result)._as_query(order)
 
-    def _read(self, fields):
-        self.check('read')
-        return super(IrAttachment, self)._read(fields)
-
     def write(self, vals):
         self.check('write', values=vals)
         # remove computed field depending of datas

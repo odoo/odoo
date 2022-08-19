@@ -93,6 +93,8 @@ class TestAccessRights(TransactionCase):
             privacy='public',
             location='In Hell',
         )
+        # invalidate cache before reading, otherwise read() might leak private data
+        self.env.invalidate_all()
         [private_location, public_location] = self.read_event(self.raoul, private + public, 'location')
         self.assertEqual(private_location, False, "Private value should be obfuscated")
         self.assertEqual(public_location, 'In Hell', "Public value should not be obfuscated")

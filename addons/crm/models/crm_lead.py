@@ -774,13 +774,13 @@ class Lead(models.Model):
         return result
 
     @api.model
-    def search(self, domain, offset=0, limit=None, order=None):
+    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
         """ Override to support ordering on my_activity_date_deadline.
 
-        Ordering through web client calls search_read with an order parameter set.
-        Search_read then calls search. In this override we therefore override search
-        to intercept a search without count with an order on my_activity_date_deadline.
-        In that case we do the search in two steps.
+        Ordering through web client calls search_read() with an order parameter
+        set. Method search_read() then calls search_fetch(). Here we override
+        search_fetch() to intercept a search with an order on field
+        my_activity_date_deadline. In that case we do the search in two steps.
 
         First step: fill with deadline-based results
 
@@ -805,8 +805,7 @@ class Lead(models.Model):
         side effects. Search_count is not affected by this override.
         """
         if not order or 'my_activity_date_deadline' not in order:
-            return super().search(domain, offset, limit, order)
-
+            return super().search_fetch(domain, field_names, offset, limit, order)
         order_items = [order_item.strip().lower() for order_item in (order or self._order).split(',')]
 
         # Perform a read_group on my activities to get a mapping lead_id / deadline
@@ -826,7 +825,7 @@ class Lead(models.Model):
 
         # Search leads linked to those activities and order them. See docstring
         # of this method for more details.
-        search_res = super().search(my_lead_domain, order=my_lead_order)
+        search_res = super().search_fetch(my_lead_domain, field_names, order=my_lead_order)
         my_lead_ids_ordered = sorted(search_res.ids, key=lambda lead_id: my_lead_mapping[lead_id], reverse=not activity_asc)
         # keep only requested window (offset + limit, or offset+)
         my_lead_ids_keep = my_lead_ids_ordered[offset:(offset + limit)] if limit else my_lead_ids_ordered[offset:]
@@ -848,9 +847,9 @@ class Lead(models.Model):
             lead_offset = 0
         lead_order = ', '.join(item for item in order_items if 'my_activity_date_deadline' not in item)
 
-        other_lead_res = super().search(
+        other_lead_res = super().search_fetch(
             expression.AND([[('id', 'not in', my_lead_ids_skip)], domain]),
-            lead_offset, lead_limit, lead_order,
+            field_names, lead_offset, lead_limit, lead_order,
         )
         return self.browse(my_lead_ids_keep) + other_lead_res
 

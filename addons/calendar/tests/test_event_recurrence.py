@@ -418,7 +418,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             'start': event.start + relativedelta(days=4),
             'stop': event.stop + relativedelta(days=5),
         })
-        self.assertFalse(self.recurrence.calendar_event_ids, "Inactive event should not create recurrent events")
+        self.assertFalse(self.recurrence.exists(), "Inactive event should not create recurrent events")
 
     def test_shift_all_with_outlier(self):
         outlier = self.events[1]

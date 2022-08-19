@@ -184,17 +184,45 @@ class HrEmployeePrivate(models.Model):
             return super(HrEmployeePrivate, self).name_get()
         return self.env['hr.employee.public'].browse(self.ids).name_get()
 
-    def _read(self, fields):
+    def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
         if self.check_access_rights('read', raise_exception=False):
-            return super(HrEmployeePrivate, self)._read(fields)
+            return super().search_fetch(domain, field_names, offset, limit, order)
 
         # HACK: retrieve publicly available values from hr.employee.public and
         # copy them to the cache of self; non-public data will be missing from
         # cache, and interpreted as an access error
-        self.flush_recordset(fields)
+        self._check_private_fields(field_names)
+        self.flush_model(field_names)
+        public = self.env['hr.employee.public'].search_fetch(domain, field_names, offset, limit, order)
+        employees = self.browse(public._ids)
+        employees._copy_cache_from(public, field_names)
+        return employees
+
+    def fetch(self, field_names):
+        if self.check_access_rights('read', raise_exception=False):
+            return super().fetch(field_names)
+
+        # HACK: retrieve publicly available values from hr.employee.public and
+        # copy them to the cache of self; non-public data will be missing from
+        # cache, and interpreted as an access error
+        self._check_private_fields(field_names)
+        self.flush_recordset(field_names)
         public = self.env['hr.employee.public'].browse(self._ids)
-        public.read(fields)
-        for fname in fields:
+        public.fetch(field_names)
+        self._copy_cache_from(public, field_names)
+
+    def _check_private_fields(self, field_names):
+        """ Check whether ``field_names`` contain private fields. """
+        public_fields = self.env['hr.employee.public']._fields
+        private_fields = [fname for fname in field_names if fname not in public_fields]
+        if private_fields:
+            raise AccessError(_('The fields "%s" you try to read is not available on the public employee profile.') % (','.join(private_fields)))
+
+    def _copy_cache_from(self, public, field_names):
+        # HACK: retrieve publicly available values from hr.employee.public and
+        # copy them to the cache of self; non-public data will be missing from
+        # cache, and interpreted as an access error
+        for fname in field_names:
             values = self.env.cache.get_values(public, public._fields[fname])
             if self._fields[fname].translate:
                 values = [(value.copy() if value else None) for value in values]
@@ -220,14 +248,6 @@ class HrEmployeePrivate(models.Model):
                         date=formated_date),
                     user_id=responsible_user_id)
         employees_scheduled.write({'work_permit_scheduled_activity': True})
-
-    def read(self, fields=None, load='_classic_read'):
-        if self.check_access_rights('read', raise_exception=False):
-            return super(HrEmployeePrivate, self).read(fields, load=load)
-        private_fields = set(fields or self._fields).difference(self.env['hr.employee.public']._fields)
-        if private_fields:
-            raise AccessError(_('The fields "%s" you try to read is not available on the public employee profile.') % (','.join(private_fields)))
-        return self.env['hr.employee.public'].browse(self.ids).read(fields, load=load)
 
     @api.model
     def get_view(self, view_id=None, view_type='form', **options):
