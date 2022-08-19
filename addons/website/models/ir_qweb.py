@@ -58,19 +58,17 @@ class IrQWeb(models.AbstractModel):
         """
         irQweb = super()._prepare_frontend_environment(values)
 
-        Website = irQweb.env['website']
+        current_website = request.website
         editable = request.env.user.has_group('website.group_website_designer')
         translatable = editable and irQweb.env.context.get('lang') != irQweb.env['ir.http']._get_default_lang().code
         editable = editable and not translatable
-
-        current_website = Website.get_current_website()
 
         has_group_restricted_editor = irQweb.env.user.has_group('website.group_website_restricted_editor')
         if has_group_restricted_editor and irQweb.env.user.has_group('website.group_multi_website'):
             values['multi_website_websites_current'] = lazy(lambda: current_website.name)
             values['multi_website_websites'] = lazy(lambda: [
                 {'website_id': website.id, 'name': website.name, 'domain': website.domain}
-                for website in Website.search([('id', '!=', current_website.id)])
+                for website in current_website.search([('id', '!=', current_website.id)])
             ])
 
             cur_company = irQweb.env.company
