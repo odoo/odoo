@@ -481,34 +481,36 @@ class Meeting(models.Model):
             return super(Meeting, self.with_context(prefetch_fields=False))._compute_field_value(field)
         return super()._compute_field_value(field)
 
-    def _read(self, fields):
+    def _fetch_query(self, query, fields):
         if self.env.is_system():
-            super()._read(fields)
-            return
+            return super()._fetch_query(query, fields)
 
-        fields = set(fields)
-        private_fields = fields - self._get_public_fields()
+        public_fnames = self._get_public_fields()
+        private_fields = [field for field in fields if field.name not in public_fnames]
         if not private_fields:
-            super()._read(fields)
-            return
+            return super()._fetch_query(query, fields)
 
-        private_fields.add('partner_ids')
-        super()._read(fields | {'privacy', 'user_id', 'partner_ids'})
+        fields_to_fetch = list(fields) + [self._fields[name] for name in ('privacy', 'user_id', 'partner_ids')]
+        events = super()._fetch_query(query, fields_to_fetch)
+
+        # determine private events to which the user does not participate
         current_partner_id = self.env.user.partner_id
-        others_private_events = self.filtered(
+        others_private_events = events.filtered(
             lambda e: e.privacy == 'private' \
                   and e.user_id != self.env.user \
                   and current_partner_id not in e.partner_ids
         )
         if not others_private_events:
-            return
+            return events
 
-        for field_name in private_fields:
-            field = self._fields[field_name]
+        private_fields.append(self._fields['partner_ids'])
+        for field in private_fields:
             replacement = field.convert_to_cache(
-                _('Busy') if field_name == 'name' else False,
+                _('Busy') if field.name == 'name' else False,
                 others_private_events)
             self.env.cache.update(others_private_events, field, repeat(replacement))
+
+        return events
 
     def write(self, values):
         detached_events = self.env['calendar.event']
