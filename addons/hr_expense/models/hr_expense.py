@@ -1089,11 +1089,20 @@ class HrExpenseSheet(models.Model):
         self = self.with_context(clean_context(self.env.context))
         for sheet in self:
             move = sheet.account_move_id
+            payment = move._get_reconciled_payments()
             sheet.account_move_id = False
+
+            if (sheet.payment_mode == 'own_account' and payment):
+                payment.line_ids.remove_move_reconcile()
+                payment.unlink()
+
             if move.state == 'draft':
                 move.unlink()
             else:
-                move._reverse_moves(cancel=True)
+                move._reverse_moves(default_values_list=[{
+                    'name': '/',
+                    'ref': _("Reversal of: %s", move.ref),
+                }], cancel=True)
             sheet.write({'state': 'draft'})
 
     def action_get_attachment_view(self):
