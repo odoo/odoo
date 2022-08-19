@@ -243,7 +243,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             # voip module read activity_type during create leading to one less query in enterprise on action_feedback
             _category = activity.activity_type_id.category
 
-        with self.assertQueryCount(__system__=17, employee=19):  # com+tm 16/18
+        with self.assertQueryCount(__system__=14, employee=15):  # com+tm 14/15
             activity.action_feedback(feedback='Zizisse Done !')
 
     @users('__system__', 'employee')
@@ -252,7 +252,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_adv_activity_mixin(self):
         record = self.env['mail.test.activity'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=8, employee=8):
+        with self.assertQueryCount(__system__=7, employee=7):
             activity = record.action_start('Test Start')
             # read activity_type to normalize cache between enterprise and community
             # voip module read activity_type during create leading to one less query in enterprise on action_close
@@ -260,7 +260,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(__system__=18, employee=21):  # com+tm 17/20
+        with self.assertQueryCount(__system__=15, employee=17):  # com+tm 15/17
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -278,7 +278,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             for values in self.test_attachments_vals
         ])
 
-        with self.assertQueryCount(__system__=8, employee=8):
+        with self.assertQueryCount(__system__=7, employee=7):
             activity = record.action_start('Test Start')
             #read activity_type to normalize cache between enterprise and community
             #voip module read activity_type during create leading to one less query in enterprise on action_close
@@ -286,7 +286,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(__system__=21, employee=25):  # com+tm 19/23
+        with self.assertQueryCount(__system__=18, employee=21):  # com+tm 17/20
             record.action_close('Dupe feedback', attachment_ids=attachments.ids)
 
         # notifications
