@@ -62,6 +62,7 @@ _ref_vat = {
     'nl': 'NL123456782B90',
     'no': 'NO123456785',
     'pe': '10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY',
+    'ph': '123-456-789-01234',
     'pl': 'PL1234567883',
     'pt': 'PT123456789',
     'ro': 'RO1234567897',
