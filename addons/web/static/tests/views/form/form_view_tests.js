@@ -5940,6 +5940,47 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".oe_stat_button"));
     });
 
+    QUnit.test("clicking on a stat button with x2many in context", async function (assert) {
+        assert.expect(1);
+        serverData.models.partner.records[1].timmy = [12];
+
+        const actionService = {
+            start() {
+                return {
+                    doActionButton(args) {
+                        // button context should have been evaluated, the x2many
+                        // should be in the form of x2m commands when serialized
+                        assert.equal(
+                            JSON.stringify(args.buttonContext),
+                            '{"test":[[6,false,[12]]]}'
+                        );
+                    },
+                };
+            },
+        };
+        registry.category("services").add("action", actionService, { force: true });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="action" name="1" context="{'test': timmy}">
+                                <field name="qux" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <field name="timmy" invisible="1"/>
+                    </sheet>
+                </form>`,
+            resId: 2,
+            context: { some_context: true },
+        });
+        await click(target.querySelector(".oe_stat_button"));
+    });
+
     QUnit.test("clicking on a stat button with no context", async function (assert) {
         assert.expect(1);
 

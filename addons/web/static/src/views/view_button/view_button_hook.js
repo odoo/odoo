@@ -56,7 +56,7 @@ export function useViewButtons(model, ref, options = {}) {
                 let buttonContext = {};
                 if (clickParams.context) {
                     if (typeof clickParams.context === "string") {
-                        const valuesForEval = Object.assign({}, record.data, {
+                        const valuesForEval = Object.assign({}, record.evalContext, {
                             active_id: resId,
                             active_ids: resIds,
                         });
