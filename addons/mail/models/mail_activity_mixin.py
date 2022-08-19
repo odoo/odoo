@@ -443,7 +443,7 @@ class MailActivityMixin(models.AbstractModel):
         for record in self:
             render_context['object'] = record
             note = self.env['ir.qweb']._render(view_ref, render_context, minimal_qcontext=True, raise_if_not_found=False)
-            activities |= record.activity_schedule(act_type_xmlid=act_type_xmlid, date_deadline=date_deadline, summary=summary, note=note, **act_values)
+            activities += record.activity_schedule(act_type_xmlid=act_type_xmlid, date_deadline=date_deadline, summary=summary, note=note, **act_values)
         return activities
 
     def activity_reschedule(self, act_type_xmlids, user_id=None, date_deadline=None, new_user_id=None):
