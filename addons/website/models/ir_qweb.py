@@ -59,7 +59,7 @@ class IrQWeb(models.AbstractModel):
         irQweb = super()._prepare_frontend_environment(values)
 
         Website = irQweb.env['website']
-        editable = request.website.is_restricted_editor()
+        editable = request.env.user.has_group('website.group_website_designer')
         translatable = editable and irQweb.env.context.get('lang') != irQweb.env['ir.http']._get_default_lang().code
         editable = editable and not translatable
 
