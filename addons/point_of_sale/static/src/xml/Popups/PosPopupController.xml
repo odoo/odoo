@@ -4,7 +4,7 @@
     <t t-name="point_of_sale.PosPopupController" owl="1">
         <div class="popups" t-att-hidden="!isShown()">
             <t t-foreach="popups" t-as="popup" t-key="popup.key">
-                <div role="dialog" class="modal-dialog" t-att-class="{ oe_hidden: !shouldShow(popup) }">
+                <div role="dialog" class="modal-dialog mw-100 pe-auto mx-auto my-0" t-att-class="{ oe_hidden: !shouldShow(popup) }">
                     <t t-component="popup.component" t-props="popup.props" t-key="popup.key" />
                 </div>
             </t>
