@@ -5,7 +5,7 @@ import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position_hook";
 
-const { Component, useExternalListener, useRef, useState, useEffect } = owl;
+const { Component, useExternalListener, useRef, useState } = owl;
 
 export class AutoComplete extends Component {
     setup() {
@@ -39,18 +39,9 @@ export class AutoComplete extends Component {
         });
 
         // position and size
-        const sourcesListRef = useRef("sourcesList");
-        useEffect(
-            () => {
-                if (sourcesListRef.el) {
-                    sourcesListRef.el.style.width =
-                        this.inputRef.el.getBoundingClientRect().width + "px";
-                }
-            },
-            () => [sourcesListRef.el]
-        );
         usePosition(() => this.inputRef.el, {
             popper: "sourcesList",
+            position: "bottom-start",
         });
     }
 
