@@ -37,28 +37,28 @@
                     </t>
                     <t t-if="chatterTopbar.chatter.hasActivities">
                         <button class="o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity btn btn-link" type="button" t-att-disabled="!chatterTopbar.chatter.hasWriteAccess" t-on-click="chatterTopbar.chatter.onClickScheduleActivity" title="Schedule an activity" data-hotkey="shift+a">
-                            <i class="fa fa-clock-o"/>
-                            Schedule activity
+                            <i class="fa fa-clock-o me-1"/>
+                            <span>Schedule activity</span>
                         </button>
                     </t>
                     <div class="flex-grow-1"/>
                         <div class="o_ChatterTopbar_rightSection flex-grow-1 flex-shrink-0 justify-content-end d-flex">
                             <button t-if="chatterTopbar.chatter.thread.allAttachments.length === 0" class="o_ChatterTopbar_button o_ChatterTopbar_buttonAddAttachments btn btn-link" type="button" t-att-disabled="!chatterTopbar.chatter.hasWriteAccess" t-on-click="chatterTopbar.chatter.onClickButtonAddAttachments" title="Add Attachments">
-                                <i class="fa fa-paperclip" role="img" aria-label="Attachments"/>
+                                <i class="fa fa-paperclip me-1" role="img" aria-label="Attachments"/>
                                 <t t-if="!chatterTopbar.chatter.isShowingAttachmentsLoading">
                                     <span class="o_ChatterTopbar_buttonAddAttachmentsText">Attach files</span>
                                 </t>
                                 <t t-if="chatterTopbar.chatter.isShowingAttachmentsLoading">
-                                    <i class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin ms-1" aria-label="Attachment counter loading..."/>
+                                    <i class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
                                 </t>
                             </button>
                             <button t-if="chatterTopbar.chatter.thread.allAttachments.length > 0" class="o_ChatterTopbar_button o_ChatterTopbar_buttonToggleAttachments btn btn-link" type="button" t-att-disabled="!chatterTopbar.chatter.hasReadAccess" t-att-aria-expanded="chatterTopbar.chatter.attachmentBoxView ? 'true' : 'false'" t-on-click="chatterTopbar.chatter.onClickButtonToggleAttachments" title="Show Attachments">
-                                <i class="fa fa-paperclip" role="img" aria-label="Attachments"/>
+                                <i class="fa fa-paperclip me-1" role="img" aria-label="Attachments"/>
                                 <t t-if="!chatterTopbar.chatter.isShowingAttachmentsLoading">
-                                    <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount ps-1" t-esc="chatterTopbar.attachmentButtonText"/>
+                                    <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount" t-esc="chatterTopbar.attachmentButtonText"/>
                                 </t>
                                 <t t-if="chatterTopbar.chatter.isShowingAttachmentsLoading">
-                                    <i class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin ms-1" aria-label="Attachment counter loading..."/>
+                                    <i class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
                                 </t>
                             </button>
                             <t t-if="chatterTopbar.chatter.hasFollowers and chatterTopbar.chatter.thread">
