@@ -6,7 +6,7 @@ import { mapLegacyEnvToWowlEnv } from "./legacy/utils";
 import { localization } from "@web/core/l10n/localization";
 import { session } from "@web/session";
 import { renderToString } from "./core/utils/render";
-import { assets, templates } from "@web/core/assets";
+import { setLoadXmlDefaultApp, templates } from "@web/core/assets";
 
 const { App, whenReady } = owl;
 
@@ -43,7 +43,7 @@ export async function startWebClient(Webclient) {
         translateFn: env._t,
     });
     renderToString.app = app;
-    assets.defaultApp = app;
+    setLoadXmlDefaultApp(app);
     const root = await app.mount(document.body);
     const classList = document.body.classList;
     if (localization.direction === "rtl") {

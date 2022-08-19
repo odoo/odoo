@@ -27,9 +27,6 @@ associated to every resource. It also manages the leaves of every resource.
         'web.qunit_suite_tests': [
             'resource/static/tests/components/*.js',
         ],
-        'web.assets_qweb': [
-            'resource/static/src/**/*.xml',
-        ],
     },
     'license': 'LGPL-3',
 }

@@ -16,8 +16,6 @@ var _t = core._t;
 // to avoid registering them more than once since they are already registered
 // in website_sale.js
 var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
-    xmlDependencies: ['/website_sale_comparison/static/src/xml/comparison.xml'],
-
     template: 'product_comparison_template',
     events: {
         'click .o_product_panel_header': '_onClickPanelHeader',

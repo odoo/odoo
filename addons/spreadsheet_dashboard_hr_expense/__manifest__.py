@@ -17,7 +17,6 @@
     'assets': {
         'spreadsheet_dashboard.o_spreadsheet': [],
         'web.assets_backend': [],
-        'web.assets_qweb': [],
         'web.qunit_suite_tests': [],
         'web.assets_tests': [
             'spreadsheet_dashboard_hr_expense/static/tests/**/*',

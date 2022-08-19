@@ -10,8 +10,6 @@ odoo.define('web.test_utils', async function (require) {
      * instance of a view, appended in the dom, ready to be tested.
      */
 
-    const ajax = require('web.ajax');
-    const core = require('web.core');
     const relationalFields = require('web.relational_fields');
     const session = require('web.session');
     const testUtilsCreate = require('web.test_utils_create');
@@ -121,12 +119,9 @@ odoo.define('web.test_utils', async function (require) {
     // before starting the qunit test suite.
     // (session.js is in charge of loading the static xml bundle and we also have
     // to load xml files that are normally lazy loaded by specific widgets).
-    await Promise.all([
-        session.is_bound,
-        ajax.loadXML('/web/static/src/legacy/frontend/debug_manager/debug.xml', core.qweb),
-        ajax.loadXML('/web/static/src/legacy/xml/dialog.xml', core.qweb),
-        ajax.loadXML('/web/static/src/legacy/xml/translation_dialog.xml', core.qweb),
-    ]);
+    // Assets can also contain static xml files. They are loaded when the session
+    // is launched.
+    await session.is_bound;
     setTimeout(function () {
         // jquery autocomplete refines the search in a setTimeout() parameterized
         // with a delay, so we force this delay to 0 s.t. the dropdown is filtered

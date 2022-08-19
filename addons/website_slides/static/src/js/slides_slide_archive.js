@@ -70,7 +70,6 @@ var SlideArchiveDialog = Dialog.extend({
 
 publicWidget.registry.websiteSlidesSlideArchive = publicWidget.Widget.extend({
     selector: '.o_wslides_js_slide_archive',
-    xmlDependencies: ['/website_slides/static/src/xml/slide_management.xml'],
     events: {
         'click': '_onArchiveSlideClick',
     },

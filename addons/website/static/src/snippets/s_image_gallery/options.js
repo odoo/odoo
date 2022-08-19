@@ -10,8 +10,6 @@ var _t = core._t;
 var qweb = core.qweb;
 
 options.registry.gallery = options.Class.extend({
-    xmlDependencies: ['/website/static/src/snippets/s_image_gallery/000.xml'],
-
     /**
      * @override
      */

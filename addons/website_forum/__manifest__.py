@@ -55,10 +55,11 @@ Ask questions, get answers, no distractions
             'website_forum/static/src/scss/website_forum.scss',
             'website_forum/static/src/js/website_forum.js',
             'website_forum/static/src/js/website_forum.share.js',
+            'website_forum/static/src/xml/public_templates.xml',
         ],
-        'web.assets_qweb': [
-            'website_forum/static/src/xml/*.xml',
-        ],
+        'web_editor.assets_wysiwyg': {
+            'website_forum/static/src/xml/forum_wysiwyg.xml',
+        },
     },
     'license': 'LGPL-3',
 }

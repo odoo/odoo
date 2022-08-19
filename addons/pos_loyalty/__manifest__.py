@@ -37,12 +37,10 @@
             'pos_loyalty/static/src/js/ControlButtons/PromoCodeButton.js',
             'pos_loyalty/static/src/js/ControlButtons/RewardButton.js',
             'pos_loyalty/static/src/js/Popups/GiftCardPopup.js',
+            'pos_loyalty/static/src/xml/**/*',
         ],
         'web.assets_tests': [
             'pos_loyalty/static/src/js/tours/**/*',
-        ],
-        'web.assets_qweb': [
-            'pos_loyalty/static/src/xml/**/*',
         ],
     },
     'license': 'LGPL-3',
