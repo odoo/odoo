@@ -1682,10 +1682,10 @@ class Task(models.Model):
             can normally see.
             (In other words, this compute is only used in project sharing views to see all assignees for each task)
         """
-        if self.ids:
+        if self._origin:
             # fetch 'user_ids' in superuser mode (and override value in cache
             # browse is useful to avoid miscache because of the newIds contained in self
-            self.browse(self.ids)._read(['user_ids'])
+            self._origin.fetch(['user_ids'])
         for task in self.with_context(prefetch_fields=False):
             task.portal_user_names = ', '.join(task.user_ids.mapped('name'))
 
