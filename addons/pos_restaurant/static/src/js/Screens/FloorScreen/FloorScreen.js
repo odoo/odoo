@@ -94,7 +94,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 return newTable;
             } catch (error) {
                 if (isConnectionError(error)) {
-                    await this.showPopup('ErrorPopup', {
+                    await this.showPopup('OfflineErrorPopup', {
                         title: this.env._t('Offline'),
                         body: this.env._t('Unable to create table because you are offline.'),
                     });

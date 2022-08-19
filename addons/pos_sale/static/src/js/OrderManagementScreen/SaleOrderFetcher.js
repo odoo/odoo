@@ -53,7 +53,7 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
                 this.trigger('update');
             } catch (error) {
                 if (isConnectionError(error)) {
-                    Gui.showPopup('ErrorPopup', {
+                    Gui.showPopup('OfflineErrorPopup', {
                         title: this.comp.env._t('Network Error'),
                         body: this.comp.env._t('Unable to fetch orders if offline.'),
                     });

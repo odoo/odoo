@@ -44,7 +44,7 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
                     throw error;
                 } else {
                     // NOTE: error here is most probably undefined
-                    this.showPopup('ErrorPopup', {
+                    this.showPopup('OfflineErrorPopup', {
                         title: this.env._t('Network Error'),
                         body: this.env._t('Unable to download invoice.'),
                     });
@@ -109,7 +109,7 @@ odoo.define('point_of_sale.InvoiceButton', function (require) {
                 await this._invoiceOrder();
             } catch (error) {
                 if (isConnectionError(error)) {
-                    this.showPopup('ErrorPopup', {
+                    this.showPopup('OfflineErrorPopup', {
                         title: this.env._t('Network Error'),
                         body: this.env._t('Unable to invoice order.'),
                     });

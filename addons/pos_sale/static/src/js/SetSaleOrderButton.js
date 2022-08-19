@@ -34,7 +34,7 @@ odoo.define('pos_sale.SetSaleOrderButton', function(require) {
               Gui.showScreen(screen);
           } catch (error) {
               if (isConnectionError(error)) {
-                  this.showPopup('ErrorPopup', {
+                  this.showPopup('OfflineErrorPopup', {
                       title: this.env._t('Network Error'),
                       body: this.env._t('Cannot access order management screen if offline.'),
                   });

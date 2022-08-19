@@ -41,10 +41,6 @@ odoo.define('point_of_sale.PosPopupController', function(require) {
             if (!component) {
                 throw new Error(`'${name}' is not found. Make sure the file is loaded and the component is properly registered using 'Registries.Component.add'.`);
             }
-            if (component.dontShow) {
-                resolve();
-                return;
-            }
             this.popups.push({
                 name,
                 component,

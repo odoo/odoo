@@ -144,7 +144,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 } catch (error) {
                     const iError = identifyError(error);
                     if (iError instanceof ConnectionLostError || iError instanceof ConnectionAbortedError) {
-                        await this.showPopup('ErrorPopup', {
+                        await this.showPopup('OfflineErrorPopup', {
                             title: this.env._t('Network Error'),
                             body: this.env._t('Cannot close the session when offline.'),
                         });

@@ -204,7 +204,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                         syncOrderResult.map((res) => res.id)
                     );
                     if (!postPushResult) {
-                        this.showPopup('ErrorPopup', {
+                        this.showPopup('OfflineErrorPopup', {
                             title: this.env._t('Error: no internet connection.'),
                             body: this.env._t('Some, if not all, post-processing after syncing order failed.'),
                         });
