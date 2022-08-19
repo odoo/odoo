@@ -16,38 +16,7 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
     class ProductInfoPopup extends AbstractAwaitablePopup {
         constructor() {
             super(...arguments);
-        }
-        async willStart() {
-            const order = this.env.pos.get_order();
-            try {
-                // check back-end method `get_product_info_pos` to see what it returns
-                // We do this so it's easier to override the value returned and use it in the component template later
-                this.productInfo = await this.rpc({
-                    model: 'product.product',
-                    method: 'get_product_info_pos',
-                    args: [[this.props.product.id],
-                        this.props.product.get_price(order.pricelist, this.props.quantity),
-                        this.props.quantity,
-                        this.env.pos.config.id],
-                    kwargs: {context: this.env.session.user_context},
-                });
-
-                const priceWithoutTax = this.productInfo['all_prices']['price_without_tax'];
-                const margin = priceWithoutTax - this.props.product.standard_price;
-                const orderPriceWithoutTax = order.get_total_without_tax();
-                const orderCost = order.get_total_cost();
-                const orderMargin = orderPriceWithoutTax - orderCost;
-
-                this.costCurrency = this.env.pos.format_currency(this.props.product.standard_price);
-                this.marginCurrency = this.env.pos.format_currency(margin);
-                this.marginPercent = priceWithoutTax ? Math.round(margin/priceWithoutTax * 10000) / 100 : 0;
-                this.orderPriceWithoutTaxCurrency = this.env.pos.format_currency(orderPriceWithoutTax);
-                this.orderCostCurrency = this.env.pos.format_currency(orderCost);
-                this.orderMarginCurrency = this.env.pos.format_currency(orderMargin);
-                this.orderMarginPercent = orderPriceWithoutTax ? Math.round(orderMargin/orderPriceWithoutTax * 10000) / 100 : 0;
-            } catch (error) {
-                this.error = error;
-            }
+            Object.assign(this, this.props.info)
         }
         /*
          * Since this popup need to be self dependent, in case of an error, the popup need to be closed on its own.
