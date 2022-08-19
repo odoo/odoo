@@ -997,7 +997,7 @@ class Message(models.Model):
                 except AccessError:
                     continue
                 else:
-                    messages |= message
+                    messages += message
         messages_per_partner = defaultdict(lambda: self.env['mail.message'])
         for message in messages:
             if not self.env.user._is_public():

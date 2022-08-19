@@ -240,7 +240,13 @@ class MailComposer(models.TransientModel):
 
     def _action_send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
-            email(s), rendering any template patterns on the fly if needed. """
+            email(s), rendering any template patterns on the fly if needed.
+
+        :return tuple: (
+            result_mails_su: in mass mode, sent emails (as sudo),
+            result_messages: in comment mode, posted messages
+        )
+        """
         # Several custom layouts make use of the model description at rendering, e.g. in the
         # 'View <document>' button. Some models are used for different business concepts, such as
         # 'purchase.order' which is used for a RFQ and and PO. To avoid confusion, we must use a
@@ -248,6 +254,7 @@ class MailComposer(models.TransientModel):
         # Therefore, we can set the description in the context from the beginning to avoid falling
         # back on the regular display_name retrieved in ``_notify_by_email_prepare_rendering_context()``.
         model_description = self._context.get('model_description')
+        result_mails_su, result_messages = self.env['mail.mail'].sudo(), self.env['mail.message']
 
         for wizard in self:
             # Duplicate attachments linked to the email.template.
@@ -299,7 +306,7 @@ class MailComposer(models.TransientModel):
                 all_mail_values = wizard.get_mail_values(res_ids)
                 for res_id, mail_values in all_mail_values.items():
                     if wizard.composition_mode == 'mass_mail':
-                        batch_mails_sudo |= self.env['mail.mail'].sudo().create(mail_values)
+                        batch_mails_sudo += self.env['mail.mail'].sudo().create(mail_values)
                     else:
                         post_params = dict(
                             message_type=wizard.message_type,
@@ -317,10 +324,13 @@ class MailComposer(models.TransientModel):
                                 # if message_notify returns an empty record set, no recipients where found.
                                 raise UserError(_("No recipient found."))
                         else:
-                            ActiveModel.browse(res_id).message_post(**post_params)
+                            result_messages += ActiveModel.browse(res_id).message_post(**post_params)
 
+                result_mails_su += batch_mails_sudo
                 if wizard.composition_mode == 'mass_mail':
                     batch_mails_sudo.send(auto_commit=auto_commit)
+
+        return result_mails_su, result_messages
 
     def action_save_as_template(self):
         """ hit save as template button: current form value will be a new
