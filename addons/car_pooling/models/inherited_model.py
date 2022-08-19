@@ -1,5 +1,5 @@
 from odoo.exceptions import ValidationError
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 DEFAULT_MESSAGE = "Default message"
 
@@ -35,5 +35,5 @@ class InheritedModel(models.Model):
         for record in self:
             if record.phone_number != '':
                 if not str(record.phone_number).isdigit() or len(record.phone_number) != 10:
-                    raise ValidationError(("Cannot enter invalid phone number"))
+                    raise ValidationError("Cannot enter invalid phone number")
         return True
