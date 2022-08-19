@@ -10,6 +10,10 @@ addFields('MessageView', {
         inverse: 'messageViewOwnerAsSnailmailError',
         isCausal: true,
     }),
+    snailmailNotificationPopoverView: one('PopoverView', {
+        inverse: 'messageViewOwnerAsSnailmailNotificationContent',
+        isCausal: true,
+    }),
 });
 
 patchRecordMethods('MessageView', {
@@ -51,5 +55,30 @@ patchRecordMethods('MessageView', {
         } else {
             this._super(...arguments);
         }
+    },
+    onClickNotificationIcon() {
+        if (this.message && this.message.message_type === 'snailmail') {
+            this.update({ snailmailNotificationPopoverView: {} });
+            return;
+        }
+        return this._super();
+    },
+    /**
+     * @override
+     */
+    _computeFailureNotificationIconClassName() {
+        if (this.message && this.message.message_type === 'snailmail') {
+            return 'fa fa-paper-plane';
+        }
+        return this._super();
+    },
+    /**
+     * @override
+     */
+    _computeNotificationIconClassName() {
+        if (this.message && this.message.message_type === 'snailmail') {
+            return 'fa fa-paper-plane';
+        }
+        return this._super();
     },
 });

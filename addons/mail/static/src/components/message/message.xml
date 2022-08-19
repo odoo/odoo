@@ -114,18 +114,13 @@
                                     <div t-att-class="{ 'ms-2': messageView.isInChatWindowAndIsAlignedRight }">
                                         <t t-if="messageView.message.failureNotifications.length > 0">
                                             <span class="o_Message_notificationIconClickable o-error cursor-pointer text-danger" role="button" tabindex="0" t-on-click="messageView.onClickFailure">
-                                                <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope" role="img" aria-label="Delivery failure"/>
+                                                <i class="o_Message_notificationIcon" t-att-class="messageView.failureNotificationIconClassName" role="img" aria-label="Delivery failure"/> <span t-if="messageView.failureNotificationIconLabel" t-out="messageView.failureNotificationIconLabel"/>
                                             </span>
                                         </t>
                                         <t t-else="">
-                                            <Popover>
-                                                <span class="o_Message_notificationIconClickable text-600 cursor-pointer">
-                                                    <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
-                                                </span>
-                                                <t t-set-slot="opened">
-                                                    <MessageNotificationPopoverContent record="messageView"/>
-                                                </t>
-                                            </Popover>
+                                            <span class="o_Message_notificationIconClickable text-600 cursor-pointer" t-on-click="messageView.onClickNotificationIcon" t-ref="notificationIcon">
+                                                <i class="o_Message_notificationIcon" t-att-class="messageView.notificationIconClassName"/> <span t-if="messageView.notificationIconLabel" t-out="messageView.notificationIconLabel"/>
+                                            </span>
                                         </t>
                                     </div>
                                 </t>
