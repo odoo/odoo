@@ -50,33 +50,6 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@id='hr_presence_button']" position="attributes">
-                <attribute name="attrs">
-                    {'invisible': ['|', ('hr_presence_state', '=', 'absent'), ('attendance_state', '=', 'checked_in')]}
-                </attribute>
-            </xpath>
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <field name="attendance_state" invisible="1"/>
-                <button name="%(hr_attendance_action_my_attendances)d"
-                    id="hr_attendance_button"
-                    class="oe_stat_button"
-                    invisible="context.get('from_my_profile', False)"
-                    type="action" attrs="{'invisible': ['|', ('attendance_state', '=', False), '&amp;', ('hr_presence_state', '=', 'present'), ('attendance_state', '=', 'checked_out')]}">
-                    <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon me-1 text-success" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}" aria-label="Available" title="Available"/>
-                    <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon me-1 text-danger" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}" aria-label="Not available" title="Not available"/>
-                    <div class="o_stat_info" attrs="{'invisible': ['|', ('last_check_in', '=', False), ('last_check_out', '!=', False)]}">
-                        <span class="o_stat_text">Attended Since</span>
-                        <span class="o_stat_value"><field name="last_check_in" widget="relative_time"/></span>
-                    </div>
-                    <div class="o_stat_info" attrs="{'invisible': [('last_check_out', '=', False)]}">
-                        <span class="o_stat_text">Not Attended Since</span>
-                        <span class="o_stat_value"><field name="last_check_out" widget="relative_time"/></span>
-                    </div>
-                    <div class="o_stat_info" attrs="{'invisible': [('last_check_in', '!=', False)]}">
-                        <span class="o_stat_text">Attendance</span>
-                    </div>
-                </button>
-            </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="employee_ids" invisible="1"/>
                 <button name="%(hr_attendance_action_employee)d"
