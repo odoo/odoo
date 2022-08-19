@@ -660,11 +660,11 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
     &.o-isVisitorTheAuthor {
         justify-content: flex-end;
-        margin-left: map-get($spacers, 5);
+        margin-left: map-get($spacers, 4);
     }
     
     &.o-isOperatorTheAuthor {
-        margin-right: map-get($spacers, 5);
+        margin-right: map-get($spacers, 4);
     }
 }
 
@@ -676,11 +676,11 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
     }
 
     &.o-isVisitorTheAuthor {
-        margin-left: map-get($spacers, 5);
+        margin-left: map-get($spacers, 2);
     }
     
     &.o-isOperatorTheAuthor {
-        margin-right: map-get($spacers, 5);
+        margin-right: map-get($spacers, 2);
     }
 
 }
@@ -715,4 +715,11 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         color: #000;
         opacity: 15%
     }
+}
+
+.o_PublicLivechatWindow_composer {
+    padding: map-get($spacers, 2);
+    outline: none;
+    border: 0;
+    border-top: 1px solid lightgray;
 }
