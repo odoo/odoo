@@ -840,6 +840,12 @@ class ResourceCalendarAttendance(models.Model):
         # avoid wrong order
         self.hour_to = max(self.hour_to, self.hour_from)
 
+    @api.constrains('hour_from', 'hour_to')
+    def _check_closing_date(self):
+        for attendance in self:
+            if attendance.hour_to == attendance.hour_from:
+                raise ValidationError(_("Attended time spent should be at least 1 hour."))
+
     def _copy_attendance_vals(self):
         self.ensure_one()
         return {
