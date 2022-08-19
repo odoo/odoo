@@ -53,6 +53,9 @@ registerModel({
             if (this.messageActionViewOwnerAsReaction) {
                 return this.messageActionViewOwnerAsReaction.actionRef;
             }
+            if (this.messageViewOwnerAsNotificationContent) {
+                return this.messageViewOwnerAsNotificationContent.notificationIconRef;
+            }
             return clear();
         },
         /**
@@ -78,6 +81,9 @@ registerModel({
             }
             if (this.emojiPickerView) {
                 return this.emojiPickerView;
+            }
+            if (this.messageNotificationPopoverContentView) {
+                return this.messageNotificationPopoverContentView;
             }
             return clear();
         },
@@ -108,6 +114,9 @@ registerModel({
             if (this.emojiPickerView) {
                 return 'EmojiPickerView';
             }
+            if (this.messageNotificationPopoverContentView) {
+                return 'MessageNotificationPopoverContent';
+            }
             return clear();
         },
         /**
@@ -130,6 +139,16 @@ registerModel({
         _computeManager() {
             if (this.messaging.popoverManager) {
                 return this.messaging.popoverManager;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {Object|FieldCommand}
+         */
+        _computeMessageNotificationPopoverContentView() {
+            if (this.messageViewOwnerAsNotificationContent) {
+                return {};
             }
             return clear();
         },
@@ -248,6 +267,15 @@ registerModel({
         messageActionViewOwnerAsReaction: one('MessageActionView', {
             identifying: true,
             inverse: 'reactionPopoverView',
+        }),
+        messageNotificationPopoverContentView: one('MessageNotificationPopoverContentView', {
+            compute: '_computeMessageNotificationPopoverContentView',
+            inverse: 'popoverViewOwner',
+            isCausal: true,
+        }),
+        messageViewOwnerAsNotificationContent: one('MessageView', {
+            identifying: true,
+            inverse: 'notificationPopoverView',
         }),
         /**
          * Position of the popover view relative to its anchor point.
