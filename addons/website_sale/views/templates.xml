@@ -1264,7 +1264,7 @@
         </t>
     </template>
 
-    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" name="Alternative Products in my cart">
+    <template id="suggested_products_list" inherit_id="website_sale.cart_lines" name="Accessory Products in my cart">
         <xpath expr="//table[@id='cart_products']" position="after">
             <h5 class='text-muted js_cart_lines' t-if="suggested_products">Suggested Accessories:</h5>
             <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-sm">
