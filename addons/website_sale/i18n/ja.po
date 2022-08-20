@@ -10,7 +10,6 @@
 # Manami Hashi <manami@roomsfor.hk>, 2022
 # 江口和志 <k_eguchi@enzantrades.co.jp>, 2022
 # Yoon Nankyung <nankyung.yoon@pro-spire.co.jp>, 2022
-# Martin Trigaux, 2022
 # Tsuda Ryoko <ryoko04nov@gmail.com>, 2022
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2022
 # Tim Siu Lai <tl@roomsfor.hk>, 2022
@@ -19,6 +18,7 @@
 # Noma Yuki, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -943,6 +943,14 @@ msgstr "アカウントにドキュメントが発行された後は、会社名
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "子分類"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr "アカウントの請求書が発行されると、あなたの名前の変更は許可されません。 この操作については、直接お問い合わせください。"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard

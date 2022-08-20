@@ -12,21 +12,21 @@
 # Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2021
 # Manuela Silva <mmsrs@sky.com>, 2021
 # Pedro Castro Silva <pedrocs@exo.pt>, 2021
-# Nuno Silva <nuno.silva@arxi.pt>, 2021
 # Marcelo Pereira <marcelo.pereira@arxi.pt>, 2021
 # Pedro Filipe <pedro2.10@hotmail.com>, 2021
 # João Carvalho <jpldcarvalho+github@gmail.com>, 2021
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2021
 # Martin Trigaux, 2021
 # Luiz Fernando <lfpsgs@outlook.com>, 2022
+# Nuno Silva <nuno.silva@arxi.pt>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Luiz Fernando <lfpsgs@outlook.com>, 2022\n"
+"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2022\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -952,6 +952,16 @@ msgid "Children Categories"
 msgstr "Categorias Descendentes"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Alterar o seu nome não é permitido assim que sejam emitidas faturas na sua "
+"conta. Por favor contacte-nos diretamente para esta operação."
+
+#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
 msgstr "Escolha um método de pagamento"
@@ -1796,9 +1806,8 @@ msgstr "O Meu Carrinho"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
-#: model_terms:ir.ui.view,arch_db:website_sale.sort
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name"
 msgstr "Nome"
 
@@ -3014,6 +3023,12 @@ msgid "The #1"
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3040,6 +3055,12 @@ msgid ""
 msgstr ""
 "O modo aqui selecionado será aplicado como política de faturação de qualquer"
 " novo artigo criado, mas não em artigos existentes."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The order has been canceled."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids

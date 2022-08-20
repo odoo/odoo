@@ -55,19 +55,21 @@ msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
 msgstr ""
+"%(email)s no se reconoce como un correo electrónico válido y  es un dato "
+"necesario para crear un nuevo cliente."
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 msgstr ""
-"%(user_name)s lo invitó a seguir el documento %(document)s : %(title)s"
+"%(user_name)s le invitó a seguir el documento %(document)s : %(title)s"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
 #, python-format
 msgid "%(user_name)s invited you to follow a new document."
-msgstr "%(user_name)s lo invitó a seguir un nuevo documento."
+msgstr "%(user_name)s le invitó a seguir un nuevo documento."
 
 #. module: mail
 #. openerp-web
@@ -388,7 +390,7 @@ msgid ""
 "Kind Regards,</p>"
 msgstr ""
 "<p>Estimado remitente,<br /><br />\n"
-"El siguiente mensaje no pudo entregarse a la dirección%(alias_display_name)s.\n"
+"No se pudo entregar el siguiente mensaje a la dirección%(alias_display_name)s.\n"
 "Solo %(contact_description)s están autorizados a ponerse en contacto.<br /><br />\n"
 "Asegúrese de utilizar la dirección correcta o póngase en contacto con nosotros en %(default_email)s.<br /><br />\n"
 "Saludos cordiales,</p>"
@@ -526,7 +528,7 @@ msgid ""
 "creating new records for this alias."
 msgstr ""
 "Se evaluará un diccionario de Python con el fin de proporcionar valores "
-"predefinidos cuando se creen nuevos registros para este seudónimo."
+"predeterminados al crear nuevos registros para este seudónimo."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
@@ -766,7 +768,7 @@ msgstr "Añadir seguidores"
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
 msgid "Add Followers can only be done on a mail thread model"
-msgstr "Solo se pueden añadir seguidores en una conversación tipo correo."
+msgstr "Solo se pueden añadir seguidores en una conversación por correo."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__add_sign
@@ -1494,6 +1496,8 @@ msgid ""
 "Channel \"%(channel_name)s\" only accepts members of group "
 "\"%(group_name)s\". Forbidden for: %(guest_names)s"
 msgstr ""
+"El canal \"%(channel_name)s\" solo acepta miembros del grupo "
+"\"%(group_name)s\". Prohibido para: %(guest_names)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -1733,7 +1737,7 @@ msgstr "Confirmación"
 #: code:addons/mail/static/src/xml/systray.xml:0
 #, python-format
 msgid "Congratulations, you're done with your activities."
-msgstr "Felicidades, ha terminado sus actividades."
+msgstr "¡Felicidades! ha terminado sus actividades."
 
 #. module: mail
 #. openerp-web
@@ -2014,7 +2018,7 @@ msgstr "Ensordecer"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
-msgstr "Estimado"
+msgstr "Apreciable"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
@@ -2138,7 +2142,7 @@ msgstr "Error en la entrega"
 #: code:addons/mail/static/src/components/message/message.xml:0
 #, python-format
 msgid "Delivery failure"
-msgstr "Fallo en la entrega"
+msgstr "Error en la entrega"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
@@ -2503,7 +2507,7 @@ msgstr "Dirección de correo electrónico"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Email Alias"
-msgstr "Seudónimo de correo"
+msgstr "Seudónimo de correo electrónico"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
@@ -2572,7 +2576,7 @@ msgstr "Hilo de correos electrónicos"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_blacklist_unique_email
 msgid "Email address already exists!"
-msgstr "¡Ya existe esta dirección de correo electrónico!"
+msgstr "Ya existe esta dirección de correo electrónico."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__email_from
@@ -3390,6 +3394,10 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
+"Si está opción está activada, el administrador de espera enviará el correo "
+"electrónico después de la fecha. Si no se activada, el correo electrónico se"
+" enviará lo antes posible. A menos que se especifique una zona horaria, se "
+"considerará que está en la zona horaria UTC."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -6069,6 +6077,8 @@ msgstr "Limitar las plantillas de correo y la creación por Jinja."
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Restrict mail templates edition and QWEB placeholders usage."
 msgstr ""
+"Restringir la edición de plantillas de correo y el uso de marcadores de "
+"posición QWEB."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -7837,7 +7847,7 @@ msgstr "Nombre de operación erróneo (%s)"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "YYYY-MM-DD HH:MM:SS"
-msgstr ""
+msgstr "AAAA-MM-DD HH:MM:SS"
 
 #. module: mail
 #. openerp-web

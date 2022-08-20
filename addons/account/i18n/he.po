@@ -22,12 +22,12 @@
 # Martin Trigaux, 2022
 # MichaelHadar, 2022
 # Jonathan Spier, 2022
-# hed shefer <hed@laylinetech.com>, 2022
 # Sagi Ahiel, 2022
 # david danilov, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # Netta Waizer, 2022
 # Roy Sayag, 2022
+# hed shefer <hed@laylinetech.com>, 2022
 # NoaFarkash, 2022
 # 
 msgid ""
@@ -554,8 +554,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_statements_count','&gt;', 1)]}\">Statement</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">Statements</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('reconciled_statements_count','&gt;', 1)]}\">הצהרה</span>\n"
-"<span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">הצהרות</span>"
+"דף בנק\n"
+"<span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">דפי בנק</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -2217,7 +2217,7 @@ msgstr "קביעת בסיס מזומן לצורכי מס"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
 msgid "Allowed Journals"
-msgstr "כתבי עת מותרים"
+msgstr "יומנים מותרים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__type_control_ids
@@ -3503,7 +3503,7 @@ msgstr "עיגול מזומן"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Cash Statement"
-msgstr "הצהרת מזומן"
+msgstr "דף מזומן"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -7452,7 +7452,7 @@ msgstr "נמוך מ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_matched
 msgid "Is Matched With a Bank Statement"
-msgstr "האם מותאם לדוח בנק"
+msgstr "האם מותאם לדף בנק"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_move_sent
@@ -7695,14 +7695,14 @@ msgstr "קבוצות יומנים"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Journal Item"
-msgstr "פקודת יומן"
+msgstr "תנועת יומן"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_label
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__label
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template__label
 msgid "Journal Item Label"
-msgstr "אסמכתא לפקודת יומן"
+msgstr "אסמכתא לתנועת יומן"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_all
@@ -8492,7 +8492,7 @@ msgstr "פריטי יומן תואמים"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Matched Statements"
-msgstr "הצהרות תואמות"
+msgstr "דפי בנק מותאמים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
@@ -9131,8 +9131,8 @@ msgid ""
 "Odoo allows you to reconcile a statement line directly with\n"
 "                the related sale or purchase invoice(s)."
 msgstr ""
-"Odoo מאפשר לך ליישב שורת הצהרה ישירות עם\n"
-"הרכישות הקשורות או חשבוני/ות המכירה."
+"Odoo מאפשר לך להתאים שורת דף בנק ישירות עם\n"
+"חשבוניות הרכישה או המכירה הרלוונטיות."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -9227,7 +9227,7 @@ msgstr "רק שותפים האלה"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Only Validated statements can be reset to new."
-msgstr "רק הצהרות מאומתות ניתן לאפס לחדשות."
+msgstr "רק דפי בנק מאושרים ניתן לאפס לסטטוס חדש."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -9246,7 +9246,7 @@ msgstr "ניתן להדפיס רק חשבוניות."
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Only new statements can be posted."
-msgstr "ניתן לפרסם רק הצהרות חדשות."
+msgstr "ניתן לפרסם רק דפי בנק בסטטוס חדש."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__group_payment
@@ -9267,7 +9267,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Only validated statements can be reset to new."
-msgstr "רק הצהרות מאומתות ניתן לאפס לחדשות."
+msgstr "רק דפי בנק מאושרים ניתן לאפס לסטטוס חדש."
 
 #. module: account
 #: code:addons/account/controllers/terms.py:0
@@ -9466,7 +9466,7 @@ msgstr "תשלום מקור"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_line_id
 msgid "Originator Statement Line"
-msgstr "שורת הצהרת המוצא"
+msgstr "שורת דף בנק מקור"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
@@ -9545,13 +9545,13 @@ msgstr "חשבון פלט להערכת מניות"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_id
 msgid "Outstanding Account"
-msgstr "חשבון יוצא מן הכלל"
+msgstr "חשבון תקבולים/ תשלומים בתהליך"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Outstanding Payments"
-msgstr "תשלומים בולטים"
+msgstr "תשלומים שטרם נפרעו"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
@@ -9567,7 +9567,7 @@ msgstr "חשבונות תשלומים שטרם נפרעו"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Outstanding Receipts"
-msgstr "קבלות יוצאות דופן"
+msgstr "תקבולים שטרם הופקדו"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
@@ -9810,7 +9810,7 @@ msgstr "תשלום"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_method_line__payment_account_id
 msgid "Payment Account"
-msgstr "תשלום חשבון "
+msgstr "חשבון תשלום"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -9950,13 +9950,13 @@ msgstr "שורת תנאי תשלום"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__allow_payment_tolerance
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__allow_payment_tolerance
 msgid "Payment Tolerance"
-msgstr "סובלנות לתשלום"
+msgstr "חריגה מותרת לתשלום"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__payment_tolerance_type
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__payment_tolerance_type
 msgid "Payment Tolerance Type"
-msgstr "סוג סובלנות לתשלום"
+msgstr "סוג חריגה מותרת לתשלום"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_type
@@ -10089,7 +10089,7 @@ msgstr "אחוז מכל שורה לביצוע הפעולה."
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage_st_line
 msgid "Percentage of statement line"
-msgstr "אחוז שורת ההצהרה"
+msgstr "אחוז שורת דפי בנק"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -10241,7 +10241,7 @@ msgstr "רשום תשלומים"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 msgid "Post entries"
-msgstr "פרסם ערכים"
+msgstr "פרסם פקודות יומן"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -10369,7 +10369,7 @@ msgstr "תצוגה מקדימה של חשבונית"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__previous_statement_id
 msgid "Previous Statement"
-msgstr "הצהרה קודמת"
+msgstr "דף קודם"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10695,7 +10695,7 @@ msgstr "עבר התאמה חשבונאית"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bill_ids
 msgid "Reconciled Bills"
-msgstr "חשבונות מותאמים"
+msgstr "חשבוניות ספק שהותאמו"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10715,7 +10715,7 @@ msgstr "סוג חשבוניות מותאמות"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_ids
 msgid "Reconciled Statements"
-msgstr "הצהרות מתואמות"
+msgstr "דפים מותאמים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconcile_model_id
@@ -11038,7 +11038,7 @@ msgstr "הגבל את השימוש במסים לסוג מוצר."
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_same_currency
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
-msgstr "הגבל להצעות בעלות אותו מטבע כמו שורת ההצהרה."
+msgstr "הגבל להצעות בעלות אותו מטבע כמו שורת דף הבנק."
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -12121,7 +12121,7 @@ msgstr "דף בנק"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Statement %s confirmed."
-msgstr "ההצהרה %s אושרה."
+msgstr "דף הבנק %s אושר."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -12129,7 +12129,7 @@ msgstr "ההצהרה %s אושרה."
 #: model:ir.model.fields,field_description:account.field_account_payment__statement_line_id
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_line_form
 msgid "Statement Line"
-msgstr "שורת הצהרה"
+msgstr "שורת דף הבנק"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -12153,7 +12153,7 @@ msgstr "דפי בנק"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_ids
 msgid "Statements matched to this payment"
-msgstr "הצהרות תואמות לתשלום זה"
+msgstr "דפי בנק מותאמים לתשלום זה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -12798,7 +12798,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement__all_lines_reconciled
 msgid ""
 "Technical field indicating if all statement lines are fully reconciled."
-msgstr "שדה טכני המציין אם כל שורות ההצהרה מתואמות במלואן."
+msgstr "שדה טכני המציין האם כל שורות דפי הבנק הותאמו במלואן."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__is_matched
