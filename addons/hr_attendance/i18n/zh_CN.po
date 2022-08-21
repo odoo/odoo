@@ -3,22 +3,27 @@
 # 	* hr_attendance
 # 
 # Translators:
-# Martin Trigaux, 2019
+# waveyeung <waveyeung@qq.com>, 2017
+# Bo Cao, 2017
+# 苏州远鼎 <tiexinliu@126.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
 # Jeffery CHEN <jeffery9@gmail.com>, 2019
-# liAnGjiA <liangjia@qq.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
-# 张宏奎 <zhanghongkui@inspur.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,6 +65,17 @@ msgstr "<i class=\"fa fa-calendar\" aria-label=\"Period\" role=\"img\" title=\"P
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Employee PIN</span>"
 msgstr "<span class=\"o_form_label\">员工 PIN</span>"
 
@@ -90,6 +106,12 @@ msgstr "<span class=\"o_stat_text\">出席以来</span>"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
+msgid "<span class=\"o_stat_text\">Extra Hours</span>"
+msgstr "<span class=\"o_stat_text\">加班时间</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+#: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Not Attended Since</span>"
 msgstr "<span class=\"o_stat_text\">从那以后没有参加</span>"
 
@@ -107,13 +129,37 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 msgid ""
-"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
-"oe_hr_attendance_status_red\" role=\"img\" aria-label=\"Not available\" "
-"title=\"Not available\"/>"
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
 msgstr ""
-"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle "
-"oe_hr_attendance_status_red\" role=\"img\" aria-label=\"Not available\" "
-"title=\"Not available\"/>"
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle oe_hr_attendance_status_orange\" role=\"img\" aria-label=\"Not available\" title=\"不可用\">\n"
+"                                    </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span> Minutes</span>"
+msgstr "<span>会议记录</span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"<span> Minutes</span>\n"
+"                                    <br/>\n"
+"                                    <br/>"
+msgstr ""
+"<span>分钟</span>\n"
+"                                    <br/>\n"
+"                                    <br/>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "<span>Time Period </span>"
+msgstr "<span>时间期间 </span>"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Activate the count of employees' extra hours."
+msgstr "激活员工的加班工作时间的数量。"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -125,9 +171,33 @@ msgstr ""
 "                要添加员工，请点击员工菜单即可."
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__adjustment
+msgid "Adjustment"
+msgstr "调整"
+
+#. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
 msgid "Administrator"
 msgstr "管理员"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"counted, in benefit of the company"
+msgstr "为了公司的利益，允许有一段时间（工作时间前后）不计算加班时间。"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Allow a period of time (around working hours) where extra time will not be "
+"deducted, in benefit of the employee"
+msgstr "为了雇员的利益，允许在一段时间内（工作时间前后）不扣减加班时间。"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
+msgid "Amount of extra hours"
+msgstr "加班小时数的数量"
 
 #. module: hr_attendance
 #. openerp-web
@@ -147,22 +217,29 @@ msgstr "期待很快与您见面！"
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_ids
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__attendance_ids
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_ids
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_graph
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_pivot
 msgid "Attendance"
 msgstr "出勤"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph
-#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_graph_filtered
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_report_action_filtered
 msgid "Attendance Analysis"
 msgstr "出勤分析"
 
 #. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
+msgid "Attendance Overtime"
+msgstr "出勤 加班"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_report
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_graph
+msgid "Attendance Statistics"
+msgstr "出席率统计"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
 msgid "Attendance Status"
@@ -171,7 +248,9 @@ msgstr "出勤状态"
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_overview
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_attendances_overview
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
@@ -182,16 +261,12 @@ msgstr "出勤"
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 #, python-format
 msgid "Available"
 msgstr "可用"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_employee_base
-msgid "Basic Employee"
-msgstr "基本员工"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -221,10 +296,10 @@ msgstr "在 %(empl_name)s上无法执行签出, 无法找到相应的签入。�
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__check_in
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_in
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__last_check_in
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_in
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_in
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check In"
 msgstr "签到"
@@ -237,8 +312,6 @@ msgstr "签到/签出"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_check_out
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__last_check_out
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_out
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_out
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check Out"
@@ -251,8 +324,6 @@ msgstr "签到/签退"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
-#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_base__attendance_state__checked_in
-#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_public__attendance_state__checked_in
 msgid "Checked in"
 msgstr "签到"
 
@@ -265,8 +336,6 @@ msgstr "签到时间"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_out
-#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_base__attendance_state__checked_out
-#: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_public__attendance_state__checked_out
 msgid "Checked out"
 msgstr "签出"
 
@@ -286,11 +355,26 @@ msgid "Click to"
 msgstr "点击"
 
 #. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Company Logo"
 msgstr "公司 Logo"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Compare attendance with working hours set on employee."
+msgstr "将出勤率与员工设定的工作时间进行比较。"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_config_settings
@@ -303,27 +387,55 @@ msgid "Configuration"
 msgstr "基础配置"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_overtime
+msgid "Count Extra Hours"
+msgstr "计算加班时间"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Count of Extra Hours"
+msgstr "加班小时数量"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Count of extra hours is considered from this date. Potential extra hours "
+"prior to this date are not considered."
+msgstr "加班时间的计算是从这个日期开始考虑的。在此日期之前的潜在加班小时不被考虑。"
+
+#. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
 msgid "Create a new employee"
 msgstr "创建一位新员工"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__create_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__create_date
 msgid "Created on"
 msgstr "创建时间"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__date
+msgid "Day"
+msgstr "天"
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__department_id
 msgid "Department"
 msgstr "部门"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__display_name
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
@@ -342,7 +454,11 @@ msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
 msgstr "国王的早餐，商人的午餐，乞丐的晚餐"
 
 #. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_employee
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__employee_id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__employee_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
 msgid "Employee"
@@ -361,7 +477,6 @@ msgstr "员工出勤"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_employee_attendance_action_kanban
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_employees_kanban
 msgid "Employees"
 msgstr "员工"
 
@@ -376,6 +491,37 @@ msgstr "允许使用PIN"
 #, python-format
 msgid "Error: could not find corresponding employee."
 msgstr "错误: 找不到相应的员工。"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__overtime_hours
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Extra Hours"
+msgstr "加班时间"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration_real
+msgid "Extra Hours (Real)"
+msgstr "加班时间（真实）"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_start_date
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_start_date
+msgid "Extra Hours Starting Date"
+msgstr "加班时间的开始日期"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Extra hours today:"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
+msgid "Extra-hours including the threshold duration"
+msgstr "加班时间，包括阈值时间"
 
 #. module: hr_attendance
 #. openerp-web
@@ -393,6 +539,7 @@ msgstr "很久没见，欢迎回来!"
 
 #. module: hr_attendance
 #. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
@@ -438,9 +585,15 @@ msgid "Goodbye"
 msgstr "再见"
 
 #. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Group By"
 msgstr "分组"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
+msgid "HR Attendance Search"
+msgstr "HR考勤查询"
 
 #. module: hr_attendance
 #. openerp-web
@@ -478,26 +631,26 @@ msgstr "小时"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__hours_last_month
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month
 msgid "Hours Last Month"
 msgstr "小时上月"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__hours_last_month_display
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_last_month_display
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month_display
 msgid "Hours Last Month Display"
 msgstr "小时上月显示"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__hours_today
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_today
 msgid "Hours Today"
 msgstr "小时今天"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__worked_hours
+msgid "Hours Worked"
+msgstr "工作小时数"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -506,6 +659,8 @@ msgstr "人力资源考勤搜索"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__id
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__id
 msgid "ID"
 msgstr "ID"
 
@@ -513,8 +668,8 @@ msgstr "ID"
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
-msgid "Identify"
-msgstr "标识"
+msgid "Identify Manually"
+msgstr "手动识别"
 
 #. module: hr_attendance
 #. openerp-web
@@ -531,36 +686,39 @@ msgid "Invalid request, please return to the main menu."
 msgstr "请求无效，请返回主菜单。"
 
 #. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_mode
+#: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
+msgid "Kiosk Attendance"
+msgstr "信息亭出勤"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
 msgid "Kiosk Mode"
 msgstr "Kiosk模式"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_base__last_attendance_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_attendance_id
 msgid "Last Attendance"
 msgstr "上次出勤"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance____last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime____last_update
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report____last_update
 msgid "Last Modified on"
-msgstr "最后更改日"
+msgstr "最后修改时间"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_date
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__write_date
 msgid "Last Updated on"
-msgstr "更新时间"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
-msgid "Manager"
-msgstr "管理员"
+msgstr "最后更新时间"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
@@ -568,11 +726,9 @@ msgid "Manual Attendance"
 msgstr "管理考勤"
 
 #. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
-#, python-format
-msgid "Manually"
-msgstr "手工"
+#: model:ir.model,name:hr_attendance.model_ir_ui_menu
+msgid "Menu"
+msgstr "菜单"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -596,14 +752,15 @@ msgstr "没找到出勤记录"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
 msgid "No attendance records to display"
 msgstr "无出勤记录可显示"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
-msgid "No employee corresponding to barcode %(barcode)s"
-msgstr "没有员工对应的条码 %(barcode)s"
+msgid "No employee corresponding to Badge ID '%(barcode)s.'"
+msgstr "工号牌ID%(barcode)s不能对应任何员工。"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -624,6 +781,11 @@ msgid "Officer"
 msgstr "主管"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
+msgid "Overtime"
+msgstr "延时"
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
@@ -638,9 +800,14 @@ msgid "Please return to the main menu."
 msgstr "请退回到主菜单"
 
 #. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_employee_public
+msgid "Public Employee"
+msgstr "公共员工"
+
+#. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
 msgid "Reporting"
-msgstr "报表"
+msgstr "报告"
 
 #. module: hr_attendance
 #. openerp-web
@@ -663,6 +830,8 @@ msgstr "设置"
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Sign in"
 msgstr "登录"
@@ -672,9 +841,23 @@ msgstr "登录"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Sign out"
 msgstr "签出"
+
+#. module: hr_attendance
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Start from"
+msgstr "从"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid "Such grouping is not allowed."
+msgstr "不允许这样分组。"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -688,6 +871,12 @@ msgstr "您的员工的出勤记录将显示在此处。"
 #, python-format
 msgid "The early bird catches the worm"
 msgstr "早起的虫儿被鸟吃"
+
+#. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
+msgid ""
+"The user will be able to open the kiosk mode and validate the employee PIN."
+msgstr "用户将能够打开信息亭模式并验证员工PIN。"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
@@ -704,12 +893,48 @@ msgid ""
 msgstr "用户必须输入他的PIN才能在公司屏幕上手动签入和签出。"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/models/hr_employee.py:0
+#, python-format
+msgid ""
+"To activate Kiosk mode without pin code, you must have access right as an "
+"Officer or above in the Attendance app. Please contact your administrator."
+msgstr "要在没有 PIN 码的情况下激活 Kiosk 模式，您必须在考勤应用程序中拥有官员或更高级别的访问权限。 请联系您的管理员。"
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Today's work hours:"
 msgstr "今天的工作时间："
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_company_threshold
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Tolerance Time In Favor Of Company"
+msgstr "对公司有利的宽容时间"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_employee_threshold
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_employee_threshold
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Tolerance Time In Favor Of Employee"
+msgstr "有利于雇员的宽容时间"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__total_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__total_overtime
+#: model:ir.model.fields,field_description:hr_attendance.field_res_users__total_overtime
+msgid "Total Overtime"
+msgstr "加班费总额"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/xml/attendance.xml:0
+#, python-format
+msgid "Total extra hours:"
+msgstr "加班时间总数。"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -789,6 +1014,11 @@ msgid "You cannot duplicate an attendance."
 msgstr "你不能复制出勤记录。"
 
 #. module: hr_attendance
+#: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
+msgid "Your attendance records will be displayed here."
+msgstr "您的出勤记录将显示在此处。"
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
@@ -808,8 +1038,6 @@ msgstr "签出"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_ids
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee_base__attendance_ids
-#: model:ir.model.fields,help:hr_attendance.field_hr_employee_public__attendance_ids
 msgid "list of attendances for the employee"
 msgstr "员工出勤列表"
 

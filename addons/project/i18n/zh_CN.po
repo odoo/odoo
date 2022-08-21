@@ -38,6 +38,7 @@
 # 苏州远鼎 <tiexinliu@126.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -45,7 +46,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:06+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1704,6 +1705,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"可以看到此项目及其任务的人员.\n"
+"\n"
+"- 受邀的内部用户：当关注一个项目时，内部用户将无差别地访问其所有任务。否则，他们将只能访问他们正在执行的特定任务。\n"
+" 具有项目 > 管理员访问权限级别的用户仍然可以访问此项目及其任务，即使他们不是明确的追随者\n"
+"\n"
+"- 所有内部用户：所有内部用户都可以无差别地访问项目及其所有任务。\n"
+"\n"
+"- 受邀门户用户和所有内部用户：所有内部用户都可以无差别地访问项目及其所有任务。\n"
+"关注项目时，门户用户将可以无差别地访问其所有任务。否则，他们将只能访问他们正在执行的特定任务。\n"
+"\n"
+"当项目以只读方式共享时，门户用户将被重定向到他们的门户。他们可以查看任务，但不能编辑它们。\n"
+"当项目以可编辑方式共享时，门户用户将被重定向到任务的看板和列表视图。他们可以修改任务中选定数量的字段。\n"
+"\n"
+"在任何情况下，没有项目访问权限的内部用户仍然可以访问任务，前提是为他们提供相应的 URL（如果项目是私有的，他们是关注者的一部分）。"
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action

@@ -22,9 +22,9 @@
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2021
 # Collex100, 2021
 # ILMIR <karamov@it-projects.info>, 2021
-# Сергей Шебанин <sergey@shebanin.ru>, 2022
 # Martin Trigaux, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
+# Сергей Шебанин <sergey@shebanin.ru>, 2022
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-30 06:06+0000\n"
 "PO-Revision-Date: 2016-08-05 13:14+0000\n"
-"Last-Translator: Ivan Kropotkin <yelizariev@itpp.dev>, 2022\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2022\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -877,6 +877,16 @@ msgstr ""
 "вашей учетной записи. Свяжитесь с нами по этой операции."
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Изменение имени не допускается, так как были выставлены акты для вашей "
+"учетной записи. Пожалуйста, свяжитесь с нами для этой операции."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Детские категории"
@@ -1414,6 +1424,12 @@ msgid "Extra Variant Media"
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Featured"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "FedEx"
 msgstr "FedEx"
@@ -1771,6 +1787,12 @@ msgid "Name"
 msgstr "Название"
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Name (A-Z)"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__name_short
 msgid "Name Short"
 msgstr "Краткое название"
@@ -1786,6 +1808,12 @@ msgstr "Новый продукт"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.new_ribbon
 msgid "New!"
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Newest Arrivals"
 msgstr ""
 
 #. module: website_sale
@@ -2159,6 +2187,18 @@ msgstr "Предыдущий год"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 msgid "Price"
 msgstr "Цена"
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Price - High to Low"
+msgstr ""
+
+#. module: website_sale
+#: code:addons/website_sale/models/website.py:0
+#, python-format
+msgid "Price - Low to High"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
@@ -3013,6 +3053,12 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3039,6 +3085,12 @@ msgid ""
 msgstr ""
 "Выбранный режим применяется здесь как политика выставления счетов любого "
 "нового товара, но не существующего."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The order has been canceled."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
