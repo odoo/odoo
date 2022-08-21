@@ -8,6 +8,7 @@
 # Diego de la Torre <diego.delatorreh@gmail.com>, 2021
 # Daniela Cervantes <dace@odoo.com>, 2021
 # marcescu, 2022
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,13 +16,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-19 09:43+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: auth_totp
 #: code:addons/auth_totp/controllers/home.py:0
@@ -60,6 +61,8 @@ msgid ""
 "<i class=\"fa fa-question-circle text-primary\" title=\"If checked, you "
 "won't be asked for two-factor authentication codes with this device.\"/>"
 msgstr ""
+"<i class=\"fa fa-question-circle text-primary\" title=\"If checked, you "
+"won't be asked for two-factor authentication codes with this device.\"/>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -163,7 +166,7 @@ msgstr "Nombre mostrado"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Don't ask again for this device"
-msgstr ""
+msgstr "No volver a preguntar por este dispositivo"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0

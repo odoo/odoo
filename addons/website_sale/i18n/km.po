@@ -7,7 +7,7 @@
 # Sengtha Chay <sengtha@gmail.com>, 2020
 # Chan Nath <channath@gmail.com>, 2020
 # Samkhann Seang <seangsamkhann@gmail.com>, 2020
-# Lux Sok <sok.lux@gmail.com>, 2020
+# Lux Sok <sok.lux@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2020\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2022\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -787,6 +787,16 @@ msgstr ""
 #: model:product.public.category,name:website_sale.public_category_furnitures_chairs
 msgid "Chairs"
 msgstr "កៅអី។"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"ការផ្លាស់ប្តូរឈ្មោះរបស់អ្នកមិនត្រូវបានអនុញ្ញាតទេនៅពេលដែលវិក័យប័ត្រត្រូវបានចេញសម្រាប់គណនីរបស់អ្នក។"
+" សូមទាក់ទងមកយើងដោយផ្ទាល់សម្រាប់ប្រតិបត្តិការនេះ។"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
@@ -1640,6 +1650,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 #, python-format
 msgid "Name"
 msgstr "ឈ្មោះ"
@@ -2168,13 +2179,16 @@ msgid "Product views"
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.menu,name:website_sale.menu_product_settings
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_demo_products
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
+#, python-format
 msgid "Products"
 msgstr "ផលិតផល"
 
