@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Alexandra Jubert, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:34+0000\n"
 "PO-Revision-Date: 2022-06-17 09:51+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Alexandra Jubert, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1136,6 +1137,12 @@ msgid "Timesheets can be logged on this task."
 msgstr "Des feuilles de temps peuvent être encodées sur cette tâche."
 
 #. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "Timesheets must be created with an active employee."
+msgstr "Les feuilles de temps doivent être créées avec un employé actif."
+
+#. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
 msgstr "Astuce: Encodez vos Feuilles de Temps plus rapidement"
@@ -1298,6 +1305,14 @@ msgstr ""
 "Vous ne pouvez pas encoder des feuilles de temps sur ce projet puisqu'il est"
 " lié à un compte analytique inactif. Veuillez changer ce compte ou réactiver"
 " le compte actuel pour enregistrer des feuilles de temps sur ce projet."
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+#, python-format
+msgid "You cannot set an archived employee to the existing timesheets."
+msgstr ""
+"Vous ne pouvez pas définir un employé archivé sur des feuilles de temps "
+"existantes."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
