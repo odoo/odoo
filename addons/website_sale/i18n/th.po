@@ -5,13 +5,13 @@
 # Translators:
 # Potsawat Manuthamathorn <firmpotsawat@hotmail.com>, 2020
 # gsong <gsong2014@foxmail.com>, 2020
-# Martin Trigaux, 2020
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020
 # monchai7 <montchye@gmail.com>, 2020
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2020
 # Amin Cheloh <nineamin@hotmail.com>, 2021
 # Wichanon Jamwutthipreecha, 2022
 # Odoo Thaidev <odoothaidev@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -825,6 +825,16 @@ msgstr "คำอธิบายหมวดหมู่"
 #: model:product.public.category,name:website_sale.public_category_furnitures_chairs
 msgid "Chairs"
 msgstr "เก้าอี้"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
@@ -1672,6 +1682,7 @@ msgstr "รถเข็นของฉัน"
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 #, python-format
 msgid "Name"
 msgstr "ชื่อ"
@@ -2202,13 +2213,16 @@ msgid "Product views"
 msgstr ""
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.menu,name:website_sale.menu_product_settings
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_demo_products
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
+#, python-format
 msgid "Products"
 msgstr "สินค้า"
 

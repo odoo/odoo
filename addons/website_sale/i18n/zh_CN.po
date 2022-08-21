@@ -18,7 +18,6 @@
 # 黎伟杰 <674416404@qq.com>, 2020
 # 苏州远鼎 <tiexinliu@126.com>, 2020
 # fausthuang, 2020
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # ChinaMaker <liuct@chinamaker.net>, 2020
@@ -32,7 +31,6 @@
 # 226408 台北 <226408@so8d.com>, 2020
 # Datasource International <Hennessy@datasourcegroup.com>, 2020
 # e2f <projects@e2f.com>, 2020
-# Martin Trigaux, 2020
 # niulin lnc. <admin@niulin.net>, 2020
 # liAnGjiA <liangjia@qq.com>, 2020
 # v2exerer <9010446@qq.com>, 2020
@@ -45,6 +43,8 @@
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # Jeffery CHEN <jeffery9@gmail.com>, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -52,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Mandy Choy <mnc@odoo.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -228,6 +228,9 @@ msgid ""
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
 msgstr ""
+"<br/>\n"
+"                30天退款保证<br/>\n"
+"                运输：2-3 个工作日"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -392,6 +395,8 @@ msgid ""
 "<span class=\"o_form_label\">Assignment</span>\n"
 "                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"o_form_label\">分配</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -411,12 +416,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">给我们您的反馈</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Your Reference</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">供你参考</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -680,7 +685,7 @@ msgstr "应用每个国家的特定价格、折扣等"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Assignment of online orders"
-msgstr ""
+msgstr "分配在线订单"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
@@ -851,6 +856,14 @@ msgid "Chairs"
 msgstr "椅子"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr "一旦您的科目开具了应收凭单，不可更改名称.如需运行此操作，请直接与我们联系."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "儿童类"
@@ -998,7 +1011,7 @@ msgstr "转换"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
 msgid "Couches"
-msgstr ""
+msgstr "沙发"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_country
@@ -1062,7 +1075,7 @@ msgstr "客户"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL 快递连接器"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1203,12 +1216,12 @@ msgstr "抽屉"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_extra_field_ids
 msgid "E-Commerce Extra Fields"
-msgstr ""
+msgstr "网店额外字段"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_extra_field
 msgid "E-Commerce Extra Info Shown on product page"
-msgstr ""
+msgstr "产品页面上显示的网店额外信息"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
@@ -1331,7 +1344,7 @@ msgstr "来自网站"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures
 msgid "Furnitures"
-msgstr ""
+msgstr "家具"
 
 #. module: website_sale
 #. openerp-web
@@ -1697,6 +1710,7 @@ msgstr "购物车"
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 #, python-format
 msgid "Name"
 msgstr "名称"
@@ -1811,7 +1825,7 @@ msgstr "将购物车视为被遗弃的小时数"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Number of products"
-msgstr ""
+msgstr "产品数量"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppg
@@ -1847,6 +1861,8 @@ msgid ""
 "Only the company's websites are allowed.\n"
 "Leave the Company field empty or select a website from that company."
 msgstr ""
+"只允许使用公司的网站。\n"
+"将公司字段留空或从该公司选择一个网站。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -1922,7 +1938,7 @@ msgstr "订单总计"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
 msgid "Order by"
-msgstr ""
+msgstr "订购方式"
 
 #. module: website_sale
 #. openerp-web
@@ -2160,7 +2176,7 @@ msgstr "产品名称"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
 msgid "Product Page Extra Fields"
-msgstr ""
+msgstr "产品页面额外字段"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2216,7 +2232,7 @@ msgstr "在 web 目录中显示的产品价格"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_ribbon
 msgid "Product ribbon"
-msgstr ""
+msgstr "产品功能区"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
@@ -2224,13 +2240,16 @@ msgid "Product views"
 msgstr "产品视图"
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.menu,name:website_sale.menu_product_settings
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_demo_products
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
+#, python-format
 msgid "Products"
 msgstr "产品"
 
@@ -2395,27 +2414,27 @@ msgstr "审核订单"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Ribbon"
-msgstr ""
+msgstr "丝带"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
 msgid "Ribbon background color"
-msgstr ""
+msgstr "功能区背景颜色"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html_class
 msgid "Ribbon class"
-msgstr ""
+msgstr "功能区 class"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html
 msgid "Ribbon html"
-msgstr ""
+msgstr "功能区 html"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
 msgid "Ribbon text color"
-msgstr ""
+msgstr "功能区文本颜色"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2470,7 +2489,7 @@ msgstr "销售报表"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sales Since Last Month"
-msgstr ""
+msgstr "自上个月以来的销售额"
 
 #. module: website_sale
 #. openerp-web
@@ -2478,7 +2497,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sales Since Last Week"
-msgstr ""
+msgstr "自上周以来的销售额"
 
 #. module: website_sale
 #. openerp-web
@@ -2486,7 +2505,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sales Since Last Year"
-msgstr ""
+msgstr "自去年以来的销售额"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
@@ -2652,7 +2671,7 @@ msgstr "购物车"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show Empty Cart"
-msgstr ""
+msgstr "显示空购物车"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
@@ -2689,7 +2708,7 @@ msgstr "尺寸 Y"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Slanted"
-msgstr ""
+msgstr "倾斜的"
 
 #. module: website_sale
 #. openerp-web
@@ -2783,7 +2802,7 @@ msgstr "多数客户同时购买了以下产品:"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
 msgid "Suggestions"
-msgstr ""
+msgstr "建议"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
@@ -3083,7 +3102,7 @@ msgstr "质保，由生产厂家发给产品的买家，厂家承诺在指定时
 #: code:addons/website_sale/static/src/js/website_sale_validate.js:0
 #, python-format
 msgid "We are waiting for confirmation from the bank or the payment provider"
-msgstr ""
+msgstr "我们正在等待银行或支付提供商的确认"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_searchbar
@@ -3138,7 +3157,7 @@ msgstr "购物网站"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr ""
+msgstr "网站片段过滤器"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
@@ -3294,7 +3313,7 @@ msgstr "代码..."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
 msgid "default"
-msgstr ""
+msgstr "默认"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website.py:0
@@ -3350,7 +3369,7 @@ msgstr "在品类中 \\"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "item(s))"
-msgstr ""
+msgstr "明细(s))"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
@@ -3400,24 +3419,24 @@ msgstr "⌙ 背景"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "⌙ Mode"
-msgstr ""
+msgstr "⌙ 模式"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "⌙ Position"
-msgstr ""
+msgstr "⌙ 位置"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "⌙ Text"
-msgstr ""
+msgstr "文本"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
-msgstr ""
+msgstr "为您的帐户签发文件后，不允许更改公司名称。请直接联系我们进行此操作。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b

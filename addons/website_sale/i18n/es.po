@@ -30,7 +30,6 @@
 # RGB Consulting <odoo@rgbconsulting.com>, 2020
 # Cristopher Cravioto <ccr@odoo.com>, 2020
 # Jon Perez <jop@odoo.com>, 2020
-# Martin Trigaux, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
 # Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2021
@@ -39,6 +38,7 @@
 # marcescu, 2022
 # Marian Cuadra, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -46,7 +46,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -971,6 +971,16 @@ msgstr "Descripción de categoría"
 #: model:product.public.category,name:website_sale.public_category_furnitures_chairs
 msgid "Chairs"
 msgstr "Sillas"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"No está permitido cambiar tu nombre una vez que se hayan emitido facturas "
+"para tu cuenta. Por favor, contáctanos directamente para esta operación."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
@@ -2383,13 +2393,16 @@ msgid "Product views"
 msgstr "Vistas del producto"
 
 #. module: website_sale
+#: code:addons/website_sale/models/website.py:0
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
 #: model:ir.ui.menu,name:website_sale.menu_product_settings
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_demo_products
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
+#, python-format
 msgid "Products"
 msgstr "Productos"
 

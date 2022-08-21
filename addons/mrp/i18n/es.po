@@ -24,6 +24,7 @@
 # Alejandro Concepción <alconor23@hotmail.com>, 2021
 # Xabi Spacebiker <xabispacebiker@gmail.com>, 2021
 # marcescu, 2022
+# Víctor Martínez <victor.martinez@tecnativa.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Víctor Martínez <victor.martinez@tecnativa.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -552,12 +553,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_move__allowed_operation_ids
 msgid "Allowed Operation"
-msgstr ""
+msgstr "Operación permitida"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_product_ids
 msgid "Allowed Product"
-msgstr ""
+msgstr "Producto permitido"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -1084,7 +1085,7 @@ msgstr "Componente"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
 msgid "Component Availability"
-msgstr ""
+msgstr "Disponibilidad del componente"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -2402,7 +2403,7 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_locked_by_default
 msgid "Locked by default"
-msgstr ""
+msgstr "Bloqueado por defecto"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_id
@@ -4339,6 +4340,14 @@ msgid ""
 msgstr ""
 "Ya se consumió el número de serie %(number)sutilizado para el componente "
 "%(component)s "
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_unbuild.py:0
+#, python-format
+msgid ""
+"The selected serial number does not correspond to the one used in the "
+"manufacturing order, please select another one."
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_bom.py:0
