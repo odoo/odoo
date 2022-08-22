@@ -100,12 +100,6 @@ class PaymentAcquirer(models.Model):
             )
         return response.json()
 
-    def _get_default_payment_method_id(self):
-        self.ensure_one()
-        if self.provider != 'flutterwave':
-            return super()._get_default_payment_method_id()
-        return self.env.ref('payment_flutterwave.payment_method_flutterwave').id
-
     def _neutralize(self):
         super()._neutralize()
         self._neutralize_fields('flutterwave', [

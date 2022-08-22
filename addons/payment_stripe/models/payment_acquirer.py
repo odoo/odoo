@@ -109,7 +109,12 @@ class PaymentAcquirer(models.Model):
             connected_account = self._stripe_fetch_or_create_connected_account()
 
             # Link generation
-            menu_id = menu_id or self.env.ref('payment.payment_acquirer_menu').id
+            if not menu_id:
+                # Fall back on `account_payment`'s menu if it is installed. If not, the user is
+                # redirected to the acquirer's form view but without any menu in the breadcrumb.
+                menu = self.env.ref('account_payment.payment_acquirer_menu', False)
+                menu_id = menu and menu.id  # Only set if `account_payment` is installed.
+
             account_link_url = self._stripe_create_account_link(connected_account['id'], menu_id)
             if account_link_url:
                 action = {
@@ -258,12 +263,6 @@ class PaymentAcquirer(models.Model):
         :rtype: dict
         """
         return {}
-
-    def _get_default_payment_method_id(self):
-        self.ensure_one()
-        if self.provider != 'stripe':
-            return super()._get_default_payment_method_id()
-        return self.env.ref('payment_stripe.payment_method_stripe').id
 
     def _neutralize(self):
         super()._neutralize()

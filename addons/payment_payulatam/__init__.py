@@ -6,11 +6,7 @@ from . import models
 from odoo.exceptions import UserError
 from odoo.tools import config
 
-from odoo.addons.payment import reset_payment_acquirer
-
-
-def uninstall_hook(cr, registry):
-    reset_payment_acquirer(cr, registry, 'payulatam')
+from odoo.addons.payment import setup_provider, reset_payment_acquirer
 
 
 def pre_init_hook(cr):
@@ -18,3 +14,11 @@ def pre_init_hook(cr):
         raise UserError(
             "This module is deprecated and cannot be installed. "
             "Consider installing the Payment Acquirer: Mercado Pago module instead.")
+
+
+def post_init_hook(cr, registry):
+    setup_provider(cr, registry, 'payulatam')
+
+
+def uninstall_hook(cr, registry):
+    reset_payment_acquirer(cr, registry, 'payulatam')

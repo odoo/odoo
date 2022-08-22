@@ -39,7 +39,16 @@ class PaymentAcquirer(models.Model):
         })
 
     def _transfer_ensure_pending_msg_is_set(self):
-        for acquirer in self.filtered(lambda a: a.provider == 'custom' and not a.pending_msg):
+        transfer_acquirers_without_msg = self.filtered(
+            lambda a: a.provider == 'custom' and not a.pending_msg)
+        if not transfer_acquirers_without_msg:
+            return
+
+        account_payment = self.env['ir.module.module']._get('account_payment')
+        if account_payment.state != 'installed':
+            return
+
+        for acquirer in transfer_acquirers_without_msg:
             company_id = acquirer.company_id.id
             # filter only bank accounts marked as visible
             accounts = self.env['account.journal'].search([

@@ -81,13 +81,6 @@ class PaymentAcquirer(models.Model):
             )
         return response.json()
 
-    def _get_default_payment_method_id(self):
-        self.ensure_one()
-
-        if self.provider != 'mercado_pago':
-            return super()._get_default_payment_method_id()
-        return self.env.ref('payment_mercado_pago.payment_method_mercado_pago').id
-
     def _neutralize(self):
         super()._neutralize()
 

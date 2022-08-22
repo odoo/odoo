@@ -59,12 +59,6 @@ class PaymentAcquirer(models.Model):
         signing_string = ''.join([key, sign_data, key])
         return hashlib.sha256(signing_string.encode()).hexdigest()
 
-    def _get_default_payment_method_id(self):
-        self.ensure_one()
-        if self.provider != 'aps':
-            return super()._get_default_payment_method_id()
-        return self.env.ref('payment_aps.payment_method_aps').id
-
     def _neutralize(self):
         super()._neutralize()
         self._neutralize_fields('aps', [
