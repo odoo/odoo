@@ -43,6 +43,8 @@ class AccountPayment(models.Model):
     )
     refunds_count = fields.Integer(string="Refunds Count", compute='_compute_refunds_count')
 
+    #=== COMPUTE METHODS ===#
+
     def _compute_amount_available_for_refund(self):
         for payment in self:
             tx_sudo = payment.payment_transaction_id.sudo()
@@ -97,6 +99,8 @@ class AccountPayment(models.Model):
         for payment in self:
             payment.refunds_count = data.get(payment.id, 0)
 
+    #=== ONCHANGE METHODS ===#
+
     @api.onchange('partner_id', 'payment_method_line_id', 'journal_id')
     def _onchange_set_payment_token_id(self):
         codes = [key for key in dict(self.env['payment.acquirer']._fields['provider']._description_selection(self.env))]
@@ -116,6 +120,8 @@ class AccountPayment(models.Model):
             ('acquirer_id.capture_manually', '=', False),
             ('acquirer_id', '=', self.payment_method_line_id.payment_acquirer_id.id),
          ], limit=1)
+
+    #=== ACTION METHODS ===#
 
     def action_post(self):
         # Post the payments "normally" if no transactions are needed.
@@ -174,6 +180,8 @@ class AccountPayment(models.Model):
             action['domain'] = [('source_payment_id', '=', self.id)]
         return action
 
+    #=== BUSINESS METHODS - PAYMENT FLOW ===#
+
     def _create_payment_transaction(self, **extra_create_values):
         for payment in self:
             if payment.payment_transaction_id:
@@ -204,4 +212,12 @@ class AccountPayment(models.Model):
             'operation': 'offline',
             'payment_id': self.id,
             **extra_create_values,
+        }
+
+    def _get_payment_refund_wizard_values(self):
+        self.ensure_one()
+        return {
+            'transaction_id': self.payment_transaction_id.id,
+            'payment_amount': self.amount,
+            'amount_available_for_refund': self.amount_available_for_refund,
         }

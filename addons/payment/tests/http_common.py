@@ -194,6 +194,31 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
 
     # payment/transaction #
     #######################
+
+    def _prepare_transaction_values(self, payment_option_id, flow):
+        """ Prepare the basic payment/transaction route values.
+
+        :param int payment_option_id: The payment option handling the transaction, as a
+                                      `payment.acquirer` id or a `payment.token` id
+        :param str flow: The payment flow
+        :return: The route values
+        :rtype: dict
+        """
+        return {
+            'amount': self.amount,
+            'currency_id': self.currency.id,
+            'partner_id': self.partner.id,
+            'access_token': self._generate_test_access_token(
+                self.partner.id, self.amount, self.currency.id
+            ),
+            'payment_option_id': payment_option_id,
+            'reference_prefix': 'test',
+            'tokenization_requested': True,
+            'landing_route': 'Test',
+            'is_validation': False,
+            'flow': flow,
+        }
+
     def _portal_transaction(self, **route_kwargs):
         """/payment/transaction feedback
 

@@ -65,3 +65,13 @@ class AccountMove(models.Model):
             action['domain'] = [('id', 'in', self.transaction_ids.ids)]
 
         return action
+
+    def _get_default_payment_link_values(self):
+        self.ensure_one()
+        return {
+            'description': self.payment_reference,
+            'amount': self.amount_residual,
+            'currency_id': self.currency_id.id,
+            'partner_id': self.partner_id.id,
+            'amount_max': self.amount_residual,
+        }

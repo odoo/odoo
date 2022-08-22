@@ -15,15 +15,7 @@
         <field name="name">Access own transactions only</field>
         <field name="model_id" ref="payment.model_payment_transaction"/>
         <field name="domain_force">['|', ('partner_id', '=', False), ('partner_id', '=', user.partner_id.id)]</field>
-        <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
-    </record>
-
-    <record id="payment_transaction_billing_rule" model="ir.rule">
-        <field name="name">Access every transaction</field>
-        <field name="model_id" ref="payment.model_payment_transaction"/>
-        <!-- Reset the domain defined by payment.transaction_user_rule -->
-        <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
     </record>
 
     <record id="transaction_company_rule" model="ir.rule">
@@ -39,14 +31,6 @@
         <field name="model_id" ref="payment.model_payment_token"/>
         <field name="domain_force">[('partner_id', 'child_of', user.partner_id.commercial_partner_id.id)]</field>
         <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
-    </record>
-
-    <record id="payment_token_billing_rule" model="ir.rule">
-        <field name="name">Access every token</field>
-        <field name="model_id" ref="payment.model_payment_token"/>
-        <!-- Reset the domain defined by payment.token_user_rule -->
-        <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
     </record>
 
     <record id="payment_token_company_rule" model="ir.rule">

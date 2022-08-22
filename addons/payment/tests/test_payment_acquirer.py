@@ -43,8 +43,8 @@ class TestPaymentAcquirer(PaymentCommon):
         set to 0. """
         self.acquirer.maximum_amount = 0.
 
-        compatible_acquirers = self.acquirer._get_compatible_acquirers(
-            self.company.id, self.partner.id, self.amount, currency_id=self.currency.id
+        compatible_acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+            self.company.id, self.partner.id, self.amount, currency_id=self.env.company.currency_id.id,
         )
         self.assertIn(self.acquirer, compatible_acquirers)
 
@@ -53,8 +53,8 @@ class TestPaymentAcquirer(PaymentCommon):
         amount. """
         self.acquirer.maximum_amount = self.amount + 10.0
 
-        compatible_acquirers = self.acquirer._get_compatible_acquirers(
-            self.company.id, self.partner.id, self.amount, currency_id=self.currency.id
+        compatible_acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+            self.company.id, self.partner.id, self.amount, currency_id=self.env.company.currency_id.id,
         )
         self.assertIn(self.acquirer, compatible_acquirers)
 
@@ -63,7 +63,7 @@ class TestPaymentAcquirer(PaymentCommon):
         amount. """
         self.acquirer.maximum_amount = self.amount - 10.0
 
-        compatible_acquirers = self.acquirer._get_compatible_acquirers(
-            self.company.id, self.partner.id, self.amount, currency_id=self.currency.id
+        compatible_acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
+            self.company.id, self.partner.id, self.amount, currency_id=self.env.company.currency_id.id,
         )
         self.assertNotIn(self.acquirer, compatible_acquirers)
