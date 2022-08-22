@@ -23,7 +23,7 @@ class TestUBLNL(TestUBLCommon):
             'email': 'info@outlook.nl',
             'country_id': cls.env.ref('base.nl').id,
             'bank_ids': [(0, 0, {'acc_number': 'NL000099998B57'})],
-            'l10n_nl_kvk': '77777677',
+            'company_registry': '77777677',
         })
 
         cls.partner_2 = cls.env['res.partner'].create({
@@ -34,7 +34,7 @@ class TestUBLNL(TestUBLCommon):
             'vat': 'NL41452B11',
             'country_id': cls.env.ref('base.nl').id,
             'bank_ids': [(0, 0, {'acc_number': 'NL93999574162167'})],
-            'l10n_nl_kvk': '1234567',
+            'company_registry': '1234567',
         })
 
         cls.tax_19 = cls.env['account.tax'].create({
