@@ -33,7 +33,6 @@ class AccountReport(models.Model):
     chart_template_id = fields.Many2one(string="Chart of Accounts", comodel_name='account.chart.template')
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
     only_tax_exigible = fields.Boolean(string="Only Tax Exigible Lines")
-    caret_options_initializer = fields.Char(string="Caret Options Initializer", required=True, default='_caret_options_initializer_default')
     availability_condition = fields.Selection(
         string="Availability",
         selection=[('country', "Country Matches"), ('coa', "Chart of Accounts Matches"), ('always', "Always")],
@@ -114,18 +113,6 @@ class AccountReport(models.Model):
         string="Filter Multivat",
         compute=lambda x: x._compute_report_option_filter('filter_fiscal_position'), readonly=False, store=True, depends=['root_report_id'],
     )
-
-    #  CUSTOM REPORTS ================================================================================================================================
-    # Those fields allow case-by-case fine-tuning or the engine, for custom reports
-
-    dynamic_lines_generator = fields.Char(string="Dynamic Lines Generator")
-    custom_options_initializer = fields.Char(
-        string="Custom Options Initializer",
-        compute=lambda x: x._compute_report_option_filter('custom_options_initializer'), readonly=False, store=True, depends=['root_report_id'],
-    )
-    custom_line_postprocessor = fields.Char(string="Custom Line Postprocessor")
-    custom_groupby_line_completer = fields.Char(string="Custom Groupby Line Completer")
-    custom_unfold_all_batch_data_generator = fields.Char(string="Custom Unfold All Batch Data Generator")
 
     def _compute_report_option_filter(self, field_name, default_value=False):
         # We don't depend on the different filter fields on the root report, as we don't want a manual change on it to be reflected on all the reports
