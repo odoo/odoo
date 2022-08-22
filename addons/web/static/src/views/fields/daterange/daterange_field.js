@@ -22,6 +22,8 @@ export class DateRangeField extends Component {
         useEffect(
             (el) => {
                 if (el) {
+                    const start = this.formattedStartDate;
+                    const end = this.formattedEndDate;
                     window.$(el).daterangepicker({
                         timePicker: this.isDateTime,
                         timePicker24Hour: true,
@@ -34,8 +36,8 @@ export class DateRangeField extends Component {
                                 ? localization.dateTimeFormat
                                 : localization.dateFormat,
                         },
-                        startDate: window.moment(this.formattedStartDate),
-                        endDate: window.moment(this.formattedEndDate),
+                        startDate: start ? window.moment(start) : window.moment(),
+                        endDate: end ? window.moment(end) : window.moment(),
                     });
                     this.pickerContainer = window.$(el).data("daterangepicker").container[0];
 
@@ -122,8 +124,8 @@ export class DateRangeField extends Component {
     }
 
     async onPickerApply(ev, picker) {
-        let start = this.isDateTime ? picker.startDate : picker.startDate.startOf("day");
-        let end = this.isDateTime ? picker.endDate : picker.endDate.startOf("day");
+        const start = this.isDateTime ? picker.startDate : picker.startDate.startOf("day");
+        const end = this.isDateTime ? picker.endDate : picker.endDate.startOf("day");
         const format = this.isDateTime ? localization.dateTimeFormat : localization.dateFormat;
         const parser = parsers.get(this.props.formatType);
         const dates = [start, end].map((date) => {

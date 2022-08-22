@@ -4,6 +4,7 @@ import {
     click,
     editInput,
     getFixture,
+    patchDate,
     patchTimeZone,
     triggerEvent,
     triggerScroll,
@@ -501,6 +502,53 @@ QUnit.module("Fields", (hooks) => {
             assert.hasClass(target.querySelector(".o_notification"), "border-danger");
         }
     );
+
+    QUnit.test("Render with initial empty value: date field", async function (assert) {
+        // 2014-08-14 12:34:56 -> the day E. Zuckerman, who invented pop-up ads, has apologised.
+        patchDate(2014, 7, 14, 12, 34, 56);
+        serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="date" widget="daterange" options="{'related_end_date': 'date_end'}"/>
+                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date'}"/>
+                </form>`,
+        });
+
+        await click(document.body, ".o_field_daterange[name=date] input");
+        assert.containsN(document.body, ".month", 2);
+        assert.equal(document.body.querySelectorAll(".month")[0].textContent, "Aug 2014");
+        assert.equal(document.body.querySelectorAll(".month")[1].textContent, "Sep 2014");
+    });
+
+    QUnit.test("Render with initial empty value: datetime field", async function (assert) {
+        // 2014-08-14 12:34:56 -> the day E. Zuckerman, who invented pop-up ads, has apologised.
+        patchDate(2014, 7, 14, 12, 34, 56);
+        serverData.models.partner.fields.datetime_end = {
+            string: "Datetime End",
+            type: "datetime",
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                    <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
+                </form>`,
+        });
+
+        await click(document.body, ".o_field_daterange[name=datetime] input");
+        assert.containsN(document.body, ".month", 2);
+        assert.equal(document.body.querySelectorAll(".month")[0].textContent, "Aug 2014");
+        assert.equal(document.body.querySelectorAll(".month")[1].textContent, "Sep 2014");
+    });
 
     QUnit.test("Datetime field with option format type is 'date'", async function (assert) {
         serverData.models.partner.fields.datetime_end = {
