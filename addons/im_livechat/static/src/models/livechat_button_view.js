@@ -75,24 +75,6 @@ registerModel({
                 .val('');
         },
         /**
-         * Once the script ends, adds a visual element at the end of the chat window allowing to restart
-         * the whole script.
-         */
-        chatbotEndScript() {
-            if (
-                this.messaging.publicLivechatGlobal.chatbot.currentStep &&
-                this.messaging.publicLivechatGlobal.chatbot.currentStep.data &&
-                this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed
-            ) {
-                // don't touch anything if the user has closed the conversation, let the chat window
-                // handle the display
-                return;
-            }
-            this.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click', this.onChatbotRestartScript);
-        },
-        /**
          * Register current chatbot step state into localStorage to be able to resume if the visitor
          * goes to another website page or if he refreshes his page.
          *
@@ -523,7 +505,7 @@ registerModel({
                         ),
                     });
                 } else {
-                    this.chatbotEndScript();
+                    this.messaging.publicLivechatGlobal.chatbot.endScript();
                 }
                 this.chatbotSaveSession();
             }

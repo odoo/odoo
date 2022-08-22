@@ -8,6 +8,24 @@ registerModel({
     name: 'Chatbot',
     recordMethods: {
         /**
+         * Once the script ends, adds a visual element at the end of the chat window allowing to restart
+         * the whole script.
+         */
+        endScript() {
+            if (
+                this.currentStep &&
+                this.currentStep.data &&
+                this.currentStep.data.conversation_closed
+            ) {
+                // don't touch anything if the user has closed the conversation, let the chat window
+                // handle the display
+                return;
+            }
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click', this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript);
+        },
+        /**
          * @private
          * @returns {boolean}
          */

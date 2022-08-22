@@ -67,7 +67,7 @@ const _t = core._t;
     _chatbotAwaitUserInput() {
         if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
             if (this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
+                this.messaging.publicLivechatGlobal.chatbot.endScript();
             } else {
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
@@ -186,7 +186,7 @@ const _t = core._t;
      */
     _chatbotProcessStep() {
         if (this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
+            this.messaging.publicLivechatGlobal.chatbot.endScript();
         } else if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'forward_operator'
                    && this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_operator_found) {
             this._chatbotEnableInput();
@@ -306,7 +306,7 @@ const _t = core._t;
             // did not find next step -> end the script
             this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_is_last = true;
             this._renderMessages();
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
+            this.messaging.publicLivechatGlobal.chatbot.endScript();
         }
 
         this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
