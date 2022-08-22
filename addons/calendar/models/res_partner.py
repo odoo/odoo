@@ -72,8 +72,8 @@ class Partner(models.Model):
             for attendee in attendees_by_partner[partner.id]:
                 attendee_is_organizer = self.env.user == attendee.event_id.user_id and attendee.partner_id == self.env.user.partner_id
                 attendees_details.append({
-                    'id': partner_info[0],
-                    'name': partner_info[1],
+                    'id': partner.id,
+                    'name': partner_info,
                     'status': attendee.state,
                     'event_id': attendee.event_id.id,
                     'attendee_id': attendee.id,
