@@ -13,7 +13,7 @@ class TestDDT(TestSaleCommon):
         cls.company_data['company'].write({
                         'vat':"IT12345670017",
                         'country_id': cls.env.ref('base.it').id,
-                        'l10n_it_codice_fiscale': '01234560157',
+                        'company_registry': '01234560157',
                         'l10n_it_tax_system': 'RF01',
                         'street': 'Via Giovanni Maria Platina 66',
                         'zip': '26100',

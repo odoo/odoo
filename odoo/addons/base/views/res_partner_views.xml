@@ -347,7 +347,8 @@
                                 </group>
                                 <group name="misc" string="Misc">
                                     <field name="company_registry" string="KVK-nummer" attrs="{'invisible': ['|', ('parent_id','!=', False), ('country_code', '!=', 'NL')]}"/>
-                                    <field name="company_registry" attrs="{'invisible': ['|', ('parent_id','!=',False), ('country_code', 'in', ['NL'])]}"/>
+                                    <field name="company_registry" string="Codice Fiscale" attrs="{'invisible': ['|', ('parent_id','!=', False), ('country_code', '!=', 'IT')]}"/>
+                                    <field name="company_registry" attrs="{'invisible': ['|', ('parent_id','!=',False), ('country_code', 'in', ['NL', 'IT'])]}"/>
                                     <field name="ref" string="Reference"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('parent_id', '!=', False)]}" force_save="1"/>
                                     <field name="industry_id" attrs="{'invisible': [('is_company', '=', False)]}" options="{'no_create': True}"/>

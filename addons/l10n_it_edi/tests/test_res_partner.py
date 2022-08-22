@@ -53,9 +53,13 @@ class TestResPartner(TransactionCase):
 
         for i, code in enumerate(invalid_codes):
             with self.assertRaises(UserError):
-                partners += self.env['res.partner'].create({'name': f'partner_{i}', 'l10n_it_codice_fiscale': code})
+                partners += self.env['res.partner'].create({
+                    'name': f'partner_{i}', 'company_registry': code, 'country_id': self.env.ref("base.it").id,
+                })
 
         for i, code in enumerate(valid_codes):
-            partners += self.env['res.partner'].create({'name': f'partner_{i}', 'l10n_it_codice_fiscale': code})
+            partners += self.env['res.partner'].create({
+                'name': f'partner_{i}', 'company_registry': code, 'country_id': self.env.ref("base.it").id,
+            })
 
         self.assertEqual(len(partners), len(valid_codes))

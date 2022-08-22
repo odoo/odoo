@@ -22,7 +22,7 @@ class TestItEdi(AccountEdiTestCommon):
 
         # Company data ------
         cls.company = cls.company_data_2['company']
-        cls.company.l10n_it_codice_fiscale = '01234560157'
+        cls.company.company_registry = '01234560157'
         cls.company.partner_id.l10n_it_pa_index = "0803HR0"
         cls.company.vat = 'IT01234560157'
 

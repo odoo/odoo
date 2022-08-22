@@ -23,7 +23,7 @@
                     <DatiTrasmissione>
                         <IdTrasmittente>
                             <IdPaese t-esc="get_vat_country(record.company_id.vat)"/>
-                            <IdCodice t-esc="normalize_codice_fiscale(record.company_id.l10n_it_codice_fiscale) or get_vat_number(record.company_id.vat)"/>
+                            <IdCodice t-esc="normalize_codice_fiscale(record.company_id.company_registry) or get_vat_number(record.company_id.vat)"/>
                         </IdTrasmittente>
                         <ProgressivoInvio t-esc="format_alphanumeric(record.name.replace('/','')[-10:])"/>
                         <FormatoTrasmissione t-esc="formato_trasmissione"/>
@@ -36,7 +36,7 @@
                             <IdPaese t-esc="get_vat_country(record.company_id.vat)"/>
                             <IdCodice t-esc="get_vat_number(record.company_id.vat)"/>
                         </IdFiscaleIVA>
-                        <CodiceFiscale t-if="record.company_id.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(record.company_id.l10n_it_codice_fiscale)"/>
+                        <CodiceFiscale t-if="record.company_id.company_registry" t-esc="normalize_codice_fiscale(record.company_id.company_registry)"/>
                         <Denominazione t-esc="format_alphanumeric(record.company_id.partner_id.display_name[:80])"/>
                         <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede">
                             <t t-set="partner" t-value="record.company_id.partner_id"/>
@@ -67,7 +67,7 @@
                                 <IdPaese t-esc="get_vat_country(record.commercial_partner_id.vat)"/>
                                 <IdCodice t-esc="get_vat_number(record.commercial_partner_id.vat)"/>
                             </IdFiscaleIVA>
-                            <CodiceFiscale t-if="record.commercial_partner_id.l10n_it_codice_fiscale" t-esc="normalize_codice_fiscale(record.commercial_partner_id.l10n_it_codice_fiscale)"/>
+                            <CodiceFiscale t-if="record.commercial_partner_id.company_registry" t-esc="normalize_codice_fiscale(record.commercial_partner_id.company_registry)"/>
                         </IdentificativiFiscali>
                     </CessionarioCommittente>
                 </FatturaElettronicaHeader>

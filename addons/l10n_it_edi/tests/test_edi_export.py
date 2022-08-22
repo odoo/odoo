@@ -63,7 +63,7 @@ class TestItEdiExport(TestItEdi):
         cls.italian_partner_a = cls.env['res.partner'].create({
             'name': 'Alessi',
             'vat': 'IT00465840031',
-            'l10n_it_codice_fiscale': '00465840031',
+            'company_registry': '00465840031',
             'country_id': cls.env.ref('base.it').id,
             'street': 'Via Privata Alessi 6',
             'zip': '28887',
@@ -75,7 +75,7 @@ class TestItEdiExport(TestItEdi):
         cls.italian_partner_b = cls.env['res.partner'].create({
             'name': 'pa partner',
             'vat': 'IT06655971007',
-            'l10n_it_codice_fiscale': '06655971007',
+            'company_registry': '06655971007',
             'l10n_it_pa_index': '123456',
             'country_id': cls.env.ref('base.it').id,
             'street': 'Via Test PA',
@@ -86,7 +86,7 @@ class TestItEdiExport(TestItEdi):
 
         cls.italian_partner_no_address_codice = cls.env['res.partner'].create({
             'name': 'Alessi',
-            'l10n_it_codice_fiscale': '00465840031',
+            'company_registry': '00465840031',
             'is_company': True,
         })
 

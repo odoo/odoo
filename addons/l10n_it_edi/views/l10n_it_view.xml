@@ -30,7 +30,6 @@
         <data>
             <xpath expr="//field[@name='category_id']" position="after">
                 <field name="l10n_it_pec_email" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
-                <field name="l10n_it_codice_fiscale" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
                 <field name="l10n_it_pa_index" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
             </xpath>
         </data>
@@ -45,7 +44,6 @@
         <field name="arch" type="xml">
         <data>
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="l10n_it_codice_fiscale" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
                 <field name="l10n_it_tax_system" attrs="{'invisible': [('country_code', '!=', 'IT')]}"/>
             </xpath>
             <xpath expr="//page" position="after">
