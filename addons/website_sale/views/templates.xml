@@ -481,6 +481,7 @@
                 <form class="js_attributes mb-2" method="get">
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
+                    <input type="hidden" name="order" t-att-value="order"/>
                     <a t-if="attrib_values" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0)" class="btn btn-link p-0">
                         <i class="fa fa-eraser mr-1"/><u>Clear filters</u>
                     </a>
