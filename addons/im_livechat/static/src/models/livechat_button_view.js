@@ -145,7 +145,10 @@ registerModel({
             this._sendMessageChatbotAfter();
         },
         start() {
-            this.widget.$el.text(this.buttonText);
+            if (!this.messaging.publicLivechatGlobal.hasWebsiteLivechatFeature) {
+                this.widget.$el.text(this.buttonText);
+            }
+            this.update({ isWidgetMounted: true });
             if (this.messaging.publicLivechatGlobal.history) {
                 for (const m of this.messaging.publicLivechatGlobal.history) {
                     this.addMessage(m);
@@ -500,6 +503,9 @@ registerModel({
             default: false,
         }),
         isTypingTimeout: attr(),
+        isWidgetMounted: attr({
+            default: false,
+        }),
         openChatDebounced: attr({
             compute: '_computeOpenChatDebounced',
         }),

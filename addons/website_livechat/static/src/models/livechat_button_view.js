@@ -1,11 +1,38 @@
 /** @odoo-module **/
 
-import { patchRecordMethods } from '@mail/model/model_core';
+import { addFields, patchRecordMethods } from '@mail/model/model_core';
+import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@im_livechat/models/livechat_button_view';
 
 import { set_cookie, unaccent } from 'web.utils';
+
+addFields('LivechatButtonView', {
+    hasFloatingText: attr({
+        compute() {
+            return Boolean(
+                this.messaging.publicLivechatGlobal.rule &&
+                this.messaging.publicLivechatGlobal.rule.action === 'display_button_and_text' &&
+                this.isWidgetMounted
+            );
+        },
+    }),
+    floatingTextView: one('PublicLivechatFloatingTextView', {
+        inverse: 'livechatButtonViewOwner',
+        isCausal: true,
+    }),
+    initialFloatingTextViewVisibilityTimer: one('Timer', {
+        compute() {
+            if (!this.floatingTextView && this.hasFloatingText) {
+                return {};
+            }
+            return clear();
+        },
+        inverse: 'livechatButtonViewOwnerAsInitialFloatingTextVisibility',
+        isCausal: true,
+    }),
+});
 
 patchRecordMethods('LivechatButtonView', {
     /**

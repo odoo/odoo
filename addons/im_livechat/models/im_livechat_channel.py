@@ -283,21 +283,24 @@ class ImLivechatChannelRule(models.Model):
     regex_url = fields.Char('URL Regex',
         help="Regular expression specifying the web pages this rule will be applied on.")
     action = fields.Selection([
-        ('display_button', 'Display the LiveChat Button'),
-        ('auto_popup', 'Autopop LiveChat'),
-        ('hide_button', 'Hide all buttons')], string='Action', required=True, default='display_button',
-        help="* 'Display the button' displays the chat button on the pages.\n"\
-             "* 'Auto popup' displays the button and automatically open the conversation pane.\n"\
-             "* 'Hide the button' hides the chat button on the pages.\n")
-    auto_popup_timer = fields.Integer('Auto popup timer', default=0,
-        help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Auto popup' otherwise this parameter will not be taken into account.")
+        ('display_button', 'Show'),
+        ('display_button_and_text', 'Show with notification'),
+        ('auto_popup', 'Open automatically'),
+        ('hide_button', 'Hide')], string='Live Chat Button', required=True, default='display_button',
+        help="* 'Show' displays the chat button on the pages.\n"\
+             "* 'Show with notification' is 'Show' in addition to a floating text just next to the button.\n"\
+             "* 'Open automatically' displays the button and automatically open the conversation pane.\n"\
+             "* 'Hide' hides the chat button on the pages.\n")
+    auto_popup_timer = fields.Integer('Open automatically timer', default=0,
+        help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Open automatically' otherwise this parameter will not be taken into account.")
     chatbot_script_id = fields.Many2one('chatbot.script', string='Chatbot')
     chatbot_only_if_no_operator = fields.Boolean(
         string='Enabled only if no operator', help='Enable the bot only if there is no operator available')
     channel_id = fields.Many2one('im_livechat.channel', 'Channel',
         help="The channel of the rule")
     country_ids = fields.Many2many('res.country', 'im_livechat_channel_country_rel', 'channel_id', 'country_id', 'Country',
-        help="The rule will only be applied for these countries. Example: if you select 'Belgium' and 'United States' and that you set the action to 'Hide Button', the chat button will be hidden on the specified URL from the visitors located in these 2 countries. This feature requires GeoIP installed on your server.")
+        help="The rule will only be applied for these countries. Example: if you select 'Belgium' and 'United States' and that you set the action to 'Hide', the chat button will be hidden on the specified URL from the visitors located in these 2 countries. This feature requires GeoIP installed on your server.")
+    notification_message = fields.Char('Notification message', related='channel_id.button_text', depends=['channel_id'], required=True, readonly=False)
     sequence = fields.Integer('Matching order', default=10,
         help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.")
 

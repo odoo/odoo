@@ -245,6 +245,7 @@
                                     <field name="chatbot_only_if_no_operator"/>
                                 </span>
                             </div>
+                            <field name="notification_message" placeholder="e.g. How may I help you?" attrs="{'invisible': [('action', '!=', 'display_button_and_text')]}"/>
                             <field name="regex_url" placeholder="e.g. /contactus"/>
                             <label for="auto_popup_timer" class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}"/>
                             <div class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}">

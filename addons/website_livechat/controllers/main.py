@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import tools
 from odoo import http, _
 from odoo.http import request
 from odoo.addons.im_livechat.controllers.main import LivechatController
@@ -66,3 +67,12 @@ class WebsiteLivechat(LivechatController):
         if visitor_sudo:
             anonymous_name = visitor_sudo.with_context(lang=visitor_sudo.lang_id.code).display_name
         return super(WebsiteLivechat, self).get_session(channel_id, anonymous_name, previous_operator_id=previous_operator_id, chatbot_script_id=chatbot_script_id, **kwargs)
+
+    @http.route('/im_livechat/load_templates', type='json', auth='none', cors="*")
+    def load_templates(self, **kwargs):
+        res = super(WebsiteLivechat, self).load_templates(**kwargs)
+        templates = [
+            'website_livechat/static/src/legacy/widgets/public_livechat_floating_text_view/public_livechat_floating_text_view.xml',
+        ]
+        res2 = [tools.file_open(tmpl, 'rb').read() for tmpl in templates]
+        return res + res2

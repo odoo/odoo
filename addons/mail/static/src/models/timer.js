@@ -55,6 +55,9 @@ registerModel({
          */
         _onTimeout() {
             this.update({ timeoutId: clear() });
+            this.onTimeout();
+        },
+        onTimeout() {
             if (this.blurManagerOwnerAsFrameRequest) {
                 this.blurManagerOwnerAsFrameRequest.onRequestFrameTimerTimeout();
                 return;
