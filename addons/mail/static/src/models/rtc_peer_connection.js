@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'RtcPeerConnection',
@@ -63,9 +62,9 @@ registerModel({
         }),
     },
     onChanges: [
-        new OnChange({
+        {
             dependencies: ['acceptsVideoStream'],
             methodName: '_onChangeAcceptsVideoStream',
-        }),
+        },
     ],
 });

@@ -2,7 +2,6 @@
 
 import { addFields, addOnChanges, addRecordMethods, patchModelMethods } from '@mail/model/model_core';
 import { many } from '@mail/model/model_field';
-import { OnChange } from '@mail/model/model_onchange';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/activity_group';
 
@@ -33,8 +32,8 @@ addFields('ActivityGroup', {
 });
 
 addOnChanges('ActivityGroup', [
-    new OnChange({
+    {
         dependencies: ['meetings', 'type'],
         methodName: '_onChangeMeetings',
-    }),
+    },
 ]);
