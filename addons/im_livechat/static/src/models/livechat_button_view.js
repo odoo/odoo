@@ -6,7 +6,6 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
-import { qweb } from 'web.core';
 import { get_cookie, set_cookie, unaccent } from 'web.utils';
 
 registerModel({
@@ -134,7 +133,7 @@ registerModel({
             }
 
             this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: clear() });
-            this.chatbotSetIsTyping();
+            this.messaging.publicLivechatGlobal.chatbot.setIsTyping();
             this.update({
                 chatbotNextStepTimeout: setTimeout(
                     this.widget._chatbotTriggerNextStep.bind(this.widget),
@@ -198,34 +197,6 @@ registerModel({
             this.chatWindow.legacyChatWindow.$el.css(cssProps);
             this.widget.$el.hide();
             this._openChatWindowChatbot();
-        },
-        /**
-         * Adds a small "is typing" animation into the chat window.
-         *
-         * @param {boolean} [isWelcomeMessage=false]
-         */
-        chatbotSetIsTyping(isWelcomeMessage = false) {
-            if (this.isTypingTimeout) {
-                clearTimeout(this.isTypingTimeout);
-            }
-            this.widget._chatbotDisableInput('');
-            this.update({
-                isTypingTimeout: setTimeout(
-                    () => {
-                        this.chatWindow.legacyChatWindow.$('.o_mail_thread_content').append(
-                            $(qweb.render('im_livechat.legacy.chatbot.is_typing_message', {
-                                'chatbotImageSrc': `/im_livechat/operator/${
-                                    this.messaging.publicLivechatGlobal.publicLivechat.operator.id
-                                }/avatar`,
-                                'chatbotName': this.messaging.publicLivechatGlobal.chatbot.name,
-                                'isWelcomeMessage': isWelcomeMessage,
-                            }))
-                        );
-                        this.chatWindow.publicLivechatView.widget.scrollToBottom();
-                    },
-                    this.messaging.publicLivechatGlobal.chatbot.messageDelay / 3,
-                ),
-            });
         },
         /**
          * @param {Object} message
@@ -515,7 +486,7 @@ registerModel({
                 } else if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
                     this.widget._debouncedChatbotAwaitUserInput();
                 } else if (!this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
-                    this.chatbotSetIsTyping();
+                    this.messaging.publicLivechatGlobal.chatbot.setIsTyping();
                     this.update({
                         chatbotNextStepTimeout: setTimeout(
                             this.widget._chatbotTriggerNextStep.bind(this.widget),

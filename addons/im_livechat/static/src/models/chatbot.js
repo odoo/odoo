@@ -4,9 +4,39 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
+import { qweb } from 'web.core';
+
 registerModel({
     name: 'Chatbot',
     recordMethods: {
+        /**
+         * Adds a small "is typing" animation into the chat window.
+         *
+         * @param {boolean} [isWelcomeMessage=false]
+         */
+        setIsTyping(isWelcomeMessage = false) {
+            if (this.messaging.publicLivechatGlobal.livechatButtonView.isTypingTimeout) {
+                clearTimeout(this.messaging.publicLivechatGlobal.livechatButtonView.isTypingTimeout);
+            }
+            this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotDisableInput('');
+            this.messaging.publicLivechatGlobal.livechatButtonView.update({
+                isTypingTimeout: setTimeout(
+                    () => {
+                        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_mail_thread_content').append(
+                            $(qweb.render('im_livechat.legacy.chatbot.is_typing_message', {
+                                'chatbotImageSrc': `/im_livechat/operator/${
+                                    this.messaging.publicLivechatGlobal.publicLivechat.operator.id
+                                }/avatar`,
+                                'chatbotName': this.name,
+                                'isWelcomeMessage': isWelcomeMessage,
+                            }))
+                        );
+                        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
+                    },
+                    this.messageDelay / 3,
+                ),
+            });
+        },
         /**
          * @private
          * @returns {boolean}

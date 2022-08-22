@@ -69,7 +69,7 @@ const _t = core._t;
             if (this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
             } else {
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
+                this.messaging.publicLivechatGlobal.chatbot.setIsTyping();
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
                     chatbotNextStepTimeout: setTimeout(
                         this._chatbotTriggerNextStep.bind(this),
@@ -193,7 +193,7 @@ const _t = core._t;
         }  else if (this.messaging.publicLivechatGlobal.chatbot.isExpectingUserInput) {
             if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
                 // user has already typed a message in -> trigger next step
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
+                this.messaging.publicLivechatGlobal.chatbot.setIsTyping();
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
                     chatbotNextStepTimeout: setTimeout(
                         this._chatbotTriggerNextStep.bind(this),
@@ -222,7 +222,7 @@ const _t = core._t;
                     // -> in that case, don't wait and trigger the next step immediately
                     nextStepDelay = 0;
                 } else {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
+                    this.messaging.publicLivechatGlobal.chatbot.setIsTyping();
                 }
 
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
@@ -429,7 +429,7 @@ const _t = core._t;
 
         if (stepIndex + 1 < this.messaging.publicLivechatGlobal.chatbot.welcomeSteps.length) {
             if (welcomeMessageDelay !== 0) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping(true);
+                this.messaging.publicLivechatGlobal.chatbot.setIsTyping(true);
             }
 
             this.messaging.publicLivechatGlobal.livechatButtonView.update({
