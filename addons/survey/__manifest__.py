@@ -105,7 +105,10 @@ sent mails with personal token for the invitation of the survey.
         ],
         'web.assets_common': [
             'survey/static/src/js/tours/survey_tour.js',
-        ]
+        ],
+        'web.assets_qweb': [
+            'survey/static/src/question_page/*.xml',
+        ],
     },
     'license': 'LGPL-3',
 }
