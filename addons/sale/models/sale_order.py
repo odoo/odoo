@@ -1297,6 +1297,16 @@ class SaleOrder(models.Model):
 
         return self.order_line.filtered(show_line)
 
+    def _get_default_payment_link_values(self):
+        self.ensure_one()
+        return {
+            'description': self.name,
+            'amount': self.amount_total - sum(self.invoice_ids.filtered(lambda x: x.state != 'cancel').mapped('amount_total')),
+            'currency_id': self.currency_id.id,
+            'partner_id': self.partner_id.id,
+            'amount_max': self.amount_total,
+        }
+
     # PORTAL #
 
     def _has_to_be_signed(self, include_draft=False):
