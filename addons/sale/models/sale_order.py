@@ -595,7 +595,7 @@ class SaleOrder(models.Model):
     def _compute_access_url(self):
         super()._compute_access_url()
         for order in self:
-            order.access_url = '/my/orders/%s' % (order.id)
+            order.access_url = f'/my/orders/{order.id}'
 
     #=== CONSTRAINT METHODS ===#
 
@@ -1002,7 +1002,6 @@ class SaleOrder(models.Model):
         return ['company_id', 'partner_id', 'currency_id']
 
     def _nothing_to_invoice_error_message(self):
-        self.ensure_one()
         return _(
             "There is nothing to invoice!\n\n"
             "Reason(s) of this behavior could be:\n"
@@ -1092,7 +1091,7 @@ class SaleOrder(models.Model):
             invoice_vals_list.append(invoice_vals)
 
         if not invoice_vals_list and self._context.get('raise_if_nothing_to_invoice', True):
-            raise UserError(order._nothing_to_invoice_error_message())
+            raise UserError(self._nothing_to_invoice_error_message())
 
         # 2) Manage 'grouped' parameter: group by (partner_id, currency_id).
         if not grouped:
@@ -1328,16 +1327,16 @@ class SaleOrder(models.Model):
         return super().get_empty_list_help(help_msg)
 
     def _compute_field_value(self, field):
-        if field.name == 'invoice_status' and not self.env.context.get('mail_activity_automation_skip'):
-            filtered_self = self.filtered(lambda so: so.ids and (so.user_id or so.partner_id.user_id) and so._origin.invoice_status != 'upselling')
-        super()._compute_field_value(field)
         if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
-            return
+            return super()._compute_field_value(field)
+
+        filtered_self = self.filtered(
+            lambda so: so.ids
+                and (so.user_id or so.partner_id.user_id)
+                and so._origin.invoice_status != 'upselling')
+        super()._compute_field_value(field)
 
         upselling_orders = filtered_self.filtered(lambda so: so.invoice_status == 'upselling')
-        if not upselling_orders:
-            return
-
         upselling_orders._create_upsell_activity()
 
     def name_get(self):
@@ -1354,8 +1353,10 @@ class SaleOrder(models.Model):
     #=== BUSINESS METHODS ===#
 
     def _create_upsell_activity(self):
-        if self:
-            self.activity_unlink(['sale.mail_act_sale_upsell'])
+        if not self:
+            return
+
+        self.activity_unlink(['sale.mail_act_sale_upsell'])
         for order in self:
             order_ref = order._get_html_link()
             customer_ref = order.partner_id._get_html_link()
