@@ -5312,6 +5312,30 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group", 4);
     });
 
+    QUnit.test("quick create column with enter", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                "<kanban>" +
+                '<field name="product_id"/>' +
+                '<templates><t t-name="kanban-box">' +
+                '<div><field name="foo"/></div>' +
+                "</t></templates>" +
+                "</kanban>",
+            groupBy: ["product_id"],
+        });
+
+        // add a new column
+        await createColumn();
+        await editColumnName("New Column 1");
+        await triggerEvent(target, ".o_column_quick_create input", "keydown", {
+            key: "Enter",
+        });
+        assert.containsN(target, ".o_kanban_group", 3, "should now have three columns");
+    });
+
     QUnit.test("quick create column and examples", async (assert) => {
         serviceRegistry.add("dialog", dialogService, { force: true });
         registry.category("kanban_examples").add("test", {
