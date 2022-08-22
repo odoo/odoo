@@ -29,5 +29,7 @@ export function deepCopy(obj) {
  * @returns {Partial<T>}
  */
 export function pick(object, ...properties) {
-    return Object.fromEntries(Object.entries(object).filter(([k]) => properties.includes(k)));
+    return Object.fromEntries(
+        properties.filter((prop) => prop in object).map((prop) => [prop, object[prop]])
+    );
 }

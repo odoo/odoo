@@ -11,6 +11,16 @@ QUnit.module("utils", () => {
         assert.deepEqual(pick({ a: 3, b: "a", c: [] }, "a"), { a: 3 });
         assert.deepEqual(pick({ a: 3, b: "a", c: [] }, "a", "c"), { a: 3, c: [] });
         assert.deepEqual(pick({ a: 3, b: "a", c: [] }, "a", "b", "c"), { a: 3, b: "a", c: [] });
+
+        // Non enumerable property
+        class MyClass {
+            get a() {
+                return 1;
+            }
+        }
+        const myClass = new MyClass();
+        Object.defineProperty(myClass, "b", { enumerable: false, value: 2 });
+        assert.deepEqual(pick(myClass, "a", "b"), { a: 1, b: 2 });
     });
 
     QUnit.test("shallowEqual: simple valid cases", function (assert) {
