@@ -94,8 +94,8 @@ tour.register('shop_mail', {
     },
     {
         content: "check it's the correct email, and the URL is correct too",
-        trigger: 'div.oe_form_field_html[name="body_html"] p:contains("Your"):contains("order")',
-        extra_trigger: 'div.oe_form_field_html[name="body_html"] a[href^="https://my-test-domain.com"]',
+        trigger: 'div.o_field_html[name="body_html"] p:contains("Your"):contains("order")',
+        extra_trigger: 'div.o_field_html[name="body_html"] a[href^="https://my-test-domain.com"]',
     },
 ]);
 });

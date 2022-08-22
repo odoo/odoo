@@ -20,7 +20,7 @@ Wysiwyg.include({
     /**
      * @override
      */
-    async start() {
+    async startEdition() {
         await this._super(...arguments);
         $('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
     },

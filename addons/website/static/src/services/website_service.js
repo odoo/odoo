@@ -200,7 +200,10 @@ export const websiteService = {
             async loadWysiwyg() {
                 if (!Wysiwyg) {
                     await ajax.loadXML('/website/static/src/xml/website.editor.xml', core.qweb);
-                    Wysiwyg = await getWysiwygClass({wysiwygAlias: 'website.wysiwyg'}, ['website.compiled_assets_wysiwyg']);
+                    Wysiwyg = await getWysiwygClass({
+                        moduleName: 'website.wysiwyg',
+                        additionnalAssets: ['website.compiled_assets_wysiwyg']
+                    });
                 }
                 return Wysiwyg;
             },

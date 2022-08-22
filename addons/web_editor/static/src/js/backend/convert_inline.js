@@ -1,7 +1,6 @@
 /** @odoo-module alias=web_editor.convertInline */
 'use strict';
 
-import FieldHtml from 'web_editor.field.html';
 import { isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
 /* global html2canvas */
 
@@ -1389,56 +1388,6 @@ function _normalizeStyle(style) {
     wrapper.append(element);
     return wrapper;
 }
-
-//--------------------------------------------------------------------------
-// Widget
-//--------------------------------------------------------------------------
-
-
-FieldHtml.include({
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    commitChanges: async function () {
-        const _super = this._super.bind(this);
-        if (this.nodeOptions['style-inline'] && this.mode === "edit") {
-            await this._toInline();
-        }
-        return _super();
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Converts CSS dependencies to CSS-independent HTML.
-     * - CSS display for attachment link -> real image
-     * - Font icons -> images
-     * - CSS styles -> inline styles
-     *
-     * @private
-     */
-    _toInline: async function () {
-        var $editable = this.wysiwyg.getEditable();
-        var html = this.wysiwyg.getValue();
-        const $odooEditor = $editable.closest('.odoo-editor');
-        // Remove temporarily the class so that css editing will not be converted.
-        $odooEditor.removeClass('odoo-editor');
-        $editable.html(html);
-
-        await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
-        $odooEditor.addClass('odoo-editor');
-
-        this.wysiwyg.setValue($editable.html(), {
-            notifyChange: false,
-        });
-    },
-});
 
 export default {
     addTables: addTables,

@@ -388,7 +388,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//form" position="attributes">
                     <attribute name="js_class">mailing_mailing_view_form_full_width</attribute>
-                    <attribute name="class">o_mass_mailing_mailing_form o_mass_mailing_form_full_width</attribute>
+                    <attribute name="class">o_form_view o_mass_mailing_mailing_form o_mass_mailing_form_full_width</attribute>
                 </xpath>
                 <field name="state" position="before">
                     <xpath expr="//div[hasclass('alert-info')]" position="move"/>
@@ -453,7 +453,7 @@
                         <div class="position-relative">
                             <div class="mt-n2">
                                 <field name="body_html" class="o_mail_body" widget="html"
-                                    options="{'cssReadonly': 'mass_mailing.iframe_css_assets_readonly', 'notEditable': True}"/>
+                                    readonly="True" force_save="1" options="{'cssReadonly': 'mass_mailing.iframe_css_assets_readonly'}"/>
                             </div>
                             <field name="is_body_empty" invisible="1"/>
                             <div class="o_view_nocontent oe_read_only" attrs="{'invisible': ['|', ('is_body_empty', '=', False), ('state', 'in', ('sending', 'done'))]}">

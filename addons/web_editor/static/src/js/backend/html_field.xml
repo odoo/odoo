@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web_editor.HtmlField" owl="1">
+        <t t-if="props.readonly || props.notEditable">
+            <t t-if="this.showIframe">
+                <iframe t-ref="iframe" t-att-class="{'d-none': !this.state.iframeVisible, 'o_readonly': true}"></iframe>
+            </t>
+            <t t-else="">
+                <div  t-ref="readonlyElement" class="o_readonly" t-out="markupValue" />
+            </t>
+        </t>
+        <t t-else="">
+            <t t-if="state.showCodeView">
+                <textarea t-ref="codeView" class="o_codeview" t-att-value="markupValue"/>
+                <div t-ref="codeViewButton" id="codeview-btn-group" class="btn-group" t-on-click="toggleCodeView">
+                    <button class="o_codeview_btn btn btn-primary">
+                        <i class="fa fa-code" />
+                    </button>
+                </div>
+            </t>
+            <t t-else="">
+                <HtmlFieldWysiwygAdapterComponent Component="this.Wysiwyg"
+                    startWysiwyg.bind="this.startWysiwyg"
+                    editingValue="this.currentEditingValue"
+                    widgetArgs="[this.wysiwygOptions]" />
+            </t>
+            <t t-if="props.isTranslatable">
+                <span t-attf-style="font-size: 15px; position: absolute; right: {{this.props.codeview ? '40px' : '5px'}}; top: 5px;">
+                    <TranslationButton
+                        fieldName="props.name"
+                        resId="props.record.resId"
+                        resModel="props.record.resModel"
+                        value="props.value"
+                        updateField="props.update"
+                        context="props.record.context"
+                    />
+                </span>
+            </t>
+        </t>
+    </t>
+
+</templates>

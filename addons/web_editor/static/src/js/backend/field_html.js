@@ -17,7 +17,6 @@ import {
 // must wait for web/ to add the default html widget, otherwise it would override the web_editor one
 import 'web._field_registry';
 import "@web/views/fields/html/html_field"; // make sure the html field file has first been executed.
-import { registry } from '@web/core/registry';
 
 var _lt = core._lt;
 var _t = core._t;
@@ -257,7 +256,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
      * @returns {$.Promise}
      */
     _createWysiwygInstance: async function () {
-        this.wysiwyg = await wysiwygLoader.createWysiwyg(this, this._getWysiwygOptions());
+        const Wysiwyg = await wysiwygLoader.getWysiwygClass();
+        this.wysiwyg = new Wysiwyg(this, this._getWysiwygOptions());
         return this.wysiwyg.appendTo(this.$el).then(() => {
             this.$content = this.wysiwyg.$editable;
             this._onLoadWysiwyg();
@@ -680,9 +680,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
      */
     _onWysiwygFocus: function (ev) {},
 });
-
-// Road to WOWL trick needed not to shadow the legacy html field in web editor.
-registry.category("fields").remove("html");
 
 field_registry.add('html', FieldHtml);
 

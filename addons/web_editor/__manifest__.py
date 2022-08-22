@@ -25,6 +25,8 @@ Odoo Web Editor widget.
         'web.assets_qweb': [
             ('include', 'web_editor.assets_media_dialog_templates'),
             'web_editor/static/src/xml/*.xml',
+            'web_editor/static/src/components/**/*.xml',
+            'web_editor/static/src/js/backend/**/*',
         ],
         'web_editor.assets_wysiwyg': [
             # lib
