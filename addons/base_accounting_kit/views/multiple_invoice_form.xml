@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="multiple_invoice_view_form" model="ir.ui.view">
+        <field name="name">multiple.invoice.form.inherit.account.journal</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form" />
+        <field name="arch" type="xml">
+            <page name="advanced_settings" position="inside">
+
+                <group string="Multiple Invoice Copies" attrs="{'invisible': [('type', 'not in',['sale', 'purchase'])]}">
+                    <field name="multiple_invoice_type" style="width: 40%"/>
+
+                </group>
+                <group attrs="{'invisible': [('type', 'not in',['sale', 'purchase'])]}">
+                    <div class="mt8">
+                        <button name="%(base_accounting_kit.action_multiple_invoice_layout_configurator)d" string="Configure Copy Layout" type="action" class="oe_link" icon="fa-arrow-right"/>
+                    </div>
+                </group>
+
+                <group attrs="{'invisible': [('type', 'not in',['sale', 'purchase'])]}">
+                    <div>
+                        <field name="multiple_invoice_ids" widget="one2many" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="copy_name" style="width: 75"/>
+                            </tree>
+                         </field>
+                    </div>
+                </group>
+            </page>
+        </field>
+    </record>
+</odoo>
