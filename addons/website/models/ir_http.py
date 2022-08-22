@@ -271,7 +271,6 @@ class Http(models.AbstractModel):
         if page and (request.website.is_publisher() or page.is_visible):
             _, ext = os.path.splitext(req_page)
             response = request.render(page.view_id.id, {
-                'deletable': True,
                 'main_object': page,
             }, mimetype=_guess_mimetype(ext))
             return response
