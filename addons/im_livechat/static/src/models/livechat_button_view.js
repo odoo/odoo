@@ -361,7 +361,7 @@ registerModel({
          */
         _computeServerUrl() {
             if (this.isChatbot) {
-                return this.messaging.publicLivechatGlobal.chatbotServerUrl;
+                return this.messaging.publicLivechatGlobal.chatbot.serverUrl;
             }
             return this.messaging.publicLivechatGlobal.serverUrl;
         },

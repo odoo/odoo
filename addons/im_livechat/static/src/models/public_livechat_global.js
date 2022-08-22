@@ -232,7 +232,6 @@ registerModel({
             inverse: 'publicLivechatGlobalOwner',
             isCausal: true,
         }),
-        chatbotServerUrl: attr(),
         chatbotSessionCookieKey: attr({
             compute: '_computeChatbotSessionCookieKey',
         }),

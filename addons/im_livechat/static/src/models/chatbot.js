@@ -195,6 +195,7 @@ registerModel({
         scriptId: attr({
             compute: '_computeScriptId',
         }),
+        serverUrl: attr(),
         shouldEndScript: attr({
             compute: '_computeShouldEndScript',
             default: false,
