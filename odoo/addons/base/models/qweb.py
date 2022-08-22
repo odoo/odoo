@@ -1223,7 +1223,7 @@ class QWeb(object):
         else:
             content = (self._compile_tag_open(el, options, indent + 1, not without_attributes) +
                 self._compile_tag_close(el, options) +
-                self._flushText(options, indent + 2))
+                self._flushText(options, indent + 1))
             if content:
                 code.append(self._indent("elif force_display:", indent))
                 code.extend(content)
