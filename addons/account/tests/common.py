@@ -387,7 +387,8 @@ class AccountTestInvoicingCommon(TransactionCase):
                 line_form.product_id = product
                 if taxes:
                     line_form.tax_ids.clear()
-                    line_form.tax_ids.add(taxes)
+                    for tax in taxes:
+                        line_form.tax_ids.add(tax)
 
         for amount in (amounts or []):
             with move_form.invoice_line_ids.new() as line_form:
