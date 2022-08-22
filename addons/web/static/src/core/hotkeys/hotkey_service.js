@@ -233,7 +233,7 @@ export const hotkeyService = {
             let winner = candidates.shift();
             if (winner && winner.area) {
                 // If there is an area, find the closest one
-                for (const candidate of candidates) {
+                for (const candidate of candidates.filter((c) => Boolean(c.area))) {
                     if (candidate.area() && winner.area().contains(candidate.area())) {
                         winner = candidate;
                     }
