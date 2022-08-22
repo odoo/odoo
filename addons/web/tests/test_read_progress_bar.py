@@ -16,7 +16,7 @@ class TestReadProgressBar(common.TransactionCase):
         progressbar = {
             'field': 'type',
             'colors': {
-                'contact': 'success', 'private': 'danger', 'other': 'muted',
+                'contact': 'success', 'private': 'danger', 'other': '200',
             }
         }
         result = self.env['res.partner'].read_progress_bar([], 'category_id', progressbar)
