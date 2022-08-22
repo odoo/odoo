@@ -34,8 +34,8 @@ export class X2ManyField extends Component {
             this.isMany2Many
         );
 
-        const subView = this.activeField.views[this.viewMode];
-        const subViewActiveActions = subView.activeActions;
+        const archInfo = this.activeField.views[this.viewMode];
+        const subViewActiveActions = archInfo.activeActions;
         this.activeActions = useActiveActions({
             crudOptions: Object.assign({}, this.activeField.options, {
                 onDelete: removeRecord,
@@ -50,12 +50,9 @@ export class X2ManyField extends Component {
             },
         });
 
-        if (subView.editable) {
-            this.addInLine = useAddInlineRecord({
-                position: subView.editable,
-                addNew: (...args) => this.list.addNew(...args),
-            });
-        }
+        this.addInLine = useAddInlineRecord({
+            addNew: (...args) => this.list.addNew(...args),
+        });
 
         const openRecord = useOpenX2ManyRecord({
             resModel: this.list.resModel,
@@ -194,13 +191,17 @@ export class X2ManyField extends Component {
                 }
             });
 
+        const editable = archInfo.editable || this.props.editable;
         props.activeActions = this.activeActions;
         props.archInfo = { ...archInfo, columns };
         props.cycleOnTab = false;
-        props.editable = !this.props.readonly && archInfo.editable;
+        props.editable = !this.props.readonly && editable;
         props.nestedKeyOptionalFieldsData = this.nestedKeyOptionalFieldsData;
-        props.onAdd = this.onAdd.bind(this);
-
+        props.onAdd = (params) => {
+            params.editable =
+                !this.props.readonly && ("editable" in params ? params.editable : editable);
+            this.onAdd(params);
+        };
         return props;
     }
 
@@ -211,7 +212,7 @@ export class X2ManyField extends Component {
         return false;
     }
 
-    async onAdd({ context } = {}) {
+    async onAdd({ context, editable } = {}) {
         const record = this.props.record;
         const domain = record.getFieldDomain(this.props.name).toList();
         if (context) {
@@ -220,7 +221,7 @@ export class X2ManyField extends Component {
         if (this.isMany2Many) {
             return this.selectCreate({ domain, context });
         }
-        if (this.addInLine) {
+        if (editable) {
             if (this.list.editedRecord) {
                 const proms = [];
                 this.list.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
@@ -228,7 +229,7 @@ export class X2ManyField extends Component {
                 await this.list.editedRecord.switchMode("readonly");
             }
             if (!this.list.editedRecord) {
-                return this.addInLine({ context });
+                return this.addInLine({ context, editable });
             }
             return;
         }
@@ -243,6 +244,7 @@ X2ManyField.components = { Pager, KanbanRenderer, ListRenderer };
 X2ManyField.props = {
     ...standardFieldProps,
     addLabel: { type: "string", optional: true },
+    editable: { type: "string", optional: true },
 };
 X2ManyField.supportedTypes = ["one2many"];
 X2ManyField.template = "web.X2ManyField";
