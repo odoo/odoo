@@ -337,10 +337,6 @@
         if (BLACKLISTED_MENUS.includes(element.dataset.menuXmlid)) {
             return Promise.resolve(); // Skip black listed menus
         }
-        let menuTimeLimit = 10000;
-        if (element.innerText.trim() === "Settings") {
-            menuTimeLimit = 20000;
-        }
         const startActionCount = actionCount;
         await triggerClick(element, `menu item "${element.innerText.trim()}"`);
         let isModal = false;
@@ -359,7 +355,7 @@
                 return true;
             }
             return startActionCount !== actionCount;
-        }, menuTimeLimit)
+        })
             .then(() => {
                 if (!isModal) {
                     return testFilters();
