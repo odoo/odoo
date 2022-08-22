@@ -335,7 +335,7 @@ var SnippetEditor = Widget.extend({
      * Makes the editor overlay cover the associated snippet.
      */
     cover: function () {
-        if (!this.isShown() || !this.$target.length) {
+        if (!this.isShown() || !this.$target.length || !this.$target[0].ownerDocument.defaultView) {
             return;
         }
 
@@ -2616,7 +2616,6 @@ var SnippetsMenu = Widget.extend({
         this._disableUndroppableSnippets();
 
         this.$el.addClass('o_loaded');
-        this.trigger_up('snippets_loaded', self.$el);
         $(this.el.ownerDocument.body).addClass('editor_has_snippets');
     },
     /**

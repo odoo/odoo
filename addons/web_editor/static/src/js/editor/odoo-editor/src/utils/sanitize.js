@@ -144,7 +144,7 @@ class Sanitize {
                     )
                 ) &&
                 !isBlock(node.parentElement) &&
-                anchor !== node
+                (!anchor || anchor !== node)
             ) {
                 const restoreCursor = node.isConnected &&
                     preserveCursor(this.root.ownerDocument);
