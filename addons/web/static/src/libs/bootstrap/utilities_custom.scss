@@ -44,7 +44,7 @@ $order-array: (
     first: -1,
     last: $grid-columns + 1,
 ) !default;
-@for $i from 1 through $grid-columns {
+@for $i from 0 through $grid-columns {
     $order-array: map-merge(
         $order-array,
         (#{$i}: $i)
