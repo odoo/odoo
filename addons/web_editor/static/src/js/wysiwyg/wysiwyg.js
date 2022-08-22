@@ -69,6 +69,8 @@ const Wysiwyg = Widget.extend({
         recordInfo: {context: {}},
         document: document,
         allowCommandVideo: true,
+        allowCommandImage: true,
+        allowCommandLink: true,
         insertParagraphAfterColumns: true,
     },
     init: function (parent, options) {

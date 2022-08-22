@@ -137,10 +137,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 resizable: true,
                 userGeneratedContent: true,
             };
-            if (hasFullEdit) {
-                options.allowCommandLink = true;
-                options.allowCommandImage = true;
-            }
+            options.allowCommandLink = hasFullEdit;
+            options.allowCommandImage = hasFullEdit;
             wysiwygLoader.loadFromTextarea(self, $textarea[0], options).then(wysiwyg => {
                 if (!hasFullEdit) {
                     wysiwyg.toolbar.$el.find('#link, #media').remove();
