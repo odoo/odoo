@@ -13641,6 +13641,34 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(document.activeElement, intFieldInput);
     });
 
+    QUnit.test("continue creating new lines in editable=top on keyboard nav", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        let initialRowCount = $('.o_data_cell[name=int_field]').length
+
+        // click on int_field cell of first row
+        await click(target, ".o_list_button_add");
+
+        await editInput(target, ".o_data_cell[name=int_field] input", "1");
+        triggerHotkey("Tab");
+        await nextTick();
+
+        await editInput(target, ".o_data_cell[name=int_field] input", "2");
+        triggerHotkey("Enter");
+        await nextTick();
+
+        // 3 new rows: the two created ("1" and "2", and a new still in edit mode)
+        assert.strictEqual($('.o_data_cell[name=int_field]').length , initialRowCount + 3);
+    });
+
     QUnit.test("Date in evaluation context works with date field", async function (assert) {
         patchDate(1997, 0, 9, 12, 0, 0);
 
