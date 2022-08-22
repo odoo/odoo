@@ -1239,7 +1239,6 @@ export class Record extends DataPoint {
      * @returns {Promise<boolean>}
      */
     async _save(options = { stayInEdition: false, noReload: false }) {
-        this.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES");
         if (!(await this._checkValidity())) {
             const invalidFields = [...this._invalidFields].map((fieldName) => {
                 return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
