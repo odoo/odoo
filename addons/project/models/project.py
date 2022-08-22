@@ -2429,6 +2429,12 @@ class ProjectTags(models.Model):
         return AND([domain, [('id', 'in', tag_ids)]])
 
     @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if 'project_id' in self.env.context:
+            domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
+    @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         if 'project_id' in self.env.context:
             domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
