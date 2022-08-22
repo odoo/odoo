@@ -15,6 +15,7 @@
         'data/payment_paypal_email_data.xml',
     ],
     'application': True,
+    'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }

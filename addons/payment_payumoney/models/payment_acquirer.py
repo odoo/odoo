@@ -50,12 +50,6 @@ class PaymentAcquirer(models.Model):
             sign = '|'.join(f'{sign_values.get(k) or ""}' for k in keys.split('|'))
         return hashlib.sha512(sign.encode('utf-8')).hexdigest()
 
-    def _get_default_payment_method_id(self):
-        self.ensure_one()
-        if self.provider != 'payumoney':
-            return super()._get_default_payment_method_id()
-        return self.env.ref('payment_payumoney.payment_method_payumoney').id
-
     def _neutralize(self):
         super()._neutralize()
         self._neutralize_fields('payumoney', ['payumoney_merchant_key', 'payumoney_merchant_salt'])

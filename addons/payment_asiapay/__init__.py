@@ -3,7 +3,11 @@
 from . import controllers
 from . import models
 
-from odoo.addons.payment import reset_payment_acquirer
+from odoo.addons.payment import setup_provider, reset_payment_acquirer
+
+
+def post_init_hook(cr, registry):
+    setup_provider(cr, registry, 'asiapay')
 
 
 def uninstall_hook(cr, registry):

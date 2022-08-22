@@ -6,8 +6,8 @@ from odoo.addons.payment.tests.common import PaymentCommon
 class StripeCommon(PaymentCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.stripe = cls._prepare_acquirer('stripe', update_values={
             'stripe_secret_key': 'sk_test_KJtHgNwt2KS3xM7QJPr4O5E8',

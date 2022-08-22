@@ -6,8 +6,8 @@ from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 class APSCommon(PaymentHttpCommon):
 
     @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
+    def setUpClass(cls):
+        super().setUpClass()
 
         cls.aps = cls._prepare_acquirer('aps', update_values={
             'aps_merchant_identifier': '123456abc',
