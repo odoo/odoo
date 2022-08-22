@@ -22,9 +22,9 @@ const _t = core._t;
     init() {
         this._super(...arguments);
 
-        // debounced to let the user type several sentences, see '_chatbotAwaitUserInput' for details
+        // debounced to let the user type several sentences, see 'Chatbot/awaitUserInput' for details
         this._debouncedChatbotAwaitUserInput = _.debounce(
-            this._chatbotAwaitUserInput.bind(this),
+            this.messaging.publicLivechatGlobal.chatbot.awaitUserInput,
             this.messaging.publicLivechatGlobal.chatbot.awaitUserInputDebounceTime,
         );
     },
@@ -49,35 +49,6 @@ const _t = core._t;
 
         if (!options || !options.skipRenderMessages) {
             this._renderMessages();
-        }
-    },
-
-    /**
-     * This method will be transformed into a 'debounced' version (see init).
-     *
-     * The purpose is to handle steps of type 'free_input_multi', that will let the user type in
-     * multiple lines of text before the bot goes to the next step.
-     *
-     * Every time a 'keydown' is detected into the input, or every time a message is sent, we call
-     * this debounced method, which will give the user about 10 seconds to type more text before
-     * the next step is triggered.
-     *
-     * First we check if the last message was sent by the user, to make sure we always let him type
-     * at least one message before moving on.
-     */
-    _chatbotAwaitUserInput() {
-        if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
-            if (this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
-            } else {
-                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
-                this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                    chatbotNextStepTimeout: setTimeout(
-                        this._chatbotTriggerNextStep.bind(this),
-                        this.messaging.publicLivechatGlobal.chatbot.messageDelay,
-                    )
-                });
-            }
         }
     },
 

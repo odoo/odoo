@@ -554,7 +554,7 @@ registerModel({
          * - If the conversation has been forwarded to an operator
          *   Then there is nothing to do, we let them speak
          * - If we are currently on a 'free_input_multi' step
-         *   Await more user input (see #_chatbotAwaitUserInput() for details)
+         *   Await more user input (see #Chatbot/awaitUserInput for details)
          * - Otherwise we continue the script or end it if it's the last step
          *
          * We also save the current session state.

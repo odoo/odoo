@@ -14,7 +14,7 @@ patchRecordMethods('LivechatButtonView', {
     start() {
         this.messaging.publicLivechatGlobal.chatbot.update({ isWebsiteLivechatTourFlow: true });
         this.widget._debouncedChatbotAwaitUserInput = _.debounce(
-            this.widget._chatbotAwaitUserInput.bind(this.widget),
+            this.messaging.publicLivechatGlobal.chatbot.awaitUserInput,
             this.messaging.publicLivechatGlobal.chatbot.awaitUserInputDebounceTime,
         );
         this._super();

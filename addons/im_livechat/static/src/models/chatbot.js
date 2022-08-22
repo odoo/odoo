@@ -8,6 +8,34 @@ registerModel({
     name: 'Chatbot',
     recordMethods: {
         /**
+         * This method will be transformed into a 'debounced' version (see init).
+         *
+         * The purpose is to handle steps of type 'free_input_multi', that will let the user type in
+         * multiple lines of text before the bot goes to the next step.
+         *
+         * Every time a 'keydown' is detected into the input, or every time a message is sent, we call
+         * this debounced method, which will give the user about 10 seconds to type more text before
+         * the next step is triggered.
+         *
+         * First we check if the last message was sent by the user, to make sure we always let him type
+         * at least one message before moving on.
+         */
+        awaitUserInput() {
+            if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
+                if (this.shouldEndScript) {
+                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
+                } else {
+                    this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
+                    this.messaging.publicLivechatGlobal.livechatButtonView.update({
+                        chatbotNextStepTimeout: setTimeout(
+                            this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotTriggerNextStep.bind(this.messaging.publicLivechatGlobal.livechatButtonView.widget),
+                            this.messageDelay,
+                        )
+                    });
+                }
+            }
+        },
+        /**
          * @private
          * @returns {integer}
          */
