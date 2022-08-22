@@ -192,6 +192,10 @@ export class ListRenderer extends Component {
         return this.props.hasSelectors && !this.env.isSmall;
     }
 
+    add(params) {
+        this.props.onAdd(params);
+    }
+
     // The following code manipulates the DOM directly to avoid having to wait for a
     // render + patch which would occur on the next frame and cause flickering.
     freezeColumnWidths() {
@@ -831,7 +835,7 @@ export class ListRenderer extends Component {
             await recordAfterResequence();
             await record.switchMode("edit");
             this.cellToFocus = { column, record };
-        } else if (this.props.editable) {
+        } else if (this.isInlineEditable(record)) {
             if (record.isInEdition) {
                 this.focusCell(column);
                 this.cellToFocus = null;
@@ -925,6 +929,12 @@ export class ListRenderer extends Component {
             }
         }
         return futureCell && getElementToFocus(futureCell);
+    }
+
+    isInlineEditable(record) {
+        // /!\ the keyboard navigation works under the hypothesis that all or
+        // none records are editable.
+        return !!this.props.editable;
     }
 
     /**
@@ -1076,7 +1086,7 @@ export class ListRenderer extends Component {
             record.checkValidity() &&
             (isEnterBehavior || isTabBehavior)
         ) {
-            this.props.onAdd({ group });
+            this.add({ group });
             return true;
         }
         return false;
@@ -1116,14 +1126,14 @@ export class ListRenderer extends Component {
                     // add a line
                     if (record.checkValidity()) {
                         const { context } = this.creates[0];
-                        this.props.onAdd({ context });
+                        this.add({ context });
                     }
                 } else if (
                     activeActions.create &&
                     !record.canBeAbandoned &&
                     (record.isDirty || this.lastIsDirty)
                 ) {
-                    this.props.onAdd({ group });
+                    this.add({ group });
                 } else if (cycleOnTab) {
                     if (record.canBeAbandoned) {
                         list.unselectRecord(true);
@@ -1187,14 +1197,14 @@ export class ListRenderer extends Component {
                         // add a line
                         if (record.checkValidity()) {
                             const { context } = this.creates[0];
-                            this.props.onAdd({ context });
+                            this.add({ context });
                         }
                     } else if (
                         activeActions.create &&
                         !record.canBeAbandoned &&
                         (record.isDirty || this.lastIsDirty)
                     ) {
-                        this.props.onAdd({ group });
+                        this.add({ group });
                     } else if (cycleOnTab) {
                         if (record.canBeAbandoned) {
                             list.unselectRecord(true);
@@ -1258,7 +1268,7 @@ export class ListRenderer extends Component {
                 if (futureRecord) {
                     futureRecord.switchMode("edit");
                 } else if (this.lastIsDirty || !record.canBeAbandoned || this.displayRowCreates) {
-                    this.props.onAdd({ group });
+                    this.add({ group });
                 } else {
                     futureRecord = list.records.at(0);
                     futureRecord.switchMode("edit");
@@ -1395,7 +1405,7 @@ export class ListRenderer extends Component {
                     return true;
                 }
 
-                if (this.props.editable || applyMultiEditBehavior) {
+                if (this.isInlineEditable(record) || applyMultiEditBehavior) {
                     const column = this.state.columns.find(
                         (c) => c.name === cell.getAttribute("name")
                     );
@@ -1427,7 +1437,7 @@ export class ListRenderer extends Component {
         if (this.createProm) {
             return;
         }
-        this.props.onAdd({ context });
+        this.add({ context });
         this.createProm = Promise.resolve();
         this.createProm.then(() => {
             this.lastCreatingAction = true;
