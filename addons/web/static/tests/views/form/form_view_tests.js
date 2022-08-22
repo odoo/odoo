@@ -18,6 +18,7 @@ import {
     patchWithCleanup,
     selectDropdownItem,
     triggerEvent,
+    triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { FieldOne2Many } from "web.relational_fields";
 import { FieldChar as LegacyFieldChar } from "web.basic_fields";
@@ -4239,6 +4240,78 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(target.querySelector(".o_pager_previous"));
+        assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
+        assert.strictEqual(
+            target.querySelector(".o_pager_value").textContent,
+            "1",
+            "pager value should be 1"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=foo] input").value,
+            "new value",
+            "input should contain new value"
+        );
+
+        assert.strictEqual(nbWrite, 1, "one write RPC should have been done");
+    });
+
+    QUnit.test("keynav switching to another record from a dirty one", async function (assert) {
+        let nbWrite = 0;
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="foo"></field></form>',
+            resIds: [1, 2],
+            resId: 1,
+            mockRPC(route) {
+                if (route === "/web/dataset/call_kw/partner/write") {
+                    nbWrite++;
+                }
+            },
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_pager_value").textContent,
+            "1",
+            "pager value should be 1"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_pager_limit").textContent,
+            "2",
+            "pager limit should be 2"
+        );
+
+        // switch to edit mode
+        await click(target.querySelector(".o_form_button_edit"));
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=foo] input").value,
+            "yop",
+            "input should contain yop"
+        );
+
+        // edit the foo field
+        const input = target.querySelector(".o_field_widget[name=foo] input");
+        input.value = "new value";
+        await triggerEvent(input, null, "input");
+
+        // click on the pager to switch to the next record (will save record)
+        triggerHotkey("alt+n");
+        await nextTick();
+        assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
+        assert.strictEqual(
+            target.querySelector(".o_pager_value").textContent,
+            "2",
+            "pager value should be 2"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_field_widget[name=foo] input").value,
+            "blip",
+            "input should contain blip"
+        );
+
+        triggerHotkey("alt+p");
+        await nextTick();
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(
             target.querySelector(".o_pager_value").textContent,

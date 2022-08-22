@@ -185,9 +185,7 @@ export class FormController extends Component {
                     limit: 1,
                     total: resIds.length,
                     onUpdate: async ({ offset }) => {
-                        if (this.model.root.isDirty) {
-                            await this.model.root.save({ stayInEdition: true });
-                        }
+                        await this.model.root.save({ stayInEdition: true });
                         this.model.load({ resId: resIds[offset] });
                     },
                 };

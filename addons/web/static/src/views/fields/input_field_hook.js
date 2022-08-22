@@ -113,6 +113,9 @@ export function useInputField(params) {
     });
 
     useBus(env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => commitChanges(true));
+    useBus(env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", (ev) =>
+        ev.detail.proms.push(commitChanges())
+    );
 
     /**
      * Roughly the same as onChange, but called at more specific / critical times. (See bus events)
