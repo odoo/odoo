@@ -1,95 +1,134 @@
 /** @odoo-module **/
 
-import FormView from 'web.FormView';
-import FormController from 'web.FormController';
-import FormRenderer from 'web.FormRenderer';
-import { bus } from 'web.core';
-import viewRegistry from 'web.view_registry';
-import config from 'web.config';
+import { registry } from "@web/core/registry";
+import { formView } from "@web/views/form/form_view";
+import { throttleForAnimation } from "@web/core/utils/timing";
 
-const MassMailingFullWidthFormController = FormController.extend({
-    custom_events: _.extend({}, FormController.prototype.custom_events,{
-        iframe_updated: '_onIframeUpdated',
-        themes_loaded: '_onThemesLoaded',
-    }),
+const {
+    useSubEnv,
+    onMounted,
+    onWillUnmount,
+} = owl;
 
-    /**
-     * @override
-     */
-    init() {
-        this._super(...arguments);
-        bus.on('DOM_updated', this, this._onDomUpdated);
-        this._resizeObserver =  new ResizeObserver(entries => {
-            // We wrap this in requestAnimationFrame to greatly mitigate
-            // the "ResizeObserver loop limit exceeded" error.
-            window.requestAnimationFrame(() => {
-                if (!Array.isArray(entries) || !entries.length) {
-                    return;
-                }
-                this._onResizeIframeContents(entries);
-            });
+export class MassMailingFullWidthViewController extends formView.Controller {
+    setup() {
+        super.setup();
+        useSubEnv({
+            onIframeUpdated: () => this._updateIframe(),
+            mailingFilterTemplates: true,
         });
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        bus.off('DOM_updated', this, this._onDomUpdated);
-        this._super(...arguments);
-    },
-
-    /**
-     * If we change the "mailing_model_id" in the form view, we want to update
-     * the mass mailing widget, because some templates might be hidden / displayed
-     * depending on if they belong to the new selected model.
-     *
-     * @override
-     */
-    _applyChanges: function (dataPointID, changes, event) {
-        if (changes.mailing_model_id) {
-            this._hideIrrelevantTemplates(changes.mailing_model_id);
-        }
-        return this._super(...arguments);
-    },
-
+        this._resizeObserver =  new ResizeObserver(throttleForAnimation(() => {
+            this._resizeMailingEditorIframe();
+            this._repositionMailingEditorSidebar();
+        }));
+        onMounted(() => {
+            $('.o_content').on('scroll.repositionMailingEditorSidebar', throttleForAnimation(this._repositionMailingEditorSidebar.bind(this)));
+        });
+        onWillUnmount(() => {
+            $('.o_content').off('.repositionMailingEditorSidebar');
+        });
+    }
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
     /**
-     * This method will take the model in argument and will hide all mailing template
-     * in the mass mailing widget that do not belong to this model.
+     * Resize the given iframe so its height fits its contents and initialize a
+     * resize observer to resize on each size change in its contents.
+     * This also ensures the contents of the sidebar remain visible no matter
+     * how much we resize the iframe and scroll down.
      *
-     * This will also update the help message in the same widget to include the
-     * new model name.
-     *
-     * @params {id: <model id>, display_name: <model name>}
+     * @private
+     * @param {JQuery} ev.data.$iframe
+     */
+    _updateIframe() {
+        const $iframe = $('iframe.wysiwyg_iframe:visible, iframe.o_readonly');
+        if (!$iframe.length || !$iframe.contents().length) {
+            return;
+        }
+        const hasIframeChanged = $iframe !== this.$iframe;
+        this.$iframe = $iframe;
+        this._resizeMailingEditorIframe();
+
+        const $iframeDoc = $iframe.contents();
+        const iframeTarget = $iframeDoc.find('#iframe_target');
+        if (hasIframeChanged) {
+            $iframeDoc.find('body').on('click', '.o_fullscreen_btn', this._onToggleFullscreen.bind(this));
+            if (iframeTarget[0]) {
+                this._resizeObserver.disconnect();
+                this._resizeObserver.observe(iframeTarget[0]);
+            }
+        }
+        if (iframeTarget[0]) {
+            const isFullscreen = this._isFullScreen();
+            iframeTarget.css({
+                display: isFullscreen ? '' : 'flex',
+                'flex-direction': isFullscreen ? '' : 'column',
+            });
+        }
+    }
+    /**
+     * Reposition the sidebar so it always occupies the full available visible
+     * height, no matter the scroll position. This way, the sidebar is always
+     * visible and as big as possible.
      *
      * @private
      */
-    _hideIrrelevantTemplates: function (model) {
-        const iframeContent = $('.o_field_widget[name="body_arch"] iframe').contents();
-
-        iframeContent
-            .find(`.o_mail_template_preview[model-id!="${model.id}"]`)
-            .addClass('d-none')
-            .removeClass('d-inline-block');
-
-        const sameModelTemplates = iframeContent
-            .find(`.o_mail_template_preview[model-id="${model.id}"]`);
-
-        sameModelTemplates
-            .removeClass('d-none')
-            .addClass('d-inline-block');
-
-        // Hide or show the help message if some templates are visible
-        if (sameModelTemplates.length) {
-            iframeContent.find('.o_mailing_template_message').addClass('d-none');
+    _repositionMailingEditorSidebar() {
+        const windowHeight = $(window).height();
+        const $iframeDocument = this.$iframe.contents();
+        const $sidebar = $iframeDocument.find('#oe_snippets');
+        const isFullscreen =  this._isFullScreen();
+        if (isFullscreen) {
+            $sidebar.height(windowHeight);
+            this.$iframe.height(windowHeight);
+            $sidebar.css({
+                top: '',
+                bottom: '',
+            });
         } else {
-            iframeContent.find('.o_mailing_template_message').removeClass('d-none');
-            iframeContent.find('.o_mailing_template_message span').text(model.display_name);
+            const iframeTop = this.$iframe.offset().top;
+            $sidebar.css({
+                height: '',
+                top: Math.max(0, $('.o_content').offset().top - iframeTop),
+                bottom: this.$iframe.height() - windowHeight + iframeTop,
+            });
         }
-    },
-
+    }
+    /**
+     * Switch "scrolling modes" on toggle fullscreen mode: in fullscreen mode,
+     * the scroll happens within the iframe whereas in regular mode we pretend
+     * there is no iframe and scroll in the top document. Also reposition the
+     * sidebar since toggling the fullscreen mode visibly changes the
+     * positioning of elements in the document.
+     *
+     * @private
+     */
+    _onToggleFullscreen() {
+        const $iframeDoc = this.$iframe.contents();
+        const iframeTarget = $iframeDoc.find('#iframe_target');
+        const isFullscreen = this._isFullScreen();
+        iframeTarget.css({
+            display: isFullscreen ? '' : 'flex',
+            'flex-direction': isFullscreen ? '' : 'column',
+        });
+        const wysiwyg = $iframeDoc.find('.note-editable').data('wysiwyg');
+        if (wysiwyg && wysiwyg.snippetsMenu) {
+            // Restore the appropriate scrollable depending on the mode.
+            this._$scrollable = this._$scrollable || wysiwyg.snippetsMenu.$scrollable;
+            wysiwyg.snippetsMenu.$scrollable = isFullscreen ? $iframeDoc.find('.note-editable') : this._$scrollable;
+        }
+        this._repositionMailingEditorSidebar();
+    }
+    /**
+     * Return true if the mailing editor is in full screen mode, false
+     * otherwise.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _isFullScreen() {
+        return window.top.document.body.classList.contains('o_field_widgetTextHtml_fullscreen');
+    }
     /**
      * Resize the mailing editor's iframe container so its height fits its
      * contents. This needs to be called whenever the iframe's contents might
@@ -115,171 +154,12 @@ const MassMailingFullWidthFormController = FormController.extend({
                 });
             }
         }
-    },
-    /**
-     * Reposition the sidebar so it always occupies the full available visible
-     * height, no matter the scroll position. This way, the sidebar is always
-     * visible and as big as possible.
-     *
-     * @private
-     */
-    _repositionMailingEditorSidebar() {
-        const windowHeight = $(window).height();
-        const $iframeDocument = this.$iframe.contents();
-        const $sidebar = $iframeDocument.find('#oe_snippets');
-        const isFullscreen =  this._isFullScreen();
-        if (isFullscreen) {
-            $sidebar.height(windowHeight);
-            $sidebar.css({
-                top: '',
-                bottom: '',
-            });
-        } else {
-            const iframeTop = this.$iframe.offset().top;
-            $sidebar.css({
-                height: '',
-                top: Math.max(0, this.$('.o_content').offset().top - iframeTop),
-                bottom: this.$iframe.height() - windowHeight + iframeTop,
-            });
-        }
-    },
-    /**
-     * Return true if the mailing editor is in full screen mode, false
-     * otherwise.
-     *
-     * @private
-     * @returns {boolean}
-     */
-    _isFullScreen() {
-        return window.top.document.body.classList.contains('o_field_widgetTextHtml_fullscreen');
-    },
+    }
+}
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+export const massMailingFormView = {
+    ...formView,
+    Controller: MassMailingFullWidthViewController,
+};
 
-    /**
-     * Assume the iframe was updated on each dom_updated event.
-     *
-     * @private
-     */
-    _onDomUpdated() {
-        const data = { $iframe: this.$('iframe.wysiwyg_iframe:visible, iframe.o_readonly:visible') };
-        this._onIframeUpdated({ data });
-    },
-    /**
-     * Resize the given iframe so its height fits its contents and initialize a
-     * resize observer to resize on each size change in its contents.
-     * This also ensures the contents of the sidebar remain visible no matter
-     * how much we resize the iframe and scroll down.
-     *
-     * @private
-     * @param {JQuery} ev.data.$iframe
-     */
-    _onIframeUpdated(ev) {
-        const $iframe = ev.data.$iframe;
-        if (!$iframe.length || !$iframe.contents().length) {
-            return;
-        }
-        const hasIframeChanged = $iframe !== this.$iframe;
-        this.$iframe = $iframe;
-        this._resizeMailingEditorIframe();
-
-        const $iframeDoc = $iframe.contents();
-        const iframeTarget = $iframeDoc.find('#iframe_target');
-        if (hasIframeChanged) {
-            $iframeDoc.find('body').on('click', '.o_fullscreen_btn', this._onToggleFullscreen.bind(this));
-            this.$('.o_content').on('scroll', this._repositionMailingEditorSidebar.bind(this));
-            if (iframeTarget[0]) {
-                this._resizeObserver.disconnect();
-                this._resizeObserver.observe(iframeTarget[0]);
-            }
-        }
-        if (iframeTarget[0]) {
-            const isFullscreen = this._isFullScreen();
-            iframeTarget.css({
-                display: isFullscreen ? '' : 'flex',
-                'flex-direction': isFullscreen ? '' : 'column',
-            });
-        }
-    },
-
-    /**
-     * The themes have been loaded by the mass mailing widget.
-     */
-    _onThemesLoaded() {
-        const model = this.initialState.data.mailing_model_id.data;
-        this._hideIrrelevantTemplates(model);
-    },
-    /**
-     * Switch "scrolling modes" on toggle fullscreen mode: in fullscreen mode,
-     * the scroll happens within the iframe whereas in regular mode we pretend
-     * there is no iframe and scroll in the top document. Also reposition the
-     * sidebar since toggling the fullscreen mode visibly changes the
-     * positioning of elements in the document.
-     *
-     * @private
-     */
-    _onToggleFullscreen() {
-        const $iframeDoc = this.$iframe.contents();
-        const iframeTarget = $iframeDoc.find('#iframe_target');
-        const isFullscreen = this._isFullScreen();
-        iframeTarget.css({
-            display: isFullscreen ? '' : 'flex',
-            'flex-direction': isFullscreen ? '' : 'column',
-        });
-        const wysiwyg = $iframeDoc.find('.note-editable').data('wysiwyg');
-        if (wysiwyg && wysiwyg.snippetsMenu) {
-            // Restore the appropriate scrollable depending on the mode.
-            this._$scrollable = this._$scrollable || wysiwyg.snippetsMenu.$scrollable;
-            wysiwyg.snippetsMenu.$scrollable = isFullscreen ? $iframeDoc.find('.note-editable') : this._$scrollable;
-        }
-        this._repositionMailingEditorSidebar();
-    },
-    /**
-     * Resize the iframe and reposition the sidebar whenever the contents of the
-     * iframe change height.
-     *
-     * @private
-     */
-    _onResizeIframeContents() {
-        this._resizeMailingEditorIframe();
-        this._repositionMailingEditorSidebar();
-    },
-});
-
-const MassMailingFullWidthFormRenderer = FormRenderer.extend({
-    /**
-     * Overload the rendering of the header in order to add a child to it: move
-     * the alert after the statusbar.
-     *
-     * @private
-     * @override
-     */
-    _renderTagHeader: function (node) {
-        const $statusbar = this._super(...arguments);
-        const alert = node.children.find(child => child.tag === "div" && child.attrs.role === "alert");
-        const $alert = this._renderGenericTag(alert);
-        $statusbar.find('.o_statusbar_buttons').after($alert);
-        return $statusbar;
-    },
-    /**
-     * Increase the default number of button boxes before folding since the form
-     * without sheet is a lot bigger and more space is available for them.
-     *
-     * @private
-     * @override
-     */
-    _renderButtonBoxNbButtons: function () {
-        return [2, 2, 2, 4, 6, 7][config.device.size_class] || 10;
-    },
-});
-
-export const MassMailingFullWidthFormView = FormView.extend({
-    config: Object.assign({}, FormView.prototype.config, {
-        Controller: MassMailingFullWidthFormController,
-        Renderer: MassMailingFullWidthFormRenderer,
-    }),
-});
-
-viewRegistry.add('mailing_mailing_view_form_full_width', MassMailingFullWidthFormView);
+registry.category("views").add("mailing_mailing_view_form_full_width", massMailingFormView);

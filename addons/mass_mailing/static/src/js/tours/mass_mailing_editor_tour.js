@@ -11,9 +11,11 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
     }, {
         trigger: 'button.o_list_button_add',
     }, {
-        trigger: 'div[name="contact_list_ids"] .o_input_dropdown > input[type="text"]',
+        trigger: 'div[name="contact_list_ids"] .o_input_dropdown input[type="text"]',
     }, {
         trigger: 'li.ui-menu-item',
+    }, {
+        trigger: 'div[name="contact_list_ids"] .ui-state-active'
     }, {
         content: 'choose the theme "empty" to edit the mailing with snippets',
         trigger: '[name="body_arch"] iframe #empty',

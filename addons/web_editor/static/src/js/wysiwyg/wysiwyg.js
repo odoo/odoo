@@ -74,6 +74,7 @@ const Wysiwyg = Widget.extend({
         allowCommandImage: true,
         allowCommandLink: true,
         insertParagraphAfterColumns: true,
+        autostart: true,
     },
     init: function (parent, options) {
         this._super.apply(this, arguments);
@@ -106,7 +107,18 @@ const Wysiwyg = Widget.extend({
      * @override
      */
     start: async function () {
-        const _super = this._super;
+        await this._super.apply(this, arguments);
+        const options = this._editorOptions();
+        // If this widget is started from the OWL legacy component, at the time
+        // of start, the $el is not in the document yet. Some instruction in the
+        // start rely on the $el being in the document at that time, including
+        // code for the collaboration (for adding cursors) or the iframe loading
+        // in mass_mailing.
+        if (options.autostart) {
+            return this.startEdition();
+        }
+    },
+    startEdition: async function () {
         const self = this;
 
         var options = this._editorOptions();
@@ -195,6 +207,7 @@ const Wysiwyg = Widget.extend({
 
         this.odooEditor.addEventListener('contentChanged', function () {
             self.$editable.trigger('content_changed');
+            // todo: to remove when removing the legacy field_html
             self.trigger_up('wysiwyg_change');
         });
         document.addEventListener("mousemove", this._signalOnline, true);
@@ -364,15 +377,13 @@ const Wysiwyg = Widget.extend({
             this._setONotEditable(this.odooEditor.editable);
         });
 
-        return _super.apply(this, arguments).then(() => {
-            if (this.options.autohideToolbar) {
-                if (this.odooEditor.isMobile) {
-                    $(this.odooEditor.editable).before(this.toolbar.$el);
-                } else {
-                    $(document.body).append(this.toolbar.$el);
-                }
+        if (this.options.autohideToolbar) {
+            if (this.odooEditor.isMobile) {
+                $(this.odooEditor.editable).before(this.toolbar.$el);
+            } else {
+                $(document.body).append(this.toolbar.$el);
             }
-        });
+        }
     },
     setupCollaboration(collaborationChannel) {
         const modelName = collaborationChannel.collaborationModelName;
@@ -814,7 +825,7 @@ const Wysiwyg = Widget.extend({
         $editable.find('[data-editor-message]').removeAttr('data-editor-message');
         $editable.find('a.o_image, span.fa, i.fa').html('');
         $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-bs-original-title');
-        this.odooEditor.cleanForSave($editable[0]);
+        this.odooEditor && this.odooEditor.cleanForSave($editable[0]);
         return $editable.html();
     },
     /**
@@ -849,7 +860,6 @@ const Wysiwyg = Widget.extend({
      */
     saveContent: async function (reload = true) {
         const defs = [];
-        this.trigger_up('ready_to_save', {defs: defs});
         await Promise.all(defs);
 
         await this.cleanForSave();
@@ -934,9 +944,7 @@ const Wysiwyg = Widget.extend({
      * @returns {String}
      */
     setValue: function (value) {
-        this.$editable.html(value);
-        this.odooEditor.sanitize();
-        this.odooEditor.historyStep(true);
+        this.odooEditor.resetContent(value);
     },
     /**
      * Undo one step of change in the editor.
@@ -975,9 +983,8 @@ const Wysiwyg = Widget.extend({
     closestElement(...args) {
         return closestElement(...args);
     },
-    cleanForSave: async function () {
-        this.odooEditor.clean();
-        this.$editable.find('.oe_edited_link').removeClass('oe_edited_link');
+    async cleanForSave() {
+        this.odooEditor && this.odooEditor.cleanForSave();
 
         if (this.snippetsMenu) {
             await this.snippetsMenu.cleanForSave();
@@ -2280,7 +2287,9 @@ const Wysiwyg = Widget.extend({
             this._onToolbar = true;
         } else {
             if (this._pendingBlur && !e.target.closest('.o_wysiwyg_wrapper')) {
+                // todo: to remove when removing the legacy field_html
                 this.trigger_up('wysiwyg_blur');
+                this.options.onWysiwygBlur && this.options.onWysiwygBlur();
                 this._pendingBlur = false;
             }
             this._onToolbar = false;
@@ -2290,7 +2299,9 @@ const Wysiwyg = Widget.extend({
         if (this._onToolbar) {
             this._pendingBlur = true;
         } else {
+            // todo: to remove when removing the legacy field_html
             this.trigger_up('wysiwyg_blur');
+            this.options.onWysiwygBlur && this.options.onWysiwygBlur();
         }
     },
     _signalOffline: function () {
@@ -2340,7 +2351,7 @@ const Wysiwyg = Widget.extend({
                 });
                 dialog.open({shouldFocusButtons:true});
 
-                this._resetEditor(dbRecord.body);
+                this.resetEditor(dbRecord.body);
             }
             this.preSavePromiseResolve();
             resetPreSavePromise();
@@ -2355,6 +2366,8 @@ const Wysiwyg = Widget.extend({
     },
     resetEditor: function (value, { collaborationChannel } = {}) {
         if (!this.ptp) {
+            this.setValue(value);
+            this.odooEditor.historyReset();
             return;
         }
         this.ptp.stop();
