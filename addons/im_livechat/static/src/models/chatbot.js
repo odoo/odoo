@@ -9,6 +9,28 @@ registerModel({
     recordMethods: {
         /**
          * @private
+         * @returns {Object|FieldCommand}
+         */
+        _computeData() {
+            if (this.messaging.publicLivechatGlobal.isTestChatbot) {
+                return this.messaging.publicLivechatGlobal.testChatbotData.chatbot;
+            }
+            if (this.messaging.publicLivechatGlobal.chatbotState === 'init') {
+                return this.messaging.publicLivechatGlobal.rule.chatbot;
+            }
+            if (this.messaging.publicLivechatGlobal.chatbotState === 'welcome') {
+                return this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot;
+            }
+            if (
+                this.messaging.publicLivechatGlobal.chatbotState === 'restore_session' &&
+                this.messaging.publicLivechatGlobal.localStorageChatbotState
+            ) {
+                return this.messaging.publicLivechatGlobal.localStorageChatbotState._chatbot;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsExpectingUserInput() {
@@ -27,6 +49,9 @@ registerModel({
          * @returns {string}
          */
         _computeName() {
+            if (!this.data) {
+                return clear();
+            }
             return this.data.name;
         },
         /**
@@ -72,6 +97,9 @@ registerModel({
          * @returns {integer}
          */
         _computeScriptId() {
+            if (!this.data) {
+                return clear();
+            }
             return this.data.chatbot_script_id;
         },
         /**
@@ -128,11 +156,16 @@ registerModel({
          * @returns {Array|FieldCommand}
          */
         _computeWelcomeSteps() {
+            if (!this.data) {
+                return clear();
+            }
             return this.data.chatbot_welcome_steps;
         },
     },
     fields: {
-        data: attr(),
+        data: attr({
+            compute: '_computeData',
+        }),
         currentStep: one('ChatbotStep', {
             inverse: 'chabotOwner',
             isCausal: true,

@@ -50,25 +50,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand}
-         */
-        _computeChatbot() {
-            if (this.isTestChatbot) {
-                return { data: this.testChatbotData.chatbot };
-            }
-            if (this.chatbotState === 'init') {
-                return { data: this.rule.chatbot };
-            }
-            if (this.chatbotState === 'welcome') {
-                return { data: this.livechatInit.rule.chatbot };
-            }
-            if (this.chatbotState === 'restore_session' && this.localStorageChatbotState) {
-                return { data: this.localStorageChatbotState._chatbot };
-            }
-            return clear();
-        },
-        /**
-         * @private
          * @returns {string|FieldCommand}
          */
         _computeChatbotSessionCookieKey() {
@@ -247,7 +228,7 @@ registerModel({
             compute: '_computeChannelId',
         }),
         chatbot: one('Chatbot', {
-            compute: '_computeChatbot',
+            default: {},
             inverse: 'publicLivechatGlobalOwner',
             isCausal: true,
         }),
