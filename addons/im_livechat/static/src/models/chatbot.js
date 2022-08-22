@@ -66,6 +66,17 @@ registerModel({
         },
         /**
          * @private
+         * @returns {function}
+         */
+        _computeDebouncedAwaitUserInput() {
+            // debounced to let the user type several sentences, see 'Chatbot/awaitUserInput' for details
+            return _.debounce(
+                this.awaitUserInput,
+                this.awaitUserInputDebounceTime,
+            );
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsExpectingUserInput() {
@@ -204,6 +215,9 @@ registerModel({
         currentStep: one('ChatbotStep', {
             inverse: 'chabotOwner',
             isCausal: true,
+        }),
+        debouncedAwaitUserInput: attr({
+            compute: '_computeDebouncedAwaitUserInput',
         }),
         hasRestartButton: attr({
             compute: '_computeHasRestartButton',

@@ -534,7 +534,7 @@ registerModel({
                 ) {
                     return; // operator has taken over the conversation, let them speak
                 } else if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
-                    this.widget._debouncedChatbotAwaitUserInput();
+                    this.messaging.publicLivechatGlobal.chatbot.debouncedAwaitUserInput();
                 } else if (!this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
                     this.chatbotSetIsTyping();
                     this.update({

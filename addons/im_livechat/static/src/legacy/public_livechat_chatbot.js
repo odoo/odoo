@@ -19,15 +19,6 @@ const _t = core._t;
  *   message for a couple seconds and then trigger the next step of the script
  */
  LivechatButton.include({
-    init() {
-        this._super(...arguments);
-
-        // debounced to let the user type several sentences, see 'Chatbot/awaitUserInput' for details
-        this._debouncedChatbotAwaitUserInput = _.debounce(
-            this.messaging.publicLivechatGlobal.chatbot.awaitUserInput,
-            this.messaging.publicLivechatGlobal.chatbot.awaitUserInputDebounceTime,
-        );
-    },
 
     //--------------------------------------------------------------------------
     // Private - Chatbot specifics
@@ -435,7 +426,7 @@ const _t = core._t;
             this.messaging.publicLivechatGlobal.chatbot.currentStep.data &&
             this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi'
         ) {
-            this._debouncedChatbotAwaitUserInput();
+            this.messaging.publicLivechatGlobal.chatbot.debouncedAwaitUserInput();
         }
     },
 
