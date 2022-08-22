@@ -670,8 +670,8 @@ export function getSelectedNodes(editable) {
  * @returns {Range}
  */
 export function getDeepRange(editable, { range, sel, splitText, select, correctTripleClick } = {}) {
-    sel = sel || editable.ownerDocument.getSelection();
-    range = range ? range.cloneRange() : sel.rangeCount && sel.getRangeAt(0).cloneRange();
+    sel = sel || editable.parentElement && editable.ownerDocument.getSelection();
+    range = range ? range.cloneRange() : sel && sel.rangeCount && sel.getRangeAt(0).cloneRange();
     if (!range) return;
     let start = range.startContainer;
     let startOffset = range.startOffset;
