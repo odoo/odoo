@@ -37,8 +37,11 @@ export class KanbanColumnQuickCreate extends Component {
         );
 
         // Key Navigation
-        // FIXME ? Maybe it will also validate even if enter is pressed outside of the quick create machin
-        useHotkey("enter", () => this.validate());
+        const inputRef = useRef("autofocus");
+        useHotkey("enter", () => this.validate(), {
+            area: () => inputRef.el,
+            bypassEditableProtection: true,
+        });
         useHotkey("escape", () => this.fold());
     }
 
