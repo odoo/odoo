@@ -1146,6 +1146,7 @@ export class ListRenderer extends Component {
         const { activeActions, cycleOnTab, list } = this.props;
         const row = cell.parentElement;
         const applyMultiEditBehavior = record && record.selected && list.model.multiEdit;
+        const topReCreate = this.props.editable === 'top' && record.isNew;
 
         if (
             applyMultiEditBehavior &&
@@ -1165,7 +1166,8 @@ export class ListRenderer extends Component {
         switch (hotkey) {
             case "tab": {
                 const index = list.records.indexOf(record);
-                if (index === list.records.length - 1) {
+                const lastIndex = topReCreate ? 0 : list.records.length - 1;
+                if (index === lastIndex) {
                     if (this.displayRowCreates) {
                         if (record.isNew && !record.isDirty) {
                             list.unselectRecord(true);
@@ -1232,6 +1234,9 @@ export class ListRenderer extends Component {
             case "enter": {
                 const index = list.records.indexOf(record);
                 let futureRecord = list.records[index + 1];
+                if (topReCreate && index === 0) {
+                    futureRecord = null;
+                }
 
                 if (!futureRecord) {
                     if (activeActions && activeActions.create === false) {
