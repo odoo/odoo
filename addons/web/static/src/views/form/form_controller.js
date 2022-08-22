@@ -428,7 +428,7 @@ export class FormController extends Component {
         if (size <= SIZES.XS) {
             sizeClass = "o_xxs_form_view";
         } else if (size === SIZES.XXL) {
-            sizeClass = "o_xxl_form_view";
+            sizeClass = "o_xxl_form_view h-100";
         }
         return {
             [this.props.className]: true,
