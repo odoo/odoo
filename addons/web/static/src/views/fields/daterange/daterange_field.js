@@ -3,6 +3,7 @@
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { loadJS } from "@web/core/assets";
+import { luxonToMomentFormat } from "@web/core/l10n/dates";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -16,6 +17,9 @@ export class DateRangeField extends Component {
         this.root = useRef("root");
         this.isPickerShown = false;
         this.pickerContainer;
+        this.momentFormat = luxonToMomentFormat(
+            this.isDateTime ? localization.dateTimeFormat : localization.dateFormat
+        );
 
         useExternalListener(window, "scroll", this.onWindowScroll, { capture: true });
         onWillStart(() => loadJS("/web/static/lib/daterangepicker/daterangepicker.js"));
@@ -32,9 +36,6 @@ export class DateRangeField extends Component {
                         locale: {
                             applyLabel: this.env._t("Apply"),
                             cancelLabel: this.env._t("Cancel"),
-                            format: this.isDateTime
-                                ? localization.dateTimeFormat
-                                : localization.dateFormat,
                         },
                         startDate: start ? window.moment(start) : window.moment(),
                         endDate: end ? window.moment(end) : window.moment(),
@@ -126,10 +127,9 @@ export class DateRangeField extends Component {
     async onPickerApply(ev, picker) {
         const start = this.isDateTime ? picker.startDate : picker.startDate.startOf("day");
         const end = this.isDateTime ? picker.endDate : picker.endDate.startOf("day");
-        const format = this.isDateTime ? localization.dateTimeFormat : localization.dateFormat;
         const parser = parsers.get(this.props.formatType);
         const dates = [start, end].map((date) => {
-            return parser(date.format(format.toUpperCase()), {
+            return parser(date.format(this.momentFormat), {
                 timezone: this.isDateTime,
             });
         });

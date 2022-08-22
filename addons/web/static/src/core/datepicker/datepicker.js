@@ -4,6 +4,7 @@ import {
     areDateEquals,
     formatDate,
     formatDateTime,
+    luxonToMomentFormat,
     parseDate,
     parseDateTime,
 } from "@web/core/l10n/dates";
@@ -31,14 +32,6 @@ let datePickerId = 0;
  */
 function luxonDateToMomentDate(date) {
     return window.moment(String(date));
-}
-
-/**
- * @param {string} format
- * @returns {string}
- */
-function luxonFormatToMomentFormat(format) {
-    return format.replace(/[dy]/g, (x) => x.toUpperCase());
 }
 
 /**
@@ -198,7 +191,7 @@ export class DatePicker extends Component {
             const params = {
                 ...commandOrParams,
                 date: this.date || null,
-                format: luxonFormatToMomentFormat(format),
+                format: luxonToMomentFormat(format),
                 locale: commandOrParams.locale || (this.date && this.date.locale),
             };
             for (const prop in params) {
