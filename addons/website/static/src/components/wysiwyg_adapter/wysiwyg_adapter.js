@@ -100,6 +100,31 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
             };
         }, () => []);
 
+        useEffect(() => {
+            // Back navigation is handled with an additional state in the
+            // history, used to capture the popstate event.
+            history.pushState(null, '');
+            let hasFakeState = true;
+            const leaveOnBackNavigation = () => {
+                hasFakeState = false;
+                this.leaveEditMode({
+                    onStay: () => {
+                        history.pushState(null, '');
+                        hasFakeState = true;
+                    },
+                    onLeave: () => history.back(),
+                    reloadIframe: false
+                });
+            };
+            window.addEventListener('popstate', leaveOnBackNavigation);
+            return () => {
+                window.removeEventListener('popstate', leaveOnBackNavigation);
+                if (hasFakeState) {
+                    history.back();
+                }
+            };
+        }, () => []);
+
         onWillUnmount(() => {
             if (this.dummyWidgetEl) {
                 this.dummyWidgetEl.remove();
