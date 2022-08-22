@@ -339,11 +339,13 @@ export function registerModel({ fields, identifyingMode = 'and', lifecycleHooks,
     if (!name) {
         throw new Error("Model is lacking a name.");
     }
-    if (!identifyingMode) {
-        throw new Error(`Cannot register model "${name}": definition is lacking identifying mode.`);
-    }
     if (registry.has(name)) {
         throw new Error(`Cannot register model "${name}": model has already been registered.`);
+    }
+    const sectionNames = ['name', 'identifyingMode', 'lifecycleHooks', 'modelMethods', 'modelGetters', 'recordMethods', 'recordGetters', 'fields', 'onChanges'];
+    const invalidSectionNames = Object.keys(arguments[0]).filter(x => !sectionNames.includes(x));
+    if (invalidSectionNames.length > 0) {
+        throw new Error(`Cannot register model "${name}": model definition contains unknown key(s): ${invalidSectionNames.join(", ")}`);
     }
     registry.set(name, new Map([
         ['name', name],
