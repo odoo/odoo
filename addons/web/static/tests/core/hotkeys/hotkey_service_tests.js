@@ -40,7 +40,7 @@ QUnit.test("register / unregister", async (assert) => {
     triggerHotkey(key);
     await nextTick();
 
-    let removeHotkey = hotkey.add(key, () => assert.step(key));
+    const removeHotkey = hotkey.add(key, () => assert.step(key));
     await nextTick();
 
     triggerHotkey(key);
@@ -1094,4 +1094,21 @@ QUnit.test("operation area with validating option", async (assert) => {
     triggerHotkey("Space");
     await nextTick();
     assert.verifySteps(["RGNTDJÛ!"]);
+});
+
+QUnit.test("mixing hotkeys with and without operation area", async (assert) => {
+    class A extends Component {
+        setup() {
+            const areaRef = useRef("area");
+            useHotkey("space", () => assert.step("withoutArea"));
+            useHotkey("space", () => assert.step("withArea"), { area: () => areaRef.el });
+        }
+    }
+    A.template = xml`<div class="root" tabindex="0" t-ref="area"/>`;
+    await mount(A, target, { env });
+
+    target.querySelector(".root").focus();
+    triggerHotkey("Space");
+    await nextTick();
+    assert.verifySteps(["withArea"]);
 });
