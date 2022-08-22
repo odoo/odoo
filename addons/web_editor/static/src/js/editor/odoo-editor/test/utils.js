@@ -156,6 +156,7 @@ export function setTestSelection(selection, doc = document) {
     } catch {
         // Firefox yells not happy when setting selection on elem with contentEditable=false.
     }
+    triggerEvent(selection.anchorNode, 'selectionchange');
 }
 
 /**
@@ -545,6 +546,7 @@ function getEventConstructor(win, type) {
         'paste': win.ClipboardEvent,
         'touchstart': win.TouchEvent,
         'touchend': win.TouchEvent,
+        'selectionchange': win.Event,
     };
     if (!eventTypes[type]) {
         throw new Error('The event "' + type + '" is not implemented for the tests.');
