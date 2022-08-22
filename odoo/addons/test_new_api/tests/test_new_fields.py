@@ -4468,7 +4468,7 @@ class TestPrecomputeModel(common.TransactionCase):
         # see what happens if not both are precompute
         self.addCleanup(self.registry.reset_changes)
         self.patch(Model.upper, 'precompute', False)
-        with self.assertLogs('odoo.modules.registry', level='WARNING'):
+        with self.assertWarns(UserWarning):
             self.registry.setup_models(self.cr)
             self.registry.field_computed
 
