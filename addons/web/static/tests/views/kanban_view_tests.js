@@ -10443,7 +10443,9 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getCardTexts()[0], "yop\nTOGGLER\nMENU");
     });
 
-    QUnit.test("'muted' already in progress bar colors", async (assert) => {
+    QUnit.test(
+        "Color '200' (gray) can be used twice (for false value and another value) in progress bar",
+        async (assert) => {
         serverData.models.partner.records.push({ id: 5, bar: true }, { id: 6, bar: false });
         await makeView({
             type: "kanban",
@@ -10453,7 +10455,7 @@ QUnit.module("Views", (hooks) => {
                 <kanban>
                     <field name="bar"/>
                     <field name="foo"/>
-                    <progressbar field="foo" colors='{"yop": "muted", "gnap": "warning", "blip": "danger"}'/>
+                    <progressbar field="foo" colors='{"yop": "200", "gnap": "warning", "blip": "danger"}'/>
                     <templates>
                         <t t-name="kanban-box">
                             <div>
