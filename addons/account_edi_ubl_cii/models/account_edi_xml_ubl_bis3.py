@@ -101,9 +101,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         vals['endpoint_id'] = partner.vat
         vals['endpoint_id_attrs'] = {'schemeID': COUNTRY_EAS.get(partner.country_id.code)}
 
-        if partner.country_code == 'NO' and 'l10n_no_bronnoysund_number' in partner._fields:
+        if partner.country_code == 'NO':
             vals.update({
-                'endpoint_id': partner.l10n_no_bronnoysund_number,
+                'endpoint_id': partner.company_registry,
                 'endpoint_id_attrs': {'schemeID': '0192'},
             })
         # [BR-NL-1] Dutch supplier registration number ( AccountingSupplierParty/Party/PartyLegalEntity/CompanyID );
@@ -426,14 +426,14 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'no_supplier_bronnoysund': _(
                     "The supplier %s must have a Bronnoysund company registry.",
                     vals['supplier'].display_name
-                ) if 'l10n_no_bronnoysund_number' not in vals['supplier']._fields or not vals['supplier'].l10n_no_bronnoysund_number else "",
+                ) if not vals['supplier'].company_registry else "",
             })
         if vals['customer'].country_id.code == 'NO':
             constraints.update({
                 'no_customer_bronnoysund': _(
                     "The supplier %s must have a Bronnoysund company registry.",
                     vals['customer'].display_name
-                ) if 'l10n_no_bronnoysund_number' not in vals['customer']._fields or not vals['customer'].l10n_no_bronnoysund_number else "",
+                ) if not vals['customer'].company_registry else "",
             })
 
         return constraints
