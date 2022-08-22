@@ -44,6 +44,14 @@ const normalizeFormatTable = {
     X: "HH:mm:ss",
 };
 
+const luxonToMomentFormatTable = {
+    c: "d",
+    d: "D",
+    o: "DDDD",
+    a: "A",
+    y: "Y",
+};
+
 const smartDateUnits = {
     d: "days",
     m: "months",
@@ -141,6 +149,19 @@ export const strftimeToLuxonFormat = memoize(function strftimeToLuxonFormat(valu
         inToken = false;
     }
     return output.join("");
+});
+
+/**
+ * Converts a Luxon format to a moment.js format.
+ * NB: this is not a complete conversion, only the supported tokens are converted.
+ *
+ * @param {string} value original format
+ * @returns {string} valid moment.js format
+ */
+export const luxonToMomentFormat = memoize(function luxonToMomentFormat(format) {
+    return format.replace(alphaRegex, (match) => {
+        return luxonToMomentFormatTable[match] || match;
+    });
 });
 
 // -----------------------------------------------------------------------------

@@ -191,6 +191,27 @@ QUnit.module("Fields", (hooks) => {
                 "30",
                 "active end date minute should be '30' in date range picker"
             );
+
+            // Select a new range and check that inputs are updated
+            await triggerEvent(datepicker, ".start-date", "mousedown"); // 02/08/2017
+            await triggerEvent(datepicker, ".start-date + .available", "mousedown"); // 02/09/2017
+            await click(datepicker, ".applyBtn");
+            assert.equal(
+                target.querySelector("[name=datetime] input").value,
+                "02/08/2017 15:30:00"
+            );
+            assert.equal(
+                target.querySelector("[name=datetime_end] input").value,
+                "02/09/2017 05:30:00"
+            );
+
+            // Save
+            await click(target, ".o_form_button_save");
+            fields = target.querySelectorAll(".o_field_daterange");
+
+            // Check date after save
+            assert.strictEqual(fields[0].textContent, "02/08/2017 15:30:00");
+            assert.strictEqual(fields[fields.length - 1].textContent, "02/09/2017 05:30:00");
         }
     );
 
