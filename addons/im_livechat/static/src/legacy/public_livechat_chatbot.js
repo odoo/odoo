@@ -374,7 +374,7 @@ const _t = core._t;
         if (this.messaging.publicLivechatGlobal.livechatButtonView.isChatbot) {
             this._sendWelcomeChatbotMessage(
                 0,
-                this.messaging.publicLivechatGlobal.chatbotState === 'welcome' ? 0 : this.messaging.publicLivechatGlobal.chatbot.messageDelay,
+                this.messaging.publicLivechatGlobal.chatbot.state === 'welcome' ? 0 : this.messaging.publicLivechatGlobal.chatbot.messageDelay,
             );
         } else {
             this._super(...arguments);

@@ -15,14 +15,14 @@ registerModel({
             if (this.messaging.publicLivechatGlobal.isTestChatbot) {
                 return this.messaging.publicLivechatGlobal.testChatbotData.chatbot;
             }
-            if (this.messaging.publicLivechatGlobal.chatbotState === 'init') {
+            if (this.state === 'init') {
                 return this.messaging.publicLivechatGlobal.rule.chatbot;
             }
-            if (this.messaging.publicLivechatGlobal.chatbotState === 'welcome') {
+            if (this.state === 'welcome') {
                 return this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot;
             }
             if (
-                this.messaging.publicLivechatGlobal.chatbotState === 'restore_session' &&
+                this.state === 'restore_session' &&
                 this.messaging.publicLivechatGlobal.localStorageChatbotState
             ) {
                 return this.messaging.publicLivechatGlobal.localStorageChatbotState._chatbot;
@@ -153,6 +153,19 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeState() {
+            if (this.messaging.publicLivechatGlobal.rule && !!this.messaging.publicLivechatGlobal.rule.chatbot) {
+                return 'init';
+            }
+            if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
+                return 'welcome';
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {Array|FieldCommand}
          */
         _computeWelcomeSteps() {
@@ -198,6 +211,9 @@ registerModel({
         shouldEndScript: attr({
             compute: '_computeShouldEndScript',
             default: false,
+        }),
+        state: attr({
+            compute: '_computeState',
         }),
         welcomeSteps: attr({
             compute: '_computeWelcomeSteps',

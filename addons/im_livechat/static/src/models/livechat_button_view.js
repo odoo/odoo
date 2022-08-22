@@ -333,7 +333,7 @@ registerModel({
             if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
                 return true;
             }
-            if (this.messaging.publicLivechatGlobal.chatbotState === 'welcome') {
+            if (this.messaging.publicLivechatGlobal.chatbot.state === 'welcome') {
                 return true;
             }
             if (this.messaging.publicLivechatGlobal.localStorageChatbotState) {

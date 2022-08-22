@@ -59,19 +59,6 @@ registerModel({
             return 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.sessionCookie).uuid;
         },
         /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
-        _computeChatbotState() {
-            if (this.rule && !!this.rule.chatbot) {
-                return 'init';
-            }
-            if (this.livechatInit && this.livechatInit.rule.chatbot) {
-                return 'welcome';
-            }
-            return clear();
-        },
-        /**
          * Compares the last message of the conversation to this livechat's operator id.
          *
          * @private
@@ -179,12 +166,12 @@ registerModel({
                 if (sessionCookie) {
                     this.update({ sessionCookie });
                     if (localStorage.getItem(this.chatbotSessionCookieKey)) {
-                        this.update({ chatbotState: 'restore_session' });
+                        this.chatbot.update({ state: 'restore_session' });
                     }
                 }
             }
 
-            if (this.chatbotState === 'init') {
+            if (this.chatbot.state === 'init') {
                 // we landed on a website page where a channel rule is configured to run a chatbot.script
                 // -> initialize necessary state
                 if (this.rule.chatbot_welcome_steps && this.rule.chatbot_welcome_steps.length !== 0) {
@@ -194,7 +181,7 @@ registerModel({
                         },
                     });
                 }
-            } else if (this.chatbotState === 'welcome') {
+            } else if (this.chatbot.state === 'welcome') {
                 // we landed on a website page and a chatbot script was initialized on a previous one
                 // however the end-user did not interact with the bot ( :( )
                 // -> remove cookie to force opening the popup again
@@ -203,7 +190,7 @@ registerModel({
                 set_cookie('im_livechat_auto_popup', '', -1);
                 this.update({ history: clear() });
                 this.update({ rule: this.livechatInit.rule });
-            } else if (this.chatbotState === 'restore_session') {
+            } else if (this.chatbot.state === 'restore_session') {
                 // we landed on a website page and a chatbot script is currently running
                 // -> restore the user's session (see 'chatbotRestoreSession')
                 this.chatbotRestoreSession();
@@ -235,9 +222,6 @@ registerModel({
         chatbotServerUrl: attr(),
         chatbotSessionCookieKey: attr({
             compute: '_computeChatbotSessionCookieKey',
-        }),
-        chatbotState: attr({
-            compute: '_computeChatbotState',
         }),
         feedbackView: one('PublicLivechatFeedbackView', {
             inverse: 'publicLivechatGlobalOwner',
