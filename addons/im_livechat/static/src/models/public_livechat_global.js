@@ -262,9 +262,6 @@ registerModel({
         isTestChatbot: attr({
             default: false,
         }),
-        isWebsiteLivechatChatbotFlow: attr({
-            default: false,
-        }),
         lastMessage: one('PublicLivechatMessage', {
             compute: '_computeLastMessage',
         }),

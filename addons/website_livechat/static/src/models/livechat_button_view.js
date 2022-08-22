@@ -16,7 +16,7 @@ patchRecordMethods('LivechatButtonView', {
      * @override
      */
     async onChatbotRestartScript(ev) {
-        if (this.messaging.publicLivechatGlobal.isWebsiteLivechatChatbotFlow) {
+        if (this.messaging.publicLivechatGlobal.chatbot.isWebsiteLivechatTourFlow) {
             this.messaging.publicLivechatGlobal.update({ messages: clear() });
             this.widget._renderMessages();
         }
