@@ -12,7 +12,7 @@ patchRecordMethods('LivechatButtonView', {
      * Let us also debounce waiting for more user inputs for only 500ms.
      */
     start() {
-        this.messaging.publicLivechatGlobal.update({ isWebsiteLivechatChatbotFlow: true });
+        this.messaging.publicLivechatGlobal.chatbot.update({ isWebsiteLivechatTourFlow: true });
         this.widget._debouncedChatbotAwaitUserInput = _.debounce(
             this.widget._chatbotAwaitUserInput.bind(this.widget),
             500

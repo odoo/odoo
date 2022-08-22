@@ -290,16 +290,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {integer|FieldCommand}
-         */
-        _computeChatbotMessageDelay() {
-            if (this.messaging.publicLivechatGlobal.isWebsiteLivechatChatbotFlow) {
-                return 100;
-            }
-            return clear();
-        },
-        /**
-         * @private
          * @returns {integer}
          */
         _computeCurrentPartnerId() {

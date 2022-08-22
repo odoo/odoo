@@ -87,9 +87,6 @@ registerModel({
          * @returns {integer|FieldCommand}
          */
         _computeMessageDelay() {
-            if (this.messaging.publicLivechatGlobal.isWebsiteLivechatChatbotFlow) {
-                return 100;
-            }
             return clear();
         },
         /**
