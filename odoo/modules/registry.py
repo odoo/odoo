@@ -345,12 +345,30 @@ class Registry(Mapping):
                     computed[field] = group = groups[field.compute]
                     group.append(field)
             for fields in groups.values():
+                if len(fields) < 2:
+                    continue
                 if len({field.compute_sudo for field in fields}) > 1:
-                    _logger.warning("%s: inconsistent 'compute_sudo' for computed fields: %s",
-                                    model_name, ", ".join(field.name for field in fields))
+                    fnames = ", ".join(field.name for field in fields)
+                    warnings.warn(
+                        f"{model_name}: inconsistent 'compute_sudo' for computed fields {fnames}. "
+                        f"Either set 'compute_sudo' to the same value on all those fields, or "
+                        f"use distinct compute methods for sudoed and non-sudoed fields."
+                    )
                 if len({field.precompute for field in fields}) > 1:
-                    _logger.warning("%s: inconsistent 'precompute' for computed fields: %s",
-                                    model_name, ", ".join(field.name for field in fields))
+                    fnames = ", ".join(field.name for field in fields)
+                    warnings.warn(
+                        f"{model_name}: inconsistent 'precompute' for computed fields {fnames}. "
+                        f"Either set all fields as precompute=True (if possible), or "
+                        f"use distinct compute methods for precomputed and non-precomputed fields."
+                    )
+                if len({field.store for field in fields}) > 1:
+                    fnames1 = ", ".join(field.name for field in fields if not field.store)
+                    fnames2 = ", ".join(field.name for field in fields if field.store)
+                    warnings.warn(
+                        f"{model_name}: inconsistent 'store' for computed fields, "
+                        f"accessing {fnames1} may recompute and update {fnames2}. "
+                        f"Use distinct compute methods for stored and non-stored fields."
+                    )
         return computed
 
     def get_trigger_tree(self, fields: list, select=bool) -> "TriggerTree":
