@@ -143,6 +143,24 @@ class TestQWebTField(TransactionCase):
         })
         self.assertEqual(str(rendered.strip()), result.strip())
 
+    def test_no_value_no_default_value(self):
+        # no value, no default value with attributes on t-field
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="out-field-default">
+                <div t-field="record.name"/>
+            </t>''',
+        })
+        result = """
+                <div data-oe-xpath="/t[1]/div[1]" data-oe-model="res.partner" data-oe-field="name" data-oe-type="char" data-oe-expression="record.name"></div>
+        """
+        # inherit_branding puts attribute on the field tag as well as force the display in case the field is empty
+        rendered = self.env['ir.qweb'].with_context(inherit_branding=True)._render(t.id, {
+            'record': self.env['res.partner'].new({}),
+        })
+        self.assertEqual(str(rendered.strip()), result.strip())
+
 
 class TestQWebNS(TransactionCase):
     def test_render_static_xml_with_namespace(self):
