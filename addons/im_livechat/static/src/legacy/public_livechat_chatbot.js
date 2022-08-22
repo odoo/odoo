@@ -25,7 +25,8 @@ const _t = core._t;
         // debounced to let the user type several sentences, see '_chatbotAwaitUserInput' for details
         this._debouncedChatbotAwaitUserInput = _.debounce(
             this._chatbotAwaitUserInput.bind(this),
-            10000);
+            this.messaging.publicLivechatGlobal.chatbot.awaitUserInputDebounceTime,
+        );
     },
 
     //--------------------------------------------------------------------------

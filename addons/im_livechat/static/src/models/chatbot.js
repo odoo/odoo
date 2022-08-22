@@ -9,6 +9,13 @@ registerModel({
     recordMethods: {
         /**
          * @private
+         * @returns {integer}
+         */
+        _computeAwaitUserInputDebounceTime() {
+            return 10000;
+        },
+        /**
+         * @private
          * @returns {Object|FieldCommand}
          */
         _computeData() {
@@ -160,6 +167,9 @@ registerModel({
         },
     },
     fields: {
+        awaitUserInputDebounceTime: attr({
+            compute: '_computeAwaitUserInputDebounceTime',
+        }),
         data: attr({
             compute: '_computeData',
         }),
