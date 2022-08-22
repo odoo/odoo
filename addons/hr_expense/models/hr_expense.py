@@ -102,7 +102,7 @@ class HrExpense(models.Model):
     ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True, default='draft', help="Status of the expense.")
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", domain="[('employee_id', '=', employee_id), ('company_id', '=', company_id)]", readonly=True, copy=False)
     sheet_is_editable = fields.Boolean(compute='_compute_sheet_is_editable')
-    approved_by = fields.Many2one('res.users', string='Approved By', related='sheet_id.user_id')
+    approved_by = fields.Many2one('res.users', string='Approved By', tracking=True)
     approved_on = fields.Datetime(string='Approved On', related='sheet_id.approval_date')
     reference = fields.Char("Bill Reference")
     is_refused = fields.Boolean("Explicitly Refused by manager or accountant", readonly=True, copy=False)
@@ -1130,6 +1130,8 @@ class HrExpenseSheet(models.Model):
         if not filtered_sheet:
             return notification
         for sheet in filtered_sheet:
+            for expense_line in sheet.expense_line_ids:
+                expense_line.write({'approved_by': self.env.user.id})
             sheet.write({'state': 'approve', 'user_id': sheet.user_id.id or self.env.user.id})
         notification['params'].update({
             'title': _('The expense reports were successfully approved.'),
