@@ -3,7 +3,6 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, insert, insertAndUnlink, link, unlink } from '@mail/model/model_field_command';
-import { OnChange } from '@mail/model/model_onchange';
 import { cleanSearchTerm } from '@mail/utils/utils';
 import * as mailUtils from '@mail/js/utils';
 
@@ -2378,17 +2377,17 @@ registerModel({
         }),
     },
     onChanges: [
-        new OnChange({
+        {
             dependencies: ['lastSeenByCurrentPartnerMessageId'],
             methodName: '_onChangeLastSeenByCurrentPartnerMessageId',
-        }),
-        new OnChange({
+        },
+        {
             dependencies: ['isServerPinned'],
             methodName: '_onIsServerPinnedChanged',
-        }),
-        new OnChange({
+        },
+        {
             dependencies: ['serverFoldState'],
             methodName: '_onServerFoldStateChanged',
-        }),
+        },
     ],
 });

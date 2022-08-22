@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many } from '@mail/model/model_field';
-import { OnChange } from '@mail/model/model_onchange';
 
 /**
  * Models a record that provides the current date, updated at a given frequency.
@@ -77,9 +76,9 @@ registerModel({
         }),
     },
     onChanges: [
-        new OnChange({
+        {
             dependencies: ['watchers'],
             methodName: '_onChangeWatchers',
-        }),
+        },
     ],
 });

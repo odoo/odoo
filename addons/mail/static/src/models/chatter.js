@@ -3,7 +3,6 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear, insert, link } from '@mail/model/model_field_command';
-import { OnChange } from '@mail/model/model_onchange';
 
 const getThreadNextTemporaryId = (function () {
     let tmpId = 0;
@@ -503,13 +502,13 @@ registerModel({
         webRecord: attr(),
     },
     onChanges: [
-        new OnChange({
+        {
             dependencies: ['threadId', 'threadModel'],
             methodName: '_onThreadIdOrThreadModelChanged',
-        }),
-        new OnChange({
+        },
+        {
             dependencies: ['thread.isLoadingAttachments'],
             methodName: '_onThreadIsLoadingAttachmentsChanged',
-        }),
+        },
     ],
 });

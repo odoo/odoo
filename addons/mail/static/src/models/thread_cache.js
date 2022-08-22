@@ -3,7 +3,6 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, link, unlink } from '@mail/model/model_field_command';
-import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'ThreadCache',
@@ -369,13 +368,13 @@ registerModel({
         }),
     },
     onChanges: [
-        new OnChange({
+        {
             dependencies: ['hasLoadingFailed', 'isCacheRefreshRequested', 'isLoaded', 'isLoading', 'thread.isTemporary', 'threadViews'],
             methodName: '_onChangeForHasToLoadMessages',
-        }),
-        new OnChange({
+        },
+        {
             dependencies: ['hasToLoadMessages'],
             methodName: '_onHasToLoadMessagesChanged',
-        }),
+        },
     ],
 });

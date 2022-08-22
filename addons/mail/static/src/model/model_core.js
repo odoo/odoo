@@ -118,12 +118,34 @@ export function addModelMethods(modelName, modelMethods) {
  * Adds the provided onChanges to the model specified by the `modelName`.
  *
  * @param {string} modelName The name of the model to which to add onChanges.
- * @param {OnChange[]} onChanges Array of onChanges to be added.
+ * @param {Object[]} onChanges Array of onChange definitions.
  */
 export function addOnChanges(modelName, onChanges) {
-    if (!registry.has(modelName)) {
-        throw new Error(`Cannot add onChanges to model "${modelName}": model must be registered before onChanges can be added.`);
-    }
+    addContextToErrors(() => {
+        if (!registry.has(modelName)) {
+            throw new Error(`model must be registered before onChanges can be added.`);
+        }
+        for (const onChange of onChanges) {
+            if (!Object.prototype.hasOwnProperty.call(onChange, 'dependencies')) {
+                throw new Error("at least one onChange definition lacks dependencies (the list of fields to be watched for changes).");
+            }
+            if (!Object.prototype.hasOwnProperty.call(onChange, 'methodName')) {
+                throw new Error("at least one onChange definition lacks a methodName (the name of the method to be called on change).");
+            }
+            if (!Array.isArray(onChange.dependencies) || onChange.dependencies.some(d => typeof d !== 'string')) {
+                throw new Error("onChange dependencies must be an array of strings.");
+            }
+            if (typeof onChange.methodName !== 'string') {
+                throw new Error("onChange methodName must be a string.");
+            }
+            const allowedKeys = ['dependencies', 'methodName'];
+            for (const key of Object.keys(onChange)) {
+                if (!allowedKeys.includes(key)) {
+                    throw new Error(`unknown key "${key}" in onChange definition. Allowed keys: ${allowedKeys.join(", ")}.`);
+                }
+            }
+        }
+    }, `Cannot add onChanges to model "${modelName}": `);
     registry.get(modelName).get('onChanges').push(...onChanges);
 }
 
@@ -331,7 +353,7 @@ export function patchRecordMethods(modelName, recordMethods) {
  * @param {Object} [definition.modelGetters] Deprecated; use fields instead.
  * @param {Object} [definition.modelMethods]
  * @param {string} definition.name
- * @param {OnChanges[]} [definition.onChanges]
+ * @param {Object[]} [definition.onChanges]
  * @param {Object} [definition.recordGetters] Deprecated; use fields instead.
  * @param {Object} [definition.recordMethods]
  */

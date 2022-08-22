@@ -3,7 +3,6 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
-import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'ThreadView',
@@ -539,17 +538,17 @@ registerModel({
         }),
     },
     onChanges: [
-        new OnChange({
+        {
             dependencies: ['threadCache'],
             methodName: '_onThreadCacheChanged',
-        }),
-        new OnChange({
+        },
+        {
             dependencies: ['threadCache.isLoading'],
             methodName: '_onThreadCacheIsLoadingChanged',
-        }),
-        new OnChange({
+        },
+        {
             dependencies: ['isComposerFocused', 'lastMessage', 'thread.lastNonTransientMessage', 'lastVisibleMessage', 'threadCache'],
             methodName: '_computeThreadShouldBeSetAsSeen',
-        }),
+        },
     ],
 });

@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { OnChange } from '@mail/model/model_onchange';
 
 /**
  * Mirrors the fields of the python model res.users.settings.volumes.
@@ -45,9 +44,9 @@ registerModel({
         }),
     },
     onChanges: [
-        new OnChange({
+        {
             dependencies: ['volume'],
             methodName: '_onChangeVolume',
-        }),
+        },
     ],
 });
