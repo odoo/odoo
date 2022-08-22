@@ -279,53 +279,58 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     const selection = parseTextualSelection(testNode);
 
     const editor = new Editor(testNode, Object.assign({ toSanitize: false }, options));
-    editor.keyboardType = 'PHYSICAL';
-    editor.testMode = true;
-    if (selection) {
-        setTestSelection(selection);
-        editor._recordHistorySelection();
-    } else {
-        document.getSelection().removeAllRanges();
-    }
-
-    // we have to sanitize after having put the cursor
-    sanitize(editor.editable);
-
-    if (spec.contentBeforeEdit) {
-        renderTextualSelection();
-        const beforeEditValue = testNode.innerHTML;
-        window.chai.expect(beforeEditValue).to.be.equal(
-            spec.contentBeforeEdit,
-            customErrorMessage('contentBeforeEdit', beforeEditValue, spec.contentBeforeEdit));
-        const selection = parseTextualSelection(testNode);
+    let firefoxExecCommandError = false;
+    let error = false;
+    try {
+        editor.keyboardType = 'PHYSICAL';
+        editor.testMode = true;
         if (selection) {
             setTestSelection(selection);
+            editor._recordHistorySelection();
+        } else {
+            document.getSelection().removeAllRanges();
         }
-    }
 
-    let firefoxExecCommandError = false;
-    if (spec.stepFunction) {
-        try {
-            await spec.stepFunction(editor);
-        } catch (err) {
-            if (typeof err === 'object' && err.name === 'NS_ERROR_FAILURE') {
-                firefoxExecCommandError = true;
-            } else {
-                throw err;
+        // we have to sanitize after having put the cursor
+        sanitize(editor.editable);
+
+        if (spec.contentBeforeEdit) {
+            renderTextualSelection();
+            const beforeEditValue = testNode.innerHTML;
+            window.chai.expect(beforeEditValue).to.be.equal(
+                spec.contentBeforeEdit,
+                customErrorMessage('contentBeforeEdit', beforeEditValue, spec.contentBeforeEdit));
+            const selection = parseTextualSelection(testNode);
+            if (selection) {
+                setTestSelection(selection);
             }
         }
-    }
 
-    if (spec.contentAfterEdit && !firefoxExecCommandError) {
-        renderTextualSelection();
-        const afterEditValue = testNode.innerHTML;
-        window.chai.expect(afterEditValue).to.be.equal(
-            spec.contentAfterEdit,
-            customErrorMessage('contentAfterEdit', afterEditValue, spec.contentAfterEdit));
-        const selection = parseTextualSelection(testNode);
-        if (selection) {
-            setTestSelection(selection);
+        if (spec.stepFunction) {
+            try {
+                await spec.stepFunction(editor);
+            } catch (err) {
+                if (typeof err === 'object' && err.name === 'NS_ERROR_FAILURE') {
+                    firefoxExecCommandError = true;
+                } else {
+                    throw err;
+                }
+            }
         }
+
+        if (spec.contentAfterEdit && !firefoxExecCommandError) {
+            renderTextualSelection();
+            const afterEditValue = testNode.innerHTML;
+            window.chai.expect(afterEditValue).to.be.equal(
+                spec.contentAfterEdit,
+                customErrorMessage('contentAfterEdit', afterEditValue, spec.contentAfterEdit));
+            const selection = parseTextualSelection(testNode);
+            if (selection) {
+                setTestSelection(selection);
+            }
+        }
+    } catch (err) {
+        error = err;
     }
 
     await editor.clean();
@@ -333,26 +338,36 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     // reading the "[]" markers would broke the test.
     await editor.destroy();
 
-    if (spec.contentAfter && !firefoxExecCommandError) {
-        renderTextualSelection();
+    if (!error) {
+        try {
+            if (spec.contentAfter && !firefoxExecCommandError) {
+                renderTextualSelection();
 
-        // remove all check-ids (checklists, stars)
-        if (spec.removeCheckIds) {
-            for (const li of document.querySelectorAll('#editor-test-container li[id^=checkId-')) {
-                li.removeAttribute('id');
+                // remove all check-ids (checklists, stars)
+                if (spec.removeCheckIds) {
+                    for (const li of document.querySelectorAll('#editor-test-container li[id^=checkId-')) {
+                        li.removeAttribute('id');
+                    }
+                }
+
+                const value = testNode.innerHTML;
+                window.chai.expect(value).to.be.equal(
+                    spec.contentAfter,
+                    customErrorMessage('contentAfter', value, spec.contentAfter));
             }
+        } catch (err) {
+            error = err;
         }
-
-        const value = testNode.innerHTML;
-        window.chai.expect(value).to.be.equal(
-            spec.contentAfter,
-            customErrorMessage('contentAfter', value, spec.contentAfter));
     }
+
     await testNode.remove();
 
     if (firefoxExecCommandError) {
         // FIXME
         throw new Error('Firefox was not able to test this case because of an execCommand error');
+    }
+    if (error) {
+        throw error;
     }
 }
 
