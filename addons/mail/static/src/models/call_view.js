@@ -4,7 +4,6 @@ import { browser } from "@web/core/browser/browser";
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { OnChange } from '@mail/model/model_onchange';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
@@ -233,13 +232,13 @@ registerModel({
         }),
     },
     onChanges: [
-        new OnChange({
+        {
             dependencies: ['channel.rtc'],
             methodName: '_onChangeRtcChannel',
-        }),
-        new OnChange({
+        },
+        {
             dependencies: ['channel.videoCount'],
             methodName: '_onChangeVideoCount',
-        }),
+        },
     ],
 });

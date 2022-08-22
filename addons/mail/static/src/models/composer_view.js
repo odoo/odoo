@@ -3,7 +3,6 @@
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
 import { clear, link, unlink } from '@mail/model/model_field_command';
-import { OnChange } from '@mail/model/model_onchange';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -1621,17 +1620,17 @@ registerModel({
         }),
     },
     onChanges: [
-        new OnChange({
+        {
             dependencies: ['composer'],
             methodName: '_onChangeComposer',
-        }),
-        new OnChange({
+        },
+        {
             dependencies: ['composer.textInputContent', 'composer.textInputCursorEnd', 'composer.textInputCursorStart'],
             methodName: '_onChangeDetectSuggestionDelimiterPosition',
-        }),
-        new OnChange({
+        },
+        {
             dependencies: ['suggestionDelimiterPosition', 'suggestionModelName', 'suggestionSearchTerm', 'composer.activeThread'],
             methodName: '_onChangeUpdateSuggestionList',
-        }),
+        },
     ],
 });

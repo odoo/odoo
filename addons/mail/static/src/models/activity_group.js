@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
     name: 'ActivityGroup',
@@ -61,9 +60,9 @@ registerModel({
         type: attr(),
     },
     onChanges: [
-        new OnChange({
+        {
             dependencies: ['total_count', 'type'],
             methodName: '_onChangeTotalCount',
-        }),
+        },
     ],
 });

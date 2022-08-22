@@ -2,7 +2,6 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { OnChange } from '@mail/model/model_onchange';
 
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
@@ -64,9 +63,9 @@ registerModel({
         }),
     },
     onChanges: [
-        new OnChange({
+        {
             dependencies: ['thread.areAttachmentsLoaded', 'thread.attachmentsInWebClientView', 'thread.isLoadingAttachments'],
             methodName: '_onChangeThreadAttachmentsInWebClientView',
-        }),
+        },
     ],
 });
