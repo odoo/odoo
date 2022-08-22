@@ -669,6 +669,16 @@ export class OdooEditor extends EventTarget {
         this._columnUi.remove();
     }
 
+    resetContent(value = '<p><br></p>') {
+        this.editable.innerHTML = value;
+        this.sanitize();
+        this.historyStep(true);
+        // The unbreakable protection mechanism detects an anomaly and attempts
+        // to trigger a rollback when the content is reset using `innerHTML`.
+        // Prevent this rollback as it would otherwise revert the new content.
+        this._toRollback = false;
+    }
+
     sanitize() {
         this.observerFlush();
 
@@ -3202,13 +3212,6 @@ export class OdooEditor extends EventTarget {
 
     clean() {
         this.observerUnactive();
-        for (const hint of this.editable.querySelectorAll('.oe-hint')) {
-            hint.classList.remove('oe-hint', 'oe-command-temporary-hint');
-            if (hint.classList.length === 0) {
-                hint.removeAttribute('class');
-            }
-            hint.removeAttribute('placeholder');
-        }
         this.cleanForSave();
         this.observerActive();
     }
@@ -3263,6 +3266,14 @@ export class OdooEditor extends EventTarget {
     }
 
     cleanForSave(element = this.editable) {
+        for (const hint of element.querySelectorAll('.oe-hint')) {
+            hint.classList.remove('oe-hint', 'oe-command-temporary-hint');
+            if (hint.classList.length === 0) {
+                hint.removeAttribute('class');
+            }
+            hint.removeAttribute('placeholder');
+        }
+
         sanitize(element);
 
         this._pluginCall('cleanForSave', [element]);
@@ -3357,7 +3368,7 @@ export class OdooEditor extends EventTarget {
         }
 
         // placeholder hint
-        if (this.editable.textContent === '' && this.options.placeholder && this.editable.firstChild.innerHTML) {
+        if (this.editable.textContent === '' && this.options.placeholder && this.editable.firstChild && this.editable.firstChild.innerHTML) {
             this._makeHint(this.editable.firstChild, this.options.placeholder, true);
         }
     }

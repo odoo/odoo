@@ -23,7 +23,7 @@ tour.register('sale_timesheet_tour', {
     trigger: 'td.o_field_x2many_list_row_add > a:first-child',
     content: 'Click on "Add a product" to add a new product. We will add a service product.',
 }, {
-    trigger: '.o_field_widget[name="product_id"], .o_field_widget[name="product_template_id"] input',
+    trigger: '.o_field_html[name="product_id"], .o_field_widget[name="product_template_id"] input',
     content: Markup('Select a prepaid service product <i>(e.g. Service Product (Prepaid Hours))</i>'),
     run: 'text Service Product (Prepaid Hours)',
 }, {
