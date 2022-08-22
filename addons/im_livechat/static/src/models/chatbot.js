@@ -8,6 +8,51 @@ registerModel({
     name: 'Chatbot',
     recordMethods: {
         /**
+         * Triggers the next step of the script by calling the associated route.
+         * This will receive the next step and call step processing.
+         */
+         async triggerNextStep() {
+            let triggerNextStep = true;
+            if (
+                this.currentStep &&
+                this.currentStep.data &&
+                this.currentStep.data.chatbot_step_type === 'question_email'
+            ) {
+                triggerNextStep = await this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotValidateEmail();
+            }
+
+            if (!triggerNextStep) {
+                return;
+            }
+
+            const nextStep = await this.messaging.rpc({
+                route: '/chatbot/step/trigger',
+                params: {
+                    channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
+                    chatbot_script_id: this.scriptId,
+                },
+            });
+
+            if (nextStep) {
+                if (nextStep.chatbot_posted_message) {
+                    this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotAddMessage(nextStep.chatbot_posted_message);
+                }
+
+                this.update({ currentStep: { data: nextStep.chatbot_step } });
+
+                this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotProcessStep();
+            } else {
+                // did not find next step -> end the script
+                this.currentStep.data.chatbot_step_is_last = true;
+                this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+                this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
+            }
+
+            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
+
+            return nextStep;
+        },
+        /**
          * @private
          * @returns {boolean}
          */

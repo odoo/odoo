@@ -72,7 +72,7 @@ const _t = core._t;
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
                     chatbotNextStepTimeout: setTimeout(
-                        this._chatbotTriggerNextStep.bind(this),
+                        this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
                         this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                     )
                 });
@@ -196,7 +196,7 @@ const _t = core._t;
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
                     chatbotNextStepTimeout: setTimeout(
-                        this._chatbotTriggerNextStep.bind(this),
+                        this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
                         this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                     ),
                 });
@@ -227,7 +227,7 @@ const _t = core._t;
 
                 this.messaging.publicLivechatGlobal.livechatButtonView.update({
                     chatbotNextStepTimeout: setTimeout(
-                        this._chatbotTriggerNextStep.bind(this),
+                        this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
                         nextStepDelay,
                     ),
                 });
@@ -268,50 +268,6 @@ const _t = core._t;
 
             return false;
         }
-    },
-    /**
-     * Triggers the next step of the script by calling the associated route.
-     * This will receive the next step and call step processing.
-     *
-     * @private
-     */
-    async _chatbotTriggerNextStep() {
-        let triggerNextStep = true;
-        if (
-            this.messaging.publicLivechatGlobal.chatbot.currentStep &&
-            this.messaging.publicLivechatGlobal.chatbot.currentStep.data &&
-            this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'question_email'
-        ) {
-            triggerNextStep = await this._chatbotValidateEmail();
-        }
-
-        if (!triggerNextStep) {
-            return;
-        }
-
-        const nextStep = await session.rpc('/chatbot/step/trigger', {
-            channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
-            chatbot_script_id: this.messaging.publicLivechatGlobal.chatbot.scriptId,
-        });
-
-        if (nextStep) {
-            if (nextStep.chatbot_posted_message) {
-                this._chatbotAddMessage(nextStep.chatbot_posted_message);
-            }
-
-            this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: { data: nextStep.chatbot_step } });
-
-            this._chatbotProcessStep();
-        } else {
-            // did not find next step -> end the script
-            this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_is_last = true;
-            this._renderMessages();
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
-        }
-
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
-
-        return nextStep;
     },
     /**
      * Returns the 'this.messaging.publicLivechatGlobal.messages' filtered on our special 'welcome' ones.

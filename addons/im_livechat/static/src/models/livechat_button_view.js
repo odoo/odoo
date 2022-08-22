@@ -137,7 +137,7 @@ registerModel({
             this.chatbotSetIsTyping();
             this.update({
                 chatbotNextStepTimeout: setTimeout(
-                    this.widget._chatbotTriggerNextStep.bind(this.widget),
+                    this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
                     this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                 ),
             });
@@ -518,7 +518,7 @@ registerModel({
                     this.chatbotSetIsTyping();
                     this.update({
                         chatbotNextStepTimeout: setTimeout(
-                            this.widget._chatbotTriggerNextStep.bind(this.widget),
+                            this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
                             this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                         ),
                     });
