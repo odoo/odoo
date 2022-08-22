@@ -514,6 +514,7 @@
                 <form class="js_attributes mb-2" method="get">
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
+                    <input type="hidden" name="order" t-att-value="order"/>
                     <a t-if="attrib_values" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0)" class="btn btn-light btn-block py-0 mb-2">
                         <small><b>Clear Filters</b></small><b class="pull-right">&#215;</b>
                     </a>
