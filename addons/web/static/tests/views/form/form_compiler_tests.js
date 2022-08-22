@@ -145,7 +145,7 @@ QUnit.module("Form Compiler", () => {
         const expected = /*xml*/ `
             <t>
             <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
-                <div class="o_form_statusbar"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
+                <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
                 <div>someDiv</div>
             </div>
             </t>`;
@@ -168,7 +168,7 @@ QUnit.module("Form Compiler", () => {
             <t>
             <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }}" t-ref="compiled_view_root">
                 <div class="o_form_sheet_bg">
-                    <div class="o_form_statusbar"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
+                    <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons readonly="!props.record.isInEdition"/></div>
                     <div>someDiv</div>
                     <div class="o_form_sheet position-relative">
                         <div>inside sheet</div>
@@ -228,7 +228,7 @@ QUnit.module("Form Compiler", () => {
             </form>`;
 
         const expected = /*xml*/ `
-            <div class="o_form_statusbar">
+            <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom">
                <StatusBarButtons readonly="!props.record.isInEdition">
                   <t t-set-slot="button_0" isVisible="true" displayInReadOnly="false">
                      <div>someDiv</div>
@@ -246,7 +246,7 @@ QUnit.module("Form Compiler", () => {
             </form>`;
 
         const expected = /*xml*/ `
-            <div class="o_form_statusbar">
+            <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom">
                <StatusBarButtons readonly="!props.record.isInEdition"/>
             </div>`;
 

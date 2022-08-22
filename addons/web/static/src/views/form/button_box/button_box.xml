@@ -5,13 +5,12 @@
     <t t-set="allButtons" t-value="getButtons()" />
     <t t-set="visibleButtons" t-value="allButtons['visible']" />
     <t t-set="additionalButtons" t-value="allButtons['additional']" />
-    <div class="o-form-buttonbox oe_button_box" t-attf-class="{{ visibleButtons.length >= getMaxButtons() ? 'o_full' : 'o_not_full'}} {{this.props.class}}">
-        <t t-slot="{{ button_value }}" t-foreach="visibleButtons" t-as="button" t-key="button_value" />
-
+    <div class="o-form-buttonbox oe_button_box position-relative text-end" t-attf-class="{{ visibleButtons.length >= getMaxButtons() ? 'o_full' : 'o_not_full'}} {{this.props.class}}">
+        <t t-slot="{{ button_value }}" t-foreach="visibleButtons" t-as="button" t-key="button_value"/>
         <t t-if="additionalButtons.length" >
-            <Dropdown togglerClass="'btn o_button_more'" menuClass="'o_dropdown_more p-0'" class="'btn oe_stat_button'">
+            <Dropdown togglerClass="'btn btn-light o_button_more border-0 border-start border-bottom'" menuClass="'o_dropdown_more position-absolute start-0 top-100 w-100 p-0 border-0'" class="'oe_stat_button btn position-relative p-0 border-0'">
                 <t t-set-slot="toggler"><span>More</span></t>
-                <DropdownItem t-foreach="additionalButtons" t-as="button" t-key="button_value" class="'p-0'">
+                <DropdownItem t-foreach="additionalButtons" t-as="button" t-key="button_value" class="'d-flex flex-column p-0'">
                     <t t-slot="{{ button_value }}" />
                 </DropdownItem>
             </Dropdown>

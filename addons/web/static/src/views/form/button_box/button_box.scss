@@ -1,16 +1,14 @@
 .o-form-buttonbox {
-    position: relative;
-    display: block;
+    --o-input-border-color: #{map-get($grays, '600')};
     margin-bottom: $o-sheet-vpadding;
     margin-top: -$o-sheet-vpadding;
     @include o-form-sheet-negative-margin;
-    text-align: right;
     // Use box-shadow instead of border-bottom because some button boxes are
     // empty in some cases and we do not want to see a floating border in
     // that cases.
     box-shadow: inset 0 -1px 0 $border-color;
 
-    .btn.oe_stat_button {
+    .btn.oe_stat_button, > .o_field_widget {
         flex: 0 0 auto;
         width: percentage(1/3); // Adapt the number of visible buttons for each screen width
         @include media-breakpoint-up(md) {
@@ -24,25 +22,15 @@
         }
     }
 
+    &.o_full > *:first-child {
+        border-left: none !important;
+        box-shadow: -1px 0 0 $border-color;
+    }
+    
     .btn.oe_stat_button {
-        color: $o-main-text-color;
         height: $o-statbutton-height;
-        // Use !important to avoid touch_device style
-        padding: 0 $o-statbutton-spacing 0 0 !important; // padding-left will be achieved through margin-left of content
-        text-align: left;
-        white-space: nowrap;
-        background-color: transparent;
-        border-radius: 0px;
-        margin-bottom: 0; // If the button comes from a field
-
-        &:hover, &:focus {
-            background-color: rgba(black, 0.03);
-            color: inherit;
-            opacity: 1;
-        }
 
         > .o_button_icon {
-            margin-left: $o-statbutton-spacing; // To create the button padding left (firefox bug)
             display: inline-block;
             vertical-align: middle;
             line-height: $o-statbutton-height;
@@ -127,8 +115,6 @@
         .o_dropdown_more {
             width: 150px;
             > .dropdown-item {
-                border: none;
-                border-bottom: 1px solid $border-color;
                 .oe_stat_button {
                     border: none;
                     width: 100%;

@@ -55,6 +55,6 @@ export class FormLabel extends Component {
 }
 FormLabel.template = xml`
   <label class="o_form_label" t-att-for="props.id" t-att-class="className" >
-    <t t-esc="props.string"/><sup class="btn-link p-2" t-if="hasTooltip" t-att="{'data-tooltip-template': 'web.FieldTooltip', 'data-tooltip-info': tooltipInfo, 'data-tooltip-touch-tap-to-show': 'true'}">?</sup>
+    <t t-esc="props.string"/><sup class="btn-link p-1" t-if="hasTooltip" t-att="{'data-tooltip-template': 'web.FieldTooltip', 'data-tooltip-info': tooltipInfo, 'data-tooltip-touch-tap-to-show': 'true'}">?</sup>
   </label>
 `;
