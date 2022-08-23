@@ -135,8 +135,8 @@
                             class="o_Message_bubbleWrap position-relative d-flex align-items-start"
                             t-att-class="{
                                 'd-flex justify-content-end': messageView.isInChatWindowAndIsAlignedRight,
-                                'pe-5': messageView.isInChatWindowAndIsAlignedLeft and !messageView.composerViewInEditing,
-                                'ps-5': messageView.isInChatWindowAndIsAlignedRight and !messageView.composerViewInEditing,
+                                'pe-4': messageView.isInChatWindowAndIsAlignedLeft and !messageView.composerViewInEditing,
+                                'ps-4': messageView.isInChatWindowAndIsAlignedRight and !messageView.composerViewInEditing,
                                 'pe-2': messageView.isInChatWindowAndIsAlignedLeft and messageView.composerViewInEditing,
                                 'ps-2': messageView.isInChatWindowAndIsAlignedRight and messageView.composerViewInEditing,
                             }"
@@ -146,8 +146,8 @@
                                 t-att-class="{
                                     'flex-grow-1': messageView.composerViewInEditing,
                                     'w-100': !(messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms') and !messageView.isInChatWindow,
-                                    'me-5': messageView.isInChatWindowAndIsAlignedLeft and !messageView.composerViewInEditing,
-                                    'ms-5': messageView.isInChatWindowAndIsAlignedRight and !messageView.composerViewInEditing,
+                                    'me-2': messageView.isInChatWindowAndIsAlignedLeft and !messageView.composerViewInEditing,
+                                    'ms-2': messageView.isInChatWindowAndIsAlignedRight and !messageView.composerViewInEditing,
                                     'p-3': messageView.message.prettyBody !== '' and !messageView.composerViewInEditing, 
                                     'p-2': messageView.composerViewInEditing, 
                                     'text-muted': messageView.message.is_note and messageView.message.message_type !== 'sms',
@@ -202,7 +202,8 @@
                                     'start-0 ms-3': messageView.isInChatWindowAndIsAlignedRight,
                                     'end-0 me-3': messageView.isInChatWindowAndIsAlignedLeft || messageView.isInChatter,
                                     'mt-n4': messageView.isInChatter,
-                                    'mt-2': (messageView.isInDiscuss and messageView.message.isDiscussionOrNotification) or messageView.isInChatWindow,
+                                    'mt-2': (messageView.isInDiscuss and messageView.message.isDiscussionOrNotification),
+                                    'mt-n3': messageView.isInChatWindow,
                                     'ms-2': messageView.isInDiscuss,
                                 }"
                                 t-attf-class="{{ messageView.isActive ? 'visible' : 'invisible' }}"
