@@ -8,6 +8,19 @@ registerModel({
     name: 'Chatbot',
     recordMethods: {
         /**
+         * Register current chatbot step state into localStorage to be able to resume if the visitor
+         * goes to another website page or if he refreshes his page.
+         *
+         * (Will not work if the visitor switches browser but his livechat session will not be restored
+         *  anyway in that case, since it's stored into a cookie).
+         */
+        saveSession() {
+            localStorage.setItem('im_livechat.chatbot.state.uuid_' + this.messaging.publicLivechatGlobal.publicLivechat.uuid, JSON.stringify({
+                '_chatbot': this.data,
+                '_chatbotCurrentStep': this.currentStep.data,
+            }));
+        },
+        /**
          * @private
          * @returns {Object|FieldCommand}
          */

@@ -66,7 +66,7 @@ registerModel({
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed = true;
-                this.chatbotSaveSession();
+                this.messaging.publicLivechatGlobal.chatbot.saveSession();
             }
             this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
             this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
@@ -91,19 +91,6 @@ registerModel({
             this.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
             this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
             this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click', this.onChatbotRestartScript);
-        },
-        /**
-         * Register current chatbot step state into localStorage to be able to resume if the visitor
-         * goes to another website page or if he refreshes his page.
-         *
-         * (Will not work if the visitor switches browser but his livechat session will not be restored
-         *  anyway in that case, since it's stored into a cookie).
-         */
-        chatbotSaveSession() {
-            localStorage.setItem('im_livechat.chatbot.state.uuid_' + this.messaging.publicLivechatGlobal.publicLivechat.uuid, JSON.stringify({
-                '_chatbot': this.messaging.publicLivechatGlobal.chatbot.data,
-                '_chatbotCurrentStep': this.messaging.publicLivechatGlobal.chatbot.currentStep.data,
-            }));
         },
         /**
          * Restart the script and then trigger the "next step" (which will be the first of the script
@@ -143,7 +130,7 @@ registerModel({
             });
         },
         /**
-         * See 'chatbotSaveSession'.
+         * See 'Chatbot/saveSession'.
          *
          * We retrieve the livechat uuid from the session cookie since the livechat Widget is not yet
          * initialized when we restore the chatbot state.
@@ -525,7 +512,7 @@ registerModel({
                 } else {
                     this.chatbotEndScript();
                 }
-                this.chatbotSaveSession();
+                this.messaging.publicLivechatGlobal.chatbot.saveSession();
             }
         },
         /**

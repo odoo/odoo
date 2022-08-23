@@ -256,7 +256,7 @@ const _t = core._t;
 
         if (emailValidResult.success) {
             this.messaging.publicLivechatGlobal.chatbot.currentStep.data.is_email_valid = true;
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
+            this.messaging.publicLivechatGlobal.chatbot.saveSession();
 
             return true;
         } else {
@@ -309,7 +309,7 @@ const _t = core._t;
             this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
         }
 
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
+        this.messaging.publicLivechatGlobal.chatbot.saveSession();
 
         return nextStep;
     },
@@ -508,7 +508,7 @@ const _t = core._t;
         stepMessage.legacyPublicLivechatMessage.setChatbotStepAnswerId(selectedAnswer);
         this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_selected_answer_id = selectedAnswer;
         this._renderMessages();
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSaveSession();
+        this.messaging.publicLivechatGlobal.chatbot.saveSession();
 
         const saveAnswerPromise = session.rpc('/chatbot/answer/save', {
             channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
