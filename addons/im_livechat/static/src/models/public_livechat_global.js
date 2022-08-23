@@ -225,7 +225,7 @@ registerModel({
             } else if (this.chatbotState === 'restore_session') {
                 // we landed on a website page and a chatbot script is currently running
                 // -> restore the user's session (see 'chatbotRestoreSession')
-                this.chatbotRestoreSession();
+                this.livechatButtonView.chatbotRestoreSession();
             }
         },
     },
