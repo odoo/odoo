@@ -67,27 +67,6 @@ class WebsiteForum(WebsiteProfile):
             'forums': forums
         })
 
-    @http.route('/forum/new', type='json', auth="user", methods=['POST'], website=True)
-    def forum_create(self, forum_name="New Forum", forum_mode="questions", forum_privacy="public", forum_privacy_group=False, add_menu=False):
-        forum = {
-            'name': forum_name,
-            'mode': forum_mode,
-            'privacy': forum_privacy,
-            'website_id': request.website.id,
-        }
-        if forum_privacy == 'private' and forum_privacy_group:
-            forum['authorized_group_id'] = forum_privacy_group
-        forum_id = request.env['forum.forum'].create(forum)
-        if add_menu:
-            menu_id = request.env['website.menu'].create({
-                'name': forum_name,
-                'url': "/forum/%s" % slug(forum_id),
-                'parent_id': request.website.menu_id.id,
-                'website_id': request.website.id,
-            })
-            forum_id.menu_id = menu_id
-        return "/forum/%s" % slug(forum_id)
-
     def sitemap_forum(env, rule, qs):
         Forum = env['forum.forum']
         dom = sitemap_qs2dom(qs, '/forum', Forum._rec_name)
