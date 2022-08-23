@@ -102,6 +102,7 @@
                             <field name="pricelist_id" groups="product.group_product_pricelist" context="{'product_id':product_id}" attrs="{'invisible':[('invoice_method','=', 'none')]}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             <field name="currency_id" invisible="1"/>
+                            <field name="tax_calculation_rounding_method" invisible="1"/>
                         </group>
                     </group>
                 <notebook>
@@ -151,8 +152,10 @@
                                 <field name="product_uom" string="UoM" groups="uom.group_uom" optional="show"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags" optional="show"/>
-                                <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
+                                <field name="price_subtotal" string="Tax excl." widget="monetary"/>
+                                <field name="price_total" string="Tax incl." widget="monetary"
+                                       attrs="{'column_invisible': [('parent.tax_calculation_rounding_method', '=', 'round_globally')]}"
+                                       optional="hide"/>
                                 <field name="currency_id" invisible="1"/>
                             </tree>
                         </field>
@@ -196,8 +199,11 @@
                                 <field name="product_uom" string="Unit of Measure" groups="uom.group_uom" optional="show"/>
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags" optional="show"/>
-                                <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
+                                <field name="price_subtotal" string="Tax excl." widget="monetary"/>
+                                <field name="price_total" string="Tax incl." widget="monetary"
+                                       attrs="{'column_invisible': [('parent.tax_calculation_rounding_method', '=', 'round_globally')]}"
+                                       optional="hide"/>
+                                <field name="currency_id" invisible="1"/>
                                 <field name="currency_id" invisible="1"/>
                             </tree>
                         </field>

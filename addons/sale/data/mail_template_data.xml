@@ -83,14 +83,16 @@
                 <td style="width: 150px;"><span style="font-weight:bold;">Products</span></td>
                 <td></td>
                 <td width="15%" align="center"><span style="font-weight:bold;">Quantity</span></td>
-                <td width="20%" align="right"><span style="font-weight:bold;">
-                <t t-if="object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')">
-                    VAT Excl.
-                </t>
-                <t t-else="">
-                    VAT Incl.
-                </t>
-                </span></td>
+                <td width="20%" align="right">
+                    <span style="font-weight:bold;">
+                        <t t-if="object.company_id.tax_calculation_rounding_method == 'round_per_line'">
+                            VAT Excl.
+                        </t>
+                        <t t-else="">
+                            VAT Incl.
+                        </t>
+                    </span>
+                </td>
             </tr>
         </table>
         <t t-foreach="object.order_line" t-as="line">
@@ -121,7 +123,7 @@
                         <td align="left" t-out="line.product_id.name or ''">	Taking care of Trees Course</td>
                         <td width="15%" align="center" t-out="line.product_uom_qty or ''">1</td>
                         <td width="20%" align="right"><span style="font-weight:bold;">
-                        <t t-if="object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')">
+                        <t t-if="object.company_id.tax_calculation_rounding_method == 'round_per_line'">
                             <t t-out="format_amount(line.price_reduce_taxexcl, object.currency_id) or ''">$ 10.00</t>
                         </t>
                         <t t-else="">

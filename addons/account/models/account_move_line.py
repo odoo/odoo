@@ -345,7 +345,9 @@ class AccountMoveLine(models.Model):
         digits='Discount',
         default=0.0,
     )
-
+    tax_calculation_rounding_method = fields.Selection(
+        related='company_id.tax_calculation_rounding_method',
+        string='Tax calculation rounding method', readonly=True)
     # === Invoice sync fields === #
     term_key = fields.Binary(compute='_compute_term_key')
     tax_key = fields.Binary(compute='_compute_tax_key')

@@ -189,7 +189,7 @@ class ProductTemplate(models.Model):
             price_reduce = self.env['account.tax']._fix_tax_included_price_company(
                 price_reduce, product_taxes, taxes, self.env.company)
 
-            tax_display = self.user_has_groups('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
+            tax_display = 'total_excluded' if self.env.company.show_line_subtotals_tax_selection == 'tax_excluded' else 'total_included'
             price_reduce = taxes.compute_all(price_reduce, currency, 1, template, partner_sudo)[tax_display]
 
             template_price_vals = {
@@ -316,8 +316,8 @@ class ProductTemplate(models.Model):
         price = self.env['account.tax']._fix_tax_included_price_company(
             price, product_taxes, taxes, company_id
         )
-        show_tax_excluded = self.user_has_groups('account.group_show_line_subtotals_tax_excluded')
-        tax_display = 'total_excluded' if show_tax_excluded else 'total_included'
+        show_tax = self.env.company.show_line_subtotals_tax_selection
+        tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'
         # The list_price is always the price of one.
         return taxes.compute_all(price, currency, 1, product, partner)[tax_display]
 

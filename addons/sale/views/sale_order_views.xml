@@ -285,6 +285,7 @@
                         <field name="currency_id" invisible="1"/>
                         <field name="pricelist_id" invisible="1" groups="!product.group_product_pricelist"/>
                         <field name="tax_country_id" invisible="1"/>
+                        <field name="tax_calculation_rounding_method" invisible="1"/>
                         <field name="payment_term_id" options="{'no_open':True,'no_create': True}"/>
                     </group>
                 </group>
@@ -520,8 +521,13 @@
                                 />
                                 <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="sol_discount"/>
                                 <field name="is_downpayment" invisible="1"/>
-                                <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded" attrs="{'invisible': [('is_downpayment', '=', True)]}"/>
-                                <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included" attrs="{'invisible': [('is_downpayment', '=', True)]}"/>
+                                <field name="price_subtotal" string="Tax excl." attrs="{'invisible': [('is_downpayment', '=', True)]}"/>
+                                <field name="price_total"
+                                       string="Tax incl."
+                                       attrs="{'column_invisible': [('parent.tax_calculation_rounding_method', '=', 'round_globally')],'invisible': [('is_downpayment', '=', True)]}"
+                                       optional="hide"/>
+                                <!-- Others fields -->
+                                <field name="tax_calculation_rounding_method" invisible="1"/>
                                 <field name="state" invisible="1"/>
                                 <field name="invoice_status" invisible="1"/>
                                 <field name="currency_id" invisible="1"/>
@@ -541,6 +547,7 @@
                                 <field name="display_type"/>
                                 <field name="tax_id" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
+                                <field name="tax_calculation_rounding_method" invisible="1"/>
                                 <templates>
                                     <t t-name="kanban-box">
                                         <div t-attf-class="oe_kanban_card oe_kanban_global_click ps-0 pe-0 {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
@@ -555,8 +562,8 @@
                                                                 <strong t-out="record.product_id.value" />
                                                             </div>
                                                             <div class="col-auto">
-                                                                <t t-set="line_price" t-value="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                                                <t t-set="line_price" t-value="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
+                                                                <strong>Tax excl.: </strong>
+                                                                <t t-set="line_price" t-value="record.price_subtotal.value"/>
                                                                 <strong class="float-end text-end" t-out="line_price" />
                                                             </div>
                                                         </div>
@@ -567,9 +574,14 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="col-12 text-muted">
+                                                            <div class="col text-muted">
                                                                 Unit Price:
                                                                 <t t-out="record.price_unit.value"/>
+                                                            </div>
+                                                            <div class="col-auto" t-if="record.tax_calculation_rounding_method.raw_value === 'round_per_line'">
+                                                                <strong>Tax incl.: </strong>
+                                                                <t t-set="line_price" t-value="record.price_total.value"/>
+                                                                <strong class="float-end text-end" t-out="line_price" />
                                                             </div>
                                                         </div>
                                                     </div>

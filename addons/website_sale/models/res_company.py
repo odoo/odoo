@@ -7,6 +7,11 @@ from odoo import api, fields, models
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
+    show_line_subtotals_tax_selection = fields.Selection([
+        ('tax_excluded', 'Tax Excluded'),
+        ('tax_included', 'Tax Included')], string="Line Subtotals Tax Display",
+        required=True, default='tax_excluded',
+    )
     website_sale_onboarding_payment_provider_state = fields.Selection([('not_done', "Not done"), ('just_done', "Just done"), ('done', "Done")], string="State of the website sale onboarding payment provider step", default='not_done')
 
     @api.model

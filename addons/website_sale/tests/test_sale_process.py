@@ -119,8 +119,6 @@ class TestUi(HttpCaseWithUserDemo):
         self.env['res.config.settings'].create({
             'auth_signup_uninvited': 'b2c',
             'show_line_subtotals_tax_selection': 'tax_excluded',
-            'group_show_line_subtotals_tax_excluded': True,
-            'group_show_line_subtotals_tax_included': False,
         }).execute()
 
         self.start_tour("/", 'website_sale_tour_1')

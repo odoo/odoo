@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
     trigger: '.ui-menu-item > a:contains("Tajine Saucisse")',
     auto: true,
 }, {
-    trigger: "a:contains('Add a product')",
+    trigger: 'a:contains("Add a product")',
 }, {
     trigger: 'div[name="product_template_id"] input',
     run: 'text event (',
@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
     trigger: '.o_event_sale_js_event_configurator_ok'
 }, {
     trigger: 'a:contains("Add a product")',
-    extra_trigger: '.o_monetary_cell span:contains("16.50")',  // wait for the optional product line
+    extra_trigger: 'td[name="price_subtotal"]:contains("16.50")',  // wait for the optional product line
 }, {
     trigger: 'div[name="product_template_id"] input',
     extra_trigger: '[name="product_template_id"] .o_dropdown_button',
@@ -84,7 +84,7 @@ registry.category("web_tour.tours").add('event_sale_with_product_configurator_to
     trigger: '.o_event_sale_js_event_configurator_ok'
 }, {
     trigger: 'a:contains("Add a product")',
-    extra_trigger: '.o_monetary_cell span:contains("150.00")',  // wait for the adult tickets line
+    extra_trigger: 'td[name="price_subtotal"]:contains("150.00")',  // wait for the adult tickets line
 }, {
     trigger: 'div[name="product_template_id"] input',
     extra_trigger: '[name="product_template_id"] .o_dropdown_button',

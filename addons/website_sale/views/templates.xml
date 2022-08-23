@@ -1141,10 +1141,10 @@
     </template>
 
     <template id="website_sale.tax_indication" active="False">
-        <span groups="account.group_show_line_subtotals_tax_excluded" class="h6 text-muted">
+        <span t-if="env.company.show_line_subtotals_tax_selection == 'tax_excluded'" class="h6 text-muted">
             VAT Excluded
         </span>
-        <span groups="account.group_show_line_subtotals_tax_included" class="h6 text-muted">
+        <span t-if="env.company.show_line_subtotals_tax_selection == 'tax_included'" class="h6 text-muted">
             VAT Included
         </span>
     </template>
@@ -1450,10 +1450,10 @@
                             <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>
                             <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination, pricelist=website_sale_order.pricelist_id, add_qty=line.product_uom_qty)"/>
 
-                            <t groups="account.group_show_line_subtotals_tax_excluded">
+                            <t t-if="env.company.show_line_subtotals_tax_selection == 'tax_excluded'">
                                 <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                             </t>
-                            <t groups="account.group_show_line_subtotals_tax_included">
+                            <t t-if="env.company.show_line_subtotals_tax_selection == 'tax_included'">
                                 <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                             </t>
                             <t t-if="line.discount">
@@ -2117,8 +2117,8 @@
                                     </t>
                                 </td>
                                 <td class="text-center td-price">
-                                    <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_excluded" />
-                                    <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" groups="account.group_show_line_subtotals_tax_included" />
+                                    <span t-field="line.price_reduce_taxexcl" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" t-if="env.company.show_line_subtotals_tax_selection == 'tax_excluded'"/>
+                                    <span t-field="line.price_reduce_taxinc" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}" t-if="env.company.show_line_subtotals_tax_selection == 'tax_included'"/>
                                 </td>
                             </tr>
                         </tbody>
