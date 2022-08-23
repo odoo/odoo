@@ -33,13 +33,6 @@ class ResConfigSettings(models.TransientModel):
              "and not after the delivery.",
         config_parameter='sale.automatic_invoice',
     )
-    confirmation_mail_template_id = fields.Many2one(
-        comodel_name='mail.template',
-        string='Confirmation Email Template',
-        domain="[('model', '=', 'sale.order')]",
-        config_parameter='sale.default_confirmation_template',
-        help="Email sent to the customer once the order is paid."
-    )
     deposit_default_product_id = fields.Many2one(
         'product.product',
         'Deposit Product',

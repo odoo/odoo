@@ -3073,10 +3073,12 @@ class MailThread(models.AbstractModel):
 
         for record in self:
             model_description = self.env['ir.model']._get(record._name).display_name
+            company = record.company_id.sudo() if 'company_id' in record else self.env.company
             values = {
-                'object': record,
-                'model_description': model_description,
                 'access_link': record._notify_get_action_link('view'),
+                'company': company,
+                'model_description': model_description,
+                'object': record,
             }
             assignation_msg = self.env['ir.qweb']._render(template, values, minimal_qcontext=True)
             assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)

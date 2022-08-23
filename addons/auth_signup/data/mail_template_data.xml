@@ -3,11 +3,12 @@
     <data noupdate="1">
         <!-- Email template for reset password -->
         <record id="reset_password_email" model="mail.template">
-            <field name="name">Auth Signup: Reset Password</field>
+            <field name="name">Settings: User Reset Password</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">Password reset</field>
             <field name="email_from">"{{ object.company_id.name }}" &lt;{{ (object.company_id.email or user.email) }}&gt;</field>
             <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="description">Sent to user who requested a password reset</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
@@ -98,11 +99,12 @@
 
         <!-- Email template for new users -->
         <record id="set_password_email" model="mail.template">
-            <field name="name">Auth Signup: Odoo Connection</field>
+            <field name="name">Settings: New Portal Signup</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">{{ object.create_uid.name }} from {{ object.company_id.name }} invites you to connect to Odoo</field>
             <field name="email_from">"{{ object.company_id.name }}" &lt;{{ (object.company_id.email or user.email) }}&gt;</field>
             <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="description">Sent to new user after you invited them</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
@@ -193,11 +195,12 @@
 
         <!-- Email template for reminder of unregistered users -->
         <record id="mail_template_data_unregistered_users" model="mail.template">
-            <field name="name">Auth Signup: Unregistered Users</field>
+            <field name="name">Settings: Unregistered User Reminder</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">Reminder for unregistered users</field>
             <field name="email_from">{{ object.company_id.partner_id.email_formatted }}</field>
             <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="description">Sent automatically to admin if new user haven't responded to the invitation</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
@@ -244,11 +247,12 @@
 
         <!-- Email template for new users that used a signup token -->
         <record id="mail_template_user_signup_account_created" model="mail.template">
-            <field name="name">Auth Signup: Odoo Account Created</field>
+            <field name="name">Settings: New User Invite</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">Welcome to {{ object.company_id.name }}!</field>
             <field name="email_from">"{{ object.company_id.name }}" &lt;{{ (object.company_id.email or user.email) }}&gt;</field>
             <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="description">Sent to portal user who registered themselves</field>
             <field name="body_html" type="html">
 <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
 <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;">
