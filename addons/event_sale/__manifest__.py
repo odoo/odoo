@@ -25,7 +25,7 @@ this event.
         'views/event_views.xml',
         'views/sale_order_views.xml',
         'data/event_sale_data.xml',
-        'data/mail_data.xml',
+        'data/mail_templates.xml',
         'report/event_event_templates.xml',
         'report/event_sale_report_views.xml',
         'security/ir.model.access.csv',

@@ -44,7 +44,7 @@
         'views/project_task_templates.xml',
         'views/project_sharing_templates.xml',
         'data/ir_cron_data.xml',
-        'data/mail_data.xml',
+        'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
         'data/project_data.xml',
         'wizard/project_task_type_delete_views.xml',
