@@ -1224,6 +1224,10 @@ patch(MockServer.prototype, 'mail', {
                 }).map(channel => {
                     // expected format
                     return {
+                        channel: {
+                            channel_type: channel.channel_type,
+                            id: channel.id,
+                        },
                         id: channel.id,
                         name: channel.name,
                         public: channel.public,

@@ -1137,7 +1137,16 @@ class Channel(models.Model):
                             [('channel_partner_ids', 'in', [self.env.user.partner_id.id])]
                         ])
                     ])
-        return self.search_read(domain, ['id', 'name', 'public', 'channel_type'], limit=limit)
+        channels = self.search(domain, limit=limit)
+        return [{
+            'channel': {
+                'channel_type': channel.channel_type,
+                'id': channel.id,
+            },
+            'id': channel.id,
+            'name': channel.name,
+            'public': channel.public,
+        } for channel in channels]
 
     def channel_fetch_preview(self):
         """ Return the last message of the given channels """
