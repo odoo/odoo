@@ -106,20 +106,6 @@ registerModel({
             }
             return clear();
         },
-        /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeLocalStorageChatbotState() {
-            if (!this.sessionCookie) {
-                return clear();
-            }
-            const data = localStorage.getItem(this.chatbotSessionCookieKey);
-            if (!data) {
-                return clear();
-            }
-            return JSON.parse(data);
-        },
         async _willStart() {
             const cookie = get_cookie('im_livechat_session');
             if (cookie) {
@@ -274,9 +260,6 @@ registerModel({
             isCausal: true,
         }),
         livechatInit: attr(),
-        localStorageChatbotState: attr({
-            compute: '_computeLocalStorageChatbotState',
-        }),
         messages: many('PublicLivechatMessage'),
         notificationHandler: one('PublicLivechatGlobalNotificationHandler', {
             inverse: 'publicLivechatGlobalOwner',

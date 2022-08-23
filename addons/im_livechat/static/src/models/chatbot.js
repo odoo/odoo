@@ -23,9 +23,9 @@ registerModel({
             }
             if (
                 this.messaging.publicLivechatGlobal.chatbotState === 'restore_session' &&
-                this.messaging.publicLivechatGlobal.localStorageChatbotState
+                this.messaging.publicLivechatGlobal.chatbot.localStorageState
             ) {
-                return this.messaging.publicLivechatGlobal.localStorageChatbotState._chatbot;
+                return this.messaging.publicLivechatGlobal.chatbot.localStorageState._chatbot;
             }
             return clear();
         },
@@ -43,6 +43,20 @@ registerModel({
                 'free_input_single',
                 'free_input_multi',
             ].includes(this.currentStep.data.chatbot_step_type);
+        },
+        /**
+         * @private
+         * @returns {FieldCommand|Object}
+         */
+        _computeLocalStorageState() {
+            if (!this.messaging.publicLivechatGlobal.sessionCookie) {
+                return clear();
+            }
+            const data = localStorage.getItem(this.messaging.publicLivechatGlobal.chatbotSessionCookieKey);
+            if (!data) {
+                return clear();
+            }
+            return JSON.parse(data);
         },
         /**
          * @private
@@ -180,6 +194,9 @@ registerModel({
         }),
         lastWelcomeStep: attr({
             compute: '_computeLastWelcomeStep',
+        }),
+        localStorageState: attr({
+            compute: '_computeLocalStorageState',
         }),
         name: attr({
             compute: '_computeName',
