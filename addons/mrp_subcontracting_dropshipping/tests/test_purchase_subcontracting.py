@@ -191,3 +191,61 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
 
         dropship_po = self.env['purchase.order'].search([('partner_id', '=', vendor.id)])
         self.assertEqual(dropship_po.dest_address_id, subcontractor)
+
+    def test_po_to_customer(self):
+        """
+        Create and confirm a PO with a subcontracted move. The picking type of
+        the PO is 'Dropship' and the delivery address a customer.
+        """
+        subcontractor, client = self.env['res.partner'].create([
+            {'name': 'SuperSubcontractor'},
+            {'name': 'SuperClient'},
+        ])
+
+        p_finished, p_compo = self.env['product.product'].create([{
+            'name': 'Finished Product',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'name': subcontractor.id})],
+        }, {
+            'name': 'Component',
+            'type': 'consu',
+        }])
+
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': p_finished.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'subcontract',
+            'subcontractor_ids': [(6, 0, subcontractor.ids)],
+            'bom_line_ids': [
+                (0, 0, {'product_id': p_compo.id, 'product_qty': 1}),
+            ],
+        })
+
+        dropship_picking_type = self.env['stock.picking.type'].search([
+            ('company_id', '=', self.env.company.id),
+            ('default_location_src_id.usage', '=', 'supplier'),
+            ('default_location_dest_id.usage', '=', 'customer'),
+        ], limit=1, order='sequence')
+
+        po = self.env['purchase.order'].create({
+            "partner_id": subcontractor.id,
+            "picking_type_id": dropship_picking_type.id,
+            "dest_address_id": client.id,
+            "order_line": [(0, 0, {
+                'product_id': p_finished.id,
+                'name': p_finished.name,
+                'product_qty': 1.0,
+            })],
+        })
+        po.button_confirm()
+
+        mo = self.env['mrp.production'].search([('bom_id', '=', bom.id)])
+        self.assertEqual(mo.picking_type_id, self.warehouse.subcontracting_type_id)
+
+        delivery = po.picking_ids
+        delivery.move_line_ids.qty_done = 1.0
+        delivery.button_validate()
+
+        self.assertEqual(delivery.state, 'done')
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(po.order_line.qty_received, 1)
