@@ -306,8 +306,9 @@ export class OdooEditor extends EventTarget {
         this._activateContenteditable();
 
         this._collabClientId = this.options.collaborationClientId;
+        this._collabClientAvatarUrl = this.options.collaborationClientAvatarUrl;
 
-        // Colaborator selection and caret display.
+        // Collaborator selection and caret display.
         this._collabSelectionInfos = new Map();
         this._collabSelectionColor = `hsl(${(Math.random() * 360).toFixed(0)}, 75%, 50%)`;
         this._collabSelectionsContainer = this.document.createElement('div');
@@ -1432,13 +1433,20 @@ export class OdooEditor extends EventTarget {
     }
 
     multiselectionRefresh() {
-        this._collabSelectionsContainer.innerHTML = '';
+        // Refresh the selection but keep the relevant images to avoid flickering.
+        const avatars = [...this._collabSelectionInfos.values()].map(info => info.avatarElement);
+        for (const element of this._collabSelectionsContainer.childNodes) {
+            const isAvatarElement = element.classList && element.classList.contains('oe-collaboration-caret-avatar');
+            if (!(isAvatarElement && avatars.includes(element))) {
+                element.remove();
+            }
+        }
         for (const { selection } of this._collabSelectionInfos.values()) {
             this._multiselectionDisplayClient(selection);
         }
     }
 
-    _multiselectionDisplayClient({ selection, color, clientId, clientName = 'Anonyme' }) {
+    _multiselectionDisplayClient({ selection, color, clientId, clientAvatarUrl = '', clientName = this.options._t('Anonymous') }) {
         let clientRects;
 
         const anchorNode = this.idFind(selection.anchorNodeOid);
@@ -1505,18 +1513,79 @@ export class OdooEditor extends EventTarget {
         caretTopSquare.setAttribute('data-client-name', clientName);
         caretElement.append(caretTopSquare);
 
-        if (clientRects.length) {
-            if (direction === DIRECTIONS.LEFT) {
-                const rect = clientRects[0];
-                caretElement.style.height = `${rect.height * 1.2}px`;
-                caretElement.style.top = `${rect.y - containerRect.y}px`;
-                caretElement.style.left = `${rect.x - containerRect.x}px`;
-            } else {
-                const rect = peek(clientRects);
-                caretElement.style.height = `${rect.height * 1.2}px`;
-                caretElement.style.top = `${rect.y - containerRect.y}px`;
-                caretElement.style.left = `${rect.right - containerRect.x}px`;
+        // Draw user avatar.
+        const selectionInfo = this._collabSelectionInfos.get(clientId);
+        let caretAvatar = selectionInfo && selectionInfo.avatarElement;
+        if (!caretAvatar) {
+            caretAvatar = this.document.createElement('div');
+            caretAvatar.className = 'oe-collaboration-caret-avatar';
+            caretAvatar.style.display = 'none';
+            const image = this.document.createElement('img');
+            caretAvatar.append(image);
+            image.onload = () => caretAvatar.style.removeProperty('display');
+            image.setAttribute('src', clientAvatarUrl);
+            caretAvatar.setAttribute('data-selection-client-id', clientId);
+            this._collabSelectionsContainer.append(caretAvatar);
+        }
+        // Make sure data is up to date.
+        if (selectionInfo) {
+            selectionInfo.avatarElement = caretAvatar;
+            selectionInfo.clientName = clientName;
+        } else {
+            this._collabSelectionInfos.set(clientId, { avatarElement: caretAvatar, clientName: clientName });
+        }
+
+        const anchorBlockRect = closestBlock(anchorNode).getBoundingClientRect();
+        const previousTop = caretAvatar.style.top;
+        const top = anchorBlockRect.y - containerRect.y + 'px';
+        caretAvatar.style.top = top;
+        const closestList = closestElement(anchorNode, 'ul, ol'); // Prevent overlap bullets.
+        const anchorX = closestList ? closestList.getBoundingClientRect().x : anchorBlockRect.x;
+        const previousLeft = caretAvatar.style.left;
+        const left = anchorX - containerRect.x - 25 + 'px';
+        caretAvatar.style.left = left;
+
+        // Handle overlapping avatars.
+        if (previousTop !== top || previousLeft !== left) {
+            const allAvatarsInDom = [...this._collabSelectionsContainer.children].filter(child => child.classList.contains('oe-collaboration-caret-avatar'));
+            for (const position of [[previousTop, previousLeft], [top, left]]) {
+                // Filter clients at that position.
+                const [currentTop, currentLeft] = position;
+                const clients = new Map([...this._collabSelectionInfos.entries()].filter(([key, value]) => {
+                    const avatarTop = value.avatarElement && value.avatarElement.style.top;
+                    const avatarLeft = value.avatarElement && value.avatarElement.style.left;
+                    return value.avatarElement && avatarTop === currentTop && avatarLeft === currentLeft;
+                }));
+                // Update avatar values for that position.
+                const avatars = [...clients.values()].map(client => client.avatarElement);
+                const lastInDom = allAvatarsInDom.find(avatar => avatars.includes(avatar));
+                const newTitle = [...clients.values()].map(client => client.clientName).join('\n');
+                for (const client of clients.values()) {
+                    const avatar = client.avatarElement;
+                    // Only show the number of overlapping avatars on the z-top
+                    // element, and then only if there are indeed more than one
+                    // at the same position.
+                    if (clients.size > 1 && avatar === lastInDom) {
+                        avatar.setAttribute('data-overlapping-avatars', clients.size);
+                    } else {
+                        avatar.removeAttribute('data-overlapping-avatars');
+                    }
+                    if (avatar.firstElementChild.getAttribute('title') !== newTitle) {
+                        avatar.firstElementChild.setAttribute('title', newTitle);
+                    }
+                };
             }
+        }
+        if (direction === DIRECTIONS.LEFT) {
+            const rect = clientRects[0];
+            caretElement.style.height = `${rect.height * 1.2}px`;
+            caretElement.style.top = `${rect.y - containerRect.y}px`;
+            caretElement.style.left = `${rect.x - containerRect.x}px`;
+        } else {
+            const rect = peek(clientRects);
+            caretElement.style.height = `${rect.height * 1.2}px`;
+            caretElement.style.top = `${rect.y - containerRect.y}px`;
+            caretElement.style.left = `${rect.right - containerRect.x}px`;
         }
         this._multiselectionRemoveClient(clientId);
         this._collabSelectionsContainer.append(caretElement, ...indicators);
@@ -1525,11 +1594,18 @@ export class OdooEditor extends EventTarget {
     multiselectionRemove(clientId) {
         this._collabSelectionInfos.delete(clientId);
         this._multiselectionRemoveClient(clientId);
+        const avatars = [...this._collabSelectionsContainer.children].filter(child => (
+            child.classList.contains('oe-collaboration-caret-avatar') &&
+            child.getAttribute('data-selection-client-id') === clientId
+        ));
+        for (const avatar of avatars) {
+            avatar.remove();
+        }
     }
 
     _multiselectionRemoveClient(clientId) {
         const elements = this._collabSelectionsContainer.querySelectorAll(
-            `[data-selection-client-id="${clientId}"]`,
+            `[data-selection-client-id="${clientId}"]:not(.oe-collaboration-caret-avatar)`,
         );
         for (const element of elements) {
             element.remove();
@@ -3197,6 +3273,7 @@ export class OdooEditor extends EventTarget {
             selection: serializeSelection(selection),
             color: this._collabSelectionColor,
             clientId: this._collabClientId,
+            clientAvatarUrl: this._collabClientAvatarUrl,
         });
     }
 
