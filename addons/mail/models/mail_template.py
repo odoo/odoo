@@ -29,6 +29,15 @@ class MailTemplate(models.Model):
 
     # description
     name = fields.Char('Name', translate=True)
+    description = fields.Text(
+        'Template description', translate=True,
+        help="This field is used for internal description of the template's usage.")
+    active = fields.Boolean(default=True)
+    template_category = fields.Selection(
+        [('base_template', 'Base Template'),
+         ('hidden_template', 'Hidden Template'),
+         ('custom_template', 'Custom Template')],
+         compute="_compute_template_category", search="_search_template_category")
     model_id = fields.Many2one('ir.model', 'Applies to')
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     subject = fields.Char('Subject', translate=True, prefetch=True, help="Subject (placeholders may be used here)")
@@ -84,6 +93,42 @@ class MailTemplate(models.Model):
         writable_templates = self._filter_access_rules('write')
         for template in self:
             template.can_write = template in writable_templates
+
+    @api.depends('active', 'description')
+    def _compute_template_category(self):
+        """ Base templates (or master templates) are active templates having
+        a description and an XML ID. User defined templates (no xml id),
+        templates without description or archived templates are not
+        base templates anymore. """
+        deactivated = self.filtered(lambda template: not template.active)
+        if deactivated:
+            deactivated.template_category = 'hidden_template'
+        remaining = self - deactivated
+        if remaining:
+            template_external_ids = remaining.get_external_id()
+            for template in remaining:
+                if bool(template_external_ids[template.id]) and template.description:
+                    template.template_category = 'base_template'
+                elif bool(template_external_ids[template.id]):
+                    template.template_category = 'hidden_template'
+                else:
+                    template.template_category = 'custom_template'
+
+    @api.model
+    def _search_template_category(self, operator, value):
+        if operator in ['in', 'not in'] and isinstance(value, list):
+            value_templates = self.env['mail.template'].search([]).filtered(
+                lambda t: t.template_category in value
+            )
+            return [('id', operator, value_templates.ids)]
+
+        if operator in ['=', '!='] and isinstance(value, str):
+            value_templates = self.env['mail.template'].search([]).filtered(
+                lambda t: t.template_category == value
+            )
+            return [('id', 'in' if operator == "=" else 'not in', value_templates.ids)]
+
+        raise NotImplementedError(_('Operation not supported'))
 
     # ------------------------------------------------------------
     # CRUD
