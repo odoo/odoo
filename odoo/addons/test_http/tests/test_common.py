@@ -1,15 +1,39 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from contextlib import contextmanager
 from unittest.mock import patch
 
+from decorator import decorator
+
 import odoo
-from odoo.http import Session
-from odoo.tests.common import HttpCase
-from odoo.tools.func import lazy_property
 from odoo.addons.test_http.utils import MemoryGeoipResolver, MemorySessionStore
+from odoo.http import Session
+from odoo.tools.func import lazy_property
 
 
-class TestHttpBase(HttpCase):
+@contextmanager
+def nodb():
+    with patch('odoo.http.db_list', return_value=[]),\
+         patch('odoo.http.db_filter', return_value=[]):
+        yield
+
+def multidb(dblist):
+    assert len(dblist) >= 2
+    @decorator
+    def _multidb(func, self, *args, **kwargs):
+        with multidb_(dblist, self.registry):
+            return func(self, *args, **kwargs)
+    return _multidb
+@contextmanager
+def multidb_(dblist, registry):
+    with patch('odoo.http.db_list', return_value=dblist),\
+         patch('odoo.http.db_filter', side_effect=lambda dbs, host=None: [
+             db for db in dbs if db in dblist
+         ]),\
+         patch('odoo.http.Registry', return_value=registry):
+        yield
+
+
+class HttpTestMixin:
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -22,24 +46,3 @@ class TestHttpBase(HttpCase):
     def setUp(self):
         super().setUp()
         odoo.http.root.session_store.store.clear()
-
-    def db_url_open(self, url, *args, allow_redirects=False, **kwargs):
-        return self.url_open(url, *args, allow_redirects=allow_redirects, **kwargs)
-
-    def nodb_url_open(self, url, *args, allow_redirects=False, **kwargs):
-        with patch('odoo.http.db_list') as db_list, \
-             patch('odoo.http.db_filter') as db_filter:
-            db_list.return_value = []
-            db_filter.return_value = []
-            return self.url_open(url, *args, allow_redirects=allow_redirects, **kwargs)
-
-    def multidb_url_open(self, url, *args, allow_redirects=False, dblist=(), **kwargs):
-        dblist = dblist or self.db_list
-        assert len(dblist) >= 2, "There should be at least 2 databases"
-        with patch('odoo.http.db_list') as db_list, \
-             patch('odoo.http.db_filter') as db_filter, \
-             patch('odoo.http.Registry') as Registry:
-            db_list.return_value = dblist
-            db_filter.side_effect = lambda dbs, host=None: [db for db in dbs if db in dblist]
-            Registry.return_value = self.registry
-            return self.url_open(url, *args, allow_redirects=allow_redirects, **kwargs)

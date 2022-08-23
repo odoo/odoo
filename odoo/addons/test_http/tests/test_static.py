@@ -1,18 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import datetime, timedelta
 from os.path import basename, join as opj
 from unittest.mock import patch
+
 from freezegun import freeze_time
 
-from odoo.tests import tagged
+from odoo.tests import tagged, HttpCase, WsgiCase
 from odoo.tools import config, file_open
+from .test_common import HttpTestMixin
 
-from .test_common import TestHttpBase
 
-
-@tagged('post_install', '-at_install')
-class TestHttpStaticCommon(TestHttpBase):
+class StaticMixin(HttpTestMixin):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -27,7 +25,7 @@ class TestHttpStaticCommon(TestHttpBase):
     def assertDownload(
         self, url, headers, assert_status_code, assert_headers, assert_content=None
     ):
-        res = self.db_url_open(url, headers=headers)
+        res = self.opener.get(url, headers=headers, allow_redirects=False)
         res.raise_for_status()
         self.assertEqual(res.status_code, assert_status_code)
         for header_name, header_value in assert_headers.items():
@@ -60,8 +58,7 @@ class TestHttpStaticCommon(TestHttpBase):
         return self.assertDownload(url, {}, 200, headers, self.placeholder_data)
 
 
-@tagged('post_install', '-at_install')
-class TestHttpStatic(TestHttpStaticCommon):
+class StaticBase(StaticMixin):
     def test_static00_static(self):
         with self.subTest(x_sendfile=False):
             res = self.assertDownloadGizeh('/test_http/static/src/img/gizeh.png')
@@ -81,7 +78,7 @@ class TestHttpStatic(TestHttpStaticCommon):
         self.assertEqual(res.headers.get('Cache-Control', ''), 'no-cache, max-age=0')
 
     def test_static02_not_found(self):
-        res = self.nodb_url_open("/test_http/static/i-dont-exist")
+        res = self.opener.get('/test_http/static/i-dont-exist', allow_redirects=False)
         self.assertEqual(res.status_code, 404)
 
     def test_static03_attachment_fallback(self):
@@ -133,7 +130,7 @@ class TestHttpStatic(TestHttpStaticCommon):
             self.assertDownloadGizeh('/web/image/test_http.gizeh_url', x_sendfile=False)
 
     def test_static07_attachment_external_url(self):
-        res = self.db_url_open('/web/content/test_http.rickroll')
+        res = self.opener.get('/web/content/test_http.rickroll', allow_redirects=False)
         res.raise_for_status()
         self.assertEqual(res.status_code, 301)
         self.assertEqual(res.headers.get('Location'), 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
@@ -269,7 +266,7 @@ class TestHttpStatic(TestHttpStaticCommon):
         self.assertEqual(res.status_code, 404)
 
 
-class TestHttpStaticCache(TestHttpStaticCommon):
+class StaticCache(StaticMixin):
     @freeze_time(datetime.utcnow())
     def test_static_cache0_standard(self, domain=''):
         # Wed, 21 Oct 2015 07:28:00 GMT
@@ -278,16 +275,16 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         http_date_format = '%a, %d %b %Y %H:%M:%S GMT'
         one_week_away = (datetime.utcnow() + timedelta(weeks=1)).strftime(http_date_format)
 
-        res1 = self.nodb_url_open(f'{domain}/test_http/static/src/img/gizeh.png')
+        res1 = self.opener.get(f'{domain}/test_http/static/src/img/gizeh.png', allow_redirects=False)
         res1.raise_for_status()
         self.assertEqual(res1.status_code, 200)
         self.assertEqual(res1.headers.get('Cache-Control'), 'public, max-age=604800')  # one week
         self.assertEqual(res1.headers.get('Expires'), one_week_away)
         self.assertIn('ETag', res1.headers)
 
-        res2 = self.nodb_url_open(f'{domain}/test_http/static/src/img/gizeh.png', headers={
+        res2 = self.opener.get(f'{domain}/test_http/static/src/img/gizeh.png', headers={
             'If-None-Match': res1.headers['ETag']
-        })
+        }, allow_redirects=False)
         res2.raise_for_status()
         self.assertEqual(res2.status_code, 304, "We should not download the file again.")
 
@@ -304,9 +301,9 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         self.assertEqual(res1.headers.get('Expires'), one_year_away)
         self.assertIn('ETag', res1.headers)
 
-        res2 = self.db_url_open(f'{domain}/web/content/test_http.gizeh_png?unique=1', headers={
+        res2 = self.opener.get(f'{domain}/web/content/test_http.gizeh_png?unique=1', headers={
             'If-None-Match': res1.headers['ETag']
-        })
+        }, allow_redirects=False)
         res2.raise_for_status()
         self.assertEqual(res2.status_code, 304, "We should not download the file again.")
 
@@ -317,8 +314,22 @@ class TestHttpStaticCache(TestHttpStaticCommon):
         self.assertNotIn('Expires', res1.headers)
         self.assertIn('ETag', res1.headers)
 
-        res2 = self.db_url_open(f'{domain}/web/content/test_http.gizeh_png?nocache=1', headers={
+        res2 = self.opener.get(f'{domain}/web/content/test_http.gizeh_png?nocache=1', headers={
             'If-None-Match': res1.headers['ETag']
-        })
+        }, allow_redirects=False)
         res2.raise_for_status()
         self.assertEqual(res2.status_code, 304, "We should not download the file again.")
+
+@tagged('-at_install', 'post_install')
+class TestHttpStaticBase(StaticBase, HttpCase):
+    pass
+
+@tagged('-at_install', 'post_install')
+class TestHttpStaticCache(StaticCache, HttpCase):
+    pass
+
+class TestWsgiStaticBase(StaticBase, WsgiCase):
+    pass
+
+class TestWsgiStaticCache(StaticCache, WsgiCase):
+    pass

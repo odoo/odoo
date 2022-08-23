@@ -1,14 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import contextlib
 
 from odoo.tests import tagged
-from odoo.tests.common import new_test_user
+from odoo.tests.common import new_test_user, WsgiCase, HttpCase
+from .test_common import nodb, HttpTestMixin
 
-from .test_common import TestHttpBase
 
-
-@tagged('post_install', '-at_install')
-class TestHttpGreeting(TestHttpBase):
+class GreetingMixin(HttpTestMixin):
     def test_greeting0_matrix(self):
         new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
         test_matrix = [
@@ -33,14 +31,15 @@ class TestHttpGreeting(TestHttpBase):
 
         for path, withdb, login, expected_code, expected_pattern in test_matrix:
             with self.subTest(path=path, withdb=withdb, login=login):
+                cm = nodb()
                 if withdb:
                     if login == 'public':
                         self.authenticate(None, None)
                     elif login:
                         self.authenticate(login, login)
-                    res = self.db_url_open(path, allow_redirects=False)
-                else:
-                    res = self.nodb_url_open(path, allow_redirects=False)
+                    cm = contextlib.nullcontext()
+                with cm:
+                    res = self.opener.get(path, allow_redirects=False)
 
                 self.assertEqual(res.status_code, expected_code)
                 self.assertRegex(res.text, expected_pattern)
@@ -48,8 +47,9 @@ class TestHttpGreeting(TestHttpBase):
                 if withdb and login:
                     self.logout(keep_db=False)
 
+    @nodb()
     def test_greeting1_headers_nodb(self):
-        res = self.nodb_url_open('/test_http/greeting')
+        res = self.opener.get('/test_http/greeting')
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
         self.assertEqual(res.text, "Tek'ma'te")
@@ -57,7 +57,14 @@ class TestHttpGreeting(TestHttpBase):
     def test_greeting2_headers_db(self):
         new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
         self.authenticate('jackoneill', 'jackoneill')
-        res = self.db_url_open('/test_http/greeting')
+        res = self.opener.get('/test_http/greeting')
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
         self.assertEqual(res.text, "Tek'ma'te")
+
+
+class TestWsgiGreeting(GreetingMixin, WsgiCase):
+    pass
+@tagged('post_install', '-at_install')
+class TestHttpGreeting(GreetingMixin, HttpCase):
+    pass

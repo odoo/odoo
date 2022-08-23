@@ -7,6 +7,7 @@ helpers and classes to write tests.
 import base64
 import collections
 import concurrent.futures
+import contextlib
 import difflib
 import functools
 import importlib
@@ -29,8 +30,14 @@ import threading
 import time
 import unittest
 import warnings
+from abc import abstractmethod
 from collections import defaultdict
 from concurrent.futures import Future, CancelledError, wait
+from http.cookies import BaseCookie
+from socket import gethostbyname
+
+from requests import HTTPError
+
 try:
     from concurrent.futures import InvalidStateError
 except ImportError:
@@ -43,7 +50,7 @@ from xmlrpc import client as xmlrpclib
 
 import requests
 import werkzeug.urls
-import werkzeug.urls
+import werkzeug.wrappers
 from decorator import decorator
 from lxml import etree, html
 
@@ -1603,7 +1610,7 @@ which leads to stray network requests and inconsistencies."""))
         return replacer
 
 
-class Opener(requests.Session):
+class RequestsOpener(requests.Session):
     """
     Flushes and clears the current transaction when starting a request.
 
@@ -1618,11 +1625,17 @@ class Opener(requests.Session):
     def request(self, *args, **kwargs):
         self.cr.flush()
         self.cr.clear()
+        # fixup URL for convenience compatibility with werkzeug client
+        if args[1].startswith('/'):
+            args = (
+                args[0],
+                f"http://{HOST}:{odoo.tools.config['http_port']}{args[1]}",
+                *args[2:]
+            )
         return super().request(*args, **kwargs)
 
-
 class Transport(xmlrpclib.Transport):
-    """ see :class:`Opener` """
+    """ see :class:`RequestsOpener` """
     def __init__(self, cr: BaseCursor):
         self.cr = cr
         super().__init__()
@@ -1633,81 +1646,135 @@ class Transport(xmlrpclib.Transport):
         return super().request(*args, **kwargs)
 
 
-class HttpCase(TransactionCase):
-    """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
-    registry_test_mode = True
-    browser = None
-    browser_size = '1366x768'
-    touch_enabled = False
-    allow_end_on_form = False
+class TestResponse(werkzeug.wrappers.Response):
+    """Werkzeug 2.0 has TestResponse which basically adds this, but we don't
+    require it (yet) so add requests.Response compatibility shims
+    """
+    @property
+    def url(self):
+        return '???' # doesn't exist in werkzeug
+    @property
+    def reason(self):
+        return self.status
+    def raise_for_status(self):
+        reason = self.status
+        if 400 <= self.status_code < 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+        elif 500 <= self.status_code < 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+        else:
+            http_error_msg = ""
 
+        if http_error_msg:
+            raise HTTPError(http_error_msg, response=self)
+    @property
+    def ok(self):
+        with contextlib.suppress(HTTPError):
+            self.raise_for_status()
+            return True
+        return False
+
+    @property
+    def text(self):
+        return self.get_data(as_text=True)
+
+    # werkzeug 2 adds a `json` to `Response`, but it's a property...
+    # pylint: disable=invalid-overridden-method
+    def json(self):
+        return json.loads(self.text)
+
+    @property
+    def content(self):
+        return self.data
+
+    @property
+    def cookies(self):
+        cookies = BaseCookie()
+        for h, v in self.headers.items():
+            if h == 'Set-Cookie':
+                cookies.load(v)
+        return {name: morsel.value for name, morsel in cookies.items()}
+
+class TestClientOpener(werkzeug.test.Client):
+    def __init__(self, cr):
+        super().__init__(odoo.http.root, response_wrapper=TestResponse)
+        self.cr = cr
+
+    def open(self, *args, **kwargs):
+        self.cr.flush()
+        self.cr.clear()
+        assert not kwargs.pop('files', None), \
+            "TODO: translate files between requests and werkzeug APIs"
+        kwargs.pop('timeout', None)
+        # translate kwargs from requests
+        kwargs['follow_redirects'] = kwargs.pop('allow_redirects', False)
+
+        base_url = f"http://{HOST}:{odoo.tools.config['http_port']}"
+        if not args[0].startswith(('/', base_url + '/')):
+            raise AssertionError(f"WSGI client implies {HOST}")
+        args = (
+            args[0].replace(base_url, ''),
+            *args[1:]
+        )
+
+        kwargs['environ_base'] = {
+            # defaults the current IP as the remote (gethostbyname is probably
+            # unnecessary but...)
+            'REMOTE_ADDR': gethostbyname(HOST),
+        }
+        return super().open(*args, **kwargs)
+
+    @property
+    def cookies(self):
+        # should be a RequestsCookieJar, which is a CookieJar subclass with a
+        # complex MutableMapping interface (and some more), but just implement
+        # setitem for now, client has a cookie_jar attribute which is its own
+        # TestCookieJar
+        return CookiesProxy(self)
+class CookiesProxy:
+    def __init__(self, client):
+        self.client = client
+
+    def __setitem__(self, key, value):
+        # nb: that's not the cookiejar method
+        self.client.set_cookie("", key, value)
+
+class QueryCase(TransactionCase):
     _logger: logging.Logger = None
+
+    @abstractmethod
+    def Opener(self, cr: Cursor):
+        raise NotImplementedError
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
         ICP = cls.env['ir.config_parameter']
         ICP.set_param('web.base.url', cls.base_url())
         ICP.env.flush_all()
-        # v8 api with correct xmlrpc exception handling.
-        cls.xmlrpc_url = f'http://{HOST}:{odoo.tools.config["http_port"]:d}/xmlrpc/2/'
+
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
 
     def setUp(self):
         super().setUp()
-        if self.registry_test_mode:
-            self.registry.enter_test_mode(self.cr)
-            self.addCleanup(self.registry.leave_test_mode)
+        self.registry.enter_test_mode(self.cr)
+        self.addCleanup(self.registry.leave_test_mode)
 
-        self.xmlrpc_common = xmlrpclib.ServerProxy(self.xmlrpc_url + 'common', transport=Transport(self.cr))
-        self.xmlrpc_db = xmlrpclib.ServerProxy(self.xmlrpc_url + 'db', transport=Transport(self.cr))
-        self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr))
         # setup an url opener helper
-        self.opener = Opener(self.cr)
-
-    @classmethod
-    def start_browser(cls):
-        # start browser on demand
-        if cls.browser is None:
-            cls.browser = ChromeBrowser(cls)
-            cls.addClassCleanup(cls.terminate_browser)
-
-    @classmethod
-    def terminate_browser(cls):
-        if cls.browser:
-            cls.browser.stop()
-            cls.browser = None
+        self.opener = self.Opener(self.cr)
 
     def url_open(self, url, data=None, files=None, timeout=12, headers=None, allow_redirects=True, head=False):
         if url.startswith('/'):
             url = self.base_url() + url
         if head:
-            return self.opener.head(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=False)
+            return self.opener.head(url, timeout=timeout, headers=headers, allow_redirects=False)
         if data or files:
             return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
         return self.opener.get(url, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
-
-    def _wait_remaining_requests(self, timeout=10):
-
-        def get_http_request_threads():
-            return [t for t in threading.enumerate() if t.name.startswith('odoo.service.http.request.')]
-
-        start_time = time.time()
-        request_threads = get_http_request_threads()
-        self._logger.info('waiting for threads: %s', request_threads)
-
-        for thread in request_threads:
-            thread.join(timeout - (time.time() - start_time))
-
-        request_threads = get_http_request_threads()
-        for thread in request_threads:
-            self._logger.info("Stop waiting for thread %s handling request for url %s",
-                                    thread.name, getattr(thread, 'url', '<UNKNOWN>'))
-
-        if request_threads:
-            self._logger.info('remaining requests')
-            odoo.tools.misc.dumpstacks()
 
     def logout(self, keep_db=True):
         self.session.logout(keep_db=keep_db)
@@ -1748,13 +1815,79 @@ class HttpCase(TransactionCase):
         #
         # An alternative would be to set the cookie to None (unsetting it
         # completely) or clear-ing session.cookies.
-        self.opener = Opener(self.cr)
+        self.opener = self.Opener(self.cr)
         self.opener.cookies['session_id'] = session.sid
+
+        return session
+
+    @classmethod
+    def base_url(cls):
+        return f"http://{HOST}:{odoo.tools.config['http_port']}"
+
+class WsgiCase(QueryCase):
+    Opener = TestClientOpener
+
+class HttpCase(QueryCase):
+    """ Transactional HTTP TestCase with url_open and Chrome headless helpers. """
+    browser = None
+    browser_size = '1366x768'
+    touch_enabled = False
+    allow_end_on_form = False
+
+    Opener = RequestsOpener
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # v8 api with correct xmlrpc exception handling.
+        cls.xmlrpc_url = f'{cls.base_url()}/xmlrpc/2/'
+
+    def setUp(self):
+        super().setUp()
+        self.xmlrpc_common = xmlrpclib.ServerProxy(self.xmlrpc_url + 'common', transport=Transport(self.cr))
+        self.xmlrpc_db = xmlrpclib.ServerProxy(self.xmlrpc_url + 'db', transport=Transport(self.cr))
+        self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr))
+
+    def authenticate(self, user, password):
+        session = super().authenticate(user, password)
         if self.browser:
             self._logger.info('Setting session cookie in browser')
             self.browser.set_cookie('session_id', session.sid, '/', HOST)
-
         return session
+
+    @classmethod
+    def start_browser(cls):
+        # start browser on demand
+        if cls.browser is None:
+            cls.browser = ChromeBrowser(cls)
+            cls.addClassCleanup(cls.terminate_browser)
+
+    @classmethod
+    def terminate_browser(cls):
+        if cls.browser:
+            cls.browser.stop()
+            cls.browser = None
+
+    def _wait_remaining_requests(self, timeout=10):
+
+        def get_http_request_threads():
+            return [t for t in threading.enumerate() if t.name.startswith('odoo.service.http.request.')]
+
+        start_time = time.time()
+        request_threads = get_http_request_threads()
+        self._logger.info('waiting for threads: %s', request_threads)
+
+        for thread in request_threads:
+            thread.join(timeout - (time.time() - start_time))
+
+        request_threads = get_http_request_threads()
+        for thread in request_threads:
+            self._logger.info("Stop waiting for thread %s handling request for url %s",
+                                    thread.name, getattr(thread, 'url', '<UNKNOWN>'))
+
+        if request_threads:
+            self._logger.info('remaining requests')
+            odoo.tools.misc.dumpstacks()
 
     def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, watch=False, **kw):
         """ Test js code running in the browser
@@ -1828,10 +1961,6 @@ class HttpCase(TransactionCase):
             self.browser.delete_cookie('session_id', domain=HOST)
             self.browser.clear()
             self._wait_remaining_requests()
-
-    @classmethod
-    def base_url(cls):
-        return f"http://{HOST}:{odoo.tools.config['http_port']}"
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the
