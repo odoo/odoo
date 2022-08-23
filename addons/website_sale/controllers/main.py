@@ -1597,15 +1597,6 @@ class WebsiteSale(http.Controller):
     # Edit
     # ------------------------------------------------------
 
-    @http.route(['/shop/add_product'], type='json', auth="user", methods=['POST'], website=True)
-    def add_product(self, name=None, category=None, **post):
-        product = request.env['product.product'].create({
-            'name': name or _("New Product"),
-            'public_categ_ids': category,
-            'website_id': request.website.id,
-        })
-        return self.env["website"].get_client_action_url(product.product_tmpl_id.website_url, True)
-
     @http.route(['/shop/config/product'], type='json', auth='user')
     def change_product_config(self, product_id, **options):
         if not request.env.user.has_group('website.group_website_restricted_editor'):

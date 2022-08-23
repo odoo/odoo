@@ -7,15 +7,6 @@ from odoo.addons.website_slides.controllers.main import WebsiteSlides
 
 class WebsiteSlidesForum(WebsiteSlides):
 
-    def _slide_channel_prepare_values(self, **kwargs):
-        channel = super(WebsiteSlidesForum, self)._slide_channel_prepare_values(**kwargs)
-        if bool(kwargs.get('link_forum')):
-            forum = request.env['forum.forum'].create({
-                'name': kwargs.get('name')
-            })
-            channel['forum_id'] = forum.id
-        return channel
-
     # Profile
     # ---------------------------------------------------
 

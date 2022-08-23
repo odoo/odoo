@@ -591,27 +591,6 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.CHANNEL UTILS
     # --------------------------------------------------
 
-    @http.route('/slides/channel/add', type='http', auth='user', methods=['POST'], website=True)
-    def slide_channel_create(self, *args, **kw):
-        channel = request.env['slide.channel'].create(self._slide_channel_prepare_values(**kw))
-        return request.redirect("/slides/%s" % (slug(channel)))
-
-    def _slide_channel_prepare_values(self, **kw):
-        # `tag_ids` is a string representing a list of int with coma. i.e.: '2,5,7'
-        # We don't want to allow user to create tags and tag groups on the fly.
-        tag_ids = []
-        if kw.get('tag_ids'):
-            tag_ids = [int(item) for item in kw['tag_ids'].split(',')]
-
-        return {
-            'name': kw['name'],
-            'description': kw.get('description'),
-            'channel_type': kw.get('channel_type', 'documentation'),
-            'user_id': request.env.user.id,
-            'tag_ids': [(6, 0, tag_ids)],
-            'allow_comment': bool(kw.get('allow_comment')),
-        }
-
     def _slide_channel_prepare_review_values(self, channel):
         values = {
             'rating_avg': channel.rating_avg,
