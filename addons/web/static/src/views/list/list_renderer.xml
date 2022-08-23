@@ -75,7 +75,7 @@
             </t>
             <tr t-if="displayRowCreates">
                 <td t-if="withHandleColumn"/>
-                <td t-att-colspan="state.columns.length + 1"
+                <td t-att-colspan="withHandleColumn ? nbCols - 1 : nbCols"
                     class="o_field_x2many_list_row_add"
                     t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, null)"
                 >
@@ -105,7 +105,7 @@
             </tr>
             <t t-if="!props.list.isGrouped">
                 <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
-                    <td t-att-colspan="state.columns.length + 1">&#8203;</td>
+                    <td t-att-colspan="nbCols">&#8203;</td>
                 </tr>
             </t>
         </t>
@@ -119,7 +119,7 @@
                     <tr t-if="!group.list.isGrouped and props.editable and props.activeActions['create']">
                         <td t-if="hasSelectors"/>
                         <td
-                            t-att-colspan="state.columns.length + 1"
+                            t-att-colspan="hasSelector ? nbCols - 1 : nbCols"
                             class="o_group_field_row_add"
                         >
                             <a href="#"

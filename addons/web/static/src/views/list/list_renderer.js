@@ -203,7 +203,7 @@ export class ListRenderer extends Component {
         }
 
         const table = this.tableRef.el;
-        const headers = [...table.querySelectorAll("thead th")];
+        const headers = [...table.querySelectorAll("thead th:not(.o_list_record_remove_header)")];
 
         if (!this.columnWidths || !this.columnWidths.length) {
             // no column widths to restore
@@ -331,6 +331,17 @@ export class ListRenderer extends Component {
 
     get fields() {
         return this.props.list.fields;
+    }
+
+    get nbCols() {
+        let nbCols = this.state.columns.length;
+        if (this.hasSelectors) {
+            nbCols++;
+        }
+        if (this.props.activeActions && this.props.activeActions.onDelete) {
+            nbCols++;
+        }
+        return nbCols;
     }
 
     canUseFormatter(column, record) {
