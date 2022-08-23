@@ -8,6 +8,31 @@ registerModel({
     name: 'Chatbot',
     recordMethods: {
         /**
+         * See 'chatbotSaveSession'.
+         *
+         * We retrieve the livechat uuid from the session cookie since the livechat Widget is not yet
+         * initialized when we restore the chatbot state.
+         *
+         * We also clear any older keys that store a previously saved chatbot session.
+         * (In that case we clear the actual browser's local storage, we don't use the localStorage
+         * object as it does not allow browsing existing keys, see 'local_storage.js'.)
+         */
+        restoreSession() {
+            const browserLocalStorage = window.localStorage;
+            if (browserLocalStorage && browserLocalStorage.length) {
+                for (let i = 0; i < browserLocalStorage.length; i++) {
+                    const key = browserLocalStorage.key(i);
+                    if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.sessionCookieKey) {
+                        browserLocalStorage.removeItem(key);
+                    }
+                }
+            }
+            const chatbotState = localStorage.getItem(this.sessionCookieKey);
+            if (chatbotState) {
+                this.update({ currentStep: { data: this.localStorageState._chatbotCurrentStep } });
+            }
+        },
+        /**
          * @private
          * @returns {Object|FieldCommand}
          */
