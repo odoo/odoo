@@ -188,8 +188,6 @@ odoo.define('website_sale_tour.tour', function (require) {
                 args: [{
                     'auth_signup_uninvited': 'b2b',
                     'show_line_subtotals_tax_selection': 'tax_included',
-                    'group_show_line_subtotals_tax_excluded': false,
-                    'group_show_line_subtotals_tax_included': true,
                 }],
             });
             var def2 = def1.then(function (resId) {

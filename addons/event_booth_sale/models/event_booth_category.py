@@ -21,6 +21,9 @@ class EventBoothCategory(models.Model):
     price = fields.Float(
         string='Price', compute='_compute_price', digits='Product Price', readonly=False,
         store=True, groups="event.group_event_registration_desk")
+    price_incl = fields.Float(
+        string='Price incl', compute='_compute_price_incl', digits='Product Price', readonly=False,
+        groups="event.group_event_registration_desk")
     currency_id = fields.Many2one(related='product_id.currency_id', groups="event.group_event_registration_desk")
     price_reduce = fields.Float(
         string='Price Reduce', compute='_compute_price_reduce',
@@ -44,6 +47,16 @@ class EventBoothCategory(models.Model):
             if category.product_id and category.product_id.list_price:
                 category.price = category.product_id.list_price + category.product_id.price_extra
 
+    @api.depends('product_id', 'product_id.taxes_id', 'price')
+    def _compute_price_incl(self):
+        for category in self:
+            if category.product_id and category.price:
+                tax_ids = category.product_id.taxes_id
+                taxes = tax_ids.compute_all(category.price, category.currency_id, 1.0, product=category.product_id)
+                category.price_incl = taxes['total_included']
+            else:
+                category.price_incl = 0
+
     @api.depends_context('pricelist', 'quantity')
     @api.depends('product_id', 'price')
     def _compute_price_reduce(self):
@@ -65,7 +78,7 @@ class EventBoothCategory(models.Model):
         for category in self:
             tax_ids = category.product_id.taxes_id
             taxes = tax_ids.compute_all(category.price_reduce, category.currency_id, 1.0, product=category.product_id)
-            category.price_reduce_taxinc = taxes['total_included']
+            category.price_reduce_taxinc = taxes['total_included'] or 0
 
     def _init_column(self, column_name):
         """ Initialize product_id for existing columns when installing sale

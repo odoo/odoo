@@ -16,7 +16,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line.price_unit', 'order_line.tax_id', 'order_line.discount', 'order_line.product_uom_qty')
     def _compute_amount_delivery(self):
         for order in self:
-            if self.env.user.has_group('account.group_show_line_subtotals_tax_excluded'):
+            if self.env.company.show_line_subtotals_tax_selection == 'tax_excluded':
                 order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_subtotal'))
             else:
                 order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_total'))

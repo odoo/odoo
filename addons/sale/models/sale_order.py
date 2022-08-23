@@ -274,6 +274,9 @@ class SaleOrder(models.Model):
     partner_credit_warning = fields.Text(
         compute='_compute_partner_credit_warning',
         groups='account.group_account_invoice,account.group_account_readonly')
+    tax_calculation_rounding_method = fields.Selection(
+        related='company_id.tax_calculation_rounding_method',
+        depends=['company_id'])
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
         compute='_compute_tax_country_id',

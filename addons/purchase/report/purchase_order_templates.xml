@@ -53,14 +53,19 @@
                         <th name="th_date_req" class="text-center"><strong>Date Req.</strong></th>
                         <th name="th_quantity" class="text-end"><strong>Qty</strong></th>
                         <th name="th_price_unit" class="text-end"><strong>Unit Price</strong></th>
-                        <th name="th_amount" class="text-end"><strong>Amount</strong></th>
+                        <th name="th_subtotal" class="text-end">
+                            <strong>Tax excl.</strong>
+                        </th>
+                        <th t-if="o.company_id.tax_calculation_rounding_method == 'round_per_line'" name="th_total" class="text-end">
+                            <strong>Tax incl.</strong>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     <t t-set="current_subtotal" t-value="0"/>
                     <t t-foreach="o.order_line" t-as="line">
-                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
-                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
+                        <t t-set="current_total" t-value="current_subtotal + line.price_total" t-if="o.company_id.tax_calculation_rounding_method == 'round_per_line'"/>
 
                         <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
                             <t t-if="not line.display_type">
@@ -82,6 +87,10 @@
                                 </td>
                                 <td class="text-end">
                                     <span t-field="line.price_subtotal"
+                                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </td>
+                                <td t-if="o.company_id.tax_calculation_rounding_method == 'round_per_line'" class="text-end">
+                                    <span t-field="line.price_total"
                                         t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                 </td>
                             </t>
