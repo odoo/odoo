@@ -275,6 +275,14 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      */
     _onScroll() {
+        if (
+            !this.messaging.exists() ||
+            !this.messaging.publicLivechatGlobal ||
+            !this.messaging.publicLivechatGlobal.livechatButtonView ||
+            !this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow
+        ) {
+            return;
+        }
         if (this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.isAtBottom()) {
             this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.markAsRead();
         }
