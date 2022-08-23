@@ -45,7 +45,7 @@ patchRecordMethods('LivechatButtonView', {
             return this._super();
         }
         this.messaging.publicLivechatGlobal.update({
-            publicLivechat: { data: this.testChatbotData.channel },
+            publicLivechat: { data: this.messaging.publicLivechatGlobal.testChatbotData.channel },
         });
         await this.openChatWindow();
         this.widget._sendWelcomeMessage();

@@ -313,5 +313,6 @@ registerModel({
             default: '',
         }),
         sessionCookie: attr(),
+        testChatbotData: attr(),
     },
 });
