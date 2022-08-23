@@ -149,35 +149,37 @@ class AccruedExpenseRevenue(models.TransientModel):
         fnames = []
         total_balance = 0.0
         for order in orders:
-            if len(orders) == 1 and self.amount and order.order_line:
+            if self.amount and order.order_line:
                 total_balance = self.amount
-                order_line = order.order_line[0]
-                account = self._get_computed_account(order, order_line.product_id, is_purchase)
-                values = _get_aml_vals(order, self.amount, 0, account.id, label=_('Manual entry'))
-                move_lines.append(Command.create(values))
+                total = 0
+                lines = order.order_line.filtered(lambda l: not l.display_type)
+                for i, line in enumerate(lines, start=1):
+                    account = self._get_computed_account(order, line.product_id, is_purchase)
+                    amount = self.amount / len(order.order_line.filtered(lambda l: not l.display_type))
+                    total += self.currency_id.round(amount)
+                    # to avoid rounding issues
+                    if total > self.amount:
+                        amount -= total - self.amount
+                    elif i == len(lines) and total < self.amount:
+                        amount += self.amount - total
+                    values = _get_aml_vals(order, amount, 0, account.id, label=_('Manual entry'))
+                    move_lines.append(Command.create(values))
             else:
                 other_currency = self.company_id.currency_id != order.currency_id
                 rate = order.currency_id._get_rates(self.company_id, self.date).get(order.currency_id.id) if other_currency else 1.0
                 # create a virtual order that will allow to recompute the qty delivered/received (and dependancies)
                 # without actually writing anything on the real record (field is computed and stored)
                 o = order.new(origin=order)
+                lines = o.order_line.filtered(lambda l: not l.display_type)
                 if is_purchase:
-                    o.order_line.with_context(accrual_entry_date=self.date)._compute_qty_received()
-                    o.order_line.with_context(accrual_entry_date=self.date)._compute_qty_invoiced()
+                    lines.with_context(accrual_entry_date=self.date)._compute_qty_received()
+                    lines.with_context(accrual_entry_date=self.date)._compute_qty_invoiced()
                 else:
-                    o.order_line.with_context(accrual_entry_date=self.date)._compute_qty_delivered()
-                    o.order_line.with_context(accrual_entry_date=self.date)._compute_qty_invoiced()
-                    o.order_line.with_context(accrual_entry_date=self.date)._compute_untaxed_amount_invoiced()
-                    o.order_line.with_context(accrual_entry_date=self.date)._get_to_invoice_qty()
-                lines = o.order_line.filtered(
-                    lambda l: l.display_type not in ['line_section', 'line_note'] and
-                    fields.Float.compare(
-                        l.qty_to_invoice,
-                        0,
-                        precision_rounding=l.product_uom.rounding,
-                    ) == 1
-                )
-                for order_line in lines:
+                    lines.with_context(accrual_entry_date=self.date)._compute_qty_delivered()
+                    lines.with_context(accrual_entry_date=self.date)._compute_qty_invoiced()
+                    lines.with_context(accrual_entry_date=self.date)._compute_untaxed_amount_invoiced()
+                    lines.with_context(accrual_entry_date=self.date)._get_to_invoice_qty()
+                for order_line in lines.filtered(lambda l: fields.Float.compare(l.qty_to_invoice, 0, precision_rounding=l.product_uom.rounding) == 1):
                     if is_purchase:
                         amount = self.company_id.currency_id.round(order_line.qty_to_invoice * order_line.price_unit / rate)
                         amount_currency = order_line.currency_id.round(order_line.qty_to_invoice * order_line.price_unit)
