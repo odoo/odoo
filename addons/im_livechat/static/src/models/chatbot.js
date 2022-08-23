@@ -184,6 +184,7 @@ registerModel({
         name: attr({
             compute: '_computeName',
         }),
+        nextStepTimeout: attr(),
         messageDelay: attr({
             compute: '_computeMessageDelay',
             default: 3500, // in milliseconds

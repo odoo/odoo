@@ -113,8 +113,8 @@ registerModel({
             this.chatWindow.legacyChatWindow.$('.o_composer_text_field').removeClass('d-none');
             this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
 
-            if (this.chatbotNextStepTimeout) {
-                clearTimeout(this.chatbotNextStepTimeout);
+            if (this.messaging.publicLivechatGlobal.chatbot.nextStepTimeout) {
+                clearTimeout(this.messaging.publicLivechatGlobal.chatbot.nextStepTimeout);
             }
 
             if (this.chatbotWelcomeMessageTimeout) {
@@ -135,8 +135,8 @@ registerModel({
 
             this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: clear() });
             this.chatbotSetIsTyping();
-            this.update({
-                chatbotNextStepTimeout: setTimeout(
+            this.messaging.publicLivechatGlobal.chatbot.update({
+                nextStepTimeout: setTimeout(
                     this.widget._chatbotTriggerNextStep.bind(this.widget),
                     this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                 ),
@@ -516,8 +516,8 @@ registerModel({
                     this.widget._debouncedChatbotAwaitUserInput();
                 } else if (!this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
                     this.chatbotSetIsTyping();
-                    this.update({
-                        chatbotNextStepTimeout: setTimeout(
+                    this.messaging.publicLivechatGlobal.chatbot.update({
+                        nextStepTimeout: setTimeout(
                             this.widget._chatbotTriggerNextStep.bind(this.widget),
                             this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                         ),
@@ -567,7 +567,6 @@ registerModel({
         buttonTextColor: attr({
             compute: '_computeButtonTextColor',
         }),
-        chatbotNextStepTimeout: attr(),
         chatbotWelcomeMessageTimeout: attr(),
         chatWindow: one('PublicLivechatWindow', {
             inverse: 'livechatButtonViewOwner',

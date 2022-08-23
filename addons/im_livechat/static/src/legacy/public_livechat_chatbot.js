@@ -70,8 +70,8 @@ const _t = core._t;
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbotEndScript();
             } else {
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
-                this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                    chatbotNextStepTimeout: setTimeout(
+                this.messaging.publicLivechatGlobal.chatbot.update({
+                    nextStepTimeout: setTimeout(
                         this._chatbotTriggerNextStep.bind(this),
                         this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                     )
@@ -194,8 +194,8 @@ const _t = core._t;
             if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
                 // user has already typed a message in -> trigger next step
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
-                this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                    chatbotNextStepTimeout: setTimeout(
+                this.messaging.publicLivechatGlobal.chatbot.update({
+                    nextStepTimeout: setTimeout(
                         this._chatbotTriggerNextStep.bind(this),
                         this.messaging.publicLivechatGlobal.chatbot.messageDelay,
                     ),
@@ -225,8 +225,8 @@ const _t = core._t;
                     this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping();
                 }
 
-                this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                    chatbotNextStepTimeout: setTimeout(
+                this.messaging.publicLivechatGlobal.chatbot.update({
+                    nextStepTimeout: setTimeout(
                         this._chatbotTriggerNextStep.bind(this),
                         nextStepDelay,
                     ),
