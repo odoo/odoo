@@ -124,19 +124,20 @@ class AssetsBundle(object):
         self.user_direction = self.env['res.lang']._lang_get(
             self.env.context.get('lang') or self.env.user.lang
         ).direction
+        self.css_extra = 'rtl/' if self.user_direction == 'rtl' else ''
         # asset-wide html "media" attribute
         for f in files:
             if css:
                 if f['atype'] == 'text/sass':
-                    self.stylesheets.append(SassStylesheetAsset(url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
+                    self.stylesheets.append(SassStylesheetAsset(env, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
                 elif f['atype'] == 'text/scss':
-                    self.stylesheets.append(ScssStylesheetAsset(url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
+                    self.stylesheets.append(ScssStylesheetAsset(env, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
                 elif f['atype'] == 'text/less':
-                    self.stylesheets.append(LessStylesheetAsset(url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
+                    self.stylesheets.append(LessStylesheetAsset(env, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
                 elif f['atype'] == 'text/css':
-                    self.stylesheets.append(StylesheetAsset(url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
+                    self.stylesheets.append(StylesheetAsset(env, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media']))
             if js and f['atype'] == 'text/javascript':
-                self.javascripts.append(JavascriptAsset(url=f['url'], filename=f['filename'], inline=f['content']))
+                self.javascripts.append(JavascriptAsset(env, url=f['url'], filename=f['filename'], inline=f['content']))
 
     def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False):
         """
@@ -148,7 +149,7 @@ class AssetsBundle(object):
             css_attachments = self.css(is_minified=not is_debug_assets) or []
             for attachment in css_attachments:
                 if is_debug_assets:
-                    href = self.get_debug_asset_url(extra='rtl/' if self.user_direction == 'rtl' else '',
+                    href = self.get_debug_asset_url(extra=self.css_extra,
                                                     name=css_attachments.name,
                                                     extension='')
                 else:
@@ -158,7 +159,7 @@ class AssetsBundle(object):
                     ["rel", "stylesheet"],
                     ["href", href],
                     ['data-asset-bundle', self.name],
-                    ['data-asset-version', self.version],
+                    ['data-asset-version', self.version['css']],
                 ])
                 response.append(("link", attr, None))
             if self.css_errors:
@@ -169,7 +170,7 @@ class AssetsBundle(object):
                         'type': 'text/javascript',
                         'charset': 'utf-8',
                         'data-asset-bundle': self.name,
-                        'data-asset-version': self.version,
+                        'data-asset-version': self.version['css'],
                     },
                     self.dialog_message(msg)
                 ))
@@ -181,7 +182,7 @@ class AssetsBundle(object):
                         'href': '/web/static/lib/bootstrap/dist/css/bootstrap.css',
                         'media': None,
                         'data-asset-bundle': self.name,
-                        'data-asset-version': self.version,
+                        'data-asset-version': self.version['css'],
                     },
                     None
                 ))
@@ -195,7 +196,7 @@ class AssetsBundle(object):
                 ["type", "text/javascript"],
                 ["data-src" if lazy_load else "src", src],
                 ['data-asset-bundle', self.name],
-                ['data-asset-version', self.version],
+                ['data-asset-version', self.version['js']],
             ])
             response.append(("script", attr, None))
 
@@ -208,16 +209,9 @@ class AssetsBundle(object):
 
     @func.lazy_property
     def version(self):
-        return self.checksum[0:7]
-
-    @func.lazy_property
-    def checksum(self):
-        """
-        Not really a full checksum.
-        We compute a SHA512/256 on the rendered bundle + max linked files last_modified date
-        """
-        check = u"%s%s" % (json.dumps(self.files, sort_keys=True), self.last_modified)
-        return hashlib.sha512(check.encode('utf-8')).hexdigest()[:64]
+        js = hashlib.sha1("".join(asset.unique for asset in self.javascripts).encode('utf-8')).hexdigest()[0:7]
+        css = hashlib.sha1(("".join(asset.unique for asset in self.stylesheets) + self.css_extra).encode('utf-8')).hexdigest()[0:7]
+        return {'js': js, 'css': css}
 
     def _get_asset_template_url(self):
         return "/web/assets/{id}-{unique}/{extra}{name}{sep}{extension}"
@@ -263,8 +257,9 @@ class AssetsBundle(object):
         must exclude the current bundle.
         """
         ira = self.env['ir.attachment']
+        file_type = 'js' if 'js' in extension else 'css'
         url = self.get_asset_url(
-            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
+            extra='%s' % (self.css_extra if file_type == 'css' else ''),
             name=self.name,
             sep='',
             extension='.%s' % extension
@@ -272,7 +267,7 @@ class AssetsBundle(object):
 
         domain = [
             ('url', '=like', url),
-            '!', ('url', '=like', self.get_asset_url(unique=self.version))
+            '!', ('url', '=like', self.get_asset_url(unique=self.version[file_type]))
         ]
         attachments = ira.sudo().search(domain)
         # avoid to invalidate cache if it's already empty (mainly useful for test)
@@ -298,11 +293,13 @@ class AssetsBundle(object):
                                else: the url contains a version equal to that of the self.version
                                 => web/assets/%-self.version/name.extension.
         """
-        unique = "%" if ignore_version else self.version
+
+        file_type = 'js' if 'js' in extension else 'css' if 'css' in extension else False
+        unique = "%" if ignore_version else self.version[file_type]
 
         url_pattern = self.get_asset_url(
             unique=unique,
-            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
+            extra='%s' % (self.css_extra if file_type == 'css' else ''),
             name=self.name,
             sep='',
             extension='.%s' % extension
@@ -350,11 +347,13 @@ class AssetsBundle(object):
             'public': True,
             'raw': content.encode('utf8'),
         }
+        file_type = 'js' if 'js' in extension else 'css'
+
         attachment = ira.with_user(SUPERUSER_ID).create(values)
         url = self.get_asset_url(
             id=attachment.id,
-            unique=self.version,
-            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
+            unique=self.version[file_type],
+            extra='%s' % (self.css_extra if file_type == 'css' else ''),
             name=fname,
             sep='',  # included in fname
             extension=''
@@ -375,7 +374,7 @@ class AssetsBundle(object):
             self.env['bus.bus']._sendone('broadcast', 'bundle_changed', {
                 'server_version': release.version # Needs to be dynamically imported
             })
-            _logger.debug('Asset Changed: bundle: %s -- version: %s', self.name, self.version)
+            _logger.debug('Asset Changed: bundle: %s -- version: %s', self.name, self.version[file_type])
 
         return attachment
 
@@ -466,7 +465,7 @@ class AssetsBundle(object):
         sourcemap_attachment = self.get_attachments('css.map') \
                                 or self.save_attachment('css.map', '')
         debug_asset_url = self.get_debug_asset_url(name=self.name,
-                                                   extra='rtl/' if self.user_direction == 'rtl' else '')
+                                                   extra=self.css_extra)
         generator = SourceMapGenerator(
             source_root="/".join(
                 [".." for i in range(0, len(debug_asset_url.split("/")) - 2)]
@@ -563,12 +562,6 @@ class AssetsBundle(object):
             })("%s");
         """ % message.replace('"', '\\"').replace('\n', '&NewLine;')
 
-    def _get_assets_domain_for_already_processed_css(self, assets):
-        """ Method to compute the attachments' domain to search the already process assets (css).
-        This method was created to be overridden.
-        """
-        return [('url', 'in', list(assets.keys()))]
-
     def preprocess_css(self, debug=False, old_attachments=None):
         """
             Checks if the bundle contains any sass/less content, then compiles it to css.
@@ -600,7 +593,7 @@ class AssetsBundle(object):
             at_rules = fragments.pop(0)
             if at_rules:
                 # Sass and less moves @at-rules to the top in order to stay css 2.1 compatible
-                self.stylesheets.insert(0, StylesheetAsset(inline=at_rules))
+                self.stylesheets.insert(0, StylesheetAsset(self.env, inline=at_rules))
             while fragments:
                 asset_id = fragments.pop(0)
                 asset = next(asset for asset in self.stylesheets if asset.id == asset_id)
@@ -713,10 +706,11 @@ class WebAsset(object):
     _ir_attach = None
     _id = None
 
-    def __init__(self, inline=None, url=None, filename=None):
+    def __init__(self, env, inline=None, url=None, filename=None):
         self.inline = inline
         self._filename = filename
         self.url = url
+        self.env = env
         if not inline and not url:
             raise Exception("An asset should either be inlined or url linked.")
 
@@ -737,7 +731,7 @@ class WebAsset(object):
                 return
             try:
                 # Test url against ir.attachments
-                self._ir_attach = self.bundle.env['ir.attachment'].sudo()._get_serve_attachment(self.url)
+                self._ir_attach = self.env['ir.attachment'].sudo()._get_serve_attachment(self.url)
                 self._ir_attach.ensure_one()
             except ValueError:
                 raise AssetNotFound("Could not find %s" % self.name)
@@ -753,6 +747,10 @@ class WebAsset(object):
         except Exception:
             pass
         return datetime(1970, 1, 1)
+
+    @property
+    def unique(self):
+        return f"{self.url or ''}{self._filename or ''}{self.inline or ''}{self.last_modified}"
 
     @property
     def content(self):
@@ -824,8 +822,8 @@ class WebAsset(object):
 
 class JavascriptAsset(WebAsset):
 
-    def __init__(self, inline=None, url=None, filename=None):
-        super().__init__(inline, url, filename)
+    def __init__(self, env, inline=None, url=None, filename=None):
+        super().__init__(env, inline, url, filename)
         self.is_transpiled = is_odoo_module(super().content)
         self._converted_content = None
 

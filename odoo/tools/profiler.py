@@ -635,7 +635,7 @@ class Profiler:
                     filelines = None
                 self.filecache[filename] = filelines
             # fill in the line
-            if filelines is not None:
+            if filelines is not None and lineno is not None:
                 line = filelines[lineno - 1]
                 stack[index] = (filename, lineno, name, line)
 
