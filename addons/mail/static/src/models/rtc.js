@@ -194,11 +194,13 @@ registerModel({
                 });
             }
             this.update({
+                blurManager: clear(),
                 currentRtcSession: clear(),
                 disconnectAudioMonitor: clear(),
                 logs: clear(),
                 sendUserVideo: clear(),
                 sendDisplay: clear(),
+                sourceVideoStream: clear(),
                 videoTrack: clear(),
                 audioTrack: clear(),
             });
@@ -223,8 +225,8 @@ registerModel({
         /**
          * Toggles user video (eg: webcam) broadcasting to peers.
          */
-        async toggleUserVideo() {
-            this._toggleVideoBroadcast({ type: 'user-video' });
+        async toggleUserVideo({ force } = {}) {
+            this._toggleVideoBroadcast({ type: 'user-video', force });
         },
         async undeafen() {
             await this._setDeafState(false);
@@ -914,27 +916,42 @@ registerModel({
          * @param {boolean} activateVideo true if we want to activate the video
          */
         async _updateLocalVideoTrack(type, activateVideo) {
-            if (this.videoTrack) {
-                this.videoTrack.stop();
-            }
             this.update({
                 sendDisplay: false,
                 sendUserVideo: false,
-                videoTrack: clear(),
             });
-            let videoStream;
+            const stopVideo = () => {
+                if (this.videoTrack) {
+                    this.videoTrack.stop();
+                }
+                this.update({
+                    sourceVideoStream: clear(),
+                    videoTrack: clear(),
+                });
+            };
             if (!activateVideo) {
+                if (this.blurManager) {
+                    this.blurManager.update({
+                        srcStream: clear(),
+                    });
+                }
                 if (type === 'display') {
                     this.messaging.soundEffects.screenSharing.play();
                 }
+                stopVideo();
                 return;
             }
+            let sourceWebMediaStream;
             try {
                 if (type === 'user-video') {
-                    videoStream = await browser.navigator.mediaDevices.getUserMedia({ video: this.videoConfig });
+                    if (this.blurManager && this.blurManager.srcStream) {
+                        sourceWebMediaStream = this.blurManager.srcStream.webMediaStream;
+                    } else {
+                        sourceWebMediaStream = await browser.navigator.mediaDevices.getUserMedia({ video: this.videoConfig });
+                    }
                 }
                 if (type === 'display') {
-                    videoStream = await browser.navigator.mediaDevices.getDisplayMedia({ video: this.videoConfig });
+                    sourceWebMediaStream = await browser.navigator.mediaDevices.getDisplayMedia({ video: this.videoConfig });
                     this.messaging.soundEffects.screenSharing.play();
                 }
             } catch (_e) {
@@ -946,7 +963,27 @@ registerModel({
                     ),
                     type: 'warning',
                 });
+                stopVideo();
                 return;
+            }
+            let videoStream = sourceWebMediaStream;
+            if (this.messaging.userSetting.useBlur && type === 'user-video') {
+                try {
+                    this.update({ blurManager: { srcStream: { webMediaStream: sourceWebMediaStream, id: sourceWebMediaStream.id } }, });
+                    const mediaStream = await this.blurManager.stream;
+                    videoStream = mediaStream.webMediaStream;
+                } catch (_e) {
+                    this.messaging.notify({
+                        message: sprintf(
+                            this.env._t('To %(name)s: %(message)s)'), {
+                                name: _e.name,
+                                message: _e.message,
+                            },
+                        ),
+                        type: 'warning',
+                    });
+                    this.messaging.userSetting.update({ useBlur: false });
+                }
             }
             const videoTrack = videoStream ? videoStream.getVideoTracks()[0] : undefined;
             if (videoTrack) {
@@ -955,6 +992,7 @@ registerModel({
                 });
             }
             this.update({
+                sourceVideoStream: { webMediaStream: sourceWebMediaStream, id: sourceWebMediaStream.id },
                 videoTrack,
                 sendUserVideo: type === 'user-video' && !!videoTrack,
                 sendDisplay: type === 'display' && !!videoTrack,
@@ -1092,6 +1130,10 @@ registerModel({
          * audio MediaStreamTrack of the current user
          */
         audioTrack: attr(),
+        blurManager: one('BlurManager', {
+            inverse: 'rtc',
+            isCausal: true,
+        }),
         /**
          * The channel that is hosting the current RTC call.
          */
@@ -1229,6 +1271,12 @@ registerModel({
          */
         sendDisplay: attr({
             default: false,
+        }),
+        /**
+         * Ensures that we always have a single source stream and that replacing it will properly terminate its tracks.
+         */
+        sourceVideoStream: one('MediaStream', {
+            isCausal: true,
         }),
         /**
          * MediaTrackConstraints for the user video track.

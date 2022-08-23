@@ -21,6 +21,9 @@ registerModel({
          * @returns {integer|FieldCommand}
          */
         _computeDuration() {
+            if (this.blurManagerOwnerAsFrameRequest) {
+                return Math.floor(1000 / 30); // 30 fps
+            }
             if (this.callMainViewAsShowOverlay) {
                 return 3 * 1000;
             }
@@ -55,6 +58,10 @@ registerModel({
          */
         _onTimeout() {
             this.update({ timeoutId: clear() });
+            if (this.blurManagerOwnerAsFrameRequest) {
+                this.blurManagerOwnerAsFrameRequest.onRequestFrameTimerTimeout();
+                return;
+            }
             if (this.callMainViewAsShowOverlay) {
                 this.callMainViewAsShowOverlay.onShowOverlayTimeout();
                 return;
@@ -104,6 +111,10 @@ registerModel({
         },
     },
     fields: {
+        blurManagerOwnerAsFrameRequest: one('BlurManager', {
+            identifying: true,
+            inverse: 'frameRequestTimer',
+        }),
         callMainViewAsShowOverlay: one('CallMainView', {
             identifying: true,
             inverse: 'showOverlayTimer',

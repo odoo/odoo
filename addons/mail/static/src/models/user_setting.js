@@ -211,6 +211,12 @@ registerModel({
                 audioInputDeviceId: audioInputDeviceId || undefined,
             });
         },
+        _onChangeUseBlur() {
+            if (!this.messaging.rtc.sendUserVideo) {
+                return;
+            }
+            this.messaging.rtc.toggleUserVideo({ force: true });
+        },
         /**
          * @private
          * @param {Event} ev
@@ -291,6 +297,12 @@ registerModel({
         audioInputDeviceId: attr({
             default: '',
         }),
+        backgroundBlurAmount: attr({
+            default: 10,
+        }),
+        edgeBlurAmount: attr({
+            default: 10,
+        }),
         globalSettingsTimeout: attr(),
         /**
          * true if listening to keyboard input to register the push to talk key.
@@ -307,6 +319,9 @@ registerModel({
         pushToTalkKey: attr({
             compute: '_computePushToTalkKey',
             default: '',
+        }),
+        useBlur: attr({
+            default: false,
         }),
         /**
          * If true, push-to-talk will be used over voice activation.
@@ -333,4 +348,10 @@ registerModel({
             default: {},
         }),
     },
+    onChanges: [
+        {
+            dependencies: ['useBlur'],
+            methodName: '_onChangeUseBlur',
+        },
+    ],
 });
