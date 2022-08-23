@@ -73,6 +73,32 @@
                         <span class="o_CallSettingsMenu_optionName ms-2 text-truncate">Show video participants only</span>
                     </label>
                 </div>
+                <t t-if="messaging.device.hasCanvasFilterSupport">
+                    <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
+                        <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Blur video background" aria-label="Blur video background">
+                            <input type="checkbox" aria-label="Blur video background" title="Blur video background" t-on-change="callSettingsMenu.onChangeBlur" t-att-checked="messaging.userSetting.useBlur ? 'checked' : ''"/>
+                            <span class="o_CallSettingsMenu_optionName ms-2 text-truncate">Blur video background</span>
+                        </label>
+                    </div>
+                </t>
+                <t t-if="messaging.userSetting.useBlur">
+                    <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
+                        <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Background blur intensity" aria-label="Background blur intensity">
+                            <span class="o_CallSettingsMenu_optionName me-2 text-truncate">Background blur intensity</span>
+                            <div class="o_CallSettingsMenu_optionInputGroup d-flex w-100">
+                                <input class="o_CallSettingsMenu_optionInputGroupInput" type="range" min="0" max="20" step="1" t-att-value="messaging.userSetting.backgroundBlurAmount" t-on-change="callSettingsMenu.onChangeBackgroundBlurAmount"/>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="o_CallSettingsMenu_option mb-3 d-flex align-items-center flex-wrap">
+                        <label class="o_CallSettingsMenu_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Edge blur intensity" aria-label="Edge blur intensity">
+                            <span class="o_CallSettingsMenu_optionName me-2 text-truncate">Edge blur intensity</span>
+                            <div class="o_CallSettingsMenu_optionInputGroup d-flex w-100">
+                                <input class="o_CallSettingsMenu_optionInputGroupInput" type="range" min="0" max="20" step="1" t-att-value="messaging.userSetting.edgeBlurAmount" t-on-change="callSettingsMenu.onChangeEdgeBlurAmount"/>
+                            </div>
+                        </label>
+                    </div>
+                </t>
             </div>
         </div>
     </t>

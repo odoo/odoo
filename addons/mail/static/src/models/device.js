@@ -47,6 +47,9 @@ registerModel({
     fields: {
         globalWindowInnerHeight: attr(),
         globalWindowInnerWidth: attr(),
+        hasCanvasFilterSupport: attr({
+            default: typeof document.createElement('canvas').getContext('2d').filter !== 'undefined',
+        }),
         hasRtcSupport: attr({
             compute: '_computeHasRtcSupport',
         }),
