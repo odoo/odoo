@@ -52,16 +52,6 @@ registerModel({
          * @private
          * @returns {string|FieldCommand}
          */
-        _computeChatbotSessionCookieKey() {
-            if (!this.sessionCookie) {
-                return clear();
-            }
-            return 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.sessionCookie).uuid;
-        },
-        /**
-         * @private
-         * @returns {string|FieldCommand}
-         */
         _computeChatbotState() {
             if (this.rule && !!this.rule.chatbot) {
                 return 'init';
@@ -164,7 +154,7 @@ registerModel({
                 const sessionCookie = get_cookie('im_livechat_session');
                 if (sessionCookie) {
                     this.update({ sessionCookie });
-                    if (localStorage.getItem(this.chatbotSessionCookieKey)) {
+                    if (localStorage.getItem(this.chatbot.sessionCookieKey)) {
                         this.update({ chatbotState: 'restore_session' });
                     }
                 }
@@ -219,9 +209,6 @@ registerModel({
             isCausal: true,
         }),
         chatbotServerUrl: attr(),
-        chatbotSessionCookieKey: attr({
-            compute: '_computeChatbotSessionCookieKey',
-        }),
         chatbotState: attr({
             compute: '_computeChatbotState',
         }),

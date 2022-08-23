@@ -52,7 +52,7 @@ registerModel({
             if (!this.messaging.publicLivechatGlobal.sessionCookie) {
                 return clear();
             }
-            const data = localStorage.getItem(this.messaging.publicLivechatGlobal.chatbotSessionCookieKey);
+            const data = localStorage.getItem(this.sessionCookieKey);
             if (!data) {
                 return clear();
             }
@@ -115,6 +115,16 @@ registerModel({
                 return clear();
             }
             return this.data.chatbot_script_id;
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeSessionCookieKey() {
+            if (!this.messaging.publicLivechatGlobal.sessionCookie) {
+                return clear();
+            }
+            return 'im_livechat.chatbot.state.uuid_' + JSON.parse(this.messaging.publicLivechatGlobal.sessionCookie).uuid;
         },
         /**
          * Helper method that checks if the script should be ended or not.
@@ -211,6 +221,9 @@ registerModel({
         }),
         scriptId: attr({
             compute: '_computeScriptId',
+        }),
+        sessionCookieKey: attr({
+            compute: '_computeSessionCookieKey',
         }),
         shouldEndScript: attr({
             compute: '_computeShouldEndScript',
