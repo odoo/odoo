@@ -219,6 +219,7 @@
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('nz_21330'),
+                'plus_report_expression_ids': [ref('tax_report_box11_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -226,6 +227,7 @@
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('nz_21330'),
+                'minus_report_expression_ids': [ref('tax_report_box11_tag')],
             }),
         ]"/>
     </record>
