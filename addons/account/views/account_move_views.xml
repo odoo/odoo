@@ -745,6 +745,7 @@
                         <field name="statement_id" invisible="1"/>
                         <field name="payment_id" invisible="1"/>
                         <field name="tax_country_id" invisible="1"/>
+                        <field name="tax_calculation_rounding_method" invisible="1"/>
                         <field name="tax_cash_basis_created_move_ids" invisible="1"/>
                         <field name="quick_edit_mode" invisible="1"/>
                         <field name="hide_post_button" invisible="1"/>
@@ -916,11 +917,11 @@
                                                options="{'no_create': True}"
                                                optional="show"/>
                                         <field name="price_subtotal"
-                                               string="Subtotal"
-                                               groups="account.group_show_line_subtotals_tax_excluded"/>
+                                               string="Tax excl."/>
                                         <field name="price_total"
-                                               string="Total"
-                                               groups="account.group_show_line_subtotals_tax_included"/>
+                                               string="Tax incl."
+                                               attrs="{'column_invisible': [('parent.tax_calculation_rounding_method', '=', 'round_globally')]}"
+                                               optional="hide"/>
 
                                         <!-- Others fields -->
                                         <field name="partner_id" invisible="1"/>
@@ -936,8 +937,12 @@
                                         <!-- Displayed fields -->
                                         <field name="name"/>
                                         <field name="product_id"/>
-                                        <field name="price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                        <field name="price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                                        <field name="price_subtotal"
+                                               string="Tax excl."/>
+                                        <field name="price_total"
+                                               string="Tax incl."
+                                               attrs="{'invisible': [('tax_calculation_rounding_method', '=', 'round_globally')]}"
+                                               optional="hide"/>
                                         <field name="quantity"/>
                                         <field name="product_uom_category_id" invisible="1"/>
                                         <field name="product_uom_id" groups="uom.group_uom"/>
@@ -957,8 +962,8 @@
                                                                     </div>
                                                                     <div class="col-auto">
                                                                         <strong class="float-end text-end">
-                                                                            <t t-out="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                                                            <t t-out="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
+                                                                            <t t-out="record.price_subtotal.value"/>
+                                                                            <t t-out="record.price_total.value" t-if="tax_calculation_rounding_method == 'round_per_line'"/>
                                                                         </strong>
                                                                     </div>
                                                                 </div>
@@ -986,6 +991,7 @@
                                         </templates>
 
                                         <!-- Others fields -->
+                                        <field name="tax_calculation_rounding_method" invisible="1"/>
                                         <field name="currency_id" invisible="1"/>
                                         <field name="company_currency_id" invisible="1"/>
                                         <field name="display_type" force_save="1" invisible="1"/>
@@ -994,6 +1000,7 @@
                                     <!-- Form view to cover mobile use -->
                                     <form>
                                         <sheet>
+                                            <field name="tax_calculation_rounding_method" invisible="1"/>
                                             <field name="display_type" invisible="1"/>
                                             <field name="company_id" invisible="1"/>
                                             <field name="partner_id" invisible="1"/>
@@ -1015,8 +1022,12 @@
                                             <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
                                             <field name="name" widget="text"/>
                                             <group>
-                                                <field name="price_subtotal" string="Subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                                <field name="price_total" string="Total" groups="account.group_show_line_subtotals_tax_included"/>
+                                                <field name="price_subtotal"
+                                                       string="Tax excl."/>
+                                                <field name="price_total"
+                                                       string="Tax incl."
+                                                       attrs="{'invisible': [('tax_calculation_rounding_method', '=', 'round_globally')]}"
+                                                       optional="hide"/>
                                             </group>
                                         </sheet>
                                     </form>

@@ -255,6 +255,9 @@ class SaleOrderLine(models.Model):
         compute='_compute_product_updatable')
     product_uom_readonly = fields.Boolean(
         compute='_compute_product_uom_readonly')
+    tax_calculation_rounding_method = fields.Selection(
+        related='company_id.tax_calculation_rounding_method',
+        string='Tax calculation rounding method', readonly=True)
 
     #=== COMPUTE METHODS ===#
 

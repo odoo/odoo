@@ -71,28 +71,10 @@ class ResConfigSettings(models.TransientModel):
     module_account_accountant = fields.Boolean(string='Accounting')
     group_warning_account = fields.Boolean(string="Warnings in Invoices", implied_group='account.group_warning_account')
     group_cash_rounding = fields.Boolean(string="Cash Rounding", implied_group='account.group_cash_rounding')
-    # group_show_line_subtotals_tax_excluded and group_show_line_subtotals_tax_included are opposite,
-    # so we can assume exactly one of them will be set, and not the other.
-    # We need both of them to coexist so we can take advantage of automatic group assignation.
-    group_show_line_subtotals_tax_excluded = fields.Boolean(
-        "Show line subtotals without taxes (B2B)",
-        implied_group='account.group_show_line_subtotals_tax_excluded',
-        group='base.group_portal,base.group_user,base.group_public',
-        compute='_compute_group_show_line_subtotals', store=True, readonly=False)
-    group_show_line_subtotals_tax_included = fields.Boolean(
-        "Show line subtotals with taxes (B2C)",
-        implied_group='account.group_show_line_subtotals_tax_included',
-        group='base.group_portal,base.group_user,base.group_public',
-        compute='_compute_group_show_line_subtotals', store=True, readonly=False)
     group_show_sale_receipts = fields.Boolean(string='Sale Receipt',
         implied_group='account.group_sale_receipts')
     group_show_purchase_receipts = fields.Boolean(string='Purchase Receipt',
         implied_group='account.group_purchase_receipts')
-    show_line_subtotals_tax_selection = fields.Selection([
-        ('tax_excluded', 'Tax Excluded'),
-        ('tax_included', 'Tax Included')], string="Line Subtotals Tax Display",
-        required=True, default='tax_excluded',
-        config_parameter='account.show_line_subtotals_tax_selection')
     module_account_budget = fields.Boolean(string='Budget Management')
     module_account_payment = fields.Boolean(string='Invoice Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
@@ -207,12 +189,6 @@ class ResConfigSettings(models.TransientModel):
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template)
         self.has_accounting_entries = self.company_id._existing_accounting()
-
-    @api.depends('show_line_subtotals_tax_selection')
-    def _compute_group_show_line_subtotals(self):
-        for wizard in self:
-            wizard.group_show_line_subtotals_tax_included = wizard.show_line_subtotals_tax_selection == "tax_included"
-            wizard.group_show_line_subtotals_tax_excluded = wizard.show_line_subtotals_tax_selection == "tax_excluded"
 
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):
