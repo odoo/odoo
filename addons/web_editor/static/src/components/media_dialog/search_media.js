@@ -15,9 +15,7 @@ export class SearchMedia extends Component {
     }
 }
 SearchMedia.template = xml`
-<div class="col input-group me-auto">
-    <input type="text" class="form-control o_we_search" t-att-placeholder="props.searchPlaceholder.trim()" t-att-value="props.needle" t-on-input="search" t-ref="autofocus"/>
-    <div class="input-group-text o_we_search_icon">
-        <i class="fa fa-search" title="Search" role="img" aria-label="Search"/>
-    </div>
+<div class="position-relative mw-lg-25 flex-grow-1 me-auto">
+    <input type="text" class="o_we_search o_input form-control" t-att-placeholder="props.searchPlaceholder.trim()" t-att-value="props.needle" t-on-input="search" t-ref="autofocus"/>
+    <i class="oi oi-search input-group-text position-absolute end-0 top-50 me-n3 px-2 py-1 translate-middle bg-transparent border-0" title="Search" role="img" aria-label="Search"/>
 </div>`;
