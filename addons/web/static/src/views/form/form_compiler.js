@@ -79,13 +79,14 @@ export class FormCompiler extends ViewCompiler {
             fieldInfo: `props.archInfo.fieldNodes['${fieldId}']`,
             className: `"${label.className}"`,
         };
-        if (label.hasAttribute("data-no-label")) {
-            return;
-        }
         let labelText = label.textContent || fieldString;
-        labelText = labelText
-            ? toStringExpression(labelText)
-            : `props.record.fields['${fieldName}'].string`;
+        if (label.hasAttribute("data-no-label")) {
+            labelText = toStringExpression("");
+        } else {
+            labelText = labelText
+                ? toStringExpression(labelText)
+                : `props.record.fields['${fieldName}'].string`;
+        }
         const formLabel = createElement("FormLabel", {
             "t-props": objectToString(props),
             string: labelText,
