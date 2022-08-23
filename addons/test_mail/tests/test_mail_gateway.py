@@ -1609,3 +1609,117 @@ class TestMailGatewayDefensiveAliasAutoCorrection(TestMailGatewayDefensiveAliasC
             self._assert_creation({**self.basic_fields, 'folder_id': None, 'tag_ids': None})
             self._assert_alias_default_error({'folder_id': {'MISSING_REF'}, 'tag_ids': {'MISSING_REF'}},
                                              force_recompute=True)
+
+
+@tagged('mail_gateway')
+class TestMailGatewayDefensiveAliasErrorReport(TestMailGatewayDefensiveAliasCommon):
+    """Test of the additional validation reported to the user but not systematically applied.
+
+    The autocorrections are only applied when the creation of the record fails. The reported errors tested here doesn't
+    prevent the creation of the record so no autocorrection will happen except if the creation fails for another reason.
+    But all those errors will be reported to the user, so we test here that they are reported and if the creation fails
+    for another reason, they will be autocorrected (i.e. parts that are not valid will be ignored).
+    """
+    def _assert_alias_default_cleaned(self, expected):
+        """Check cleaned alias default.
+
+        :param dict expected: expected alias default cleaned
+        """
+        safe_date, _ = self.env[self.alias.alias_model_id.model]._get_safe_create_data(
+            ast.literal_eval(self.alias.alias_defaults),
+            is_remove_missing_ref=True)
+        self.assertEqual([expected], safe_date,
+                         f'{self.current_test_desc} (alias_default: {self.alias.alias_defaults}): incorrect cleanup')
+
+    def test_skip_of_sub_record_creation(self):
+        """Test that the autocorrection of alias defaults removes any creation of sub-record."""
+        tag_inbox = self.Tag.create({'name': 'inbox'})
+        tag_name_todo = 'todo'
+        doc_name_new = 'new doc'
+
+        self.current_test_desc = 'Many2many create command skipped'
+        self.alias.alias_defaults = repr(
+            {**self.basic_fields, 'tag_ids': [self._cmd_compat(Command.create({'name': tag_name_todo}))]})
+        self._assert_alias_default_error({'tag_ids': {'NOT_ALLOWED_CREATE'}})
+        self._assert_alias_default_cleaned(self.basic_fields)
+
+        self.current_test_desc = 'Many2many create command skipped among set command'
+        self.alias.alias_defaults = repr({
+            **self.basic_fields,
+            'tag_ids': [self._cmd_compat(Command.set([tag_inbox.id])),
+                        self._cmd_compat(Command.create({'name': 'todo'}))]
+        })
+        self._assert_alias_default_error({'tag_ids': {'NOT_ALLOWED_CREATE'}})
+        self._assert_alias_default_cleaned({
+            **self.basic_fields,
+            'tag_ids': [self._cmd_compat(Command.set([tag_inbox.id]))]
+        })
+
+        self.current_test_desc = 'Many2many create command skipped among link command'
+        self.alias.alias_defaults = repr({
+            **self.basic_fields,
+            'tag_ids': [self._cmd_compat(Command.link(tag_inbox.id)),
+                        self._cmd_compat(Command.create({'name': 'todo'}))]
+        })
+        self._assert_alias_default_error({'tag_ids': {'NOT_ALLOWED_CREATE'}})
+        self._assert_alias_default_cleaned({
+            **self.basic_fields,
+            'tag_ids': [self._cmd_compat(Command.link(tag_inbox.id))]
+        })
+
+        self.current_test_desc = 'One2many create command skipped'
+        self.alias.alias_defaults = repr({
+            **self.basic_fields,
+            'sub_document_ids': [self._cmd_compat(Command.create({'name': doc_name_new}))],
+            'tag_ids': [self._cmd_compat(Command.link(tag_inbox.id))],
+        })
+        self._assert_alias_default_error({'sub_document_ids': {'NOT_ALLOWED_ONE2MANY'}})
+        self._assert_alias_default_cleaned({
+            **self.basic_fields,
+            'tag_ids': [self._cmd_compat(Command.link(tag_inbox.id))]})
+
+    def test_skip_of_set_to_one2many_field(self):
+        """Test that the autocorrection of alias defaults remove set to one2many field."""
+        sub_doc = self.Document.create({'name': 'Sub document'})
+
+        self.current_test_desc = 'One2many set command skipped'
+        self.alias.alias_defaults = repr({
+            **self.basic_fields,
+            'sub_document_ids': [self._cmd_compat(Command.set([sub_doc.id]))]
+        })
+        self._assert_alias_default_error({'sub_document_ids': {'NOT_ALLOWED_ONE2MANY'}})
+        self._assert_alias_default_cleaned(self.basic_fields)
+
+        self.current_test_desc = 'One2many set skipped'
+        self.alias.alias_defaults = repr({**self.basic_fields, 'sub_document_ids': [sub_doc.id]})
+        self._assert_alias_default_error({'sub_document_ids': {'NOT_ALLOWED_ONE2MANY'}})
+        self._assert_alias_default_cleaned(self.basic_fields)
+
+        self.current_test_desc = 'One2many link command skipped'
+        self.alias.alias_defaults = repr({
+            **self.basic_fields,
+            'sub_document_ids': [self._cmd_compat(Command.link(sub_doc.id))]
+        })
+        self._assert_alias_default_error({'sub_document_ids': {'NOT_ALLOWED_ONE2MANY'}})
+        self._assert_alias_default_cleaned(self.basic_fields)
+
+    def test_skip_of_set_to_non_existing_field(self):
+        """Test that the autocorrection of alias defaults removes set to non-existing fields."""
+        self.current_test_desc = 'Non existing field must be skipped'
+        self.alias.alias_defaults = repr({**self.basic_fields, 'not_existing_field': 'test'})
+        self._assert_alias_default_error({'not_existing_field': {'MISSING_FIELD'}})
+        self._assert_alias_default_cleaned(self.basic_fields)
+
+    def test_skip_of_forbidden_command(self):
+        """Test that the autocorrection of alias defaults removes commands != LINK and SET."""
+        tag_name_inbox = 'inbox'
+        tag_inbox = self.Tag.create({'name': tag_name_inbox})
+
+        self.current_test_desc = 'Skip update command'
+        self.alias.alias_defaults = repr({
+            **self.basic_fields,
+            'tag_ids': [self._cmd_compat(Command.update(tag_inbox.id, {'name': 'inbox2'}))]
+        })
+        self._assert_alias_default_error({'tag_ids': {'NOT_ALLOWED_UPDATE'}})
+        self._assert_alias_default_cleaned(self.basic_fields)
+        # Other command not tested because seems to have no effect anyway

@@ -201,3 +201,5 @@ class MailTestDocument(models.Model):
     partner_id = fields.Many2one('res.partner')
     folder_id = fields.Many2one('mail.test.document.folder')
     tag_ids = fields.Many2many('mail.test.document.tag', 'mail_test_document_tag_rel')
+    parent_id = fields.Many2one('mail.test.document')
+    sub_document_ids = fields.One2many('mail.test.document', 'parent_id')

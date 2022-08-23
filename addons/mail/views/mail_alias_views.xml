@@ -8,6 +8,11 @@
             <field name="model">mail.alias</field>
             <field name="arch" type="xml">
                 <form string="Alias">
+                    <field name="alias_defaults_error" invisible="1"/>
+                    <div attrs="{'invisible':[('alias_defaults_error', '=', False)]}"
+                         class="alert alert-danger text-center" role="alert">
+                        Incorrect "Default Values": <field name="alias_defaults_error"/>
+                    </div>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="open_document" string="Open Document"
@@ -43,7 +48,8 @@
                     <field name="alias_name"/>
                     <field name="alias_model_id"/>
                     <field name="alias_user_id"/>
-                    <field name="alias_defaults"/>
+                    <field name="alias_defaults_error" invisible="1"/>
+                    <field name="alias_defaults" decoration-danger="alias_defaults_error"/>
                     <field name="alias_contact"/>
                 </tree>
             </field>
