@@ -21,10 +21,10 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'data_recycle/static/src/js/**/*',
+            'data_recycle/static/src/views/*.js',
         ],
         'web.assets_qweb': [
-            'data_recycle/static/src/xml/**/*',
+            'data_recycle/static/src/views/*.xml',
         ],
     },
     'license': 'LGPL-3',
