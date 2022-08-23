@@ -185,7 +185,7 @@
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <form string="Sales Order" class="o_sale_order" js_class="sale_discount_form">
+            <form string="Sales Order" class="o_sale_order">
             <header>
                 <field name="authorized_transaction_ids" invisible="1"/>
                 <button name="payment_action_capture" type="object" data-hotkey="shift+g"
@@ -284,7 +284,7 @@
                     <page string="Order Lines" name="order_lines">
                         <field
                             name="order_line"
-                            widget="section_and_note_one2many"
+                            widget="sale_section_and_note_one2many"
                             mode="tree,kanban"
                             attrs="{'readonly': [('state', 'in', ('done','cancel'))]}"
                         >
