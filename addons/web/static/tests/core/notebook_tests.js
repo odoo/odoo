@@ -49,7 +49,7 @@ QUnit.module("Components", (hooks) => {
         );
         assert.hasClass(
             target.querySelector(".nav"),
-            "nav-tabs",
+            "flex-row",
             "navigation container uses the right class to display as horizontal tabs"
         );
         assert.containsN(
@@ -184,7 +184,7 @@ QUnit.module("Components", (hooks) => {
         );
         assert.hasClass(
             target.querySelector(".nav"),
-            "nav-pills",
+            "flex-column",
             "navigation container uses the right class to display as vertical buttons"
         );
     });

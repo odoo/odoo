@@ -1,18 +1,72 @@
 .o_notebook {
-    &.horizontal {
-        flex-direction: column;
+    --notebook-margin-x: 0;
+    --notebook-padding-x: 0;
+    --notebook-link-border-color: transparent; 
+    --notebook-link-border-color-active: #{$border-color};
+    --notebook-link-border-color-hover: #{$gray-200};
+    --notebook-link-border-color-active-accent: #{$border-color};
 
-        .nav.nav-tabs {
-            flex-flow: row nowrap;
+    .o_notebook_headers {
+        margin: 0 var(--notebook-margin-x, 0);
+    }
+
+    .nav {
+        padding: 0 var(--notebook-padding-x, 0);
+        background-color: $o-view-background-color;
+    }
+
+    .nav-item {
+        white-space: nowrap;
+    }
+    
+    .nav-link {
+        border: 1px solid var(--notebook-link-border-color, transparent);
+
+        &.active {
+            border: 1px solid var(--notebook-link-border-color-active);
+            border-bottom-color: $o-view-background-color;
+
+            &, &:hover, &:focus, &:active {
+                border-color: var(--notebook-link-border-color-active);
+                border-top-color: var(--notebook-link-border-color-active-accent, var(--notebook-link-border-color-active));
+                border-bottom-color: $o-view-background-color;
+            }
         }
 
+        &:hover {
+            border-color: var(--notebook-link-border-color-hover);
+        }
     }
 
     &.vertical {
-        flex-direction: row;
+        .o_notebook_headers {
+            border-right: 1px solid $border-color;
+        }
 
-        .nav.nav-pills {
+        .nav {
             width: max-content;
+            border-bottom: 1px solid var(--notebook-link-border-color);
+        }
+        
+        .nav-item {
+            margin: 0 -1px -1px 0;
+
+            &:first-child .nav-link {
+                border-top-width: 0;
+            }
+        }
+        
+        .nav-link {
+            border: 1px solid var(--notebook-link-border-color, transparent);
+
+            &.active {
+                border: 1px solid var(--notebook-link-border-color-active);
+
+                &, &:hover, &:focus, &:active {
+                    border-left-color: var(--notebook-link-border-color-active-accent, var(--notebook-link-border-color-active));
+                    border-right-color: $o-white;
+                }
+            }
         }
     }
 }
