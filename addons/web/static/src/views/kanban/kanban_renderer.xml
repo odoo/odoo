@@ -47,7 +47,7 @@
                                             </DropdownItem>
                                         </t>
                                     </Dropdown>
-                                    <button t-if="canQuickCreate()" class="o_kanban_quick_add btn p-0 border-0 fs-6 shadow-none" t-on-click="() => this.quickCreate(group)">
+                                    <button t-if="canQuickCreate()" class="o_kanban_quick_add btn p-0 border-0 fs-6 shadow-none" t-on-click="() => this.quickCreate(group, true)">
                                         <i class="fa fa-plus fa-stack d-block small text-end text-700 opacity-50 opacity-100-hover cursor-pointer" role="img" aria-label="Quick add" title="Quick add" />
                                     </button>
                                 </t>
@@ -112,12 +112,18 @@
                             <div t-if="unloadedCount > 0" class="o_kanban_load_more">
                                 <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.loadMore(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
                             </div>
+                            <span t-elif="canQuickCreate()" class="o_kanban_quick_add_bottom d-block m-2 cursor-pointer" t-on-click="() => this.quickCreate(group, false)">
+                                <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" /> New
+                            </span>
                         </t>
                         <t t-elif="env.isSmall">
                             <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
                             <div t-if="unloadedCount > 0" class="o_kanban_load_more">
                                 <button class="btn btn-outline-primary w-100 mt-4" t-on-click="() => this.toggleGroup(group)">Load more... (<t t-out="unloadedCount"/> remaining)</button>
                             </div>
+                            <span t-elif="canQuickCreate()" class="o_kanban_quick_add_bottom d-block m-2 cursor-pointer" t-on-click="() => this.quickCreate(group, false)">
+                                <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" /> New
+                            </span>
                         </t>
                     </div>
                 </t>

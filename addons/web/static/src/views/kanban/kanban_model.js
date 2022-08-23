@@ -163,13 +163,13 @@ class KanbanGroup extends Group {
     /**
      * @override
      */
-    quickCreate(activeFields, context) {
+    quickCreate(activeFields, context, atFirstPosition = false) {
         const ctx = { ...context };
         if (this.hasActiveProgressValue && this.progressValue.active !== FALSE) {
             const { fieldName } = this.model.progressAttributes;
             ctx[`default_${fieldName}`] = this.progressValue.active;
         }
-        return super.quickCreate(activeFields, ctx);
+        return super.quickCreate(activeFields, ctx, atFirstPosition);
     }
 
     async load() {
@@ -295,14 +295,14 @@ class KanbanGroup extends Group {
         await this.checkActiveValue();
     }
 
-    async validateQuickCreate() {
+    async validateQuickCreate(index) {
         const record = this.list.quickCreateRecord;
         if (!record) {
             return false;
         }
         const saved = await record.save();
         if (saved) {
-            this.addRecord(this.removeRecord(record), 0);
+            this.addRecord(this.removeRecord(record), index);
             this.count++;
             this.list.count++;
             return record;

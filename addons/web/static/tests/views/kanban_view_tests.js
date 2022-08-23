@@ -98,8 +98,12 @@ async function createRecord() {
     await click(target, "button.o-kanban-button-new");
 }
 
-async function quickCreateRecord(groupIndex) {
-    await click(getColumn(groupIndex), ".o_kanban_quick_add");
+async function quickCreateRecord(groupIndex, position = "top") {
+    if (position === "top") {
+        await click(getColumn(groupIndex), ".o_kanban_quick_add");
+    } else if (position === "bottom") {
+        await click(getColumn(groupIndex), ".o_kanban_quick_add_bottom");
+    }
 }
 
 async function editQuickCreateInput(field, value) {
@@ -1833,10 +1837,8 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates></kanban>",
             groupBy: ["bar"],
         });
-
         // create a new record
         await quickCreateRecord();
-
         assert.hasClass(
             target.querySelector(".o_kanban_quick_create .o_field_widget[name=foo]"),
             "o_required_modifier",
@@ -2025,7 +2027,7 @@ QUnit.module("Views", (hooks) => {
 
             // click to add and element and click outside, should cancel the quick creation
             await quickCreateRecord();
-            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-child");
+            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-of-type");
             assert.containsNone(
                 target,
                 ".o_kanban_quick_create",
@@ -2035,7 +2037,7 @@ QUnit.module("Views", (hooks) => {
             // click to input and drag the mouse outside, should not cancel the quick creation
             await quickCreateRecord();
             await triggerEvent(target, ".o_kanban_quick_create input", "mousedown");
-            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-child");
+            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-of-type");
             assert.containsOnce(
                 target,
                 ".o_kanban_quick_create",
@@ -2047,7 +2049,7 @@ QUnit.module("Views", (hooks) => {
             await editQuickCreateInput("foo", "new partner");
 
             // clicking outside should no longer destroy the quick create as it is dirty
-            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-child");
+            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-of-type");
             assert.containsOnce(
                 target,
                 ".o_kanban_quick_create",
@@ -2627,7 +2629,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click outside: should remove the quick create
-        await click(target, ".o_kanban_group:first-child .o_kanban_record:last-child");
+        await click(target, ".o_kanban_group:first-child .o_kanban_record:last-of-type");
         assert.containsNone(
             target,
             ".o_kanban_quick_create",
@@ -4360,7 +4362,7 @@ QUnit.module("Views", (hooks) => {
 
         // second record of first column moved at first place
         await dragAndDrop(
-            ".o_kanban_group:first-child .o_kanban_record:last-child",
+            ".o_kanban_group:first-child .o_kanban_record:last-of-type",
             ".o_kanban_group:first-child .o_kanban_record"
         );
 
@@ -4709,7 +4711,7 @@ QUnit.module("Views", (hooks) => {
             // attempt to drag&drop a record in the same column
             await dragAndDrop(
                 ".o_kanban_group:first-child .o_kanban_record",
-                ".o_kanban_group:first-child .o_kanban_record:last-child"
+                ".o_kanban_group:first-child .o_kanban_record:last-of-type"
             );
 
             assert.deepEqual(
@@ -8638,7 +8640,6 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("load more should load correct records after drag&drop event", async (assert) => {
         // Add a sequence number and initialize
         serverData.models.partner.records.forEach((el, i) => (el.sequence = i));
-
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -8662,7 +8663,7 @@ QUnit.module("Views", (hooks) => {
         // Drag the first kanban record on top of the last
         await dragAndDrop(
             ".o_kanban_group:first-child .o_kanban_record",
-            ".o_kanban_group:last-child"
+            ".o_kanban_group:last-child .o_kanban_record"
         );
 
         // load more twice to load all records of second column
@@ -10999,6 +11000,36 @@ QUnit.module("Views", (hooks) => {
             assert.hasClass(document.activeElement, "o_searchview_input");
         }
     );
+
+    QUnit.test("quick create record with bottom quick create button", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "product",
+            serverData,
+            groupBy: ["name"],
+            arch: /* xml */ `
+                <kanban on_create="quick_create">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="display_name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        // quick create at the bottom and verify the order
+        await quickCreateRecord(1, "bottom");
+        await editQuickCreateInput("display_name", "new product");
+        await validateRecord();
+        assert.deepEqual(getCardTexts(1), ["xmo", "new product"]);
+        // directly re-create another records at the bottom
+        await editQuickCreateInput("display_name", "new product 2");
+        await validateRecord();
+        assert.deepEqual(getCardTexts(1), ["xmo", "new product", "new product 2"]);
+    });
 
     QUnit.test("no leak of TransactionInProgress (grouped case)", async (assert) => {
         let def;
