@@ -10,7 +10,7 @@
     // that cases.
     box-shadow: inset 0 -1px 0 $border-color;
 
-    > .btn.oe_stat_button, > .o_dropdown_more {
+    .btn.oe_stat_button {
         flex: 0 0 auto;
         width: percentage(1/3); // Adapt the number of visible buttons for each screen width
         @include media-breakpoint-up(md) {
@@ -24,20 +24,6 @@
         }
     }
 
-    > .btn.oe_stat_button.o-dropdown {
-        .o_button_more {
-            height:100%;
-            width: 100%;
-            &:after {
-                @include o-caret-right
-            };
-        }
-
-        &.show .o_button_more:after {
-            @include o-caret-down;
-        }
-    }
-
     .btn.oe_stat_button {
         color: $o-main-text-color;
         height: $o-statbutton-height;
@@ -46,11 +32,8 @@
         text-align: left;
         white-space: nowrap;
         background-color: transparent;
-        opacity: 0.8;
         border-radius: 0px;
         margin-bottom: 0; // If the button comes from a field
-        border: 0 solid map-get($grays, '300');
-        text-transform: capitalize !important;
 
         &:hover, &:focus {
             background-color: rgba(black, 0.03);
@@ -117,63 +100,40 @@
         &:hover .o_stat_info > .o_not_hover {
             display: none !important
         }
+    }
+    .oe_stat_button {
+        border-left: 1px solid $border-color;
+    }
+    &.o_full > .oe_stat_button:first-child {
+        border-left: none;
+    }
 
-        &.o_button_more {
-            padding: 0 !important;
-            > .o_dropdown_toggler {
-                text-align: center;
-                width: 100%;
-                height: 100%;
+    // "More" button and dropdown
+    .oe_stat_button.dropdown {
+        > .o_button_more {
+            width: 100%;
+            height: 100%;
+            &:after {
+                margin-left: 5px;
+                @include o-caret-down;
+            }
+        }
+        &.show > .o_button_more {
+            &:after {
+                @include o-caret-up;
+            }
+        }
+
+        .o_dropdown_more {
+            width: 150px;
+            > .dropdown-item {
                 border: none;
-                border-bottom: 1px solid map-get($grays, '300');
-                margin: 0;
-                padding: 0;
-                background-color: transparent;
-
-                &:after {
-                    margin-left: 5px;
-                    @include o-caret-down;
-                }
-                &[aria-expanded="true"]:after {
-                    margin-left: 5px;
-                    @include o-caret-up;
+                border-bottom: 1px solid $border-color;
+                .oe_stat_button {
+                    border: none;
+                    width: 100%;
                 }
             }
         }
     }
-
-    &.o-full .oe_stat_button:not(.o_invisible_modifier) ~ .oe_stat_button {
-        border-left: 1px solid $border-color;
-    }
-    &.o-not-full .oe_stat_button {
-        border-left: 1px solid $border-color;
-    }
-
-    // > .o_dropdown_more {
-    //     @include o-position-absolute(100%, 0);
-    //     min-width: 0;
-    //     border: none;
-    //     border: 1px solid map-get($grays, '300');
-    //     margin: 0;
-    //     padding: 0;
-    //     @include media-breakpoint-down(md) {
-    //         // avoid b4 drowdown inline style
-    //         position: relative !important;
-    //         transform: none !important;
-    //         will-change: inherit!important;
-    //         margin-bottom: 20px;
-    //         width: 100%;
-    //         border-width: 0px;
-    //     }
-    //     > .btn.oe_stat_button {
-    //         width: 100%;
-    //         border: none;
-    //         border-bottom: 1px solid map-get($grays, '300');
-
-    //         @include media-breakpoint-down(md) {
-    //             display: inline-block;
-    //             width: percentage(1/3);
-    //         }
-    //     }
-    // }
 }

@@ -1,7 +1,7 @@
 // Define left and right padding according to screen resolution
 @mixin o-form-sheet-inner-left-padding {
     padding-left: $o-horizontal-padding;
-    @include media-breakpoint-between(lg,  xxl, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-between(lg, $o-extra-grid-breakpoints) {
         padding-left: $o-horizontal-padding*2;
     }
 }
@@ -10,7 +10,7 @@
 }
 @mixin o-form-sheet-inner-right-padding {
     padding-right: $o-horizontal-padding;
-    @include media-breakpoint-between(lg,  xxl, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-between(lg, $o-extra-grid-breakpoints) {
         padding-right: $o-horizontal-padding*2;
     }
 }
@@ -18,7 +18,7 @@
 @mixin o-form-sheet-negative-margin {
     margin-left: -$o-horizontal-padding;
     margin-right: -$o-horizontal-padding;
-    @include media-breakpoint-between(lg,  xxl, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-between(lg, $o-extra-grid-breakpoints) {
         margin-left: -$o-horizontal-padding*2;
         margin-right: -$o-horizontal-padding*2;
     }
@@ -167,7 +167,7 @@ $o-form-label-margin-right: 0px;
                     width: auto!important;
                 }
             }
-            &.o_field_many2one_selection {
+            .o_field_many2one_selection {
                 width: 100% !important;
             }
         }
@@ -247,162 +247,6 @@ $o-form-label-margin-right: 0px;
         }
     }
 
-    // Button box
-    .oe_button_box {
-        position: relative;
-        display: block;
-        margin-bottom: $o-sheet-vpadding;
-        margin-top: -$o-sheet-vpadding;
-        @include o-form-sheet-negative-margin;
-        text-align: right;
-        // Use box-shadow instead of border-bottom because some button boxes are
-        // empty in some cases and we do not want to see a floating border in
-        // that cases.
-        box-shadow: inset 0 -1px 0 $border-color;
-
-        .oe_stat_button, .o_dropdown_more {
-            border: 0 solid $border-color;
-        }
-
-        &.o_full .oe_stat_button:not(.o_invisible_modifier) ~ .oe_stat_button,
-        &.o_not_full .oe_stat_button {
-            border-left-width: $border-width;
-        }
-
-        .btn.oe_stat_button, > .o_dropdown_more {
-            flex: 0 0 auto;
-            width: percentage(1/3); // Adapt the number of visible buttons for each screen width
-            @include media-breakpoint-up(md) {
-                width: percentage(1/5);
-            }
-            @include media-breakpoint-up(lg) {
-                width: percentage(1/7);
-            }
-            @include media-breakpoint-up(xl) {
-                width: percentage(1/8);
-            }
-        }
-
-        .btn.oe_stat_button {
-            color: $o-main-text-color;
-            height: $o-statbutton-height;
-            // Use !important to avoid touch_device style
-            padding: 0 $o-statbutton-spacing 0 0 !important; // padding-left will be achieved through margin-left of content
-            text-align: left;
-            white-space: nowrap;
-            background-color: transparent;
-            opacity: 0.8;
-            border-radius: 0px;
-            margin-bottom: 0; // If the button comes from a field
-
-            &:hover, &:focus {
-                background-color: rgba(black, 0.03);
-                color: inherit;
-                opacity: 1;
-            }
-
-            > .o_button_icon {
-                margin-left: $o-statbutton-spacing; // To create the button padding left (firefox bug)
-                display: inline-block;
-                vertical-align: middle;
-                line-height: $o-statbutton-height;
-                width: 30%;
-
-                &:before {
-                    font-size: 22px;
-                    vertical-align: middle;
-                }
-            }
-
-            > .o_field_percent_pie {
-                margin-left: $o-statbutton-spacing; // To create the button padding left (firefox bug)
-            }
-
-            // Some buttons only display text without using StatInfo template
-            > span {
-                @include o-text-overflow(block);
-                white-space: normal; // text on several lines if needed
-            }
-
-            > .o_stat_info, > span { // contains the value and text
-                display: inline-block;
-                vertical-align: middle;
-                font-weight: $font-weight-normal;
-
-                max-width: 70%;
-                padding-right: $o-statbutton-spacing;
-                line-height: 1.3;
-
-                > .o_stat_value, > .o_stat_text {
-                    @include o-text-overflow(block);
-                    line-height: 1.2;
-                }
-
-                .o_stat_value {
-                    font-weight: $font-weight-bold;
-                    color: $o-brand-odoo;
-                }
-
-                .o_stat_text .o_field_empty {
-                    display: none;
-                }
-            }
-
-            &:not(:disabled) {
-                > .o_stat_info .o_field_widget, > span .o_field_widget {
-                    cursor: pointer;
-                }
-            }
-
-            &:not(:hover) .o_stat_info > .o_hover {
-                display: none !important;
-            }
-            &:hover .o_stat_info > .o_not_hover {
-                display: none !important
-            }
-
-            &.o_button_more {
-                text-align: center;
-                &:after {
-                    margin-left: 5px;
-                    @include o-caret-down;
-                }
-                &[aria-expanded="true"]:after {
-                    margin-left: 5px;
-                    @include o-caret-up;
-                }
-            }
-        }
-
-        > .o_dropdown_more {
-            @include o-position-absolute(100%, 0);
-            min-width: 0;
-            border-width: 0 $border-width;
-            box-sizing: content-box;
-            margin: 0;
-            padding: 0;
-            @include media-breakpoint-down(md) {
-                // avoid b4 drowdown inline style
-                position: relative !important;
-                transform: none !important;
-                will-change: inherit!important;
-                margin-bottom: 20px;
-                width: 100%;
-                border-width: 0px;
-            }
-            > .btn.oe_stat_button {
-                width: 100%;
-                // Override stronger ':not(.o_invisible_modifier) ~' rule
-                border-width: 0 0 $border-width!important;
-
-                @include media-breakpoint-down(md) {
-                    display: inline-block;
-                    width: percentage(1/3);
-                }
-            }
-        }
-    }
-
     // Title
     .oe_title {
         > h1, > h2, > h3 {
@@ -428,16 +272,14 @@ $o-form-label-margin-right: 0px;
 
     // Avatar
     .oe_avatar {
-        > div {
-            float: right;
-            margin-bottom: 10px;
+        float: right;
+        margin-bottom: 10px;
 
-            > img {
-                max-width: $o-avatar-size;
-                max-height: $o-avatar-size;
-                vertical-align: top;
-                border: 1px solid $o-gray-300;
-            }
+        > div > img {
+            max-width: $o-avatar-size;
+            max-height: $o-avatar-size;
+            vertical-align: top;
+            border: 1px solid $o-gray-300;
         }
     }
 
@@ -474,12 +316,6 @@ $o-form-label-margin-right: 0px;
                     @include o-td-label-style;
                 }
                 vertical-align: top;
-
-                span, .o_field_boolean, .oe_avatar, .o_form_uri {
-                    &.o_field_widget {
-                        width: auto;
-                    }
-                }
             }
 
             .o_field_widget {
