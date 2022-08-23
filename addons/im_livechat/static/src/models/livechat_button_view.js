@@ -164,7 +164,7 @@ registerModel({
             }
             const chatbotState = localStorage.getItem(this.messaging.publicLivechatGlobal.chatbotSessionCookieKey);
             if (chatbotState) {
-                this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: { data: this.messaging.publicLivechatGlobal.localStorageChatbotState._chatbotCurrentStep } });
+                this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: { data: this.messaging.publicLivechatGlobal.chatbot.localStorageState._chatbotCurrentStep } });
             }
         },
         closeChat() {
@@ -336,7 +336,7 @@ registerModel({
             if (this.messaging.publicLivechatGlobal.chatbotState === 'welcome') {
                 return true;
             }
-            if (this.messaging.publicLivechatGlobal.localStorageChatbotState) {
+            if (this.messaging.publicLivechatGlobal.chatbot.localStorageState) {
                 return true;
             }
             return clear();
