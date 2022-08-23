@@ -9,7 +9,7 @@ import {svgToPNG} from 'website.utils';
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
-const { Component, onMounted, reactive, useEnv, useRef, useState, useSubEnv, onWillStart } = owl;
+const { Component, onMounted, reactive, useEnv, useRef, useState, useSubEnv, onWillStart, useExternalListener } = owl;
 
 const ROUTES = {
     descriptionScreen: 2,
@@ -608,13 +608,13 @@ class Configurator extends Component {
         this.router = useService('router');
 
         // Using the back button must update the router state.
-        window.addEventListener("popstate", () => {
+        useExternalListener(window, "popstate", () => {
             const match = window.location.pathname.match(/\/website\/configurator\/(.*)$/);
             const step = parseInt(match && match[1], 10) || 1;
             // Do not use navigate because URL is already updated.
             this.state.currentStep = step;
         });
-        
+
         const initialStep = this.props.action.context.params && this.props.action.context.params.step;
         const store = reactive(new Store(), () => this.updateStorage(store));
 
