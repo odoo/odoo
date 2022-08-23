@@ -667,20 +667,6 @@ class PosConfig(models.Model):
         result = self.env.cr.fetchall()
         return result
 
-    @api.model
-    def are_there_uninstalled_modules(self, changed_fields):
-        modules_to_check = self._get_modules_to_check(changed_fields)
-        n_installed = self.env['ir.module.module'].search_count([('name', 'in', modules_to_check), ('state', '=', 'installed')])
-        return n_installed != len(modules_to_check)
-
-    @api.model
-    def _get_modules_to_check(self, changed_fields):
-        modules_to_check = []
-        for field in changed_fields:
-            if field.startswith('module_'):
-                modules_to_check.append(field.replace('module_', ''))
-        return modules_to_check
-
     def action_pos_config_modal_edit(self):
         return {
             'view_mode': 'form',
