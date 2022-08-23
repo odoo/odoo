@@ -104,12 +104,30 @@ registerModel({
         _computePaddingClassNames() {
             const isDeviceSmall = this.messaging.device.isSmall;
             const paddingClassNames = [];
-            if (this.messageAction.messageActionListOwner.firstActionView === this) {
+            if (
+                (
+                    this.messageAction.messageActionListOwner.firstActionView === this &&
+                    !this.messageAction.messageActionListOwner.messageView.isInChatWindowAndIsAlignedRight
+                ) ||
+                (
+                    this.messageAction.messageActionListOwner.lastActionView === this &&
+                    this.messageAction.messageActionListOwner.messageView.isInChatWindowAndIsAlignedRight
+                )
+            ) {
                 paddingClassNames.push(isDeviceSmall ? 'ps-3' : 'ps-2');
             } else {
                 paddingClassNames.push(isDeviceSmall ? 'ps-2' : 'ps-1');
             }
-            if (this.messageAction.messageActionListOwner.lastActionView === this) {
+            if (
+                (
+                    this.messageAction.messageActionListOwner.lastActionView === this &&
+                    !this.messageAction.messageActionListOwner.messageView.isInChatWindowAndIsAlignedRight
+                ) ||
+                (
+                    this.messageAction.messageActionListOwner.firstActionView === this &&
+                    this.messageAction.messageActionListOwner.messageView.isInChatWindowAndIsAlignedRight
+                )
+            ) {
                 paddingClassNames.push(isDeviceSmall ? 'pe-3' : 'pe-2');
             } else {
                 paddingClassNames.push(isDeviceSmall ? 'pe-2' : 'pe-1');
