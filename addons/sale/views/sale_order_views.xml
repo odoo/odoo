@@ -284,6 +284,7 @@
                     <page string="Order Lines" name="order_lines">
                         <field
                             name="order_line"
+                            widget="sale_section_and_note_one2many"
                             mode="tree,kanban"
                             attrs="{'readonly': [('state', 'in', ('done','cancel'))]}"
                         >
