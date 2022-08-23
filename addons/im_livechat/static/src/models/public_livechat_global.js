@@ -258,6 +258,10 @@ registerModel({
         chatbotState: attr({
             compute: '_computeChatbotState',
         }),
+        chatWindow: one('PublicLivechatWindow', {
+            inverse: 'publicLivechatGlobalOwner',
+            isCausal: true,
+        }),
         feedbackView: one('PublicLivechatFeedbackView', {
             inverse: 'publicLivechatGlobalOwner',
             isCausal: true,

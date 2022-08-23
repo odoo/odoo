@@ -94,10 +94,10 @@ const LivechatButton = Widget.extend({
      * @private
      */
      _renderMessages() {
-        const shouldScroll = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded && this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.isAtBottom();
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.render();
+        const shouldScroll = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded && this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom();
+        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.render();
         if (shouldScroll) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.publicLivechatView.widget.scrollToBottom();
+            this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
         }
     },
     /**
@@ -135,12 +135,12 @@ const LivechatButton = Widget.extend({
      */
     _onCloseChatWindow(ev) {
         ev.stopPropagation();
-        const isComposerDisabled = this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled');
+        const isComposerDisabled = this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled');
         const shouldAskFeedback = !isComposerDisabled && this.messaging.publicLivechatGlobal.messages.find(function (message) {
             return message.id !== '_welcome';
         });
         if (shouldAskFeedback) {
-            this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.toggleFold(false);
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.toggleFold(false);
             this.messaging.publicLivechatGlobal.livechatButtonView.askFeedback();
         } else {
             this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
@@ -176,7 +176,7 @@ const LivechatButton = Widget.extend({
      */
     _onUpdatedTypingPartners(ev) {
         ev.stopPropagation();
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.renderHeader();
+        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.renderHeader();
     },
     /**
      * @private
@@ -184,7 +184,7 @@ const LivechatButton = Widget.extend({
      */
     _onUpdatedUnreadCounter(ev) {
         ev.stopPropagation();
-        this.messaging.publicLivechatGlobal.livechatButtonView.chatWindow.legacyChatWindow.renderHeader();
+        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.renderHeader();
     },
 });
 

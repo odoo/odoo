@@ -54,7 +54,7 @@ registerModel({
             }
         },
         askFeedback() {
-            this.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled', true);
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled', true);
             this.messaging.publicLivechatGlobal.update({ feedbackView: {} });
             /**
              * When we enter the "ask feedback" process of the chat, we hide some elements that become
@@ -68,9 +68,9 @@ registerModel({
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed = true;
                 this.chatbotSaveSession();
             }
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
-            this.chatWindow.legacyChatWindow.$('.o_composer_text_field')
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field')
                 .removeClass('d-none')
                 .val('');
         },
@@ -88,9 +88,9 @@ registerModel({
                 // handle the display
                 return;
             }
-            this.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click', this.onChatbotRestartScript);
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click', this.onChatbotRestartScript);
         },
         /**
          * Register current chatbot step state into localStorage to be able to resume if the visitor
@@ -110,8 +110,8 @@ registerModel({
          * in this case).
          */
         async onChatbotRestartScript(ev) {
-            this.chatWindow.legacyChatWindow.$('.o_composer_text_field').removeClass('d-none');
-            this.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field').removeClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
 
             if (this.chatbotNextStepTimeout) {
                 clearTimeout(this.chatbotNextStepTimeout);
@@ -168,7 +168,7 @@ registerModel({
             }
         },
         closeChat() {
-            this.update({ chatWindow: clear() });
+            this.messaging.publicLivechatGlobal.update({ chatWindow: clear() });
             set_cookie('im_livechat_session', "", -1); // remove cookie
         },
         /**
@@ -191,11 +191,11 @@ registerModel({
             }
         },
         async openChatWindow() {
-            this.update({ chatWindow: {} });
-            await this.chatWindow.legacyChatWindow.appendTo($('body'));
+            this.messaging.publicLivechatGlobal.update({ chatWindow: {} });
+            await this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.appendTo($('body'));
             const cssProps = { bottom: 0 };
             cssProps[this.messaging.locale.textDirection === 'rtl' ? 'left' : 'right'] = 0;
-            this.chatWindow.legacyChatWindow.$el.css(cssProps);
+            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$el.css(cssProps);
             this.widget.$el.hide();
             this._openChatWindowChatbot();
         },
@@ -212,7 +212,7 @@ registerModel({
             this.update({
                 isTypingTimeout: setTimeout(
                     () => {
-                        this.chatWindow.legacyChatWindow.$('.o_mail_thread_content').append(
+                        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_mail_thread_content').append(
                             $(qweb.render('im_livechat.legacy.chatbot.is_typing_message', {
                                 'chatbotImageSrc': `/im_livechat/operator/${
                                     this.messaging.publicLivechatGlobal.publicLivechat.operator.id
@@ -221,7 +221,7 @@ registerModel({
                                 'isWelcomeMessage': isWelcomeMessage,
                             }))
                         );
-                        this.chatWindow.publicLivechatView.widget.scrollToBottom();
+                        this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
                     },
                     this.messaging.publicLivechatGlobal.chatbot.messageDelay / 3,
                 ),
@@ -449,8 +449,8 @@ registerModel({
          */
         _openChatWindowChatbot() {
             window.addEventListener('resize', () => {
-                if (this.chatWindow) {
-                    this.chatWindow.publicLivechatView.widget.scrollToBottom();
+                if (this.messaging.publicLivechatGlobal.chatWindow) {
+                    this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
                 }
             });
 
@@ -493,7 +493,7 @@ registerModel({
                 }
                 this.closeChat();
             }
-            this.chatWindow.publicLivechatView.widget.scrollToBottom();
+            this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
         },
         /**
          * @private
@@ -569,10 +569,6 @@ registerModel({
         }),
         chatbotNextStepTimeout: attr(),
         chatbotWelcomeMessageTimeout: attr(),
-        chatWindow: one('PublicLivechatWindow', {
-            inverse: 'livechatButtonViewOwner',
-            isCausal: true,
-        }),
         currentPartnerId: attr({
             compute: '_computeCurrentPartnerId',
         }),
