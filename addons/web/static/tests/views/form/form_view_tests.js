@@ -1690,12 +1690,14 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector("label.o_form_label").textContent, "Bar");
     });
 
-    QUnit.test("label with empty string attribute doesn't get rendered", async function (assert) {
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
+    QUnit.test(
+        "label with empty string attribute renders to an empty label",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <form>
                     <sheet>
                         <group>
@@ -1706,11 +1708,13 @@ QUnit.module("Views", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            resId: 2,
-        });
+                resId: 2,
+            });
 
-        assert.containsNone(target, "label.o_form_label");
-    });
+            assert.containsOnce(target, "label.o_form_label");
+            assert.equal(target.querySelector("label.o_form_label").textContent, "");
+        }
+    );
 
     QUnit.test(
         "label is not rendered when invisible and not at top-level in a group",
