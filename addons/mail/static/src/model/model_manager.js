@@ -160,7 +160,7 @@ export class ModelManager {
             const entry = this._listenersObservingAllByModel.get(model);
             const info = {
                 listener,
-                reason: `all() - ${model}`,
+                reason: this.isDebug && `all() - ${model}`,
             };
             if (entry.has(listener)) {
                 entry.get(listener).push(info);
@@ -224,14 +224,14 @@ export class ModelManager {
      * @returns {Record|undefined}
      */
     findFromIdentifyingData(model, data = {}) {
-        const data2 = { ...data };
         for (const fieldName of model.__identifyingFieldNames) {
-            const field = model.__fieldMap[fieldName];
-            if (data2[field.fieldName] === undefined && field.default !== undefined) {
-                data2[field.fieldName] = field.default;
+            const field = model.__fieldMap.get(fieldName);
+            if (data[field.fieldName] === undefined && field.default !== undefined) {
+                data[field.fieldName] = field.default;
             }
         }
-        const record = model.__recordsIndex.findRecord(this._preInsertIdentifyingFieldsFromData(model, data2));
+        this._preInsertIdentifyingFieldsFromData(model, data);
+        const record = model.__recordsIndex.findRecord(data);
         if (!record) {
             return;
         }
@@ -243,7 +243,7 @@ export class ModelManager {
             const entry = this._listenersObservingRecord.get(record);
             const info = {
                 listener,
-                reason: `findFromIdentifyingData record - ${record}`,
+                reason: this.isDebug && `findFromIdentifyingData record - ${record}`,
             };
             if (entry.has(listener)) {
                 entry.get(listener).push(info);
@@ -592,7 +592,7 @@ export class ModelManager {
                 if (!relatedModel) {
                     throw new Error(`${field} on ${model} defines a relation to model(${field.to}), but there is no model registered with this name.`);
                 }
-                const inverseField = relatedModel.__fieldMap[field.inverse];
+                const inverseField = relatedModel.__fieldMap.get(field.inverse);
                 if (!inverseField) {
                     throw new Error(`${field} on ${model} defines its inverse as field(${field.inverse}) on ${relatedModel}, but it does not exist.`);
                 }
@@ -604,7 +604,7 @@ export class ModelManager {
                 }
             }
             for (const identifyingField of model.__identifyingFieldNames) {
-                const field = model.__fieldMap[identifyingField];
+                const field = model.__fieldMap.get(identifyingField);
                 if (!field) {
                     throw new Error(`Identifying field "${identifyingField}" is not a field on ${model}.`);
                 }
@@ -613,7 +613,7 @@ export class ModelManager {
                         throw new Error(`Identifying field "${identifyingField}" on ${model} has a relation of type "${field.relationType}" but identifying field is only supported for "one".`);
                     }
                     const relatedModel = this.models[field.to];
-                    const inverseField = relatedModel.__fieldMap[field.inverse];
+                    const inverseField = relatedModel.__fieldMap.get(field.inverse);
                     if (!inverseField.isCausal) {
                         throw new Error(`Identifying field "${identifyingField}" on ${model} has an inverse "${field.inverse}" not declared as "isCausal" on ${relatedModel}.`);
                     }
@@ -641,13 +641,13 @@ export class ModelManager {
             // change in dependencies of compute, related and "on change".
             __listeners: [],
             // Field values of record.
-            __values: {},
+            __values: new Map(),
             [IS_RECORD]: true,
         });
         const record = owl.markRaw(!this.isDebug ? nonProxyRecord : new Proxy(nonProxyRecord, {
             get: function getFromProxy(record, prop) {
                 if (
-                    !model.__fieldMap[prop] &&
+                    !model.__fieldMap.has(prop) &&
                     !['_super', 'then', 'localId'].includes(prop) &&
                     typeof prop !== 'symbol' &&
                     !(prop in record)
@@ -659,10 +659,9 @@ export class ModelManager {
         }));
         // Ensure X2many relations are Set initially (other fields can stay undefined).
         for (const field of model.__fieldList) {
-            record.__values[field.fieldName] = undefined;
             if (field.fieldType === 'relation') {
                 if (field.relationType === 'many') {
-                    record.__values[field.fieldName] = new RelationSet(record, field);
+                    record.__values.set(field.fieldName, new RelationSet(record, field));
                 }
             }
         }
@@ -670,9 +669,6 @@ export class ModelManager {
             this._listenersObservingRecord.set(record, new Map());
         }
         this._listenersObservingFieldOfRecord.set(record, new Map());
-        for (const field of model.__fieldList) {
-            this._listenersObservingFieldOfRecord.get(record).set(field, new Map());
-        }
         /**
          * Register record.
          */
@@ -694,14 +690,14 @@ export class ModelManager {
         for (const [listener, infoList] of this._listenersObservingAllByModel.get(model)) {
             this._markListenerToNotify(listener, {
                 listener,
-                reason: `_create: allByModel - ${record}`,
+                reason: this.isDebug && `_create: allByModel - ${record}`,
                 infoList,
             });
         }
         for (const [listener, infoList] of this._listenersObservingRecord.get(record)) {
             this._markListenerToNotify(listener, {
                 listener,
-                reason: `_create: record - ${record}`,
+                reason: this.isDebug && `_create: record - ${record}`,
                 infoList,
             });
         }
@@ -713,7 +709,9 @@ export class ModelManager {
      * @param {Record} record
      */
     _delete(record) {
-        this._ensureNoLockingListener();
+        if (this.isDebug) {
+            this._ensureNoLockingListener();
+        }
         const model = record.constructor;
         if (!record.exists()) {
             throw Error(`Cannot delete already deleted record ${record}.`);
@@ -742,14 +740,14 @@ export class ModelManager {
         for (const [listener, infoList] of this._listenersObservingRecord.get(record)) {
             this._markListenerToNotify(listener, {
                 listener,
-                reason: `_delete: record - ${record}`,
+                reason: this.isDebug && `_delete: record - ${record}`,
                 infoList,
             });
         }
         for (const [listener, infoList] of this._listenersObservingAllByModel.get(model)) {
             this._markListenerToNotify(listener, {
                 listener,
-                reason: `_delete: allByModel - ${record}`,
+                reason: this.isDebug && `_delete: allByModel - ${record}`,
                 infoList,
             });
         }
@@ -818,7 +816,7 @@ export class ModelManager {
             for (const listener of listeners) {
                 listener.onChange({
                     listener,
-                    reason: `first call on ${record}`,
+                    reason: this.isDebug && `first call on ${record}`,
                 });
             }
         }
@@ -871,7 +869,7 @@ export class ModelManager {
                 record.__listeners.push(listener);
                 listener.onChange({
                     listener,
-                    reason: `first call on ${record}`,
+                    reason: this.isDebug && `first call on ${record}`,
                 });
                 if (!record.exists()) {
                     break; // onChange might have deleted the record, other onChange shouldn't be executed
@@ -951,12 +949,15 @@ export class ModelManager {
      * @returns {Record[]}
      */
     _insert(model, dataList, options = {}) {
-        this._ensureNoLockingListener();
+        if (this.isDebug) {
+            this._ensureNoLockingListener();
+        }
         const records = [];
         for (const data of dataList) {
             let record = this.findFromIdentifyingData(model, data);
             if (!record) {
-                const data2 = this._preInsertIdentifyingFieldsFromData(model, this._addDefaultData(model, data));
+                const data2 = this._addDefaultData(model, data);
+                this._preInsertIdentifyingFieldsFromData(model, data2);
                 record = this._create(model);
                 model.__recordsIndex.addRecord(record, data2);
                 this._update(record, data2, { ...options, allowWriteReadonly: true });
@@ -1027,10 +1028,10 @@ export class ModelManager {
      * @param {ModelField} field
      */
     _markRecordFieldAsChanged(record, field) {
-        for (const [listener, infoList] of this._listenersObservingFieldOfRecord.get(record).get(field)) {
+        for (const [listener, infoList] of this._listenersObservingFieldOfRecord.get(record).get(field) || []) {
             this._markListenerToNotify(listener, {
                 listener,
-                reason: `_update: ${field} of ${record}`,
+                reason: this.isDebug && `_update: ${field} of ${record}`,
                 infoList,
             });
         }
@@ -1082,23 +1083,18 @@ export class ModelManager {
      * and to replace them by corresponding "replace" commands.
      *
      * @param {Object} model
-     * @param {Object} [data={}]
-     * @returns {Object}
+     * @param {Object} data
      */
     _preInsertIdentifyingFieldsFromData(model, data) {
-        const data2 = { ...data };
-        for (const [fieldName, value] of Object.entries(data2)) {
-            const field = model.__fieldMap[fieldName];
-            if (!field) {
-                throw new Error(`"${fieldName}" is not a field on "${model}".`);
+        for (const fieldName of model.__identifyingFieldNames) {
+            if (data[fieldName] === undefined) {
+                return;
             }
+            const field = model.__fieldMap.get(fieldName);
             if (!field.to) {
                 continue;
             }
-            if (!field.identifying) {
-                continue;
-            }
-            const commands = field.convertToFieldCommandList(value);
+            const commands = field.convertToFieldCommandList(data[fieldName]);
             if (commands.length !== 1) {
                 throw new Error(`Identifying field "${model}/${fieldName}" should receive a single command.`);
             }
@@ -1119,9 +1115,8 @@ export class ModelManager {
                 throw new Error(`Identifying field "${model}/${fieldName}" should receive a single data object.`);
             }
             const [record] = this._insert(this.models[field.to], [command._value]);
-            data2[fieldName] = record;
+            data[fieldName] = record;
         }
-        return data2;
     }
 
     /**
@@ -1205,28 +1200,32 @@ export class ModelManager {
          */
         for (const model of Object.values(this.models)) {
             // Object with fieldName/field as key/value pair, for quick access.
-            model.__fieldMap = model.__combinedFields;
+            model.__fieldMap = new Map(Object.entries(model.__combinedFields));
             // List of all fields, for iterating.
-            model.__fieldList = Object.values(model.__fieldMap);
+            model.__fieldList = [...model.__fieldMap.values()];
             model.__requiredFieldsList = model.__fieldList.filter(
                 field => field.required
             );
             model.__identifyingFieldNames = new Set();
-            for (const [fieldName, field] of Object.entries(model.__fieldMap)) {
+            for (const [fieldName, field] of model.__fieldMap) {
                 if (field.identifying) {
                     model.__identifyingFieldNames.add(fieldName);
                 }
                 // Add field accessors.
                 Object.defineProperty(model.prototype, fieldName, {
                     get: function getFieldValue() { // this is bound to record
-                        const field = model.__fieldMap[fieldName];
                         if (this.modelManager._listeners.size) {
-                            if (!this.modelManager._listenersObservingRecord.has(this)) {
-                                this.modelManager._listenersObservingRecord.set(this, new Map());
+                            let entryRecord = this.modelManager._listenersObservingRecord.get(this);
+                            if (!entryRecord) {
+                                entryRecord = new Map();
+                                this.modelManager._listenersObservingRecord.set(this, entryRecord);
                             }
-                            const entryRecord = this.modelManager._listenersObservingRecord.get(this);
-                            const reason = `getField - ${field} of ${this}`;
-                            const entryField = this.modelManager._listenersObservingFieldOfRecord.get(this).get(field);
+                            const reason = this.modelManager.isDebug && `getField - ${field} of ${this}`;
+                            let entryField = this.modelManager._listenersObservingFieldOfRecord.get(this).get(field);
+                            if (!entryField) {
+                                entryField = new Map();
+                                this.modelManager._listenersObservingFieldOfRecord.get(this).set(field, entryField);
+                            }
                             for (const listener of this.modelManager._listeners) {
                                 listener.lastObservedRecords.add(this);
                                 const info = { listener, reason };
@@ -1263,32 +1262,21 @@ export class ModelManager {
      * @returns {boolean} whether any value changed for the current record
      */
     _update(record, data, options = {}) {
-        this._ensureNoLockingListener();
-        if (!record.exists()) {
+        if (this.isDebug) {
+            this._ensureNoLockingListener();
+        }
+        if (this.isDebug && !record.exists()) {
             throw Error(`Cannot update already deleted record ${record}.`);
         }
         const { allowWriteReadonly = false } = options;
         const model = record.constructor;
         let hasChanged = false;
-        const sortedFieldNames = Object.keys(data);
-        sortedFieldNames.sort((a, b) => {
-            // Always update identifying fields first because updating other relational field will
-            // trigger update of inverse field, which will require this identifying fields to be set
-            // beforehand to properly detect whether this is already linked or not on the inverse.
-            if (model.__identifyingFieldNames.has(a) && !model.__identifyingFieldNames.has(b)) {
-                return -1;
-            }
-            if (!model.__identifyingFieldNames.has(a) && model.__identifyingFieldNames.has(b)) {
-                return 1;
-            }
-            return 0;
-        });
-        for (const fieldName of sortedFieldNames) {
+        for (const fieldName of Object.keys(data)) {
             if (data[fieldName] === undefined) {
                 // `undefined` should have the same effect as not passing the field
                 continue;
             }
-            const field = model.__fieldMap[fieldName];
+            const field = model.__fieldMap.get(fieldName);
             if (!field) {
                 throw new Error(`Cannot create/update record with data unrelated to a field. (record: "${record}", non-field attempted update: "${fieldName}")`);
             }

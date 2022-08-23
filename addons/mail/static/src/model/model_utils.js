@@ -12,7 +12,7 @@
 export function followRelations(record, relatedPath) {
     let target = record;
     for (const field of relatedPath.split('.')) {
-        if (!target.constructor.__fieldMap[field]) {
+        if (!target.constructor.__fieldMap.has(field)) {
             throw Error(`field(${field}) does not exist on ${target}`);
         }
         target = target[field];
