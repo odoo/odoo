@@ -6,6 +6,7 @@ const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/medi
 const { saveVideos, videoSpecificClasses } = require('@web_editor/components/media_dialog/video_selector');
 const dom = require('web.dom');
 const core = require('web.core');
+const { browser } = require('@web/core/browser/browser');
 const Widget = require('web.Widget');
 const Dialog = require('web.Dialog');
 const customColors = require('web_editor.custom_colors');
@@ -204,6 +205,7 @@ const Wysiwyg = Widget.extend({
             categories: powerboxOptions.categories,
             plugins: options.editorPlugins,
             direction: localization.direction || 'ltr',
+            collaborationClientAvatarUrl: `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${this.getSession().uid}`,
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
@@ -487,6 +489,7 @@ const Wysiwyg = Widget.extend({
                         }
                         return this._userName;
                     },
+                    get_client_avatar: () => `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${this.getSession().uid}`,
                     get_missing_steps: (params) => this.odooEditor.historyGetMissingSteps(params.requestPayload),
                     get_history_from_snapshot: () => this.odooEditor.historyGetSnapshotSteps(),
                     get_collaborative_selection: () => this.odooEditor.getCurrentCollaborativeSelection(),
@@ -511,6 +514,9 @@ const Wysiwyg = Widget.extend({
                             this.ptp.clientsInfos[fromClientId].startTime = await this.ptp.requestClient(fromClientId, 'get_start_time', undefined, { transport: 'rtc' });
                             this.ptp.requestClient(fromClientId, 'get_client_name', undefined, { transport: 'rtc' }).then((clientName) => {
                                 this.ptp.clientsInfos[fromClientId].clientName = clientName;
+                            });
+                            this.ptp.requestClient(fromClientId, 'get_client_avatar', undefined, { transport: 'rtc' }).then(clientAvatarUrl => {
+                                this.ptp.clientsInfos[fromClientId].clientAvatarUrl = clientAvatarUrl;
                             });
 
                             if (!historySyncAtLeastOnce) {
@@ -539,6 +545,7 @@ const Wysiwyg = Widget.extend({
                             }
                             const selection = notificationPayload;
                             selection.clientName = client.clientName;
+                            selection.clientAvatarUrl = client.clientAvatarUrl;
                             this.odooEditor.onExternalMultiselectionUpdate(selection);
                             break;
                         }
