@@ -1021,7 +1021,7 @@ QUnit.test('load single message from channel initially', async function (assert)
         model: 'mail.channel',
         res_id: mailChannelId1
     });
-    const { messaging, openDiscuss } = await start({
+    const { openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1061,9 +1061,7 @@ QUnit.test('load single message from channel initially', async function (assert)
     assert.strictEqual(
         document.querySelectorAll(`
             .o_Discuss_thread
-            .o_MessageList_message[data-message-local-id="${
-                messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
-            }"]
+            .o_MessageList_message[data-message-id="${mailMessageId1}"]
         `).length,
         1,
         "should have message with Id 100"
@@ -1106,7 +1104,7 @@ QUnit.test('basic rendering of message', async function (assert) {
         model: 'mail.channel',
         res_id: mailChannelId1
     });
-    const { click, messaging, openDiscuss } = await start({
+    const { click, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1117,9 +1115,7 @@ QUnit.test('basic rendering of message', async function (assert) {
     const message = document.querySelector(`
         .o_Discuss_thread
         .o_ThreadView_messageList
-        .o_MessageList_message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
-        }"]
+        .o_MessageList_message[data-message-id="${mailMessageId1}"]
     `);
     assert.strictEqual(
         message.querySelectorAll(`:scope .o_Message_sidebar`).length,
@@ -1253,7 +1249,7 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
             res_id: mailChannelId1, // id of related channel
         }
     ]);
-    const { click, messaging, openDiscuss } = await start({
+    const { click, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -1271,16 +1267,12 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
     const message1 = document.querySelector(`
         .o_Discuss_thread
         .o_ThreadView_messageList
-        .o_MessageList_message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
-        }"]
+        .o_MessageList_message[data-message-id="${mailMessageId1}"]
     `);
     const message2 = document.querySelector(`
         .o_Discuss_thread
         .o_ThreadView_messageList
-        .o_MessageList_message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId2 }).localId
-        }"]
+        .o_MessageList_message[data-message-id="${mailMessageId2}"]
     `);
     assert.notOk(
         message1.classList.contains('o-squashed'),
@@ -1401,16 +1393,12 @@ QUnit.test('inbox messages are never squashed', async function (assert) {
     const message1 = document.querySelector(`
         .o_Discuss_thread
         .o_ThreadView_messageList
-        .o_MessageList_message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
-        }"]
+        .o_MessageList_message[data-message-id="${mailMessageId1}"]
     `);
     const message2 = document.querySelector(`
         .o_Discuss_thread
         .o_ThreadView_messageList
-        .o_MessageList_message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId2 }).localId
-        }"]
+        .o_MessageList_message[data-message-id="${mailMessageId2}"]
     `);
     assert.notOk(
         message1.classList.contains('o-squashed'),
@@ -1974,7 +1962,7 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
             res_id: mailChannelId1,
         }
     );
-    const { messaging, openDiscuss } = await start({
+    const { openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -2003,9 +1991,7 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
     );
     const msg1 = document.querySelector(`
         .o_Discuss_thread
-        .o_Message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
-        }"]
+        .o_Message[data-message-id="${mailMessageId1}"]
     `);
     assert.strictEqual(
         msg1.querySelectorAll(`:scope .o_Message_authorAvatar`).length,
@@ -2556,7 +2542,7 @@ QUnit.test('post a simple message', async function (assert) {
 
     const pyEnv = await startServer();
     const mailChannelId1 = pyEnv['mail.channel'].create({});
-    const { click, insertText, messaging, openDiscuss } = await start({
+    const { click, insertText, openDiscuss } = await start({
         discuss: {
             params: {
                 default_active_id: `mail.channel_${mailChannelId1}`,
@@ -2633,8 +2619,8 @@ QUnit.test('post a simple message', async function (assert) {
     const [postedMessageId] = pyEnv['mail.message'].search([], { order: 'id DESC' });
     const message = document.querySelector(`.o_Message`);
     assert.strictEqual(
-        message.dataset.messageLocalId,
-        messaging.models['Message'].findFromIdentifyingData({ id: postedMessageId }).localId,
+        parseInt(message.dataset.messageId),
+        postedMessageId,
         "new message in thread should be linked to newly created message from message post"
     );
     assert.strictEqual(
@@ -2917,8 +2903,8 @@ QUnit.test('receive new needaction messages', async function (assert) {
         "should have one message in inbox"
     );
     assert.strictEqual(
-        document.querySelector(`.o_Discuss_thread .o_Message`).dataset.messageLocalId,
-        messaging.models['Message'].findFromIdentifyingData({ id: 100 }).localId,
+        parseInt(document.querySelector(`.o_Discuss_thread .o_Message`).dataset.messageId),
+        100,
         "should display newly received needaction message"
     );
 
@@ -2950,18 +2936,14 @@ QUnit.test('receive new needaction messages', async function (assert) {
     assert.ok(
         document.querySelector(`
             .o_Discuss_thread
-            .o_Message[data-message-local-id="${
-                messaging.models['Message'].findFromIdentifyingData({ id: 100 }).localId
-            }"]
+            .o_Message[data-message-id="100"]
         `),
         "should still display 1st needaction message"
     );
     assert.ok(
         document.querySelector(`
             .o_Discuss_thread
-            .o_Message[data-message-local-id="${
-                messaging.models['Message'].findFromIdentifyingData({ id: 101 }).localId
-            }"]
+            .o_Message[data-message-id="101"]
         `),
         "should display 2nd needaction message"
     );
@@ -2985,7 +2967,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         notification_type: 'inbox',
         res_partner_id: pyEnv.currentPartnerId, // must be for current partner
     });
-    const { click, insertText, messaging, openDiscuss } = await start({
+    const { click, insertText, openDiscuss } = await start({
         async mockRPC(route, args) {
             if (route === '/mail/message/post') {
                 assert.step('message_post');
@@ -3032,8 +3014,8 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         "should display a single message"
     );
     assert.strictEqual(
-        document.querySelector('.o_Message').dataset.messageLocalId,
-        messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId,
+        parseInt(document.querySelector('.o_Message').dataset.messageId),
+        mailMessageId1,
         "should display message with ID 100"
     );
     assert.strictEqual(
@@ -3076,8 +3058,8 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
         "should still display a single message after posting reply"
     );
     assert.strictEqual(
-        document.querySelector('.o_Message').dataset.messageLocalId,
-        messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId,
+        parseInt(document.querySelector('.o_Message').dataset.messageId),
+        mailMessageId1,
         "should still display message with ID 100 after posting reply"
     );
     assert.notOk(
@@ -3276,14 +3258,10 @@ QUnit.test('mark a single message as read should only move this message to "Hist
     );
 
     await click(`
-        .o_Message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
-        }"]
+        .o_Message[data-message-id="${mailMessageId1}"]
     `);
     await click(`
-        .o_Message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
-        }"] .o_MessageActionView_actionMarkAsRead
+        .o_Message[data-message-id="${mailMessageId1}"] .o_MessageActionView_actionMarkAsRead
     `);
     assert.containsOnce(
         document.body,
@@ -3292,9 +3270,7 @@ QUnit.test('mark a single message as read should only move this message to "Hist
     );
     assert.containsOnce(
         document.body,
-        `.o_Message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId2 }).localId
-        }"]`,
+        `.o_Message[data-message-id="${mailMessageId2}"]`,
         "message still in inbox should be the one not marked as read"
     );
 
@@ -3319,9 +3295,7 @@ QUnit.test('mark a single message as read should only move this message to "Hist
     );
     assert.containsOnce(
         document.body,
-        `.o_Message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 }).localId
-        }"]`,
+        `.o_Message[data-message-id="${mailMessageId1}"]`,
         "message moved in history should be the one marked as read"
     );
 });
@@ -3846,7 +3820,7 @@ QUnit.test('message being a replied to another message should show message being
         parent_id: mailMessageId1,
         res_id: mailChannelId1,
     });
-    const { messaging, openDiscuss } = await start({
+    const { openDiscuss } = await start({
         discuss: {
             context: {
                 active_id: `mail.channel_${mailChannelId1}`,
@@ -3855,9 +3829,7 @@ QUnit.test('message being a replied to another message should show message being
     });
     await openDiscuss();
     assert.containsOnce(
-        document.querySelector(`.o_Message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId2 }).localId
-        }"]`),
+        document.querySelector(`.o_Message[data-message-id="${mailMessageId2}"]`),
         '.o_MessageInReplyToView',
         "message being a replied to another message should show message being replied in the message view",
     );
