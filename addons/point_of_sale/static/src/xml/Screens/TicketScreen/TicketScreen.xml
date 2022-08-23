@@ -4,8 +4,8 @@
     <t t-name="TicketScreen" owl="1">
         <div class="ticket-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
             <div class="screen-full-width">
-                <div class="rightpane pane-border">
-                    <div class="controls">
+                <div class="rightpane pane-border w-100 h-100 d-flex flex-column flex-grow-1 flex-basis-25 bg-500 text-700">
+                    <div class="controls d-flex justify-content-between align-items-center flex-basis-0 m-0 mb-2 p-2 bg-white">
                         <t t-if="!env.isMobile || !state.showSearchBar">
                             <div class="buttons">
                                 <button class="discard" t-on-click="() => this.trigger('close-screen')">
@@ -51,22 +51,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="orders">
+                    <div class="orders overflow-y-auto">
                         <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
                         <t t-if="_filteredOrderList.length !== 0">
-                            <div class="header-row" t-att-class="{ oe_hidden: env.isMobile }">
+                            <div class="header-row d-flex align-items-center px-3 py-3 text-bg-light fs-5 fw-bold" t-att-class="{ oe_hidden: env.isMobile }">
                                 <div class="col wide">Date</div>
                                 <div class="col wide">Receipt Number</div>
                                 <div class="col">Customer</div>
                                 <div class="col wide" t-if="showCardholderName()">Cardholder Name</div>
-                                <div class="col">Cashier</div>
-                                <div class="col end">Total</div>
+                                <div class="col ">Cashier</div>
+                                <div class="col end ">Total</div>
                                 <div class="col narrow">Status</div>
                                 <div class="col very-narrow" name="delete"></div>
                             </div>
                             <t t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
-                                <div class="order-row" t-att-class="{ highlight: isHighlighted(order) }" t-on-click="() => this.trigger('click-order', order)">
-                                    <div class="col wide">
+                                <div class="order-row d-flex align-item-center py-3 px-3 fs-5 " t-att-class="{ highlight: isHighlighted(order) }" t-on-click="() => this.trigger('click-order', order)">
+                                    <div class="col wide ">
                                         <div t-if="env.isMobile">Date</div>
                                         <div><t t-esc="getDate(order)"></t></div>
                                     </div>
@@ -102,14 +102,14 @@
                             </t>
                         </t>
                         <t t-else="">
-                            <div class="empty-order-list">
-                                <i role="img" aria-label="Shopping cart" title="Shopping cart" class="fa fa-shopping-cart"></i>
-                                <h1>No orders found</h1>
+                            <div class="empty-order-list m-4 text-center">
+                                <i class="fa fa-shopping-cart fa-5x text-300" role="img" aria-label="Shopping cart" title="Shopping cart"></i>
+                                <h1 class="mt-2 fs-4 text-700">No orders found</h1>
                             </div>
                         </t>
                     </div>
                 </div>
-                <div class="leftpane">
+                <div class="leftpane d-flex flex-column flex-grow-1 h-100 border-end border-2 border-dark bg-gray-300">
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedSyncedOrder()" />
                     <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
                     <OrderDetails order="_selectedSyncedOrder" selectedOrderlineId="_selectedOrderlineId" highlightHeaderNote="_state.ui.highlightHeaderNote" />

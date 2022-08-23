@@ -132,6 +132,8 @@
 
             'point_of_sale/static/src/scss/topheader.scss',
 
+            'point_of_sale/static/src/scss/TicketScreen.scss',
+
             'point_of_sale/static/src/css/pos_receipts.css',
             'point_of_sale/static/src/css/popups/product_info_popup.css',
             'point_of_sale/static/src/css/popups/common.css',
