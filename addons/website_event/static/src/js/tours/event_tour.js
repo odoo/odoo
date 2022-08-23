@@ -40,11 +40,7 @@ EventAdditionalTourSteps.include({
                 content: Markup(_t("Looking great! Let's now <b>publish</b> this page so that it becomes <b>visible</b> on your website!")),
                 position: 'bottom',
             }, {
-                trigger: '.o_menu_systray_item.o_website_edit_in_backend .dropdown-toggle',
-                content: _t("Want to change your event configuration? Let's go back to the event form."),
-                position: 'bottom',
-            }, {
-                trigger: '.o_menu_systray_item.o_website_edit_in_backend .dropdown-menu .dropdown-item',
+                trigger: '.o_website_edit_in_backend > a',
                 extra_trigger: 'iframe .o_wevent_event',
                 content: _t("This shortcut will bring you right back to the event form."),
                 position: 'bottom'

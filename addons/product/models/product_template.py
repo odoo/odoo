@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 class ProductTemplate(models.Model):
     _name = "product.template"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'image.mixin']
-    _description = "Product Template"
+    _description = "Product"
     _order = "priority desc, name"
 
     @tools.ormcache()
