@@ -1,27 +1,23 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useService, useBus } from "@web/core/utils/hooks";
 
-const { Component, onMounted } = owl;
+const { Component, onWillStart, onMounted } = owl;
+
+const websiteSystrayRegistry = registry.category('website_systray');
 
 export class EditInBackendSystray extends Component {
     setup() {
         this.websiteService = useService('website');
         this.actionService = useService('action');
 
+        onWillStart(this._updateMainObjectName);
+        useBus(websiteSystrayRegistry, 'CONTENT-UPDATED', this._updateMainObjectName);
+
         onMounted(() => {
             this.websiteService.editedObjectPath = null;
         });
-    }
-
-    getElements() {
-        return [{
-            title: this.env._t("Settings"),
-            callback: () => this.editInBackend(),
-        }];
     }
 
     editInBackend() {
@@ -35,16 +31,16 @@ export class EditInBackendSystray extends Component {
             view_mode: "form",
         });
     }
+
+    async _updateMainObjectName() {
+        this.mainObjectName = await this.websiteService.getUserModelName();
+    }
 }
 EditInBackendSystray.template = "website.EditInBackendSystray";
-EditInBackendSystray.components = {
-    Dropdown,
-    DropdownItem
-};
 
 export const systrayItem = {
     Component: EditInBackendSystray,
     isDisplayed: env => env.services.website.currentWebsite && env.services.website.currentWebsite.metadata.editableInBackend,
 };
 
-registry.category("website_systray").add("EditInBackend", systrayItem, { sequence: 7 });
+registry.category("website_systray").add("EditInBackend", systrayItem, { sequence: 9 });

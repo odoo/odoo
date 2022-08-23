@@ -16,7 +16,6 @@ class Users(models.Model):
     """
     _name = 'res.users'
     _inherit = ['res.users']
-    _description = 'Users'
 
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),

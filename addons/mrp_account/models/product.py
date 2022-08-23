@@ -23,7 +23,6 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _name = 'product.product'
     _inherit = 'product.product'
-    _description = 'Product'
 
     def button_bom_cost(self):
         self.ensure_one()

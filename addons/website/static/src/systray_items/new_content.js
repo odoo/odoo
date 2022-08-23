@@ -96,7 +96,7 @@ export class NewContentModal extends Component {
                     moduleXmlId: 'base.module_website_hr_recruitment',
                     status: MODULE_STATUS.NOT_INSTALLED,
                     icon: xml`<i class="fa fa-briefcase"/>`,
-                    title: this.env._t('Job Offer'),
+                    title: this.env._t('Job Position'),
                 },
                 {
                     moduleXmlId: 'base.module_website_sale',

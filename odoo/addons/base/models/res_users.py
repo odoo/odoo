@@ -244,7 +244,7 @@ class Users(models.Model):
         avatar, ... The user model is now dedicated to technical data.
     """
     _name = "res.users"
-    _description = 'Users'
+    _description = 'User'
     _inherits = {'res.partner': 'partner_id'}
     _order = 'name, login'
 
