@@ -70,20 +70,24 @@ class TestUi(HttpCaseWithUserDemo):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer acquirer is not installed")
 
-        self.env.ref('payment.payment_acquirer_transfer').write({
+        transfer_acquirer = self.env.ref('payment.payment_acquirer_transfer')
+        transfer_acquirer.write({
             'state': 'enabled',
             'is_published': True,
         })
+        transfer_acquirer._transfer_ensure_pending_msg_is_set()
         self.start_tour("/", 'shop_buy_product', login="admin")
 
     def test_03_demo_checkout(self):
         if self.env['ir.module.module']._get('payment_custom').state != 'installed':
             self.skipTest("Transfer acquirer is not installed")
 
-        self.env.ref('payment.payment_acquirer_transfer').write({
+        transfer_acquirer = self.env.ref('payment.payment_acquirer_transfer')
+        transfer_acquirer.write({
             'state': 'enabled',
             'is_published': True,
         })
+        transfer_acquirer._transfer_ensure_pending_msg_is_set()
         self.start_tour("/", 'shop_buy_product', login="demo")
 
     def test_04_admin_website_sale_tour(self):
