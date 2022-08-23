@@ -16,7 +16,7 @@
                     <div class="oe_button_box" name="button_box">
                         <field name="sidebar_action_id" invisible="1"/>
                         <button name="action_create_sidebar_action" type="object"
-                                groups="base.group_system"
+                                groups="base.group_no_one"
                                 class="oe_stat_button"
                                 attrs="{'invisible':[('sidebar_action_id','!=',False)]}" icon="fa-plus"
                                 help="Add a contextual action on the related model to open a sms composer with this template">
@@ -26,7 +26,7 @@
                             </div>
                         </button>
                         <button name="action_unlink_sidebar_action" type="object"
-                                groups="base.group_system"
+                                groups="base.group_no_one"
                                 class="oe_stat_button" icon="fa-minus"
                                 attrs="{'invisible':[('sidebar_action_id','=',False)]}"
                                 help="Remove the contextual action of the related model" widget="statinfo">

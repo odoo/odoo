@@ -135,6 +135,29 @@
                         </div>
                     </div>
                 </div>
+                <div id="companies_setting" position="inside">
+                    <br/>
+                    <div class="o_setting_right_pane" id="mail_templates_setting"
+                        groups="mail.group_mail_template_editor,base.group_system">
+                        <span class="o_form_label">Email Templates</span>
+                        <div class="text-muted">
+                            Customize the look and feel of automated emails
+                        </div>
+                        <div class="w-50 row">
+                            <span class="d-block w-75 py-2">Header Color</span>
+                            <field name="primary_color" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                        <div class="w-50 row mt-1">
+                            <span class="d-block w-75 py-2">Button Color</span>
+                            <field name="secondary_color" class="d-block w-25 p-0 m-0" widget="color"/>
+                        </div>
+                        <button name="open_email_layout" icon="fa-arrow-right"
+                            type="object" string="Update Mail Layout"
+                            groups="base.group_no_one" class="btn-link"/>
+                        <br groups="base.group_no_one"/>
+                        <button name="open_mail_templates" icon="fa-arrow-right" type="object" string="Review All Templates" class="btn-link"/>
+                    </div>
+                </div>
             </field>
         </record>
     </data>

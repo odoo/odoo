@@ -19,10 +19,11 @@
                             <div class="o_document_layout_colors">
                                 <field name="primary_color" widget="color"/>
                                 <field name="secondary_color" widget="color"/>
-                                <field name="custom_colors" class="d-none" />
-                                <button class="btn btn-link" title="Reset to logo colors" attrs="{'invisible': [('custom_colors', '=', False)]}">
-                                    <label for="custom_colors" class="fa fa-refresh" string="" />
-                                </button>
+                                <div class="o_custom_colors" title="Reset to logo colors"
+                                    attrs="{'invisible': [('custom_colors', '=', False)]}">
+                                    <span class="fa fa-refresh fa-2x"></span>
+                                    <field name="custom_colors" nolabel="1"/>
+                                </div>
                             </div>
                             <field name="layout_background" widget="selection" required="1"/>
                             <field name="layout_background_image" options="{'accepted_file_extensions': 'image/*'}" attrs="{'invisible': [('layout_background', '!=', 'Custom')], 'required': [('layout_background', '=', 'Custom')]}">Upload your file</field>

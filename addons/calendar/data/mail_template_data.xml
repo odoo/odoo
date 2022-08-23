@@ -9,6 +9,7 @@
             <field name="email_to">{{ ('' if object.partner_id.email and object.partner_id.email == object.email else object.email) }}</field>
             <field name="partner_to">{{ object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False }}</field>
             <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="description">Invitation email to new attendees</field>
             <field name="body_html" type="html">
 <div>
     <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}"/>
@@ -135,13 +136,14 @@
         </record>
 
         <record id="calendar_template_meeting_changedate" model="mail.template">
-            <field name="name">Calendar: Date updated</field>
+            <field name="name">Calendar: Date Updated</field>
             <field name="model_id" ref="calendar.model_calendar_attendee"/>
             <field name="subject">{{ object.event_id.name }}: Date updated</field>
             <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
             <field name="email_to">{{ ('' if object.partner_id.email and object.partner_id.email == object.email else object.email) }}</field>
             <field name="partner_to">{{ object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False }}</field>
             <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="description">Sent to all attendees if the schedule change</field>
             <field name="body_html" type="html">
 <div>
 
@@ -272,6 +274,7 @@
             <field name="email_to">{{ ('' if object.partner_id.email and object.partner_id.email == object.email else object.email) }}</field>
             <field name="partner_to">{{ object.partner_id.id if object.partner_id.email and object.partner_id.email == object.email else False }}</field>
             <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="description">Sent to all attendees if a reminder is set</field>
             <field name="body_html" type="html">
 <div>
     <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}" />
@@ -377,6 +380,7 @@
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted or '') }}</field>
             <field name="email_to">{{ object._get_attendee_emails() }}</field>
             <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="description">Used to manually notifiy attendees</field>
             <field name="body_html" type="html">
 <div>
     <t t-set="colors" t-value="{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}" />

@@ -37,7 +37,7 @@
                     <table cellspacing="0" cellpadding="0" border="0">
                         <tbody>
                             <tr>
-                                <td t-if="has_button_access" style="border-radius: 3px; background: #875A7B; text-align: center; padding: 8px 12px 11px;">
+                                <td t-if="has_button_access" t-att-style="'border-radius: 3px; text-align: center; padding: 8px 12px 11px; background: ' + (company.secondary_color if company.secondary_color else '#875A7B')">
                                     <a t-att-href="button_access['url']" style="font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400;">
                                         <t t-out="button_access['title']"/>
                                     </a>
