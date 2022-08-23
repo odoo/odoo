@@ -3,6 +3,7 @@ odoo.define('website.wysiwyg', function (require) {
 
 var Wysiwyg = require('web_editor.wysiwyg');
 var snippetsEditor = require('website.snippet.editor');
+let socialMediaOptions = require('@website/snippets/s_social_media/options')[Symbol.for("default")];
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -101,6 +102,15 @@ const WebsiteWysiwyg = Wysiwyg.extend({
      * @override
      */
     destroy: function () {
+        // We do not need the cache to live longer than the edition.
+        // Keeping it alive could end up in a corrupt state without the user
+        // even noticing. (If the values were changed in another tab or by
+        // someone else, when edit starts again here, without a clear cache at
+        // destroy, options will have wrong social media values).
+        // It would also survive (multi) website switch, not fetching the values
+        // from the accessed website.
+        socialMediaOptions.clearDbSocialValuesCache();
+
         this._restoreMegaMenus();
         this._super.apply(this, arguments);
     },
