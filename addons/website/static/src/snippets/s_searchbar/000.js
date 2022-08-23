@@ -234,20 +234,36 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
      * @private
      */
     _onKeydown: function (ev) {
+        const focusedEl = this.$menu && this.$menu[0].querySelector('.o_focus');
         switch (ev.which) {
             case $.ui.keyCode.ESCAPE:
                 this._render();
                 break;
             case $.ui.keyCode.UP:
             case $.ui.keyCode.DOWN:
-                ev.preventDefault();
                 if (this.$menu) {
-                    let $element = ev.which === $.ui.keyCode.UP ? this.$menu.children().last() : this.$menu.children().first();
-                    $element.focus();
+                    const suggestionEls = [null, ...this.$menu[0].querySelectorAll('.dropdown-item')];
+                    const currentIndex = suggestionEls.indexOf(focusedEl);
+                    const delta = ev.which === $.ui.keyCode.UP ? suggestionEls.length - 1 : 1;
+                    const nextIndex = (currentIndex + delta) % suggestionEls.length;
+                    const nextFocusedEl = suggestionEls[nextIndex];
+                    if (focusedEl) {
+                        focusedEl.classList.remove('o_focus');
+                    }
+                    if (nextFocusedEl) {
+                        nextFocusedEl.classList.add('o_focus');
+                        nextFocusedEl.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+                    } else {
+                        this.$input[0].scrollIntoView({behavior: 'smooth', block: 'nearest'});
+                    }
                 }
                 break;
             case $.ui.keyCode.ENTER:
                 this.limit = 0; // prevent autocomplete
+                if (focusedEl) {
+                    focusedEl.click();
+                    ev.preventDefault();
+                }
                 break;
         }
     },
