@@ -16,13 +16,11 @@ export class ReferenceField extends Component {
             resModel: this.relation,
         });
 
-        let modelName = this.getModelName(this.props);
         onWillUpdateProps((nextProps) => {
             if (
                 valuesEqual(this.getValue(this.props) || {}, this.getValue(nextProps) || {}) &&
-                this.getModelName(nextProps) !== modelName
+                this.getRelation(nextProps) !== this.state.resModel
             ) {
-                modelName = this.getModelName(nextProps);
                 nextProps.update(false);
             }
         });
@@ -61,10 +59,18 @@ export class ReferenceField extends Component {
     }
 
     get relation() {
-        if (this.getModelName(this.props)) {
-            return this.getModelName(this.props);
-        } else if (this.getValue(this.props) && this.getValue(this.props).resModel) {
-            return this.getValue(this.props).resModel;
+        return this.getRelation(this.props);
+    }
+
+    getRelation(props) {
+        const modelName = this.getModelName(props);
+        if (modelName) {
+            return modelName;
+        }
+
+        const value = this.getValue(props);
+        if (value && value.resModel) {
+            return value.resModel;
         } else {
             return this.state && this.state.resModel;
         }
