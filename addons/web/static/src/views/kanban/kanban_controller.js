@@ -96,10 +96,12 @@ export class KanbanController extends Component {
     }
 
     get canCreate() {
-        if (!this.model.root.isGrouped) {
-            return this.props.archInfo.activeActions.create;
+        const { create, groupCreate } = this.props.archInfo.activeActions;
+        const list = this.model.root;
+        if (!create) {
+            return false;
         }
-        return !this.props.archInfo.activeActions.groupCreate || this.model.root.groups.length > 0;
+        return list.isGrouped ? list.groups.length > 0 || !groupCreate : true;
     }
 }
 
