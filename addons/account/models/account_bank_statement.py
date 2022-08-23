@@ -850,6 +850,8 @@ class AccountBankStatementLine(models.Model):
                 raise ValidationError(_("The foreign currency must be different than the journal one: %s", st_line.currency_id.name))
             if not st_line.foreign_currency_id and st_line.amount_currency:
                 raise ValidationError(_("You can't provide an amount in foreign currency without specifying a foreign currency."))
+            if not st_line.amount_currency and st_line.foreign_currency_id:
+                raise ValidationError(_("You can't provide a foreign currency without specifying an amount in 'Amount in Currency' field."))
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
