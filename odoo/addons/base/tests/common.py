@@ -39,7 +39,11 @@ class BaseCommon(TransactionCase):
         # Enforce constant currency
         currency = cls._enable_currency(currency_code)
         if not cls.env.company.currency_id == currency:
-            cls.env.company.currency_id = currency
+            cls.env.transaction.cache.set(cls.env.company, type(cls.env.company).currency_id, currency.id, dirty=True)
+            # this is equivalent to cls.env.company.currency_id = currency but without triggering buisness code checks.
+            # The value is added in cache, and the cache value is set as dirty so that that
+            # the value will be written to the database on next flush.
+            # this was needed because some journal entries may exist when running tests, especially l10n demo data.
 
     @classmethod
     def _enable_currency(cls, currency_code):

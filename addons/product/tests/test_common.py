@@ -7,7 +7,7 @@ from odoo.addons.product.tests.common import ProductCommon
 
 
 @tagged('post_install', '-at_install')
-class TestProductCommon(ProductCommon):
+class TestProduct(ProductCommon):
 
     def test_common(self):
         self.assertEqual(self.consumable_product.type, 'consu')
