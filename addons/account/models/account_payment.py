@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
 
@@ -126,6 +126,12 @@ class AccountPayment(models.Model):
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_bills_count = fields.Integer(string="# Reconciled Bills",
         compute="_compute_stat_buttons_from_reconciliation")
+    reconciled_statement_line_ids = fields.Many2many(
+        comodel_name='account.bank.statement.line',
+        string="Reconciled Statement Lines",
+        compute='_compute_stat_buttons_from_reconciliation',
+        help="Statements lines matched to this payment",
+    )
     reconciled_statement_ids = fields.Many2many('account.bank.statement', string="Reconciled Statements",
         compute='_compute_stat_buttons_from_reconciliation',
         help="Statements matched to this payment")
@@ -573,6 +579,7 @@ class AccountPayment(models.Model):
             self.reconciled_invoices_type = ''
             self.reconciled_bill_ids = False
             self.reconciled_bills_count = 0
+            self.reconciled_statement_line_ids = False
             self.reconciled_statement_ids = False
             self.reconciled_statements_count = 0
             return
@@ -622,7 +629,7 @@ class AccountPayment(models.Model):
         self._cr.execute('''
             SELECT
                 payment.id,
-                ARRAY_AGG(DISTINCT counterpart_line.statement_id) AS statement_ids
+                ARRAY_AGG(DISTINCT counterpart_line.statement_line_id) AS statement_line_ids
             FROM account_payment payment
             JOIN account_move move ON move.id = payment.move_id
             JOIN account_journal journal ON journal.id = move.journal_id
@@ -644,12 +651,13 @@ class AccountPayment(models.Model):
         ''', {
             'payment_ids': tuple(stored_payments.ids)
         })
-        query_res = dict((payment_id, statement_ids) for payment_id, statement_ids in self._cr.fetchall())
+        query_res = dict((payment_id, statement_line_ids) for payment_id, statement_line_ids in self._cr.fetchall())
 
         for pay in self:
-            statement_ids = query_res.get(pay.id, [])
-            pay.reconciled_statement_ids = [(6, 0, statement_ids)]
-            pay.reconciled_statements_count = len(statement_ids)
+            statement_line_ids = query_res.get(pay.id, [])
+            pay.reconciled_statement_line_ids = [Command.set(statement_line_ids)]
+            pay.reconciled_statement_ids = [Command.set(pay.reconciled_statement_line_ids.statement_id.ids)]
+            pay.reconciled_statements_count = len(statement_line_ids)
             if len(pay.reconciled_invoice_ids.mapped('move_type')) == 1 and pay.reconciled_invoice_ids[0].move_type == 'out_refund':
                 pay.reconciled_invoices_type = 'credit_note'
             else:
