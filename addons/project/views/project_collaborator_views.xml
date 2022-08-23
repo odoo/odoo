@@ -5,7 +5,7 @@
         <field name="name">project.collaborator.view.tree</field>
         <field name="model">project.collaborator</field>
         <field name="arch" type="xml">
-            <tree string="Project Collaborators" create="0">
+            <tree string="Project Collaborators" js_class="project_collaborators" create="0">
                 <field name="partner_id" options="{'no_create': True}"/>
                 <field name="partner_email"/>
             </tree>

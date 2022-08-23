@@ -46,18 +46,16 @@
             <t t-else="">
                 Hello,<br/><br/>
             </t>
-            Please take a moment to rate our services related to the task "<strong t-out="object.name or ''">Planning and budget</strong>"
+            Please take a moment to rate our services related to the <strong t-out="object.name or ''">Planning and budget</strong> task
             <t t-if="object._rating_get_operator().name">
                 assigned to <strong t-out="object._rating_get_operator().name or ''">Mitchell Admin</strong>.<br/>
             </t>
-            <t t-else="">
-                .<br/>
-            </t>
+            <t t-else="">.<br/></t>
         </td></tr>
         <tr><td style="text-align: center;">
             <table border="0" cellpadding="0" cellspacing="0" width="590" summary="o_mail_notification" style="width:100%; margin: 32px 0px 32px 0px;">
                 <tr><td style="font-size: 13px;">
-                    <strong>Tell us how you feel about our service</strong><br/>
+                    <strong>Tell us how you feel about our services</strong><br/>
                     <span style="font-size: 12px; opacity: 0.5; color: #454748;">(click on one of these smileys)</span>
                 </td></tr>
                 <tr><td style="font-size: 13px;">
@@ -83,15 +81,30 @@
                 </td></tr>
             </table>
         </td></tr>
+        <tr>
+            <td align="left" style="min-width: 600px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="400" style="min-width: 400px; font-size: 11px; border-collapse:separate;">
+                    <tbody style="font-size: 13px;">
+                        <tr>
+                            <td align="left" class="pb-4">We appreciate your feedback. It helps us improve continuously.</td>
+                        </tr>
+                        <tr>
+                            <td align="left">Best regards,</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
         <tr><td valign="top" style="font-size: 13px;">
-            We appreciate your feedback. It helps us to improve continuously.
             <t t-if="object.project_id.rating_status == 'stage'">
-                <br/><br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey has been sent because your task has been moved to the stage <b t-out="object.stage_id.name or ''">In progress</b></span>
+                <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This satisfaction survey has been sent because your task has been moved to the <b t-out="object.stage_id.name or ''">In progress</b> stage</span>
             </t>
             <t t-if="object.project_id.rating_status == 'periodic'">
-                <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey is sent <b t-out="object.project_id.rating_status_period or ''">Weekly</b> as long as the task is in the <b t-out="object.stage_id.name or ''">In progress</b> stage.</span>
+                <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This satisfaction survey is sent <b t-out="object.project_id.rating_status_period or ''">weekly</b> as long as the task is in the <b t-out="object.stage_id.name or ''">In progress</b> stage.</span>
             </t>
         </td></tr>
+        <tr>
+    </tr>
     </tbody>
     </table>
 </div>

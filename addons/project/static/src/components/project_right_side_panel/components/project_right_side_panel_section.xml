@@ -9,7 +9,10 @@
                 </div>
                 <t t-slot="header"/>
             </div>
-            <div class="o_rightpanel_data fs-6" t-if="props.showData">
+            <div class="o_rightpanel_data text-muted mt-2 mb-4 fst-italic" t-if="props.slots.helper and !props.showData">
+                <t t-slot="helper"/>
+            </div>
+            <div class="o_rightpanel_data fs-6" t-else="">
                 <t t-slot="default"/>
             </div>
         </div>

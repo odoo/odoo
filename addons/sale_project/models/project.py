@@ -259,6 +259,7 @@ class Project(models.Model):
         return {
             **panel_data,
             'sale_items': self._get_sale_items(),
+            'allow_billable': self.allow_billable,
         }
 
     def get_sale_items_data(self, domain=None, offset=0, limit=None, with_action=True):

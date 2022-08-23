@@ -5,10 +5,14 @@
         <xpath expr="//ProjectRightSidePanelSection[@name=&quot;'profitability'&quot;]" position="before">
             <ProjectRightSidePanelSection
                 name="'sales'"
-                show="state.data.sale_items and state.data.sale_items.total &gt; 0"
+                show="showProjectUpdateSection and !!state.data.sale_items"
+                showData = "state.data.sale_items and state.data.sale_items.total &gt; 0"
             >
                 <t t-set-slot="title" owl="1">
                     Sales
+                </t>
+                <t t-set-slot="helper" owl="1">
+                    Track what has been sold, delivered, and invoiced.
                 </t>
                 <table class="table table-striped table-hover mb-4">
                     <thead>

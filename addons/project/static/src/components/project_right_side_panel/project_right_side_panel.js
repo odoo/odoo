@@ -57,6 +57,10 @@ export class ProjectRightSidePanel extends Component {
         };
     }
 
+    get showProjectUpdateSection() {
+        return this.state.data.has_analytic_account_group && this.state.data.allow_billable;
+    }
+
     get showProjectProfitability() {
         return !!this.state.data.profitability_items
             && (

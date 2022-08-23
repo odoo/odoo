@@ -902,6 +902,7 @@ class Project(models.Model):
             'user': self._get_user_values(),
             'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
             'currency_id': self.currency_id.id,
+            'has_analytic_account_group': self.user_has_groups('analytic.group_analytic_accounting')
         }
         if self.allow_milestones:
             panel_data['milestones'] = self._get_milestones()

@@ -11,6 +11,9 @@ class TestUi(HttpCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env['res.config.settings'] \
+        .create({'group_analytic_accounting': True}) \
+        .execute()
         service_category_id = cls.env['product.category'].create({
             'name': 'Services',
             'parent_id': cls.env.ref('product.product_category_1').id,

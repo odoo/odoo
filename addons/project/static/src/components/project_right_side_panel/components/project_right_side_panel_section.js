@@ -15,6 +15,7 @@ ProjectRightSidePanelSection.props = {
             default: Object, // Content is not optional
             header: { type: Object, optional: true },
             title: { type: Object, optional: true },
+            helper: { type: Object, optional: true}
         },
     },
 };

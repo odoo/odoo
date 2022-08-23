@@ -37,10 +37,14 @@
             </ProjectRightSidePanelSection>
             <ProjectRightSidePanelSection
                 name="'profitability'"
-                show="showProjectProfitability"
+                show="showProjectUpdateSection"
+                showData="showProjectProfitability"
             >
                 <t t-set-slot="title" owl="1">
                     Profitability
+                </t>
+                <t t-set-slot="helper">
+                    Track the costs, revenues, and margin of your project by setting the analytic account of your project on your documents.
                 </t>
                 <ProjectProfitability
                     data="state.data.profitability_items"
