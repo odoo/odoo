@@ -42,7 +42,7 @@
                              <img border="0" src="/mass_mailing_themes/static/src/img/theme_newsletter/s_default_image_logo.png" style="height: auto; max-width: 100%; width: 194px;"  width="194" alt="Your Logo" />
                         </a>
                     </div>
-                    <div class="col-lg-8 o_mail_header_social" style="text-align: right;" t-translation="off">
+                    <div class="col-lg-8 o_mail_header_social" style="text-align: right;" data-name="Social Media" t-translation="off">
                         <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
                         <a t-att-href="social_links.get('social_facebook')" title="Facebook" class="s_social_media_facebook">
                             <span class="fa fa-facebook rounded-circle text-white" style="background-color: rgb(43, 59, 88) !important;"/>
@@ -185,7 +185,7 @@
                             <img border="0" width="189" style="height:auto; max-width:100%; width: 189px;" src="/mass_mailing_themes/static/src/img/theme_tech/tech_logo.png"/>
                         </a>
                     </div>
-                    <div class="col-lg-8 o_mail_header_social" style="text-align:right;">
+                    <div class="col-lg-8 o_mail_header_social" style="text-align:right;" data-name="Social Media">
                         <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
 
                         <a t-att-href="social_links.get('social_facebook')" title="Facebook" class="s_social_media_facebook">
@@ -421,7 +421,7 @@
         <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center" style="background-color: rgb(36, 37, 48) !important;">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-12" style="text-align: center;" t-translation="off">
+                    <div class="col-lg-12" style="text-align: center;" data-name="Social Media" t-translation="off">
                         <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
 
                         <a t-att-href="social_links.get('social_facebook')" aria-label="Facebook" title="Facebook" class="s_social_media_facebook">
@@ -610,7 +610,7 @@
         <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-12" style="text-align: center;" t-translation="off">
+                    <div class="col-lg-12" style="text-align: center;" data-name="Social Media" t-translation="off">
                         <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
 
                         <a t-att-href="social_links.get('social_facebook')" aria-label="Facebook" title="Facebook" class="s_social_media_facebook">
@@ -714,7 +714,7 @@
         <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200 pt16 pb16" data-snippet="s_mail_block_footer_social" data-name="Footer Center">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-12" style="text-align: center;" t-translation="off">
+                    <div class="col-lg-12" style="text-align: center;" data-name="Social Media" t-translation="off">
                         <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
 
                         <a t-att-href="social_links.get('social_facebook')" aria-label="Facebook" title="Facebook" class="s_social_media_facebook">
@@ -853,7 +853,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="pb16" style="text-align: right;" t-translation="off">
+                        <div class="pb16" style="text-align: right;" data-name="Social Media" t-translation="off">
                             <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
 
                             <a t-att-href="social_links.get('social_facebook')" aria-label="Facebook" title="Facebook" class="s_social_media_facebook">
