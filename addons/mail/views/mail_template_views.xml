@@ -17,7 +17,7 @@
                         <div class="oe_button_box" name="button_box">
                             <field name="ref_ir_act_window" invisible="1"/>
                             <button class="oe_stat_button"
-                                    groups="base.group_system"
+                                    groups="base.group_no_one"
                                     name="create_action" type="object"
                                     attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-plus"
                                     help="Display an option on related documents to open a composition wizard with this template">
@@ -27,7 +27,7 @@
                                 </div>
                             </button>
                             <button name="unlink_action" type="object"
-                                    groups="base.group_system"
+                                    groups="base.group_no_one"
                                     class="oe_stat_button" icon="fa-minus"
                                     attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
                                     help="Remove the contextual action to use this template on related documents" widget="statinfo">
@@ -41,18 +41,17 @@
                         </div>
                         <div class="oe_title">
                             <label for="name"/>
-                            <h1><field name="name" required="1" placeholder='e.g. "Welcome email"'/></h1>
+                            <h1><field name="name" class="w-100"
+                                required="1" placeholder='e.g. "Welcome email"'/></h1>
                             <group>
                                 <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
+                                <field name="subject" placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, {{ object.name }}"'/>
                                 <field name="model" invisible="1"/>
+                                <field name="description"/>
                             </group>
                         </div>
                         <notebook>
                             <page string="Content" name="content">
-                                <div class="oe_title"><label for="subject"/></div>
-                                <div class="oe_title">
-                                    <h2 style="display: inline-block;"><field name="subject" placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, ${object.name}"'/></h2>
-                                </div>
                                 <field name="can_write" invisible="1"/>
                                 <field name="body_html" widget="html" class="oe-bordered-editor"
                                     options="{'style-inline': true, 'codeview': true }"
@@ -75,13 +74,29 @@
                                     <field name="scheduled_date" string="Scheduled Send Date"/>
                                 </group>
                             </page>
-                            <page string="Advanced Settings" name="advanced_settings">
-                                <group>
-                                    <field name="lang" placeholder="{{ object.partner_id.lang }}"/>
-                                    <field name="mail_server_id"/>
-                                    <field name="auto_delete"/>
-                                    <field name="report_template" domain="[('model','=',model)]"/>
-                                    <field name="report_name" attrs="{'invisible':[('report_template','=',False)]}"/>
+                            <page string="Settings" name="email_configuration" class="row">
+                                <group col="2">
+                                    <group>
+                                        <field name="email_from"
+                                                placeholder="Override author's email"/>
+                                        <field name="use_default_to"/>
+                                        <field name="email_to" attrs="{'invisible': [('use_default_to', '=', True)]}"
+                                                placeholder="Comma-separated recipient addresses"/>
+                                        <field name="partner_to" attrs="{'invisible': [('use_default_to', '=', True)]}"
+                                                placeholder="Comma-separated ids of recipient partners"/>
+                                        <field name="email_cc" attrs="{'invisible': [('use_default_to', '=', True)]}"
+                                                placeholder="Comma-separated carbon copy recipients addresses"/>
+                                        <field name="reply_to"
+                                                placeholder="Email address to which replies will be redirected when sending emails in mass"/>
+                                        <field name="scheduled_date" string="Scheduled Send Date"/>
+                                    </group>
+                                    <group>
+                                        <field name="lang" placeholder="{{ object.partner_id.lang }}"/>
+                                        <field name="mail_server_id"/>
+                                        <field name="auto_delete"/>
+                                        <field name="report_template" domain="[('model','=',model)]"/>
+                                        <field name="report_name" attrs="{'invisible':[('report_template','=',False)]}"/>
+                                    </group>
                                 </group>
                             </page>
                         </notebook>
@@ -97,30 +112,33 @@
                 <tree string="Templates">
                     <field name="mail_server_id" invisible="1"/>
                     <field name="name"/>
-                    <field name="model_id"/>
-                    <field name="subject"/>
-                    <field name="email_from"/>
-                    <field name="email_to"/>
-                    <field name="partner_to"/>
-                    <field name="report_name"/>
+                    <field name="model_id" groups="base.group_no_one"/>
+                    <field name="description"/>
+                    <field name="subject" optional="hidden"/>
+                    <field name="email_from" optional="hidden"/>
+                    <field name="email_to" optional="hidden"/>
+                    <field name="partner_to" optional="hidden"/>
+                    <field name="report_name" optional="hidden"/>
                 </tree>
             </field>
         </record>
 
         <record id="view_email_template_search" model="ir.ui.view">
-           <field name="name">email.template.search</field>
-           <field name="model">mail.template</field>
-           <field name="arch" type="xml">
-               <search string="Templates">
+            <field name="name">email.template.search</field>
+            <field name="model">mail.template</field>
+            <field name="arch" type="xml">
+                <search string="Templates">
                     <field name="name" filter_domain="['|', '|', '|',('name','ilike',self), ('report_name','ilike',self), ('subject','ilike',self), ('email_to','ilike',self)]" string="Templates"/>
                     <field name="lang"/>
                     <field name="model_id"/>
+                    <filter name="base_templates" string="Base Templates" domain="[('is_base_template', '=', True)]"/>
+                    <filter name="custom_templates" string="Custom Templates" domain="[('is_base_template', '=', False)]"/>
                     <group expand="0" string="Group by...">
                         <filter string="SMTP Server" name="smtpserver" domain="[]" context="{'group_by':'mail_server_id'}"/>
                         <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
-               </search>
-           </field>
+                </search>
+            </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_email_template_tree_all">
@@ -129,6 +147,7 @@
             <field name="view_mode">form,tree</field>
             <field name="view_id" ref="email_template_tree" />
             <field name="search_view_id" ref="view_email_template_search"/>
+            <field name="context">{'search_default_base_templates': 1}</field>
         </record>
 
     </data>

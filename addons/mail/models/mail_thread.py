@@ -3073,8 +3073,10 @@ class MailThread(models.AbstractModel):
 
         for record in self:
             model_description = self.env['ir.model']._get(record._name).display_name
+            company = record.company_id if 'company_id' in record._fields else self.env.company
             values = {
                 'object': record,
+                'company': company,
                 'model_description': model_description,
                 'access_link': record._notify_get_action_link('view'),
             }

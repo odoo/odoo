@@ -3,7 +3,8 @@
 
 import datetime
 
-from odoo import api, fields, models, tools
+from odoo import _, fields, models
+from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -35,6 +36,8 @@ class ResConfigSettings(models.TransientModel):
         'Twilio Account Auth Token',
         config_parameter='mail.twilio_account_token',
     )
+    primary_color = fields.Char(related='company_id.primary_color', string="Header Color", readonly=False)
+    secondary_color = fields.Char(related='company_id.secondary_color', string="Button Color", readonly=False)
 
     def _compute_fail_counter(self):
         previous_date = fields.Datetime.now() - datetime.timedelta(days=30)
@@ -43,3 +46,28 @@ class ResConfigSettings(models.TransientModel):
             ('date', '>=', previous_date),
             ('state', '=', 'exception'),
         ])
+
+    def open_email_layout(self):
+        layout = self.env.ref('mail.mail_notification_layout', raise_if_not_found=False)
+        if not layout:
+            raise UserError(_("This layout seems to no longer exist."))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Mail Layout'),
+            'view_mode': 'form',
+            'res_id': layout.id,
+            'res_model': 'ir.ui.view',
+        }
+
+    def open_mail_templates(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Mail Templates'),
+            'view_mode': 'list,form',
+            'res_model': 'mail.template',
+            'views': [(self.env.ref('mail.email_template_tree').id, 'list'),
+                (self.env.ref('mail.email_template_form').id, 'form')],
+            'context': {
+                'search_default_base_templates': 1,
+            }
+        }

@@ -23,21 +23,11 @@
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width: 100%; margin-top: 5px;">
         <tbody>
             <tr>
-                <td valign="center">
-                    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: auto; max-width: 200px; max-height: 36px;" t-att-alt="'%s' % company.name"/>
-                </td>
-            </tr>
-            <tr>
-                <td valign="center">
-                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 10px 0px;"/>
-                </td>
-            </tr>
-            <tr>
                 <td valign="center" style="white-space:nowrap;">
                     <table cellspacing="0" cellpadding="0" border="0">
                         <tbody>
                             <tr>
-                                <td t-if="has_button_access" style="border-radius: 3px; background: #875A7B; text-align: center; padding: 8px 12px 11px;">
+                                <td t-if="has_button_access" t-att-style="'border-radius: 3px; text-align: center; padding: 8px 12px 11px; background: ' + (company.secondary_color if company.secondary_color else '#875A7B')">
                                     <a t-att-href="button_access['url']" style="font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400;">
                                         <t t-out="button_access['title']"/>
                                     </a>

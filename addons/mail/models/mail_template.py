@@ -29,6 +29,8 @@ class MailTemplate(models.Model):
 
     # description
     name = fields.Char('Name', translate=True)
+    active = fields.Boolean(default=True)
+    is_base_template = fields.Boolean(compute="_compute_is_base_template", search="_search_is_base_template")
     model_id = fields.Many2one('ir.model', 'Applies to')
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     subject = fields.Char('Subject', translate=True, prefetch=True, help="Subject (placeholders may be used here)")
@@ -64,6 +66,7 @@ class MailTemplate(models.Model):
     auto_delete = fields.Boolean(
         'Auto Delete', default=True,
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
+    description = fields.Text('Template description', translate=True, help="This field is used for internal description of the template's usage.")
     # contextual action
     ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
@@ -84,6 +87,26 @@ class MailTemplate(models.Model):
         writable_templates = self._filter_access_rules('write')
         for template in self:
             template.can_write = template in writable_templates
+
+    def _compute_is_base_template(self):
+        template_external_ids = self.get_external_id()
+        for template in self:
+            template.is_base_template = bool(template_external_ids[template.id])
+
+    @api.model
+    def _search_is_base_template(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise NotImplementedError(_('Operation not supported'))
+        base_templates = self.env['mail.template'].search(
+            [('active', '=', True)]
+        ).filtered(lambda t: t.is_base_template)
+
+        # remove templates that we do not want to be put in evidence
+        base_templates_blacklist = base_templates.filtered(lambda t: not t.description)
+
+        search_bool = (operator == '=') == value
+        return [('id', 'in' if search_bool else 'not in', base_templates.ids), ('id', 'not in', base_templates_blacklist.ids)]
+
 
     # ------------------------------------------------------------
     # CRUD

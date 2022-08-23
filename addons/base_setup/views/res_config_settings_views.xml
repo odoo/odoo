@@ -91,21 +91,6 @@
                                                 <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one"/>
                                             </div>
                                         </div>
-                                    </div> 
-                                </div>
-                                <div class="col-12 col-lg-6 o_setting_box" id="companies_setting">
-                                    <div class="o_setting_right_pane">
-                                        <field name='company_count' class="w-auto ps-1 fw-bold"/>
-                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&gt;', '1')]}">
-                                            Company
-                                        </span>
-                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&lt;=', '1')]}">
-                                            Companies
-                                        </span>
-                                        <br/>
-                                        <div class="mt8">
-                                            <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
-                                        </div>
                                     </div>
                                     <br/>
                                     <div id="inter_company" groups="base.group_multi_company" title="Configure company rules to automatically create SO/PO when one of your company sells/buys to another of your company.">
@@ -122,6 +107,21 @@
                                             <div class="content-group" attrs="{'invisible': [('module_account_inter_company_rules','=',False)]}" id="inter_companies_rules">
                                                 <div class="mt16 text-warning"><strong>Save</strong> this page and come back here to set up the feature.</div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 o_setting_box" id="companies_setting">
+                                    <div class="o_setting_right_pane">
+                                        <field name='company_count' class="w-auto ps-1 fw-bold"/>
+                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&gt;', '1')]}">
+                                            Company
+                                        </span>
+                                        <span class='o_form_label' attrs="{'invisible':[('company_count', '&lt;=', '1')]}">
+                                            Companies
+                                        </span>
+                                        <br/>
+                                        <div class="mt8">
+                                            <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
                                         </div>
                                     </div>
                                 </div>
