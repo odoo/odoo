@@ -39,7 +39,7 @@
     <t t-name="project.StatButtonsSection" owl="1">
         <div class="o_rightpanel_section">
             <div class="o_form_view">
-                <div class="oe_button_box o_full">
+                <div class="oe_button_box o-form-buttonbox">
                     <t t-foreach="state.data.buttons" t-as="button" t-key="button.action">
                         <button class="btn oe_stat_button" t-if="button.show"
                             t-on-click="onProjectActionClick"

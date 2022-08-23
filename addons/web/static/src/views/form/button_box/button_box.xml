@@ -9,9 +9,9 @@
         <t t-slot="{{ button_value }}" t-foreach="visibleButtons" t-as="button" t-key="button_value" />
 
         <t t-if="additionalButtons.length" >
-            <Dropdown togglerClass="'btn o_button_more'" class="'btn oe_stat_button'">
+            <Dropdown togglerClass="'btn o_button_more'" menuClass="'o_dropdown_more p-0'" class="'btn oe_stat_button'">
                 <t t-set-slot="toggler"><span>More</span></t>
-                <DropdownItem t-foreach="additionalButtons" t-as="button" t-key="button_value">
+                <DropdownItem t-foreach="additionalButtons" t-as="button" t-key="button_value" class="'p-0'">
                     <t t-slot="{{ button_value }}" />
                 </DropdownItem>
             </Dropdown>

@@ -62,10 +62,8 @@
 .o_field_widget {
     // Default display and alignment of widget and internal <input/>
     text-align: inherit;
+    display: inline-block;
 
-    &.o_legacy_field_widget {
-        display: inline-block;
-    }
     input.o_input {
         display: inline-block;
         text-align: inherit;
@@ -136,16 +134,16 @@
     // Many2One
     &.o_field_many2one {
         flex-direction: column;
+    }
 
-        .o_field_many2one_selection {
-            display: flex;
-            width: 100%;
-        }
+    .o_field_many2one_selection {
+        display: flex;
+        width: 100%;
+    }
 
-        .o_external_button {
-            padding-top: 0;
-            padding-bottom: 0;
-        }
+    .o_external_button {
+        padding-top: 0;
+        padding-bottom: 0;
     }
 
     // Many2OneAvatar
