@@ -129,10 +129,6 @@
                                     <div class="text-muted">
                                         Send an automatic confirmation email when Delivery Orders are done
                                     </div>
-                                    <div class="row mt16" attrs="{'invisible': [('stock_move_email_validation', '=', False)]}">
-                                        <label for="stock_mail_confirmation_template_id" string="Email Template" class="col-lg-4 o_light_label"/>
-                                        <field name="stock_mail_confirmation_template_id" class="oe_inline" attrs="{'required': [('stock_move_email_validation', '=', True)]}" context="{'default_model': 'stock.picking'}"/>
-                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="stock_sms">

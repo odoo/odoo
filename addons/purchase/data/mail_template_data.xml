@@ -2,10 +2,11 @@
 <odoo>
     <data noupdate="1">
         <record id="email_template_edi_purchase" model="mail.template">
-            <field name="name">Purchase Order: Send RFQ</field>
+            <field name="name">Purchase: Request For Quotation</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="subject">{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="description">Sent manually to vendor to request a quotation</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -36,10 +37,11 @@
         </record>
 
         <record id="email_template_edi_purchase_done" model="mail.template">
-            <field name="name">Purchase Order: Send PO</field>
+            <field name="name">Purchase: Purchase Order</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="subject">{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="description">Sent to vendor with the purchase order in attachment</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
@@ -74,11 +76,12 @@
         </record>
 
         <record id="email_template_edi_purchase_reminder" model="mail.template">
-            <field name="name">Purchase Order: Vendor Reminder</field>
+            <field name="name">Purchase: Vendor Reminder</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
             <field name="subject">{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="description">Sent to vendors before expected arrival, based on the purchase order setting</field>
             <field name="body_html" type="html">
 <div style="margin: 0px; padding: 0px;">
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
