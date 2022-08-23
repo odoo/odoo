@@ -5,7 +5,7 @@
         <a
             t-att-title="title"
             t-att-href="'sms:'+props.value"
-            t-on-click.prevent="onClick"
+            t-on-click.prevent.stop="onClick"
             class="ms-3 d-inline-flex align-items-center o_field_phone_sms"
         ><i class="fa fa-mobile"></i><small class="fw-bold ms-1">SMS</small></a>
     </t>
