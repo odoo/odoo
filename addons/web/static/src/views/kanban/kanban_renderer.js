@@ -83,6 +83,9 @@ export class KanbanRenderer extends Component {
                         parent.dataset.id === element.parentElement.dataset.id
                     ) {
                         parent && parent.classList && parent.classList.remove("o_kanban_hover");
+                        while (previous && !previous.dataset.id) {
+                            previous = previous.previousElementSibling;
+                        }
                         const refId = previous ? previous.dataset.id : null;
                         const targetGroupId = parent && parent.dataset.id;
                         await this.props.list.moveRecord(
@@ -379,15 +382,16 @@ export class KanbanRenderer extends Component {
     // Edition methods
     // ------------------------------------------------------------------------
 
-    quickCreate(group) {
-        return this.props.list.quickCreate(group);
+    quickCreate(group, atFirstPosition = true) {
+        return this.props.list.quickCreate(group, atFirstPosition);
     }
 
     async validateQuickCreate(mode, group) {
         const values = group.list.quickCreateRecord.data;
+        const quickCreateRecordIndex = group.list.quickCreateRecordIndex;
         let record;
         try {
-            record = await group.validateQuickCreate();
+            record = await group.validateQuickCreate(quickCreateRecordIndex);
         } catch (e) {
             // TODO: filter RPC errors more specifically (eg, for access denied, there is no point in opening a dialog)
             if (!(e instanceof RPCError)) {
@@ -420,7 +424,7 @@ export class KanbanRenderer extends Component {
             if (mode === "edit") {
                 await this.props.openRecord(record, "edit");
             } else {
-                await this.quickCreate(group);
+                await this.quickCreate(group, quickCreateRecordIndex === 0);
             }
         }
     }
