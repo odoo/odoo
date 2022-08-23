@@ -875,4 +875,51 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test(
+        "edit a record containing a ReferenceField with model_field option (list in form view)",
+        async function (assert) {
+            serverData.models.turtle.records[0].partner_ids = [1];
+            serverData.models.partner.records[0].reference = "product,41";
+            serverData.models.partner.records[0].model_id = 20;
+
+            await makeView({
+                type: "form",
+                resModel: "turtle",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="partner_ids">
+                            <tree editable="bottom">
+                                <field name="name" />
+                                <field name="model_id" />
+                                <field name="reference" options='{"model_field": "model_id"}'/>
+                            </tree>
+                        </field>
+                   </form>`,
+            });
+            assert.strictEqual(
+                target.querySelector(".o_list_table [name='name']").textContent,
+                "name"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_list_table [name='reference']").textContent,
+                "xpad"
+            );
+
+            await clickEdit(target);
+            await click(target.querySelector(".o_list_table .o_data_cell"));
+            await editInput(target, ".o_list_table [name='name'] input", "plop");
+            await click(target, ".o_form_view");
+            assert.strictEqual(
+                target.querySelector(".o_list_table [name='name']").textContent,
+                "plop"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_list_table [name='reference']").textContent,
+                "xpad"
+            );
+        }
+    );
 });
