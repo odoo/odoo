@@ -14,3 +14,4 @@ List of contributors:
 
 Ruchir Shukla ruchir@bizzappdev.com https://github.com/bizzappdev
 
+VIJ VIJ@bizzappdev.com https://github.com/bizzappdev
