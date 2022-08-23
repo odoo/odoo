@@ -23,7 +23,7 @@
                     'px-3': !messageView.isInChatWindow,
                     'px-1': messageView.isInChatWindow,
                     'opacity-50': (messageView.messageListViewMessageViewItemOwner and messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView) and !messageView.isSelected,
-                }" t-attf-class="{{ messageView.extraClass }} {{ className }}" role="group" t-att-aria-label="messageView.message.messageTypeText" t-on-click="messageView.onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-id="messageView.message.id" t-att-data-message-local-id="messageView.message.localId"
+                }" t-attf-class="{{ messageView.extraClass }} {{ className }}" role="group" t-att-aria-label="messageView.message.messageTypeText" t-on-click="messageView.onClick" t-on-mouseenter="messageView.onMouseenter" t-on-mouseleave="messageView.onMouseleave" t-att-data-id="messageView.message.id" t-att-data-message-id="messageView.message.id"
                 t-ref="root"
             >
                 <div class="o_Message_inReplyToWrap" t-att-class="{ 'me-5': messageView.isInDiscuss or messageView.isInChatWindowAndIsAlignedLeft, 'd-flex justify-content-end ms-5': messageView.isInChatWindowAndIsAlignedRight }">

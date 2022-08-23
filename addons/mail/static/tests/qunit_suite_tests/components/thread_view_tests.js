@@ -466,9 +466,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
 
     assert.containsOnce(
         document.body,
-        `.o_MessageList_separatorNewMessages ~ .o_Message[data-message-local-id="${
-            messaging.models['Message'].findFromIdentifyingData({ id: mailMessageId1 + 1 }).localId
-        }"]`,
+        `.o_MessageList_separatorNewMessages ~ .o_Message[data-message-id="${mailMessageId1 + 1}"]`,
         "'new messages' separator should be shown above new message received"
     );
 
@@ -1330,8 +1328,8 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     );
     assert.containsOnce(
         document.body,
-        `.o_Message[data-message-local-id="${
-            transientMessage.localId
+        `.o_Message[data-message-id="${
+            transientMessage.id
         }"] + .o_MessageList_separatorNewMessages`,
         "separator should be shown just after transient message"
     );
