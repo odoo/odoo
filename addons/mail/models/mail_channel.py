@@ -996,15 +996,23 @@ class Channel(models.Model):
             if channel_partner.fetched_message_id.id == last_message_id:
                 # last message fetched by user is already up-to-date
                 return
-            channel_partner.write({
-                'fetched_message_id': last_message_id,
-            })
-            self.env['bus.bus']._sendone(channel, 'mail.channel.partner/fetched', {
-                'channel_id': channel.id,
-                'id': channel_partner.id,
-                'last_message_id': last_message_id,
-                'partner_id': self.env.user.partner_id.id,
-            })
+            # This method may be called multiple times and we don't care having small errors in last fetched
+            # compared to performance issues.
+            # Using try...except to avoid concurrent updates error
+            # (instead of raising an exception, wait for a moment and retry)
+            try:
+                with channel_partner.env.cr.savepoint():
+                    channel_partner.write({
+                        'fetched_message_id': last_message_id,
+                    })
+                    self.env['bus.bus']._sendone(channel, 'mail.channel.partner/fetched', {
+                        'channel_id': channel.id,
+                        'id': channel_partner.id,
+                        'last_message_id': last_message_id,
+                        'partner_id': self.env.user.partner_id.id,
+                    })
+            except Exception:
+                pass
 
     def channel_set_custom_name(self, name):
         self.ensure_one()
