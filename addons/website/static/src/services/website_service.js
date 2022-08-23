@@ -42,6 +42,9 @@ export const websiteService = {
         let hasMultiWebsites;
         let actionJsId;
         let blockingProcesses = [];
+        let modelNamesProm = null;
+        const modelNames = {};
+
         const context = reactive({
             showNewContentModal: false,
             showAceEditor: false,
@@ -221,6 +224,34 @@ export const websiteService = {
             },
             hideLoader() {
                 bus.trigger('HIDE-WEBSITE-LOADER');
+            },
+            /**
+             * Returns the (translated) "functional" name of a model
+             * (_description) given its "technical" name (_name).
+             *
+             * @param {string} [model]
+             * @returns {string}
+             */
+            async getUserModelName(model = this.currentWebsite.metadata.mainObject.model) {
+                if (!modelNamesProm) {
+                    // FIXME the `get_available_models` is to be removed/changed
+                    // in a near future. This code is to be adapted, probably
+                    // with another helper to map a model functional name from
+                    // its technical map without the need of the right access
+                    // rights (which is why I cannot use search_read here).
+                    modelNamesProm = orm.call("ir.model", "get_available_models")
+                        .then(modelsData => {
+                            for (const modelData of modelsData) {
+                                modelNames[modelData['model']] = modelData['display_name'];
+                            }
+                        })
+                        // Precaution in case the util is simply removed without
+                        // adapting this method: not critical, we can restore
+                        // later and use the fallback until the fix is made.
+                        .catch(() => {});
+                }
+                await modelNamesProm;
+                return modelNames[model] || env._t("Data");
             },
         };
     },

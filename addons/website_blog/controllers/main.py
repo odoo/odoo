@@ -205,7 +205,6 @@ class WebsiteBlog(http.Controller):
 
         if blog:
             values['main_object'] = blog
-            values['edit_in_backend'] = True
             values['blog_url'] = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end, search=search)
         else:
             values['blog_url'] = QueryURL('/blog', ['tag'], date_begin=date_begin, date_end=date_end, search=search)
@@ -301,15 +300,3 @@ class WebsiteBlog(http.Controller):
                 request.session['posts_viewed'].append(blog_post.id)
                 request.session.modified = True
         return response
-
-    @http.route('/blog/post_duplicate', type='http', auth="user", website=True, methods=['POST'])
-    def blog_post_copy(self, blog_post_id, **post):
-        """ Duplicate a blog.
-
-        :param blog_post_id: id of the blog post currently browsed.
-
-        :return redirect to the new blog created
-        """
-        new_blog_post = request.env['blog.post'].with_context(mail_create_nosubscribe=True).browse(int(blog_post_id)).copy()
-        client_action_url = request.env["website"].get_client_action_url(f"/blog/{slug(new_blog_post.blog_id)}/{slug(new_blog_post)}", True)
-        return request.redirect(client_action_url)

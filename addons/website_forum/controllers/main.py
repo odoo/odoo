@@ -155,7 +155,7 @@ class WebsiteForum(WebsiteProfile):
         values = self._prepare_user_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
         values.update({
             'main_object': tag or forum,
-            'edit_in_backend': not tag,
+            'edit_in_backend': True,
             'question_ids': question_ids,
             'question_count': question_count,
             'search_count': question_count,
@@ -258,6 +258,7 @@ class WebsiteForum(WebsiteProfile):
         values = self._prepare_user_values(forum=forum, searches=post)
         values.update({
             'main_object': question,
+            'edit_in_backend': True,
             'question': question,
             'can_bump': (question.forum_id.allow_bump and not question.child_count and (datetime.today() - question.write_date).days > 9),
             'header': {'question_data': True},

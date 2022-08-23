@@ -62,4 +62,4 @@ export const systrayItem = {
     isDisplayed: (env) => env.services.website.currentWebsite.metadata.editable,
 };
 
-registry.category("website_systray").add("EditWebsite", systrayItem, { sequence: 8 });
+registry.category("website_systray").add("EditWebsite", systrayItem, { sequence: 7 });

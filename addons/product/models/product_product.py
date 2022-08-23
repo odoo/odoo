@@ -12,7 +12,7 @@ from odoo.tools import float_compare
 
 class ProductProduct(models.Model):
     _name = "product.product"
-    _description = "Product"
+    _description = "Product Variant"
     _inherits = {'product.template': 'product_tmpl_id'}
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'priority desc, default_code, name, id'
