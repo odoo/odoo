@@ -53,6 +53,7 @@ class TestExpenseMargin(TestExpenseCommon):
                     'product_id': product_with_no_cost.id,
                     'unit_amount': product_with_no_cost.standard_price,
                     'total_amount': 100,
+                    'tax_ids': False,
                     'employee_id': self.expense_employee.id,
                     'sale_order_id': sale_order.id
                 }),
@@ -74,6 +75,7 @@ class TestExpenseMargin(TestExpenseCommon):
                     'product_id': product_with_cost.id,
                     'quantity': 5,
                     'unit_amount': product_with_cost.standard_price,
+                    'tax_ids': False,
                     'employee_id': self.expense_employee.id,
                     'sale_order_id': sale_order.id
                 }),
