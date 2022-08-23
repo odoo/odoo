@@ -157,12 +157,12 @@ registerModel({
             if (browserLocalStorage && browserLocalStorage.length) {
                 for (let i = 0; i < browserLocalStorage.length; i++) {
                     const key = browserLocalStorage.key(i);
-                    if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.messaging.publicLivechatGlobal.chatbotSessionCookieKey) {
+                    if (key.startsWith('im_livechat.chatbot.state.uuid_') && key !== this.messaging.publicLivechatGlobal.chatbot.sessionCookieKey) {
                         browserLocalStorage.removeItem(key);
                     }
                 }
             }
-            const chatbotState = localStorage.getItem(this.messaging.publicLivechatGlobal.chatbotSessionCookieKey);
+            const chatbotState = localStorage.getItem(this.messaging.publicLivechatGlobal.chatbot.sessionCookieKey);
             if (chatbotState) {
                 this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: { data: this.messaging.publicLivechatGlobal.chatbot.localStorageState._chatbotCurrentStep } });
             }
