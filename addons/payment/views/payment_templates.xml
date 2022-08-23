@@ -63,7 +63,7 @@
                             </span>
                             <!-- === "Test Mode" badge === -->
                             <span t-if="acquirer.state == 'test'"
-                                  class="rounded-pill text-bg-warning ms-1">
+                                  class="badge rounded-pill text-bg-warning ms-1">
                                 Test Mode
                             </span>
                             <!-- === "Unpublished" badge === -->
@@ -73,7 +73,7 @@
                             </span>
                             <!-- === Extra fees badge === -->
                             <t t-if="fees_by_acquirer.get(acquirer)">
-                                <span class="rounded-pill text-bg-secondary ms-1">
+                                <span class="badge rounded-pill text-bg-secondary ms-1">
                                     + <t t-esc="fees_by_acquirer.get(acquirer)"
                                          t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                                     Fees
@@ -208,7 +208,7 @@
                             </span>
                             <!-- === "Test Mode" badge === -->
                             <span t-if="acquirer.state == 'test'"
-                                  class="rounded-pill text-bg-warning"
+                                  class="badge rounded-pill text-bg-warning"
                                   style="margin-left:5px">
                                 Test Mode
                             </span>

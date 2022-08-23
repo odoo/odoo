@@ -546,7 +546,7 @@
 <template id="website_forum.user_sidebar">
     <nav t-if="uid" class="o_wforum_nav nav nav-pills flex-column ms-4">
         <a t-attf-href="/forum/#{slug(forum)}/user/#{uid}?forum_origin=#{request.httprequest.path}"
-            class="nav-link d-flex align-items-center rounded-pill text-reset mb-2"
+            class="nav-link d-flex align-items-center badge rounded-pill text-reset mb-2"
             data-bs-toggle="tooltip"
             data-trigger="hover"
             title="My profile">
@@ -560,38 +560,38 @@
         <t t-set="location" t-value="url_for('/forum/') + slug(forum) + ( ('/tag/' + slug(tag) + '/questions?') if tag else '?' )"/>
 
         <!-- My Posts -->
-        <span t-if="my == 'mine'" class="nav-link rounded-pill mb-2 active fw-bold">
+        <span t-if="my == 'mine'" class="nav-link badge rounded-pill mb-2 active fw-bold">
             <i class="fa fa-question-circle-o fa-fw"/> My Posts
             <a class="text-reset pull-right no-decoration" t-att-href="location + keep_query('search', 'filters', 'sorting')">&#215;</a>
         </span>
-        <a t-else="" class="nav-link rounded-pill mb-2 text-reset" t-att-href="location + keep_query('search', 'filters', 'sorting', my='mine')">
+        <a t-else="" class="nav-link badge rounded-pill mb-2 text-reset" t-att-href="location + keep_query('search', 'filters', 'sorting', my='mine')">
             <i class="fa fa-question-circle-o fa-fw"/> My Posts
         </a>
 
         <!-- My Favourites -->
-        <span t-if="my == 'favourites'" class="nav-link rounded-pill mb-2 active fw-bold">
+        <span t-if="my == 'favourites'" class="nav-link badge rounded-pill mb-2 active fw-bold">
             <i class="fa fa-star fa-fw"/> Favourites
             <a class="text-reset pull-right no-decoration" t-att-href="location + keep_query( 'search', 'filters', 'sorting')">&#215;</a>
         </span>
-        <a t-else="" t-attf-class="nav-link rounded-pill mb-2 text-reset" t-att-href="location + keep_query( 'search', 'filters', 'sorting', my='favourites')">
+        <a t-else="" t-attf-class="nav-link badge rounded-pill mb-2 text-reset" t-att-href="location + keep_query( 'search', 'filters', 'sorting', my='favourites')">
             <i class="fa fa-star fa-fw"/> Favourites
         </a>
 
         <!-- My Followed posts -->
-        <span t-if="my == 'followed'" class="nav-link rounded-pill mb-2 active fw-bold">
+        <span t-if="my == 'followed'" class="nav-link badge rounded-pill mb-2 active fw-bold">
             <i class="fa fa-bell fa-fw"/> Followed Posts
             <a class="text-reset pull-right no-decoration" t-att-href="location + keep_query( 'search', 'filters', 'sorting')">&#215;</a>
         </span>
-        <a t-else="" class="nav-link rounded-pill mb-2 text-reset" t-att-href="location + keep_query( 'search', 'filters', 'sorting', my='followed')">
+        <a t-else="" class="nav-link badge rounded-pill mb-2 text-reset" t-att-href="location + keep_query( 'search', 'filters', 'sorting', my='followed')">
             <i class="fa fa-bell fa-fw"/> Followed Posts
         </a>
 
         <!-- My Followed tags -->
-        <span t-if="my == 'tagged'" class="nav-link rounded-pill mb-2 active fw-bold">
+        <span t-if="my == 'tagged'" class="nav-link badge rounded-pill mb-2 active fw-bold">
             <i class="fa fa-tags fa-fw"/> Followed Tags
             <a class="text-reset pull-right no-decoration" t-att-href="location + keep_query( 'search', 'filters', 'sorting')">&#215;</a>
         </span>
-        <a t-else="" class="nav-link rounded-pill mb-2 text-reset" t-att-href="location + keep_query( 'search', 'filters', 'sorting', my='tagged')">
+        <a t-else="" class="nav-link badge rounded-pill mb-2 text-reset" t-att-href="location + keep_query( 'search', 'filters', 'sorting', my='tagged')">
             <i class="fa fa-tags fa-fw"/> Followed Tags
         </a>
 
@@ -601,19 +601,19 @@
                 <div class="pb-1 border-bottom text-muted">Moderation tools</div>
             </span>
 
-            <span t-if="queue_type == 'validation'" class="nav-link rounded-pill mb-2 active fw-bold">
+            <span t-if="queue_type == 'validation'" class="nav-link badge rounded-pill mb-2 active fw-bold">
                 <i class="fa fa-check-square-o fa-fw"/> To Validate
                 <a class="text-reset pull-right no-decoration" t-attf-href="/forum/#{ slug(forum) }">&#215;</a>
             </span>
-            <a t-else="" class="nav-link rounded-pill text-reset" t-attf-href="/forum/#{slug(forum)}/validation_queue">
+            <a t-else="" class="nav-link badge rounded-pill text-reset" t-attf-href="/forum/#{slug(forum)}/validation_queue">
                 <i class="fa fa-check-square-o fa-fw"/> To Validate
                 <span t-attf-class="badge pull-right #{forum.count_posts_waiting_validation > 0 and 'text-bg-warning' or 'text-bg-light'}" t-esc="forum.count_posts_waiting_validation"/>
             </a>
-            <span t-if="queue_type == 'offensive' or queue_type == 'flagged'" class="nav-link rounded-pill mb-2 active fw-bold">
+            <span t-if="queue_type == 'offensive' or queue_type == 'flagged'" class="nav-link badge rounded-pill mb-2 active fw-bold">
                 <i class="fa fa-flag fa-fw"/> Flagged
                 <a class="text-reset pull-right no-decoration" t-attf-href="/forum/#{ slug(forum) }">&#215;</a>
             </span>
-            <a t-else="" class="nav-link rounded-pill text-reset" t-attf-href="/forum/#{slug(forum)}/flagged_queue">
+            <a t-else="" class="nav-link badge rounded-pill text-reset" t-attf-href="/forum/#{slug(forum)}/flagged_queue">
                 <i class="fa fa-flag fa-fw"/> Flagged
                 <span id="count_flagged_posts" t-attf-class="badge pull-right #{forum.count_flagged_posts > 0 and 'text-bg-danger' or 'text-bg-light'}" t-esc="forum.count_flagged_posts"/>
             </a>
@@ -695,21 +695,21 @@
                 <div class="d-none d-lg-flex align-items-center col-auto flex-grow-md-1 flex-grow-lg-0">
                     <nav class="o_wforum_nav nav nav-pills justify-content-around">
                         <a t-att-href="url_for('') + '?' + keep_query('search', 'sorting', 'my', filters='all')"
-                            t-attf-class="nav-link py-1 rounded-pill #{no_filters and 'active fw-bold' or 'ps-0 pe-2'}">
+                            t-attf-class="nav-link py-1 badge rounded-pill #{no_filters and 'active fw-bold' or 'ps-0 pe-2'}">
                             All
                         </a>
                         <t t-if="forum.mode == 'questions'">
                             <span class="mx-1 text-400 d-none d-lg-block">|</span>
                             <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='solved')"
-                                t-attf-class="nav-link py-1 rounded-pill #{filters == 'solved' and 'active fw-bold' or 'px-2'}">Solved
+                                t-attf-class="nav-link py-1 badge rounded-pill #{filters == 'solved' and 'active fw-bold' or 'px-2'}">Solved
                             </a>
                             <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='unsolved')"
-                                t-attf-class="d-none d-lg-block nav-link py-1 rounded-pill #{filters == 'unsolved' and 'active fw-bold' or 'px-2'}">Unsolved
+                                t-attf-class="d-none d-lg-block nav-link py-1 badge rounded-pill #{filters == 'unsolved' and 'active fw-bold' or 'px-2'}">Unsolved
                             </a>
                         </t>
                         <span class="mx-1 text-400 d-none d-lg-block">|</span>
                         <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='unanswered')"
-                            t-attf-class="nav-link py-1 rounded-pill #{filters == 'unanswered' and 'active fw-bold' or 'px-2'}">Unanswered
+                            t-attf-class="nav-link py-1 badge rounded-pill #{filters == 'unanswered' and 'active fw-bold' or 'px-2'}">Unanswered
                         </a>
                     </nav>
                 </div>
@@ -1320,7 +1320,7 @@
                             <t t-set="allow_biography" t-value="True"/>
                             <t t-set="object_validable" t-value="True"/>
                         </t>
-                        <span class="o_wforum_answer_correct_badge border small border-success rounded-pill fw-bold text-success ms-2 px-2">
+                        <span class="o_wforum_answer_correct_badge border small border-success badge rounded-pill fw-bold text-success ms-2 px-2">
                             Best Answer
                         </span>
                     </div>

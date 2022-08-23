@@ -110,7 +110,7 @@
                             </div>
                         </div>
                         <div t-if="state.recommendedPalette" class="w-75 mx-auto px-2 pt-3" style="max-width: 184px;">
-                            <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{state.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}}"
+                            <div t-attf-class="palette_card badge rounded-pill overflow-hidden d-flex {{state.getSelectedPaletteName() == 'recommendedPalette' ? 'selected' : ''}}"
                                  t-on-click="() => this.selectPalette('recommendedPalette')" t-attf-style="background-color: {{state.recommendedPalette.color3}}">
                                 <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color1}}"/>
                                 <div class="color_sample w-100" t-attf-style="background-color: {{state.recommendedPalette.color3}}"/>
@@ -133,7 +133,7 @@
                     <div class="d-flex flex-wrap align-items-end">
                         <t t-foreach="state.getPalettes()" t-as="palette" t-key="palette_index">
                             <div class="o_palette_card_container w-25 px-2 pt-3">
-                                <div t-attf-class="palette_card rounded-pill overflow-hidden d-flex {{state.getSelectedPaletteName() == palette.name ? 'selected' : ''}}"
+                                <div t-attf-class="palette_card badge rounded-pill overflow-hidden d-flex {{state.getSelectedPaletteName() == palette.name ? 'selected' : ''}}"
                                      t-on-click="() => this.selectPalette(palette.name)" t-attf-style="background-color: {{palette.color3}}">
                                     <div class="color_sample w-100" t-attf-style="background-color: {{palette.color1}}"/>
                                     <div class="color_sample w-100" t-attf-style="background-color: {{palette.color3}}"/>
