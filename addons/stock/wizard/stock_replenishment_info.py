@@ -42,7 +42,6 @@ class StockReplenishmentInfo(models.TransientModel):
             dummy, lead_days_description = orderpoint.rule_ids._get_lead_days(
                 orderpoint.product_id, **orderpoints_values)
             replenishment_report.json_lead_days = dumps({
-                'template': 'stock.leadDaysPopOver',
                 'lead_days_date': format_date(self.env, replenishment_report.orderpoint_id.lead_days_date),
                 'lead_days_description': lead_days_description,
                 'today': format_date(self.env, fields.Date.today()),

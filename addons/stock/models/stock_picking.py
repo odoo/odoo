@@ -519,13 +519,12 @@ class Picking(models.Model):
         picking_no_alert.json_popover = False
         for picking in (self - picking_no_alert):
             picking.json_popover = json.dumps({
-                'popoverTemplate': 'stock.PopoverStockRescheduling',
                 'delay_alert_date': format_datetime(self.env, picking.delay_alert_date, dt_format=False),
                 'late_elements': [{
-                        'id': late_move.id,
-                        'name': late_move.display_name,
-                        'model': late_move._name,
-                    } for late_move in picking.move_ids.filtered(lambda m: m.delay_alert_date).move_orig_ids._delay_alert_get_documents()
+                    'id': late_move.id,
+                    'name': late_move.display_name,
+                    'model': late_move._name,
+                } for late_move in picking.move_ids.filtered(lambda m: m.delay_alert_date).move_orig_ids._delay_alert_get_documents()
                 ]
             })
 
