@@ -28,7 +28,7 @@
         'report/project_task_burndown_chart_report_views.xml',
         'views/analytic_views.xml',
         'views/digest_views.xml',
-        'views/rating_views.xml',
+        'views/rating_rating_views.xml',
         'views/project_update_views.xml',
         'views/project_update_templates.xml',
         'views/project_project_stage_views.xml',
