@@ -486,7 +486,7 @@ const _t = core._t;
         const selectedAnswer = $target.data('chatbotStepAnswerId');
 
         const redirectLink = $target.data('chatbotStepRedirectLink');
-        this.messaging.publicLivechatGlobal.livechatButtonView.update({ isChatbotRedirecting: !!redirectLink });
+        this.messaging.publicLivechatGlobal.chatbot.update({ isRedirecting: !!redirectLink });
 
         await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage({
             content: $target.text().trim(),

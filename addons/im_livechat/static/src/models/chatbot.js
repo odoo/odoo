@@ -178,6 +178,9 @@ registerModel({
             compute: '_computeIsExpectingUserInput',
             default: false,
         }),
+        isRedirecting: attr({
+            default: false,
+        }),
         lastWelcomeStep: attr({
             compute: '_computeLastWelcomeStep',
         }),

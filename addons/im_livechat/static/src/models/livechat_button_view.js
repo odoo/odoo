@@ -499,7 +499,7 @@ registerModel({
          * @private
          */
         _sendMessageChatbotAfter() {
-            if (this.isChatbotRedirecting) {
+            if (this.messaging.publicLivechatGlobal.chatbot.isRedirecting) {
                 return;
             }
             if (
@@ -591,9 +591,6 @@ registerModel({
         }),
         isChatbot: attr({
             compute: '_computeIsChatbot',
-            default: false,
-        }),
-        isChatbotRedirecting: attr({
             default: false,
         }),
         isOpenChatDebounced: attr({
