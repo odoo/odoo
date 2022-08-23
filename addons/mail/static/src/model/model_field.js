@@ -146,7 +146,7 @@ export class ModelField {
          */
         if (this.identifying) {
             this.readonly = true;
-            if (model.identifyingMode === 'and') {
+            if (this.model.identifyingMode === 'and') {
                 this.required = true;
             }
         }
@@ -225,8 +225,7 @@ export class ModelField {
      */
     computeRelated(record) {
         const [relationName, relatedFieldName] = this.related.split('.');
-        const model = record.constructor;
-        const relationField = model.__fieldMap.get(relationName);
+        const relationField = this.model.__fieldMap.get(relationName);
         if (relationField.relationType === 'many') {
             const newVal = [];
             for (const otherRecord of record[relationName]) {
@@ -378,7 +377,7 @@ export class ModelField {
                         }
                         break;
                     default:
-                        throw new Error(`Field "${record.constructor.name}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
+                        throw new Error(`Field "${this.model.name}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
                 }
             } else if (this.fieldType === 'relation') {
                 switch (commandName) {
@@ -423,7 +422,7 @@ export class ModelField {
                         }
                         break;
                     default:
-                        throw new Error(`Field "${record.constructor.name}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
+                        throw new Error(`Field "${this.model.name}/${this.fieldName}"(${this.fieldType} type) does not support command "${commandName}"`);
                 }
             }
         }
