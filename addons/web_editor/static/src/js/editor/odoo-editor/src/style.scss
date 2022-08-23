@@ -403,3 +403,29 @@ i.oe-powerbox-commandImg {
         }
     }
 }
+.oe-collaboration-caret-avatar {
+    position: absolute;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    transition: top 0.5s, left 0.5s;
+
+    > img {
+        height: 100%;
+        width: 100%;
+        border-radius: 50%;
+    }
+
+    &[data-overlapping-avatars]::after {
+        content: attr(data-overlapping-avatars);
+        background-color: green;
+        color: white;
+        border-radius: 50%;
+        font-size: 9px;
+        padding: 0 4px;
+        position: absolute;
+        top: 11px;
+        right: -5px;
+        z-index: 1;
+    }
+}
