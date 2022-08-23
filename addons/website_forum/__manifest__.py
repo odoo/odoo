@@ -19,7 +19,7 @@ Ask questions, get answers, no distractions
     'data': [
         'data/forum_default_faq.xml',
         'data/forum_data.xml',
-        'data/mail_data.xml',
+        'data/mail_message_subtype_data.xml',
         'data/mail_templates.xml',
         'views/forum.xml',
         'views/res_users_views.xml',

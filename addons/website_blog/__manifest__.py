@@ -10,7 +10,7 @@
     'version': '1.1',
     'depends': ['website_mail', 'website_partner'],
     'data': [
-        'data/mail_data.xml',
+        'data/mail_message_subtype_data.xml',
         'data/mail_templates.xml',
         'data/website_blog_data.xml',
         'data/blog_snippet_template_data.xml',
