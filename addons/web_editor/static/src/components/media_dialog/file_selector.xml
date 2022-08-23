@@ -1,35 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 <t t-name="web_editor.FileSelectorControlPanel" owl="1">
-    <div class="row g-2 align-items-center py-4">
+    <div class="d-flex flex-wrap gap-2 mt-4 mb-2 align-items-end">
         <SearchMedia searchPlaceholder="props.searchPlaceholder" needle="props.needle" search="props.search"/>
-
-        <div class="col-auto d-flex gap-2 align-items-center">
+        <div class="d-flex gap-3 justify-content-start align-items-center">
             <div t-if="props.showOptimizedOption" class="flex-shrink-0 form-check form-switch align-items-center" t-on-change="props.changeShowOptimized">
                 <input class="o_we_show_optimized form-check-input" type="checkbox" t-att-checked="props.showOptimized" id="o_we_show_optimized_switch"/>
                 <label class="form-check-label" for="o_we_show_optimized_switch">
                     Show optimized images
                 </label>
             </div>
-            <select t-if="showSearchServiceSelect" class="form-select o_we_search_select" t-on-change="ev => props.changeSearchService(ev.target.value)">
+            <select t-if="showSearchServiceSelect" class="o_input o_we_search_select form-select" t-on-change="ev => props.changeSearchService(ev.target.value)">
                 <option t-att-selected="props.searchService === 'all'" value="all">All</option>
                 <option t-att-selected="props.searchService === 'database'" value="database">My Images</option>
                 <option t-if="props.useMediaLibrary" t-att-selected="props.searchService === 'media-library'" value="media-library">Illustrations</option>
             </select>
         </div>
-
-        <div class="col justify-content-end align-items-center input-group">
-            <input type="text" class="form-control flex-grow-0 o_we_url_input o_we_transition_ease me-1" t-att-class="{ o_we_horizontal_collapse: !state.showUrlInput, 'w-auto': state.showUrlInput }" name="url" t-att-placeholder="props.urlPlaceholder" t-model="state.urlInput" t-on-input="onUrlInput"/>
-            <button type="button" class="btn o_upload_media_url_button" t-att-class="{ 'btn-primary': state.urlInput, 'btn-secondary': !state.urlInput}" t-on-click="onUrlUploadClick" t-att-disabled="!enableUrlUploadClick">
+        <div class="col justify-content-end flex-nowrap input-group has-validation"> 
+            <input type="text" class="form-control o_input o_we_url_input o_we_transition_ease flex-grow-0" t-att-class="{ o_we_horizontal_collapse: !state.showUrlInput, 'w-auto': state.showUrlInput }" name="url" t-att-placeholder="props.urlPlaceholder" t-model="state.urlInput" t-on-input="onUrlInput" t-if="state.showUrlInput"/>
+            <button type="button" class="btn o_upload_media_url_button text-nowrap" t-att-class="{ 'btn-primary': state.urlInput, 'btn-secondary': !state.urlInput}" t-on-click="onUrlUploadClick" t-att-disabled="!enableUrlUploadClick">
                     <t t-esc="props.addText"/>
             </button>
-            <div>
+            <div class="d-flex align-items-center">
                 <span t-if="state.urlInput and state.isValidUrl and state.isValidFileFormat" class="o_we_url_success text-success mx-2 fa fa-lg fa-check" title="The URL seems valid."/>
                 <span t-if="state.urlInput and !state.isValidUrl" class="o_we_url_error text-danger mx-2 fa fa-lg fa-times" title="The URL does not seem to work."/>
                 <span t-if="props.urlWarningTitle and state.urlInput and state.isValidUrl and !state.isValidFileFormat" class="o_we_url_warning text-warning mx-2 fa fa-lg fa-warning" t-att-title="props.urlWarningTitle"/>
             </div>
         </div>
-
         <input type="file" class="d-none o_file_input" t-on-change="onChangeFileInput" t-ref="file-input" t-att-accept="props.accept" t-att-multiple="props.multiSelect and 'multiple'"/>
         <div class="col-auto btn-group">
             <button type="button" class="btn btn-primary o_upload_media_button" t-on-click="onClickUpload">
@@ -61,7 +58,7 @@
             multiSelect="props.multiSelect"/>
         <t t-call="{{ constructor.attachmentsListTemplate }}"/>
         <div name="load_more_attachments" class="mt-4 text-center mx-auto o_we_load_more">
-            <button t-if="canLoadMore" class="btn btn-primary o_load_more" type="button" t-on-click="loadMore">Load more...</button>
+            <button t-if="canLoadMore" class="btn btn-secondary o_load_more" type="button" t-on-click="loadMore">Load more...</button>
             <div t-if="hasContent and !canLoadMore" class="mt-4 o_load_done_msg">
                 <span><i t-esc="allLoadedText"/></span>
             </div>

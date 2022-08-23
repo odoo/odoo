@@ -7,7 +7,7 @@
 </div>
 
 <t t-name="web_editor.VideoOption" owl="1">
-    <div>
+    <div class="mb-1">
         <label class="o_switch" t-on-change="props.onChangeOption">
             <input type="checkbox" t-att-checked="props.value"/><span/>
             <span t-esc="props.label"/>
@@ -39,7 +39,7 @@
                 <span class="fw-bold">Suggestions</span>
                 <div id="video-suggestion" class="mt-4 d-flex flex-wrap mh-75 overflow-auto">
                     <t t-foreach="state.vimeoPreviews" t-as="vimeoPreview" t-key="vimeoPreview.id">
-                        <div class="o_sample_video w-25 mh-100" t-on-click="() => this.onClickSuggestion(vimeoPreview.src)">
+                        <div class="o_sample_video w-25 mh-100 cursor-pointer" t-on-click="() => this.onClickSuggestion(vimeoPreview.src)">
                             <img class="mw-100 mh-100 p-1" t-att-src="vimeoPreview.thumbnailSrc"/>
                         </div>
                     </t>
@@ -47,12 +47,12 @@
             </t>
         </div>
         <div class="col-md-6">
-            <div class="o_video_preview p-3">
+            <div class="o_video_preview position-relative border-0 p-3">
                 <div t-if="this.state.src and !this.state.errorMessage" class="o_video_dialog_preview_text mb-2">Preview</div>
                 <div class="media_iframe_video">
                     <div class="media_iframe_video_size"/>
-                    <iframe t-if="this.state.src and !this.state.errorMessage" height="720" width="1280" class="o_video_dialog_iframe" allowfullscreen="allowfullscreen" frameborder="0" t-att-src="this.state.src"/>
-                    <div t-if="this.state.errorMessage" class="alert alert-warning o_video_dialog_iframe mb-2 mt-2" t-esc="this.state.errorMessage"/>
+                    <iframe t-if="this.state.src and !this.state.errorMessage" height="720" width="1280" class="o_video_dialog_iframe mw-100 mh-100 overflow-hidden shadow" allowfullscreen="allowfullscreen" frameborder="0" t-att-src="this.state.src"/>
+                    <div t-if="this.state.errorMessage" class="alert alert-warning o_video_dialog_iframe mw-100 mh-100 mb-2 mt-2" t-esc="this.state.errorMessage"/>
                 </div>
             </div>
         </div>
