@@ -599,7 +599,8 @@ QUnit.module("SettingsFormView", (hooks) => {
         const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 1);
-        assert.containsNone(target, ".o_form_label");
+        assert.containsOnce(target, ".o_form_label");
+        assert.equal(target.querySelector(".o_form_label").textContent, "");
         assert.containsNone(target, ".settingSearchHeader");
         await editSearch(target, "Fo");
         await execTimeouts();

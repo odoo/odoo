@@ -41,16 +41,20 @@ QUnit.module("Form Compiler", () => {
         assert.areEquivalent(compileTemplate(arch), expected);
     });
 
-    QUnit.test("label with empty string is not rendered", async (assert) => {
-        const arch = /*xml*/ `<form><field name="test"/><label for="test" string=""/></form>`;
-        const expected = /*xml*/ `
+    QUnit.test(
+        "label with empty string compiles to FormLabel with empty string",
+        async (assert) => {
+            const arch = /*xml*/ `<form><field name="test"/><label for="test" string=""/></form>`;
+            const expected = /*xml*/ `
             <t>
                 <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block" class="o_form_nosheet" t-ref="compiled_view_root">
-                    <Field id="'test'" name="'test'" record="props.record" fieldInfo="props.archInfo.fieldNodes['test']"/>
+                    <Field id="'test'" name="'test'" record="props.record" fieldInfo="props.archInfo.fieldNodes['test']" />
+                    <FormLabel t-props="{id:'test',fieldName:'test',record:props.record,fieldInfo:props.archInfo.fieldNodes['test'],className:&quot;&quot;}" string="\`\`" />
                 </div>
             </t>`;
-        assert.areEquivalent(compileTemplate(arch), expected);
-    });
+            assert.areEquivalent(compileTemplate(arch), expected);
+        }
+    );
 
     QUnit.test("properly compile simple div with field", async (assert) => {
         const arch = /*xml*/ `<form><div class="someClass">lol<field name="display_name"/></div></form>`;
