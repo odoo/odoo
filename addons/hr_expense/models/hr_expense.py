@@ -26,14 +26,6 @@ class HrExpense(models.Model):
         return employee
 
     @api.model
-    def _default_product_uom_id(self):
-        return self.env['uom.uom'].search([], limit=1, order='id')
-
-    @api.model
-    def _default_account_id(self):
-        return self.env['ir.property']._get('property_account_expense_categ_id', 'product.category')
-
-    @api.model
     def _get_employee_id_domain(self):
         res = [('id', '=', 0)] # Nothing accepted by domain, by default
         if self.user_has_groups('hr_expense.group_hr_expense_user') or self.user_has_groups('account.group_account_user'):
@@ -54,7 +46,7 @@ class HrExpense(models.Model):
             res = [('id', '=', employee.id), '|', ('company_id', '=', False), ('company_id', '=', employee.company_id.id)]
         return res
 
-    name = fields.Char('Description', compute='_compute_from_product_id_company_id', readonly=False, store=True, required=True, copy=True,
+    name = fields.Char('Description', compute='_compute_from_product_id_company_id', readonly=False, store=True, precompute=True, required=True, copy=True,
         states={'done': [('readonly', True)]})
     date = fields.Date(states={'done': [('readonly', True)]}, default=fields.Date.context_today, string="Expense Date")
     accounting_date = fields.Date(string="Accounting Date", related='sheet_id.accounting_date', store=True, groups='account.group_account_invoice,account.group_account_readonly')
@@ -66,15 +58,15 @@ class HrExpense(models.Model):
     product_id = fields.Many2one('product.product', string='Product', tracking=True, states={'done': [('readonly', True)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='restrict')
     product_description = fields.Html(compute='_compute_product_description')
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_from_product_id_company_id',
-        store=True, copy=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]},
-        default=_default_product_uom_id, domain="[('category_id', '=', product_uom_category_id)]")
+        store=True, precompute=True, copy=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]},
+        domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True, string="UoM Category")
-    unit_amount = fields.Float("Unit Price", compute='_compute_from_product_id_company_id', readonly=False, store=True, required=True, copy=True,
+    unit_amount = fields.Float("Unit Price", compute='_compute_from_product_id_company_id', readonly=False, store=True, precompute=True, required=True, copy=True,
         states={'done': [('readonly', True)]}, digits='Product Price')
     unit_amount_display = fields.Float("Unit Price Display", compute='_compute_unit_amount_display')
     quantity = fields.Float(required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure', default=1)
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id',
-        compute='_compute_from_product_id_company_id', store=True, readonly=False,
+        compute='_compute_from_product_id_company_id', store=True, readonly=False, precompute=True,
         domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Included taxes')
     amount_tax = fields.Monetary(string='Tax amount in Currency', help="Tax amount in currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
     amount_tax_company = fields.Monetary('Tax amount', help="Tax amount in company currency", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
@@ -88,8 +80,8 @@ class HrExpense(models.Model):
     currency_rate = fields.Float(compute='_compute_currency_rate')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    account_id = fields.Many2one('account.account', compute='_compute_from_product_id_company_id', store=True, readonly=False, string='Account',
-        default=_default_account_id, domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_id', '=', company_id)]", help="An expense account is expected")
+    account_id = fields.Many2one('account.account', compute='_compute_from_product_id_company_id', store=True, readonly=False, precompute=True, string='Account',
+        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_id', '=', company_id)]", help="An expense account is expected")
     description = fields.Text('Notes...', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     payment_mode = fields.Selection([
         ("own_account", "Employee (to reimburse)"),
@@ -268,6 +260,7 @@ class HrExpense(models.Model):
     def _compute_from_product_id_company_id(self):
         for expense in self:
             if not expense.product_id:
+                expense.account_id = self.env['ir.property']._get('property_account_expense_categ_id', 'product.category')
                 continue
             # Only change unit_amount if the product has no cost defined on it
             if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):

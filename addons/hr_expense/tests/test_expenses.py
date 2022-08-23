@@ -420,3 +420,29 @@ class TestExpenses(TestExpenseCommon):
 
         move = self.env['account.payment'].browse(action['res_id']).move_id
         self.assertEqual(move.amount_total_signed, 10.0, 'The total amount of the payment move is not correct')
+
+    def test_form_defaults_from_product(self):
+        """
+        As soon as you set a product, the expense name, uom, taxes and account are set
+        according to the product.
+        """
+        # Disable multi-uom
+        self.env.ref('base.group_user').implied_ids -= self.env.ref('uom.group_uom')
+        self.expense_user_employee.groups_id -= self.env.ref('uom.group_uom')
+
+        # Use the expense employee
+        Expense = self.env['hr.expense'].with_user(self.expense_user_employee)
+
+        # Make sure the multi-uom is correctly disabled for the user creating the expense
+        self.assertFalse(Expense.env.user.has_group('uom.group_uom'))
+
+        # Use a product not using the default uom "Unit(s)"
+        product = Expense.env.ref('hr_expense.mileage_expense_product')
+
+        expense_form = Form(Expense)
+        expense_form.product_id = product
+        expense = expense_form.save()
+        self.assertEqual(expense.name, product.display_name)
+        self.assertEqual(expense.product_uom_id, product.uom_id)
+        self.assertEqual(expense.tax_ids, product.supplier_taxes_id)
+        self.assertEqual(expense.account_id, product._get_product_accounts()['expense'])
