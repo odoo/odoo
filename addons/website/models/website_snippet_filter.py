@@ -87,6 +87,9 @@ class WebsiteSnippetFilter(models.Model):
             domain = filter_sudo._get_eval_domain()
             if 'website_id' in self.env[filter_sudo.model_id]:
                 domain = expression.AND([domain, self.env['website'].get_current_website().website_domain()])
+            if 'company_id' in self.env[filter_sudo.model_id]:
+                website = self.env['website'].get_current_website()
+                domain = expression.AND([domain, [('company_id', 'in', [False, website.company_id.id])]])
             if 'is_published' in self.env[filter_sudo.model_id]:
                 domain = expression.AND([domain, [('is_published', '=', True)]])
             if search_domain:
