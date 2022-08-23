@@ -3123,6 +3123,35 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("colspan of empty lines is correct in readonly and edit", async function (assert) {
+        serverData.models.foo.fields.foo_o2m = {
+            string: "Foo O2M",
+            type: "one2many",
+            relation: "foo",
+        };
+        await makeView({
+            type: "form",
+            resModel: "foo",
+            serverData,
+            resId: 1,
+            mode: "readonly",
+            arch: `
+                    <form>
+                        <sheet>
+                            <field name="foo_o2m">
+                                <tree editable="bottom">
+                                    <field name="int_field"/>
+                                </tree>
+                            </field>
+                        </sheet>
+                    </form>`,
+        });
+        assert.strictEqual(target.querySelector("tbody td").getAttribute("colspan"), "1");
+        await clickEdit(target);
+        // in edit mode, the delete action is available and the empty lines should cover that col
+        assert.strictEqual(target.querySelector("tbody td").getAttribute("colspan"), "2");
+    });
+
     QUnit.test(
         "width of some fields should be hardcoded if no data, and list initially invisible",
         async function (assert) {
