@@ -1,19 +1,5 @@
-$min-row-height: 128;
-
 .modal:not(.o_legacy_dialog) .o_select_media_dialog {
-    .nav-item {
-        cursor: pointer;
-    }
-
-    .o_we_horizontal_collapse {
-        width: 0 !important;
-        padding: 0 !important;
-        border: none !important;
-    }
-
-    .o_we_transition_ease {
-        transition: all ease 0.25s;
-    }
+    $min-row-height: 128;
 
     .o_we_existing_attachments {
         min-height: $min-row-height + px;
@@ -23,75 +9,19 @@ $min-row-height: 128;
             flex-basis: $min-row-height + px;
         }
 
-        .o_existing_attachment_cell {
-            cursor: pointer;
-            margin: 1px;
-
-            &.o_we_image {
-                position: fixed !important;
-                opacity: 0;
-                transition: opacity 0.5s;
-                transition-delay: 0.5s;
-
-                &.o_loaded {
-                    position: relative !important;
-                    opacity: 1;
-                }
-
-                .o_we_media_dialog_img_wrapper {
-                    @extend %o-preview-alpha-background;
-
-                    img {
-                        width: 100%;
-                    }
-                }
+        .o_existing_attachment_cell.o_we_image {
+            transition: opacity 0.5s ease 0.5s;
+    
+            .o_we_media_dialog_img_wrapper {
+                @extend %o-preview-alpha-background;
             }
+        }
 
-            .o_existing_attachment_remove {
-                background-color: rgba(white, 0.4);
-                cursor: pointer;
-                opacity: 0;
-                transition: color 0.2s ease;
-            }
-
-            .o_existing_attachment_remove {
-                @include o-position-absolute($top: 0, $right: 0);
-                z-index: 1;
-                border-radius: 0 0 0 2px;
-                &:hover {
-                    color: $o-we-color-danger;
-                }
-            }
-
-            .o_file_name {
-                @include o-text-overflow;
-            }
-
+        .o_existing_attachment_remove {
+            border-radius: 0 0 0 $o-we-item-border-radius;
+            
             &:hover {
-                .o_existing_attachment_remove {
-                    opacity: 1;
-                }
-                &.o_we_attachment_highlight, .o_we_attachment_highlight {
-                    border-color: $card-border-color;
-                    box-shadow: 0px 0px 2px 2px $card-border-color;
-                }
-            }
-
-            &.o_we_attachment_optimized .badge {
-                position: absolute;
-                bottom: 0;
-                right: 0;
-                margin: 2px;
-            }
-
-            .o_we_media_author {
-                font-size: 11px;
-                @include o-position-absolute($bottom: 0, $left: 0, $right: 0);
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                text-align: center;
-                background-color: rgba(255, 255, 255, .7);
+                color: $o-we-color-danger;
             }
         }
     }
@@ -100,46 +30,19 @@ $min-row-height: 128;
         @include o-we-active-wrapper($top: 5px, $left: 5px);
     }
 
-    .font-icons-icons {
-        > span {
-            text-align: center;
-            font-size: 22px;
-            margin: 5px;
-            width: 50px;
-            height: 50px;
-            padding: 15px 0; // 0 allows to center properly
-            cursor: pointer;
-        }
+    .font-icons-icons > span {
+        width: 50px;
     }
 
-    .o_video_dialog_form {
-        textarea {
-            min-height: 95px;
-        }
+    .o_video_dialog_form textarea {
+        min-height: 95px;
     }
 
     .o_video_preview {
-        position: relative;
         @include o-we-preview-box();
-        border: none;
 
         .media_iframe_video {
             width: 100%;
         }
-
-        .o_video_dialog_iframe {
-            @include o-we-preview-content;
-            max-width: 100%;
-            max-height: 100%;
-
-            &.alert {
-                animation: fadeInDownSmall 700ms forwards;
-                margin: 0 auto;
-            }
-        }
-    }
-
-    #video-suggestion > .o_sample_video {
-        cursor: pointer;
     }
 }

@@ -23,7 +23,7 @@ class RemoveButton extends Component {
         this.props.remove();
     }
 }
-RemoveButton.template = xml`<i class="fa fa-trash o_existing_attachment_remove p-2" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle" t-on-click="this.remove"/>`;
+RemoveButton.template = xml`<i class="fa fa-trash o_existing_attachment_remove position-absolute top-0 end-0 p-2 bg-white-25 cursor-pointer opacity-0 opacity-100-hover z-index-1 transition-base" t-att-title="removeTitle" role="img" t-att-aria-label="removeTitle" t-on-click="this.remove"/>`;
 
 export class AttachmentError extends Component {
     setup() {
