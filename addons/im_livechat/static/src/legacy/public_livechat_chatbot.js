@@ -432,8 +432,8 @@ const _t = core._t;
                 this.messaging.publicLivechatGlobal.livechatButtonView.chatbotSetIsTyping(true);
             }
 
-            this.messaging.publicLivechatGlobal.livechatButtonView.update({
-                chatbotWelcomeMessageTimeout: setTimeout(() => {
+            this.messaging.publicLivechatGlobal.chatbot.update({
+                welcomeMessageTimeout: setTimeout(() => {
                     this._sendWelcomeChatbotMessage(stepIndex + 1, welcomeMessageDelay);
                     this._renderMessages();
                 }, welcomeMessageDelay),

@@ -117,8 +117,8 @@ registerModel({
                 clearTimeout(this.chatbotNextStepTimeout);
             }
 
-            if (this.chatbotWelcomeMessageTimeout) {
-                clearTimeout(this.chatbotWelcomeMessageTimeout);
+            if (this.messaging.publicLivechatGlobal.chatbot.welcomeMessageTimeout) {
+                clearTimeout(this.messaging.publicLivechatGlobal.chatbot.welcomeMessageTimeout);
             }
 
             const postedMessage = await this.messaging.rpc({
@@ -568,7 +568,6 @@ registerModel({
             compute: '_computeButtonTextColor',
         }),
         chatbotNextStepTimeout: attr(),
-        chatbotWelcomeMessageTimeout: attr(),
         chatWindow: one('PublicLivechatWindow', {
             inverse: 'livechatButtonViewOwner',
             isCausal: true,

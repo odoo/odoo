@@ -199,6 +199,7 @@ registerModel({
             compute: '_computeShouldEndScript',
             default: false,
         }),
+        welcomeMessageTimeout: attr(),
         welcomeSteps: attr({
             compute: '_computeWelcomeSteps',
         }),
