@@ -214,10 +214,7 @@ registerModel({
                 { shadow: true },
             );
             this.messaging.models['Thread'].insert(channelsData.map(channelData =>
-                Object.assign(
-                    { model: 'mail.channel' },
-                    this.messaging.models['Thread'].convertData(channelData),
-                )
+                this.messaging.models['Thread'].convertData(channelData)
             ));
         },
         /**
