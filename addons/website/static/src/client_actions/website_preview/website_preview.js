@@ -7,6 +7,7 @@ import { AceEditorAdapterComponent } from '../../components/ace_editor/ace_edito
 import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
+import { routeToUrl } from "@web/core/browser/router_service";
 
 const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
 
@@ -84,6 +85,25 @@ export class WebsitePreview extends Component {
             this.websiteService.websiteRootInstance = undefined;
             this.websiteService.pageDocument = null;
         });
+
+        useEffect(() => {
+            // When reaching a "regular" url of the webclient's router, an
+            // hashchange event should be dispatched to properly display the
+            // content of the previous URL before reaching the client action,
+            // which was lost after being replaced for the frontend's URL.
+            const handleBackNavigation = () => {
+                if (!window.location.pathname.startsWith('/@')) {
+                    window.dispatchEvent(new HashChangeEvent('hashchange', {
+                        newURL: window.location.href.toString()
+                    }));
+                }
+            };
+            window.addEventListener('popstate', handleBackNavigation);
+            return () => {
+                history.pushState({}, null, this.backendUrl);
+                window.removeEventListener('popstate', handleBackNavigation);
+            };
+        }, () => []);
     }
 
     get websiteId() {
@@ -192,6 +212,12 @@ export class WebsitePreview extends Component {
      * the iframe's url (it is clearer for the user).
      */
     _replaceBrowserUrl() {
+        // The original /web#action=... url is saved to be pushed on top of the
+        // history when leaving the component, so that the webclient can
+        // correctly find back and replay the client action.
+        if (!this.backendUrl) {
+            this.backendUrl = routeToUrl(this.router.current);
+        }
         const currentUrl = new URL(this.iframe.el.contentDocument.location.href);
         currentUrl.pathname = `/@${currentUrl.pathname}`;
         this.currentTitle = this.iframe.el.contentDocument.title;
