@@ -612,8 +612,6 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test("many2ones in form views with search more", async function (assert) {
-        assert.expect(3);
-
         for (let i = 5; i < 11; i++) {
             serverData.models.partner.records.push({ id: i, display_name: `Partner ${i}` });
         }
@@ -654,6 +652,7 @@ QUnit.module("Fields", (hooks) => {
         await selectDropdownItem(target, "trululu", "Search More...");
 
         assert.strictEqual($("tr.o_data_row").length, 9, "should display 9 records");
+        assert.equal(target.querySelector(".o_field_widget[name=trululu] input").value, "aaa");
 
         const modal = target.querySelector(".modal");
 

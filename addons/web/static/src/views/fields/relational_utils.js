@@ -167,7 +167,9 @@ export class Many2XAutocomplete extends owl.Component {
             },
             fieldString,
             onClose: () => {
-                autoCompleteContainer.el.querySelector("input").focus();
+                const autoCompleteInput = autoCompleteContainer.el.querySelector("input");
+                autoCompleteInput.value = "";
+                autoCompleteInput.focus();
             },
         });
 
