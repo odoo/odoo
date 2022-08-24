@@ -122,7 +122,7 @@ class DiscussController(http.Controller):
             'data': {
                 'channelData': channel_sudo.channel_info()[0],
                 'discussPublicViewData': dict({
-                    'channel': [('insert', {'id': channel_sudo.id, 'model': 'mail.channel'})],
+                    'channel': {'id': channel_sudo.id, 'model': 'mail.channel'},
                     'shouldDisplayWelcomeViewInitially': channel_sudo.default_display_mode == 'video_full_screen',
                 }, **discuss_public_view_data),
             },
@@ -321,22 +321,22 @@ class DiscussController(http.Controller):
             if not guest_sudo or not message_sudo.model == 'mail.channel' or message_sudo.res_id not in guest_sudo.channel_ids.ids:
                 raise NotFound()
             message_sudo._message_add_reaction(content=content)
-            guests = [('insert', {'id': guest_sudo.id})]
+            guests = ('insert', {'id': guest_sudo.id})
             partners = []
         else:
             message_sudo.sudo(False)._message_add_reaction(content=content)
             guests = []
-            partners = [('insert', {'id': request.env.user.partner_id.id})]
+            partners = ('insert', {'id': request.env.user.partner_id.id})
         reactions = message_sudo.env['mail.message.reaction'].search([('message_id', '=', message_sudo.id), ('content', '=', content)])
         return {
             'id': message_sudo.id,
-            'messageReactionGroups': [('insert' if len(reactions) > 0 else 'insert-and-unlink', {
+            'messageReactionGroups': ('insert' if len(reactions) > 0 else 'insert-and-unlink', {
                 'content': content,
                 'count': len(reactions),
                 'guests': guests,
                 'message': {'id', message_sudo.id},
                 'partners': partners,
-            })],
+            }),
         }
 
     @http.route('/mail/message/remove_reaction', methods=['POST'], type='json', auth='public')
@@ -349,22 +349,22 @@ class DiscussController(http.Controller):
             if not guest_sudo or not message_sudo.model == 'mail.channel' or message_sudo.res_id not in guest_sudo.channel_ids.ids:
                 raise NotFound()
             message_sudo._message_remove_reaction(content=content)
-            guests = [('insert-and-unlink', {'id': guest_sudo.id})]
+            guests = ('insert-and-unlink', {'id': guest_sudo.id})
             partners = []
         else:
             message_sudo.sudo(False)._message_remove_reaction(content=content)
             guests = []
-            partners = [('insert-and-unlink', {'id': request.env.user.partner_id.id})]
+            partners = ('insert-and-unlink', {'id': request.env.user.partner_id.id})
         reactions = message_sudo.env['mail.message.reaction'].search([('message_id', '=', message_sudo.id), ('content', '=', content)])
         return {
             'id': message_sudo.id,
-            'messageReactionGroups': [('insert' if len(reactions) > 0 else 'insert-and-unlink', {
+            'messageReactionGroups': ('insert' if len(reactions) > 0 else 'insert-and-unlink', {
                 'content': content,
                 'count': len(reactions),
                 'guests': guests,
                 'message': {'id': message_sudo.id},
                 'partners': partners,
-            })],
+            }),
         }
 
     # --------------------------------------------------------------------------

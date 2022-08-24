@@ -169,7 +169,7 @@ class ChannelMember(models.Model):
             self.channel_id.message_post(body=_("%s started a live conference", self.partner_id.name or self.guest_id.name), message_type='notification')
             invited_members = self._rtc_invite_members()
             if invited_members:
-                res['invitedMembers'] = [('insert', invited_members.mail_channel_member_format())]
+                res['invitedMembers'] = ('insert', invited_members.mail_channel_member_format())
         return res
 
     def _rtc_leave_call(self):
@@ -217,11 +217,11 @@ class ChannelMember(models.Model):
                 target = member.guest_id
             invitation_notifications.append((target, 'mail.channel/insert', {
                 'id': self.channel_id.id,
-                'rtcInvitingSession': [('insert', self.rtc_session_ids._mail_rtc_session_format())],
+                'rtcInvitingSession': self.rtc_session_ids._mail_rtc_session_format(),
             }))
         self.env['bus.bus']._sendmany(invitation_notifications)
         if members:
             channel_data = {'id': self.channel_id.id}
-            channel_data['invitedMembers'] = [('insert', members.mail_channel_member_format())]
+            channel_data['invitedMembers'] = ('insert', members.mail_channel_member_format())
             self.env['bus.bus']._sendone(self.channel_id, 'mail.channel/insert', channel_data)
         return members

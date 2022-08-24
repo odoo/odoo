@@ -860,10 +860,10 @@ class Message(models.Model):
                 record_name = False
 
             if message_sudo.author_guest_id:
-                vals['guestAuthor'] = [('insert', {
+                vals['guestAuthor'] = {
                     'id': message_sudo.author_guest_id.id,
                     'name': message_sudo.author_guest_id.name,
-                })]
+                }
             else:
                 vals['author_id'] = author
             reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])

@@ -4,7 +4,7 @@ import { IS_RECORD, registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
 import { ModelIndexAnd } from '@mail/model/model_index_and';
 import { ModelIndexXor } from '@mail/model/model_index_xor';
-import { FieldCommand, unlinkAll } from '@mail/model/model_field_command';
+import { unlinkAll } from '@mail/model/model_field_command';
 import { RelationSet } from '@mail/model/model_field_relation_set';
 import { Listener } from '@mail/model/model_listener';
 import { followRelations } from '@mail/model/model_utils';
@@ -1102,14 +1102,7 @@ export class ModelManager {
             if (!field.to) {
                 continue;
             }
-            const commands = field.convertToFieldCommandList(data[fieldName]);
-            if (commands.length !== 1) {
-                throw new Error(`Identifying field "${model}/${fieldName}" should receive a single command.`);
-            }
-            const [command] = commands;
-            if (!(command instanceof FieldCommand)) {
-                throw new Error(`Identifying field "${model}/${fieldName}" should receive a command.`);
-            }
+            const command = field.convertToFieldCommand(data[fieldName]);
             if (!['insert-and-replace', 'replace'].includes(command._name)) {
                 throw new Error(`Identifying field "${model}/${fieldName}" should receive a "replace" or "insert-and-replace" command.`);
             }

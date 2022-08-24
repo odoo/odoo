@@ -337,7 +337,7 @@ class Channel(models.Model):
                 'memberCount': self.member_count,
             })],
             'id': self.id,
-            'members': [('insert-and-unlink', {'id': partner.id})],
+            'members': ('insert-and-unlink', {'id': partner.id}),
         })
         return result
 
@@ -422,8 +422,8 @@ class Channel(models.Model):
                     'memberCount': channel.member_count,
                 })],
                 'id': channel.id,
-                'guestMembers': [('insert', guest_members_data)],
-                'members': [('insert', members_data)],
+                'guestMembers': ('insert', guest_members_data),
+                'members': ('insert', members_data),
             }))
         if invite_to_rtc_call:
             if self.env.user._is_public() and 'guest' in self.env.context:
@@ -485,12 +485,12 @@ class Channel(models.Model):
                 target = member.guest_id
             invitation_notifications.append((target, 'mail.channel/insert', {
                 'id': self.id,
-                'rtcInvitingSession': [('unlink',)],
+                'rtcInvitingSession': ('clear',),
             }))
         self.env['bus.bus']._sendmany(invitation_notifications)
         channel_data = {'id': self.id}
         if members:
-            channel_data['invitedMembers'] = [('insert-and-unlink', members.mail_channel_member_format())]
+            channel_data['invitedMembers'] = ('insert-and-unlink', members.mail_channel_member_format())
             self.env['bus.bus']._sendone(self, 'mail.channel/insert', channel_data)
         return channel_data
 
@@ -647,42 +647,42 @@ class Channel(models.Model):
     def _message_add_reaction_after_hook(self, message, content):
         self.ensure_one()
         if self.env.user._is_public() and 'guest' in self.env.context:
-            guests = [('insert', {'id': self.env.context.get('guest').id})]
+            guests = ('insert', {'id': self.env.context.get('guest').id})
             partners = []
         else:
             guests = []
-            partners = [('insert', {'id': self.env.user.partner_id.id})]
+            partners = ('insert', {'id': self.env.user.partner_id.id})
         reactions = self.env['mail.message.reaction'].sudo().search([('message_id', '=', message.id), ('content', '=', content)])
         self.env['bus.bus']._sendone(self, 'mail.message/insert', {
             'id': message.id,
-            'messageReactionGroups': [('insert' if len(reactions) > 0 else 'insert-and-unlink', {
+            'messageReactionGroups': ('insert' if len(reactions) > 0 else 'insert-and-unlink', {
                 'content': content,
                 'count': len(reactions),
                 'guests': guests,
                 'message': {'id': message.id},
                 'partners': partners,
-            })],
+            }),
         })
         return super()._message_add_reaction_after_hook(message=message, content=content)
 
     def _message_remove_reaction_after_hook(self, message, content):
         self.ensure_one()
         if self.env.user._is_public() and 'guest' in self.env.context:
-            guests = [('insert-and-unlink', {'id': self.env.context.get('guest').id})]
+            guests = ('insert-and-unlink', {'id': self.env.context.get('guest').id})
             partners = []
         else:
             guests = []
-            partners = [('insert-and-unlink', {'id': self.env.user.partner_id.id})]
+            partners = ('insert-and-unlink', {'id': self.env.user.partner_id.id})
         reactions = self.env['mail.message.reaction'].sudo().search([('message_id', '=', message.id), ('content', '=', content)])
         self.env['bus.bus']._sendone(self, 'mail.message/insert', {
             'id': message.id,
-            'messageReactionGroups': [('insert' if len(reactions) > 0 else 'insert-and-unlink', {
+            'messageReactionGroups': ('insert' if len(reactions) > 0 else 'insert-and-unlink', {
                 'content': content,
                 'count': len(reactions),
                 'guests': guests,
                 'message': {'id': message.id},
                 'partners': partners,
-            })],
+            }),
         })
         return super()._message_remove_reaction_after_hook(message=message, content=content)
 
@@ -818,15 +818,15 @@ class Channel(models.Model):
                     'fetched_message_id': cp.fetched_message_id.id,
                     'seen_message_id': cp.seen_message_id.id,
                 } for cp in members_by_channel[channel] if cp.partner_id], key=lambda p: p['partner_id'])
-                info['guestMembers'] = [('insert', sorted([{
+                info['guestMembers'] = ('insert', sorted([{
                     'id': member.guest_id.id,
                     'name': member.guest_id.name,
-                } for member in members_by_channel[channel] if member.guest_id], key=lambda g: g['id']))]
+                } for member in members_by_channel[channel] if member.guest_id], key=lambda g: g['id']))
 
             # add RTC sessions info
             info.update({
-                'invitedMembers': [('insert', invited_members_by_channel[channel].mail_channel_member_format())],
-                'rtcSessions': [('insert', rtc_sessions_by_channel.get(channel, []))],
+                'invitedMembers': ('insert', invited_members_by_channel[channel].mail_channel_member_format()),
+                'rtcSessions': ('insert', rtc_sessions_by_channel.get(channel, [])),
             })
 
             info['channel'] = channel_data
@@ -1190,7 +1190,7 @@ class Channel(models.Model):
             domain=[('channel_id', '=', self.id)],
         )
         return {
-            'channelMembers': [('insert', unknown_members.mail_channel_member_format())],
+            'channelMembers': ('insert', unknown_members.mail_channel_member_format()),
             'memberCount': count,
         }
 

@@ -533,7 +533,7 @@ patch(MockServer.prototype, 'mail', {
                 [['res_id', '=', thread.id], ['res_model', '=', thread_model]],
             ); // order not done for simplicity
             res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id));
-            res['mainAttachment'] = thread.message_main_attachment_id ? { 'id': thread.message_main_attachment_id[0] } : [['clear']];
+            res['mainAttachment'] = thread.message_main_attachment_id ? { 'id': thread.message_main_attachment_id[0] } : ['clear'];
         }
         if (request_list.includes('followers')) {
             const followers = this.pyEnv['mail.followers'].searchRead([['id', 'in', thread.message_follower_ids || []]]);
@@ -590,10 +590,10 @@ patch(MockServer.prototype, 'mail', {
                 'mimetype': attachment.mimetype,
                 'name': attachment.name,
             };
-            res['originThread'] = [['insert', {
+            res['originThread'] = {
                 'id': attachment.res_id,
                 'model': attachment.res_model,
-            }]];
+            };
             return res;
         });
     },
@@ -1353,7 +1353,7 @@ patch(MockServer.prototype, 'mail', {
             });
         }
         return {
-            channelMembers: [['insert', membersData]],
+            channelMembers: ['insert', membersData],
             memberCount,
         };
     },
@@ -2234,7 +2234,7 @@ patch(MockServer.prototype, 'mail', {
         }
         if (Object.prototype.hasOwnProperty.call(res, 'volume_settings_ids')) {
             const volumeSettings = this._mockResUsersSettingsVolumes_DiscussUsersSettingsVolumeFormat(settings.volume_settings_ids);
-            res.volume_settings_ids = [['insert', volumeSettings]];
+            res.volume_settings_ids = volumeSettings;
         }
         return res;
     },
@@ -2268,9 +2268,9 @@ patch(MockServer.prototype, 'mail', {
             const [relatedGuest] = this.getRecords('mail.guest', [['id', '=', volumeSettingsRecord.guest_id]]);
             const [relatedPartner] = this.getRecords('res.partner', [['id', '=', volumeSettingsRecord.partner_id]]);
             return {
-                guest_id: relatedGuest ? { id: relatedGuest.id, name: relatedGuest.name } : [['clear']],
+                guest_id: relatedGuest ? { id: relatedGuest.id, name: relatedGuest.name } : ['clear'],
                 id: volumeSettingsRecord.id,
-                partner_id: relatedPartner ? { id: relatedPartner.id, name: relatedPartner.name } : [['clear']],
+                partner_id: relatedPartner ? { id: relatedPartner.id, name: relatedPartner.name } : ['clear'],
                 volume: volumeSettingsRecord.volume,
             };
         });
@@ -2516,7 +2516,7 @@ patch(MockServer.prototype, 'mail', {
             menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
             partner_root: this._mockResPartnerMailPartnerFormat(this.partnerRootId).get(this.partnerRootId),
-            publicPartners: [['insert', [{ 'id': this.publicPartnerId }]]],
+            publicPartners: ['insert', [{ 'id': this.publicPartnerId }]],
             shortcodes: this.pyEnv['mail.shortcode'].searchRead([], { fields: ['source', 'substitution'] }),
             starred_counter: this.getRecords('mail.message', [['starred_partner_ids', 'in', user.partner_id]]).length,
         };

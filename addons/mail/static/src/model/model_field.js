@@ -265,30 +265,32 @@ export class ModelField {
      * @param {*} newVal
      * @returns {FieldCommand[]}
      */
-    convertToFieldCommandList(newVal) {
+    convertToFieldCommand(newVal) {
         if (newVal instanceof FieldCommand) {
-            return [newVal];
-        } else if (newVal instanceof Array && newVal[0] instanceof FieldCommand) {
             return newVal;
+        } else if (newVal instanceof Array && newVal[0] instanceof FieldCommand) {
+            throw new Error(`${this} on ${this.model} command list no longer supported (FieldCommand syntax)`, newVal);
         } else if (this.fieldType === 'relation') {
-            if (newVal instanceof Array && newVal[0] instanceof Array && ['clear', 'insert', 'insert-and-replace', 'insert-and-unlink', 'link', 'replace', 'unlink', 'unlink-all'].includes(newVal[0][0])) {
+            if (newVal instanceof Array && ['clear', 'insert', 'insert-and-replace', 'insert-and-unlink', 'link', 'replace', 'unlink', 'unlink-all'].includes(newVal[0])) {
+                return new FieldCommand(newVal[0], newVal[1]);
+            } else if (newVal instanceof Array && newVal[0] instanceof Array && ['clear', 'insert', 'insert-and-replace', 'insert-and-unlink', 'link', 'replace', 'unlink', 'unlink-all'].includes(newVal[0][0])) {
                 // newVal: [['insert', ...], ...]
-                return newVal.map(([name, value]) => new FieldCommand(name, value));
+                throw new Error(`${this} on ${this.model} command list no longer supported (old syntax)`, newVal);
             } else if (newVal instanceof Array && newVal[0] && !newVal[0][IS_RECORD]) {
                 // newVal: [data, ...]
-                return [new FieldCommand('insert-and-replace', newVal)];
+                return new FieldCommand('insert-and-replace', newVal);
             } else if (newVal instanceof Array && newVal[0]) {
                 // newVal: [record, ...]
-                return [new FieldCommand('replace', newVal)];
+                return new FieldCommand('replace', newVal);
             } else if (!newVal[IS_RECORD]) {
                 // newVal: data
-                return [new FieldCommand('insert-and-replace', newVal)];
+                return new FieldCommand('insert-and-replace', newVal);
             } else {
                 // newVal: record
-                return [new FieldCommand('replace', newVal)];
+                return new FieldCommand('replace', newVal);
             }
         } else {
-            return [new FieldCommand('set', newVal)];
+            return new FieldCommand('set', newVal);
         }
     }
 
@@ -349,9 +351,9 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     parseAndExecuteCommands(record, newVal, options) {
-        const commandList = this.convertToFieldCommandList(newVal);
+        const command = this.convertToFieldCommand(newVal);
         let hasChanged = false;
-        for (const command of commandList) {
+        {
             const commandName = command.name;
             const newVal = command.value;
             if (this.fieldType === 'attribute') {

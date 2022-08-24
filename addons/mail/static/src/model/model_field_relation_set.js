@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { decrement, increment } from '@mail/model/model_field_command';
+import { decrement } from '@mail/model/model_field_command';
 import { Listener } from '@mail/model/model_listener';
 import { followRelations } from '@mail/model/model_utils';
 import { cleanSearchTerm } from '@mail/utils/utils';
@@ -161,10 +161,7 @@ export class RelationSet {
                     this.record.modelManager._update(
                         this.record,
                         {
-                            [sumFieldName]: [
-                                decrement(previousContribution),
-                                increment(contribution),
-                            ],
+                            [sumFieldName]: this.field.get(this.record) - previousContribution + contribution,
                         },
                         { allowWriteReadonly: true },
                     );

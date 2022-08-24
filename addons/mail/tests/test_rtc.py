@@ -38,14 +38,14 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
-                        'rtcSessions': [('insert-and-unlink', [{'id': channel_member.rtc_session_ids.id}])],
+                        'rtcSessions': ('insert-and-unlink', [{'id': channel_member.rtc_session_ids.id}]),
                     },
                 },
                 {
                     'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
-                        'rtcSessions': [('insert', [{
+                        'rtcSessions': ('insert', [{
                             'id': channel_member.rtc_session_ids.id + 1,
                             'channelMember': {
                                 "id": channel_member.id,
@@ -62,7 +62,7 @@ class TestChannelInternals(MailCommon):
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                        }])],
+                        }]),
                     },
                 },
             ]
@@ -120,7 +120,7 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
-                        'rtcSessions': [('insert', [{
+                        'rtcSessions': ('insert', [{
                             'id': last_rtc_session_id + 1,
                             'channelMember': {
                                 "id": channel_member.id,
@@ -137,14 +137,14 @@ class TestChannelInternals(MailCommon):
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                        }])],
+                        }]),
                     },
                 },
                 {
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedMembers': [('insert', [{
+                        'invitedMembers': ('insert', [{
                             'id': channel_member_test_user.id,
                             'channel': {'id': channel_member_test_user.channel_id.id},
                             'persona': {
@@ -154,14 +154,14 @@ class TestChannelInternals(MailCommon):
                                     'im_status': channel_member_test_user.partner_id.im_status,
                                 },
                             },
-                        }])],
+                        }]),
                     },
                 },
             ]
         ):
             res = channel_member._rtc_join_call()
         self.assertIn('invitedMembers', res)
-        self.assertEqual(res['invitedMembers'], [('insert', [{
+        self.assertEqual(res['invitedMembers'], ('insert', [{
             'id': channel_member_test_user.id,
             'channel': {'id': channel_member_test_user.channel_id.id},
             'persona': {
@@ -171,7 +171,7 @@ class TestChannelInternals(MailCommon):
                     'im_status': channel_member_test_user.partner_id.im_status,
                 },
             },
-        }])])
+        }]))
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
@@ -203,7 +203,7 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
-                        'rtcSessions': [('insert', [{
+                        'rtcSessions': ('insert', [{
                             'id': last_rtc_session_id + 1,
                             'channelMember': {
                                 "id": channel_member.id,
@@ -220,14 +220,14 @@ class TestChannelInternals(MailCommon):
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                        }])],
+                        }]),
                     },
                 },
                 {
                     'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
-                        'rtcSessions': [('insert', [{
+                        'rtcSessions': ('insert', [{
                             'id': last_rtc_session_id + 1,
                             'channelMember': {
                                 "id": channel_member.id,
@@ -244,14 +244,14 @@ class TestChannelInternals(MailCommon):
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                        }])],
+                        }]),
                     },
                 },
                 {
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedMembers': [('insert', [
+                        'invitedMembers': ('insert', [
                             {
                                 'id': channel_member_test_user.id,
                                 'channel': {'id': channel_member_test_user.channel_id.id},
@@ -274,14 +274,14 @@ class TestChannelInternals(MailCommon):
                                     },
                                 },
                             },
-                        ])],
+                        ]),
                     },
                 },
             ]
         ):
             res = channel_member._rtc_join_call()
         self.assertIn('invitedMembers', res)
-        self.assertEqual(res['invitedMembers'], [('insert', [
+        self.assertEqual(res['invitedMembers'], ('insert', [
             {
                 'id': channel_member_test_user.id,
                 'channel': {'id': channel_member_test_user.channel_id.id},
@@ -304,7 +304,7 @@ class TestChannelInternals(MailCommon):
                     },
                 },
             },
-        ])])
+        ]))
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
@@ -329,14 +329,14 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'rtcInvitingSession': [('unlink',)],
+                        'rtcInvitingSession': ('clear',),
                     },
                 },
                 {
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedMembers': [('insert-and-unlink', [{
+                        'invitedMembers': ('insert-and-unlink', [{
                             'id': channel_member_test_user.id,
                             'channel': {'id': channel_member_test_user.channel_id.id},
                             'persona': {
@@ -346,14 +346,14 @@ class TestChannelInternals(MailCommon):
                                     'im_status': channel_member_test_user.partner_id.im_status,
                                 },
                             },
-                        }])],
+                        }]),
                     },
                 },
                 {
                     'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
-                        'rtcSessions': [('insert', [
+                        'rtcSessions': ('insert', [
                             {
                                 'id': channel_member.rtc_session_ids.id + 1,
                                 'channelMember': {
@@ -372,7 +372,7 @@ class TestChannelInternals(MailCommon):
                                 'isSelfMuted': False,
                                 'isScreenSharingOn': False,
                             },
-                        ])],
+                        ]),
                     },
                 },
             ]
@@ -392,14 +392,14 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'rtcInvitingSession': [('unlink',)],
+                        'rtcInvitingSession': ('clear',),
                     },
                 },
                 {
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedMembers': [('insert-and-unlink', [{
+                        'invitedMembers': ('insert-and-unlink', [{
                             'id': channel_member_test_guest.id,
                             'channel': {'id': channel_member_test_guest.channel_id.id},
                             'persona': {
@@ -409,14 +409,14 @@ class TestChannelInternals(MailCommon):
                                     'im_status': channel_member_test_guest.guest_id.im_status,
                                 },
                             },
-                        }])],
+                        }]),
                     },
                 },
                 {
                     'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
-                        'rtcSessions': [('insert', [
+                        'rtcSessions': ('insert', [
                             {
                                 'id': channel_member.rtc_session_ids.id + 2,
                                 'channelMember': {
@@ -435,7 +435,7 @@ class TestChannelInternals(MailCommon):
                                 'isSelfMuted': False,
                                 'isScreenSharingOn': False,
                             },
-                        ])],
+                        ]),
                     },
                 },
             ]
@@ -464,14 +464,14 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'rtcInvitingSession': [('unlink',)],
+                        'rtcInvitingSession': ('clear',),
                     },
                 },
                 {
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedMembers': [('insert-and-unlink', [{
+                        'invitedMembers': ('insert-and-unlink', [{
                             'id': channel_member_test_user.id,
                             'channel': {'id': channel_member_test_user.channel_id.id},
                             'persona': {
@@ -481,7 +481,7 @@ class TestChannelInternals(MailCommon):
                                     'im_status': channel_member_test_user.partner_id.im_status,
                                 },
                             },
-                        }])],
+                        }]),
                     },
                 },
             ]
@@ -500,14 +500,14 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'rtcInvitingSession': [('unlink',)],
+                        'rtcInvitingSession': ('clear',),
                     },
                 },
                 {
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedMembers': [('insert-and-unlink', [{
+                        'invitedMembers': ('insert-and-unlink', [{
                             'id': channel_member_test_guest.id,
                             'channel': {'id': channel_member_test_guest.channel_id.id},
                             'persona': {
@@ -517,7 +517,7 @@ class TestChannelInternals(MailCommon):
                                     'im_status': channel_member_test_guest.guest_id.im_status,
                                 },
                             },
-                        }])],
+                        }]),
                     },
                 },
             ]
@@ -556,21 +556,21 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'rtcInvitingSession': [('unlink',)],
+                        'rtcInvitingSession': ('clear',),
                     },
                 },
                 {
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'rtcInvitingSession': [('unlink',)],
+                        'rtcInvitingSession': ('clear',),
                     },
                 },
                 {
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedMembers': [('insert-and-unlink', [
+                        'invitedMembers': ('insert-and-unlink', [
                             {
                                 'id': channel_member_test_user.id,
                                 'channel': {'id': channel_member_test_user.channel_id.id},
@@ -593,14 +593,14 @@ class TestChannelInternals(MailCommon):
                                     },
                                 },
                             },
-                        ])],
+                        ]),
                     },
                 },
                 {
                     'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
-                        'rtcSessions': [('insert-and-unlink', [{'id': channel_member.rtc_session_ids.id}])],
+                        'rtcSessions': ('insert-and-unlink', [{'id': channel_member.rtc_session_ids.id}]),
                     },
                 },
             ]
@@ -642,7 +642,7 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'rtcInvitingSession': [('insert', {
+                        'rtcInvitingSession': {
                             'id': channel_member.rtc_session_ids.id,
                             'channelMember': {
                                 "id": channel_member.id,
@@ -659,14 +659,14 @@ class TestChannelInternals(MailCommon):
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                        })],
+                        },
                     },
                 },
                 {
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'rtcInvitingSession': [('insert', {
+                        'rtcInvitingSession': {
                             'id': channel_member.rtc_session_ids.id,
                             'channelMember': {
                                 "id": channel_member.id,
@@ -683,14 +683,14 @@ class TestChannelInternals(MailCommon):
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                        })],
+                        },
                     },
                 },
                 {
                     'type': 'mail.channel/insert',
                     'payload': {
                         'id': channel.id,
-                        'invitedMembers': [('insert', [
+                        'invitedMembers': ('insert', [
                             {
                                 'id': channel_member_test_user.id,
                                 'channel': {'id': channel_member_test_user.channel_id.id},
@@ -713,7 +713,7 @@ class TestChannelInternals(MailCommon):
                                     },
                                 },
                             },
-                        ])],
+                        ]),
                     },
                 },
             ],
@@ -743,7 +743,7 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
-                        'rtcSessions': [('insert-and-unlink', [{'id': channel_member.rtc_session_ids.id}])],
+                        'rtcSessions': ('insert-and-unlink', [{'id': channel_member.rtc_session_ids.id}]),
                     },
                 },
             ],
@@ -775,7 +775,7 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
-                        'rtcSessions': [('insert-and-unlink', [{'id': channel_member.rtc_session_ids.id}])],
+                        'rtcSessions': ('insert-and-unlink', [{'id': channel_member.rtc_session_ids.id}]),
                     },
                 },
             ],
@@ -806,7 +806,7 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
-                        'rtcSessions': [('insert-and-unlink', [{'id': channel_member.rtc_session_ids.id}])],
+                        'rtcSessions': ('insert-and-unlink', [{'id': channel_member.rtc_session_ids.id}]),
                     },
                 },
             ],
@@ -846,7 +846,7 @@ class TestChannelInternals(MailCommon):
                     'type': 'mail.channel/rtc_sessions_update',
                     'payload': {
                         'id': channel.id,
-                        'rtcSessions': [('insert-and-unlink', [{'id': test_session.id}])],
+                        'rtcSessions': ('insert-and-unlink', [{'id': test_session.id}]),
                     },
                 },
             ],

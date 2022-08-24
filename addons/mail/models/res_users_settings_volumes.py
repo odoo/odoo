@@ -29,11 +29,11 @@ class ResUsersSettingsVolumes(models.Model):
             'guest_id': {
                 'id': volume_setting.guest_id.id,
                 'name': volume_setting.guest_id.name,
-            } if volume_setting.guest_id else [('clear',)],
+            } if volume_setting.guest_id else ('clear',),
             'partner_id': {
                 'id': volume_setting.partner_id.id,
                 'name': volume_setting.partner_id.name,
-            } if volume_setting.partner_id else [('clear',)],
+            } if volume_setting.partner_id else ('clear',),
             'user_setting_id': {
                 'id': volume_setting.user_setting_id.id,
             },

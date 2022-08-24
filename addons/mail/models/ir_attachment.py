@@ -59,10 +59,10 @@ class IrAttachment(models.Model):
                 'mimetype': 'application/octet-stream' if safari and attachment.mimetype and 'video' in attachment.mimetype else attachment.mimetype,
             }
             if not legacy:
-                res['originThread'] = [('insert', {
+                res['originThread'] = {
                     'id': attachment.res_id,
                     'model': attachment.res_model,
-                })]
+                }
             else:
                 res.update({
                     'res_id': attachment.res_id,
