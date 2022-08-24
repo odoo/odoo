@@ -129,7 +129,7 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
     pyEnv['res.partner'].write([pyEnv.currentPartnerId], {
         message_follower_ids: [followerId],
     });
-    const { click, messaging, openView } = await start({
+    const { click, openView } = await start({
         // FIXME: should adapt mock server code to provide `hasWriteAccess`
         async mockRPC(route, args, performRPC) {
             if (route === '/mail/thread/data') {
@@ -147,22 +147,20 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
     });
     await click('.o_FollowerListMenu_buttonFollowers');
     await click('.o_Follower_editButton');
-    const followerSubtype = messaging.models['FollowerSubtype'].findFromIdentifyingData({ id: followerSubtypeId });
-    const followerSubtypeView = followerSubtype.followerSubtypeViews[0];
     assert.notOk(
-        document.querySelector(`.o_FollowerSubtype[data-local-id="${followerSubtypeView.localId}"] .o_FollowerSubtype_checkbox`).checked,
+        document.querySelector(`.o_FollowerSubtype[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtype_checkbox`).checked,
         "checkbox should not be checked as follower subtype is not followed"
     );
 
-    await click(`.o_FollowerSubtype[data-local-id="${followerSubtypeView.localId}"] .o_FollowerSubtype_checkbox`);
+    await click(`.o_FollowerSubtype[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtype_checkbox`);
     assert.ok(
-        document.querySelector(`.o_FollowerSubtype[data-local-id="${followerSubtypeView.localId}"] .o_FollowerSubtype_checkbox`).checked,
+        document.querySelector(`.o_FollowerSubtype[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtype_checkbox`).checked,
         "checkbox should now be checked"
     );
 
-    await click(`.o_FollowerSubtype[data-local-id="${followerSubtypeView.localId}"] .o_FollowerSubtype_checkbox`);
+    await click(`.o_FollowerSubtype[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtype_checkbox`);
     assert.notOk(
-        document.querySelector(`.o_FollowerSubtype[data-local-id="${followerSubtypeView.localId}"] .o_FollowerSubtype_checkbox`).checked,
+        document.querySelector(`.o_FollowerSubtype[data-follower-subtype-id="${followerSubtypeId}"] .o_FollowerSubtype_checkbox`).checked,
         "checkbox should be no more checked"
     );
 });
