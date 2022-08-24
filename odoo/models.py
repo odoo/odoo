@@ -1635,9 +1635,12 @@ class BaseModel(metaclass=MetaModel):
             )
             for [v_id, v_type] in views
         }
-        models = set(model for info in result['views'].values() for model in info.pop('models'))
 
-        result['models'] = {model: self.env[model].fields_get() for model in models}
+        result['models'] = {
+            model: fields
+            for info in result['views'].values()
+            for model, fields in info.pop('models').items()
+        }
 
         # Add related action information if asked
         if options.get('toolbar'):
@@ -1716,6 +1719,63 @@ class BaseModel(metaclass=MetaModel):
         return arch, view
 
     @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """ Get the key to use for caching `_get_view_cache`.
+
+        This method is meant to be overriden by models needing additional keys.
+
+        :param int view_id: id of the view or None
+        :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
+        :param dict options: bool options to return additional features:
+            - bool mobile: true if the web client is currently using the responsive mobile view
+              (to use kanban views instead of list views for x2many fields)
+        :return: a cache key
+        :rtype: tuple
+        """
+        return (view_id, view_type, options.get('mobile'), self.env.lang) + tuple(
+            (key, value) for key, value in self.env.context.items() if key.endswith('_view_ref')
+        )
+
+    @api.model
+    @ormcache('self._get_view_cache_key(view_id, view_type, **options)')
+    def _get_view_cache(self, view_id=None, view_type='form', **options):
+        """ Get the view information ready to be cached
+
+        The cached view includes the postprocessed view, including inherited views, for all groups.
+        The blocks restricted to groups must therefore be removed after calling this method
+        for users not part of the given groups.
+
+        :param int view_id: id of the view or None
+        :param str view_type: type of the view to return if view_id is None ('form', 'tree', ...)
+        :param dict options: boolean options to return additional features:
+            - bool mobile: true if the web client is currently using the responsive mobile view
+              (to use kanban views instead of list views for x2many fields)
+        :return: a dictionnary including
+            - string arch: the architecture of the view (including inherited views, postprocessed, for all groups)
+            - int id: the view id
+            - string model: the view model
+            - dict models: the fields of the models used in the view (including sub-views)
+        :rtype: dict
+        """
+        # Get the view arch and all other attributes describing the composition of the view
+        arch, view = self._get_view(view_id, view_type, **options)
+
+        # Apply post processing, groups and modifiers etc...
+        arch, models = view.postprocess_and_fields(arch, model=self._name, **options)
+        result = {
+            'arch': arch,
+            # TODO: only `web_studio` seems to require this. I guess this is acceptable to keep it.
+            'id': view.id,
+            # TODO: only `web_studio` seems to require this. But this one on the other hand should be eliminated:
+            # you just called `get_views` for that model, so obviously the web client already knows the model.
+            'model': self._name,
+            # sudo is important to get all fields, including fields restricted to groups, in the cache.
+            'models': {model: frozendict(self.env[model].sudo().fields_get()) for model in models},
+        }
+
+        return frozendict(result)
+
+    @api.model
     def get_view(self, view_id=None, view_type='form', **options):
         """ get_view([view_id | view_type='form'])
 
@@ -1739,24 +1799,11 @@ class BaseModel(metaclass=MetaModel):
         """
         self.check_access_rights('read')
 
-        # Get the view arch and all other attributes describing the composition of the view
-        arch, view = self._get_view(view_id, view_type, **options)
+        result = dict(self._get_view_cache(view_id, view_type, **options))
 
-        # Override context for postprocessing
-        if view and (view.model or self._name) != self._name:
-            view = view.with_context(base_model_name=view.model)
-
-        # Apply post processing, groups and modifiers etc...
-        arch, models = view.postprocess_and_fields(arch, model=self._name, **options)
-        result = {
-            'arch': arch,
-            # TODO: only `web_studio` seems to require this. I guess this is acceptable to keep it.
-            'id': view.id,
-            # TODO: only `web_studio` seems to require this. But this one on the other hand should be eliminated:
-            # you just called `get_views` for that model, so obviously the web client already knows the model.
-            'model': self._name,
-            'models': models,
-        }
+        node = etree.fromstring(result['arch'])
+        node, result['models'] = self.env['ir.ui.view']._postprocess_access_rights(node, result['models'])
+        result['arch'] = etree.tostring(node, encoding="unicode").replace('\t', '')
 
         if options.get('load_filters') and view_type == 'search':
             result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
