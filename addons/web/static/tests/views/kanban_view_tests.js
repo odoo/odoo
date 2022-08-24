@@ -10302,6 +10302,39 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(dropdown, ".o_kanban_manage_toggle_button.o_left");
     });
 
+    QUnit.test("dropdown is closed on item click", async (assert) => {
+        serverData.models.partner.records.splice(1, 3); // keep one record only
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                            <div class="o_dropdown_kanban dropdown">
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <a role="menuitem" class="dropdown-item">Item</a>
+                                </div>
+                            </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        assert.containsNone(target, ".dropdown-menu");
+        await click(target, ".o_kanban_renderer .dropdown-toggle");
+        assert.containsOnce(target, ".dropdown-menu");
+        await click(target, ".o_kanban_renderer .dropdown-menu .dropdown-item");
+        assert.containsNone(target, ".dropdown-menu");
+    });
+
     QUnit.test(
         "classes on dropdown are on dropdown main div but not the other attributes",
         async (assert) => {

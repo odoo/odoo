@@ -18,6 +18,7 @@ import { evalDomain } from "../utils";
 import { KANBAN_BOX_ATTRIBUTE, KANBAN_TOOLTIP_ATTRIBUTE } from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
+import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
 const { Component, onMounted, onWillUpdateProps, useRef, xml } = owl;
 const { COLORS } = ColorList;
@@ -381,6 +382,7 @@ export class KanbanRecord extends Component {
 KanbanRecord.components = {
     Dropdown,
     DropdownItem,
+    KanbanDropdownMenuWrapper,
     Field,
     KanbanCoverImageDialog,
     ViewButton,
