@@ -88,10 +88,12 @@ export class Many2ManyTagsField extends Component {
     get tags() {
         return this.props.value.records.map((record) => ({
             id: record.id, // datapoint_X
+            resId: record.resId,
             text: record.data.display_name,
             colorIndex: record.data[this.props.colorField],
             onClick: (ev) => this.onBadgeClick(ev, record),
             onDelete: !this.props.readonly ? () => this.deleteTag(record.id) : undefined,
+            onKeydown: this.onTagKeydown.bind(this),
         }));
     }
 
@@ -230,7 +232,7 @@ export class Many2ManyTagsField extends Component {
         ev.stopPropagation();
     }
 
-    onTagsKeydown(ev) {
+    onTagKeydown(ev) {
         if (this.props.readonly) {
             return;
         }
