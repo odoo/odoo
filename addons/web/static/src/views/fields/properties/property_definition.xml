@@ -107,17 +107,10 @@
                         <span t-if="props.readonly">
                             <t t-if="state.resModelDescription" t-out="state.resModelDescription"/>
                         </span>
-                        <Many2XAutocomplete
+                        <ModelSelector
                             t-else=""
-                            value="state.resModelDescription || ''"
-                            id="state.resModelId &amp;&amp; state.resModelId.toString() || ''"
-                            placeholder="'Model'"
-                            resModel="'ir.model'"
-                            fieldString="'Target Model'"
-                            activeActions="[]"
-                            update.bind="onModelChange"
-                            context="props.context"
-                            getDomain.bind="() => [['transient', '=', false]]"
+                            value="state.resModelDescription"
+                            onModelSelected.bind="onModelChange"
                         />
                     </td>
                 </tr>

@@ -12,7 +12,12 @@ export class ModelSelector extends Component {
         this.orm = useService("orm");
 
         onWillStart(async () => {
-            this.models = await this.orm.call("ir.model", "display_name_for", [this.props.models]);
+            if (!this.props.models) {
+                this.models = await this._fetchAvailableModels();
+            } else {
+                this.models = await this.orm.call("ir.model", "display_name_for", [this.props.models]);
+            }
+
             this.models = this.models.map((record) => ({
                 label: record.display_name,
                 technical: record.model,
@@ -24,7 +29,7 @@ export class ModelSelector extends Component {
     }
 
     get placeholder() {
-        return _t("Start typing to search more...");
+        return _t("Search a Model...");
     }
 
     get sources() {
@@ -63,6 +68,18 @@ export class ModelSelector extends Component {
         }
         return options;
     }
+
+    /**
+     * Fetch the list of the models that can be
+     * selected for the relational properties.
+     */
+     async _fetchAvailableModels() {
+        const result = await this.orm.call(
+            'ir.model',
+            'get_available_models',
+        );
+        return result || [];
+     }
 }
 
 ModelSelector.template = "web.ModelSelector";
@@ -70,5 +87,7 @@ ModelSelector.components = { AutoComplete };
 ModelSelector.props = {
     onModelSelected: Function,
     value: { type: String, optional: true },
-    models: Array,
+    // list of models technical name, if not set
+    // we will fetch all models we have access to
+    models: { type: Array, optional: true },
 };
