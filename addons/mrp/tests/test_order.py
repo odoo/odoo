@@ -1239,15 +1239,23 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.product_id = product
         mo = mo_form.save()
         move = self.env['stock.move'].create({
-            'name': 'mrp_move',
             'product_id': self.product_2.id,
             'product_uom': self.ref('uom.product_uom_unit'),
             'production_id': mo.id,
-            'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 0,
             'quantity_done': 0,
         })
+
+        self.assertEqual(move.name, mo.name)
+        self.assertEqual(move.origin, mo._get_origin())
+        self.assertEqual(move.group_id, mo.procurement_group_id)
+        self.assertEqual(move.propagate_cancel, mo.propagate_cancel)
+        self.assertFalse(move.raw_material_production_id)
+        self.assertEqual(move.location_id, mo.production_location_id)
+        self.assertEqual(move.date, mo._get_date_planned_finished())
+        self.assertEqual(move.date_deadline, mo.date_deadline)
+
         mo.move_raw_ids |= move
         mo.action_confirm()
 
