@@ -360,6 +360,15 @@ registerModel({
             if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
                 return 'welcome';
             }
+            if (
+                !this.messaging.publicLivechatGlobal.rule && 
+                this.messaging.publicLivechatGlobal.history !== null &&
+                this.messaging.publicLivechatGlobal.history.length !== 0 &&
+                this.sessionCookieKey &&
+                localStorage.getItem(this.sessionCookieKey)
+            ) {
+                return 'restore_session';
+            }
             return clear();
         },
         /**
