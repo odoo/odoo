@@ -179,9 +179,10 @@
     </record>
 
     <record model="ir.actions.act_window" id="dashboard_open_quants"> <!-- Used in dashboard -->
-        <field name="name">Stock On Hand</field>
-        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1}</field>
+        <field name="name">Update Quantity</field>
+        <field name="context">{'search_default_internal_loc': 1, 'search_default_productgroup':1, 'search_default_locationgroup':1, 'inventory_mode':True}</field>
         <field name="res_model">stock.quant</field>
+        <field name="view_id" ref="view_stock_quant_tree_editable"/>
     </record>
 
     <record model="ir.actions.act_window" id="location_open_quants"> <!-- Used in location -->
