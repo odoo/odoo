@@ -506,8 +506,14 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
             'invoicing_switch_threshold': fields.Date.add(invoice.invoice_date, days=30),
         }).execute()
 
+<<<<<<< HEAD
         invoice.invalidate_cache(fnames=['payment_state', 'state'])
 
+||||||| parent of b87ff5712b8e... temp
+=======
+        invoice.invalidate_cache(fnames=['payment_state'])
+
+>>>>>>> b87ff5712b8e... temp
         self.assertEqual(line.qty_invoiced, 10)
         line.qty_received = 15
         self.assertEqual(line.qty_invoiced, 10)
