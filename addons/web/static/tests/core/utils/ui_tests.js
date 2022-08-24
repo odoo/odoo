@@ -275,7 +275,7 @@ QUnit.module("UI", ({ beforeEach }) => {
         assert.ok(true, "No drag sequence should have been initiated");
     });
 
-    QUnit.test("Ignore specified elements elements", async (assert) => {
+    QUnit.test("Ignore specified elements", async (assert) => {
         assert.expect(6);
 
         class List extends Component {
