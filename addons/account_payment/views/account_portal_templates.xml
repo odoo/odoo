@@ -25,7 +25,7 @@
                 <t t-if="invoice.state == 'posted' and last_tx.state == 'pending' and last_tx.acquirer_id.provider not in ('transfer', 'manual')">
                   <span class="badge badge-pill badge-warning"><span class="d-none d-md-inline"> Pending</span></span>
                 </t>
-                <t t-if="invoice.state == 'posted' and invoice.invoice_payment_state == 'paid' or last_tx.state == 'done'">
+                <t t-if="invoice.state == 'posted' and invoice.invoice_payment_state == 'paid'">
                     <span class="badge badge-pill badge-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
                 </t>
                 <t t-if="invoice.state == 'cancel'">
