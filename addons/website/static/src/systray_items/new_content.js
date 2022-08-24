@@ -4,7 +4,7 @@ import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
 import { WebsiteDialog, AddPageDialog } from "@website/components/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import wUtils from 'website.utils';
+import { csrf_token } from 'web.core';
 import { sprintf } from '@web/core/utils/strings';
 
 const { Component, xml, useState, onWillStart } = owl;
@@ -61,6 +61,7 @@ export class NewContentModal extends Component {
         this.dialogs = useService('dialog');
         this.website = useService('website');
         this.action = useService('action');
+        this.http = useService('http');
         this.isSystem = this.user.isSystem;
 
         this.newContentText = {
@@ -147,7 +148,19 @@ export class NewContentModal extends Component {
         this.dialogs.add(AddPageDialog, {
             addPage: async (name, addMenu) => {
                 const url = `/website/add/${encodeURIComponent(name)}`;
-                wUtils.sendRequest(url, { add_menu: addMenu || '' });
+                const data = await this.http.post(url, { add_menu: addMenu || '', csrf_token });
+                if (data.view_id) {
+                    this.action.doAction({
+                        res_model: 'ir.ui.view',
+                        res_id: data.view_id,
+                        views: [[false, 'form']],
+                        type: 'ir.actions.act_window',
+                        view_mode: 'form',
+                    });
+                } else {
+                    this.website.goToWebsite({ path: data.url, edition: true });
+                }
+                this.websiteContext.showNewContentModal = false;
             },
         });
     }
