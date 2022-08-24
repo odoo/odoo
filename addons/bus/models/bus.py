@@ -151,9 +151,13 @@ class ImDispatch(threading.Thread):
         given channels will be sent through the websocket. If a subscription
         is already present, overwrite it.
         """
-        channels = [channel_with_db(db, c) for c in channels]
+        channels = {hashable(channel_with_db(db, c)) for c in channels}
+        subscription = self._ws_to_subscription.get(websocket)
+        if subscription:
+            outdated_channels = subscription.channels - channels
+            self._clear_outdated_channels(websocket, outdated_channels)
         for channel in channels:
-            self._channels_to_ws.setdefault(hashable(channel), set()).add(websocket)
+            self._channels_to_ws.setdefault(channel, set()).add(websocket)
         self._ws_to_subscription[websocket] = BusSubscription(channels, last)
         if not self.is_alive():
             self.start()
@@ -161,9 +165,17 @@ class ImDispatch(threading.Thread):
         self._dispatch_notifications(websocket)
 
     def unsubscribe(self, websocket):
-        self._ws_to_subscription.pop(websocket, None)
-        for websockets in self._channels_to_ws.values():
-            websockets.discard(websocket)
+        websocket_subscription = self._ws_to_subscription.pop(websocket, None)
+        if not websocket_subscription:
+            return
+        self._clear_outdated_channels(websocket, websocket_subscription.channels)
+
+    def _clear_outdated_channels(self, websocket, outdated_channels):
+        """ Remove channels from channel to websocket map. """
+        for channel in outdated_channels:
+            self._channels_to_ws[channel].remove(websocket)
+            if not self._channels_to_ws[channel]:
+                self._channels_to_ws.pop(channel)
 
     def loop(self):
         """ Dispatch postgres notifications to the relevant websockets """
