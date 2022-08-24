@@ -45,11 +45,12 @@ class Job(models.Model):
         return (default_description.render() if default_description else "")
 
     website_description = fields.Html('Website description', translate=html_translate, sanitize_attributes=False, default=_get_default_website_description, prefetch=False)
-
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()
         for job in self:
-            job.website_url = "/jobs/detail/%s" % job.id
+            # can't publish a job of company without website
+            website = self.env['website'].search([('company_id', '=', job.company_id.id)], limit=1)
+            job.website_url = "/jobs/detail/%s" % job.id if website else False
 
     def set_open(self):
         self.write({'website_published': False})

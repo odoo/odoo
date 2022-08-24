@@ -13,7 +13,7 @@
             </xpath>
             <xpath expr="//div[@name='kanban_boxes']/div/div[1]" position="inside">
                 <field name="website_url" invisible="1"/>
-                <span>
+                <span t-if="record.website_url.raw_value">
                     <a t-attf-href="#{record.website_url.raw_value}">Job Description</a>
                 </span>
             </xpath>
