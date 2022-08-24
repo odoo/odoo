@@ -3,6 +3,7 @@
 from . import test_db_manager
 from . import test_health
 from . import test_image
+from . import test_ir_model
 from . import test_js
 from . import test_menu
 from . import test_serving_base
