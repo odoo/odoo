@@ -70,7 +70,7 @@ class SaleOrder(models.Model):
         required=True, readonly=False, change_default=True, index=True,
         tracking=1,
         states=READONLY_FIELD_STATES,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        domain="[('type', '!=', 'private'), ('company_id', 'in', (False, company_id))]")
     state = fields.Selection(
         selection=[
             ('draft', "Quotation"),
