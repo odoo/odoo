@@ -259,7 +259,7 @@ class ir_cron(models.Model):
         try:
             cr.execute(query, [job_ids], log_exceptions=False)
         except psycopg2.extensions.TransactionRollbackError:
-            # A serialization error can occurs when anoter cron worker
+            # A serialization error can occur when another cron worker
             # commits the new `nextcall` value of a cron it just ran and
             # that commit occured just before this query. The error is
             # genuine and the job should be skipped in this cron worker.
