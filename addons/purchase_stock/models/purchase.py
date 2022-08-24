@@ -236,6 +236,7 @@ class PurchaseOrder(models.Model):
                 if not pickings:
                     res = order._prepare_picking()
                     picking = StockPicking.with_user(SUPERUSER_ID).create(res)
+                    pickings = picking
                 else:
                     picking = pickings[0]
                 moves = order.order_line._create_stock_moves(picking)
@@ -245,6 +246,7 @@ class PurchaseOrder(models.Model):
                     seq += 5
                     move.sequence = seq
                 moves._action_assign()
+                pickings.action_confirm()
                 picking.message_post_with_view('mail.message_origin_link',
                     values={'self': picking, 'origin': order},
                     subtype_id=self.env.ref('mail.mt_note').id)
