@@ -268,7 +268,8 @@ class StockMove(models.Model):
         product_id_to_product = defaultdict(lambda: self.env['product.product'])
         for values in vals_list:
             mo_id = values.get('raw_material_production_id', False) or values.get('production_id', False)
-            if mo_id:
+            location_dest = self.env['stock.location'].browse(values.get('location_dest_id'))
+            if mo_id and not values.get('scrapped') and not location_dest.scrap_location:
                 mo = mo_id_to_mo[mo_id]
                 if not mo:
                     mo = mo.browse(mo_id)
