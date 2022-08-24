@@ -68,8 +68,8 @@ class LeaveReport(models.Model):
                     allocation.holiday_status_id as holiday_status_id,
                     allocation.state as state,
                     allocation.holiday_type,
-                    null as date_from,
-                    null as date_to,
+                    allocation.date_from as date_from,
+                    allocation.date_to as date_to,
                     'allocation' as leave_type,
                     allocation.employee_company_id as company_id
                 from hr_leave_allocation as allocation
