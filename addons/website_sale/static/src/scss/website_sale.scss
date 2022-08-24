@@ -130,40 +130,8 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         padding-bottom: 0.75rem;
     }
     #products_grid_before {
-        #wsale_products_categories_collapse {
-            label {
-                &:hover {
-                    color: map-get($theme-colors, 'primary');
-                    cursor: pointer;
-                }
-            }
-            i.fa {
-                color: map-get($grays, '500');
-            }
-        }
         .o_categories_collapse_title, .o_products_attributes_title {
             font-size: 0.9rem;
-        }
-        .form-check {
-            .form-check-input {
-                ~ .form-check-label:before {
-                    outline: none;
-                    border: 0px;
-                    border: 2px solid map-get($grays, '400');
-                    border-radius: 0px;
-                    cursor: pointer;
-                }
-                &:checked {
-                    ~ .form-check-label:before {
-                        background-color: map-get($theme-colors, 'primary');
-                        border: 2px solid map-get($theme-colors, 'primary');
-                    }
-                }
-            }
-            label:hover {
-                color: map-get($theme-colors, 'primary');
-                cursor: pointer;
-            }
         }
         .css_attribute_color {
             height: 32px;
