@@ -1,5 +1,5 @@
-odoo.define('event_sale.product_configurator', function (require) {
-var ProductConfiguratorWidget = require('sale.product_configurator');
+odoo.define('event_sale.product_configurator_legacy', function (require) {
+var ProductConfiguratorWidget = require('sale.product_configurator_legacy');
 
 /**
  * Extension of the ProductConfiguratorWidget to support event product configuration.
@@ -10,7 +10,7 @@ var ProductConfiguratorWidget = require('sale.product_configurator');
  * - event_ticket_id
  *
  */
-ProductConfiguratorWidget.include({
+ProductConfiguratorWidgetLegacy.include({
     /**
      * @returns {boolean}
      *
@@ -139,6 +139,6 @@ ProductConfiguratorWidget.include({
 });
 
 
-return ProductConfiguratorWidget;
+return ProductConfiguratorWidgetLegacy;
 
 });

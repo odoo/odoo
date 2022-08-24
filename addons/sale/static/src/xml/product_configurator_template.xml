@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="sale.ProductConfiguratorField" t-inherit="web.Many2OneField" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[@class='o_field_many2one_selection']" position="after">
+            <button t-if="addLinkButton" 
+                    type="button" 
+                    class="fa fa-external-link btn btn-secondary o_external_button" 
+                    tabindex="-1" 
+                    draggable="false" 
+                    title="External Link"/>
+            <button t-if="addConfigurationButton"
+                    type="button"
+                    class="fa fa-pencil btn btn-secondary o_edit_product_configuration"
+                    tabindex="-1"
+                    draggable="false"
+                    title="Edit Configuration"/>
+        </xpath>
+    </t>
+</templates>

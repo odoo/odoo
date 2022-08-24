@@ -1,5 +1,5 @@
-odoo.define('event_booth_sale.product_configurator', function (require) {
-const ProductConfiguratorWidget = require('sale.product_configurator');
+odoo.define('event_booth_sale.product_configurator_legacy', function (require) {
+const ProductConfiguratorWidgetLegacy = require('sale.product_configurator_legacy');
 
 /**
  * Extension of the ProductConfiguratorWidget to support event booth configuration.
@@ -11,7 +11,7 @@ const ProductConfiguratorWidget = require('sale.product_configurator');
  * - event_booth_ids
  *
  */
-ProductConfiguratorWidget.include({
+ProductConfiguratorWidgetLegacy.include({
 
     //--------------------------------------------------------------------------
     // Overrides
@@ -144,6 +144,6 @@ ProductConfiguratorWidget.include({
     },
 });
 
-return ProductConfiguratorWidget;
+return ProductConfiguratorWidgetLegacy;
 
 });

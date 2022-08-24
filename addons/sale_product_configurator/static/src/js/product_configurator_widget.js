@@ -1,5 +1,5 @@
 /** @odoo-module */
-import ProductConfiguratorWidget from "sale.product_configurator";
+import ProductConfiguratorWidgetLegacy from "sale.product_configurator_legacy";
 import { OptionalProductsModal } from "@sale_product_configurator/js/product_configurator_modal";
 import {
     selectOrCreateProduct,
@@ -9,7 +9,7 @@ import {
 import { _t } from "web.core";
 
 /**
- * Extension of the ProductConfiguratorWidget to support product configuration.
+ * Extension of the ProductConfiguratorWidgetLegacy to support product configuration.
  * It opens when a configurable product_template is set.
  * (multiple variants, or custom attributes)
  *
@@ -18,7 +18,7 @@ import { _t } from "web.core";
  * - product_template_attribute_value_ids
  *
  */
-ProductConfiguratorWidget.include({
+ProductConfiguratorWidgetLegacy.include({
     /**
      * Override of sale.product_configurator Hook
      *
@@ -462,4 +462,4 @@ ProductConfiguratorWidget.include({
     },
 });
 
-export { ProductConfiguratorWidget };
+export { ProductConfiguratorWidgetLegacy };

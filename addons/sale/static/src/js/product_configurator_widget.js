@@ -1,4 +1,4 @@
-odoo.define('sale.product_configurator', function (require) {
+odoo.define('sale.product_configurator_legacy', function (require) {
 var relationalFields = require('web.relational_fields');
 var FieldsRegistry = require('web.field_registry');
 var core = require('web.core');
@@ -15,7 +15,7 @@ var _t = core._t;
  * This widget is only designed for sale_order_line creation/updates.
  * !!! It should only be used on a product_product or product_template field !!!
  */
-var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
+var ProductConfiguratorWidgetLegacy = relationalFields.FieldMany2One.extend({
     events: _.extend({}, relationalFields.FieldMany2One.prototype.events, {
         'click .o_edit_product_configuration': '_onEditConfiguration'
     }),
@@ -269,8 +269,8 @@ var ProductConfiguratorWidget = relationalFields.FieldMany2One.extend({
     }
 });
 
-FieldsRegistry.add('product_configurator', ProductConfiguratorWidget);
+FieldsRegistry.add('product_configurator_legacy', ProductConfiguratorWidgetLegacy);
 
-return ProductConfiguratorWidget;
+return ProductConfiguratorWidgetLegacy;
 
 });
