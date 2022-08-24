@@ -663,7 +663,7 @@ class PosConfig(models.Model):
             pos_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'POSS')])
             if not pos_journal:
                 pos_journal = self.env['account.journal'].create({
-                    'type': 'general',
+                    'type': 'sale',
                     'name': 'Point of Sale',
                     'code': 'POSS',
                     'company_id': company.id,
