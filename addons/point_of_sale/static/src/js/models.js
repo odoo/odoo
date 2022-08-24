@@ -1166,7 +1166,7 @@ class PosGlobalState extends PosModel {
         return taxes;
     }
 
-    get_taxes_after_fp(taxes_ids){
+    get_taxes_after_fp(taxes_ids, order = false){
         var self = this;
         var taxes =  this.taxes;
         var product_taxes = [];
@@ -1174,7 +1174,7 @@ class PosGlobalState extends PosModel {
             var tax = _.detect(taxes, function(t){
                 return t.id === el;
             });
-            product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax));
+            product_taxes.push.apply(product_taxes, self._map_tax_fiscal_position(tax, order));
         });
         product_taxes = _.uniq(product_taxes, function(tax) { return tax.id; });
         return product_taxes;
@@ -1869,7 +1869,7 @@ class Orderline extends PosModel {
         return round_pr(this.get_unit_price() * this.get_quantity() * (1 - this.get_discount()/100), rounding);
     }
     get_taxes_after_fp(taxes_ids){
-        return this.pos.get_taxes_after_fp(taxes_ids);
+        return this.pos.get_taxes_after_fp(taxes_ids, this.order);
     }
     get_display_price_one(){
         var rounding = this.pos.currency.rounding;
