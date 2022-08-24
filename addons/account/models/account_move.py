@@ -3378,15 +3378,14 @@ class AccountMove(models.Model):
                 'partner_bank_id': False,
                 'currency_id': move.currency_id.id,
             })
-            move.write({
-                'line_ids': [
-                    Command.update(line.id, {
-                        'quantity': -line.quantity,
-                    })
-                    for line in move.line_ids
-                    if line.display_type == 'product' and line.quantity < 0
-                ]
-            })
+            if move.amount_total < 0:
+                move.write({
+                    'line_ids': [
+                        Command.update(line.id, {'quantity': -line.quantity})
+                        for line in move.line_ids
+                        if line.display_type == 'product'
+                    ]
+                })
 
     def action_register_payment(self):
         ''' Open the account.payment.register wizard to pay the selected journal entries.
