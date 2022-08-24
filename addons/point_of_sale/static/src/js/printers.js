@@ -105,6 +105,7 @@ var PrinterMixin = {
         return html2canvas(this.receipt[0], {
             height: Math.ceil(this.receipt.outerHeight() + this.receipt.offset().top),
             width: Math.ceil(this.receipt.outerWidth() + 2 * this.receipt.offset().left),
+            scale: 1,
         }).then(canvas => {
             $('.pos-receipt-print').empty();
             return this.process_canvas(canvas);
