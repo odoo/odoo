@@ -9,13 +9,9 @@ const { Component } = owl;
 
 export class FontSelectionField extends Component {
     get options() {
-        const options = this.props.record.fields[this.props.name].selection.filter(
+        return this.props.record.fields[this.props.name].selection.filter(
             (option) => option[0] !== false && option[1] !== ""
         );
-        if (!this.isRequired) {
-            options.unshift([false, this.props.placeholder || ""]);
-        }
-        return options;
     }
     get isRequired() {
         return this.props.record.isRequired(this.props.name);

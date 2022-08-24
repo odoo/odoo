@@ -7,6 +7,12 @@
         </t>
         <t t-else="">
             <select class="o_input" t-on-change="onChange" t-attf-style="font-family:{{ props.value }};">
+                <option
+                    t-att-selected="false === value"
+                    t-att-value="stringify(false)"
+                    t-esc="this.props.placeholder || ''"
+                    t-attf-style="{{ isRequired ? 'display:none' : '' }}"
+                />
                 <t t-foreach="options" t-as="option" t-key="option[0]">
                     <option
                         t-att-selected="option[0] === value"
