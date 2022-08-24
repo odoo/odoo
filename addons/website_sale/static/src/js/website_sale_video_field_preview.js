@@ -1,29 +1,10 @@
-odoo.define('website_sale.video_field_preview', function (require) {
-"use strict";
+/** @odoo-module **/
 
+import { registry } from "@web/core/registry";
 
-var AbstractField = require('web.AbstractField');
-var core = require('web.core');
-const {Markup} = require('web.utils');
-var fieldRegistry = require('web.field_registry');
+const { Component }  = owl;
 
-var QWeb = core.qweb;
+export class FieldVideoPreview extends Component {}
+FieldVideoPreview.template = 'website_sale.FieldVideoPreview';
 
-/**
- * Displays preview of the video showcasing product.
- */
-var FieldVideoPreview = AbstractField.extend({
-    className: 'd-block o_field_video_preview',
-
-    _render: function () {
-        this.$el.html(QWeb.render('productVideo', {
-            embedCode: Markup(this.value),
-        }));
-    },
-});
-
-fieldRegistry.add('video_preview', FieldVideoPreview);
-
-return FieldVideoPreview;
-
-});
+registry.category("fields").add("video_preview", FieldVideoPreview);
