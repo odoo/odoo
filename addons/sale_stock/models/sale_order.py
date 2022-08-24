@@ -67,10 +67,16 @@ class SaleOrder(models.Model):
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
+        res = self.env['stock.picking'].read_group(domain=[
+            ('sale_id', 'in', self.ids),
+            ('state', '=', 'done'),
+            ('location_dest_id.usage', '=', 'customer')],
+            fields=['date_done:min(date_done)'],
+            groupby=['sale_id'])
+        res_sales = {group['sale_id'][0]: group['date_done'] for group in res}
         for order in self:
-            pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
-            dates_list = [date for date in pickings.mapped('date_done') if date]
-            order.effective_date = min(dates_list, default=False)
+            min_date_done = res_sales.get(order.id, False)
+            order.effective_date = min_date_done and fields.Date.context_today(order, min_date_done)
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_delivery_status(self):
