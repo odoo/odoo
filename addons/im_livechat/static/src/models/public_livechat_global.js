@@ -128,7 +128,7 @@ registerModel({
          * @override
          */
         async _willStartChatbot() {
-            if (this.rule && !!this.chatbot) {
+            if (this.rule) {
                 // noop
             } else if (this.history !== null && this.history.length === 0) {
                 this.update({
@@ -141,9 +141,6 @@ registerModel({
                 const sessionCookie = get_cookie('im_livechat_session');
                 if (sessionCookie) {
                     this.update({ sessionCookie });
-                    if (localStorage.getItem(this.chatbot.sessionCookieKey)) {
-                        this.chatbot.update({ state: 'restore_session' });
-                    }
                 }
             }
 
