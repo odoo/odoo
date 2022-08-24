@@ -3,7 +3,7 @@
 
 <!-- Search Bar autocomplete item -->
 <div t-name="website.s_searchbar.autocomplete"
-    class="dropdown-menu show w-100">
+    class="o_dropdown_menu show w-100">
     <t t-if="fuzzySearch and results.length">
         <span class="dropdown-item-text">
             <span class="text-muted">No results found for '<t t-esc="search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-esc="fuzzySearch"/>'.</span>
