@@ -7,6 +7,7 @@ import { clear } from '@mail/model/model_field_command';
 import '@mail/models/thread';
 
 addFields('Thread', {
+    livechatCorrespondent: one('Partner'),
     /**
      * If set, current thread is a livechat.
      */
@@ -64,11 +65,11 @@ patchModelMethods('Thread', {
                     { id: this.messaging.models['Partner'].getNextPublicId() }
                 );
                 data2.members.push(partnerData);
-                data2.correspondent = partnerData;
+                data2.livechatCorrespondent = partnerData;
             } else {
                 const partnerData = this.messaging.models['Partner'].convertData(data.livechat_visitor);
                 data2.members.push(partnerData);
-                data2.correspondent = partnerData;
+                data2.livechatCorrespondent = partnerData;
             }
         }
         return data2;
@@ -90,8 +91,7 @@ patchRecordMethods('Thread', {
      */
     _computeCorrespondent() {
         if (this.channel && this.channel.channel_type === 'livechat') {
-            // livechat correspondent never change: always the public member.
-            return;
+            return this.livechatCorrespondent || clear();
         }
         return this._super();
     },
