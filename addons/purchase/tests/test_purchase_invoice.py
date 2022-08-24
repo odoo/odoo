@@ -98,10 +98,22 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
             self.assertEqual(line.qty_invoiced, 0.0)
 
         purchase_order.action_create_invoice()
-        self.assertEqual(purchase_order.invoice_status, "invoiced")
+        self.assertEqual(purchase_order.invoice_status, "no")
         for line in purchase_order.order_line:
             self.assertEqual(line.qty_to_invoice, 0.0)
             self.assertEqual(line.qty_invoiced, 5)
+
+        purchase_order.order_line.qty_received = 10
+        self.assertEqual(purchase_order.invoice_status, "to invoice")
+        for line in purchase_order.order_line:
+            self.assertEqual(line.qty_to_invoice, 5)
+            self.assertEqual(line.qty_invoiced, 5)
+
+        purchase_order.action_create_invoice()
+        self.assertEqual(purchase_order.invoice_status, "invoiced")
+        for line in purchase_order.order_line:
+            self.assertEqual(line.qty_to_invoice, 0.0)
+            self.assertEqual(line.qty_invoiced, 10)
 
     def test_vendor_bill_ordered(self):
         """Test if a order of product invoiced by ordered quantity can be
@@ -187,7 +199,7 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
             self.assertEqual(line.qty_to_invoice, -5)
             self.assertEqual(line.qty_invoiced, 10)
         purchase_order.action_create_invoice()
-        self.assertEqual(purchase_order.invoice_status, "invoiced")
+        self.assertEqual(purchase_order.invoice_status, "no")
         for line in purchase_order.order_line:
             self.assertEqual(line.qty_to_invoice, 0.0)
             self.assertEqual(line.qty_invoiced, 5)
