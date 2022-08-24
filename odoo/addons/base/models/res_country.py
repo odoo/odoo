@@ -115,6 +115,10 @@ class Country(models.Model):
         if ('code' in vals or 'phone_code' in vals):
             # Intentionally simplified by not clearing the cache in create and unlink.
             self.clear_caches()
+        if 'address_view_id' in vals:
+            # Changing the address view of the company must invalidate the view cached for res.partner
+            # because of _view_get_address
+            self.env['res.partner'].clear_caches()
         return res
 
     def get_address_fields(self):

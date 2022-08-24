@@ -384,6 +384,15 @@ class Partner(models.Model):
             arch = self._view_get_address(arch)
         return arch, view
 
+    @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """The override of _get_view, using _view_get_address,
+        changing the architecture according to the address view of the company,
+        makes the view cache dependent on the company.
+        Different companies could use each a different address view"""
+        key = super()._get_view_cache_key(view_id, view_type, **options)
+        return key + (self.env.company,)
+
     @api.constrains('parent_id')
     def _check_parent_id(self):
         if not self._check_recursion():
