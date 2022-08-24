@@ -327,7 +327,8 @@ class MetaCase(type):
         super(MetaCase, cls).__init__(name, bases, attrs)
         # assign default test tags
         if cls.__module__.startswith('odoo.addons.'):
-            cls.test_tags = {'standard', 'at_install'}
+            if getattr(cls, 'test_tags', None) is None:
+                cls.test_tags = {'standard', 'at_install'}
             cls.test_module = cls.__module__.split('.')[2]
             cls.test_class = cls.__name__
             cls.test_sequence = 0
@@ -2906,18 +2907,21 @@ def _get_node(view, f, *arg):
     ), *arg)
 
 def tagged(*tags):
-    """
-    A decorator to tag BaseCase objects.
+    """A decorator to tag BaseCase objects.
+
     Tags are stored in a set that can be accessed from a 'test_tags' attribute.
+
     A tag prefixed by '-' will remove the tag e.g. to remove the 'standard' tag.
+
     By default, all Test classes from odoo.tests.common have a test_tags
     attribute that defaults to 'standard' and 'at_install'.
-    When using class inheritance, the tags are NOT inherited.
+
+    When using class inheritance, the tags ARE inherited.
     """
+    include = {t for t in tags if not t.startswith('-')}
+    exclude = {t[1:] for t in tags if t.startswith('-')}
     def tags_decorator(obj):
-        include = {t for t in tags if not t.startswith('-')}
-        exclude = {t[1:] for t in tags if t.startswith('-')}
-        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude # todo remove getattr in master since we want to limmit tagged to BaseCase and always have +standard tag
+        obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
         return obj
     return tags_decorator
 
