@@ -498,8 +498,8 @@ export class ModelManager {
                     if (!model.prototype[field.compute]) {
                         throw new Error(`Property "compute" of field(${fieldName}) on ${model} does not refer to an instance method of this model.`);
                     }
-                    if ('readonly' in field) {
-                        throw new Error(`Computed field(${fieldName}) on ${model} has unnecessary "readonly" attribute (readonly is implicit for computed fields).`);
+                    if (field.readonly) {
+                        throw new Error(`Computed field(${fieldName}) on ${model} has unnecessary "readonly" attribute (readonly is implicitly set to true for computed fields).`);
                     }
                 }
                 // 5. Related field.
@@ -548,8 +548,8 @@ export class ModelManager {
                     ) {
                         throw new Error(`Related field(${fieldName}) on ${model} has mismatched target model name with its related model field.`);
                     }
-                    if ('readonly' in field) {
-                        throw new Error(`Related field(${fieldName}) on ${model} has unnecessary "readonly" attribute (readonly is implicit for related fields).`);
+                    if (field.readonly) {
+                        throw new Error(`Related field(${fieldName}) on ${model} has unnecessary "readonly" attribute (readonly is implicitly set to true for related fields).`);
                     }
                 }
             }

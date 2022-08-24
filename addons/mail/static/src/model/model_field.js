@@ -153,7 +153,7 @@ export class ModelField {
         /**
          * Automatically make computes and relateds readonly.
          */
-        if (this.compute || this.related) {
+        if ((this.compute || this.related) && this.readonly !== false) {
             this.readonly = true;
         }
     }
