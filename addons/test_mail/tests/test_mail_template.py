@@ -11,7 +11,6 @@ from odoo.tests import tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('mail_template', 'multi_lang')
 class TestMailTemplateCommon(TestMailCommon, TestRecipients):
 
     @classmethod

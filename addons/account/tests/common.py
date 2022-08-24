@@ -9,7 +9,6 @@ import base64
 from lxml import etree
 
 
-@tagged('post_install', '-at_install')
 class AccountTestInvoicingCommon(TransactionCase):
 
     @classmethod
@@ -540,7 +539,6 @@ class AccountTestInvoicingCommon(TransactionCase):
         return etree.fromstring(xml_tree_str)
 
 
-@tagged('post_install', '-at_install')
 class AccountTestInvoicingHttpCommon(AccountTestInvoicingCommon, HttpCase):
     pass
 
