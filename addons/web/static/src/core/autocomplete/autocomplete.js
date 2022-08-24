@@ -120,6 +120,7 @@ export class AutoComplete extends Component {
         const option = this.sources[indices[0]].options[indices[1]];
         if (option.unselectable) {
             this.inputRef.el.value = "";
+            this.close();
             return;
         }
 

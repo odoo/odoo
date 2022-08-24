@@ -3073,6 +3073,13 @@ QUnit.module("Fields", (hooks) => {
                 ".o_field_many2one[name=product_id] .o_m2o_no_result",
                 "there should be option for 'No records'"
             );
+
+            await triggerEvent(target, ".o_field_many2one[name=product_id] input", "blur");
+            assert.containsNone(
+                target,
+                ".o_field_many2one[name=product_id] .o_m2o_no_result",
+                "there should be option for 'No records'"
+            );
         }
     );
 
