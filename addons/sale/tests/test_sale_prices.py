@@ -97,7 +97,7 @@ class TestSalePrices(SaleCommon):
         """ Verify the order date is correctly provided to the pricelist API"""
         today = fields.Datetime.today()
         pricelist_rule = self._create_discount_pricelist_rule(
-            date_start=today,
+            date_start=today - timedelta(hours=1),
             date_end=today + timedelta(hours=23),
         )
         self.empty_order.date_order = today
