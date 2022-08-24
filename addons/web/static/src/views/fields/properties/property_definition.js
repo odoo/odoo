@@ -6,6 +6,7 @@ import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { ModelSelector } from "@web/core/model_selector/model_selector";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { PropertyDefinitionSelection } from "./property_definition_selection";
@@ -37,7 +38,6 @@ export class PropertyDefinition extends Component {
             propertyDefinition: propertyDefinition,
             typeLabel: this._typeLabel(propertyDefinition.type),
             resModel: "",
-            resModelId: 0,
             resModelDescription: "",
             matchingRecordsCount: undefined,
         });
@@ -155,42 +155,17 @@ export class PropertyDefinition extends Component {
      * @param {string} newModel
      */
     async onModelChange(newModel) {
-        if (!newModel || !newModel.length || !newModel[0].id) {
-            // remove the model
-            const propertyDefinition = {
-                ...this.state.propertyDefinition,
-                comodel: false,
-                default: false,
-                domain: false,
-                value: false,
-            };
-            this.props.onChange(propertyDefinition);
-            this.state.propertyDefinition = propertyDefinition;
-            this.state.resModel = '';
-            this.state.resModelId = 0;
-            this.state.resModelDescription = '';
-            await this._updateMatchingRecordsCount();
-            return;
-        }
-        const newModelId = newModel[0].id;
+        const { label, technical } = newModel;
 
         // if we change the model, we should reset the default value and the domain
-        const modelChanged = newModelId !== this.state.resModelId;
+        const modelChanged = technical !== this.state.resModel;
 
-        this.state.resModelId = newModelId;
+        this.state.resModel = technical;
+        this.state.resModelDescription = label;
 
-        const result = await this.orm.call(
-            'ir.model',
-            'read',
-            [[newModelId], ['model', 'name']],
-        );
-
-        if (!result || !result.length) {
-            return;
-        }
-        this.state.resModelDescription = result[0].name;
         const propertyDefinition = {
             ...this.state.propertyDefinition,
+            comodel: technical,
             default: modelChanged
                 ? false
                 : this.state.propertyDefinition.default,
@@ -273,10 +248,11 @@ export class PropertyDefinition extends Component {
      * @param {object} propertyDefinition
      */
     async _syncStateWithProps(propertyDefinition) {
-        const currentModel = this.state.resModel;
         const newModel = propertyDefinition.comodel;
+        const currentModel = this.state.resModel;
 
         this.state.propertyDefinition = propertyDefinition;
+        this.state.resModel = propertyDefinition.comodel;
         this.state.typeLabel = this._typeLabel(propertyDefinition.type);
         this.state.resModel = newModel;
 
@@ -286,20 +262,15 @@ export class PropertyDefinition extends Component {
             try {
                 const result = await this.orm.call(
                     "ir.model",
-                    "search_read",
-                    [
-                        [['model', '=', newModel]],
-                        ['id', 'name'],
-                    ],
+                    "display_name_for",
+                    [[newModel]],
                 );
                 if (!result || !result.length) {
                     return;
                 }
-                this.state.resModelId = result[0].id;
-                this.state.resModelDescription = result[0].name;
+                this.state.resModelDescription = result[0].display_name;
             } catch (_) {
                 // can not read the ir.model
-                this.state.resModelId = 0;
                 this.state.resModelDescription = sprintf(
                     _lt('You do not have access to the model "%s".'),
                     newModel
@@ -308,7 +279,6 @@ export class PropertyDefinition extends Component {
 
             await this._updateMatchingRecordsCount();
         } else if (!newModel) {
-            this.state.resModelId = false;
             this.state.resModelDescription = "";
         }
     }
@@ -317,7 +287,7 @@ export class PropertyDefinition extends Component {
      * Update the number of records that match the current domain.
      */
     async _updateMatchingRecordsCount() {
-        if (this.state.resModelId && this.state.propertyDefinition.comodel) {
+        if (this.state.resModel && this.state.resModel.length) {
             const domainList = new Domain(
                 this.state.propertyDefinition.domain || "[]"
             ).toList();
@@ -353,6 +323,7 @@ PropertyDefinition.components = {
     DropdownItem,
     PropertyValue,
     Many2XAutocomplete,
+    ModelSelector,
     PropertyDefinitionSelection,
     PropertyTags,
 };
