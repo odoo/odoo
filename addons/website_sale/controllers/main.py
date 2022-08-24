@@ -463,8 +463,7 @@ class WebsiteSale(http.Controller):
         :raises NotFound : If the user is not allowed to access Attachment model
         """
 
-        if not (request.env.user.has_group('website.group_website_designer') or\
-            request.env.user.has_group('website.group_website_restricted_editor')):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise NotFound()
 
         image_ids = request.env["ir.attachment"].browse(i['id'] for i in images)
@@ -499,8 +498,7 @@ class WebsiteSale(http.Controller):
         """
         Unlinks all images from the product.
         """
-        if not (request.env.user.has_group('website.group_website_designer') or\
-            request.env.user.has_group('website.group_website_restricted_editor')):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise NotFound()
 
         product_product = request.env['product.product'].browse(int(product_product_id)) if product_product_id else False
@@ -519,9 +517,10 @@ class WebsiteSale(http.Controller):
         """
         Delete or clear the product's image.
         """
-        if not (request.env.user.has_group('website.group_website_designer') or\
-            request.env.user.has_group('website.group_website_restricted_editor')) or\
-            image_res_model not in ['product.product', 'product.template', 'product.image']:
+        if (
+            not request.env.user.has_group('website.group_website_restricted_editor')
+            or image_res_model not in ['product.product', 'product.template', 'product.image']
+        ):
             raise NotFound()
 
         image_res_id = int(image_res_id)
@@ -534,10 +533,11 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/product/resequence-image'], type='json', auth='user', website=True)
     def resequence_product_image(self, image_res_model, image_res_id, move):
-        if not (request.env.user.has_group('website.group_website_designer') or\
-            request.env.user.has_group('website.group_website_restricted_editor')) or\
-            image_res_model not in ['product.product', 'product.template', 'product.image'] or\
-            move not in ['first', 'left', 'right', 'last']:
+        if (
+            not request.env.user.has_group('website.group_website_restricted_editor')
+            or image_res_model not in ['product.product', 'product.template', 'product.image']
+            or move not in ['first', 'left', 'right', 'last']
+        ):
             raise NotFound()
 
         image_res_id = int(image_res_id)
