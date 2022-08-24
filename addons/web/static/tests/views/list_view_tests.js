@@ -1799,6 +1799,52 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["openRecord", "openRecord"]);
     });
 
+    QUnit.test("action/type attributes on tree arch, type='object'", async (assert) => {
+        const list = await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree action="a1" type="object"><field name="foo"/></tree>',
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        patchWithCleanup(list.env.services.action, {
+            doActionButton(params) {
+                assert.step(`doActionButton type ${params.type} name ${params.name}`);
+                params.onClose();
+            },
+        });
+
+        assert.verifySteps(["get_views", "web_search_read"]);
+        await click(target.querySelector(".o_data_cell"));
+        assert.verifySteps(["doActionButton type object name a1", "web_search_read"]);
+    });
+
+    QUnit.test("action/type attributes on tree arch, type='action'", async (assert) => {
+        const list = await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree action="a1" type="action"><field name="foo"/></tree>',
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+
+        patchWithCleanup(list.env.services.action, {
+            doActionButton(params) {
+                assert.step(`doActionButton type ${params.type} name ${params.name}`);
+                params.onClose();
+            },
+        });
+
+        assert.verifySteps(["get_views", "web_search_read"]);
+        await click(target.querySelector(".o_data_cell"));
+        assert.verifySteps(["doActionButton type action name a1", "web_search_read"]);
+    });
+
     QUnit.test("editable list view: readonly fields cannot be edited", async function (assert) {
         serverData.models.foo.fields.foo.readonly = true;
 
