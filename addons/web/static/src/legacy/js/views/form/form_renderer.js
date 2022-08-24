@@ -652,14 +652,19 @@ var FormRenderer = BasicRenderer.extend({
     _renderHeaderButtons: function (node) {
         var self = this;
         var buttons = [];
-        _.each(node.children, function (child) {
+        var children = [...node.children];
+        while(children.length) {
+            var child = children.shift();
             if (child.tag === 'button') {
                 buttons.push(self._renderHeaderButton(child));
             }
             if (child.tag === 'widget') {
                 buttons.push(self._renderTagWidget(child));
             }
-        });
+            if (child.children){
+                children.push(...child.children);
+            }
+        }
         return this._renderStatusbarButtons(buttons);
     },
     /**
