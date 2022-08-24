@@ -561,7 +561,7 @@ class Website(Home):
     # ------------------------------------------------------
 
     @http.route(['/website/add', '/website/add/<path:path>'], type='http', auth="user", website=True, methods=['POST'])
-    def pagenew(self, path="", add_menu=False, template=False, **kwargs):
+    def pagenew(self, path="", add_menu=False, template=False, redirect=False, **kwargs):
         # for supported mimetype, get correct default template
         _, ext = os.path.splitext(path)
         ext_special_case = ext and ext in _guess_mimetype() and ext != '.html'
@@ -575,9 +575,14 @@ class Website(Home):
         page = request.env['website'].new_page(path, add_menu=add_menu, **template)
         url = page['url']
 
-        if ext_special_case:  # redirect non html pages to backend to edit
-            return request.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
-        return request.redirect(request.env['website'].get_client_action_url(url, True))
+        if redirect:
+            if ext_special_case:  # redirect non html pages to backend to edit
+                return request.redirect('/web#id=' + str(page.get('view_id')) + '&view_type=form&model=ir.ui.view')
+            return request.redirect(request.env['website'].get_client_action_url(url, True))
+
+        if ext_special_case:
+            return json.dumps({'view_id': page.get('view_id')})
+        return json.dumps({'url': url})
 
     @http.route("/website/get_switchable_related_views", type="json", auth="user", website=True)
     def get_switchable_related_views(self, key):
