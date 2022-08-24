@@ -492,6 +492,8 @@ class TestSaleToInvoice(TestSaleCommon):
             'invoicing_switch_threshold': fields.Date.add(invoice.invoice_date, days=30),
         }).execute()
 
+        invoice.invalidate_cache(fnames=['payment_state'])
+
         self.assertEqual(line.qty_invoiced, 10)
         line.qty_delivered = 15
         self.assertEqual(line.qty_invoiced, 10)
