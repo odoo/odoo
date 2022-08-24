@@ -10,7 +10,6 @@ from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('lead_manage')
 class TestLeadMergeCommon(TestLeadConvertMassCommon):
     """ During a mixed merge (involving leads and opps), data should be handled a certain way following their type
     (m2o, m2m, text, ...). """

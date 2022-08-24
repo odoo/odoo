@@ -5,7 +5,6 @@ from odoo.tests import tagged
 from odoo import fields
 
 
-@tagged('-at_install', 'post_install')
 class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
     """ Base class for tests checking interim accounts reconciliation works
     in anglosaxon accounting. It sets up everything we need in the tests, and is

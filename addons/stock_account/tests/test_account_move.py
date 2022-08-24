@@ -6,7 +6,6 @@ from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounti
 from odoo.tests.common import tagged, Form
 
 
-@tagged("post_install", "-at_install")
 class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):

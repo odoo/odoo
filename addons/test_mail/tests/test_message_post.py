@@ -21,7 +21,6 @@ from odoo.tools import mute_logger, formataddr
 from odoo.tests.common import users
 
 
-@tagged('mail_post')
 class TestMessagePostCommon(TestMailCommon, TestRecipients):
 
     @classmethod

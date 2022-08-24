@@ -11,7 +11,6 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-@tagged('post_install', '-at_install')
 class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
 
     @classmethod
@@ -132,7 +131,6 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
         (invoice_rep_lines | refund_rep_lines).write({'account_id': cls.company_data['default_account_tax_sale'].id})
 
 
-@tagged('post_install', '-at_install')
 class TestPoSCommon(ValuationReconciliationTestCommon):
     """ Set common values for different special test cases.
 

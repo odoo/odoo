@@ -11,7 +11,6 @@ from odoo.tools import config, file_open
 from .test_common import TestHttpBase
 
 
-@tagged('post_install', '-at_install')
 class TestHttpStaticCommon(TestHttpBase):
     @classmethod
     def setUpClass(cls):

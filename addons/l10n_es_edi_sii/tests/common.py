@@ -3,12 +3,10 @@ import base64
 from pytz import timezone
 from datetime import datetime
 
-from odoo.tests import tagged
 from odoo.tools import misc
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestEsEdiCommon(AccountEdiTestCommon):
 
     @classmethod
