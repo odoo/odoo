@@ -562,13 +562,15 @@ export class ListRenderer extends Component {
         const field = this.fields[column.name];
         const classNames = ["align-middle"];
         if (field.sortable && column.hasLabel) {
-            classNames.push("o_column_sortable");
+            classNames.push("o_column_sortable", "position-relative", "cursor-pointer");
+        } else {
+            classNames.push("cursor-default");
         }
         const orderBy = this.props.list.orderBy;
-        if (orderBy.length && orderBy[0].name === column.name) {
-            classNames.push(orderBy[0].asc ? "o-sort-up" : "o-sort-down");
+        if (orderBy.length && column.widget !== "handle" && orderBy[0].name === column.name) {
+            classNames.push("table-active");
         }
-        if (["float", "integer", "monetary"].includes(field.type)) {
+        if (this.isNumericColumn(column)) {
             classNames.push("o_list_number_th");
         }
         if (column.type === "button_group") {
@@ -592,6 +594,24 @@ export class ListRenderer extends Component {
         return this.state.columns;
     }
 
+    isNumericColumn(column) {
+        const { type } = this.fields[column.name];
+        return ["float", "integer", "monetary"].includes(type);
+    }
+
+    getSortableIconClass(column) {
+        const { sortable } = this.fields[column.name];
+        const { orderBy } = this.props.list;
+        const classNames = sortable && column.hasLabel ? ["fa", "fa-lg", "px-2"] : ["d-none"];
+        if (orderBy.length && orderBy[0].name === column.name) {
+            classNames.push(orderBy[0].asc ? "fa-angle-up" : "fa-angle-down");
+        } else {
+            classNames.push("fa-angle-down", "opacity-0", "opacity-75-hover");
+        }
+
+        return classNames.join(" ");
+    }
+
     /**
      * Returns the classnames to apply to the row representing the given record.
      * @param {Record} record
@@ -602,6 +622,9 @@ export class ListRenderer extends Component {
         const classNames = this.props.archInfo.decorations
             .filter((decoration) => evaluateExpr(decoration.condition, record.evalContext))
             .map((decoration) => decoration.class);
+        if (record.selected) {
+            classNames.push("table-info");
+        }
         // "o_selected_row" classname for the potential row in edition
         if (record.isInEdition) {
             classNames.push("o_selected_row");
@@ -660,6 +683,15 @@ export class ListRenderer extends Component {
                         classNames.push(getClassNameFromDecoration(decoName));
                     }
                 }
+            }
+            if (
+                record.isInEdition &&
+                this.props.list.editedRecord &&
+                this.props.list.editedRecord.isReadonly(column.name)
+            ) {
+                classNames.push("pe-none", "text-muted");
+            } else {
+                classNames.push("cursor-pointer");
             }
         }
         return classNames.join(" ");
@@ -1593,6 +1625,24 @@ export class ListRenderer extends Component {
     }
 
     /**
+     * Handles the :hover effect on sortable column headers
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    onHoverSortColumn(ev, column) {
+        if (this.props.list.orderBy.length && this.props.list.orderBy[0].name === column.name) {
+            return;
+        } else if (
+            this.fields[column.name].sortable &&
+            column.widget !== "handle" &&
+            column.hasLabel
+        ) {
+            ev.target.classList.toggle("table-active", ev.type == "mouseenter");
+        }
+    }
+
+    /**
      * Handles the resize feature on the column headers
      *
      * @private
@@ -1601,6 +1651,7 @@ export class ListRenderer extends Component {
     onStartResize(ev) {
         const table = this.tableRef.el;
         const th = ev.target.closest("th");
+        const handler = th.querySelector(".o_resize");
         table.style.width = `${Math.floor(table.getBoundingClientRect().width)}px`;
         const thPosition = [...th.parentNode.children].indexOf(th);
         const resizingColumnElements = [...table.getElementsByTagName("tr")]
@@ -1622,6 +1673,8 @@ export class ListRenderer extends Component {
         table.classList.add("o_resizing");
         for (const el of resizingColumnElements) {
             el.classList.add("o_column_resizing");
+            handler.classList.add("bg-primary", "opacity-100");
+            handler.classList.remove("bg-black-25", "opacity-50-hover");
         }
         // Mousemove event : resize header
         const resizeHeader = (ev) => {
@@ -1648,6 +1701,8 @@ export class ListRenderer extends Component {
             table.classList.remove("o_resizing");
             for (const el of resizingColumnElements) {
                 el.classList.remove("o_column_resizing");
+                handler.classList.remove("bg-primary", "opacity-100");
+                handler.classList.add("bg-black-25", "opacity-50-hover");
             }
 
             window.removeEventListener("mousemove", resizeHeader);

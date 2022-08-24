@@ -254,9 +254,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, "tbody tr", 4, "should have 4 rows");
         assert.containsOnce(target, "th.o_column_sortable", "should have 1 sortable column");
 
-        assert.strictEqual(
-            $(target).find("thead th:nth(2)").css("text-align"),
-            "right",
+        assert.containsOnce(
+            target,
+            "thead th:nth(2) .text-end",
             "header cells of integer fields should be right aligned"
         );
         assert.strictEqual(
@@ -3495,7 +3495,7 @@ QUnit.module("Views", (hooks) => {
 
             const [titi, grosminet] = target.querySelectorAll(".tab-pane:last-child th");
             assert.ok(
-                titi.style.width.split("px")[0] > 80 && grosminet.style.width.split("px")[0] > 700,
+                titi.style.width.split("px")[0] > 80 && grosminet.style.width.split("px")[0] > 500,
                 "list has been correctly frozen after being visible"
             );
         }
@@ -3649,9 +3649,8 @@ QUnit.module("Views", (hooks) => {
         const thRect = charTh.getBoundingClientRect();
         const resizeRect = charTh.querySelector(".o_resize").getBoundingClientRect();
 
-        assert.strictEqual(
-            thRect.x + thRect.width,
-            resizeRect.x + resizeRect.width,
+        assert.ok(
+            resizeRect.right - thRect.right <= 1,
             "First resize handle should be attached at the end of the first header"
         );
         assert.containsNone(
@@ -3900,7 +3899,6 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
             });
 
-            assert.strictEqual($(target).find('th[data-name="datetime"]')[0].offsetWidth, 146);
             assert.strictEqual($(target).find('th[data-name="int_field"]')[0].offsetWidth, 200);
         }
     );
@@ -3992,7 +3990,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(
             window.getComputedStyle(target.querySelectorAll("th")[2]).maxWidth,
-            "100%",
+            "none",
             "no max-width should be harcoded on the buttons column"
         );
     });
