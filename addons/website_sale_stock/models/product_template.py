@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models
 from odoo.tools.translate import html_translate
+from odoo.http import request
 
 
 class ProductTemplate(models.Model):
@@ -25,6 +26,11 @@ class ProductTemplate(models.Model):
             product = self.env['product.product'].sudo().browse(combination_info['product_id'])
             website = self.env['website'].get_current_website()
             free_qty = product.with_context(warehouse=website._get_warehouse_available()).free_qty
+            has_stock_notification = product._has_stock_notification(self.env.user.partner_id) \
+                                     or request \
+                                     and product.id in request.session.get('product_with_stock_notification_enabled',
+                                                                           set())
+            stock_notification_email = request and request.session.get('stock_notification_email', '')
             combination_info.update({
                 'free_qty': free_qty,
                 'product_type': product.type,
@@ -35,6 +41,8 @@ class ProductTemplate(models.Model):
                 'allow_out_of_stock_order': self.allow_out_of_stock_order,
                 'show_availability': self.show_availability,
                 'out_of_stock_message': self.out_of_stock_message,
+                'has_stock_notification': has_stock_notification,
+                'stock_notification_email': stock_notification_email,
             })
         else:
             product_template = self.sudo()

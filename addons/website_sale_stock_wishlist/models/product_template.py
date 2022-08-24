@@ -20,6 +20,6 @@ class ProductTemplate(models.Model):
 
         if combination_info['product_id']:
             product = self.env['product.product'].sudo().browse(combination_info["product_id"])
-            combination_info['wish'] = product._is_in_wishlist()
+            combination_info['is_in_wishlist'] = product._is_in_wishlist()
 
         return combination_info
