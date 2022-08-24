@@ -2,35 +2,42 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-import logging
 from lxml import etree
-from freezegun import freeze_time
 
 from odoo import tools
 from odoo.tests import tagged
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo.exceptions import UserError
 
-_logger = logging.getLogger(__name__)
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
-class TestItEdi(AccountEdiTestCommon):
+class TestItEdiCommon(AccountEdiTestCommon):
+    """
+        Mixin to setup the l10n_it_edi test classes.
+        We don't want to inherit test methods but we need a common setup function.
+    """
+    chart_template_ref = 'l10n_it.l10n_it_chart_template_generic'
+    edi_format_ref = 'l10n_it_edi.edi_fatturaPA'
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass(chart_template_ref='l10n_it.l10n_it_chart_template_generic',
-                           edi_format_ref='l10n_it_edi.edi_fatturaPA')
+        super().setUpClass(cls.chart_template_ref, cls.edi_format_ref)
 
         # Use the company_data_2 to test that the e-invoice is imported for the right company
         cls.company = cls.company_data_2['company']
 
+        # Make sure that import/export taxes have include_base_amount == True
+        cls.company.account_sale_tax_id.include_base_amount = True
+        cls.company.account_sale_tax_id.sequence = 30
+        cls.FatturaPA = cls.env.ref('l10n_it_edi.edi_fatturaPA')
+        cls.FatturaPA._l10n_it_edi_import_search_tax(cls.company, 22.0).include_base_amount = True
+
         cls.company.l10n_it_codice_fiscale = '01234560157'
         cls.company.vat = 'IT01234560157'
         cls.test_bank = cls.env['res.partner.bank'].with_company(cls.company).create({
-                'partner_id': cls.company.partner_id.id,
-                'acc_number': 'IT1212341234123412341234123',
-                'bank_name': 'BIG BANK',
-                'bank_bic': 'BIGGBANQ',
+            'partner_id': cls.company.partner_id.id,
+            'acc_number': 'IT1212341234123412341234123',
+            'bank_name': 'BIG BANK',
+            'bank_bic': 'BIGGBANQ',
         })
         cls.company.l10n_it_tax_system = "RF01"
         cls.company.street = "1234 Test Street"
@@ -338,6 +345,9 @@ class TestItEdi(AccountEdiTestCommon):
 
         cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
         cls.edi_simplified_basis_xml = cls._get_test_file_content('IT00470550013_simpl.xml')
+        cls.edi_withholding_tax_xml = cls._get_test_file_content('IT00470550013_withh.xml')
+        cls.edi_pension_fund_tax_xml = cls._get_test_file_content('IT00470550013_pfund.xml')
+        cls.edi_enasarco_tax_xml = cls._get_test_file_content('IT00470550013_enasarco.xml')
 
     @classmethod
     def _get_test_file_content(cls, filename):
@@ -345,6 +355,9 @@ class TestItEdi(AccountEdiTestCommon):
         path = 'l10n_it_edi_sdicoop/tests/expected_xmls/' + filename
         with tools.file_open(path, mode='rb') as test_file:
             return test_file.read()
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestItEdi(TestItEdiCommon):
 
     def test_price_included_taxes(self):
         """ When the tax is price included, there should be a rounding value added to the xml, if the sum(subtotals) * tax_rate is not

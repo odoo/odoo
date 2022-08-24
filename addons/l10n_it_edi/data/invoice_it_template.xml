@@ -22,9 +22,9 @@
                         <Percentuale t-esc="format_numbers(abs(line.discount))"/>
                     </ScontoMaggiorazione>
                     <PrezzoTotale t-esc="format_monetary(line_dict['subtotal_price'], currency)"/>
-                    <AliquotaIVA t-if="line.tax_ids.amount_type == 'percent'" t-esc="format_numbers(line.tax_ids.amount)"/>
-                    <AliquotaIVA t-elif="line.tax_ids.amount_type != 'percent'" t-esc="'0.00'"/>
-                    <Natura t-if="line.tax_ids.l10n_it_has_exoneration" t-esc="line.tax_ids.l10n_it_kind_exoneration"/>
+                    <AliquotaIVA t-if="vat_tax.amount_type == 'percent'" t-esc="format_numbers(vat_tax.amount)"/>
+                    <AliquotaIVA t-elif="vat_tax.amount_type != 'percent'" t-esc="'0.00'"/>
+                    <Natura t-if="vat_tax.l10n_it_has_exoneration" t-esc="vat_tax.l10n_it_kind_exoneration"/>
                     <AltriDatiGestionali t-if="conversion_rate">
                         <TipoDato>Currency</TipoDato>
                         <RiferimentoTesto t-esc="format_alphanumeric(record.currency_id.name)"/>
@@ -160,6 +160,7 @@
         <DatiBeniServizi>
             <t t-foreach="invoice_lines" t-as="line_dict">
                 <t t-set="line" t-value="line_dict['line']"/>
+                <t t-set="vat_tax" t-value="line_dict['vat_tax']"/>
                 <t t-call="l10n_it_edi.account_invoice_line_it_FatturaPA"/>
             </t>
             <t t-foreach="tax_details['tax_details']" t-as="tax_name">

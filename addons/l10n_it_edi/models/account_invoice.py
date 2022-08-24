@@ -2,19 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import zipfile
-import io
 import logging
 import re
 
-from datetime import date, datetime
-from lxml import etree
+from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.tools import float_repr, float_compare
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
-from odoo.tests.common import Form
 
 
 _logger = logging.getLogger(__name__)
@@ -114,14 +110,14 @@ class AccountMove(models.Model):
                     if moves:
                         description += ', '.join([move.name for move in moves])
 
-            line_dict = {
+            invoice_lines.append({
                 'line': line,
                 'line_number': num + 1,
                 'description': description or 'NO NAME',
                 'unit_price': price_unit,
                 'subtotal_price': price_subtotal,
-            }
-            invoice_lines.append(line_dict)
+                'vat_tax': self._l10n_it_edi_fatturapa_select_only_vat_tax(line.tax_ids),
+            })
         return invoice_lines
 
     def _l10n_it_edi_prepare_fatturapa_tax_details(self, tax_details, reverse_charge_refund=False):
@@ -153,6 +149,14 @@ class AccountMove(models.Model):
                 tax_dict['tax_amount'] = abs(tax_dict['tax_amount'])
                 tax_dict['tax_amount_currency'] = abs(tax_dict['tax_amount_currency'])
         return tax_details
+
+    def _l10n_it_edi_filter_fatturapa_tax_details(self, line):
+        """Filters tax details to only include the positive amounted lines regarding VAT taxes."""
+        return (line['tax_repartition_line_id'].factor_percent >= 0 and line['tax_id'].amount >= 0)
+
+    def _l10n_it_edi_fatturapa_select_only_vat_tax(self, taxes):
+        """Filters taxes to only be the positive amounted taxes."""
+        return taxes.filtered(lambda x: x.amount >= 0)
 
     def _prepare_fatturapa_export_values(self):
         self.ensure_one()
@@ -232,9 +236,7 @@ class AccountMove(models.Model):
                 if tax.amount == 0.0:
                     tax_map[tax] = tax_map.get(tax, 0.0) + line.price_subtotal
 
-        tax_details = self._prepare_edi_tax_details(
-            filter_to_apply=lambda l: l['tax_repartition_line_id'].factor_percent >= 0
-        )
+        tax_details = self._prepare_edi_tax_details(filter_to_apply=self._l10n_it_edi_filter_fatturapa_tax_details)
 
         company = self.company_id
         partner = self.commercial_partner_id
@@ -304,6 +306,7 @@ class AccountMove(models.Model):
             'invoice_lines': invoice_lines,
             'conversion_rate': conversion_rate,
         }
+
         return template_values
 
     def _export_as_xml(self):
@@ -312,10 +315,11 @@ class AccountMove(models.Model):
         :return: The XML content as str.
         '''
         template_values = self._prepare_fatturapa_export_values()
-        if not self.env['account.edi.format']._l10n_it_is_simplified_document_type(template_values['document_type']):
-            content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export')._render(template_values)
-        else:
-            content = self.env.ref('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export')._render(template_values)
+        is_simplified = self.env['account.edi.format']._l10n_it_is_simplified_document_type(template_values['document_type'])
+        template_name = ('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export' if is_simplified
+                         else 'l10n_it_edi.account_invoice_it_FatturaPA_export')
+        content = self.env.ref(template_name)._render(template_values)
+        if is_simplified:
             self.message_post(body=_("A simplified invoice was created instead of an ordinary one. This is because the invoice \
                                     is a domestic invoice with a total amount of less than or equal to 400€ and the customer's address is incomplete."))
         return content
@@ -398,6 +402,7 @@ class AccountMove(models.Model):
                 if text:
                     output_str += "<li>%s: %s</li>" % (element.tag, text)
         return output_str + "</ul>"
+
 
 class AccountTax(models.Model):
     _name = "account.tax"

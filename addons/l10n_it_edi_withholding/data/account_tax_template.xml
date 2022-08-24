@@ -1,0 +1,468 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+    <!-- Withholding Taxes (Ritenute) ......................................................... -->
+    <!-- Individuals -->
+    <record id="20vwi" model="account.tax.template">
+        <field name="description">20vwi</field>
+        <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+        <field name="name">20% WHT I</field>
+        <field name="sequence">10</field>
+        <field name="amount">-20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="l10n_it_withholding_type">RT01</field>
+        <field name="l10n_it_withholding_reason">A</field>
+        <field name="tax_exigibility">on_payment</field>
+        <field name="cash_basis_transition_account_id" ref="l10n_it.1611"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.1609'),
+                'minus_report_line_ids': [ref('withh_tax_report_it_line')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.1609'),
+                'plus_report_line_ids': [ref('withh_tax_report_it_line')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="20awi" model="account.tax.template">
+        <field name="description">20awi</field>
+        <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+        <field name="name">20% WHT I</field>
+        <field name="sequence">10</field>
+        <field name="amount">-20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="l10n_it_withholding_type">RT01</field>
+        <field name="l10n_it_withholding_reason">A</field>
+        <field name="tax_exigibility">on_payment</field>
+        <field name="cash_basis_transition_account_id" ref="l10n_it.2603"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2602'),
+                'plus_report_line_ids': [ref('withh_tax_report_it_line')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2602'),
+                'minus_report_line_ids': [ref('withh_tax_report_it_line')],
+            }),
+        ]"/>
+    </record>
+
+    <!-- Individual Companies -->
+    <record id="20vwc" model="account.tax.template">
+        <field name="description">20vwc</field>
+        <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+        <field name="name">20% WHT C</field>
+        <field name="sequence">11</field>
+        <field name="amount">-20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="l10n_it_withholding_type">RT02</field>
+        <field name="l10n_it_withholding_reason">A</field>
+        <field name="tax_exigibility">on_payment</field>
+        <field name="cash_basis_transition_account_id" ref="l10n_it.1611"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.1609'),
+                'minus_report_line_ids': [ref('withh_tax_report_it_line')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.1609'),
+                'plus_report_line_ids': [ref('withh_tax_report_it_line')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="20awc" model="account.tax.template">
+        <field name="description">20awc</field>
+        <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+        <field name="name">20% WHT C</field>
+        <field name="sequence">11</field>
+        <field name="amount">-20</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="l10n_it_withholding_type">RT02</field>
+        <field name="l10n_it_withholding_reason">A</field>
+        <field name="tax_exigibility">on_payment</field>
+        <field name="cash_basis_transition_account_id" ref="l10n_it.2603"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2602'),
+                'plus_report_line_ids': [ref('withh_tax_report_it_line')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2602'),
+                'minus_report_line_ids': [ref('withh_tax_report_it_line')],
+            }),
+        ]"/>
+    </record>
+
+    <!-- Other -->
+    <record id="23vwo" model="account.tax.template">
+        <field name="description">23vwo</field>
+        <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+        <field name="name">23% WHT O</field>
+        <field name="sequence">12</field>
+        <field name="amount">-23</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="l10n_it_withholding_type">RT02</field>
+        <field name="l10n_it_withholding_reason">ZO</field>
+        <field name="tax_exigibility">on_payment</field>
+        <field name="cash_basis_transition_account_id" ref="l10n_it.1611"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.1609'),
+                'minus_report_line_ids': [ref('withh_tax_report_it_line')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.1609'),
+                'plus_report_line_ids': [ref('withh_tax_report_it_line')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="23awo" model="account.tax.template">
+        <field name="description">23awo</field>
+        <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+        <field name="name">23% WHT O</field>
+        <field name="sequence">12</field>
+        <field name="amount">-23</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_withholding"/>
+        <field name="l10n_it_withholding_type">RT02</field>
+        <field name="l10n_it_withholding_reason">ZO</field>
+        <field name="tax_exigibility">on_payment</field>
+        <field name="cash_basis_transition_account_id" ref="l10n_it.2603"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2602'),
+                'plus_report_line_ids': [ref('withh_tax_report_it_line')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2602'),
+                'minus_report_line_ids': [ref('withh_tax_report_it_line')],
+            }),
+        ]"/>
+    </record>
+
+    <!-- INPS ................................................................................. -->
+    <record id="4vinps" model="account.tax.template">
+        <field name="description">4vinps</field>
+        <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+        <field name="name">4% INPS</field>
+        <field name="sequence">5</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="include_base_amount">True</field>
+        <field name="tax_group_id" ref="tax_group_pension_fund"/>
+        <field name="l10n_it_pension_fund_type">TC22</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2630'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2630'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="4ainps" model="account.tax.template">
+        <field name="description">4ainps</field>
+        <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+        <field name="name">4% INPS</field>
+        <field name="sequence">5</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="price_include">False</field>
+        <field name="include_base_amount">True</field>
+        <field name="l10n_it_pension_fund_type">TC22</field>
+        <field name="tax_group_id" ref="tax_group_pension_fund"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.4402'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.4402'),
+            }),
+        ]"/>
+   </record>
+
+    <!-- Pension Fund (Cassa Previdenziale) ................................................... -->
+    <record id="4vcp" model="account.tax.template">
+        <field name="description">4vcp</field>
+        <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+        <field name="name">4% Pension Fund</field>
+        <field name="sequence">20</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="include_base_amount">True</field>
+        <field name="tax_group_id" ref="tax_group_pension_fund"/>
+        <field name="l10n_it_pension_fund_type">TC01</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2630'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2630'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="4acp" model="account.tax.template">
+        <field name="description">4acp</field>
+        <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+        <field name="name">4% Pension Fund</field>
+        <field name="sequence">20</field>
+        <field name="amount">4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="price_include">False</field>
+        <field name="include_base_amount">True</field>
+        <field name="l10n_it_pension_fund_type">TC01</field>
+        <field name="tax_group_id" ref="tax_group_pension_fund"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.4402'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.4402'),
+            }),
+        ]"/>
+   </record>
+
+    <!-- ENASARCO ................................................................ -->
+    <record id="enasarcov" model="account.tax.template">
+        <field name="description">enasarcov</field>
+        <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+        <field name="name">ENASARCO</field>
+        <field name="sequence">13</field>
+        <field name="amount">-8.5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_enasarco"/>
+        <field name="l10n_it_pension_fund_type">TC07</field>
+        <field name="tax_exigibility">on_payment</field>
+        <field name="cash_basis_transition_account_id" ref="l10n_it.1611"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2630'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2630'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="enasarcoa" model="account.tax.template">
+        <field name="description">enasarcoa</field>
+        <field name="chart_template_id" ref="l10n_it.l10n_it_chart_template_generic"/>
+        <field name="name">ENASARCO</field>
+        <field name="sequence">13</field>
+        <field name="amount">-8.5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="price_include">False</field>
+        <field name="tax_group_id" ref="tax_group_enasarco"/>
+        <field name="l10n_it_pension_fund_type">TC07</field>
+        <field name="tax_exigibility">on_payment</field>
+        <field name="cash_basis_transition_account_id" ref="l10n_it.1611"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2630'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_it.2630'),
+            }),
+        ]"/>
+    </record>
+</odoo>

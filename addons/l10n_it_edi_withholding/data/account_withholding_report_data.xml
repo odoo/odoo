@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="withh_tax_report_it" model="account.tax.report">
+        <field name="name">Withholding Report</field>
+        <field name="country_id" ref="base.it"/>
+    </record>
+    <record id="withh_tax_report_it_line" model="account.tax.report.line">
+        <field name="name">Withholding Amount</field>
+        <field name="code">wth</field>
+        <field name="tag_name">WTH</field>
+        <field name="sequence">1</field>
+        <field name="report_id" ref="withh_tax_report_it"/>
+    </record>
+</odoo>

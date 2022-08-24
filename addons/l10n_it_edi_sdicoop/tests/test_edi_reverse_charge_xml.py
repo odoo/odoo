@@ -6,11 +6,11 @@ from lxml import etree
 
 from odoo import fields
 from odoo.tests import tagged
-from odoo.addons.l10n_it_edi_sdicoop.tests.test_edi_xml import TestItEdi
+from odoo.addons.l10n_it_edi_sdicoop.tests.test_edi_xml import TestItEdiCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestItEdiReverseCharge(TestItEdi):
+class TestItEdiReverseCharge(TestItEdiCommon):
 
     @classmethod
     def setUpClass(cls):

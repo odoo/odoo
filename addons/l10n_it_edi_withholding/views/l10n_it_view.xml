@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_view_tax_form_l10n_it_edi_withholding" model="ir.ui.view">
+        <field name="name">account.tax.form.l10n.it.edi.withholding</field>
+        <field name="model">account.tax</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="l10n_it_edi.account_tax_form_l10n_it_edi"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//page[@name='advanced_options']" position="inside">
+                <group>
+                    <field name="l10n_it_withholding_type"  attrs="{'readonly': [('amount', '&gt;=', 0.0)]}"/>
+                    <field name="l10n_it_withholding_reason" attrs="{'invisible': [('l10n_it_withholding_type', '=', False)]}"/>
+                    <field name="l10n_it_pension_fund_type"/>
+                </group>
+            </xpath>
+        </data>
+        </field>
+    </record>
+
+    <record id="view_invoice_tree_l10n_it_edi_withholding" model="ir.ui.view">
+        <field name="name">account.invoice.tree.l10n.it.edi.withholding</field>
+        <field name="model">account.move</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_untaxed_signed']" position="after">
+                <field name="l10n_it_amount_vat_signed" string="VAT" sum="Total" optional="show"/>
+                <field name="l10n_it_amount_pension_fund_signed" string="Pension Fund" sum="Total" optional="hide"/>
+                <field name="l10n_it_amount_withholding_signed" string="Withholding" sum="Total" optional="hide"/>
+                <field name="l10n_it_amount_before_withholding_signed" string="Before Withholding" sum="Total" optional="hide"/>
+            </xpath>
+            <field name="amount_untaxed_signed" position="attributes">
+                <attribute name="string">Base Total</attribute>
+            </field>
+        </field>
+    </record>
+
+</odoo>
