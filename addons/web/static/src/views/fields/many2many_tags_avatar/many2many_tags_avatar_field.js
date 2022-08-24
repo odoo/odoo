@@ -7,11 +7,10 @@ import { TagsList } from "../many2many_tags/tags_list";
 
 export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
     get tags() {
-        return this.props.value.records.map((record) => ({
-            id: record.id, // datapoint_X
-            text: record.data.display_name,
-            img: `/web/image/${this.props.relation}/${record.resId}/avatar_128`,
-            onDelete: !this.props.readonly ? () => this.deleteTag(record.id) : undefined,
+        return super.tags.map((tag) => ({
+            ...tag,
+            img: `/web/image/${this.props.relation}/${tag.resId}/avatar_128`,
+            onDelete: !this.props.readonly ? () => this.deleteTag(tag.id) : undefined,
         }));
     }
 }
