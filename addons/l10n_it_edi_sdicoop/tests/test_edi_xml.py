@@ -13,7 +13,6 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
-@tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdiCommon(AccountEdiTestCommon):
 
     @classmethod
