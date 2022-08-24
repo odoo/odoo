@@ -119,7 +119,7 @@ class Slide(models.Model):
     sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
     description = fields.Html('Description', translate=True)
-    channel_id = fields.Many2one('slide.channel', string="Course", required=True)
+    channel_id = fields.Many2one('slide.channel', string="Course", required=True, ondelete='cascade')
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
     is_new_slide = fields.Boolean('Is New Slide', compute='_compute_is_new_slide')
@@ -684,11 +684,6 @@ class Slide(models.Model):
         rec = super(Slide, self).copy(default)
         rec.sequence = 0
         return rec
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_already_taken(self):
-        if self.question_ids and self.channel_id.channel_partner_ids:
-            raise UserError(_("People already took this quiz. To keep course progression it should not be deleted."))
 
     def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):

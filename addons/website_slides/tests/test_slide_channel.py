@@ -134,6 +134,15 @@ class TestSlidesManagement(slides_common.SlidesCase):
             ['Congratulation! You completed %s' % self.channel.name, 'ATestSubject']
         )
 
+    def test_unlink_slide_channel(self):
+        self.assertTrue(self.channel.slide_content_ids.mapped('question_ids').exists(),
+            "Has question(s) linked to the slides")
+        self.assertTrue(self.channel.channel_partner_ids.exists(), "Has participant(s)")
+
+        self.channel.with_user(self.user_manager).unlink()
+        self.assertFalse(self.channel.exists(),
+            "Should have deleted channel along with the slides even if there are slides with quiz and participant(s)")
+
 
 class TestSequencing(slides_common.SlidesCase):
 
