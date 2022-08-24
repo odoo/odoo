@@ -1352,7 +1352,7 @@
         </record>
 
         <record id="action_account_moves_all_grouped_matching" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general', 'search_default_group_by_matching': 1, 'search_default_posted':1, 'expand':'1'}</field>
+            <field name="context">{'journal_type':'general', 'search_default_posted':1, 'expand':'1'}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>

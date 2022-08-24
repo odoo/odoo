@@ -7,6 +7,7 @@ from functools import lru_cache
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import frozendict, formatLang, format_date
+from odoo.addons.web.controllers.utils import clean_action
 
 INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
 
@@ -2133,15 +2134,8 @@ class AccountMoveLine(models.Model):
 
         # ==== Collect all involved lines through the existing reconciliation ====
 
-        involved_lines = sorted_lines
-        involved_partials = self.env['account.partial.reconcile']
-        current_lines = involved_lines
-        current_partials = involved_partials
-        while current_lines:
-            current_partials = (current_lines.matched_debit_ids + current_lines.matched_credit_ids) - current_partials
-            involved_partials += current_partials
-            current_lines = (current_partials.debit_move_id + current_partials.credit_move_id) - current_lines
-            involved_lines += current_lines
+        involved_lines = sorted_lines._all_reconciled_lines()
+        involved_partials = involved_lines.matched_credit_ids | involved_lines.matched_debit_ids
 
         # ==== Create partials ====
 
@@ -2335,6 +2329,16 @@ class AccountMoveLine(models.Model):
             ids.append(aml.id)
         return ids
 
+    def _all_reconciled_lines(self):
+        reconciliation_lines = self.filtered(lambda x: x.account_id.reconcile or x.account_id.account_type in ('asset_cash', 'liability_credit_card'))
+        current_lines = reconciliation_lines
+        current_partials = self.env['account.partial.reconcile']
+        while current_lines:
+            current_partials = (current_lines.matched_debit_ids + current_lines.matched_credit_ids) - current_partials
+            current_lines = (current_partials.debit_move_id + current_partials.credit_move_id) - current_lines
+            reconciliation_lines += current_lines
+        return reconciliation_lines
+
     def _get_attachment_domains(self):
         self.ensure_one()
         domains = [[('res_model', '=', 'account.move'), ('res_id', '=', self.move_id.id)]]
@@ -2447,9 +2451,9 @@ class AccountMoveLine(models.Model):
 
     def open_reconcile_view(self):
         action = self.env['ir.actions.act_window']._for_xml_id('account.action_account_moves_all_grouped_matching')
-        ids = self._reconciled_lines()
+        ids = self._all_reconciled_lines().filtered(lambda l: l.matched_debit_ids or l.matched_credit_ids).ids
         action['domain'] = [('id', 'in', ids)]
-        return action
+        return clean_action(action, self.env)
 
     def open_move(self):
         return self.move_id.open_move()
