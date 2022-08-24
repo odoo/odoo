@@ -5,6 +5,7 @@ import json
 from collections import defaultdict
 from datetime import timedelta
 from freezegun import freeze_time
+from threading import Event
 from unittest.mock import patch
 
 from odoo.api import Environment
@@ -140,3 +141,52 @@ class TestWebsocketCaryall(WebsocketCase):
             self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
             dispatch._dispatch_notifications(next(iter(dispatch._ws_to_subscription.keys())))
             self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
+
+    def test_channel_subscription_disconnect(self):
+        subscribe_done_event = Event()
+        original_subscribe = dispatch.subscribe
+
+        def patched_subscribe(*args):
+            original_subscribe(*args)
+            subscribe_done_event.set()
+
+        with patch.object(dispatch, 'subscribe', patched_subscribe):
+            websocket = self.websocket_connect()
+            websocket.send(json.dumps({
+                'event_name': 'subscribe',
+                'data': {'channels': ['my_channel'], 'last': 0}
+            }))
+            subscribe_done_event.wait(timeout=5)
+            # channel is added as expected to the channel to websocket map.
+            self.assertIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
+            websocket.close(CloseCode.CLEAN)
+            self.wait_remaining_websocket_connections()
+            # channel is removed as expected when removing the last
+            # websocket that was listening to this channel.
+            self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
+
+    def test_channel_subscription_update(self):
+        subscribe_done_event = Event()
+        original_subscribe = dispatch.subscribe
+
+        def patched_subscribe(*args):
+            original_subscribe(*args)
+            subscribe_done_event.set()
+
+        with patch.object(dispatch, 'subscribe', patched_subscribe):
+            websocket = self.websocket_connect()
+            websocket.send(json.dumps({
+                'event_name': 'subscribe',
+                'data': {'channels': ['my_channel'], 'last': 0}
+            }))
+            subscribe_done_event.wait(timeout=5)
+            subscribe_done_event.clear()
+            # channel is added as expected to the channel to websocket map.
+            self.assertIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
+            websocket.send(json.dumps({
+                'event_name': 'subscribe',
+                'data': {'channels': ['my_channel_2'], 'last': 0}
+            }))
+            subscribe_done_event.wait(timeout=5)
+            # channel is removed as expected when updating the subscription.
+            self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
