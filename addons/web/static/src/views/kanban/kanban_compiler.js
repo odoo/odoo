@@ -195,10 +195,13 @@ export class KanbanCompiler extends ViewCompiler {
         const cls = el.getAttribute("class") || "";
 
         combineAttributes(dropdownEl, "menuClass", toStringExpression(cls), "+' '+");
+        const wrapper = createElement("KanbanDropdownMenuWrapper");
 
         for (const child of el.childNodes) {
-            append(dropdownEl, this.compileNode(child, params));
+            append(wrapper, this.compileNode(child, params));
         }
+
+        append(dropdownEl, wrapper);
 
         return shouldInsert && dropdownEl;
     }
