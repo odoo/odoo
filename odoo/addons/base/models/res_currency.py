@@ -290,6 +290,7 @@ class Currency(models.Model):
                  LIMIT 1) AS date_end
             FROM res_currency_rate r
             JOIN res_company c ON (r.company_id is null or r.company_id = c.id)
+            ORDER BY date_end
         """
 
     @api.model
