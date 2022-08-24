@@ -34,7 +34,7 @@
             <field name="name">hr.employee.public.form</field>
             <field name="model">hr.employee.public</field>
             <field name="arch" type="xml">
-                <form string="Employee" create="0" write="0" js_class="hr_employee_form">
+                <form string="Employee" create="0" write="0" js_class="hr_employee_form" class="o_employee_form">
                     <field name="image_128" invisible="1" />
                     <header/>
                     <sheet>
@@ -50,7 +50,7 @@
                                 <label for="name" string="Employee Name"/>
                                 <h1>
                                     <field name="name" placeholder="e.g. John Doe" required="True"/>
-                                    <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                    <a title="Chat" icon="fa-comments" t-on-click.prevent="() => openChat(props.record.resId)" href="#" class="ml8" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
                                 </h1>
                                 <h2>
                                     <field name="job_title" placeholder="Job Title" />
@@ -196,7 +196,7 @@
             <field name="res_model">hr.employee.public</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[]</field>
-            <field name="context">{}</field>
+            <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="hr_employee_public_view_search"/>
             <field name="help" type="html">
