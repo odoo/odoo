@@ -3785,6 +3785,18 @@ class AccountMoveLine(models.Model):
         return result
 
     @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        if operator == 'ilike':
+            args = ['|', '|',
+                    ('name', 'ilike', name),
+                    ('move_id', 'ilike', name),
+                    ('product_id', 'ilike', name)]
+            result = self._search(args, limit=limit, access_rights_uid=name_get_uid)
+            return models.lazy_name_get(self.browse(result).with_user(name_get_uid))
+
+        return super()._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
+
+    @api.model
     def invalidate_cache(self, fnames=None, ids=None):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:

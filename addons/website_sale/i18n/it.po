@@ -11,13 +11,13 @@
 # Alberto Carollo <baba75@gmail.com>, 2019
 # David Minneci <david@numeko.it>, 2019
 # Paolo Caruccio <paolo.caruccio66@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Giovanni Perteghella <giovanni@perteghella.org>, 2019
 # Paolo Valier, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
 # Friederike Fasterling-Nesselbosch, 2021
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Martin Trigaux, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,13 +25,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -858,6 +858,16 @@ msgstr "Descrizione categoria"
 #: model:product.public.category,name:website_sale.public_category_chairs
 msgid "Chairs"
 msgstr "Sedie"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Impossibile modificare il nome dopo l'emissione delle fatture del conto. Per"
+" questa operazione contattarci direttamente."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id

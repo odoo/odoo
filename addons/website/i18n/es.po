@@ -43,11 +43,11 @@
 # gpi odoo <gpi@odoo.com>, 2020
 # Osiris Anael Roman Eras <osiris.roman@yachaytech.edu.ec>, 2020
 # Jorge Luis Alfonso <jlalfonso21@gmail.com>, 2020
-# jabelchi, 2021
 # juankfj, 2022
 # Jonatan Gk, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
 # Martin Trigaux, 2022
+# jabelchi, 2022
 # 
 msgid ""
 msgstr ""
@@ -55,7 +55,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-07 12:31+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: jabelchi, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1385,7 +1385,7 @@ msgstr "Archivado"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Breadcrumb"
-msgstr "Barra de migas"
+msgstr "Migas de pan"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -2630,6 +2630,18 @@ msgid "Google Maps API Key"
 msgstr "Clave de la API de Google Maps"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Google deprecated both its \"Universal Analytics\" and \"Google Sign-In\" "
+"API. It means that only accounts and keys created before 2020 will be able "
+"to integrate their Analytics dashboard in Odoo (or any other website). This "
+"will be possible only up to mid 2023. After that, those services won't work "
+"anymore, at all."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Great Value"
 msgstr "Gran valor"
@@ -3658,6 +3670,15 @@ msgstr "Nuevo evento"
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "New Forum"
 msgstr "Nuevo foro"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"New Google Analytics accounts and keys are now using Google Analytics 4 "
+"which, for now, can't be integrated/embed in external websites."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -5065,6 +5086,15 @@ msgid "This page will be visible on {{ date_formatted }}"
 msgstr "Esta página será visible el {{ date_formatted }}"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.backend.xml:0
+#, python-format
+msgid ""
+"Those accounts should now check their Analytics dashboard in the Google "
+"platform directly."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Thumbnails"
 msgstr "Miniaturas"
@@ -6094,7 +6124,7 @@ msgstr "y copie y pegue el código de inserción aquí."
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "breadcrumb"
-msgstr "barra de migas"
+msgstr "migas de pan"
 
 #. module: website
 #. openerp-web

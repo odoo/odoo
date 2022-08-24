@@ -8,9 +8,11 @@ from unittest.mock import patch
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
 from odoo.addons.test_mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
+from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
+@tagged('mail_composer')
 class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @classmethod
@@ -162,6 +164,7 @@ class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
             self.assertEqual(self.test_record.message_ids[0].author_id, portal_user.partner_id)
 
 
+@tagged('mail_composer')
 class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
 
     @classmethod
@@ -188,7 +191,13 @@ class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
         cls.email_1 = 'test1@example.com'
         cls.email_2 = 'test2@example.com'
         cls.email_3 = cls.partner_1.email
-        cls._create_template('mail.test.simple', {
+        # template with emails derived from template (assumes templates are processed in this form)
+        cls.template_emails_template = cls._create_template('mail.test.simple', {
+            'email_from': "${'test@test.test'}",
+            'email_to': "${'test@test.test'}",
+            'email_cc': "${'test@test.test'}",
+        })
+        cls.email_template = cls._create_template('mail.test.simple', {
             'attachment_ids': [(0, 0, cls._attachments[0]), (0, 0, cls._attachments[1])],
             'partner_to': '%s,%s' % (cls.partner_2.id, cls.user_admin.partner_id.id),
             'email_to': '%s, %s' % (cls.email_1, cls.email_2),
@@ -288,7 +297,9 @@ class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
             [[self.partner_1], [self.partner_2], [new_partners[0]], [new_partners[1]], [self.partner_admin]],
             subject='About %s' % self.test_record.name,
             body_content=self.test_record.name,
-            attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
+            attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')],
+            reply_to=self.user_employee.email_formatted,
+        )
 
         self._mails = self._mails_record2
         self.assertEmails(
@@ -296,7 +307,9 @@ class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
             [[self.partner_1], [self.partner_2], [new_partners[0]], [new_partners[1]], [self.partner_admin]],
             subject='About %s' % test_record_2.name,
             body_content=test_record_2.name,
-            attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')])
+            attachments=[('first.txt', b'My first attachment', 'text/plain'), ('second.txt', b'My second attachment', 'text/plain')],
+            reply_to=self.user_employee.email_formatted,
+        )
 
         message_1 = self.test_record.message_ids[0]
         message_2 = test_record_2.message_ids[0]
@@ -306,6 +319,50 @@ class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEqual(message_2.subject, 'About %s' % test_record_2.name)
         self.assertIn(self.test_record.name, message_1.body)
         self.assertIn(test_record_2.name, message_2.body)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_composer_w_template_mass_mailing_dynamic_from(self):
+        email_template = self._create_template('mail.test.simple', {
+            'email_from': "${('\"' + object.name + '\" <%s>' % 'dynamic.from@test.com') | safe}",
+            'partner_to': '%s,%s' % (self.partner_2.id, self.user_admin.partner_id.id),
+        })
+
+        test_record_2 = self.env['mail.test.simple'].with_context(self._test_context).create({'name': 'Test2', 'email_from': ''})
+
+        composer = self.env['mail.compose.message'].with_user(self.user_employee).with_context({
+            'default_composition_mode': 'mass_mail',
+            'default_notify': False,
+            'default_model': 'mail.test.simple',
+            'default_res_id': self.test_record.id,
+            'default_template_id': email_template.id,
+            'active_ids': [self.test_record.id, test_record_2.id]
+        }).create({})
+        values = composer.onchange_template_id(email_template.id, 'mass_mail', 'mail.test.simple', self.test_record.id)['value']
+        composer.write(values)
+        composer.send_mail()
+
+        # hack to use assertEmails
+        self._mails_record1 = [dict(mail) for mail in self._mails if '%s-%s' % (self.test_record.id, self.test_record._name) in mail['message_id']]
+        self._mails_record2 = [dict(mail) for mail in self._mails if '%s-%s' % (test_record_2.id, test_record_2._name) in mail['message_id']]
+
+        self._mails = self._mails_record1
+        self.assertEmails(
+            False,  # trigger custom email_from
+            [[self.partner_2], [self.partner_admin]],
+            body_content=self.test_record.name,
+            email_from='"%s" <dynamic.from@test.com>' % self.test_record.name,
+            subject='About %s' % self.test_record.name,
+            reply_to='"%s" <dynamic.from@test.com>' % self.test_record.name,
+        )
+        self._mails = self._mails_record2
+        self.assertEmails(
+            False,  # trigger custom email_from
+            [[self.partner_2], [self.partner_admin]],
+            body_content=test_record_2.name,
+            email_from='"%s" <dynamic.from@test.com>' % test_record_2.name,
+            subject='About %s' % test_record_2.name,
+            reply_to='"%s" <dynamic.from@test.com>' % test_record_2.name,
+        )
 
     def test_composer_template_save(self):
         self.env['mail.compose.message'].with_context({

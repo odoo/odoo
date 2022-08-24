@@ -413,6 +413,7 @@
                 <form class="js_attributes mb-2" method="get">
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
+                    <input type="hidden" name="order" t-att-value="order"/>
                     <ul class="nav nav-pills flex-column">
                         <t t-foreach="attributes" t-as="a">
                             <li t-if="a.value_ids and len(a.value_ids) &gt; 1" class="nav-item">
