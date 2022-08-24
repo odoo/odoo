@@ -15,6 +15,8 @@ from odoo.tools import config
 
 class TestDatabaseManager(HttpCase):
     def test_database_manager(self):
+        if not config['list_db']:
+            return
         res = self.url_open('/web/database/manager')
         self.assertEqual(res.status_code, 200)
 
