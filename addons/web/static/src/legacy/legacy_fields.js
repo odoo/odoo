@@ -59,7 +59,7 @@ class FieldAdapter extends ComponentAdapter {
         return [name, record, options];
     }
 
-    updateWidget(nextProps) {
+    async updateWidget(nextProps) {
         const { name, record, options } = nextProps.fieldParams;
         if (this.widget.mode !== options.mode) {
             // the mode changed, we need to instantiate a new FieldWidget
@@ -69,9 +69,11 @@ class FieldAdapter extends ComponentAdapter {
                 this.oldWidget = this.widget;
             }
             this.widget = new this.props.Component(this, name, record, options);
-            return this.widget._widgetRenderAndInsert(() => {});
+            this.widgetProm = this.widget._widgetRenderAndInsert(() => {});
+            return this.widgetProm;
         } else {
             // the mode is the same, simply reset the FieldWidget with the new record
+            await this.widgetProm;
             return this.widget.reset(record, this.lastFieldChangedEvent, true);
         }
     }
