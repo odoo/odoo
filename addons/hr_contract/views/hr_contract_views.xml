@@ -39,7 +39,7 @@
                             </div>
                         </button>
                     </div>
-                    <xpath expr="//field[@name='user_id']" position="before">
+                    <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
                         <field name="first_contract_date"
                                attrs="{'invisible' : ['|', ('employee_type', 'not in', ['employee', 'student']), ('first_contract_date', '=', False)]}"
                                readonly="1"/>
