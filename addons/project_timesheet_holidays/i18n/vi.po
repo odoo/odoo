@@ -41,7 +41,7 @@ msgid ""
 "the time off %s. If you don't want a timesheet, you should leave the "
 "internal project and task empty."
 msgstr ""
-"Yêu cầu cả nhiệm vụ và dự án nội bộ để tạo bảng chấm công cho nghỉ phép %s. "
+"Yêu cầu cả nhiệm vụ và dự án nội bộ để tạo bảng chấm công cho nghỉ %s. "
 "Nếu bạn không muốn bảng chấm công, bạn nên để trống dự án và nhiệm vụ nội "
 "bộ."
 
@@ -58,7 +58,7 @@ msgstr "Thiết lập Cấu hình"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
-msgstr "Giá trị dự án mặc định cho bảng chấm công được tạo từ loại nghỉ phép."
+msgstr "Giá trị dự án mặc định cho bảng chấm công được tạo từ kiểu nghỉ."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_employee
@@ -73,7 +73,7 @@ msgstr "Đưa vào thời gian biểu"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
 msgid "Global Time Off"
-msgstr "Nghỉ phép chung"
+msgstr "Nghỉ toàn cục"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -81,7 +81,7 @@ msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
 msgstr ""
-"Nếu đánh dấu, khi xác nhận nghỉ phép, bảng chấm công sẽ được tạo trong Dự án"
+"Nếu đánh dấu, khi xác nhận nghỉ, bảng chấm công sẽ được tạo trong Dự án"
 " nghỉ lễ của công ty."
 
 #. module: project_timesheet_holidays
@@ -110,7 +110,7 @@ msgstr "Dự án"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Chi tiết nguồn lực nghỉ phép"
+msgstr "Chi tiết nguồn lực nghỉ"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
@@ -123,7 +123,7 @@ msgstr "Nhiệm vụ"
 msgid ""
 "The project will contain the timesheet generated when a time off is "
 "validated."
-msgstr "Dự án sẽ chứa bảng chấm công được tạo khi nghỉ phép được xác nhận."
+msgstr "Dự án sẽ chứa bảng chấm công được tạo khi nghỉ được xác nhận."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
@@ -138,13 +138,13 @@ msgstr "Nghỉ"
 #: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
 #, python-format
 msgid "Time Off (%s/%s)"
-msgstr "Nghỉ phép (%s/%s)"
+msgstr "Nghỉ (%s/%s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr "Nhiệm vụ nghỉ phép"
+msgstr "Nhiệm vụ nghỉ"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
@@ -163,5 +163,5 @@ msgid ""
 "You cannot delete timesheets linked to time off. Please, cancel the time off"
 " instead."
 msgstr ""
-"Bạn không thể xóa bảng chấm công được liên kết với nghỉ phép. Hãy xóa nghỉ "
-"phép."
+"Bạn không thể xóa bảng chấm công được liên kết với nghỉ. Hãy xóa nghỉ "
+"trước."
