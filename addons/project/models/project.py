@@ -1789,6 +1789,13 @@ class Task(models.Model):
         return public_fields
 
     @api.model
+    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
+        """The override of fields_get making fields readonly for portal users
+        makes the view cache dependent on the fact the user has the group portal or not"""
+        key = super()._get_view_cache_key(view_id, view_type, **options)
+        return key + (self.env.user.has_group('base.group_portal'),)
+
+    @api.model
     def default_get(self, default_fields):
         vals = super(Task, self).default_get(default_fields)
 
