@@ -1,10 +1,12 @@
 .css_attribute_color {
     position: relative;
     display: inline-block;
-    border: 5px solid map-get($grays, '300');
+    border: 5px solid $input-border-color;
     border-radius: 50%;
     text-align: center;
-    transition: border 200ms;
+    transition: $input-transition;
+
+    @include o-field-pointer();
 
     &:before {
         content: "";

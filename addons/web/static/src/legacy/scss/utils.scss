@@ -145,6 +145,19 @@
     cursor: url(/web/static/img/openhand.cur), grab;
 }
 
+@mixin o-field-pointer() {
+    // Force `pointer`cursor on  inputs and labels
+    &:not(:disabled):not(.disabled) {
+        &, input, label {
+            cursor: pointer;
+        }
+
+        &:hover, &:hover .form-check-input {
+            border-color: $form-check-input-checked-border-color;
+        }
+    }
+}
+
 // ------------------------------------------------------------------
 // Hovering effects
 // ------------------------------------------------------------------
