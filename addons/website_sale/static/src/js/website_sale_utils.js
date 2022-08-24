@@ -64,6 +64,7 @@ function animateClone($cart, $elem, offsetTop, offsetLeft) {
                     top: $imgtodrag.offset().top,
                     left: $imgtodrag.offset().left
                 })
+                .removeClass()
                 .addClass('o_website_sale_animate')
                 .appendTo(document.body)
                 .css({
