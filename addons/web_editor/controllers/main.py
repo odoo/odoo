@@ -6,12 +6,14 @@ import logging
 import re
 import time
 import requests
+import uuid
 import werkzeug.exceptions
 import werkzeug.urls
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
 from base64 import b64decode, b64encode
+from datetime import datetime
 
 from odoo.http import request
 from odoo import http, tools, _, SUPERUSER_ID
@@ -208,6 +210,12 @@ class Web_Editor(http.Controller):
                 mimetype = guess_mimetype(data)
                 if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}
+                if not name:
+                    name = '%s-%s%s' % (
+                        datetime.now().strftime('%Y%m%d%H%M%S'),
+                        str(uuid.uuid4())[:6],
+                        SUPPORTED_IMAGE_MIMETYPES[mimetype],
+                    )
             except UserError:
                 # considered as an image by the browser file input, but not
                 # recognized as such by PIL, eg .webp

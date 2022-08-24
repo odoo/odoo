@@ -212,6 +212,7 @@ const Wysiwyg = Widget.extend({
             direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${this.getSession().uid}`,
             renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link'],
+            dropImageAsAttachment: options.dropImageAsAttachment,
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
@@ -899,7 +900,7 @@ const Wysiwyg = Widget.extend({
         await this.cleanForSave();
 
         const editables = this.options.getContentEditableAreas();
-        await this.saveModifiedImages(editables.length ? $(editables) : this.$editable);
+        await this.savePendingImages(editables.length ? $(editables) : this.$editable);
         await this._saveViewBlocks();
 
         window.removeEventListener('beforeunload', this._onBeforeUnload);
@@ -935,15 +936,28 @@ const Wysiwyg = Widget.extend({
         });
     },
     /**
-     * Create/Update cropped attachments.
+     * Create/Update attachments for unsaved images.
+     * (e.g. modified/cropped images, drag & dropped images, pasted images..)
      *
      * @param {jQuery} $editable
      * @returns {Promise}
      */
-    saveModifiedImages: function ($editable = this.$editable) {
+    savePendingImages($editable = this.$editable) {
         const defs = _.map($editable, async editableEl => {
             const {oeModel: resModel, oeId: resId} = editableEl.dataset;
-            const proms = [...editableEl.querySelectorAll('.o_modified_image_to_save')].map(async el => {
+            const b64Proms = [...editableEl.querySelectorAll('.o_b64_image_to_save')].map(async el => {
+                const attachment = await this._rpc({
+                    route: '/web_editor/attachment/add_data',
+                    params: {
+                        name: el.dataset.fileName || '',
+                        data: el.getAttribute('src').split(',')[1],
+                        is_image: true,
+                    },
+                });
+                el.setAttribute('src', attachment.image_src);
+                el.classList.remove('o_b64_image_to_save');
+            });
+            const modifiedProms = [...editableEl.querySelectorAll('.o_modified_image_to_save')].map(async el => {
                 const isBackground = !el.matches('img');
                 el.classList.remove('o_modified_image_to_save');
                 // Modifying an image always creates a copy of the original, even if
@@ -969,7 +983,7 @@ const Wysiwyg = Widget.extend({
                     el.setAttribute('src', newAttachmentSrc);
                 }
             });
-            return Promise.all(proms);
+            return Promise.all([...b64Proms, ...modifiedProms]);
         });
         return Promise.all(defs);
     },
