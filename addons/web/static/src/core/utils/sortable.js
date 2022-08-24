@@ -22,6 +22,8 @@ const { useEffect, useEnv, useExternalListener, onWillUnmount } = owl;
  *  work on group elements during the dragging sequence.
  * @property {string | () => string} [handle] additional selector for when the dragging
  *  sequence must be initiated when dragging on a certain part of the element.
+ * @property {string | () => string} [ignore] selector targetting elements that must
+ *  initiate a drag.
  * @property {boolean | () => boolean} [connectGroups] whether elements can be dragged
  *  accross different parent groups. Note that it requires a `groups` param to work.
  * @property {string | () => string} [cursor] cursor style during the dragging sequence.
@@ -63,6 +65,7 @@ const SORTABLE_PARAMS = {
     elements: ["string"],
     groups: ["string", "function"],
     handle: ["string", "function"],
+    ignore: ["string", "function"],
     connectGroups: ["boolean", "function"],
     cursor: ["string"],
 };
@@ -155,6 +158,11 @@ export function useSortable(params) {
      * @type {string | null}
      */
     let elementSelector = null;
+    /**
+     * Stores the full selector used to initiate a drag sequence.
+     * @type {string | null}
+     */
+    let ignoreSelector = null;
     /**
      * Stores the full selector used to initiate a drag sequence.
      * @type {string | null}
@@ -339,7 +347,12 @@ export function useSortable(params) {
         // outside of the window.
         dragStop(true);
 
-        if (ev.button !== LEFT_CLICK || !enabled || !ev.target.closest(fullSelector)) {
+        if (
+            ev.button !== LEFT_CLICK ||
+            !enabled ||
+            !ev.target.closest(fullSelector) ||
+            (ignoreSelector && ev.target.closest(ignoreSelector))
+        ) {
             return;
         }
 
@@ -407,8 +420,8 @@ export function useSortable(params) {
         currentContainerRect.height -= ptop + pbottom;
 
         // Prepares the ghost element
-        ghost = currentElement.cloneNode(true);
-        ghost.style.visibility = "hidden";
+        ghost = currentElement.cloneNode(false);
+        ghost.style = `visibility: hidden; display: block; width: ${width}px; height:${height}px;`;
         cleanups.push(() => ghost.remove());
 
         // Binds handlers on eligible groups, if the elements are not confined to
@@ -525,6 +538,9 @@ export function useSortable(params) {
             }
             if (actualParams.handle) {
                 allSelectors.push(actualParams.handle);
+            }
+            if (actualParams.ignore) {
+                ignoreSelector = actualParams.ignore;
             }
             fullSelector = allSelectors.join(" ");
 

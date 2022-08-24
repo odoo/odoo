@@ -201,7 +201,7 @@ QUnit.module("UI", ({ beforeEach }) => {
     QUnit.test("Dynamically disable sortable feature", async (assert) => {
         assert.expect(4);
 
-        let state = reactive({ enableSortable: true });
+        const state = reactive({ enableSortable: true });
         class List extends Component {
             setup() {
                 this.state = useState(state);
@@ -273,5 +273,51 @@ QUnit.module("UI", ({ beforeEach }) => {
         await dragAndDrop(".item:first-child", ".item:nth-child(2)");
 
         assert.ok(true, "No drag sequence should have been initiated");
+    });
+
+    QUnit.test("Ignore specified elements elements", async (assert) => {
+        assert.expect(6);
+
+        class List extends Component {
+            setup() {
+                useSortable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                    ignore: ".ignored",
+                    onStart() {
+                        assert.step("drag");
+                    },
+                });
+            }
+        }
+
+        List.template = xml`
+            <div t-ref="root" class="root">
+                <ul class="list">
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" class="item">
+                        <span class="ignored" t-esc="i" />
+                        <span class="not-ignored" t-esc="i" />
+                    </li>
+                </ul>
+            </div>`;
+
+        await mount(List, target);
+
+        assert.verifySteps([]);
+
+        // Drag root item element
+        await dragAndDrop(".item:first-child", ".item:nth-child(2)");
+
+        assert.verifySteps(["drag"]);
+
+        // Drag ignored element
+        await dragAndDrop(".item:first-child .not-ignored", ".item:nth-child(2)");
+
+        assert.verifySteps(["drag"]);
+
+        // Drag non-ignored element
+        await dragAndDrop(".item:first-child .ignored", ".item:nth-child(2)");
+
+        assert.verifySteps([]);
     });
 });
