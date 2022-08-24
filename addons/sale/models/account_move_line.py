@@ -185,7 +185,7 @@ class AccountMoveLine(models.Model):
             return order.pricelist_id._get_product_price(
                 self.product_id,
                 1.0,
-                self.product_uom_id,
+                uom=self.product_uom_id,
                 date=order.date_order,
             )
 
