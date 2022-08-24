@@ -2209,6 +2209,36 @@ QUnit.module('LegacyViews', {
         form.destroy();
     });
 
+    QUnit.test("nested buttons in form view header", async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                    '<header>' +
+                        '<button name="0"/>' +
+                        '<button name="1"/>' +
+                        '<div>' +
+                            '<button name="2"/>' +
+                            '<button name="3"/>' +
+                        '</div>' +
+                    '</header>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        var buttons = form.$('.o_form_statusbar button');
+        assert.hasAttrValue(buttons[0], 'name', '0');
+        assert.hasAttrValue(buttons[1], 'name', '1');
+        assert.hasAttrValue(buttons[2], 'name', '2');
+        assert.hasAttrValue(buttons[3], 'name', '3');
+
+        form.destroy();
+    });
+
     QUnit.test('button in form view and long willStart', async function (assert) {
         assert.expect(6);
 
