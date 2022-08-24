@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
-import { FieldFloat } from 'web.basic_fields';
-import fieldRegistry from 'web.field_registry';
-import field_utils from 'web.field_utils';
+import { FloatField } from '@web/views/fields/float/float_field';
+import { registry } from '@web/core/registry';
+import { formatFloat } from '@web/views/fields/formatters';
+
 /**
  * This widget is used to display alongside the total quantity to consume of a production order,
  * the exact quantity that the worker should consume depending on the BoM. Ex:
@@ -10,67 +11,37 @@ import field_utils from 'web.field_utils';
  * The production order is created to make 5 finished product and the quantity producing is set to 3.
  * The widget will be '3.000 / 5.000'.
  */
-const MrpShouldConsume = FieldFloat.extend({
-    /**
-     * @override
-     */
-    init: function (parent, name, params) {
-        this._super.apply(this, arguments);
-        this.displayShouldConsume = !['done', 'draft', 'cancel'].includes(params.data.state);
-        this.should_consume_qty = field_utils.format.float(params.data.should_consume_qty, params.fields.should_consume_qty, this.nodeOptions);
-    },
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+const { useRef, onPatched, onMounted } = owl;
+export class MrpShouldConsumeOwl extends FloatField {
+    setup() {
+        super.setup()
+        const { data, fields } = this.props.record
+        this.shouldConsumeQty = formatFloat(
+            data.should_consume_qty,
+            { ...fields.should_consume_qty, ...this.nodeOptions }
+        );
+        this.displayShouldConsume = !['done', 'draft', 'cancel'].includes(data.state);
+        this.prefixSpanRef = useRef('prefixSpan')
+        this.wrapSpanRef = useRef('wrapSpan')
+        this.inputSpanRef = useRef('numpadDecimal')
+        onMounted(this._renderPrefix);
+        onPatched(this._renderPrefix);
+    }
 
-    /**
-     * Prefix the classic float field (this.$el) by a static value.
-     *
-     * @private
-     * @param {float} [value] quantity to display before the input `el`
-     * @param {bool} [edit] whether the field will be editable or readonly
-     */
-    _addShouldConsume: function (value, edit=false) {
-        const $to_consume_container = $('<span class="o_should_consume ps-1"/>');
-        if (edit) {
-            $to_consume_container.addClass('o_row');
-        }
-        $to_consume_container.text(value + ' / ');
-        this.setElement(this.$el.wrap($to_consume_container).parent());
-    },
-
-    /**
-     * @private
-     * @override
-     */
-    _renderEdit: function () {
-        if (this.displayShouldConsume) {
-            if (!this.$el.text().includes('/')) {
-                this.$input = this.$el;
-                this._addShouldConsume(this.should_consume_qty, true);
+    _renderPrefix () {
+        const wrapClass = "o_should_consume ps-1"
+        if (this.displayShouldConsume && this.prefixSpanRef.el && this.wrapSpanRef.el) {
+            this.wrapSpanRef.el.className = (this.props.readonly) ? wrapClass : wrapClass + " o_row"
+            this.prefixSpanRef.el.textContentc = this.shouldConsumeQty + ' / ';
+            if (this.inputSpanRef.el) {
+                this.inputSpanRef.el.classList.add("o_quick_editable", "o_field_widget", "o_field_number", "o_field_float")
             }
-            this._prepareInput(this.$input);
-        } else {
-            this._super.apply(this);
         }
-    },
-    /**
-     * Resets the content to the formated value in readonly mode.
-     *
-     * @override
-     * @private
-     */
-    _renderReadonly: function () {
-        this.$el.text(this._formatValue(this.value));
-        if (this.displayShouldConsume) {
-            this._addShouldConsume(this.should_consume_qty);
-        }
-    },
-});
+    }
+}
 
-fieldRegistry.add('mrp_should_consume', MrpShouldConsume);
+MrpShouldConsumeOwl.template = "mrp.ShouldConsume"
+MrpShouldConsumeOwl.displayName = "MRP Should Consume"
 
-export default {
-    MrpShouldConsume: MrpShouldConsume,
-};
+registry.category('fields').add('mrp_should_consume', MrpShouldConsumeOwl); 

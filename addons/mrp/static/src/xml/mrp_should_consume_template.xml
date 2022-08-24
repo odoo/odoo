@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mrp.ShouldConsume" owl="1">
+        <t t-if="displayShouldConsume">
+            <span t-ref="wrapSpan"> 
+                <span t-ref="prefixSpan"/>
+                <t t-call="web.FloatField"/>
+            </span>
+        </t>
+        <t t-else="">
+            <t t-call="web.FloatField"/>
+        </t>
+    </t>
+</templates>
