@@ -60,7 +60,6 @@ registerModel({
              * unnecessary and irrelevant (restart / end messages, any text field values, ...).
              */
             if (
-                this.messaging.publicLivechatGlobal.chatbot &&
                 this.messaging.publicLivechatGlobal.chatbot.currentStep &&
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
@@ -391,7 +390,6 @@ registerModel({
             });
 
             if (
-                this.messaging.publicLivechatGlobal.chatbot &&
                 this.messaging.publicLivechatGlobal.chatbot.currentStep &&
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data &&
                 this.messaging.publicLivechatGlobal.messages &&
