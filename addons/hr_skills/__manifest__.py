@@ -34,14 +34,17 @@ This module introduces skills and resumé management for employees.
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'hr_skills/static/src/css/hr_skills.scss',
-            'hr_skills/static/src/js/*.js',
-        ],
-        'web.qunit_suite_tests': [
-            'hr_skills/static/tests/**/*',
+            'hr_skills/static/src/fields/*.js',
+            'hr_skills/static/src/fields/*.scss',
+            'hr_skills/static/src/views/*.js',
         ],
         'web.assets_qweb': [
+            'hr_skills/static/src/fields/skills_one2many.xml',
+            'hr_skills/static/src/fields/*.xml',
             'hr_skills/static/src/xml/**/*',
+        ],
+        'web.assets_tests': [
+            'hr_skills/static/tests/tours/*',
         ],
     },
     'license': 'LGPL-3',
