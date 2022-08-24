@@ -10283,6 +10283,39 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(dropdown, ".o_kanban_manage_toggle_button.o_left");
     });
 
+    QUnit.test("dropdown is closed on item click", async (assert) => {
+        serverData.models.partner.records.splice(1, 3); // keep one record only
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                            <div class="o_dropdown_kanban dropdown">
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <a role="menuitem" class="dropdown-item">Item</a>
+                                </div>
+                            </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            `,
+        });
+
+        assert.containsNone(target, ".dropdown-menu");
+        await click(target, ".o_kanban_renderer .dropdown-toggle");
+        assert.containsOnce(target, ".dropdown-menu");
+        await click(target, ".o_kanban_renderer .dropdown-menu .dropdown-item");
+        assert.containsNone(target, ".dropdown-menu");
+    });
+
     QUnit.test(
         "classes on dropdown are on dropdown main div but not the other attributes",
         async (assert) => {
@@ -10446,12 +10479,12 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "Color '200' (gray) can be used twice (for false value and another value) in progress bar",
         async (assert) => {
-        serverData.models.partner.records.push({ id: 5, bar: true }, { id: 6, bar: false });
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch: `
+            serverData.models.partner.records.push({ id: 5, bar: true }, { id: 6, bar: false });
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
                 <kanban>
                     <field name="bar"/>
                     <field name="foo"/>
@@ -10465,56 +10498,57 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>
             `,
-            groupBy: ["bar"],
-        });
+                groupBy: ["bar"],
+            });
 
-        assert.containsN(target, ".o_kanban_group:nth-child(1) .progress-bar", 2);
-        assert.deepEqual(
-            [...target.querySelectorAll(".o_kanban_group:nth-child(1) .progress-bar")].map(
-                (el) => el.dataset.tooltip
-            ),
-            ["1 blip", "1 Other"]
-        );
-        assert.containsN(target, ".o_kanban_group:nth-child(2) .progress-bar", 4);
-        assert.deepEqual(
-            [...target.querySelectorAll(".o_kanban_group:nth-child(2) .progress-bar")].map(
-                (el) => el.dataset.tooltip
-            ),
-            ["1 yop", "1 gnap", "1 blip", "1 Other"]
-        );
-        assert.deepEqual(getCounters(), ["2", "4"]);
+            assert.containsN(target, ".o_kanban_group:nth-child(1) .progress-bar", 2);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_group:nth-child(1) .progress-bar")].map(
+                    (el) => el.dataset.tooltip
+                ),
+                ["1 blip", "1 Other"]
+            );
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .progress-bar", 4);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_group:nth-child(2) .progress-bar")].map(
+                    (el) => el.dataset.tooltip
+                ),
+                ["1 yop", "1 gnap", "1 blip", "1 Other"]
+            );
+            assert.deepEqual(getCounters(), ["2", "4"]);
 
-        await click(target.querySelector(".o_kanban_group:nth-child(2) .progress-bar"));
+            await click(target.querySelector(".o_kanban_group:nth-child(2) .progress-bar"));
 
-        assert.deepEqual(getCounters(), ["2", "1"]);
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
-            "ABC"
-        );
-        assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
+            assert.deepEqual(getCounters(), ["2", "1"]);
+            assert.strictEqual(
+                target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
+                "ABC"
+            );
+            assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
 
-        await click(
-            target.querySelector(".o_kanban_group:nth-child(2) .progress-bar:nth-child(2)")
-        );
+            await click(
+                target.querySelector(".o_kanban_group:nth-child(2) .progress-bar:nth-child(2)")
+            );
 
-        assert.deepEqual(getCounters(), ["2", "1"]);
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
-            "GHI"
-        );
-        assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
+            assert.deepEqual(getCounters(), ["2", "1"]);
+            assert.strictEqual(
+                target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
+                "GHI"
+            );
+            assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
 
-        await click(
-            target.querySelector(".o_kanban_group:nth-child(2) .progress-bar:nth-child(4)")
-        );
+            await click(
+                target.querySelector(".o_kanban_group:nth-child(2) .progress-bar:nth-child(4)")
+            );
 
-        assert.deepEqual(getCounters(), ["2", "1"]);
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
-            ""
-        );
-        assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
-    });
+            assert.deepEqual(getCounters(), ["2", "1"]);
+            assert.strictEqual(
+                target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").innerText,
+                ""
+            );
+            assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
+        }
+    );
 
     QUnit.test(
         "keep focus inside control panel when pressing arrowdown and no kanban card",
