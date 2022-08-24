@@ -117,17 +117,15 @@ export class AutoComplete extends Component {
         );
     }
     selectOption(indices, params = {}) {
-        this.inputRef.el.value = "";
-        this.forceValFromProp = true;
-
         const option = this.sources[indices[0]].options[indices[1]];
         if (option.unselectable) {
+            this.inputRef.el.value = "";
             return;
         }
 
+        this.forceValFromProp = true;
         this.props.onSelect(option, {
             ...params,
-            inputValue: this.inputRef.el.value.trim(),
             input: this.inputRef.el,
         });
         this.close();
