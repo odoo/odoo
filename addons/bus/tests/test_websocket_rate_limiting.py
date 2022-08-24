@@ -2,7 +2,11 @@
 
 import json
 import time
-from websocket._exceptions import WebSocketProtocolException
+
+try:
+    from websocket._exceptions import WebSocketProtocolException
+except ImportError:
+    pass
 
 from odoo.tests import common
 from .common import WebsocketCase
