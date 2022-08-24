@@ -99,7 +99,7 @@ export class MassMailingHtmlField extends HtmlField {
         const $editable = this.wysiwyg.getEditable();
         const initialHtml = $editable.html();
         await this.wysiwyg.cleanForSave();
-        await this.wysiwyg.saveModifiedImages(this.$content);
+        await this.wysiwyg.savePendingImages(this.$content);
 
         await super.commitChanges();
 

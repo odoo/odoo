@@ -145,7 +145,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         this._setValue(this._getValue());
         this._isDirty = this.wysiwyg.isDirty();
         await fullClean;
-        await this.wysiwyg.saveModifiedImages(this.$content);
+        await this.wysiwyg.savePendingImages(this.$content);
         // Update the value to the fully cleaned version.
         this._setValue(this._getValue());
         _super();

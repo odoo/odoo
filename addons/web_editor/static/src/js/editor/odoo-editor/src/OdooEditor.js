@@ -4220,7 +4220,15 @@ export class OdooEditor extends EventTarget {
                 this.execCommand('insert', fragment);
             }
         } else if (files.length && targetSupportsHtmlContent) {
-            this.addImagesFiles(files).then(html => this.execCommand('insert', this._prepareClipboardData(html)));
+            this.addImagesFiles(files).then(html => {
+                const imageNodes = this.execCommand('insert', this._prepareClipboardData(html));
+                if (imageNodes && this.options.dropImageAsAttachment) {
+                    // Mark images as having to be saved as attachments.
+                    for (const imageNode of imageNodes) {
+                        imageNode.classList.add('o_b64_image_to_save');
+                    }
+                }
+            });
         } else if (clipboardHtml && targetSupportsHtmlContent) {
             this.execCommand('insert', this._prepareClipboardData(clipboardHtml));
         } else {
@@ -4438,7 +4446,13 @@ export class OdooEditor extends EventTarget {
             this.execCommand('insert', this._prepareClipboardData(html));
         } else if (fileTransferItems.length) {
             this.addImagesFiles(fileTransferItems).then(html => {
-                this.execCommand('insert', this._prepareClipboardData(html));
+                const imageNodes = this.execCommand('insert', this._prepareClipboardData(html));
+                if (imageNodes && this.options.dropImageAsAttachment) {
+                    // Mark images as having to be saved as attachments.
+                    for (const imageNode of imageNodes) {
+                        imageNode.classList.add('o_b64_image_to_save');
+                    }
+                }
             });
         } else if (htmlTransferItem) {
             htmlTransferItem.getAsString(pastedText => {

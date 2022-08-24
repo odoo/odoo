@@ -357,7 +357,7 @@ export class HtmlField extends Component {
             if (this.wysiwyg) {
                 // Avoid listening to changes made during the _toInline process.
                 this.wysiwyg.odooEditor.observerUnactive('commitChanges');
-                await this.wysiwyg.saveModifiedImages();
+                await this.wysiwyg.savePendingImages();
                 if (this.props.isInlineStyle) {
                     await this._toInline();
                 }
