@@ -27,10 +27,10 @@ export class SelectCreateDialog extends Component {
     get viewProps() {
         return {
             ...this.baseViewProps,
+            allowSelectors: this.props.multiSelect,
             context: this.props.context,
             domain: this.props.domain,
             dynamicFilters: this.props.dynamicFilters,
-            hasSelectors: this.props.multiSelect,
             resModel: this.props.resModel,
             searchViewId: this.props.searchViewId,
             type: this.env.isSmall ? "kanban" : "list",

@@ -1276,7 +1276,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree><field name="foo"/></tree>',
             groupBy: ["bar"],
-            hasSelectors: false,
+            allowSelectors: false,
         });
 
         assert.containsOnce(target.querySelector(".o_group_header"), "th");
@@ -1303,7 +1303,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree ><field name="foo"/><field name="bar"/></tree>',
             groupBy: ["bar"],
-            hasSelectors: false,
+            allowSelectors: false,
         });
 
         assert.containsN(target.querySelector(".o_group_header"), "th", 2);
@@ -1317,7 +1317,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree ><field name="foo"/><field name="bar"/><field name="text"/></tree>',
             groupBy: ["bar"],
-            hasSelectors: false,
+            allowSelectors: false,
         });
 
         assert.containsN(target.querySelector(".o_group_header"), "th", 2);
@@ -1331,7 +1331,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree ><field name="foo"/><field name="bar"/></tree>',
             groupBy: ["bar"],
-            hasSelectors: true,
+            allowSelectors: true,
         });
 
         assert.containsN(target.querySelector(".o_group_header"), "th", 2);
@@ -1345,7 +1345,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree><field name="foo"/><field name="bar"/><field name="text"/></tree>',
             groupBy: ["bar"],
-            hasSelectors: true,
+            allowSelectors: true,
         });
 
         assert.containsN(target.querySelector(".o_group_header"), "th", 2);
