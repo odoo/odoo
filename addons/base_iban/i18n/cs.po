@@ -1,53 +1,72 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_iban
+# 	* base_iban
+# 
+# Translators:
+# trendspotter <j.podhorecky@volny.cz>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
-"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: base_iban
+#. openerp-web
+#: code:addons/base_iban/static/src/js/iban_widget.js:0
+#, python-format
+msgid "Account isn't IBAN compliant."
+msgstr ""
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
 msgid "Bank Accounts"
-msgstr ""
+msgstr "Bankovní účty"
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:57
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr ""
+msgstr "BBAN nelze vypočítat, protože číslo účtu není IBAN."
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:26
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
-msgid "No IBAN !"
-msgstr ""
+msgid "IBAN"
+msgstr "IBAN"
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:34
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
 msgstr ""
+"Zdá se, že IBAN není správný. Měli jste zadat něco podobného %s\n"
+"Kde B = národní kód banky, S = kód pobočky, C = číslo účtu, k = kontrolní číslice"
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:30
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr ""
+msgstr "Číslo IBAN je neplatné, mělo by začínat kódem země"
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:40
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "There is no IBAN code."
+msgstr "Neexistuje žádný kód IBAN."
+
+#. module: base_iban
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
+msgstr "Tento IBAN neprojde ověřovací kontrolou, ověřte jej prosím."

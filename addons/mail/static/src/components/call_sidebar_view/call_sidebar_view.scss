@@ -1,0 +1,32 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_CallSidebarView {
+    width: 120px;
+    min-width: 120px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 0.3vw;
+    }
+}
+
+.o_CallSidebarView_participantCard {
+    aspect-ratio: 16/9;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_CallSidebarView {
+
+    &::-webkit-scrollbar {
+        background: map-get($grays, '900');
+    }
+    &::-webkit-scrollbar-thumb {
+        background: map-get($grays, '700');
+    }
+}

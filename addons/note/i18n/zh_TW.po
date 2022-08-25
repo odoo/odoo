@@ -1,17 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * note
+# 	* note
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Michael Yeung <michael@deluxe.hk>, 2017
+# Martin Trigaux, 2019
+# Andy Cheng <andy.cheng@richsoda.com>, 2019
+# sejun huang <sejun.huang@gmail.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Michael Yeung <michael@deluxe.hk>, 2017\n"
+"POT-Creation-Date: 2019-09-09 12:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,291 +23,529 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_open
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_needaction
+msgid "Action Needed"
+msgstr "需採取行動"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action to Perform"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__open
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
 msgstr "啟用"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model:ir.model.fields,field_description:note.field_note_note__activity_ids
+msgid "Activities"
+msgstr "活動"
+
+#. module: note
+#: model:ir.model,name:note.model_mail_activity
+msgid "Activity"
+msgstr "活動"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_state
+msgid "Activity State"
+msgstr "活動狀態"
+
+#. module: note
+#: model:ir.model,name:note.model_mail_activity_type
+msgid "Activity Type"
+msgstr "活動類型"
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
+msgid "Add a new personal note"
+msgstr "添加個人便箋"
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.note_tag_action
+msgid "Add a new tag"
+msgstr "添加新標籤"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Add a note"
+msgstr "增加備註"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Add new note"
+msgstr "添加便簽"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Archive"
-msgstr ""
+msgstr "歸檔"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
+msgid "Attachment Count"
+msgstr "附件數"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
-msgstr ""
+msgstr "按便箋類別"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.note_tag_action
-msgid "Click to add a new tag."
-msgstr ""
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Channel"
+msgstr "群組"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid "Click to add a personal note."
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_color
-#: model:ir.model.fields,field_description:note.field_note_tag_color
+#: model:ir.model.fields,field_description:note.field_note_note__color
+#: model:ir.model.fields,field_description:note.field_note_tag__color
 msgid "Color Index"
-msgstr ""
+msgstr "顏色索引"
 
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
 msgid "Configuration"
-msgstr "設置"
+msgstr "配置"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_create_uid
-#: model:ir.model.fields,field_description:note.field_note_stage_create_uid
-#: model:ir.model.fields,field_description:note.field_note_tag_create_uid
+#: model:ir.model.fields,field_description:note.field_note_note__create_uid
+#: model:ir.model.fields,field_description:note.field_note_stage__create_uid
+#: model:ir.model.fields,field_description:note.field_note_tag__create_uid
 msgid "Created by"
-msgstr "建立者"
+msgstr "創立者"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_create_date
-#: model:ir.model.fields,field_description:note.field_note_stage_create_date
-#: model:ir.model.fields,field_description:note.field_note_tag_create_date
+#: model:ir.model.fields,field_description:note.field_note_note__create_date
+#: model:ir.model.fields,field_description:note.field_note_stage__create_date
+#: model:ir.model.fields,field_description:note.field_note_tag__create_date
 msgid "Created on"
 msgstr "建立於"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_date_done
+#: model:ir.model.fields,field_description:note.field_note_note__date_done
 msgid "Date done"
-msgstr ""
+msgstr "完成日期"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_kanban
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
-msgstr ""
+msgstr "刪除"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_display_name
-#: model:ir.model.fields,field_description:note.field_note_stage_display_name
-#: model:ir.model.fields,field_description:note.field_note_tag_display_name
+#: model:ir.model.fields,field_description:note.field_note_note__display_name
+#: model:ir.model.fields,field_description:note.field_note_stage__display_name
+#: model:ir.model.fields,field_description:note.field_note_tag__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_stage_fold
-msgid "Folded by Default"
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Dropdown menu"
+msgstr "下拉選單"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Exception Activities"
 msgstr ""
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model:ir.model.fields,field_description:note.field_note_stage__fold
+msgid "Folded by Default"
+msgstr "預設折疊"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Follower"
+msgstr "關注者"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
+msgid "Followers"
+msgstr "關注人"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "關注人（頻道）"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "關注人（業務夥伴）"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Future Activities"
 msgstr "未來活動"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
-msgstr "分組方式"
+msgstr "分組按"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_id
-#: model:ir.model.fields,field_description:note.field_note_stage_id
-#: model:ir.model.fields,field_description:note.field_note_tag_id
+#: model:ir.model.fields,field_description:note.field_note_note__id
+#: model:ir.model.fields,field_description:note.field_note_stage__id
+#: model:ir.model.fields,field_description:note.field_note_tag__id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note___last_update
-#: model:ir.model.fields,field_description:note.field_note_stage___last_update
-#: model:ir.model.fields,field_description:note.field_note_tag___last_update
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_icon
+msgid "Icon"
+msgstr "圖示"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_needaction
+#: model:ir.model.fields,help:note.field_note_note__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "勾選代表有新訊息需要您留意。"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "勾選代表有訊息發生傳送錯誤。"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
+msgid "Is Follower"
+msgstr "是關注人"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note____last_update
+#: model:ir.model.fields,field_description:note.field_note_stage____last_update
+#: model:ir.model.fields,field_description:note.field_note_tag____last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改於"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_write_uid
-#: model:ir.model.fields,field_description:note.field_note_stage_write_uid
-#: model:ir.model.fields,field_description:note.field_note_tag_write_uid
+#: model:ir.model.fields,field_description:note.field_note_note__write_uid
+#: model:ir.model.fields,field_description:note.field_note_stage__write_uid
+#: model:ir.model.fields,field_description:note.field_note_tag__write_uid
 msgid "Last Updated by"
-msgstr "最後更新："
+msgstr "最後更新者"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_write_date
-#: model:ir.model.fields,field_description:note.field_note_stage_write_date
-#: model:ir.model.fields,field_description:note.field_note_tag_write_date
+#: model:ir.model.fields,field_description:note.field_note_note__write_date
+#: model:ir.model.fields,field_description:note.field_note_stage__write_date
+#: model:ir.model.fields,field_description:note.field_note_tag__write_date
 msgid "Last Updated on"
 msgstr "最後更新於"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
-msgstr "最後活動"
+msgstr "逾期活動"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_03
-#: model:note.stage,name:note.note_stage_03
-msgid "Later"
-msgstr ""
+#: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "主要附件"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "My Activities"
-msgstr "我的動態"
+#: model:note.stage,name:note.note_stage_01
+msgid "Meeting Minutes"
+msgstr "會議紀要"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_has_error
+msgid "Message Delivery error"
+msgstr "訊息遞送錯誤"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_ids
+msgid "Messages"
+msgstr "訊息"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
-msgstr "新增"
+msgstr "新的"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "下一活動截止日期"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_summary
+msgid "Next Activity Summary"
+msgstr "下一活動摘要"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
+msgid "Next Activity Type"
+msgstr "下一活動類型"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
-#: model:ir.ui.view,arch_db:note.view_note_note_form
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
 msgstr "備註"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_memo
+#: model:ir.model.fields,field_description:note.field_note_note__memo
 msgid "Note Content"
-msgstr ""
+msgstr "便箋內容"
 
 #. module: note
 #: model:ir.model,name:note.model_note_stage
 msgid "Note Stage"
-msgstr ""
+msgstr "便箋階段"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_name
+#: model:ir.model.fields,field_description:note.field_note_note__name
 msgid "Note Summary"
-msgstr ""
+msgstr "便箋摘要"
 
 #. module: note
 #: model:ir.model,name:note.model_note_tag
 msgid "Note Tag"
-msgstr ""
+msgstr "便箋標籤"
 
 #. module: note
+#: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
-#: model:note.stage,name:note.note_stage_04
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+#: model:note.stage,name:note.note_stage_02
+#, python-format
 msgid "Notes"
+msgstr "備註"
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
+msgid ""
+"Notes are private, unless you share them by inviting follower on a note.\n"
+"            (Useful for meeting minutes)."
+msgstr ""
+"紀要是隱私內容，除非由紀要上的邀約人來共享。\n"
+"      （對會議紀要有用）"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
+msgid "Number of Actions"
+msgstr "動作數量"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
+msgid "Number of errors"
 msgstr ""
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_user_id
-#: model:ir.model.fields,field_description:note.field_note_stage_user_id
+#: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "需要處理的消息數量"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "有發送錯誤的郵件數量"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_unread_counter
+msgid "Number of unread messages"
+msgstr "未讀訊息的數量"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__user_id
+#: model:ir.model.fields,field_description:note.field_note_stage__user_id
 msgid "Owner"
-msgstr "擁有者"
+msgstr "所有者"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_stage_user_id
+#: model:ir.model.fields,help:note.field_note_stage__user_id
 msgid "Owner of the note stage"
-msgstr ""
+msgstr "便箋階段的所有者"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_sequence
-#: model:ir.model.fields,field_description:note.field_note_stage_sequence
+#: model:ir.model.fields,field_description:note.field_mail_activity__note_id
+msgid "Related Note"
+msgstr "相關便簽"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Remember..."
+msgstr "記住..."
+
+#. module: note
+#: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
+#: model:mail.activity.type,name:note.mail_activity_data_reminder
+msgid "Reminder"
+msgstr "提醒"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
+msgid "Responsible User"
+msgstr "責任使用者"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "SAVE"
+msgstr "存檔"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__sequence
+#: model:ir.model.fields,field_description:note.field_note_stage__sequence
 msgid "Sequence"
-msgstr "序列"
+msgstr "序號"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Set date and time"
+msgstr "設定日期時間"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "顯示在今天之前的下一個行動日期的所有記錄"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_stage_id
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model:ir.model.fields,field_description:note.field_note_note__stage_id
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
 msgstr "階段"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_stage_name
+#: model:ir.model.fields,field_description:note.field_note_stage__name
 msgid "Stage Name"
-msgstr ""
+msgstr "階段名稱"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_stage_form
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
 msgid "Stage of Notes"
-msgstr ""
+msgstr "便箋階段"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_stage
 #: model:ir.ui.menu,name:note.menu_notes_stage
-#: model:ir.ui.view,arch_db:note.view_note_note_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_tree
 msgid "Stages"
-msgstr ""
+msgstr "階段"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_stage_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
 msgid "Stages of Notes"
-msgstr ""
+msgstr "便箋階段"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note_stage_ids
+#: model:ir.model.fields,field_description:note.field_note_note__stage_ids
 msgid "Stages of Users"
-msgstr ""
+msgstr "使用者的階段"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_tag_name
+#: model:ir.model.fields,help:note.field_note_note__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"根據活動的狀態 \n"
+" 逾期：已經超過截止日期 \n"
+" 現今：活動日期是當天 \n"
+" 計劃：未來活動。"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_tag__name
 msgid "Tag Name"
-msgstr ""
+msgstr "標籤名稱"
 
 #. module: note
-#: sql_constraint:note.tag:0
+#: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "標籤名稱已經存在！"
+msgstr "標籤名已存在!"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.note_tag_action
-#: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.model.fields,field_description:note.field_note_note__tag_ids
 #: model:ir.ui.menu,name:note.notes_tag_menu
-#: model:ir.ui.view,arch_db:note.note_tag_view_form
-#: model:ir.ui.view,arch_db:note.note_tag_view_tree
-#: model:ir.ui.view,arch_db:note.view_note_note_form
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_form
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "標籤"
 
 #. module: note
-#: model:note.stage,name:note.note_stage_02
-msgid "This Week"
-msgstr ""
-
-#. module: note
-#: model:note.stage,name:note.demo_note_stage_01
-#: model:note.stage,name:note.note_stage_01
+#. openerp-web
+#: code:addons/note/static/src/js/systray_activity_menu.js:0
+#, python-format
 msgid "Today"
-msgstr "今日"
+msgstr "今天"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Today Activities"
-msgstr "今日行程"
+msgstr "今天的活動"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_02
-msgid "Tomorrow"
-msgstr "明日"
+#: model:note.stage,name:note.note_stage_03
+msgid "Todo"
+msgstr "待辦"
 
 #. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. However\n"
-"            you can share some notes with other people by inviting followers\n"
-"            on the note. (Useful for meeting minutes, especially if\n"
-"            you activate the pad feature for collaborative writings)."
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
+msgid "Type of the exception activity on record."
 msgstr ""
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_stage_sequence
+#: model:ir.model.fields,field_description:note.field_note_note__message_unread
+msgid "Unread Messages"
+msgstr "未讀消息"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "未讀消息計數器"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
-msgstr ""
+msgstr "用於為便箋階段排序"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
-msgstr "用戶"
-
-#. module: note
-#: model:ir.actions.act_window,help:note.action_note_note
-msgid ""
-"You can customize how you process your notes/tasks by adding,\n"
-"            removing or modifying columns."
-msgstr ""
+msgstr "使用者"

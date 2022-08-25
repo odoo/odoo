@@ -2,16 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Twitter Roller',
-    'category': 'Website',
-    'summary': 'Add twitter scroller snippet in website builder',
-    'website': 'https://www.odoo.com/page/website-builder',
+    'name': 'Twitter Snippet',
+    'category': 'Website/Website',
+    'summary': 'Twitter scroller snippet in website',
     'version': '1.0',
     'description': """
-Display best tweets
-========================
-
-        """,
+This module adds a Twitter scroller building block to the website builder, so that you can display Twitter feeds on any page of your website.
+    """,
     'depends': ['website'],
     'data': [
         'security/ir.model.access.csv',
@@ -20,4 +17,14 @@ Display best tweets
         'views/website_twitter_snippet_templates.xml'
     ],
     'installable': True,
+    'assets': {
+        'web.assets_frontend': [
+            'website_twitter/static/src/scss/website_twitter.scss',
+            'website_twitter/static/src/js/website.twitter.animation.js',
+        ],
+        'website.assets_wysiwyg': [
+            'website_twitter/static/src/js/website.twitter.editor.js',
+        ],
+    },
+    'license': 'LGPL-3',
 }

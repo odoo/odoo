@@ -1,0 +1,19 @@
+// Colors of the notification are not managed by this file.
+// It is handled by the other classes defining a background. (like danger, warning, etc.)
+// The notification just add overlays.
+
+.o_notification_manager {
+    @include o-position-absolute($o-navbar-height * 1.15, map-get($spacers, 2), $left: calc(100vw - #{$o-notification-max-width}));
+    z-index: $o-notification-zindex;
+
+    .o_notification {
+        border-left-width: $o-notification-border-left-width !important; // Overrides border-[x] utility classes
+        box-shadow: $o-notification-shadow;
+    }
+
+    .o_notification_close {
+        @include o-position-absolute(0, 0);
+    }
+}
+
+@include owl-fade(0.5s, "o_notification");

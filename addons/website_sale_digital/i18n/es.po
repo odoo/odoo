@@ -1,24 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_digital
+# 	* website_sale_digital
 # 
 # Translators:
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# Alejandro Die Sanchis <marketing@domatix.com>, 2016
-# Gelo Joga Landoo <gj@landoo.es>, 2017
-# Ana Juaristi <ajuaristio@gmail.com>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# Martin Trigaux, 2019
+# Alejandro Die Sanchis <marketing@domatix.com>, 2019
+# Gelo Joga Landoo <gj@landoo.es>, 2019
+# Jesse Garza <jga@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
+"POT-Creation-Date: 2019-08-12 12:27+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Jesse Garza <jga@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,33 +23,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_sale_digital
-#: model:product.template,description_sale:website_sale_digital.product_1
-msgid ""
-"Alice's Adventures in Wonderland (commonly shortened to Alice in Wonderland)"
-" is an 1865 novel written by English author Charles Lutwidge Dodgson under "
-"the pseudonym Lewis Carroll. It tells of a girl named Alice falling through "
-"a rabbit hole into a fantasy world populated by peculiar, anthropomorphic "
-"creatures. The tale plays with logic, giving the story lasting popularity "
-"with adults as well as with children. It is considered to be one of the best"
-" examples of the literary nonsense genre. Its narrative course and "
-"structure, characters and imagery have been enormously influential in both "
-"popular culture and literature, especially in the fantasy genre."
-msgstr ""
-"Alicia en el país de las maravillas es una novela de 1865 escrita por el "
-"autor inglés Charles Lutwidge Dogson, bajo el seudónimo Lewis Carroll. "
-"Cuenta la historia de una niña llamada Alicia que cae a través de la "
-"madriguera de un conejo hasta un mundo poblado de criaturas peculiares y "
-"antropomórficas. El cuento juega con la lógica, dando a la historia una "
-"popularidad duradera tanto entre los adultos como entre los miños. Se "
-"considera como uno de los mejores ejemplos del género literario sin sentido."
-" Su ritmo narrativo y estructura, personajes y parafernalia, han sido "
-"enormemente inlfuyentes en la cultura popular y en la literatura, "
-"especialmente en el género fantástico."
-
-#. module: website_sale_digital
-#: model:product.template,name:website_sale_digital.product_1
-msgid "Alice's Adventures in Wonderland - Lewis Caroll"
-msgstr "Alicia en país de las maravillas - Lewis Caroll"
+#: model:ir.model,name:website_sale_digital.model_ir_attachment
+msgid "Attachment"
+msgstr "Adjunto"
 
 #. module: website_sale_digital
 #: code:addons/website_sale_digital/models/product.py:23
@@ -63,37 +35,32 @@ msgid "Digital Attachments"
 msgstr "Adjuntos digitales"
 
 #. module: website_sale_digital
-#: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment_product_downloadable
-#: model:ir.model.fields,field_description:website_sale_digital.field_mrp_document_product_downloadable
+#: model_terms:ir.ui.view,arch_db:website_sale_digital.product_product_view_form_inherit_digital
+#: model_terms:ir.ui.view,arch_db:website_sale_digital.product_template_view_form_inherit_digital
+msgid "Digital Files"
+msgstr "Archivos digitales"
+
+#. module: website_sale_digital
+#: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment__product_downloadable
+#: model:ir.model.fields,field_description:website_sale_digital.field_mrp_document__product_downloadable
 msgid "Downloadable from product portal"
 msgstr "Se puede descargar desde el portal de productos"
 
 #. module: website_sale_digital
-#: model:ir.ui.view,arch_db:website_sale_digital.portal_order_page_downloads
-msgid "Downloads <span class=\"caret\"/>"
-msgstr "Descargas<span class=\"caret\"/>"
+#: model_terms:ir.ui.view,arch_db:website_sale_digital.sale_order_portal_content_inherit_website_sale_digital
+msgid "Downloads"
+msgstr "Descargas"
 
 #. module: website_sale_digital
-#: model:ir.model.fields,field_description:website_sale_digital.field_product_product_attachment_count
-#: model:ir.model.fields,field_description:website_sale_digital.field_product_template_attachment_count
+#: model:ir.model.fields,field_description:website_sale_digital.field_product_product__attachment_count
+#: model:ir.model.fields,field_description:website_sale_digital.field_product_template__attachment_count
 msgid "File"
 msgstr "Archivo"
 
 #. module: website_sale_digital
-#: model:ir.model,name:website_sale_digital.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Linea de Factura"
-
-#. module: website_sale_digital
-#: model:product.template,description:website_sale_digital.product_1
-msgid "Novel by Lewis Caroll."
-msgstr "Novela de Lewis Caroll."
-
-#. module: website_sale_digital
-#: model:ir.ui.view,arch_db:website_sale_digital.product_product_view_form_inherit_digital
-#: model:ir.ui.view,arch_db:website_sale_digital.product_template_view_form_inherit_digital
-msgid "Portal Files"
-msgstr "Archivos portal"
+#: model:ir.model,name:website_sale_digital.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunte contable"
 
 #. module: website_sale_digital
 #: model:ir.model,name:website_sale_digital.model_product_product
@@ -104,8 +71,3 @@ msgstr "Producto"
 #: model:ir.model,name:website_sale_digital.model_product_template
 msgid "Product Template"
 msgstr "Plantilla de producto"
-
-#. module: website_sale_digital
-#: model:ir.model,name:website_sale_digital.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"

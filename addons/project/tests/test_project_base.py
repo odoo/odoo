@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
+from odoo.exceptions import UserError
 
 
-class TestProjectBase(SavepointCase):
+class TestProjectCommon(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestProjectBase, cls).setUpClass()
+        super(TestProjectCommon, cls).setUpClass()
 
         user_group_employee = cls.env.ref('base.group_user')
         user_group_project_user = cls.env.ref('project.group_project_user')
@@ -19,6 +20,9 @@ class TestProjectBase(SavepointCase):
         cls.partner_2 = cls.env['res.partner'].create({
             'name': 'Valid Poilvache',
             'email': 'valid.other@gmail.com'})
+        cls.partner_3 = cls.env['res.partner'].create({
+            'name': 'Valid Poilboeuf',
+            'email': 'valid.poilboeuf@gmail.com'})
 
         # Test users to use through the various tests
         Users = cls.env['res.users'].with_context({'no_reset_password': True})
@@ -38,7 +42,8 @@ class TestProjectBase(SavepointCase):
             'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])]})
         cls.user_projectuser = Users.create({
             'name': 'Armande ProjectUser',
-            'login': 'Armande',
+            'login': 'armandel',
+            'password': 'armandel',
             'email': 'armande.projectuser@example.com',
             'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id])]
         })
@@ -57,11 +62,11 @@ class TestProjectBase(SavepointCase):
         # Already-existing tasks in Pigs
         cls.task_1 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs UserTask',
-            'user_id': cls.user_projectuser.id,
+            'user_ids': cls.user_projectuser,
             'project_id': cls.project_pigs.id})
         cls.task_2 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Pigs ManagerTask',
-            'user_id': cls.user_projectmanager.id,
+            'user_ids': cls.user_projectmanager,
             'project_id': cls.project_pigs.id})
 
         # Test 'Goats' project, same as 'Pigs', but with 2 stages
@@ -87,5 +92,31 @@ class TestProjectBase(SavepointCase):
                            model=None, target_model='project.task', target_field='name'):
         self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
         mail = template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
-        self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
+        self.env['mail.thread'].message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
+
+
+class TestProjectBase(TestProjectCommon):
+
+    def test_delete_project_with_tasks(self):
+        """Test all tasks linked to a project are removed when the user removes this project. """
+        task_type = self.env['project.task.type'].create({'name': 'Won', 'sequence': 1, 'fold': True})
+        project_unlink = self.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'rev',
+            'privacy_visibility': 'employees',
+            'alias_name': 'rev',
+            'partner_id': self.partner_1.id,
+            'type_ids': task_type,
+        })
+
+        self.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Pigs UserTask',
+            'user_ids': self.user_projectuser,
+            'project_id': project_unlink.id,
+            'stage_id': task_type.id})
+
+        task_count = len(project_unlink.tasks)
+        self.assertEqual(task_count, 1, "The project should have 1 task")
+
+        project_unlink.unlink()
+        self.assertNotEqual(task_count, 0, "The all tasks linked to project should be deleted when user delete the project")

@@ -16,26 +16,20 @@
         </record>
 
         <!--Report containing an ISR corrresponding to an invoice.-->
-        <report id="l10n_ch_isr_report"
-            model="account.invoice"
-            report_type="qweb-pdf"
-            string="ISR"
-            name="l10n_ch.isr_report_main"
-            file="l10n_ch.isr_report_main"
-            attachment_use="True"
-            attachment="'ISR-' + object.number + '.pdf'"
-            menu="False"
-            print_report_name="'ISR-%s' % object.number"
-            paperformat="paperformat_euro_no_margin"/>
+        <record id="l10n_ch_isr_report" model="ir.actions.report">
+            <field name="name">ISR</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ch.isr_report_main</field>
+            <field name="report_file">l10n_ch.isr_report_main</field>
+            <field name="print_report_name">'ISR-%s' % object.name</field>
+            <field name="paperformat_id" ref="paperformat_euro_no_margin"/>
+            <field name="attachment">'ISR-' + object.name + '.pdf'</field>
+            <field name="attachment_use">True</field>
+        </record>
         <!--No additional condition in report name on invoice state or type as this
             report is only available to be printed for out invoices after
             'draft' state, if the fields required by the ISR have been set.-->
-
-        <template id="assets_common" name="l10n_ch_isr_report" inherit_id="web.report_assets_common">
-            <xpath expr="." position="inside">
-                <link href="/l10n_ch/static/src/less/report_isr.less" rel="stylesheet"/>
-            </xpath>
-        </template>
 
         <template id="l10n_ch_isr_report_template">
             <t t-call="web.external_layout">
@@ -48,7 +42,7 @@
                 <!-- since the body content take the whole page we need a way to add margin
                      back on content outside the ISR so it does not overlap with the header -->
                 <div id="content_outside_isr">
-                    <h1>ISR for invoice <t t-esc="invoice.number"/></h1>
+                    <h1>ISR for invoice <t t-esc="invoice.name"/></h1>
                 </div>
 
                 <div id="isr" t-att-class="'isr-print-bank' if print_bank else None">
@@ -81,7 +75,7 @@
 
                         <div id="voucher-bank" t-if="not print_bank or not invoice.company_id.l10n_ch_isr_preprinted_account">
                             <!--Konto/Compte/Conto-->
-                            <p id="voucher-bank_ref" t-field="invoice.l10n_ch_isr_postal_formatted"/>
+                            <p id="voucher-bank_ref" t-field="invoice.l10n_ch_isr_subscription_formatted"/>
                         </div>
 
                         <p id="voucher-amount_units" t-esc="split_total_amount[0]"/>
@@ -123,7 +117,8 @@
 
                         <div id="slip-bank" t-if="not print_bank or not invoice.company_id.l10n_ch_isr_preprinted_account">
                             <!--Konto/Compte/Conto-->
-                            <p id="slip-bank_ref" t-field="invoice.l10n_ch_isr_postal_formatted"/>
+                            <!--aka ISR Subscriber number provided by the financial institution-->
+                            <p id="slip-bank_ref" t-field="invoice.l10n_ch_isr_subscription_formatted"/>
                         </div>
 
                         <p id="slip-amount_units" t-esc="split_total_amount[0]"/>
@@ -153,6 +148,7 @@
         <template id="l10n_ch.isr_report_main">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="invoice">
+                    <t t-set="o" t-value="invoice"/>
                     <t t-call="l10n_ch.l10n_ch_isr_report_template"/>
                 </t>
             </t>

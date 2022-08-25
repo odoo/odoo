@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <!-- This template is rendered on the event.event model without referring to it. -->
+    <!-- Instead it shows details about event.booth model. -->
+    <template id="event_booth_booked_template">
+        <p>
+            <span>
+                Booth
+                <a href="#" t-att-data-oe-model="booth._name" t-att-data-oe-id="booth.id" t-out="booth.name"/>
+            </span>
+            <span t-out="'booked by' if booth.partner_id else 'has been reserved by'"/>
+            <span>
+                <a href="#" t-att-data-oe-model="booth.partner_id._name or booth.env.user.partner_id._name"
+                   t-att-data-oe-id="booth.partner_id.id or booth.env.user.partner_id.id"
+                   t-out="booth.partner_id.name or booth.env.user.partner_id.name"/>
+            </span>
+        </p>
+        <ul t-if="booth.partner_id" name="contact_details">
+            <t t-set="contact_name" t-value="booth.contact_name"/>
+            <li t-if="contact_name">
+                <b>Renter Name</b>: <span t-out="contact_name"/>
+            </li>
+            <t t-set="contact_email" t-value="booth.contact_email"/>
+            <li t-if="contact_email">
+                <b>Renter Email</b>: <span t-out="contact_email"/>
+            </li>
+            <t t-set="contact_mobile" t-value="booth.contact_mobile"/>
+            <li t-if="contact_mobile">
+                <b>Renter Mobile</b>: <span t-out="contact_mobile"/>
+            </li>
+            <t t-set="contact_phone" t-value="booth.contact_phone"/>
+            <li t-if="contact_phone">
+                <b>Renter Phone</b>: <span t-out="contact_phone"/>
+            </li>
+        </ul>
+    </template>
+
+</data></odoo>

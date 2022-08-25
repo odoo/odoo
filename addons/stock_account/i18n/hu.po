@@ -1,18 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * stock_account
+# 	* stock_account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux, 2019
+# krnkris, 2019
+# gezza <geza.nagy@oregional.hu>, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:11+0000\n"
-"PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,56 +24,84 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_move
-msgid "Account Entry"
-msgstr "Könyvelési tétel"
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid "%s changed cost from %s to %s - %s"
+msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_account_move_ids
+#: model:ir.model,name:stock_account.model_account_chart_template
+msgid "Account Chart Template"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
 msgid "Account Move"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_category_property_form
+#: model:ir.model,name:stock_account.model_account_reconciliation_widget
+msgid "Account Reconciliation widget"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Account Stock Properties"
 msgstr "Raktár könyvelés tulajdonságai"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_form_inherit
+#: model:ir.model.fields,field_description:stock_account.field_stock_inventory__accounting_date
+msgid "Accounting Date"
+msgstr "Könyvelés dátuma"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_form_inherit
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_form_inherit
 msgid "Accounting Entries"
 msgstr "Könyvelési tételek"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_location_form_inherit
+#: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Accounting Information"
 msgstr "Könyvelési információ"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_res_config_settings_module_stock_landed_costs
-#: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
-"Affect landed costs on receipt operations and split them among products to "
-"update their cost price."
+"Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
 
 #. module: stock_account
-#: selection:product.category,property_valuation:0
+#: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+msgid ""
+"Affect landed costs on reception operations and split them among products to"
+" update their cost price."
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Archived"
+msgstr "Archivált"
+
+#. module: stock_account
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 msgid "Automated"
 msgstr ""
 
 #. module: stock_account
-#: selection:product.category,property_cost_method:0
-#: selection:product.template,property_cost_method:0
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
 msgid "Average Cost (AVCO)"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Cancel"
 msgstr "Mégse"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:452
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
@@ -78,7 +109,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:454
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -87,19 +118,24 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Category"
+msgstr "Kategória"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Change Price"
 msgstr "Ár megváltoztatása"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_view_change_standard_price
 #: model:ir.model,name:stock_account.model_stock_change_standard_price
-#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Change Standard Price"
 msgstr "Egységár megváltoztatása"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:243
+#: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
 "Changing your cost method is an important change that will impact your "
@@ -107,21 +143,17 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
-msgid ""
-"Choose the accounting date at which you want to value the stock moves "
-"created by the inventory instead of the default one (the inventory end date)"
-msgstr ""
-"Válassza a készlet által létrehozott raktár tétel mozgások értékeléséhez a "
-"könyvelési dátumot az alapértelmezett helyett  (a készletezés végső dátuma)"
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
+msgid "Company"
+msgstr "Vállalat"
 
 #. module: stock_account
-#: model:ir.actions.act_window,help:stock_account.stock_move_valuation_action
-msgid "Click to create a stock movement."
-msgstr "Kattintson egy raktár mozgás létrehozásához."
+#: model:ir.model,name:stock_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurációs beállítások"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:523
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -129,87 +161,113 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "Cost"
 msgstr "Költség"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
-msgid "Cost Method"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid "Costing"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_product_property_cost_method
-#: model:ir.model.fields,field_description:stock_account.field_product_template_property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_product__cost_method
+#: model:ir.model.fields,field_description:stock_account.field_product_template__cost_method
 msgid "Costing Method"
 msgstr "Költségszámítási mód"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid "Costing method change for product category %s: from %s to %s."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id
 msgid "Counter-Part Account"
 msgstr "Ellen-oldali főkönyvi számla"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id_required
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__counterpart_account_id_required
 msgid "Counter-Part Account Required"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__create_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr "Létrehozta"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__create_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr "Létrehozva"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__currency_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__currency_id
+msgid "Currency"
+msgstr "Pénznem"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Date"
+msgstr "Dátum"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_inventory__accounting_date
+msgid ""
+"Date at which the accounting entries will be created in case of automated "
+"inventory valuation. If empty, the inventory date will be used."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
+msgid "Default unit of measure used for all stock operations."
+msgstr "Alapértelmezett mértékegység készletműveletekhez."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__description
+msgid "Description"
+msgstr "Leírás"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__display_name
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: stock_account
-#: selection:product.category,property_cost_method:0
-#: selection:product.template,property_cost_method:0
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"Due to a change of product category (from %s to %s), the costing method"
+"                                has changed for product template %s: from %s"
+" to %s."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
 msgid "First In First Out (FIFO)"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
-msgid "Force Accounting Date"
-msgstr "Erőltetett Könyvelés dátum"
+#: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
+msgid "Has Account Moves"
+msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr "Azonosító"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_change_standard_price_new_price
+#: model:ir.model.fields,help:stock_account.field_stock_change_standard_price__new_price
 msgid ""
 "If cost price is increased, stock variation account will be debited and stock output account will be credited with the value = (difference of amount * quantity available).\n"
 "If cost price is decreased, stock variation account will be creadited and stock input account will be debited."
 msgstr ""
 "Ha az elszámoló árat növelik, akkor a készletszámlát megterhelik és a készletcsökkenés számlát jóváírják az értékkel (= árváltozás összege * valós készlet mennyisége).\n"
 "Ha az elszámoló árat csökkentik, akkor a készletnövekedés számlát megterhelik és a készletszámlát jóváírják."
-
-#. module: stock_account
-#: model:ir.actions.act_window,help:stock_account.product_valuation_action
-msgid "If there are products, you will see its name and valuation."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid "Include landed costs in product cost"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -222,61 +280,77 @@ msgid "Inventory Locations"
 msgstr "Készlet helyek"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category_property_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_product_property_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template_property_valuation
+#: code:addons/stock_account/__init__.py:0
+#: code:addons/stock_account/__init__.py:0
+#: code:addons/stock_account/models/account_chart_template.py:0
+#: model:ir.actions.act_window,name:stock_account.action_stock_inventory_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
+#: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
 #: model:ir.ui.menu,name:stock_account.menu_valuation
-#: model:ir.ui.view,arch_db:stock_account.product_template_valuation_form_view
-#: model:ir.ui.view,arch_db:stock_account.product_valuation_form_view
-#: model:ir.ui.view,arch_db:stock_account.view_category_property_form
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+#, python-format
 msgid "Inventory Valuation"
 msgstr "Készletkönyvelés"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_invoice
-msgid "Invoice"
-msgstr "Számla"
+#: model:ir.model.fields,field_description:stock_account.field_account_move_line__is_anglo_saxon_line
+msgid "Is Anglo Saxon Line"
+msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Számla tételsor"
+#: model:ir.model,name:stock_account.model_account_move
+msgid "Journal Entries"
+msgstr "Könyvelési tételek"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_res_config_settings_module_stock_landed_costs
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
+msgid "Journal Entry"
+msgstr "Könyvelési tétel"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_account_move_line
+msgid "Journal Item"
+msgstr "Könyvelési napló tételsor"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
 msgid "Landed Costs"
 msgstr "Össz költségek"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price___last_update
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price____last_update
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer____last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Legutóbb frissítve"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__write_uid
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr "Frissítette"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_write_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__write_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
+msgstr "Frissítve "
 
 #. module: stock_account
-#: selection:product.category,property_valuation:0
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
+msgid "Linked To"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
 msgid "Manual"
 msgstr "Kézi"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_property_valuation
-#: model:ir.model.fields,help:stock_account.field_product_template_property_valuation
-msgid ""
-"Manual: The accounting entries to value the inventory are not posted automatically.\n"
-"        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
+#: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
+#: model:ir.model.fields,help:stock_account.field_product_product__valuation
+#: model:ir.model.fields,help:stock_account.field_product_template__valuation
 msgid ""
 "Manual: The accounting entries to value the inventory are not posted automatically.\n"
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
@@ -284,51 +358,40 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
-msgid "Moves"
-msgstr "Mozgások"
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
+msgid "Other Info"
+msgstr "Egyéb információ"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:128
+#: code:addons/stock_account/models/product.py:0
 #, python-format
-msgid "No difference between standard price and new price!"
-msgstr "Nincs különbség az alapár és az új ár között!"
+msgid ""
+"Please define an expense account for this product: \"%s\" (id:%d) - or for "
+"its category: \"%s\"."
+msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_move_line
-msgid "Packing Operation"
-msgstr "Csomag művelete"
-
-#. module: stock_account
-#: selection:product.template,property_valuation:0
-msgid "Periodic (manual)"
-msgstr "Időszakos (kézi)"
-
-#. module: stock_account
-#: selection:product.template,property_valuation:0
-msgid "Perpetual (automated)"
-msgstr "Álandó (automatikus)"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_new_price
+#: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__new_price
 msgid "Price"
 msgstr "Ár"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_procurement_group
-msgid "Procurement Requisition"
-msgstr "Beszerzési hivatkozás"
-
-#. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
-#: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
 msgstr "Termék"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 msgid "Product Category"
-msgstr "Termékkategória"
+msgstr "Termék kategória"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_move_line
+msgid "Product Moves (Stock Move Line)"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -336,34 +399,31 @@ msgid "Product Template"
 msgstr "Terméksablon"
 
 #. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.product_valuation_action
-msgid "Product Valuation"
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid "Product value manually modified (from %s to %s)"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
-msgid "Qty"
-msgstr "Menny."
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__quantity
+msgid "Quantity"
+msgstr "Mennyiség"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
-msgid "Quantity on Hand"
+#: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
+msgid "Quantity Svl"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
-msgid "Reference"
-msgstr "Hivatkozás"
+#: model:ir.model,name:stock_account.model_stock_quant
+msgid "Quants"
+msgstr "Kvantok"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_remaining_qty
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
 msgid "Remaining Qty"
 msgstr "Megmaradt mennyiség"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_remaining_value
-msgid "Remaining Value"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
@@ -371,34 +431,19 @@ msgid "Return Picking"
 msgstr "Visszáruzás"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
-msgid "Set standard cost"
+#: model:ir.model,name:stock_account.model_stock_return_picking_line
+msgid "Return Picking Line"
 msgstr ""
 
 #. module: stock_account
-#: selection:product.category,property_cost_method:0
-#: selection:product.template,property_cost_method:0
+#: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
 msgid "Standard Price"
-msgstr "Elszámoló ár"
+msgstr "Alapár"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:145
-#: code:addons/stock_account/models/product.py:150
-#, python-format
-msgid "Standard Price changed  - %s"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
-#: model:ir.model.fields,help:stock_account.field_product_template_property_cost_method
-msgid ""
-"Standard Price: The products are valued at their standard cost defined on the product.\n"
-"        Average Cost (AVCO): The products are valued at weighted average cost.\n"
-"        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first."
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
+#: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
+#: model:ir.model.fields,help:stock_account.field_product_product__cost_method
+#: model:ir.model.fields,help:stock_account.field_product_template__cost_method
 msgid ""
 "Standard Price: The products are valued at their standard cost defined on the product.\n"
 "        Average Cost (AVCO): The products are valued at weighted average cost.\n"
@@ -407,87 +452,84 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
-#: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_input
-#: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_input
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
 msgid "Stock Input Account"
 msgstr "Készletnövekedés főkönyvi számla"
 
 #. module: stock_account
-#: code:addons/stock_account/models/account_chart_template.py:15
-#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_journal
-#, python-format
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
 msgid "Stock Journal"
 msgstr "Készletnapló"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
-#: model:ir.model.fields,field_description:stock_account.field_account_move_stock_move_id
+#: model:ir.model.fields,field_description:stock_account.field_account_move__stock_move_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_move_id
 msgid "Stock Move"
 msgstr "Készletmozgás"
 
 #. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
-msgid "Stock Moves"
-msgstr "Készletmozgások"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_output_categ_id
-#: model:ir.model.fields,field_description:stock_account.field_product_product_property_stock_account_output
-#: model:ir.model.fields,field_description:stock_account.field_product_template_property_stock_account_output
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
 msgid "Stock Output Account"
 msgstr "Készletcsökkenés főkönyvi számla"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+#: model:ir.model,name:stock_account.model_stock_quantity_history
+msgid "Stock Quantity History"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 msgid "Stock Valuation"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_valuation_account_id
+#: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
 msgid "Stock Valuation Account"
 msgstr "Készletkönyvelési számla"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_in_account_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
 msgstr "Készletkönyvelési számla (Bejövő)"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_location_valuation_out_account_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
 msgstr "Készletkönyvelési számla (Kimenő)"
 
 #. module: stock_account
-#: model:ir.actions.server,name:stock_account.action_stock_account_valuation_report
-msgid "Stock Valuation Report"
+#: model:ir.model,name:stock_account.model_stock_valuation_layer
+#: model:ir.model.fields,field_description:stock_account.field_account_move__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_product_product__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
+msgid "Stock Valuation Layer"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "Számlatükör sablonok"
+#: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
+msgid "Technical field used to retrieve the anglo-saxon lines."
+msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:478
+#: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
-"The cost of %s is currently equal to 0. Change the cost or the configuration"
-" of your product to avoid an incorrect valuation."
+"The Stock Input and/or Output accounts cannot be the same than the Stock "
+"Valuation account."
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:309
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "The move lines are not in a consistent state: some are entering and other "
-"are leaving the company. "
+"are leaving the company."
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:320
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they are doing an "
@@ -496,7 +538,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:318
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "The move lines are not in a consistent states: they do not share the same "
@@ -504,36 +546,55 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_to_refund
-#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line_to_refund
-msgid "To Refund (update SO/PO)"
+#: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
+msgid ""
+"There is no valuation layers. Valuation layers are created when some product"
+" moves should impact the valuation of the stock."
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__value
 msgid "Total Value"
 msgstr "Összérték"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_move_to_refund
-#: model:ir.model.fields,help:stock_account.field_stock_return_picking_line_to_refund
+#: model:ir.model,name:stock_account.model_stock_picking
+msgid "Transfer"
+msgstr "Átvitel"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
+#: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
 msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale"
 " Order/Purchase Order"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__unit_cost
+msgid "Unit Value"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
 msgid "Unit of Measure"
 msgstr "Mértékegység"
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_template_property_form
+#: model_terms:ir.ui.view,arch_db:stock_account.product_product_normal_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
+#: model_terms:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Update Cost"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
+#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
+msgid "Update quantities on SO/PO"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
 msgid ""
 "Used for real-time inventory valuation. When set on a virtual location (non "
 "internal type), this account will be used to hold the value of products "
@@ -548,7 +609,7 @@ msgstr ""
 "állítva. Ez nem befolyásolja a belső termék helyeket."
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_location_valuation_out_account_id
+#: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
 msgid ""
 "Used for real-time inventory valuation. When set on a virtual location (non "
 "internal type), this account will be used to hold the value of products "
@@ -563,114 +624,90 @@ msgstr ""
 "állítva. Ez nem befolyásolja a belső termék helyeket."
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
-#: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
 msgid "Valuation"
 msgstr "Becslés"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_product_product_stock_value
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_value
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_search
+msgid "Valuation Layer?"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid "Valuation method change for product category %s: from %s to %s."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
 msgid "Value"
 msgstr "Érték"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:242
+#: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
+msgid "Value Svl"
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Warning"
 msgstr "Figyelmeztetés"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
 msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"incoming stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the source location. This is the default "
-"value for all products in this category. It can also directly be set on each"
-" product"
-msgstr ""
-"Ha valós-idejű készletkönyvelést végez, az összes készletnövelő mozgás "
-"ellenszámla napló tételei erre a számlára lesznek mozgatva, hacsak nem lett "
-"a forrás helyre jellemző készletkönyvelési számla beállítva. Ez az ebbe a "
-"kategóriába tartozó minden termék alapértéke. Ezt minden egyes termékre "
-"egyesével be lehet állítani."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_input
-#: model:ir.model.fields,help:stock_account.field_product_template_property_stock_account_input
-msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"incoming stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the source location. When not set on the "
-"product, the one from the product category is used."
-msgstr ""
-"Ha valós-idejű készletkönyvelést végez, az összes készletnövelő mozgás "
-"ellenszámla napló tételei erre a számlára lesznek mozgatva, hacsak nem lett "
-"a forrás helyre jellemző készletkönyvelési számla beállítva. Ez az ebbe a "
-"kategóriába tartozó minden termék alapértéke. Ezt minden egyes termékre "
-"egyesével be lehet állítani."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_output_categ_id
-msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"outgoing stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the destination location. This is the "
-"default value for all products in this category. It can also directly be set"
-" on each product"
-msgstr ""
-"Ha valós-idejű készletkönyvelést végez, az összes kimenő mozgás ellenszámla "
-"napló tételei erre a számlára lesznek mozgatva, hacsak nem lett a forrás "
-"helyre jellemző készletmozgás számla beállítva. Ez az ebbe a kategóriába "
-"tartozó minden termék alapértéke. Ezt minden egyes termékre egyesével be "
-"lehet állítani."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_product_property_stock_account_output
-#: model:ir.model.fields,help:stock_account.field_product_template_property_stock_account_output
-msgid ""
-"When doing real-time inventory valuation, counterpart journal items for all "
-"outgoing stock moves will be posted in this account, unless there is a "
-"specific valuation account set on the destination location. When not set on "
-"the product, the one from the product category is used."
-msgstr ""
-"Valós idejű készletkönyvelés alkalmazása esetén minden készletcsökkenés az "
-"ellenszámla naplózott tételein ide lesznek könyvelve, hacsak nem egy erre a "
-"célra létrehozott könyvelési számla nincs beállítva a célállomás "
-"termékhelyen. Ha nincs beállítva a termékre, akkor a termék kategóriára "
-"vonatkozó lesz használva."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_journal
-msgid ""
-"When doing real-time inventory valuation, this is the Accounting Journal in "
-"which entries will be automatically posted when stock moves are processed."
-msgstr ""
-"Ha valós idejű készletkönyvelést alkalmazunk, ebbe a könyvelési naplóba "
-"könyvelődnek automatikusan a készletmozgások feldolgozásakor a tételek."
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category_property_stock_valuation_account_id
-msgid ""
-"When real-time inventory valuation is enabled on a product, this account "
+"When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
-"Ha valós idejű készletkönyvelést alkalmazunk, ez a számla mutatja az "
-"aktuális készletértéket."
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:450
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
+msgid ""
+"When doing automated inventory valuation, counterpart journal items for all incoming stock moves will be posted in this account,\n"
+"                unless there is a specific valuation account set on the source location. This is the default value for all products in this category.\n"
+"                It can also directly be set on each product."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
+msgid ""
+"When doing automated inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account,\n"
+"                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
+"                It can also directly be set on each product."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
+msgid ""
+"When doing automated inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any input valuation account defined on your product category."
+" You must define one before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
-"you have installed a chart of accounts"
+"you have installed a chart of accounts."
 msgstr ""
-"Nem határozott meg semmilyen raktárkészlet naplót a termék kategóriához, "
-"Ellenőrizze, ha telepített egy számlatükröt"
 
 #. module: stock_account
-#: code:addons/stock_account/models/product.py:130
-#: code:addons/stock_account/models/stock.py:456
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/product.py:0
+#: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."
@@ -678,16 +715,17 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid "You must set a counterpart account."
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_change_standard_price
 msgid "_Apply"
 msgstr "_Alkalmaz"
 
 #. module: stock_account
-#: model:ir.model,name:stock_account.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_return_picking_line
-msgid "stock.return.picking.line"
-msgstr "stock.return.picking.line"
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_value
+msgid "remaining_value Value"
+msgstr ""

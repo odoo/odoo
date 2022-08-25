@@ -4,14 +4,14 @@
         <field name="name">Contacts</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.partner</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
         <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="context">{'default_is_company': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Create a contact in your address book
+            Create a Contact in your address book
           </p><p>
-            Odoo helps you to easily track all activities related to a customer.
+            Odoo helps you track all activities related to your contacts.
           </p>
         </field>
     </record>
@@ -34,10 +34,11 @@
         <field name="act_window_id" ref="action_contacts"/>
     </record>
 
+
     <menuitem name="Contacts"
         id="menu_contacts"
-        sequence="4"
-        web_icon="contacts,static/description/icon.png"
+        sequence="20"
+        web_icon="contacts,static/description/icon.svg"
         groups="base.group_user,base.group_partner_manager"/>
 
     <menuitem id="res_partner_menu_contacts"
@@ -62,7 +63,7 @@
         name="Contact Titles" parent="res_partner_menu_config"
         sequence="3"/>
 
-    <menuitem id="res_partner_industry_menu" name="Sectors of Activity"
+    <menuitem id="res_partner_industry_menu" name="Industries"
         action="base.res_partner_industry_action" parent="res_partner_menu_config"
         sequence="4"/>
 

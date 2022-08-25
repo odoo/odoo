@@ -28,9 +28,13 @@
             <field name="name">Stock Weight</field>
             <field name="digits">2</field>
         </record>
+        <record forcecreate="True" id="decimal_volume" model="decimal.precision">
+            <field name="name">Volume</field>
+            <field name="digits">2</field>
+        </record>
         <record forcecreate="True" id="decimal_product_uom" model="decimal.precision">
             <field name="name">Product Unit of Measure</field>
-            <field name="digits" eval="3"/>
+            <field name="digits" eval="2"/>
         </record>
 
         <!--

@@ -6,60 +6,130 @@
     <data noupdate="1">
         <!--Email template -->
         <record id="email_template_edi_invoice" model="mail.template">
-            <field name="name">Invoicing: Invoice email</field>
-            <field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
-            <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})</field>
-            <field name="partner_to">${object.partner_id.id}</field>
-            <field name="model_id" ref="account.model_account_invoice"/>
-            <field name="auto_delete" eval="True"/>
-            <field name="report_template" ref="account_invoices"/>
-            <field name="report_name">Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
-            <field name="lang">${object.partner_id.lang}</field>
+            <field name="name">Invoice: Send by email</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="email_from">{{ (object.invoice_user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="subject">{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})</field>
             <field name="body_html" type="html">
-<div>
-<p>Dear ${object.partner_id.name}
-% set access_action = object.with_context(force_website=True).get_access_action()
-% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
-% set access_url = object.get_mail_url()
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear
+        <t t-if="object.partner_id.parent_id">
+            <t t-out="object.partner_id.name or ''">Brandon Freeman</t> (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>),
+        </t>
+        <t t-else="">
+            <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,
+        </t>
+        <br /><br />
+        Here is your
+        <t t-if="object.name">
+            invoice <span style="font-weight:bold;" t-out="object.name or ''">INV/2021/05/0005</span>
+        </t>
+        <t t-else="">
+            invoice
+        </t>
+        <t t-if="object.invoice_origin">
+            (with reference: <t t-out="object.invoice_origin or ''">SUB003</t>)
+        </t>
+        amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 143,750.00</span>
+        from <t t-out="object.company_id.name or ''">YourCompany</t>.
+        <t t-if="object.payment_state in ('paid', 'in_payment')">
+            This invoice is already paid.
+        </t>
+        <t t-else="">
+            Please remit payment at your earliest convenience.
+            <t t-if="object.payment_reference">
+                <br /><br />
+                Please use the following communication for your payment: <span style="font-weight:bold;" t-out="object.payment_reference or ''">INV/2021/05/0005</span>.
+            </t>
+        </t>
+        <br /><br />
+        Do not hesitate to contact us if you have any questions.
+        <t t-if="not is_html_empty(object.invoice_user_id.signature)">
+            <br /><br />
+            <t t-out="object.invoice_user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+    </p>
+</div>
+            </field>
+            <field name="report_template" ref="account_invoices"/>
+            <field name="report_name">Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft' and '_draft' or '' }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
 
-% if object.partner_id.parent_id:
-    (<i>${object.partner_id.parent_id.name}</i>)
-% endif
-,</p>
-<p>Here is, in attachment, your 
-% if object.number:
-invoice <strong>${object.number}</strong>
-% else:
-invoice
-% endif
-% if object.origin:
-(with reference: ${object.origin})
-% endif
-amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
-from ${object.company_id.name}.
-</p>
-
-% if is_online:
-    <br/><br/>
-    <center>
-      <a href="${access_url}" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">View Invoice</a>
-    </center>
-% endif
-    <br/><br/>
-
-% if object.state=='paid':
-    <p>This invoice is already paid.</p>
-% else:
-    <p>Please remit payment at your earliest convenience.</p>
-% endif
-
-<p>Thank you,</p>
-<p style="color:#888888">
-% if object.user_id and object.user_id.signature:
-    ${object.user_id.signature | safe}
-% endif
-</p>
-</div></field>
+        <record id="mail_template_data_payment_receipt" model="mail.template">
+            <field name="name">Payment Receipt: Send by email</field>
+            <field name="model_id" ref="account.model_account_payment"/>
+            <field name="subject">{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear <t t-out="object.partner_id.name or ''">Azure Interior</t><br/><br/>
+        Thank you for your payment.
+        Here is your payment receipt <span style="font-weight:bold;" t-out="(object.name or '').replace('/','-') or ''">BNK1-2021-05-0002</span> amounting
+        to <span style="font-weight:bold;" t-out="format_amount(object.amount, object.currency_id) or ''">$ 10.00</span> from <t t-out="object.company_id.name or ''">YourCompany</t>.
+        <br/><br/>
+        Do not hesitate to contact us if you have any questions.
+        <br/><br/>
+        Best regards,
+        <t t-if="not is_html_empty(user.signature)">
+            <br/><br/>
+            <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+    </p>
+</div>
+</field>
+            <field name="report_template" ref="account.action_report_payment_receipt"/>
+            <field name="report_name">{{ (object.name or '').replace('/','-') }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+        <!-- Credit note template -->
+        <record id="email_template_edi_credit_note" model="mail.template">
+            <field name="name">Credit note: Send by email</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="email_from">{{ (object.invoice_user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="subject">{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear
+        <t t-if="object.partner_id.parent_id">
+            <t t-out="object.partner_id.name or ''">Brandon Freeman</t> (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>),
+        </t>
+        <t t-else="">
+            <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,
+        </t>
+        <br /><br />
+        Here is your
+        <t t-if="object.name">
+            credit note <span style="font-weight:bold;" t-out="object.name or ''">RINV/2021/05/0001</span>
+        </t>
+        <t t-else="">
+            credit note
+        </t>
+        <t t-if="object.invoice_origin">
+            (with reference: <t t-out="object.invoice_origin or ''">SUB003</t>)
+        </t>
+        amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 143,750.00</span>
+        from <t t-out="object.company_id.name or ''">YourCompany</t>.
+        <br /><br />
+        Do not hesitate to contact us if you have any questions.
+        <t t-if="not is_html_empty(object.invoice_user_id.signature)">
+            <br /><br />
+            <t t-out="object.invoice_user_id.signature or ''">--<br/>Mitchell Admin</t>
+        </t>
+    </p>
+</div>
+            </field>
+            <field name="report_template" ref="account_invoices"/>
+            <field name="report_name">Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft' and '_draft' or '' }}</field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
         </record>
     </data>
 </odoo>

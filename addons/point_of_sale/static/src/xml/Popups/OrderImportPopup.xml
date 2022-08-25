@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderImportPopup" owl="1">
+            <Draggable>
+                <div class="popup popup-import">
+                    <header class="title drag-handle">
+                        <span>Finished Importing Orders</span>
+                    </header>
+                    <ul class="body">
+                        <li>Successfully imported <b><t t-esc="props.report.paid or 0" /></b> paid orders</li>
+                        <li>Successfully imported <b><t t-esc="props.report.unpaid or 0" /></b> unpaid orders</li>
+                        <t t-if="unpaidSkipped">
+                            <li><b><t t-esc="unpaidSkipped"/></b> unpaid orders could not be imported
+                                <ul>
+                                    <li><b><t t-esc="props.report.unpaid_skipped_existing or 0" /></b> were duplicates of existing orders</li>
+                                    <li><b><t t-esc="props.report.unpaid_skipped_session or 0" /></b> belong to another session:
+                                        <t t-if="props.report.unpaid_skipped_sessions">
+                                            <ul>
+                                                <li>Session ids: <b><t t-esc="props.report.unpaid_skipped_sessions" /></b></li>
+                                            </ul>
+                                        </t>
+                                    </li>
+                                </ul>
+                            </li>
+                        </t>
+                    </ul>
+                    <footer class="footer">
+                        <div class="button cancel" t-on-click="confirm">
+                            <t t-esc="props.confirmText" />
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+    </t>
+
+</templates>

@@ -4,10 +4,12 @@
 import collections
 import unittest
 
+from lxml import etree as ET
 from lxml.builder import E
 
+import odoo
 from odoo.tests import common
-from odoo.tools.convert import _eval_xml
+from odoo.tools.convert import xml_import, _eval_xml
 
 Field = E.field
 Value = E.value
@@ -73,6 +75,149 @@ class TestEvalXML(common.TransactionCase):
 
         with self.assertRaises(IOError):
             self.eval_xml(Field('test_nofile.txt', type='file'), obj)
+
+    def test_function(self):
+        obj = xml_import(self.cr, 'test_convert', None, 'init')
+
+        # pass args in eval
+        xml = E.function(
+            model="test_convert.usered",
+            name="model_method",
+            eval="[1, 2]",
+        )
+        rec, args, kwargs = self.eval_xml(xml, obj)
+        self.assertEqual(rec.env.context, self.env.context)
+        self.assertEqual(rec.ids, [])
+        self.assertEqual(args, (1, 2))
+        self.assertEqual(kwargs, {})
+
+        xml = E.function(
+            model="test_convert.usered",
+            name="method",
+            eval="[1, 2]",
+        )
+        rec, args, kwargs = self.eval_xml(xml, obj)
+        self.assertEqual(rec.env.context, self.env.context)
+        self.assertEqual(rec.ids, [1])
+        self.assertEqual(args, (2,))
+        self.assertEqual(kwargs, {})
+
+        # pass args in child elements
+        xml = E.function(
+            E.value(eval="1"), E.value(eval="2"),
+            model="test_convert.usered",
+            name="model_method",
+        )
+        rec, args, kwargs = self.eval_xml(xml, obj)
+        self.assertEqual(rec.env.context, self.env.context)
+        self.assertEqual(rec.ids, [])
+        self.assertEqual(args, (1, 2))
+        self.assertEqual(kwargs, {})
+
+        xml = E.function(
+            E.value(eval="1"), E.value(eval="2"),
+            model="test_convert.usered",
+            name="method",
+        )
+        rec, args, kwargs = self.eval_xml(xml, obj)
+        self.assertEqual(rec.env.context, self.env.context)
+        self.assertEqual(rec.ids, [1])
+        self.assertEqual(args, (2,))
+        self.assertEqual(kwargs, {})
+
+    def test_function_kwargs(self):
+        obj = xml_import(self.cr, 'test_convert', None, 'init')
+
+        # pass args and kwargs in child elements
+        xml = E.function(
+            E.value(eval="1"), E.value(name="foo", eval="2"),
+            model="test_convert.usered",
+            name="model_method",
+        )
+        rec, args, kwargs = self.eval_xml(xml, obj)
+        self.assertEqual(rec.env.context, self.env.context)
+        self.assertEqual(rec.ids, [])
+        self.assertEqual(args, (1,))
+        self.assertEqual(kwargs, {'foo': 2})
+
+        xml = E.function(
+            E.value(eval="1"), E.value(name="foo", eval="2"),
+            model="test_convert.usered",
+            name="method",
+        )
+        rec, args, kwargs = self.eval_xml(xml, obj)
+        self.assertEqual(rec.env.context, self.env.context)
+        self.assertEqual(rec.ids, [1])
+        self.assertEqual(args, ())
+        self.assertEqual(kwargs, {'foo': 2})
+
+        # pass args and context in kwargs
+        xml = E.function(
+            E.value(eval="1"), E.value(name="context", eval="{'foo': 2}"),
+            model="test_convert.usered",
+            name="model_method",
+        )
+        rec, args, kwargs = self.eval_xml(xml, obj)
+        self.assertEqual(rec.env.context, {'foo': 2})
+        self.assertEqual(rec.ids, [])
+        self.assertEqual(args, (1,))
+        self.assertEqual(kwargs, {})
+
+        xml = E.function(
+            E.value(eval="1"), E.value(name="context", eval="{'foo': 2}"),
+            model="test_convert.usered",
+            name="method",
+        )
+        rec, args, kwargs = self.eval_xml(xml, obj)
+        self.assertEqual(rec.env.context, {'foo': 2})
+        self.assertEqual(rec.ids, [1])
+        self.assertEqual(args, ())
+        self.assertEqual(kwargs, {})
+
+    def test_function_function(self):
+        obj = xml_import(self.cr, 'test_convert', None, 'init')
+
+        xml = E.function(
+            E.function(model="test_convert.usered", name="search", eval="[[]]"),
+            model="test_convert.usered",
+            name="method",
+        )
+        rec, args, kwargs = self.eval_xml(xml, obj)
+        self.assertEqual(rec.env.context, {})
+        self.assertEqual(rec.ids, [])
+        self.assertEqual(args, ())
+        self.assertEqual(kwargs, {})
+
+    def test_o2m_sub_records(self):
+        # patch the model's class with a proxy that copies the argument
+        Model = self.registry['test_convert.test_model']
+        call_args = []
+
+        def _load_records(self, data_list, update=False):
+            call_args.append(data_list)
+            # pylint: disable=bad-super-call
+            return super(Model, self)._load_records(data_list, update=update)
+
+        self.patch(Model, '_load_records', _load_records)
+
+        # import a record with a subrecord
+        xml = ET.fromstring("""
+            <record id="test_convert.test_o2m_record" model="test_convert.test_model">
+                <field name="usered_ids">
+                    <record id="test_convert.test_o2m_subrecord" model="test_convert.usered">
+                        <field name="name">subrecord</field>
+                    </record>
+                </field>
+            </record>
+        """.strip())
+        obj = xml_import(self.cr, 'test_convert', None, 'init')
+        obj._tag_record(xml)
+
+        # check that field 'usered_ids' is not passed
+        self.assertEqual(len(call_args), 1)
+        for data in call_args[0]:
+            self.assertNotIn('usered_ids', data['values'],
+                             "Unexpected value in O2M When loading XML with sub records")
 
     @unittest.skip("not tested")
     def test_xml(self):

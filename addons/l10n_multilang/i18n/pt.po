@@ -1,33 +1,18 @@
-# #-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * l10n_multilang
-#
-# Translators:
-# Manuela Silva <h_manuela_rodsilva@gmail.com>, 2015
-# #-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#
-# Translation of Odoo Server.
-# This file contains the translation of the following modules:
-# * l10n_multilang
-#
-# Translators:
-#, fuzzy
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:20+0000\n"
-"PO-Revision-Date: 2015-10-20 14:15+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Portuguese (http://www.transifex.com/odoo/odoo-9/language/"
-"pt/)\n"
-"Language: pt\n"
+"POT-Creation-Date: 2018-10-08 14:33+0000\n"
+"PO-Revision-Date: 2019-08-26 09:11+0000\n"
+"Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: l10n_multilang
@@ -36,13 +21,51 @@ msgid "Account"
 msgstr ""
 
 #. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_chart_template
+msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_account_tag
+msgid "Account Tag"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_res_country_state__name
+msgid ""
+"Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
+msgstr ""
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_analytic_account
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_analytic_account__name
 msgid "Analytic Account"
-msgstr "Conta de Analítica"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_res_country_state
+msgid "Country state"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__description
+msgid "Display on Invoices"
+msgstr ""
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__name
 msgid "Fiscal Position"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__name
+msgid "Fiscal Position Template"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_base_language_install
+msgid "Install Language"
 msgstr ""
 
 #. module: l10n_multilang
@@ -51,16 +74,50 @@ msgid "Journal"
 msgstr ""
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template_spoken_languages
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_journal__name
+msgid "Journal Name"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax__description
+msgid "Label on Invoices"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_fiscal_position__note
+msgid "Legal mentions that have to be printed on the invoices."
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__name
+msgid "Name"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__note
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__note
+msgid "Notes"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__spoken_languages
 msgid "Spoken Languages"
 msgstr ""
 
 #. module: l10n_multilang
-#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template_spoken_languages
+#: model:ir.model.fields,field_description:l10n_multilang.field_res_country_state__name
+msgid "State Name"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template__spoken_languages
 msgid ""
 "State here the languages for which the translations of templates could be "
-"loaded at the time of installation of this localization module and copied in "
-"the final object when generating them from templates. You must provide the "
+"loaded at the time of installation of this localization module and copied in"
+" the final object when generating them from templates. You must provide the "
 "language codes separated by ';'"
 msgstr ""
 
@@ -70,46 +127,22 @@ msgid "Tax"
 msgstr ""
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
-#, fuzzy
-msgid "Template for Fiscal Position"
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__name
+msgid "Tax Name"
 msgstr ""
-"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-"Modelo para a Posição Fiscal\n"
-"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-"Template para Posição Fiscal"
 
 #. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_chart_template
-#, fuzzy
-msgid "Templates for Account Chart"
+#: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
+msgid "Template for Fiscal Position"
 msgstr ""
-"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-"Modelos para o Gráfico da Conta\n"
-"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-"Templates para Plano de Conta"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_template
-#, fuzzy
 msgid "Templates for Accounts"
 msgstr ""
-"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-"Modelos para as Contas\n"
-"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-"Templates para Contas"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax_template
-#, fuzzy
 msgid "Templates for Taxes"
 msgstr ""
-"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-"Modelos para os Impostos\n"
-"#-#-#-#-#  pt.po (Odoo 9.0)  #-#-#-#-#\n"
-"Templates para Impostos"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr "wizard.multi.charts.accounts"

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.ConfirmationDialog" owl="1">
+    <Dialog size="'md'" title="props.title">
+      <t t-esc="props.body" />
+      <t t-set-slot="footer" owl="1">
+        <button class="btn btn-primary" t-on-click="_confirm">
+          Ok
+        </button>
+        <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel">
+          Cancel
+        </button>
+      </t>
+    </Dialog>
+  </t>
+
+  <t t-name="web.AlertDialog" owl="1">
+    <Dialog size="'sm'" title="props.title" contentClass="props.contentClass">
+      <t t-esc="props.body" />
+      <t t-set-slot="footer" owl="1">
+        <button class="btn btn-primary" t-on-click="_confirm">
+          Ok
+        </button>
+        <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel">
+          Cancel
+        </button>
+      </t>
+    </Dialog>
+  </t>
+
+</templates>

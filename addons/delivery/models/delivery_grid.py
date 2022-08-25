@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, api, _
-from odoo.addons import decimal_precision as dp
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError, ValidationError
 
@@ -15,13 +14,13 @@ class PriceRule(models.Model):
     @api.depends('variable', 'operator', 'max_value', 'list_base_price', 'list_price', 'variable_factor')
     def _compute_name(self):
         for rule in self:
-            name = 'if %s %s %s then' % (rule.variable, rule.operator, rule.max_value)
+            name = 'if %s %s %.02f then' % (rule.variable, rule.operator, rule.max_value)
             if rule.list_base_price and not rule.list_price:
-                name = '%s fixed price %s' % (name, rule.list_base_price)
+                name = '%s fixed price %.02f' % (name, rule.list_base_price)
             elif rule.list_price and not rule.list_base_price:
-                name = '%s %s times %s' % (name, rule.list_price, rule.variable_factor)
+                name = '%s %.02f times %s' % (name, rule.list_price, rule.variable_factor)
             else:
-                name = '%s fixed price %s plus %s times %s' % (name, rule.list_base_price, rule.list_price, rule.variable_factor)
+                name = '%s fixed price %.02f plus %.02f times %s' % (name, rule.list_base_price, rule.list_price, rule.variable_factor)
             rule.name = name
 
     name = fields.Char(compute='_compute_name')
@@ -31,15 +30,19 @@ class PriceRule(models.Model):
     variable = fields.Selection([('weight', 'Weight'), ('volume', 'Volume'), ('wv', 'Weight * Volume'), ('price', 'Price'), ('quantity', 'Quantity')], required=True, default='weight')
     operator = fields.Selection([('==', '='), ('<=', '<='), ('<', '<'), ('>=', '>='), ('>', '>')], required=True, default='<=')
     max_value = fields.Float('Maximum Value', required=True)
-    list_base_price = fields.Float(string='Sale Base Price', digits=dp.get_precision('Product Price'), required=True, default=0.0)
-    list_price = fields.Float('Sale Price', digits=dp.get_precision('Product Price'), required=True, default=0.0)
+    list_base_price = fields.Float(string='Sale Base Price', digits='Product Price', required=True, default=0.0)
+    list_price = fields.Float('Sale Price', digits='Product Price', required=True, default=0.0)
     variable_factor = fields.Selection([('weight', 'Weight'), ('volume', 'Volume'), ('wv', 'Weight * Volume'), ('price', 'Price'), ('quantity', 'Quantity')], 'Variable Factor', required=True, default='weight')
 
 
 class ProviderGrid(models.Model):
     _inherit = 'delivery.carrier'
 
-    delivery_type = fields.Selection(selection_add=[('base_on_rule', 'Based on Rules')])
+    delivery_type = fields.Selection(selection_add=[
+        ('base_on_rule', 'Based on Rules'),
+        ], ondelete={'base_on_rule': lambda recs: recs.write({
+            'delivery_type': 'fixed', 'fixed_price': 0,
+        })})
     price_rule_ids = fields.One2many('delivery.price.rule', 'carrier_id', 'Pricing Rules', copy=True)
 
     def base_on_rule_rate_shipment(self, order):
@@ -47,7 +50,7 @@ class ProviderGrid(models.Model):
         if not carrier:
             return {'success': False,
                     'price': 0.0,
-                    'error_message': _('Error: no matching grid.'),
+                    'error_message': _('Error: this delivery method is not available for this address.'),
                     'warning_message': False}
 
         try:
@@ -55,18 +58,34 @@ class ProviderGrid(models.Model):
         except UserError as e:
             return {'success': False,
                     'price': 0.0,
-                    'error_message': e.name,
+                    'error_message': e.args[0],
                     'warning_message': False}
-        if order.company_id.currency_id.id != order.pricelist_id.currency_id.id:
-            price_unit = order.company_id.currency_id.with_context(date=order.date_order).compute(price_unit, order.pricelist_id.currency_id)
+
+        price_unit = self._compute_currency(order, price_unit, 'company_to_pricelist')
 
         return {'success': True,
                 'price': price_unit,
                 'error_message': False,
                 'warning_message': False}
 
+    def _get_conversion_currencies(self, order, conversion):
+        if conversion == 'company_to_pricelist':
+            from_currency, to_currency = order.company_id.currency_id, order.pricelist_id.currency_id
+        elif conversion == 'pricelist_to_company':
+            from_currency, to_currency = order.currency_id, order.company_id.currency_id
+
+        return from_currency, to_currency
+
+    def _compute_currency(self, order, price, conversion):
+        from_currency, to_currency = self._get_conversion_currencies(order, conversion)
+        if from_currency.id == to_currency.id:
+            return price
+        return from_currency._convert(price, to_currency, order.company_id, order.date_order or fields.Date.today())
+
     def _get_price_available(self, order):
         self.ensure_one()
+        self = self.sudo()
+        order = order.sudo()
         total = weight = volume = quantity = 0
         total_delivery = 0.0
         for line in order.order_line:
@@ -76,20 +95,35 @@ class ProviderGrid(models.Model):
                 total_delivery += line.price_total
             if not line.product_id or line.is_delivery:
                 continue
+            if line.product_id.type == "service":
+                continue
             qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty
             volume += (line.product_id.volume or 0.0) * qty
             quantity += qty
         total = (order.amount_total or 0.0) - total_delivery
 
-        total = order.currency_id.with_context(date=order.date_order).compute(total, order.company_id.currency_id)
+        total = self._compute_currency(order, total, 'pricelist_to_company')
 
         return self._get_price_from_picking(total, weight, volume, quantity)
+
+    def _get_price_dict(self, total, weight, volume, quantity):
+        '''Hook allowing to retrieve dict to be used in _get_price_from_picking() function.
+        Hook to be overridden when we need to add some field to product and use it in variable factor from price rules. '''
+        return {
+            'price': total,
+            'volume': volume,
+            'weight': weight,
+            'wv': volume * weight,
+            'quantity': quantity
+        }
 
     def _get_price_from_picking(self, total, weight, volume, quantity):
         price = 0.0
         criteria_found = False
-        price_dict = {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity}
+        price_dict = self._get_price_dict(total, weight, volume, quantity)
+        if self.free_over and total >= self.amount:
+            return 0
         for line in self.price_rule_ids:
             test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:
@@ -106,7 +140,7 @@ class ProviderGrid(models.Model):
         for p in pickings:
             carrier = self._match_address(p.partner_id)
             if not carrier:
-                raise ValidationError(_('Error: no matching grid.'))
+                raise ValidationError(_('There is no matching delivery rule.'))
             res = res + [{'exact_price': p.carrier_id._get_price_available(p.sale_id) if p.sale_id else 0.0,  # TODO cleanme
                           'tracking_number': False}]
         return res

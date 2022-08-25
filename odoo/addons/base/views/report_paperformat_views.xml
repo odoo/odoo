@@ -16,6 +16,7 @@
             <field name="model">report.paperformat</field>
             <field name="arch" type="xml">
                 <form string="Paper format configuration">
+                <sheet>
                     <group>
                         <field name="name" />
                         <field name="format" />
@@ -31,19 +32,18 @@
                         <field name="dpi" />
                         <field name="report_ids" widget="many2many_tags" options="{'not_delete': True}"/>
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>
         <record id="paper_format_action" model="ir.actions.act_window">
             <field name="name">Paper Format General Configuration</field>
             <field name="res_model">report.paperformat</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
         <record id='reports_action' model='ir.actions.act_window'>
             <field name="name">Reports</field>
             <field name="res_model">ir.actions.report</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem

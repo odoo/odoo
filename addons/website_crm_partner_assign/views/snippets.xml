@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="snippet_options" inherit_id="website.snippet_options" name="Crm Partner Assign Snippet Options">
+    <xpath expr="." position="inside">
+        <div data-selector="main:has(#oe_structure_website_crm_partner_assign_layout_1)" data-page-options="true" data-no-check="true" string="Partners Page">
+            <we-checkbox string="Show Leads / Opps"
+                         data-customize-website-views="website_crm_partner_assign.portal_my_home_lead"
+                         data-no-preview="true"
+                         data-reload="/"/>
+            <we-checkbox string="World Map"
+                         data-customize-website-views="website_crm_partner_assign.ref_country"
+                         data-no-preview="true"
+                         data-reload="/"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>
+

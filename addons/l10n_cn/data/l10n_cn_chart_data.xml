@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--
+
+     Copyright (C) 2012-2012 南京盈通 ccdos@intoerp.com <small business chart>
+
+会计科目表模板( 小企业会计准则2011)
+
+科目表依据：
+关于印发《小企业会计准则》的通知
+http://kjs.mof.gov.cn/zhengwuxinxi/zhengcefabu/201111/t20111107_605525.html
+
+-->
+    <data>
+        <record id="l10n_chart_china_small_business" model="account.chart.template">
+            <field name="name">小企业会计科目表（财会[2011]17号《小企业会计准则》）</field>
+            <field name="code_digits" eval="6"/>
+            <field name="currency_id" ref="base.CNY"/>
+            <field name="cash_account_code_prefix">1001</field>
+            <field name="bank_account_code_prefix">1002</field>
+            <field name="transfer_account_code_prefix">1012</field>
+            <field name="spoken_languages" eval="'en_US'"/>
+            <field name="country_id" ref="base.cn"/>
+            <field name="use_storno_accounting" eval="True"/>
+        </record>
+    </data>
+</odoo>
+
+

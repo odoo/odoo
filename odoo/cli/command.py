@@ -5,7 +5,7 @@ import os
 from os.path import join as joinpath, isdir
 
 import odoo
-from odoo.modules import get_modules, get_module_path
+from odoo.modules import get_modules, get_module_path, initialize_sys_path
 
 commands = {}
 
@@ -48,6 +48,7 @@ def main():
     # Subcommand discovery
     if len(args) and not args[0].startswith("-"):
         logging.disable(logging.CRITICAL)
+        initialize_sys_path()
         for module in get_modules():
             if isdir(joinpath(get_module_path(module), 'cli')):
                 __import__('odoo.addons.' + module)
@@ -59,4 +60,4 @@ def main():
         o = commands[command]()
         o.run(args)
     else:
-        sys.exit('Unknow command %r' % (command,))
+        sys.exit('Unknown command %r' % (command,))

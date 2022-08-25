@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- activate B2C portal by default -->
+        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.invitation_scope', 'b2c')"/>
+        <!-- activate Reset password by default -->
+        <function model="ir.config_parameter" name="set_param" eval="('auth_signup.reset_password', 'True')"/>
+    </data>
+</odoo>

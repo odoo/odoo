@@ -1,19 +1,49 @@
 odoo.define('barcodes.tests', function (require) {
 "use strict";
 
-var barcodeEvents = require('barcodes.BarcodeEvents');
+const {barcodeService} = require("@barcodes/barcode_service");
+const {barcodeGenericHandlers} = require("@barcodes/barcode_handlers");
+const {barcodeRemapperService} = require("@barcodes/js/barcode_events");
+const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
+const { registry } = require("@web/core/registry");
+const { mockTimeout } = require("@web/../tests/helpers/utils");
 
-var AbstractField = require('web.AbstractField');
-var fieldRegistry = require('web.field_registry');
 var FormController = require('web.FormController');
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
-var triggerKeypressEvent = testUtils.triggerKeypressEvent;
+var triggerEvent = testUtils.dom.triggerEvent;
+var core = require('web.core');
+
+const maxTimeBetweenKeysInMs = barcodeService.maxTimeBetweenKeysInMs;
+
+function simulateBarCode(chars, target = document.body) {
+    for (let char of chars) {
+        let keycode;
+        if (char === 'Enter') {
+            keycode = $.ui.keyCode.ENTER;
+        } else if (char === "Tab") {
+            keycode = $.ui.keyCode.TAB;
+        } else {
+            keycode = char.charCodeAt(0);
+        }
+        triggerEvent(target, 'keydown', {
+            key: char,
+            keyCode: keycode,
+        });
+    }
+}
 
 QUnit.module('Barcodes', {
     beforeEach: function () {
+        barcodeService.maxTimeBetweenKeysInMs = 0;
+        registry.category("services").add("barcode", barcodeService, { force: true});
+        registry.category("services").add("barcode_autoclick", barcodeGenericHandlers, { force: true});
+        // remove this one later
+        registry.category("services").add("barcode_remapper", barcodeRemapperService);
+        this.env = makeTestEnv();
+
         this.data = {
             order: {
                 fields: {
@@ -39,21 +69,25 @@ QUnit.module('Barcodes', {
                 fields: {
                     name: {string : "Product name", type: "char"},
                     int_field: {string : "Integer", type: "integer"},
+                    int_field_2: {string : "Integer", type: "integer"},
                     barcode: {string: "Barcode", type: "char"},
                 },
                 records: [
-                    {id: 1, name: "iPad Mini", barcode: '1234567890'},
-                    {id: 2, name: "Mouse, Optical", barcode: '0987654321'},
+                    {id: 1, name: "Large Cabinet", barcode: '1234567890'},
+                    {id: 2, name: "Cabinet with Doors", barcode: '0987654321'},
                 ],
             },
         };
-    }
+    },
+    afterEach: function () {
+        barcodeService.maxTimeBetweenKeysInMs = maxTimeBetweenKeysInMs;
+    },
 });
 
-QUnit.test('Button with barcode_trigger', function (assert) {
+QUnit.test('Button with barcode_trigger', async function (assert) {
     assert.expect(2);
 
-    var form = createView({
+    var form = await createView({
         View: FormView,
         model: 'product',
         data: this.data,
@@ -64,31 +98,73 @@ QUnit.test('Button with barcode_trigger', function (assert) {
                 '</header>' +
             '</form>',
         res_id: 2,
+        services: {
+            notification: {
+                notify: function (params) {
+                    assert.step(params.type);
+                }
+            },
+        },
         intercepts: {
             execute_action: function (event) {
                 assert.strictEqual(event.data.action_data.name, 'do_something',
                     "do_something method call verified");
             },
-            warning: function () {
-                assert.step('warn');
-            },
         },
     });
 
     // O-BTN.doit
-    _.each(['O','-','B','T','N','.','d','o','i','t','Enter'], triggerKeypressEvent);
+    simulateBarCode(['O','-','B','T','N','.','d','o','i','t','Enter']);
     // O-BTN.dothat (should not call execute_action as the button isn't visible)
-    _.each(['O','-','B','T','N','.','d','o','t','h','a','t','Enter'], triggerKeypressEvent);
-
+    simulateBarCode(['O','-','B','T','N','.','d','o','t','h','a','t','Enter']);
+    await testUtils.nextTick();
     assert.verifySteps([], "no warning should be displayed");
 
     form.destroy();
 });
 
-QUnit.test('edit, save and cancel buttons', function (assert) {
+QUnit.test('Two buttons with same barcode_trigger and the same string and action', async function (assert) {
+    assert.expect(2);
+
+    var form = await createView({
+        View: FormView,
+        model: 'product',
+        data: this.data,
+        arch: '<form>' +
+                '<header>' +
+                    '<button name="do_something" string="Validate" type="object" invisible="0" barcode_trigger="doit"/>' +
+                    '<button name="do_something" string="Validate" type="object" invisible="1" barcode_trigger="doit"/>' +
+                '</header>' +
+            '</form>',
+        res_id: 2,
+
+        services: {
+            notification: {
+                notify: function (params) {
+                    assert.step(params.type);
+                }
+            },
+        },
+        intercepts: {
+            execute_action: function (event) {
+                assert.strictEqual(event.data.action_data.name, 'do_something',
+                    "do_something method call verified");
+            },
+        },
+    });
+
+    // O-BTN.doit should call execute_action as the first button is visible
+    simulateBarCode(['O','-','B','T','N','.','d','o','i','t','Enter']);
+    await testUtils.nextTick();
+    assert.verifySteps([], "no warning should be displayed");
+
+    form.destroy();
+});
+
+QUnit.test('edit, save and cancel buttons', async function (assert) {
     assert.expect(6);
 
-    var form = createView({
+    var form = await createView({
         View: FormView,
         model: 'product',
         data: this.data,
@@ -103,34 +179,39 @@ QUnit.test('edit, save and cancel buttons', function (assert) {
     });
 
     // O-CMD.EDIT
-    _.each(["O","-","C","M","D",".","E","D","I","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$(".o_form_editable").length, 1,
+    simulateBarCode(["O","-","C","M","D",".","E","D","I","T","Enter"], document.body);
+    await testUtils.nextTick();
+    assert.containsOnce(form, ".o_form_editable",
         "should have switched to 'edit' mode");
     // dummy change to check that it actually saves
-    form.$('.o_field_widget').val('test').trigger('input');
+    await testUtils.fields.editInput(form.$('.o_field_widget'), 'test');
     // O-CMD.SAVE
-    _.each(["O","-","C","M","D",".","S","A","V","E","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$(".o_form_readonly").length, 1,
+    simulateBarCode(["O","-","C","M","D",".","S","A","V","E","Enter"], document.body);
+    await testUtils.nextTick();
+    assert.containsOnce(form, ".o_form_readonly",
         "should have switched to 'readonly' mode");
     assert.verifySteps(['save'], 'should have saved');
 
     // O-CMD.EDIT
-    _.each(["O","-","C","M","D",".","E","D","I","T","Enter"], triggerKeypressEvent);
+    simulateBarCode(["O","-","C","M","D",".","E","D","I","T","Enter"], document.body);
+    await testUtils.nextTick();
     // dummy change to check that it correctly discards
-    form.$('.o_field_widget').val('test').trigger('input');
+    await testUtils.fields.editInput(form.$('.o_field_widget'), 'test');
     // O-CMD.CANCEL
-    _.each(["O","-","C","M","D",".","D","I","S","C","A","R","D","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$(".o_form_readonly").length, 1,
+    simulateBarCode(["O","-","C","M","D",".","D","I","S","C","A","R","D","Enter"], document.body);
+    await testUtils.nextTick();
+    assert.containsOnce(form, ".o_form_readonly",
         "should have switched to 'readonly' mode");
-    assert.verifySteps(['save'], 'should not have saved');
+    assert.verifySteps([], 'should not have saved');
 
     form.destroy();
 });
 
-QUnit.test('pager buttons', function (assert) {
+QUnit.test('pager buttons', async function (assert) {
+    const mock = mockTimeout();
     assert.expect(5);
 
-    var form = createView({
+    var form = await createView({
         View: FormView,
         model: 'product',
         data: this.data,
@@ -142,36 +223,42 @@ QUnit.test('pager buttons', function (assert) {
         },
     });
 
-    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
     // O-CMD.PAGER-NEXT
-    _.each(["O","-","C","M","D",".","N","E","X","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'Mouse, Optical');
+    simulateBarCode(["O","-","C","M","D",".","N","E","X","T","Enter"]);
+    await testUtils.nextTick();
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Cabinet with Doors');
     // O-CMD.PAGER-PREV
-    _.each(["O","-","C","M","D",".","P","R","E","V","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    simulateBarCode(["O","-","C","M","D",".","P","R","E","V","Enter"]);
+    await testUtils.nextTick();
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
     // O-CMD.PAGER-LAST
-    _.each(["O","-","C","M","D",".","P","A","G","E","R","-","L","A","S","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'Mouse, Optical');
+    simulateBarCode(["O","-","C","M","D",".","P","A","G","E","R","-","L","A","S","T","Enter"]);
+    // need to await 2 macro steps
+    await mock.advanceTime(20);
+    await mock.advanceTime(20);
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Cabinet with Doors');
     // O-CMD.PAGER-FIRST
-    _.each(["O","-","C","M","D",".","P","A","G","E","R","-","F","I","R","S","T","Enter"], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
+    simulateBarCode(["O","-","C","M","D",".","P","A","G","E","R","-","F","I","R","S","T","Enter"]);
+    // need to await 2 macro steps
+    await mock.advanceTime(20);
+    await mock.advanceTime(20);
+    assert.strictEqual(form.$('.o_field_widget').text(), 'Large Cabinet');
 
     form.destroy();
 });
 
-QUnit.test('do no update form twice after a command barcode scanned', function (assert) {
-    assert.expect(7);
+QUnit.test('do no update form twice after a command barcode scanned', async function (assert) {
+    assert.expect(5);
 
-    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
-    testUtils.patch(FormController, {
+    testUtils.mock.patch(FormController, {
         update: function () {
             assert.step('update');
             return this._super.apply(this, arguments);
         },
     });
 
-    var form = createView({
+    var form = await createView({
         View: FormView,
         model: 'product',
         data: this.data,
@@ -195,40 +282,32 @@ QUnit.test('do no update form twice after a command barcode scanned', function (
     assert.verifySteps(['read'], "update should not have been called yet");
 
     // switch to next record
-    _.each(["O","-","C","M","D",".","N","E","X","T","Enter"], triggerKeypressEvent);
+    simulateBarCode(["O","-","C","M","D",".","N","E","X","T","Enter"]);
+    await testUtils.nextTick();
     // a first update is done to reload the data (thus followed by a read), but
     // update shouldn't be called afterwards
-    assert.verifySteps(['read', 'update', 'read']);
-
-    _.each(['5','4','3','9','8','2','6','7','1','2','5','2','Enter'], triggerKeypressEvent);
-    // a real barcode has been scanned -> an update should be requested (with
-    // option reload='false', so it isn't followed by a read)
-    assert.verifySteps(['read', 'update', 'read', 'update']);
+    assert.verifySteps(['update', 'read']);
 
     form.destroy();
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
-    testUtils.unpatch(FormController);
+    testUtils.mock.unpatch(FormController);
 });
 
-QUnit.test('widget field_float_scannable', function (assert) {
-    var done = assert.async();
-    assert.expect(11);
-
-    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
-
+QUnit.test('widget field_float_scannable', async function (assert) {
     this.data.product.records[0].int_field = 4;
-    this.data.product.onchanges = {
-        int_field: function () {},
-    };
 
-    var form = createView({
+    function _onBarcodeScanned (code) {
+        assert.step(`barcode scanned ${code}`)
+    }
+    core.bus.on('barcode_scanned', null, _onBarcodeScanned);
+
+    var form = await createView({
         View: FormView,
         model: 'product',
         data: this.data,
         arch: '<form>' +
                     '<field name="display_name"/>' +
                     '<field name="int_field" widget="field_float_scannable"/>' +
+                    '<field name="int_field_2"/>' +
                 '</form>',
         mockRPC: function (route, args) {
             if (args.method === 'onchange') {
@@ -245,163 +324,31 @@ QUnit.test('widget field_float_scannable', function (assert) {
     assert.strictEqual(form.$('.o_field_widget[name=int_field]').text(), '4',
         "should display the correct value in readonly");
 
-    form.$buttons.find('.o_form_button_edit').click();
+    await testUtils.form.clickEdit(form);
 
     assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '4',
         "should display the correct value in edit");
 
     // simulates keypress events in the input to replace 0.00 by 26 (should not trigger onchanges)
     form.$('.o_field_widget[name=int_field]').focus();
+
+    // we check here that a scan on the fieldflotscannable widget triggers a
+    // barcode event
+    simulateBarCode(["6", "0", "1", "6", "4", "7", "8", "5"], document.activeElement)
+    await testUtils.nextTick();
+    assert.verifySteps(['barcode scanned 60164785']);
     assert.strictEqual(form.$('.o_field_widget[name=int_field]').get(0), document.activeElement,
         "int field should be focused");
-    form.$('.o_field_widget[name=int_field]').trigger({type: 'keypress', which: 50, keyCode: 50}); // 2
-    assert.strictEqual(form.$('.o_field_widget[name=int_field]').get(0), document.activeElement,
-        "int field should still be focused");
-    form.$('.o_field_widget[name=int_field]').trigger({type: 'keypress', which: 54, keyCode: 54}); // 6
-    assert.strictEqual(form.$('.o_field_widget[name=int_field]').get(0), document.activeElement,
-        "int field should still be focused");
 
-    setTimeout(function () {
-        assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '426',
-            "should display the correct value in edit");
-        assert.strictEqual(form.$('.o_field_widget[name=int_field]').get(0), document.activeElement,
-        "int field should still be focused");
-
-        assert.verifySteps([], 'should not have done any onchange RPC');
-
-        form.$('.o_field_widget[name=int_field]').trigger('change'); // should trigger the onchange
-
-        assert.verifySteps(['onchange'], 'should have done the onchange RPC');
-
-        form.destroy();
-        barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
-        done();
-    });
-});
-
-QUnit.test('widget barcode_handler', function (assert) {
-    assert.expect(4);
-
-    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
-
-    this.data.product.fields.barcode_scanned = {string : "Scanned barcode", type: "char"};
-    this.data.product.onchanges = {
-        barcode_scanned: function (obj) {
-            // simulate an onchange that increment the int_field value
-            // at each barcode scanned
-            obj.int_field = obj.int_field + 1;
-        },
-    };
-
-    var form = createView({
-        View: FormView,
-        model: 'product',
-        data: this.data,
-        arch: '<form>' +
-                    '<field name="display_name"/>' +
-                    '<field name="int_field"/>' +
-                    '<field name="barcode_scanned" widget="barcode_handler" invisible="1"/>' +
-                '</form>',
-        mockRPC: function (route, args) {
-            if (args.method === 'onchange') {
-                assert.step('onchange');
-            }
-            return this._super.apply(this, arguments);
-        },
-        res_id: 1,
-        viewOptions: {
-            mode: 'edit',
-        },
-    });
-
-    assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '0',
-        "initial value should be correct");
-
-    _.each(['5','4','3','9','8','2','6','7','1','2','5','2','Enter'], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_field_widget[name=int_field]').val(), '1',
-        "value should have been incremented");
-
-    assert.verifySteps(['onchange'], "an onchange should have been done");
+    // we check here that a scan on the field without widget does not trigger a
+    // barcode event
+    form.$('.o_field_widget[name=int_field_2]').focus();
+    simulateBarCode(["6", "0", "1", "6", "4", "7", "8", "5"], document.activeElement)
+    await testUtils.nextTick();
+    assert.verifySteps([]);
 
     form.destroy();
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
+    core.bus.off('barcode_scanned', null, _onBarcodeScanned)
 });
 
-QUnit.test('specification of widget barcode_handler', function (assert) {
-    assert.expect(5);
-
-    var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
-
-    // Define a specific barcode_handler widget for this test case
-    var TestBarcodeHandler = AbstractField.extend({
-        init: function () {
-            this._super.apply(this, arguments);
-
-            this.trigger_up('activeBarcode', {
-                name: 'test',
-                fieldName: 'line_ids',
-                quantity: 'quantity',
-                commands: {
-                    barcode: '_barcodeAddX2MQuantity',
-                }
-            });
-        },
-    });
-    fieldRegistry.add('test_barcode_handler', TestBarcodeHandler);
-
-    var form = createView({
-        View: FormView,
-        model: 'order',
-        data: this.data,
-        arch: '<form>' +
-                    '<field name="_barcode_scanned" widget="test_barcode_handler"/>' +
-                    '<field name="line_ids">' +
-                        '<tree>' +
-                            '<field name="product_id"/>' +
-                            '<field name="product_barcode" invisible="1"/>' +
-                            '<field name="quantity"/>' +
-                        '</tree>' +
-                    '</field>' +
-                '</form>',
-        mockRPC: function (route, args) {
-            if (args.method === 'onchange') {
-                assert.notOK(true, "should not do any onchange RPC");
-            }
-            if (args.method === 'write') {
-                assert.deepEqual(args.args[1].line_ids, [
-                    [1, 1, {quantity: 2}], [1, 2, {quantity: 1}],
-                ], "should have generated the correct commands");
-            }
-            return this._super.apply(this, arguments);
-        },
-        res_id: 1,
-        viewOptions: {
-            mode: 'edit',
-        },
-    });
-
-    assert.strictEqual(form.$('.o_data_row').length, 2,
-        "one2many should contain 2 rows");
-
-    // scan twice product 1
-    _.each(['1','2','3','4','5','6','7','8','9','0','Enter'], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_data_row:first .o_data_cell:nth(1)').text(), '1',
-        "quantity of line one should have been incremented");
-    _.each(['1','2','3','4','5','6','7','8','9','0','Enter'], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_data_row:first .o_data_cell:nth(1)').text(), '2',
-        "quantity of line one should have been incremented");
-
-    // scan once product 2
-    _.each(['0','9','8','7','6','5','4','3','2','1','Enter'], triggerKeypressEvent);
-    assert.strictEqual(form.$('.o_data_row:nth(1) .o_data_cell:nth(1)').text(), '1',
-        "quantity of line one should have been incremented");
-
-    form.$buttons.find('.o_form_button_save').click();
-
-    form.destroy();
-    barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
-    delete fieldRegistry.map.test_barcode_handler;
-});
 });

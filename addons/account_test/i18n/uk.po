@@ -3,26 +3,27 @@
 # * account_test
 # 
 # Translators:
-# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# ТАрас <tratatuta@i.ua>, 2017
-# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
+# Martin Trigaux, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.report_accounttest
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
@@ -31,9 +32,19 @@ msgstr ""
 "                        <strong>Опис:</strong>"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.report_accounttest
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "<strong>Name:</strong>"
 msgstr "<strong>Назва:</strong>"
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_report_account_test_report_accounttest
+msgid "Account Test Report"
+msgstr "Звіт тесту рахунку"
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_accounting_assert_test
+msgid "Accounting Assert Test"
+msgstr "Тест з бухгалтерського обліку"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
@@ -43,12 +54,12 @@ msgid "Accounting Tests"
 msgstr "Тести для бухобліку"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.report_accounttest
+#: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
 msgstr "Бухгалтерські тести на"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__active
 msgid "Active"
 msgstr "Активно"
 
@@ -56,7 +67,8 @@ msgstr "Активно"
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
 msgstr ""
-"Перевірте, чи рух рядків збалансований, і вони мають однакову дату та час"
+"Перевірте, чи розміщення рядків збалансоване, і вони мають однакову дату та "
+"час"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -98,17 +110,12 @@ msgid "Check the balance: Debit sum = Credit sum"
 msgstr "Перевірте баланс: Дебет = Кредит"
 
 #. module: account_test
-#: model:ir.actions.act_window,help:account_test.action_accounting_assert
-msgid "Click to create Accounting Test."
-msgstr "Натисніть, щоб створити бухгалтерський тест."
-
-#. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Code Help"
 msgstr "Код допомоги"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
 "Code should always set a variable named `result` with the result of your test, that can be a list or\n"
 "a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
@@ -144,7 +151,7 @@ msgstr ""
 "\n"
 "Будь-якими способами цей код повинен бути легальною заявою python з правильним відступом (при необхідності).\n"
 "\n"
-"наприклад: \n"
+"Наприклад: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
 "             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
@@ -153,65 +160,70 @@ msgstr ""
 "    result = cr.dictfetchall()"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
+#: model_terms:ir.actions.act_window,help:account_test.action_accounting_assert
+msgid "Create a new accounting test"
+msgstr "Створити новий бухгалтерський тест"
+
+#. module: account_test
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_date
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__create_date
 msgid "Created on"
-msgstr "Дата створення"
+msgstr "Створено"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Description"
 msgstr "Опис"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_display_name
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_display_name
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__display_name
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Expression"
 msgstr "Вираз"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_id
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest_id
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__id
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest__id
 msgid "ID"
-msgstr "ІД"
+msgstr "ID"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test___last_update
-#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest___last_update
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test____last_update
+#: model:ir.model.fields,field_description:account_test.field_report_account_test_report_accounttest____last_update
 msgid "Last Modified on"
 msgstr "Остання модифікація"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_uid
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_write_date
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
 msgstr "Код Python"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_code_exec
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__code_exec
 msgid "Python code"
-msgstr "Python Code"
+msgstr "Код Python "
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_sequence
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__sequence
 msgid "Sequence"
 msgstr "Послідовність"
 
@@ -247,33 +259,23 @@ msgid "Test 7 : Closing balance on bank statements"
 msgstr "Тест 7: Закриття балансу по виписці"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__desc
 msgid "Test Description"
 msgstr "Опис тесту"
 
 #. module: account_test
-#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_name
+#: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__name
 msgid "Test Name"
 msgstr "Назва тесту"
 
 #. module: account_test
-#: model:ir.ui.view,arch_db:account_test.account_assert_form
-#: model:ir.ui.view,arch_db:account_test.account_assert_tree
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.account_assert_tree
 msgid "Tests"
 msgstr "Тест"
 
 #. module: account_test
-#: code:addons/account_test/report/report_account_test.py:52
+#: code:addons/account_test/report/report_account_test.py:53
 #, python-format
 msgid "The test was passed successfully"
 msgstr "Тест успішно пройдено"
-
-#. module: account_test
-#: model:ir.model,name:account_test.model_accounting_assert_test
-msgid "accounting.assert.test"
-msgstr "accounting.assert.test"
-
-#. module: account_test
-#: model:ir.model,name:account_test.model_report_account_test_report_accounttest
-msgid "report.account_test.report_accounttest"
-msgstr "report.account_test.report_accounttest"

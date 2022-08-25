@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Timesheet when on Leaves',
+    'name': 'Timesheet when on Time Off',
     'version': '1.0',
     'category': 'Human Resources',
-    'summary': 'Schedule timesheet when on leaves',
+    'summary': 'Schedule timesheet when on time off',
     'description': """
 Bridge module to integrate leaves in timesheet
 ================================================
@@ -20,8 +20,8 @@ on leaves. Project and task can be configured company-wide.
         'security/ir.model.access.csv',
 
     ],
-    'demo': [],
     'installable': True,
     'auto_install': True,
     'post_init_hook': 'post_init',
+    'license': 'LGPL-3',
 }

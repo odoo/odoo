@@ -8,20 +8,21 @@
             <search string="Stage Search">
                 <field name="name"/>
                 <field name="sequence"/>
-                <field name="probability"/>
+                <field name="is_won"/>
                 <field name="team_id"/>
             </search>
         </field>
     </record>
 
+    <!-- STAGES TREE VIEW + MUTI_EDIT -->
     <record id="crm_stage_tree" model="ir.ui.view">
         <field name="name">crm.stage.tree</field>
         <field name="model">crm.stage</field>
         <field name="arch" type="xml">
-            <tree string="Stages">
+            <tree string="Stages" multi_edit="1">
                 <field name="sequence" widget="handle"/>
-                <field name="name"/>
-                <field name="probability"/>
+                <field name="name" readonly="1"/>
+                <field name="is_won"/>
                 <field name="team_id"/>
             </tree>
         </field>
@@ -33,20 +34,24 @@
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <form string="Stage">
-                <group>
-                    <field name="team_count" invisible="1"/>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Negotiation"/>
+                        </h1>
+                    </div>
                     <group>
-                        <field name="name"/>
-                        <field name="team_id" options='{"no_open": True, "no_create": True}' attrs="{'invisible': [('team_count', '&lt;=', 1)]}"/>
-                        <field name="fold"/>
+                        <group>
+                            <field name="is_won"/>
+                            <field name="fold"/>
+                            <field name="team_id" options='{"no_open": True, "no_create": True}' attrs="{'invisible': [('team_count', '&lt;=', 1)]}" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+                        </group>
+                        <field name="team_count" invisible="1"/>
                     </group>
-                    <group>
-                        <field name="on_change"/>
-                        <field name="probability" attrs="{'invisible': [('on_change', '=', False)]}"/>
-                    </group>
-                </group>
-                <separator string="Requirements"/>
-                <field name="requirements" nolabel="1" placeholder="Give your team the requirements to move an opportunity to this stage."/>
+                    <separator string="Requirements"/>
+                    <field name="requirements" nolabel="1" placeholder="Give your team the requirements to move an opportunity to this stage."/>
+                </sheet>
             </form>
         </field>
     </record>
@@ -54,7 +59,6 @@
     <record id="crm_stage_action" model="ir.actions.act_window">
         <field name="name">Stages</field>
         <field name="res_model">crm.stage</field>
-        <field name="view_type">form</field>
         <field name="view_id" ref="crm.crm_stage_tree"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
@@ -65,13 +69,5 @@
           </p>
         </field>
     </record>
-
-    <menuitem
-        id="menu_crm_lead_stage_act"
-        name="Stages"
-        sequence="0"
-        action="crm_stage_action"
-        parent="menu_crm_config_lead"
-        groups="base.group_no_one"/>
 
 </odoo>

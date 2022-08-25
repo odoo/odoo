@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <!-- Event CRM Rule 1 -->
+        <record id="event_lead_rule_1" model="event.lead.rule">
+            <field name="name">Rule per order</field>
+            <field name="lead_creation_basis">order</field>
+            <field name="event_id" ref="event.event_0"/>
+            <field name="lead_user_id" ref="base.user_demo"/>
+            <field name="lead_tag_ids" eval="[(6, 0, [ref('sales_team.categ_oppor3')]),(6, 0, [ref('sales_team.categ_oppor6')])]"/>
+        </record>
+    </data>
+</odoo>

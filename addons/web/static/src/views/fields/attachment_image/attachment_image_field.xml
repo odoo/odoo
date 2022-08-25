@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web.AttachmentImageField" owl="1">
+        <div class="o_attachment_image">
+            <img t-if="props.value" t-attf-src="/web/image/{{ props.value[0] }}?unique=1" t-att-title="props.value[1]" alt="Image" />
+        </div>
+    </t>
+
+</templates>

@@ -40,13 +40,8 @@
         <record id="action_view_followers" model="ir.actions.act_window">
             <field name="name">Followers</field>
             <field name="res_model">mail.followers</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-
-        <!-- Add followers related menu entries in Settings/Email -->
-        <menuitem name="Followers" id="menu_email_followers" parent="base.menu_email"
-                    action="action_view_followers" sequence="30" groups="base.group_no_one"/>
 
     </data>
 </odoo>

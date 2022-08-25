@@ -1,21 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_customer
+# 	* website_customer
 # 
 # Translators:
-# fanha99 <fanha99@hotmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# son dang <son.dang@doda100.com>, 2017
-# Hoang Loc Le Huu <loclhh@gmail.com>, 2017
-# lam nguyen <lamev.inc@gmail.com>, 2017
-# Phạm Lân <phamquanglan@gmail.com>, 2017
+# Martin Trigaux, 2019
+# fanha99 <fanha99@hotmail.com>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2019
+# Chinh Chinh <trinhttp@trobz.com>, 2019
+# Dung Nguyen Thi <dungnt@trobz.com>, 2019
+# Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Phạm Lân <phamquanglan@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,113 +26,143 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.opt_tag_list
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "<span class=\"fa fa-1x fa-tags\"/> All"
-msgstr ""
+msgstr "<span class=\"fa fa-1x fa-tags\"/> Tất cả"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_active
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+msgstr ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__active
 msgid "Active"
 msgstr "Có hiệu lực"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:80
+#: code:addons/website_customer/controllers/main.py:0
 #, python-format
 msgid "All Countries"
-msgstr "Tất cả Quốc gia"
+msgstr "Tất cả quốc gia"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:61
+#: code:addons/website_customer/controllers/main.py:0
 #, python-format
 msgid "All Sectors of Activity"
-msgstr ""
+msgstr "Tất cả các ngành hoạt động"
 
 #. module: website_customer
-#: model:ir.model.fields,help:website_customer.field_res_partner_tag_classname
+#: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
+msgid "Archived"
+msgstr "Đã lưu"
+
+#. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__classname
 msgid "Bootstrap class to customize the color"
+msgstr "Lớp bootstrap để tuỳ chỉnh màu sắc"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__can_publish
+msgid "Can Publish"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_name
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__name
 msgid "Category Name"
 msgstr "Tên danh mục"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_classname
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__classname
 msgid "Class"
-msgstr ""
+msgstr "Lớp"
 
 #. module: website_customer
-#: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
-msgid "Click to create a new partner tag."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
+msgid "Close"
+msgstr "Đóng"
 
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner
 msgid "Contact"
-msgstr "Liên hệ"
+msgstr "Danh bạ"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
+#: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
+msgid "Create a new contact tag"
+msgstr "Tạo từ khóa liên hệ"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_uid
 msgid "Created by"
 msgstr "Được tạo bởi"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_date
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__create_date
 msgid "Created on"
 msgstr "Thời điểm tạo"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_display_name
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_id
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.implemented_by_block
+#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "Implemented By"
+msgstr "Thực hiện bởi"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__is_published
+msgid "Is Published"
 msgstr ""
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag___last_update
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
+msgstr "Sửa lần cuối"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_uid
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật lần cuối bởi"
+msgstr "Cập nhật gần đây bởi"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_write_date
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối vào"
+msgstr "Cập nhật gần đây vào"
 
 #. module: website_customer
-#: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
+#: model_terms:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid ""
-"Manage the partner tags to better classify them on your website.\n"
-"                    You can add the filter by tag on your website in the \"Customize\" menu."
+"Manage contact tags to better classify them for tracking and analysis "
+"purposes."
 msgstr ""
+"Quản lý các từ khóa liên lạc để phân biệt tốt hơn các liên lạc cho mục đích "
+"theo dõi và phân tích."
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.index
+#: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "No result found"
-msgstr ""
+msgstr "Không có kết quả nào"
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.details
-#: model:ir.ui.view,arch_db:website_customer.footer_custom
-#: model:ir.ui.view,arch_db:website_customer.index
+#: model_terms:ir.ui.view,arch_db:website_customer.details
+#: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Our References"
-msgstr ""
+msgstr "Thành tựu của chúng tôi"
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.view_partner_tag_form
+#: model_terms:ir.ui.view,arch_db:website_customer.view_partner_tag_form
 msgid "Partner Tag"
 msgstr "Partner Tag"
 
@@ -138,69 +170,87 @@ msgstr "Partner Tag"
 #: model:ir.model,name:website_customer.model_res_partner_tag
 msgid ""
 "Partner Tags - These tags can be used on website to find customers by "
-"sector, or ... "
+"sector, or ..."
 msgstr ""
+"Partner Tags - Các thẻ này có thể sử dụng trên website để tìm kiếm khách "
+"hàng dễ dàng hơn bằng các phân loại, khu vực, ..."
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__partner_ids
 msgid "Partners"
 msgstr "Đối tác"
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.references_block
+#: model_terms:ir.ui.view,arch_db:website_customer.references_block
+#: model:website.menu,name:website_customer.menu_customers
 msgid "References"
 msgstr "Các tham chiếu"
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.opt_country_list
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country_list
 msgid "References by Country"
-msgstr ""
+msgstr "Tham vấn theo quốc gia"
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.opt_industry_list
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_industry_list
 msgid "References by Sectors of Activity"
-msgstr ""
+msgstr "Tham khảo bằng các mục phân loại hoạt động"
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.opt_tag_list
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "References by Tag"
-msgstr ""
+msgstr "Thảo khảo bằng thẻ"
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.index
+#: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Search"
-msgstr "Search"
+msgstr "Tìm kiếm"
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.index
+#: model_terms:ir.ui.view,arch_db:website_customer.res_partner_tag_view_search
+msgid "Search Partner Tag"
+msgstr ""
+
+#. module: website_customer
+#: model:ir.model.fields,help:website_customer.field_res_partner_tag__website_url
+msgid "The full URL to access the document through the website."
+msgstr "URL đầy đủ để truy cập tài liệu thông qua trang web."
+
+#. module: website_customer
+#: model_terms:ir.ui.view,arch_db:website_customer.index
 msgid "Trusted by millions worldwide"
-msgstr ""
+msgstr "Được tin tưởng bởi hàng triệu người trên thế giới"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_published
-msgid "Visible in Website"
-msgstr ""
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_published
+msgid "Visible on current website"
+msgstr "Hiển thị ở website hiện tại"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
 #: model:ir.ui.menu,name:website_customer.menu_partner_tag_form
-#: model:ir.ui.view,arch_db:website_customer.view_partner_tag_list
-#: model:ir.ui.view,arch_db:website_customer.view_partners_form_website
+#: model_terms:ir.ui.view,arch_db:website_customer.view_partner_tag_list
+#: model_terms:ir.ui.view,arch_db:website_customer.view_partners_form_website
 msgid "Website Tags"
-msgstr ""
+msgstr "Các thẻ website"
 
 #. module: website_customer
-#: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
-#: model:ir.model.fields,field_description:website_customer.field_res_users_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag__website_url
+msgid "Website URL"
+msgstr "Địa chỉ website"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner__website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users__website_tag_ids
 msgid "Website tags"
-msgstr ""
+msgstr "Các thẻ website"
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.opt_country
+#: model_terms:ir.ui.view,arch_db:website_customer.opt_country
 msgid "World Map"
-msgstr ""
+msgstr "Bản đồ thế giới"
 
 #. module: website_customer
-#: model:ir.ui.view,arch_db:website_customer.implemented_by_block
+#: model_terms:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "reference(s))"
-msgstr ""
+msgstr "tham khảo"

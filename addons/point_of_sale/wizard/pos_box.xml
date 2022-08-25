@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-        <act_window 
-            id="action_pos_box_in"
-            name="Put Money In"
-            res_model="cash.box.in"
-            src_model="pos.session"
-            view_mode="form"
-            target="new"
-            key2="client_action_multi"/>
-
-        <act_window 
-            id="action_pos_box_out"
-            name="Take Money Out"
-            res_model="cash.box.out"
-            src_model="pos.session"
-            view_mode="form"
-            target="new"
-            key2="client_action_multi"/>
+        <record id="action_pos_box_out" model="ir.actions.act_window">
+            <field name="name">Take Money In/Out</field>
+            <field name="res_model">cash.box.out</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 </odoo>

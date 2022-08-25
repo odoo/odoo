@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fetchmail_server_form_l10n_it_inherit" model="ir.ui.view">
+        <field name="name">fetchmail.server.form.l10n.it.inherit</field>
+        <field name="model">fetchmail.server</field>
+        <field name="priority">30</field>
+        <field name="inherit_id" ref="l10n_it_edi.fetchmail_server_form_l10n_it"/>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr="//field[@name='l10n_it_is_pec']" position="replace" />
+        </data>
+        </field>
+    </record>
+
+    <record id="res_company_form_l10n_it_inherit" model="ir.ui.view">
+        <field name="name">res.company.form.l10n.it.inherit</field>
+        <field name="model">res.company</field>
+        <field name="priority">30</field>
+        <field name="inherit_id" ref="l10n_it_edi.res_company_form_l10n_it"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='l10n_it_mail_pec_server_id']" position="replace"/>
+                <xpath expr="//field[@name='l10n_it_address_send_fatturapa']" position="replace"/>
+                <xpath expr="//field[@name='l10n_it_address_recipient_fatturapa']" position="replace"/>
+            </data>
+        </field>
+    </record>
+
+    <record id="l10n_it_edi.invoice_supplier_tree_l10n_it" model="ir.ui.view">
+        <field name="arch" type="xml">
+            <!-- Remove the l10n_state_it field. Doing so
+            with xpath might replace other view elements that we shouldn't remove.-->
+            <data/>
+        </field>
+    </record>
+
+    <record id="l10n_it_edi.invoice_kanban_l10n_it" model="ir.ui.view">
+        <field name="arch" type="xml">
+            <!-- Remove the l10n_state_it field. Doing so
+            with xpath might replace other view elements that we shouldn't remove.-->
+            <data/>
+        </field>
+    </record>
+
+    <record id="l10n_it_edi.account_invoice_form_l10n_it" model="ir.ui.view">
+        <field name="arch" type="xml">
+            <!-- Remove the l10n_state_it field but keep other info tab.
+            Doing so with xpath might repace other view elements that we shouldn't remove. -->
+            <data>
+                <xpath expr="//page[@name='other_info']" position="after">
+                    <page string="Electronic Invoicing"
+                        name="electronic_invoicing"
+                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
+                        <group>
+                            <group>
+                                <field name="l10n_it_stamp_duty"/>
+                                <field name="l10n_it_ddt_id"
+                                       attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+
+    <record id="l10n_it_edi.view_account_invoice_filter_l10n_it" model="ir.ui.view">
+        <field name="arch" type="xml">
+            <!-- Remove the filters.-->
+            <data />
+        </field>
+    </record>
+
+</odoo>

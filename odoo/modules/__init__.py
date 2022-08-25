@@ -17,7 +17,8 @@ from odoo.modules.module import (
     get_modules_with_version,
     get_resource_from_path,
     get_resource_path,
+    check_resource_path,
     initialize_sys_path,
-    load_information_from_description_file,
+    get_manifest,
     load_openerp_module,
 )

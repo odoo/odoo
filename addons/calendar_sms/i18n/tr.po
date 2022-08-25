@@ -1,17 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * calendar_sms
+# 	* calendar_sms
 # 
 # Translators:
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Levent Karakaş <levent@mektup.at>, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18+e\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 11:33+0000\n"
-"PO-Revision-Date: 2017-09-20 11:33+0000\n"
-"Last-Translator: Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,32 +24,48 @@ msgstr ""
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
-msgid "Event"
-msgstr "Aktivite"
+msgid "Calendar Event"
+msgstr "Takvim Etkinliği"
+
+#. module: calendar_sms
+#: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
+msgid "Calendar Event: Reminder"
+msgstr ""
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
-msgid "Event alarm"
-msgstr "Aktivite alarmı"
+msgid "Event Alarm"
+msgstr "Etkinlik Alarmı"
 
 #. module: calendar_sms
-#: code:addons/calendar_sms/models/calendar.py:23
+#: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "Etkinlik Alarmı Yöneticisi"
+
+#. module: calendar_sms
+#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
+msgid ""
+"Event reminder: ${object.name} on ${object.start_datetime or "
+"object.start_date}"
+msgstr ""
+
+#. module: calendar_sms
+#: code:addons/calendar_sms/models/calendar.py:0
 #, python-format
 msgid "Event reminder: %s on %s."
 msgstr "Aktivite Hatırlatıcı: %s - %s."
 
 #. module: calendar_sms
-#: code:addons/calendar_sms/models/calendar.py:24
-#, python-format
-msgid "SMS text message reminder sent !"
-msgstr "SMS Mesaj hatırlatma gönderildi !"
+#: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
+msgid "SMS Text Message"
+msgstr "SMS Metin Mesajı"
 
 #. module: calendar_sms
-#: model:ir.actions.act_window,name:calendar_sms.sms_message_send_action_mutli
+#: model:ir.actions.act_window,name:calendar_sms.calendar_event_act_window_sms_composer_single
 msgid "Send SMS to attendees"
 msgstr "Katılımcılara SMS gönderin"
 
 #. module: calendar_sms
-#: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
-msgid "calendar.alarm_manager"
-msgstr "calendar.alarm_manager"
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type
+msgid "Type"
+msgstr "Tür"

@@ -2,10 +2,23 @@ odoo.define('point_of_sale.DB', function (require) {
 "use strict";
 
 var core = require('web.core');
+var utils = require('web.utils');
 /* The PosDB holds reference to data that is either
  * - static: does not change between pos reloads
  * - persistent : must stay between reloads ( orders )
  */
+
+
+/**
+ * cache the data in memory to avoid roundtrips to the localstorage
+ *
+ * NOTE/TODO: Originally, this is a prop of PosDB. However, if we keep it that way,
+ * caching will result to infinite loop to calling the reactive callbacks.
+ * Another way to solve the infinite loop is to move the instance of PosDB to env.
+ * But I'm not sure if there is anything inside the object that needs to be observed,
+ * so I guess this strategy is good enough for the moment.
+ */
+const CACHE = {};
 
 var PosDB = core.Class.extend({
     name: 'openerp_pos_db', //the prefix of the localstorage data
@@ -19,12 +32,10 @@ var PosDB = core.Class.extend({
             this.name = this.name + '_' + options.uuid;
         }
 
-        //cache the data in memory to avoid roundtrips to the localstorage
-        this.cache = {};
-
         this.product_by_id = {};
         this.product_by_barcode = {};
         this.product_by_category_id = {};
+        this.product_packaging_by_barcode = {};
 
         this.partner_sorted = [];
         this.partner_by_id = {};
@@ -41,9 +52,12 @@ var PosDB = core.Class.extend({
         this.category_search_string = {};
     },
 
-    /* 
-     * sets an uuid to prevent conflict in locally stored data between multiple databases running
-     * in the same browser at the same origin (Doing this is not advised !)
+    /** 
+     * sets an uuid to prevent conflict in locally stored data between multiple PoS Configs. By
+     * using the uuid of the config the local storage from other configs will not get effected nor
+     * loaded in sessions that don't belong to them.
+     *
+     * @param {string} uuid Unique identifier of the PoS Config linked to the current session.
      */
     set_uuid: function(uuid){
         this.name = this.name + '_' + uuid;
@@ -94,19 +108,20 @@ var PosDB = core.Class.extend({
                 name : 'Root',
             };
         }
-        for(var i=0, len = categories.length; i < len; i++){
-            this.category_by_id[categories[i].id] = categories[i];
-        }
-        len = categories.length;
-        for(i=0; i < len; i++){
-            var cat = categories[i];
-            var parent_id = cat.parent_id[0] || this.root_category_id;
-            this.category_parent[cat.id] = cat.parent_id[0];
-            if(!this.category_childs[parent_id]){
-                this.category_childs[parent_id] = [];
+        categories.forEach(function(cat){
+            self.category_by_id[cat.id] = cat;
+        });
+        categories.forEach(function(cat){
+            var parent_id = cat.parent_id[0];
+            if(!(parent_id && self.category_by_id[parent_id])){
+                parent_id = self.root_category_id;
             }
-            this.category_childs[parent_id].push(cat.id);
-        }
+            self.category_parent[cat.id] = parent_id;
+            if(!self.category_childs[parent_id]){
+                self.category_childs[parent_id] = [];
+            }
+            self.category_childs[parent_id].push(cat.id);
+        });
         function make_ancestors(cat_id, ancestors){
             self.category_ancestors[cat_id] = ancestors;
 
@@ -133,13 +148,13 @@ var PosDB = core.Class.extend({
     },
     /* loads a record store from the database. returns default if nothing is found */
     load: function(store,deft){
-        if(this.cache[store] !== undefined){
-            return this.cache[store];
+        if(CACHE[store] !== undefined){
+            return CACHE[store];
         }
         var data = localStorage[this.name + '_' + store];
         if(data !== undefined && data !== ""){
             data = JSON.parse(data);
-            this.cache[store] = data;
+            CACHE[store] = data;
             return data;
         }else{
             return deft;
@@ -148,7 +163,7 @@ var PosDB = core.Class.extend({
     /* saves a record store to the database */
     save: function(store,data){
         localStorage[this.name + '_' + store] = JSON.stringify(data);
-        this.cache[store] = data;
+        CACHE[store] = data;
     },
     _product_search_string: function(product){
         var str = product.display_name;
@@ -170,37 +185,40 @@ var PosDB = core.Class.extend({
     add_products: function(products){
         var stored_categories = this.product_by_category_id;
 
-        if(!products instanceof Array){
+        if(!(products instanceof Array)){
             products = [products];
         }
         for(var i = 0, len = products.length; i < len; i++){
             var product = products[i];
-            var search_string = this._product_search_string(product);
-            var categ_id = product.pos_categ_id ? product.pos_categ_id[0] : this.root_category_id;
-            product.product_tmpl_id = product.product_tmpl_id[0];
-            if(!stored_categories[categ_id]){
-                stored_categories[categ_id] = [];
-            }
-            stored_categories[categ_id].push(product.id);
-
-            if(this.category_search_string[categ_id] === undefined){
-                this.category_search_string[categ_id] = '';
-            }
-            this.category_search_string[categ_id] += search_string;
-
-            var ancestors = this.get_category_ancestors_ids(categ_id) || [];
-
-            for(var j = 0, jlen = ancestors.length; j < jlen; j++){
-                var ancestor = ancestors[j];
-                if(! stored_categories[ancestor]){
-                    stored_categories[ancestor] = [];
+            if (product.id in this.product_by_id) continue;
+            if (product.available_in_pos){
+                var search_string = utils.unaccent(this._product_search_string(product));
+                var categ_id = product.pos_categ_id ? product.pos_categ_id[0] : this.root_category_id;
+                product.product_tmpl_id = product.product_tmpl_id[0];
+                if(!stored_categories[categ_id]){
+                    stored_categories[categ_id] = [];
                 }
-                stored_categories[ancestor].push(product.id);
+                stored_categories[categ_id].push(product.id);
 
-                if( this.category_search_string[ancestor] === undefined){
-                    this.category_search_string[ancestor] = '';
+                if(this.category_search_string[categ_id] === undefined){
+                    this.category_search_string[categ_id] = '';
                 }
-                this.category_search_string[ancestor] += search_string; 
+                this.category_search_string[categ_id] += search_string;
+
+                var ancestors = this.get_category_ancestors_ids(categ_id) || [];
+
+                for(var j = 0, jlen = ancestors.length; j < jlen; j++){
+                    var ancestor = ancestors[j];
+                    if(! stored_categories[ancestor]){
+                        stored_categories[ancestor] = [];
+                    }
+                    stored_categories[ancestor].push(product.id);
+
+                    if( this.category_search_string[ancestor] === undefined){
+                        this.category_search_string[ancestor] = '';
+                    }
+                    this.category_search_string[ancestor] += search_string;
+                }
             }
             this.product_by_id[product.id] = product;
             if(product.barcode){
@@ -208,8 +226,16 @@ var PosDB = core.Class.extend({
             }
         }
     },
+    add_packagings: function(product_packagings){
+        var self = this;
+        _.map(product_packagings, function (product_packaging) {
+            if (_.find(self.product_by_id, {'id': product_packaging.product_id[0]})) {
+                self.product_packaging_by_barcode[product_packaging.barcode] = product_packaging;
+            }
+        });
+    },
     _partner_search_string: function(partner){
-        var str =  partner.name;
+        var str =  partner.name || '';
         if(partner.barcode){
             str += '|' + partner.barcode;
         }
@@ -225,7 +251,13 @@ var PosDB = core.Class.extend({
         if(partner.email){
             str += '|' + partner.email;
         }
-        str = '' + partner.id + ':' + str.replace(':','') + '\n';
+        if(partner.vat){
+            str += '|' + partner.vat;
+        }
+        if(partner.parent_name){
+            str += '|' + partner.parent_name;
+        }
+        str = '' + partner.id + ':' + str.replace(':', '').replace(/\n/g, ' ') + '\n';
         return str;
     },
     add_partners: function(partners){
@@ -272,12 +304,15 @@ var PosDB = core.Class.extend({
                 if(partner.barcode){
                     this.partner_by_barcode[partner.barcode] = partner;
                 }
-                partner.address = (partner.street || '') +', '+ 
-                                  (partner.zip || '')    +' '+
-                                  (partner.city || '')   +', '+ 
-                                  (partner.country_id[1] || '');
+                partner.address = (partner.street ? partner.street + ', ': '') +
+                                  (partner.zip ? partner.zip + ', ': '') +
+                                  (partner.city ? partner.city + ', ': '') +
+                                  (partner.state_id ? partner.state_id[1] + ', ': '') +
+                                  (partner.country_id ? partner.country_id[1]: '');
                 this.partner_search_string += this._partner_search_string(partner);
             }
+
+            this.partner_search_string = utils.unaccent(this.partner_search_string);
         }
         return updated_count;
     },
@@ -302,8 +337,8 @@ var PosDB = core.Class.extend({
         try {
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
             query = query.replace(/ /g,'.+');
-            var re = RegExp("([0-9]+):.*?"+query,"gi");
-        }catch(e){
+            var re = RegExp("([0-9]+):.*?"+utils.unaccent(query),"gi");
+        }catch(_e){
             return [];
         }
         var results = [];
@@ -340,16 +375,19 @@ var PosDB = core.Class.extend({
     get_product_by_barcode: function(barcode){
         if(this.product_by_barcode[barcode]){
             return this.product_by_barcode[barcode];
-        } else {
-            return undefined;
+        } else if (this.product_packaging_by_barcode[barcode]) {
+            return this.product_by_id[this.product_packaging_by_barcode[barcode].product_id[0]];
         }
+        return undefined;
     },
     get_product_by_category: function(category_id){
         var product_ids  = this.product_by_category_id[category_id];
         var list = [];
         if (product_ids) {
             for (var i = 0, len = Math.min(product_ids.length, this.limit); i < len; i++) {
-                list.push(this.product_by_id[product_ids[i]]);
+                const product = this.product_by_id[product_ids[i]];
+                if (!(product.active && product.available_in_pos)) continue;
+                list.push(product);
             }
         }
         return list;
@@ -362,8 +400,8 @@ var PosDB = core.Class.extend({
         try {
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g,'.');
             query = query.replace(/ /g,'.+');
-            var re = RegExp("([0-9]+):.*?"+query,"gi");
-        }catch(e){
+            var re = RegExp("([0-9]+):.*?"+utils.unaccent(query),"gi");
+        }catch(_e){
             return [];
         }
         var results = [];
@@ -371,7 +409,9 @@ var PosDB = core.Class.extend({
             var r = re.exec(this.category_search_string[category_id]);
             if(r){
                 var id = Number(r[1]);
-                results.push(this.get_product_by_id(id));
+                const product = this.get_product_by_id(id);
+                if (!(product.active && product.available_in_pos)) continue;
+                results.push(product);
             }else{
                 break;
             }
@@ -383,13 +423,10 @@ var PosDB = core.Class.extend({
      * or one of its child categories.
      */
     is_product_in_category: function(category_ids, product_id) {
-        if (!(category_ids instanceof Array)) {
-            category_ids = [category_ids];
-        }
-        var cat = this.get_product_by_id(product_id).pos_categ_id[0];
+        let cat = this.get_product_by_id(product_id).pos_categ_id[0];
         while (cat) {
-            for (var i = 0; i < category_ids.length; i++) {
-                if (cat == category_ids[i]) {   // The == is important, ids may be strings
+            for (let cat_id of category_ids) {
+                if (cat == cat_id) {   // The == is important, ids may be strings
                     return true;
                 }
             }
@@ -479,13 +516,48 @@ var PosDB = core.Class.extend({
         }
         return orders;
     },
-    set_cashier: function(cashier) {
-        // Always update if the user is the same as before
-        this.save('cashier', cashier || null);
+    /**
+     * Return the orders with requested ids if they are unpaid.
+     * @param {array<number>} ids order_ids.
+     * @return {array<object>} list of orders.
+     */
+    get_unpaid_orders_to_sync: function(ids){
+        const savedOrders = this.load('unpaid_orders',[]);
+        return savedOrders.filter(order => ids.includes(order.id));
     },
-    get_cashier: function() {
-        return this.load('cashier');
-    }
+    /**
+     * Add a given order to the orders to be removed from the server.
+     *
+     * If an order is removed from a table it also has to be removed from the server to prevent it from reapearing 
+     * after syncing. This function will add the server_id of the order to a list of orders still to be removed.
+     * @param {object} order object.
+     */
+    set_order_to_remove_from_server: function(order){
+        if (order.server_id !== undefined) {
+            var to_remove = this.load('unpaid_orders_to_remove',[]);
+            to_remove.push(order.server_id);
+            this.save('unpaid_orders_to_remove', to_remove);
+        }
+    },
+    /**
+     * Get a list of server_ids of orders to be removed.
+     * @return {array<number>} list of server_ids.
+     */
+    get_ids_to_remove_from_server: function(){
+        return this.load('unpaid_orders_to_remove',[]);
+    },
+    /**
+     * Remove server_ids from the list of orders to be removed.
+     * @param {array<number>} ids
+     */
+    set_ids_removed_from_server: function(ids){
+        var to_remove = this.load('unpaid_orders_to_remove',[]);
+        
+        to_remove = _.filter(to_remove, function(id){
+            return !ids.includes(id);
+        });
+        this.save('unpaid_orders_to_remove', to_remove);
+    },
 });
 
 return PosDB;

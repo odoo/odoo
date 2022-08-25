@@ -1,29 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event
+# 	* website_event
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
-# Talway <9010446@qq.com>, 2016
-# fausthuang, 2016
-# Martin Trigaux, 2016
-# liulixia <liu.lixia@elico-corp.com>, 2016
-# Eddie Lim <bhweelim@yahoo.com>, 2016
-# SHOM <shanmuxin@yeah.net>, 2016
-# liAnGjiA <liangjia@qq.com>, 2016
-# Gary Wei <Gary.wei@elico-corp.com>, 2016
-# Michael Chong <michaelchong2005@gmail.com>, 2016
-# Ma XiaoXiao <junmaing@gmail.com>, 2016
-# waveyeung <waveyeung@qq.com>, 2016
-# 苏州远鼎 <tiexinliu@126.com>, 2016
-# e2f <projects@e2f.com>, 2018
+# e2f <projects@e2f.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# v2exerer <9010446@qq.com>, 2019
+# bf2549c5415a9287249cba2b8a5823c7, 2019
+# keecome <7017511@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Fisher <fisher@kdomi.com>, 2019
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# 苏州远鼎 <tiexinliu@126.com>, 2019
+# fausthuang, 2019
+# snow wang <147156565@qq.com>, 2019
+# Mandy Choy <mnc@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2019-09-30 09:42+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Mandy Choy <mnc@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,255 +32,355 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "(Free)"
-msgstr "(免费)"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "<b>Event registration is closed.</b>"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "<b>End of Registration</b>"
-msgstr "<b/>"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "<b>Event registration not yet started.</b>"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "<b>Price</b>"
-msgstr "<b/>"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<b>Start</b>"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "<b>Quantity</b>"
-msgstr "<b/>"
+#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
+msgid "<b>View all</b>"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "<b>Ticket Type</b>"
-msgstr "<b/>"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<br/> <b>End</b>"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.country_events_list
-msgid "<b>Upcoming Events</b>"
-msgstr "<b>活动预告</b>"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
 msgid ""
-"<br/>\n"
-"                    <i class=\"fa fa-clock-o\"/> To"
-msgstr "<br/><i class=\"fa fa-clock-o\"/> To"
+"<em>Write here a quote from one of your attendees. It gives confidence in "
+"your events.</em>"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
-msgid "<i class=\"fa fa-clock-o\"/> From"
-msgstr "<i class=\"fa fa-clock-o\"/> 来自"
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "<i class=\"fa fa-ban mr-2\"/>Unpublished"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
+#: model_terms:ir.ui.view,arch_db:website_event.event_details
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "<i class=\"fa fa-check mr-2\"/>Registered"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid ""
-"<i class=\"fa fa-plus-circle\"/>\n"
-"                    <em>Configure and Launch Event Registration</em>"
-msgstr "<i class=\"fa fa-plus-circle\"/><em/>"
+"<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
+"title=\"Facebook\"/>"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-#: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "<i>to</i>"
-msgstr "<i>到</i>"
+#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
+msgid "<i class=\"fa fa-flag mr-2\"/>Events:"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_right_quotes
-msgid "<small>Author</small>"
-msgstr "<small>作者</small>"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i class=\"fa fa-fw fa-calendar\"/> Add to Google Calendar"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.country_events
-msgid "<span class=\"oe_snippet_thumbnail_title\">Local Events</span>"
-msgstr "<span class=\"oe_snippet_thumbnail_title\">本地活动</span>"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "<i class=\"fa fa-fw fa-calendar\"/> Add to iCal/Outlook"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.ticket
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
+msgid "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
+msgstr "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
+#: model_terms:ir.ui.view,arch_db:website_event.s_country_events
+msgid "<i class=\"fa fa-globe mr-2\"/>Upcoming Events"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid ""
-"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\">\n"
-"                        Sold Out\n"
+"<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" "
+"title=\"Instagram\"/>"
+msgstr ""
+"<i class=\"fa fa-instagram text-instagram\" aria-label=\"Instagram\" "
+"title=\"Instagram\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
+msgid ""
+"<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
+"title=\"LinkedIn\"/>"
+msgstr ""
+"<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
+"title=\"LinkedIn\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.layout
+msgid "<i class=\"fa fa-long-arrow-left text-primary mr-2\"/>All Events"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<i class=\"fa fa-pencil mr-2\" role=\"img\" aria-label=\"Create\" "
+"title=\"Create\"/><em>Configure Event Registration</em>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
+msgid "<i class=\"fa fa-twitter text-twitter\" aria-label=\"Twitter\" title=\"Twitter\"/>"
+msgstr ""
+"<i class=\"fa fa-twitter text-twitter\" aria-label=\"Twitter\" "
+"title=\"Twitter\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
+msgid ""
+"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
+"title=\"Youtube\"/>"
+msgstr ""
+"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
+"title=\"Youtube\"/>"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
+msgid ""
+"<span class=\"badge badge-secondary text-uppercase "
+"o_wevent_badge\">Speaker</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.ticket
+msgid "<span class=\"font-weight-bold align-middle pr-2\">Qty</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+msgid "<span class=\"navbar-brand h4 my-0 mr-4\">Events</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "<span content=\"0\" class=\"font-weight-bold text-uppercase\">Free</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<span content=\"0\" itemprop=\"price\" class=\"font-weight-bold text-"
+"uppercase\">Free</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.ticket
+msgid ""
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\" class=\"text-danger\">\n"
+"                        <i class=\"fa fa-ban mr-2\"/>Sold Out\n"
 "                    </span>"
-msgstr "<span content=\"http://schema.org/SoldOut\" itemprop=\"availability\"/>"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "<span itemprop=\"name\">Event Registration</span>"
-msgstr "<span itemprop=\"name\"/>"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "<span>&amp;times;</span>"
+msgstr "<span>&amp;次数：</span>"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"<span itemprop=\"price\" content=\"0\">\n"
-"                        Free\n"
-"                    </span>"
-msgstr "<span content=\"0\" itemprop=\"price\"/>"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_location
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "<span>Online Events</span>"
 msgstr "<span>在线活动</span>"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "<span>Unlimited</span>"
-msgstr "<span>不限</span>"
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
+msgid "A past event"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "<strong>Attendees</strong>"
-msgstr "<strong>参与者</strong>"
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
+msgid "About us"
+msgstr "关于我们"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "<strong>Email</strong>"
-msgstr "<strong>Email</strong>"
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Add to Calendar"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "<strong>Name</strong>"
-msgstr "<strong>名称</strong>"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
-msgid "<strong>Participate on Twitter</strong>"
-msgstr "<STRONG>参加Twitter</STRONG>"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "<strong>Phone</strong> <span class=\"text-muted\">(Optional)</span>"
-msgstr "<strong>电话</strong> <span class=\"text-muted\">(可选)</span>"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.ticket
-msgid "<strong>Ticket Type:</strong>"
-msgstr "<strong/>"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
-msgid "<strong>Use this tag:</strong>"
-msgstr "<strong>使用此标签:</strong>"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:96
+#: code:addons/website_event/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.event_category
 #, python-format
 msgid "All Categories"
 msgstr "所有类别"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:103
+#: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "All Countries"
 msgstr "所有国家"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.layout
-msgid "All Events"
-msgstr "所有活动"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.res_config_settings_view_form
-msgid "Ask questions to attendees when registering online"
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
+msgid "All countries"
 msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Attendee #%s"
-msgstr "出席者 #%s"
+#: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
+msgid "Ask questions to attendees when registering online"
+msgstr "在线注册时向参加者提问"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Cancel Registration"
-msgstr "取消登记记录"
+#: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
+msgid ""
+"At just 13 years old, John DOE was already starting to develop his first "
+"business applications for customers. After mastering civil engineering, he "
+"founded TinyERP. This was the first phase of OpenERP which would later "
+"became Odoo, the most installed open-source business software worldwide."
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_type_view_form_inherit_website
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Attendees"
+msgstr "与会者"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
+msgid "Author"
+msgstr "作者"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Cancel"
+msgstr "取消日期"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_categories
+msgid "Categories"
+msgstr "类别"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form_inherit_website
 msgid ""
 "Check this option to have menus for your event on the\n"
 "                                website: registrations, schedule, map, ..."
 msgstr ""
+"选中此选项可在网站上为您的活动提供 \n"
+" 菜单：注册、日程表、地图..."
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:24
+#: code:addons/website_event/static/src/js/tours/website_event.js:0
 #, python-format
 msgid "Click <em>Continue</em> to create the event."
-msgstr "点击 <em>继续</em> 创建活动."
+msgstr "点击 <em>继续</em> 创建活动。"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:15
+#: code:addons/website_event/static/src/js/tours/website_event.js:0
 #, python-format
 msgid "Click here to create a new event."
-msgstr "点击这儿添加一个新的事件."
+msgstr "点击此处添加一个新的事件。"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:43
+#: code:addons/website_event/static/src/js/tours/website_event.js:0
 #, python-format
 msgid "Click here to customize your event further."
-msgstr "点击这里进一步定制您的事件。"
+msgstr "点击这里以进一步定制你的事件。"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:38
+#: code:addons/website_event/static/src/js/tours/website_event.js:0
 #, python-format
 msgid "Click to publish your event."
-msgstr "点击发布您的活动。"
+msgstr "点击发布你的活动。"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Close"
+msgstr "关闭"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
+msgid "Company"
+msgstr "公司"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Continue"
 msgstr "继续"
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__cover_properties
+msgid "Cover Properties"
+msgstr "封面属性"
+
+#. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:19
+#: code:addons/website_event/static/src/js/tours/website_event.js:0
 #, python-format
 msgid ""
 "Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
 "Technical Training"
-msgstr "<em/>"
+msgstr "为您的新事件创建一个名称,然后单击“继续”。比如:技术培训"
 
 #. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_website_menu
+#: model:ir.model.fields,help:website_event.field_event_event__website_menu
 msgid ""
 "Creates menus Introduction, Location and Register on the page  of the event "
 "on the website."
 msgstr "在网站上的事件页面上创建菜单介绍，地理位置和注册。"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_menu
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Date &amp; Time"
+msgstr "日期时间"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
 msgid "Dedicated Menu"
 msgstr "专用菜单"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_type_website_menu
+#: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
 msgid "Display a dedicated menu on Website"
-msgstr ""
+msgstr "在网站上显示专用菜单"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:28
+#: code:addons/website_event/static/src/js/tours/website_event.js:0
 #, python-format
 msgid "Drag this block and drop it in your page."
 msgstr "拖动此区块并放在你的页面中。"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_complete
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "E-mail"
-msgstr "电子邮件"
+msgstr "EMail"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
-msgid "Edit Badges"
-msgstr "编辑徽章"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Email"
+msgstr "EMail"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.ticket
-msgid "End of Registration"
-msgstr "登记截止"
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "End -"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "End on"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -293,29 +393,37 @@ msgid "Event Category"
 msgstr "活动类别"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Event Details"
-msgstr "事件详情"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.template_intro
-msgid "Event Introduction"
-msgstr "活动说明"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.template_location
+#: model_terms:ir.ui.view,arch_db:website_event.template_location
 msgid "Event Location"
 msgstr "活动地点"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_menu_id
+#: model:ir.model.fields,field_description:website_event.field_event_event__menu_id
 msgid "Event Menu"
 msgstr "活动菜单"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.404
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
+#, python-format
+msgid "Event Name"
+msgstr "活动名称"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
+#: model_terms:ir.ui.view,arch_db:website_event.event_details
+msgid "Event Subtitle"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_details
+msgid "Event Title"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Event not found!"
-msgstr "没有活动"
+msgstr "找不到活动！"
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_published
@@ -324,268 +432,269 @@ msgid "Event published"
 msgstr "发布的活动"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Event registration is closed."
-msgstr ""
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Event registration not yet started."
-msgstr "事件注册还未开始."
-
-#. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_unpublished
 #: model:mail.message.subtype,name:website_event.mt_event_unpublished
 msgid "Event unpublished"
 msgstr "未发布的活动"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.header_footer_custom
 #: model:website.menu,name:website_event.menu_events
 msgid "Events"
 msgstr "活动"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_right_country_event
-msgid "Events from Your Country"
-msgstr "来自您国家的事件"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.country_events
-msgid "Events in visitor's country"
-msgstr "访问者所在国家的活动"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.country_events_list
-msgid "Events:"
-msgstr "事件"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid ""
-"Find out what people see and say about this event,\n"
-"                            and join the conversation."
-msgstr "弄清楚关于此次活动人们看见了什么和讨论了什么,并且加入他们的谈话。"
+"Find out what people see and say about this event, and join the "
+"conversation."
+msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
-#: code:addons/website_event/models/event.py:61
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
+msgid "Follow Us"
+msgstr "关注我们"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Get the direction"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Google"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Hashtag:"
+msgstr ""
+
+#. module: website_event
+#: code:addons/website_event/models/event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.template_intro
 #, python-format
 msgid "Introduction"
 msgstr "介绍"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
+#: model:ir.model.fields,field_description:website_event.field_event_event__is_participating
 msgid "Is Participating"
+msgstr "正在参加"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
+msgid "John DOE"
 msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
-#: code:addons/website_event/models/event.py:62
+#: code:addons/website_event/models/event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 #, python-format
 msgid "Location"
-msgstr "地点"
+msgstr "位置"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_complete
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "N/A"
-msgstr "无"
+msgstr "N/A"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_complete
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Name"
 msgstr "名称"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:183
-#: code:addons/website_event/static/src/js/website_event.editor.js:29
-#: model:ir.ui.view,arch_db:website_event.content_new_event
+#: code:addons/website_event/controllers/main.py:0
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
 #, python-format
 msgid "New Event"
 msgstr "新活动"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:34
+#: code:addons/website_event/controllers/main.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.event_time
 #, python-format
 msgid "Next Events"
 msgstr "下一个活动"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:43
+#: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "Next Week"
 msgstr "下周"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:51
+#: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "Next month"
 msgstr "次月"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "No event found"
-msgstr "没有活动"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:55
-#, python-format
-msgid "Old Events"
-msgstr "历史活动"
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "No events found."
+msgstr ""
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website.tour.event.js:33
+#: code:addons/website_event/static/src/js/tours/website_event.js:0
 #, python-format
 msgid "Once you click on save, your event is updated."
-msgstr "当您点击保存,您的产品信息将被更新."
+msgstr "当你点击保存,你的产品信息将被更新。"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "Online"
 msgstr "在线"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "Organized by:"
-msgstr "组织者："
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Organizer"
 msgstr "组织者"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "Our Events"
-msgstr "我们的活动"
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "Organizer:"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_right_photos
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "Our Trainings"
 msgstr "我们的培训"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_details
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "Participating"
-msgstr "参与"
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Past Events"
+msgstr "过往事务"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_complete
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Phone"
 msgstr "电话"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_right_photos
-msgid "Photos of Past Events"
-msgstr "历史活动照片"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Phone <small>(Optional)</small>"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.ticket
-msgid "Price"
-msgstr "价格"
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
+msgid "Photos"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.ticket
-msgid "Quantity"
-msgstr "数量"
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Please select at least one ticket."
+msgstr "请选择最近的一个服务单。"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
+msgid "Preview Badges"
+msgstr "预览徽章"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Questions"
 msgstr "问题"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_complete
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Reference"
-msgstr "参考"
+msgstr "编号"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:54
-#: code:addons/website_event/models/event.py:63
+#: code:addons/website_event/models/event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event.ticket
 #, python-format
 msgid "Register"
-msgstr "发起者"
+msgstr "注册"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Register Now"
-msgstr "现在注册"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "Registration"
+msgstr "登记"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Registration for this event is now closed"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "Registration confirmed!"
 msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.404
+#: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Return to the event list."
-msgstr "返回到事件列表"
+msgstr "返回到事件列表。"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.country_events_list
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "SHARE"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
 msgid "See all events from"
-msgstr "查看所有线索"
+msgstr "查看所有活动来自"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.country_events_list
-msgid "See all upcoming events"
-msgstr "今天将开始的活动"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Social Stream"
-msgstr "社交圈"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.404
+#: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Sorry, the requested event is not available anymore."
-msgstr "对不起，您请求的活动已经失效。"
+msgstr "对不起，请求的活动已经失效。"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:39
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Start -"
+msgstr ""
+
+#. module: website_event
+#: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "This Week"
 msgstr "本周"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:47
+#: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "This month"
 msgstr "本月"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Ticket Type #"
-msgstr "门票类型#"
+#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+msgid "Ticket #"
+msgstr ""
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:35
+#: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "Today"
 msgstr "今日"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "Use the top menu <i>'Content'</i> to create your first event."
-msgstr "使用顶部菜单<I>“内容”</I>创建您的第一个事件。"
+#: model_terms:ir.ui.view,arch_db:website_event.layout
+msgid "Toggle navigation"
+msgstr "切换导航"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_published
-msgid "Visible in Website"
-msgstr "在网站可见"
+#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
+msgid "Unpublished"
+msgstr "未发布"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Visualize on Google Maps"
-msgstr "在google地图上可见"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "We are glad to confirm your registration to our event"
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "Use the top button '<b>+ New</b>' to create an event."
 msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
+msgid "Use this paragrah to write a short text about your events or company."
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_published
+msgid "Visible on current website"
+msgstr "在当前网站显示"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -593,41 +702,21 @@ msgid "Website Home"
 msgstr "网站首页"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Website Menu"
 msgstr "网站菜单"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
-msgid "When"
-msgstr "时间"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_description_full
-msgid "Where"
-msgstr "地点"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_right_quotes
-msgid ""
-"Write here a quote from one of your attendees.\n"
-"                        It gives confidence in your\n"
-"                        events."
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "iCal/Outlook"
 msgstr ""
-"在这里引用一段来自活动参与者的话。\n"
-"                        它会给你的活动增加可信任度。"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Your registration"
-msgstr "你的登记"
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "o_wevent_sidebar_social mx-n1"
+msgstr ""
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.event_details
-msgid "to"
-msgstr "到"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.index
-msgid "unpublished"
-msgstr "未发布"
+#: model_terms:ir.ui.view,arch_db:website_event.event_description_full
+msgid "o_wevent_social_link"
+msgstr ""

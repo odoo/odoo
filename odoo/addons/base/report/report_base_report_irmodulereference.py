@@ -6,6 +6,7 @@ from odoo import api, models
 
 class IrModelReferenceReport(models.AbstractModel):
     _name = 'report.base.report_irmodulereference'
+    _description = 'Module Reference Report (base)'
 
     @api.model
     def _object_find(self, module):
@@ -14,7 +15,6 @@ class IrModelReferenceReport(models.AbstractModel):
         res_ids = data.mapped('res_id')
         return self.env['ir.model'].browse(res_ids)
 
-    @api.multi
     def _fields_find(self, model, module):
         Data = self.env['ir.model.data'].sudo()
         fname_wildcard = 'field_' + model.replace('.', '_') + '_%'
@@ -26,7 +26,7 @@ class IrModelReferenceReport(models.AbstractModel):
         return []
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         report = self.env['ir.actions.report']._get_report_from_name('base.report_irmodulereference')
         selected_modules = self.env['ir.module.module'].browse(docids)
         return {

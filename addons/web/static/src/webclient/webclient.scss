@@ -1,0 +1,155 @@
+:root {
+  font-size: $o-root-font-size;
+}
+
+html, body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+// Disable default border-style added by _reboot.scss
+tfoot {
+  tr, td, th {
+    border-style: none;
+  }
+}
+
+// ------------------------------------------------------------------
+//  General
+// ------------------------------------------------------------------
+.o_web_client {
+  direction: ltr;
+  position: relative; // normally useless but required by bootstrap-datepicker
+  background-color: $o-webclient-background-color;
+}
+
+// ------------------------------------------------------------------
+// Misc. widgets
+// ------------------------------------------------------------------
+
+// Buttons
+.o_icon_button {
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  outline: none;
+}
+
+div.o_boolean_toggle.form-switch.form-check > input.form-check-input:not(:checked) {
+  background-color: $form-switch-color;
+}
+
+// User input typically entered via keyboard
+kbd {
+  border: 1px solid $o-gray-200;
+  box-shadow: $kbd-box-shadow;
+}  
+
+//== Backgound light colors variations (bootstrap extensions)
+@each $-name, $-bg-color in $theme-colors {
+  $-safe-text-color: color-contrast(mix($-bg-color, $o-view-background-color));
+  @include bg-variant(".bg-#{$-name}-light", rgba(map-get($theme-colors, $-name), 0.5), $-safe-text-color);
+}
+
+//== Badges
+.badge {
+  min-width: $o-badge-min-width;
+}
+
+//== Btn-link
+.btn-link {
+  font-weight: $btn-font-weight;
+
+  // -- Btn-link variations
+  // Adapt the behavieur of .btn-link buttons when in conjuction with contextual
+  // classes (eg. text-warning). 'muted' is set as default text color, while
+  // the contextual-class color will be used on ':hover'.
+
+  // Apply all theme-colors variations except "secondary"
+  @each $-name, $-color in map-remove($theme-colors, "secondary") {
+    &.btn-#{$-name}, &.text-#{$-name} {
+      @include o-btn-link-variant($o-main-color-muted!important, o-text-color($-name) or $-color!important);
+    }
+  }
+
+  // Specific behavieur for "secondary"
+  &.btn-secondary {
+    @include o-btn-link-variant($body-color, $headings-color);
+  }
+}
+
+// Set position of our custom o-dropdown-menu (not bootstrap)
+.o-dropdown-menu {
+  top: 100%;
+  &.dropdown-menu-start {
+    left: 0;
+    right: auto;
+  }
+  &.dropdown-menu-end {
+    left: auto;
+    right: 0;
+  }
+}
+
+// == Boostrap Dropdown
+// ----------------------------------------------------------------------------
+.dropdown-menu {
+  max-height: 70vh;
+  overflow: auto;
+  background-clip: border-box;
+  box-shadow: $o-dropdown-box-shadow;
+}
+
+.dropdown-item {
+  &.active, &.selected {
+    position: relative;
+    font-weight: $font-weight-bold;
+
+    &:focus, &:hover {
+      background-color: $dropdown-link-hover-bg;
+    }
+
+    &:not(.dropdown-item_active_noarrow) {
+      &:before {
+        @include o-position-absolute(0);
+        transform: translate(-1.5em, 90%);
+        font: .7em/1em FontAwesome;
+        color: $primary;
+        content: "\f00c";
+      }
+
+      &.disabled:before {
+        color: $dropdown-link-disabled-color;
+      }
+    }
+  }
+}
+
+.dropdown-header {
+  font-weight: $font-weight-bold;
+  padding-bottom: .1em;
+
+  &:not(:first-child) {
+    margin-top: .3em;
+  }
+}
+
+.dropdown-divider:first-child {
+  display: none;
+}
+
+//== Printing improvements
+@media print {
+  .table-responsive {
+    overflow-x: initial;
+  }
+}
+
+//== Action manager
+// ensure special links are styled as pointers even when they don't
+// have an href
+[type="action"],
+[type="toggle"] {
+  cursor: pointer !important;
+}

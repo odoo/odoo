@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="timesheet_sale_page">
+        <t t-set="show_project" t-value="true"/>
+        <t t-set="show_task" t-value="true"/>
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <t t-foreach="docs" t-as="doc">
+                        <t t-set="doc_name" t-value="doc.name"/>
+                        <t t-if="with_order_id" t-set="doc_name" t-value="str(doc.order_id.name) +' - '+ str(doc_name)"/>
+                        <t t-elif="doc_name == '/'" t-set="doc_name" t-value="'Draft'"/>
+                        <div class="oe_structure"/>
+                        <div class="row mt8">
+                            <div class="col-12">
+                                <t t-if="doc.timesheet_ids">
+                                    <h2>
+                                        <br/>
+                                        <span>Timesheets for the <t t-out="doc_name"/> <t t-out="record_name"/>
+                                        </span>
+                                    </h2>
+                                    <t t-set='lines' t-value='doc.timesheet_ids'/>
+                                    <t t-call="hr_timesheet.timesheet_table"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Sale Order Timesheet Report for given timesheets -->
+    <template id="report_timesheet_sale_order">
+        <t t-set="record_name">Sales Order Item</t>
+        <t t-set="with_order_id" t-value="true"/>
+        <t t-set="docs" t-value="docs.order_line"/>
+        <t t-call="sale_timesheet.timesheet_sale_page"/>
+    </template>
+
+    <record id="timesheet_report_sale_order" model="ir.actions.report">
+        <field name="name">Timesheets</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sale_timesheet.report_timesheet_sale_order</field>
+        <field name="binding_model_id" ref="model_sale_order"/>
+    </record>
+
+    <!-- Invoice Timesheet Report for given timesheets -->
+    <template id="report_timesheet_account_move">
+        <t t-set="record_name">Invoice</t>
+        <t t-call="sale_timesheet.timesheet_sale_page"/>
+    </template>
+
+    <record id="timesheet_report_account_move" model="ir.actions.report">
+        <field name="name">Timesheets</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sale_timesheet.report_timesheet_account_move</field>
+        <field name="binding_model_id" ref="model_account_move"/>
+    </record>
+</odoo>

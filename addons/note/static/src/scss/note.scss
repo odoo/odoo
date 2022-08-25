@@ -1,0 +1,74 @@
+
+.o_kanban_group .note_text_line_through {
+    text-decoration: line-through;
+}
+
+.o_note_form_view {
+    .o_form_sheet_bg {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        .o_form_statusbar {
+            margin: 0;
+        }
+        .o_form_sheet {
+            margin: 0;
+            border: none;
+            flex: 1;
+            box-shadow: none;
+            padding: 0;
+            .oe_pad {
+                flex: 1;
+                margin-bottom: 0;
+                display: flex;
+                flex-direction: column;
+                .oe_pad_content {
+                    border: none;
+                    flex: 1;
+                }
+            }
+        }
+        .note-editable {
+            border: none;
+            padding: $o-sheet-vpadding $o-horizontal-padding 10px !important;
+            min-height: 300px;
+        }
+    }
+    .o_field_widget[name="memo"] {
+        padding: 0;
+        margin: 0;
+        min-height: 200px;
+        height: 100%
+    }
+    &.o_form_readonly {
+        .oe_memo {
+            padding: $o-sheet-vpadding $o-horizontal-padding;
+        }
+    }
+}
+
+// Quick create notes from systray
+.o_note.o_ActivityMenuView_activityGroup {
+    background-color: white;
+    .o_ActivityMenuView_activityGroupInfo {
+        .o_ActivityMenuView_activityGroupTitle {
+            .o_ActivityMenuView_activityGroupName {
+                flex: 1 1 100%;
+            }
+        }
+        .o_note_input_box {
+            display: flex;
+            p {
+                flex: 1 1 auto;
+                margin-bottom: 0px;
+            }
+        }
+        .o_note_save {
+            font-size: 11px;
+            font-weight: bold;
+        }
+    }
+    .o_note_input {
+        border: none;
+    }
+}

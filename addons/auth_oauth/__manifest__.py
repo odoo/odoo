@@ -3,12 +3,11 @@
 
 {
     'name': 'OAuth2 Authentication',
-    'category': 'Tools',
+    'category': 'Hidden/Tools',
     'description': """
 Allow users to login through OAuth2 Provider.
 =============================================
 """,
-    'maintainer': 'Odoo S.A.',
     'depends': ['base', 'web', 'base_setup', 'auth_signup'],
     'data': [
         'data/auth_oauth_data.xml',
@@ -18,4 +17,10 @@ Allow users to login through OAuth2 Provider.
         'views/auth_oauth_templates.xml',
         'security/ir.model.access.csv',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'auth_oauth/static/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

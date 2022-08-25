@@ -7,17 +7,16 @@ from odoo import api, fields, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    can_be_expensed = fields.Boolean(help="Specify whether the product can be selected in an HR expense.", string="Can be Expensed")
-
     @api.model
-    def create(self, vals):
-        # When creating an expense product on the fly, you don't expect to
-        # have taxes on it
-        if vals.get('can_be_expensed', False):
-            vals.update({'supplier_taxes_id': False})
-        return super(ProductTemplate, self).create(vals)
+    def default_get(self, fields):
+        result = super(ProductTemplate, self).default_get(fields)
+        if self.env.context.get('default_can_be_expensed'):
+            result['supplier_taxes_id'] = False
+        return result
 
-    @api.onchange('type')
-    def _onchange_type_for_expense(self):
-        if self.type not in ['consu', 'service']:  # stockable can not be expensed.
-            self.can_be_expensed = False
+    can_be_expensed = fields.Boolean(string="Can be Expensed", compute='_compute_can_be_expensed',
+        store=True, readonly=False, help="Specify whether the product can be selected in an expense.")
+
+    @api.depends('type')
+    def _compute_can_be_expensed(self):
+        self.filtered(lambda p: p.type not in ['consu', 'service']).update({'can_be_expensed': False})

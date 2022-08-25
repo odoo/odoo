@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.CallDemoView" owl="1">
+        <t t-if="callDemoView">
+            <div class="o_CallDemoView position-relative d-flex justify-content-center" t-attf-class="{{ className }}" t-ref="root">
+                <video class="o_CallDemoView_videoDisplay shadow rounded bg-dark" height="480" width="640" autoplay="" t-ref="video"/>
+                <p t-if="callDemoView.doesBrowserSupportMediaDevices and !callDemoView.isVideoEnabled" class="o_CallDemoView_mediaDevicesStatus position-absolute text-light">
+                    Camera is off
+                </p>
+                <p t-if="!callDemoView.doesBrowserSupportMediaDevices" class="o_CallDemoView_mediaDevicesStatus text-light">
+                    Your browser does not support videoconference
+                </p>
+                <div class="o_CallDemoView_buttonsContainer">
+                    <button t-if="!callDemoView.isMicrophoneEnabled" class="o_CallDemoView_enableMicrophoneButton o_CallDemoView_button btn btn-danger btn-lg rounded-circle p-0 m-3 fa fa-microphone-slash" t-on-click="callDemoView.onClickEnableMicrophoneButton"/>
+                    <button t-if="callDemoView.isMicrophoneEnabled" class="o_CallDemoView_disableMicrophoneButton o_CallDemoView_button btn btn-dark btn-lg p-0 m-3 rounded-circle border-light fa fa-microphone" t-on-click="callDemoView.onClickDisableMicrophoneButton"/>
+                    <button t-if="!callDemoView.isVideoEnabled" class="o_CallDemoView_enableVideoButton o_CallDemoView_button btn btn-danger btn-lg p-0 m-3 rounded-circle fa fa-eye-slash" t-on-click="callDemoView.onClickEnableVideoButton"/>
+                    <button t-if="callDemoView.isVideoEnabled" class="o_CallDemoView_disableVideoButton o_CallDemoView_button btn btn-dark btn-lg p-0 m-3 rounded-circle border-light fa fa-video-camera" t-on-click="callDemoView.onClickDisableVideoButton"/>
+                </div>
+                <audio class="o_CallDemoView_audioPlayer" autoplay="" t-ref="audio"/>
+            </div>
+        </t>
+    </t>
+
+</templates>

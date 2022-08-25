@@ -5,10 +5,7 @@
             <field name="name">My Company</field>
             <field name="partner_id" ref="main_partner"/>
             <field name="currency_id" ref="base.EUR"/>
+            <field name="favicon" model="res.company" eval="obj()._get_default_favicon(original=True)"/>
         </record>
-
-        <record id="main_partner" model="res.partner">
-            <field name="company_id" ref="main_company"/>
-        </record>
-    </data>
+    </data> 
 </odoo>

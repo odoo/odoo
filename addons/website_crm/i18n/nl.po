@@ -1,19 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_crm
+# 	* website_crm
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Cas Vissers <casvissers@brahoo.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2017\n"
+"POT-Creation-Date: 2019-09-23 11:31+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,87 +23,93 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
-msgid "&amp;times;"
-msgstr "&amp;times;"
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
+msgid "# Leads"
+msgstr "# Leads"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
-msgstr ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Verzend</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
+msgid "# Page Views"
+msgstr "# Paginaweergaven"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Add a contact form in the"
 msgstr "Voeg een contactformulier toe in de"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a sales channel."
+msgstr "Wijs leads/prospects toe aan een verkoopkanaal."
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a salesperson."
+msgstr "Wijs leads/prospects toe aan een verkoper."
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Communication"
 msgstr "Communicatie"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#: model:ir.model,name:website_crm.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Contact Form"
 msgstr "Contactformulier"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Contact Us"
 msgstr "Contacteer ons"
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_res_config_settings_crm_default_team_id
-msgid "Default Sales Channel"
-msgstr "Standaard verkoopkanaal"
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
+msgid "Default Sales Team"
+msgstr "Standaard verkoopteam"
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_team_id
-msgid "Default Sales Channels"
-msgstr "Standaard verkoopkanalen"
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
+msgid "Default Sales Team for new leads created through the Contact Us form."
+msgstr ""
+"Standaard verkoopteam voor nieuwe leads aangemaakt vanuit het "
+"contactformulier."
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_res_config_settings_crm_default_user_id
-#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
+msgid "Default Sales Teams"
+msgstr "Standaard verkoopteam"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
 msgstr "Standaard verkoper"
 
 #. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings_crm_default_team_id
-#: model:ir.model.fields,help:website_crm.field_website_crm_default_team_id
-msgid ""
-"Default sales channel for new leads created through the Contact Us form."
-msgstr ""
-"Standaard verkoopkanaal voor nieuwe leads aangemaakt vanuit het contacteer "
-"ons formulier."
-
-#. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings_crm_default_user_id
-#: model:ir.model.fields,help:website_crm.field_website_crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
-"Standaard verkoopkanaal voor nieuwe leads aangemaakt vanuit het contacteer "
-"ons formulier."
+"Standaard verkoopkanaal voor nieuwe leads aangemaakt vanuit het "
+"contactformulier."
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Email"
 msgstr "E-mail"
-
-#. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
-msgid "If you have an emergency, do not hesitate to contact us by phone:"
-msgstr ""
-"Als u spoed heeft, aarzel dan niet om telefonisch contact met ons op te "
-"nemen:"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
@@ -110,44 +117,92 @@ msgid "Lead/Opportunity"
 msgstr "Lead/Prospect"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "New messages are managed as leads or opportunities in your CRM app."
-msgstr ""
-"Nieuwe berichten worden beheerd als leads of opportuniteiten in uw CRM app."
+#: model:ir.actions.act_window,name:website_crm.website_visitor_crm_lead_action
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_ids
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Leads"
+msgstr "Leads"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
+msgid "Leads/Opportunities"
+msgstr "Leads/prospects"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "New messages are managed as leads or opportunities in your CRM app."
+msgstr "Nieuwe berichten worden beheerd als leads of prospects in uw CRM app."
+
+#. module: website_crm
+#: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
+msgid "No lead linked for this visitor"
+msgstr "Geen lead gekoppeld voor deze bezoeker"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
+msgid "Page views"
+msgstr "Pagina weergaven"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Phone Number"
 msgstr "Telefoonnummer"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid ""
+"Please set a Sales Team for the website. Otherwise you can't follow related "
+"events."
+msgstr ""
+"Stel een verkoopteam in voor de website, anders kunt u de gekoppelde "
+"evenementen niet volgen."
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
 msgid "Sales Channel"
 msgstr "Verkoopkanaal"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "Verkoopteam"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Salesperson"
 msgstr "Verkoper"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "Send"
+msgstr "Verzenden"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Subject"
 msgstr "Onderwerp"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
-msgid "Thanks!"
-msgstr "Bedankt!"
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Visitors"
+msgstr "Bezoekers"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
-msgid "We will get back to you shortly."
-msgstr "Wij nemen zo spoedig mogelijk contact met u op."
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
+msgid "Web Visitors"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
@@ -160,33 +215,35 @@ msgid "Website Contact Form"
 msgstr "Website contactformulier"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
+#: model:ir.model,name:website_crm.model_website_visitor
+msgid "Website Visitor"
+msgstr "Website bezoeker"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Company"
 msgstr "Uw bedrijf"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Name"
 msgstr "Uw naam"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Question"
 msgstr "Uw vraag"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
-msgid "Your message has been sent successfully."
-msgstr "Uw bericht is succesvol verzonden."
-
-#. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "page"
 msgstr "pagina"
-
-#. module: website_crm
-#: model:ir.model,name:website_crm.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

@@ -1,0 +1,80 @@
+.o_tree_nav {
+    top: unset;
+    z-index: $zindex-dropdown - 1;
+
+    .o_search .o_not_found {
+        box-shadow: 0 0 0 0.2rem red;
+    }
+}
+
+.o_tree_container {
+    .o_text_orange {
+        color: $orange;
+    }
+    .o_text_pink {
+        color: $pink;
+    }
+
+    .o_has_child .js_fold {
+        cursor: pointer;
+    }
+
+    .o_search_found {
+        background-color: $gray-200;
+    }
+
+    .o_tree_entry {
+        a {
+            display: none;
+        }
+
+        &:hover {
+            a {
+                display: block;
+            }
+        }
+    }
+
+    ul {
+        line-height: 2em;
+        list-style: none;
+        margin-left: 1em;
+        padding: 0;
+        position: relative;
+
+        &:before {
+            border-left: 1px dashed;
+            bottom: 0;
+            content: '';
+            display: block;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 0;
+        }
+
+        li {
+            padding: 0 1em;
+            position: relative;
+
+            &:before {
+                border-top: 1px dashed;
+                content: '';
+                display: block;
+                height: 0;
+                left: 0;
+                margin-top: -1px;
+                position: absolute;
+                top: 1em;
+                width: 10px;
+            }
+
+            &.o_last_visible_child:before {
+                background: #fff;
+                bottom: 0;
+                height: auto;
+                top: 1em;
+            }
+        }
+    }
+}

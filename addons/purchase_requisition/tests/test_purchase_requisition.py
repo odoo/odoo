@@ -1,90 +1,36 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import common
-from odoo import fields
-from datetime import datetime
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
+from odoo import Command
+from odoo.tests import Form
+
+from datetime import timedelta
 
 
-class TestPurchaseRequisition(common.TransactionCase):
-
-    def setUp(self):
-        super(TestPurchaseRequisition, self).setUp()
-
-        self.product_09_id = self.ref('product.product_product_9')
-        self.product_09_uom_id = self.ref('uom.product_uom_unit')
-        self.product_13_id = self.ref('product.product_product_13')
-        self.res_partner_1_id = self.ref('base.res_partner_1')
-        self.res_company_id = self.ref('base.main_company')
-        self.env.user.company_id.currency_id = self.env.ref("base.USD").id
-
-        self.ResUser = self.env['res.users']
-        # Create a user as 'Purchase Requisition Manager'
-        self.res_users_purchase_requisition_manager = self.ResUser.create({'company_id': self.res_company_id, 'name': 'Purchase requisition Manager', 'login': 'prm', 'email': 'requisition_manager@yourcompany.com'})
-        # Added groups for Purchase Requisition Manager.
-        self.res_users_purchase_requisition_manager.group_id = self.ref('purchase.group_purchase_manager')
-        # Create a user as 'Purchase Requisition User'
-        self.res_users_purchase_requisition_user = self.ResUser.create({'company_id': self.res_company_id, 'name': 'Purchase requisition User', 'login': 'pru', 'email': 'requisition_user@yourcompany.com'})
-        # Added groups for Purchase Requisition User.
-        self.res_users_purchase_requisition_user.group_id = self.ref('purchase.group_purchase_user')
-
-        # In order to test process of the purchase requisition ,create requisition
-        self.requisition1 = self.env['purchase.requisition'].create({'line_ids': [(0, 0, {'product_id': self.product_09_id, 'product_qty': 10.0, 'product_uom_id': self.product_09_uom_id})]})
+class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
     def test_00_purchase_requisition_users(self):
-        self.assertTrue(self.res_users_purchase_requisition_manager, 'Manager Should be created')
-        self.assertTrue(self.res_users_purchase_requisition_user, 'User Should be created')
+        self.assertTrue(self.user_purchase_requisition_manager, 'Manager Should be created')
+        self.assertTrue(self.user_purchase_requisition_user, 'User Should be created')
 
     def test_01_cancel_purchase_requisition(self):
-        self.requisition1.sudo(self.res_users_purchase_requisition_user.id).action_cancel()
+        self.bo_requisition.with_user(self.user_purchase_requisition_user).action_cancel()
         # Check requisition after cancelled.
-        self.assertEqual(self.requisition1.state, 'cancel', 'Requisition should be in cancelled state.')
+        self.assertEqual(self.bo_requisition.state, 'cancel', 'Requisition should be in cancelled state.')
         # I reset requisition as "New".
-        self.requisition1.sudo(self.res_users_purchase_requisition_user.id).action_draft()
+        self.bo_requisition.with_user(self.user_purchase_requisition_user).action_draft()
         # I duplicate requisition.
-        self.requisition1.sudo(self.res_users_purchase_requisition_user.id).copy()
+        self.bo_requisition.with_user(self.user_purchase_requisition_user).copy()
 
     def test_02_purchase_requisition(self):
-        date_planned = fields.Datetime.now()
-        warehouse = self.env['stock.warehouse'].browse(self.ref('stock.warehouse0'))
-        product = self.env['product.product'].browse(self.product_13_id)
-        product.write({'route_ids': [(4, self.ref('purchase.route_warehouse0_buy'))]})
-        self.env['procurement.group'].run(product, 14, self.env['uom.uom'].browse(self.ref('uom.product_uom_unit')), warehouse.lot_stock_id, '/', '/',
-                                          {
-                                            'warehouse_id': warehouse,
-                                            'date_planned': date_planned,
-                                          })
-
-        # Check requisition details which created after run procurement.
-        line = self.env['purchase.requisition.line'].search([('product_id', '=', self.product_13_id), ('product_qty', '=', 14.0)])
-        requisition = line[0].requisition_id
-        self.assertEqual(requisition.date_end, date_planned, "End date does not correspond.")
-        self.assertEqual(len(requisition.line_ids), 1, "Requisition Lines should be one.")
-        self.assertEqual(line.product_uom_id.id, self.ref('uom.product_uom_unit'), "UOM is not correspond.")
-
-        # Give access rights of Purchase Requisition User to open requisition
-        # Set tender state to choose tendering line.
-        self.requisition1.sudo(self.res_users_purchase_requisition_user.id).action_in_progress()
-        self.requisition1.sudo(self.res_users_purchase_requisition_user.id).action_open()
-
-        # Vendor send one RFQ so I create a RfQ of that agreement.
-        PurchaseOrder = self.env['purchase.order']
-        purchase_order = PurchaseOrder.new({'partner_id': self.res_partner_1_id, 'requisition_id': self.requisition1.id})
-        purchase_order._onchange_requisition_id()
-        po_dict = purchase_order._convert_to_write({name: purchase_order[name] for name in purchase_order._cache})
-        self.po_requisition = PurchaseOrder.create(po_dict)
-        self.assertEqual(len(self.po_requisition.order_line), 1, 'Purchase order should have one line')
-
-    def test_03_purchase_requisition(self):
         price_product09 = 34
         price_product13 = 62
         quantity = 26
-        # Create a pruchase requisition with type blanket order and two product
-        line1 = (0, 0, {'product_id': self.product_09_id, 'product_qty': quantity, 'product_uom_id': self.product_09_uom_id, 'price_unit': price_product09})
 
-        self.product_13_uom_id = self.ref('uom.product_uom_unit')
-        line2 = (0, 0, {'product_id': self.product_13_id, 'product_qty': quantity, 'product_uom_id': self.product_13_uom_id, 'price_unit': price_product13})
+        # Create a pruchase requisition with type blanket order and two product
+        line1 = (0, 0, {'product_id': self.product_09.id, 'product_qty': quantity, 'product_uom_id': self.product_uom_id.id, 'price_unit': price_product09})
+        line2 = (0, 0, {'product_id': self.product_13.id, 'product_qty': quantity, 'product_uom_id': self.product_uom_id.id, 'price_unit': price_product13})
 
         requisition_type = self.env['purchase.requisition.type'].create({
             'name': 'Blanket test',
@@ -93,30 +39,30 @@ class TestPurchaseRequisition(common.TransactionCase):
         requisition_blanket = self.env['purchase.requisition'].create({
             'line_ids': [line1, line2],
             'type_id': requisition_type.id,
-            'vendor_id': self.res_partner_1_id
+            'vendor_id': self.res_partner_1.id,
         })
 
         # confirm the requisition
         requisition_blanket.action_in_progress()
 
-        # Check for both product that the new supplier info(purchase.requisition.vendor_id) is added to the puchase tab
+        # Check for both product that the new supplier info(purchase.requisition.vendor_id) is added to the purchase tab
         # and check the quantity
-        seller_partner1 = self.env['res.partner'].browse(self.res_partner_1_id)
+        seller_partner1 = self.res_partner_1
         supplierinfo09 = self.env['product.supplierinfo'].search([
-            ('name', '=', seller_partner1.id),
-            ('product_id', '=', self.product_09_id),
+            ('partner_id', '=', seller_partner1.id),
+            ('product_id', '=', self.product_09.id),
             ('purchase_requisition_id', '=', requisition_blanket.id),
         ])
-        self.assertEqual(supplierinfo09.name, seller_partner1, 'The supplierinfo is not the good one')
-        self.assertEqual(supplierinfo09.price, price_product09, 'The supplierinfo is not the good one')
+        self.assertEqual(supplierinfo09.partner_id, seller_partner1, 'The supplierinfo is not correct')
+        self.assertEqual(supplierinfo09.price, price_product09, 'The supplierinfo is not correct')
 
         supplierinfo13 = self.env['product.supplierinfo'].search([
-            ('name', '=', seller_partner1.id),
-            ('product_id', '=', self.product_13_id),
+            ('partner_id', '=', seller_partner1.id),
+            ('product_id', '=', self.product_13.id),
             ('purchase_requisition_id', '=', requisition_blanket.id),
         ])
-        self.assertEqual(supplierinfo13.name, seller_partner1, 'The supplierinfo is not the good one')
-        self.assertEqual(supplierinfo13.price, price_product13, 'The supplierinfo is not the good one')
+        self.assertEqual(supplierinfo13.partner_id, seller_partner1, 'The supplierinfo is not correct')
+        self.assertEqual(supplierinfo13.price, price_product13, 'The supplierinfo is not correct')
 
         # Put the requisition in done Status
         requisition_blanket.action_in_progress()
@@ -125,173 +71,147 @@ class TestPurchaseRequisition(common.TransactionCase):
         self.assertFalse(self.env['product.supplierinfo'].search([('id', '=', supplierinfo09.id)]), 'The supplier info should be removed')
         self.assertFalse(self.env['product.supplierinfo'].search([('id', '=', supplierinfo13.id)]), 'The supplier info should be removed')
 
-    def test_04_purchase_requisition(self):
-        """ Set a static supplier info and make a delivery order for a "to buy" product, check that the purchase order created is consistent. Create a blanket order for this product, create a new delivery order for this product and check that the create purchase order set its values according to the blanket order.
-        """
-
-        # Product creation
-        unit = self.ref("uom.product_uom_unit")
-        warehouse1 = self.env.ref('stock.warehouse0')
-        route_buy = self.ref('purchase.route_warehouse0_buy')
-        route_mto = warehouse1.mto_pull_id.route_id.id
-        vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
-        supplier_info1 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
-            'price': 50,
+    def test_06_purchase_requisition(self):
+        """ Create a blanket order for a product and a vendor already linked via
+        a supplier info"""
+        product = self.env['product.product'].create({
+            'name': 'test6',
         })
-        product_test = self.env['product.product'].create({
-            'name': 'Usb Keyboard',
-            'type': 'product',
-            'uom_id': unit,
-            'uom_po_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
-            'route_ids': [(6, 0, [route_buy, route_mto])]
+        product2 = self.env['product.product'].create({
+            'name': 'test6',
+        })
+        vendor = self.env['res.partner'].create({
+            'name': 'vendor6',
+        })
+        supplier_info = self.env['product.supplierinfo'].create({
+            'product_id': product.id,
+            'partner_id': vendor.id,
         })
 
-        # Stock picking
-        stock_location = self.env.ref('stock.stock_location_stock')
-        customer_location = self.env.ref('stock.stock_location_customers')
-        move1 = self.env['stock.move'].create({
-            'name': '10 in',
-            'procure_method': 'make_to_order',
-            'location_id': stock_location.id,
-            'location_dest_id': customer_location.id,
-            'product_id': product_test.id,
-            'product_uom': unit,
-            'product_uom_qty': 10.0,
-            'price_unit': 10,
-        })
-        move1._action_confirm()
-
-        # Verification : there should be a purchase order created with the good price
-        purchase1 = self.env['purchase.order'].search([('partner_id', '=', vendor1.id)])
-        self.assertEqual(purchase1.order_line.price_unit, 50, 'The price on the purchase order is not the supplierinfo one')
-
-        # Blanket order creation
-        line1 = (0, 0, {'product_id': product_test.id, 'product_qty': 18, 'product_uom_id': product_test.uom_po_id.id, 'price_unit': 42})
+        # create an empty blanket order
         requisition_type = self.env['purchase.requisition.type'].create({
             'name': 'Blanket test',
-            'quantity_copy': 'none',
+            'quantity_copy': 'none'
+        })
+        line1 = (0, 0, {
+            'product_id': product2.id,
+            'product_uom_id': product2.uom_po_id.id,
+            'price_unit': 41,
+            'product_qty': 10,
         })
         requisition_blanket = self.env['purchase.requisition'].create({
             'line_ids': [line1],
             'type_id': requisition_type.id,
-            'vendor_id': vendor1.id,
-            'currency_id': self.env.ref("base.USD").id,
+            'vendor_id': vendor.id,
         })
         requisition_blanket.action_in_progress()
+        self.env['purchase.requisition.line'].create({
+            'product_id': product.id,
+            'product_qty': 14.0,
+            'requisition_id': requisition_blanket.id,
+            'price_unit': 10,
+        })
+        new_si = self.env['product.supplierinfo'].search([
+            ('product_id', '=', product.id),
+            ('partner_id', '=', vendor.id)
+        ]) - supplier_info
+        self.assertEqual(new_si.purchase_requisition_id, requisition_blanket, 'the blanket order is not linked to the supplier info')
 
-        # Second stock move
-        move2 = self.env['stock.move'].create({
-            'name': '10 in',
-            'procure_method': 'make_to_order',
-            'location_id': stock_location.id,
-            'location_dest_id': customer_location.id,
-            'product_id': product_test.id,
-            'product_uom': unit,
-            'product_uom_qty': 10.0,
-            'price_unit': 10
+    def test_07_alternative_purchases_wizards(self):
+        """Directly link POs to each other as 'Alternatives': check that wizards and
+        their flows correctly work."""
+        orig_po = self.env['purchase.order'].create({
+            'partner_id': self.res_partner_1.id,
         })
-        move2._action_confirm()
+        unit_price = 50
+        po_form = Form(orig_po)
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_09
+            line.product_qty = 5.0
+            line.price_unit = unit_price
+        po_form.save()
 
-        # Verifications
-        purchase2 = self.env['purchase.order'].search([('partner_id', '=', vendor1.id), ('requisition_id', '=', requisition_blanket.id)])
-        self.assertEqual(purchase2.order_line.price_unit, 42, 'The price on the purchase order is not the blanquet order one')
+        # first flow: check that creating an alt PO correctly auto-links both POs to each other
+        action = orig_po.action_create_alternative()
+        alt_po_wiz = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wiz.partner_id = self.res_partner_1
+        alt_po_wiz.copy_products = True
+        alt_po_wiz = alt_po_wiz.save()
+        alt_po_wiz.action_create_alternative()
+        self.assertEqual(len(orig_po.alternative_po_ids), 2, "Original PO should be auto-linked to itself and newly created PO")
 
-    def test_05_purchase_requisition(self):
-        """ Two blanket orders on different 'make to order' products must generate
-        two different purchase orders
-        """
+        # check alt po was created with correct values
+        alt_po_1 = orig_po.alternative_po_ids.filtered(lambda po: po.id != orig_po.id)
+        self.assertEqual(orig_po.order_line.product_id, alt_po_1.order_line.product_id, "Alternative PO should have copied the product to purchase from original PO")
+        self.assertEqual(orig_po.order_line.product_qty, alt_po_1.order_line.product_qty, "Alternative PO should have copied the qty to purchase from original PO")
+        self.assertEqual(len(alt_po_1.alternative_po_ids), 2, "Newly created PO should be auto-linked to itself and original PO")
 
-        # Product creation
-        unit = self.ref("uom.product_uom_unit")
-        warehouse1 = self.env.ref('stock.warehouse0')
-        route_buy = self.ref('purchase.route_warehouse0_buy')
-        route_mto = warehouse1.mto_pull_id.route_id.id
-        vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
-        supplier_info1 = self.env['product.supplierinfo'].create({
-            'name': vendor1.id,
-            'price': 50,
-        })
-        product_1 = self.env['product.product'].create({
-            'name': 'product1',
-            'type': 'product',
-            'uom_id': unit,
-            'uom_po_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
-            'route_ids': [(6, 0, [route_buy, route_mto])]
-        })
-        product_2 = self.env['product.product'].create({
-            'name': 'product2',
-            'type': 'product',
-            'uom_id': unit,
-            'uom_po_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
-            'route_ids': [(6, 0, [route_buy, route_mto])]
-        })
-        # Blanket orders creation
-        requisition_type = self.env['purchase.requisition.type'].create({
-            'name': 'Blanket test',
-            'quantity_copy': 'none',
-        })
-        line1 = (0, 0, {'product_id': product_1.id, 'product_qty': 18, 'product_uom_id': product_1.uom_po_id.id, 'price_unit': 41})
-        line2 = (0, 0, {'product_id': product_2.id, 'product_qty': 18, 'product_uom_id': product_2.uom_po_id.id, 'price_unit': 42})
-        requisition_1 = self.env['purchase.requisition'].create({
-            'line_ids': [line1],
-            'type_id': requisition_type.id,
-            'vendor_id': vendor1.id,
-            'currency_id': self.env.ref("base.USD").id,
-        })
-        requisition_2 = self.env['purchase.requisition'].create({
-            'line_ids': [line2],
-            'type_id': requisition_type.id,
-            'vendor_id': vendor1.id,
-            'currency_id': self.env.ref("base.USD").id,
-        })
-        requisition_1.action_in_progress()
-        requisition_2.action_in_progress()
-        # Stock moves
-        stock_location = self.env.ref('stock.stock_location_stock')
-        customer_location = self.env.ref('stock.stock_location_customers')
-        move1 = self.env['stock.move'].create({
-            'name': '10 in',
-            'procure_method': 'make_to_order',
-            'location_id': stock_location.id,
-            'location_dest_id': customer_location.id,
-            'product_id': product_1.id,
-            'product_uom': unit,
-            'product_uom_qty': 10.0,
-            'price_unit': 100,
-        })
-        move2 = self.env['stock.move'].create({
-            'name': '10 in',
-            'procure_method': 'make_to_order',
-            'location_id': stock_location.id,
-            'location_dest_id': customer_location.id,
-            'product_id': product_2.id,
-            'product_uom': unit,
-            'product_uom_qty': 10.0,
-            'price_unit': 100,
-        })
-        move1._action_confirm()
-        move2._action_confirm()
-        # Verifications
-        POL1 = self.env['purchase.order.line'].search([('product_id', '=', product_1.id)]).order_id
-        POL2 = self.env['purchase.order.line'].search([('product_id', '=', product_2.id)]).order_id
-        self.assertFalse(POL1 == POL2, 'The two blanket orders should generate two purchase different purchase orders')
-        POL1.write({'order_line': [
-            (0, 0, {
-                'name': product_2.name,
-                'product_id': product_2.id,
-                'product_qty': 5.0,
-                'product_uom': product_2.uom_po_id.id,
-                'price_unit': 0,
-                'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            })
-        ]})
-        order_line = self.env['purchase.order.line'].search([
-            ('product_id', '=', product_2.id),
-            ('product_qty', '=', 5.0),
-        ])
-        order_line._onchange_quantity()
-        self.assertEqual(order_line.price_unit, 50, 'The supplier info chosen should be the one without requisition id')
+        # check compare POLs correctly calcs best date/price PO lines: orig_po.date_planned = best & alt_po.price = best
+        alt_po_1.order_line.date_planned += timedelta(days=1)
+        alt_po_1.order_line.price_unit = unit_price - 10
+        action = orig_po.action_compare_alternative_lines()
+        params = action['context']['params']
+        best_price_pol = self.env['purchase.order.line'].browse(params['best_price_ids'])
+        best_date_pol = self.env['purchase.order.line'].browse(params['best_date_ids'])
+        self.assertEqual(best_price_pol.order_id.id, alt_po_1.id, "Best price PO line was not correctly calculated")
+        self.assertEqual(best_date_pol.order_id.id, orig_po.id, "Best date PO line was not correctly calculated")
+
+        # second flow: create extra alt PO, check that all 3 POs are correctly auto-linked
+        action = orig_po.action_create_alternative()
+        alt_po_wiz = Form(self.env['purchase.requisition.create.alternative'].with_context(**action['context']))
+        alt_po_wiz.partner_id = self.res_partner_1
+        alt_po_wiz.copy_products = True
+        alt_po_wiz = alt_po_wiz.save()
+        alt_po_wiz.action_create_alternative()
+        self.assertEqual(len(orig_po.alternative_po_ids), 3, "Original PO should be auto-linked to newly created alternative PO")
+        self.assertEqual(len(alt_po_1.alternative_po_ids), 3, "Alternative PO should be auto-linked to newly created alternative PO")
+        alt_po_2 = orig_po.alternative_po_ids.filtered(lambda po: po.id not in [alt_po_1.id, orig_po.id])
+        self.assertEqual(len(alt_po_2.alternative_po_ids), 3, "All alternative POs should be auto-linked to each other")
+
+        # third flow: confirm one of the POs when alt POs are a mix of confirmed + RFQs
+        alt_po_2.write({'state': 'purchase'})
+        action = orig_po.button_confirm()
+        warning_wiz = Form(self.env['purchase.requisition.alternative.warning'].with_context(**action['context']))
+        warning_wiz = warning_wiz.save()
+        self.assertEqual(warning_wiz.alternative_po_count, 1, "POs not in a RFQ status should not be listed as possible to cancel")
+        warning_wiz.action_cancel_alternatives()
+        self.assertEqual(alt_po_1.state, 'cancel', "Alternative PO should have been cancelled")
+        self.assertEqual(orig_po.state, 'purchase', "Original PO should have been confirmed")
+
+    def test_08_purchases_multi_linkages(self):
+        """Directly link POs to each other as 'Alternatives': check linking/unlinking
+        POs that are already linked correctly work."""
+        pos = []
+        for _ in range(5):
+            pos += self.env['purchase.order'].create({
+                'partner_id': self.res_partner_1.id,
+            }).ids
+        pos = self.env['purchase.order'].browse(pos)
+        po_1, po_2, po_3, po_4, po_5 = pos
+
+        po_1.alternative_po_ids |= po_2
+        po_3.alternative_po_ids |= po_4
+        groups = self.env['purchase.order.group'].search([('order_ids', 'in', pos.ids)])
+        self.assertEqual(len(po_1.alternative_po_ids), 2, "PO1 and PO2 should only be linked to each other")
+        self.assertEqual(len(po_3.alternative_po_ids), 2, "PO3 and PO4 should only be linked to each other")
+        self.assertEqual(len(groups), 2, "There should only be 2 groups: (PO1,PO2) and (PO3,PO4)")
+
+        # link non-linked PO to already linked PO
+        po_5.alternative_po_ids |= po_4
+        groups = self.env['purchase.order.group'].search([('order_ids', 'in', pos.ids)])
+        self.assertEqual(len(po_3.alternative_po_ids), 3, "PO3 should now be linked to PO4 and PO5")
+        self.assertEqual(len(po_4.alternative_po_ids), 3, "PO4 should now be linked to PO3 and PO5")
+        self.assertEqual(len(po_5.alternative_po_ids), 3, "PO5 should now be linked to PO3 and PO4")
+        self.assertEqual(len(groups), 2, "There should only be 2 groups: (PO1,PO2) and (PO3,PO4,PO5)")
+
+        # link already linked PO to already linked PO
+        po_5.alternative_po_ids |= po_1
+        groups = self.env['purchase.order.group'].search([('order_ids', 'in', pos.ids)])
+        self.assertEqual(len(po_1.alternative_po_ids), 5, "All 5 POs should be linked to each other now")
+        self.assertEqual(len(groups), 1, "There should only be 1 group containing all 5 POs (other group should have auto-deleted")
+
+        # remove all links, make sure group auto-deletes
+        (pos - po_5).alternative_po_ids = [Command.clear()]
+        groups = self.env['purchase.order.group'].search([('order_ids', 'in', pos.ids)])
+        self.assertEqual(len(po_5.alternative_po_ids), 0, "Last PO should auto unlink from itself since group should have auto-deleted")
+        self.assertEqual(len(groups), 0, "The group should have auto-deleted")

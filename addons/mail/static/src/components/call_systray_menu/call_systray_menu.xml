@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.CallSystrayMenu" owl="1">
+        <div class="o_CallSystrayMenu dropdown" t-attf-class="{{ className }}" t-ref="root">
+            <t t-if="messaging">
+                <CallInviteRequestPopupList/>
+                <t t-if="messaging.rtc.channel">
+                    <button class="o_CallSystrayMenu_button px-3 user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="callSystrayMenu.buttonTitle" role="button" t-on-click="messaging.rtc.onClickActivityNoticeButton">
+                        <div class="o_CallSystrayMenu_buttonContent d-flex align-items-center">
+                            <span class="position-relative me-2">
+                                <i class="o_CallSystrayMenu_outputIndicator fa me-2" t-att-class="{
+                                    'fa-microphone': !messaging.rtc.sendDisplay and !messaging.rtc.sendUserVideo,
+                                    'fa-video-camera': messaging.rtc.sendUserVideo,
+                                    'fa-desktop': messaging.rtc.sendDisplay,
+                                }"/>
+                                <small class="position-absolute top-0 end-0 bottom-0 mt-n3 pt-1">
+                                    <i class="o_CallSystrayMenu_dot fa fa-circle text-warning small"/>
+                                </small>
+                            </span>
+                            <em class="o_CallSystrayMenu_buttonTitle text-truncate" t-esc="messaging.rtc.channel.displayName"/>
+                        </div>
+                    </button>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

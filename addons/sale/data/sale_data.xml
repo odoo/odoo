@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
-        <record model="crm.team" id="sales_team.team_sales_department">
-            <field name="use_quotations" eval="True"/>
-            <field name="use_invoices" eval="True"/>
-            <field name="dashboard_graph_model">sale.report</field>
-        </record>
+<odoo noupdate="1">
 
-        <record id="sale_layout_cat_1" model="sale.layout_category">
-            <field name="name">Services</field>
-            <field name="subtotal" eval="True"></field>
-            <field name="pagebreak" eval="True"></field>
-            <field name="sequence">1</field>
-        </record>
+    <!-- TODO remove as it is already the fallback in _find_mail_template -->
+    <record id="default_confirmation_template" model="ir.config_parameter">
+        <field name="key">sale.default_confirmation_template</field>
+        <field name="value" ref="sale.mail_template_sale_confirmation"/>
+    </record>
 
-        <record id="sale_layout_cat_2" model="sale.layout_category">
-            <field name="name">Material</field>
-            <field name="subtotal" eval="True"></field>
-            <field name="pagebreak" eval="False"></field>
-            <field name="sequence">10</field>
-        </record>
-    </data>
+    <record id="default_invoice_email_template" model="ir.config_parameter">
+        <field name="key">sale.default_invoice_email_template</field>
+        <field name="value" ref="account.email_template_edi_invoice"/>
+    </record>
+
+    <record id="send_invoice_cron" model="ir.cron">
+        <field name="name">automatic invoicing: send ready invoice</field>
+        <field name="model_id" ref="payment.model_payment_transaction" />
+        <field name="state">code</field>
+        <field name="code">model._cron_send_invoice()</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+    </record>
+
 </odoo>

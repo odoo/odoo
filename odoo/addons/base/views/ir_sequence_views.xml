@@ -13,12 +13,12 @@
                       </group>
                       <group>
                         <field name="code"/>
-                        <field name="active"/>
+                        <field name="active" widget="boolean_toggle"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                       </group>
                     </group>
                     <notebook>
-                    <page string="Sequence">
+                    <page string="Sequence" name="sequence">
                         <group>
                           <group>
                             <field name="prefix"/>
@@ -40,21 +40,21 @@
                         </field>
                         <group col="3" string="Legend (for prefix, suffix)">
                             <group>
-                                <label colspan="2" string="Current Year with Century: %%(year)s"/>
-                                <label colspan="2" string="Current Year without Century: %%(y)s"/>
-                                <label colspan="2" string="Month: %%(month)s"/>
-                                <label colspan="2" string="Day: %%(day)s"/>
+                                <span colspan="2">Current Year with Century: %%(year)s</span>
+                                <span colspan="2">Current Year without Century: %%(y)s</span>
+                                <span colspan="2">Month: %%(month)s</span>
+                                <span colspan="2">Day: %%(day)s</span>
                             </group>
                             <group>
-                                <label colspan="2" string="Day of the Year: %%(doy)s"/>
-                                <label colspan="2" string="Week of the Year: %%(woy)s"/>
-                                <label colspan="2" string="Day of the Week (0:Monday): %%(weekday)s"/>
+                                <span colspan="2">Day of the Year: %%(doy)s</span>
+                                <span colspan="2">Week of the Year: %%(woy)s</span>
+                                <span colspan="2">Day of the Week (0:Monday): %%(weekday)s</span>
                             </group>
                             <group>
-                                <label colspan="2" string="Hour 00->24: %%(h24)s"/>
-                                <label colspan="2" string="Hour 00->12: %%(h12)s"/>
-                                <label colspan="2" string="Minute: %%(min)s"/>
-                                <label colspan="2" string="Second: %%(sec)s"/>
+                                <span colspan="2">Hour 00->24: %%(h24)s</span>
+                                <span colspan="2">Hour 00->12: %%(h12)s</span>
+                                <span colspan="2">Minute: %%(min)s</span>
+                                <span colspan="2">Second: %%(sec)s</span>
                             </group>
                         </group>
                         <group attrs="{'invisible': [('use_date_range', '=', False)]}">
@@ -69,6 +69,7 @@
                 </form>
             </field>
         </record>
+
         <record id="sequence_view_tree" model="ir.ui.view">
             <field name="model">ir.sequence</field>
             <field name="arch" type="xml">
@@ -84,6 +85,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_sequence_search" model="ir.ui.view">
             <field name="model">ir.sequence</field>
             <field name="arch" type="xml">
@@ -91,17 +93,20 @@
                     <field name="name" string="Sequence"/>
                     <field name="code"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>
+
         <record id="ir_sequence_form" model="ir.actions.act_window">
             <field name="name">Sequences</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.sequence</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="sequence_view_tree"/>
             <field name="context">{'active_test': False}</field>
         </record>
+
         <menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
 
 </odoo>

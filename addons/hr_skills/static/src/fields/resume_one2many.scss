@@ -1,0 +1,46 @@
+.o_field_resume_one2many {
+    $o-hrs-timeline-entry-padding: .5rem;
+    $o-hrs-timeline-dot-size: .6rem;
+
+    .o_data_row td {
+        padding: $o-hrs-timeline-entry-padding;
+
+        &.o_resume_timeline_cell {
+            div {
+                width: $o-hrs-timeline-dot-size;
+                height: $o-hrs-timeline-dot-size;
+            }
+
+            &:before {
+                @include o-position-absolute(0, $left: ($o-hrs-timeline-dot-size * .5 + $o-hrs-timeline-entry-padding));
+                width: 1px;
+                height: 100%;
+                margin-left: -.01rem;
+                background-color: $border-color;
+                content: "";
+            }
+        }
+    }
+
+    .o_resume_line_title, .o_resume_line_desc {
+        white-space: normal;
+    }
+
+    .o_resume_line_title, .o_resume_line_dates {
+        line-height: 1;
+    }
+
+    .o_resume_group_header + .o_data_row .o_resume_timeline_cell:before {
+        top: $o-hrs-timeline-entry-padding;
+    }
+
+    .o_data_row.o_data_row_last {
+        .o_resume_line_desc {
+            margin-bottom: $headings-margin-bottom;
+        }
+
+        .o_resume_timeline_cell:before {
+            height: $o-hrs-timeline-entry-padding;
+        }
+    }
+}

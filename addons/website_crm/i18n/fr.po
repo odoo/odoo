@@ -1,31 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_crm
+# 	* website_crm
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Xavier Symons <xsy@openerp.com>, 2016
-# Stephane DAGUET <stephane@darbtech.net>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Florian Hatat, 2016
-# Martin Trigaux, 2016
-# Lucas Deliege <lud@odoo.com>, 2017
-# lucasdeliege <deliegelucas@gmail.com>, 2017
-# Clo <clo@odoo.com>, 2017
-# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
-# Lucas Deliege <lud@openerp.com>, 2017
-# Richard Mathot <rim@odoo.com>, 2017
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Eloïse Stilmant <est@odoo.com>, 2017
-# fr trans <e2ftrans1@yahoo.com>, 2017
-# e2f <projects@e2f.com>, 2018
+# e2f <projects@e2f.com>, 2019
+# bb76cd9ac0cb7e20167a14728edb858b, 2019
+# Richard Mathot <rim@odoo.com>, 2019
+# Florian Hatat, 2019
+# Clo <clo@odoo.com>, 2019
+# Stephane DAGUET <stephane@darbtech.net>, 2019
+# Lucas Deliege <lud@odoo.com>, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
+# Bertrand LATOUR <divoir@gmail.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
+# gdp Odoo <gdp@odoo.com>, 2019
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: e2f <projects@e2f.com>, 2018\n"
+"POT-Creation-Date: 2019-09-23 11:31+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,85 +31,93 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
-msgid "&amp;times;"
-msgstr "&times;"
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
+msgid "# Leads"
+msgstr "# Pistes"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Send</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
-msgstr ""
-"<span class=\"btn btn-primary btn-lg o_website_form_send\">Envoyer</span>\n"
-"                                <span id=\"o_website_form_result\"/>"
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
+msgid "# Page Views"
+msgstr "nb. de pages vues"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Add a contact form in the"
 msgstr "Ajoutez un formulaire de contact sur la"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a sales channel."
+msgstr "Attribuer pistes/opportunités à un canal de vente."
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a salesperson."
+msgstr "Attribuer pistes/opportunités à un commercial."
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Communication"
 msgstr "Communication"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#: model:ir.model,name:website_crm.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de config"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Contact Form"
 msgstr "Formulaire de contact"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Contact Us"
 msgstr "Contactez-nous"
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_res_config_settings_crm_default_team_id
-msgid "Default Sales Channel"
-msgstr "Canal de vente par défaut"
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
+msgid "Default Sales Team"
+msgstr "Equipe de vente par défaut"
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_team_id
-msgid "Default Sales Channels"
-msgstr "Canaux de vente par défaut"
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
+msgid "Default Sales Team for new leads created through the Contact Us form."
+msgstr ""
+"Equipe de vente par défaut pour les nouvelles pistes créées via le "
+"formulaire de contact."
 
 #. module: website_crm
-#: model:ir.model.fields,field_description:website_crm.field_res_config_settings_crm_default_user_id
-#: model:ir.model.fields,field_description:website_crm.field_website_crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
+msgid "Default Sales Teams"
+msgstr "Equipes de vente par défaut"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
+#: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
 msgstr "Commercial par défaut"
 
 #. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings_crm_default_team_id
-#: model:ir.model.fields,help:website_crm.field_website_crm_default_team_id
-msgid ""
-"Default sales channel for new leads created through the Contact Us form."
-msgstr ""
-"Canal de vente par défaut pour les nouveaux leads créés via le formulaire de"
-" contact."
-
-#. module: website_crm
-#: model:ir.model.fields,help:website_crm.field_res_config_settings_crm_default_user_id
-#: model:ir.model.fields,help:website_crm.field_website_crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
+#: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
 "Vendeur par défaut pour les nouveaux leads créés via le formulaire de "
 "contact."
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Email"
 msgstr "Courriel"
-
-#. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
-msgid "If you have an emergency, do not hesitate to contact us by phone:"
-msgstr "En cas d'urgence, n'hésitez pas à nous contacter par téléphone :"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
@@ -120,45 +125,94 @@ msgid "Lead/Opportunity"
 msgstr "Piste/opportunité"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
-msgid "New messages are managed as leads or opportunities in your CRM app."
-msgstr ""
-"Les nouveaux messages sont gérés comme des leads et opportunités dans votre "
-"application CRM."
+#: model:ir.actions.act_window,name:website_crm.website_visitor_crm_lead_action
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_ids
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Leads"
+msgstr "Pistes"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
+msgid "Leads/Opportunities"
+msgstr "Pistes/opportunités"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "New messages are managed as leads or opportunities in your CRM app."
+msgstr ""
+"Les nouveaux messages sont gérés comme des leads et des opportunités dans "
+"votre application CRM."
+
+#. module: website_crm
+#: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
+msgid "No lead linked for this visitor"
+msgstr "Pas de pistes liées pour ce visiteur"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
+msgid "Page views"
+msgstr "Pages vues"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Phone Number"
 msgstr "Numéro de téléphone"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid ""
+"Please set a Sales Team for the website. Otherwise you can't follow related "
+"events."
+msgstr ""
+"Veuillez définir une Equipe de Vente pour le site web. Sinon vous ne pourrez"
+" pas suivre les évènements liés."
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
 msgid "Sales Channel"
 msgstr "Equipe de vente"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "Équipe commerciale"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Salesperson"
 msgstr "Vendeur"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+msgid "Send"
+msgstr "Envoyer"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Subject"
 msgstr "Sujet"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
-msgid "Thanks!"
-msgstr "Merci !"
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Visitors"
+msgstr "Visiteurs"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
-msgid "We will get back to you shortly."
-msgstr "Nous reviendrons vers vous rapidement"
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
+msgid "Web Visitors"
+msgstr "Visiteurs Web"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
@@ -171,33 +225,35 @@ msgid "Website Contact Form"
 msgstr "Formulaire de Contact du Site Web"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
+#: model:ir.model,name:website_crm.model_website_visitor
+msgid "Website Visitor"
+msgstr "Visiteur du site web"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Company"
 msgstr "Votre société"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Name"
-msgstr "Votre nom"
+msgstr "Votre Nom"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_form
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
+#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Question"
 msgstr "Votre question"
 
 #. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks
-#: model:ir.ui.view,arch_db:website_crm.contactus_thanks_page_ir_ui_view
-#: model:website.page,arch_db:website_crm.contactus_thanks_page
-msgid "Your message has been sent successfully."
-msgstr "Votre message a été envoyé avec succès."
-
-#. module: website_crm
-#: model:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "page"
 msgstr "page"
-
-#. module: website_crm
-#: model:ir.model,name:website_crm.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

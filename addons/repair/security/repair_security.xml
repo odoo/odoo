@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
+<odoo noupdate="1">
 
-<!-- Multi -->
-    <record model="ir.rule" id="repair_rule">
-        <field name="name">repair multi-company</field>
+    <!-- Multicompay rules-->
+    <record model="ir.rule" id="repair_order_rule">
+        <field name="name">repair order multi-company</field>
         <field name="model_id" search="[('model','=','repair.order')]" model="ir.model"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record model="ir.rule" id="repair_line_rule">
+        <field name="name">repair line multi-company</field>
+        <field name="model_id" search="[('model','=','repair.line')]" model="ir.model"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record model="ir.rule" id="repair_fee_rule">
+        <field name="name">repair fee multi-company</field>
+        <field name="model_id" search="[('model','=','repair.fee')]" model="ir.model"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
-    </data>
 </odoo>

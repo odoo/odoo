@@ -12,7 +12,7 @@ class HrExpenseRefuseWizard(models.TransientModel):
     """
 
     _name = "hr.expense.refuse.wizard"
-    _description = "Expense refuse Reason wizard"
+    _description = "Expense Refuse Reason Wizard"
 
     reason = fields.Char(string='Reason', required=True)
     hr_expense_ids = fields.Many2many('hr.expense')
@@ -35,7 +35,6 @@ class HrExpenseRefuseWizard(models.TransientModel):
             })
         return res
 
-    @api.multi
     def expense_refuse_reason(self):
         self.ensure_one()
         if self.hr_expense_ids:

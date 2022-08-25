@@ -3,7 +3,6 @@
         <record id="action_partner_deduplicate" model="ir.actions.act_window">
             <field name="name">Deduplicate Contacts</field>
             <field name="res_model">base.partner.merge.automatic.wizard</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
             <field name="context">{'active_test': False}</field>
@@ -16,7 +15,7 @@
                 <form string='Automatic Merge Wizard'>
                     <sheet>
                         <group attrs="{'invisible': [('state', '!=', 'finished')]}" col="1">
-                            <h2>There is no more contacts to merge for this request...</h2>
+                            <h2>There are no more contacts to merge for this request</h2>
                             <button name="%(action_partner_deduplicate)d" string="Deduplicate the other Contacts" class="oe_highlight" type="action"/>
                         </group>
                         <p class="oe_grey" attrs="{'invisible': [('state', '!=', ('option'))]}">
@@ -56,7 +55,11 @@
                                 You can remove contacts from this list to avoid merging them.
                             </p>
                             <group col="2">
-                                <field name="dst_partner_id" domain="[('id', 'in', partner_ids or False)]" attrs="{'required': [('state', '=', 'selection')]}"/>
+                                <field name="dst_partner_id"
+                                    domain="[('id', 'in', partner_ids or False)]"
+                                    attrs="{'required': [('state', '=', 'selection')]}"
+                                    context="{'partner_show_db_id': True}"
+                                    options="{'always_reload': True}"/>
                             </group>
                             <field name="partner_ids" nolabel="1">
                                 <tree string="Partners">
@@ -73,39 +76,38 @@
                     <footer>
                         <button name='action_merge' string='Merge Contacts'
                             class='oe_highlight'
-                            type='object'
+                            type='object' data-hotkey="q"
                             attrs="{'invisible': [('state', 'in', ('option', 'finished' ))]}" />
                         <button name='action_skip' string='Skip these contacts'
                             type='object'
                             attrs="{'invisible': [('state', '!=', 'selection')]}" />
                         <button name='action_start_manual_process'
-                            string='Merge with Manual Check'
+                            string='Merge with Manual Check' data-hotkey="x"
                             type='object'  class='oe_highlight'
                             attrs="{'invisible': [('state', '!=', 'option')]}" />
                         <button name='action_start_automatic_process'
-                            string='Merge Automatically'
+                            string='Merge Automatically' data-hotkey="l"
                             type='object' class='oe_highlight'
                             confirm="Are you sure to execute the automatic merge of your contacts ?"
                             attrs="{'invisible': [('state', '!=', 'option')]}" />
                         <button name='action_update_all_process'
                             string='Merge Automatically all process'
-                            type='object'
+                            type='object' data-hotkey="y"
                             confirm="Are you sure to execute the list of automatic merges of your contacts ?"
                             attrs="{'invisible': [('state', '!=', 'option')]}" />
-                        <button special="cancel" string="Cancel" type="object" class="btn btn-default oe_inline" attrs="{'invisible': [('state', '=', 'finished')]}"/>
-                        <button special="cancel" string="Close" type="object" class="btn btn-default oe_inline" attrs="{'invisible': [('state', '!=', 'finished')]}"/>
+                        <button special="cancel" data-hotkey="z" string="Cancel" type="object" class="btn btn-secondary oe_inline" attrs="{'invisible': [('state', '=', 'finished')]}"/>
+                        <button special="cancel" data-hotkey="z" string="Close" type="object" class="btn btn-secondary oe_inline" attrs="{'invisible': [('state', '!=', 'finished')]}"/>
                     </footer>
                 </form>
             </field>
         </record>
 
-        <act_window
-            id="action_partner_merge"
-            res_model="base.partner.merge.automatic.wizard"
-            src_model="res.partner"
-            target="new"
-            multi="True"
-            key2="client_action_multi"
-            view_mode="form"
-            name="Merge Selected Contacts"/>
+        <record id="action_partner_merge" model="ir.actions.act_window">
+            <field name="name">Merge</field>
+            <field name="res_model">base.partner.merge.automatic.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="base.model_res_partner"/>
+            <field name="binding_view_types">list</field>
+        </record>
 </odoo>

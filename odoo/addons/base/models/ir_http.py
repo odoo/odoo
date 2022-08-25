@@ -1,28 +1,27 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 #----------------------------------------------------------
 # ir_http modular http routing
 #----------------------------------------------------------
 import base64
-import datetime
 import hashlib
 import logging
 import mimetypes
 import os
 import re
 import sys
+import traceback
 
 import werkzeug
 import werkzeug.exceptions
 import werkzeug.routing
-import werkzeug.urls
 import werkzeug.utils
 
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
-from odoo.exceptions import AccessDenied, AccessError
-from odoo.http import request, STATIC_CACHE, content_disposition
-from odoo.tools import pycompat, consteq
-from odoo.tools.mimetypes import guess_mimetype
+from odoo.exceptions import AccessDenied, AccessError, MissingError
+from odoo.http import request, Response, ROUTING_KEYS, Stream
+from odoo.service import security
+from odoo.tools import consteq, submap
 from odoo.modules.module import get_resource_path, get_module_path
 
 _logger = logging.getLogger(__name__)
@@ -73,312 +72,129 @@ class SignedIntConverter(werkzeug.routing.NumberConverter):
 
 class IrHttp(models.AbstractModel):
     _name = 'ir.http'
-    _description = "HTTP routing"
+    _description = "HTTP Routing"
+
+    #------------------------------------------------------
+    # Routing map
+    #------------------------------------------------------
 
     @classmethod
     def _get_converters(cls):
         return {'model': ModelConverter, 'models': ModelsConverter, 'int': SignedIntConverter}
 
     @classmethod
-    def _find_handler(cls, return_rule=False):
-        return cls.routing_map().bind_to_environ(request.httprequest.environ).match(return_rule=return_rule)
+    def _match(cls, path_info, key=None):
+        rule, args = cls.routing_map().bind_to_environ(request.httprequest.environ).match(path_info=path_info, return_rule=True)
+        return rule, args
 
     @classmethod
     def _auth_method_user(cls):
-        request.uid = request.session.uid
-        if not request.uid:
+        if request.env.uid is None:
             raise http.SessionExpiredException("Session expired")
 
     @classmethod
     def _auth_method_none(cls):
-        request.uid = None
+        request.env = api.Environment(request.env.cr, None, request.env.context)
 
     @classmethod
     def _auth_method_public(cls):
-        if not request.session.uid:
-            request.uid = request.env.ref('base.public_user').id
-        else:
-            request.uid = request.session.uid
+        if request.env.uid is None:
+            public_user = request.env.ref('base.public_user')
+            request.update_env(user=public_user.id)
 
     @classmethod
-    def _authenticate(cls, auth_method='user'):
+    def _authenticate(cls, endpoint):
+        auth = 'none' if http.is_cors_preflight(request, endpoint) else endpoint.routing['auth']
+
         try:
-            if request.session.uid:
-                try:
-                    request.session.check_security()
-                    # what if error in security.check()
-                    #   -> res_users.check()
-                    #   -> res_users.check_credentials()
-                except (AccessDenied, http.SessionExpiredException):
-                    # All other exceptions mean undetermined status (e.g. connection pool full),
-                    # let them bubble up
+            if request.session.uid is not None:
+                if not security.check_session(request.session, request.env):
                     request.session.logout(keep_db=True)
-            if request.uid is None:
-                getattr(cls, "_auth_method_%s" % auth_method)()
+                    request.env = api.Environment(request.env.cr, None, request.session.context)
+            getattr(cls, f'_auth_method_{auth}')()
         except (AccessDenied, http.SessionExpiredException, werkzeug.exceptions.HTTPException):
             raise
         except Exception:
             _logger.info("Exception during request Authentication.", exc_info=True)
             raise AccessDenied()
-        return auth_method
 
     @classmethod
-    def _serve_attachment(cls):
-        env = api.Environment(request.cr, SUPERUSER_ID, request.context)
-        domain = [('type', '=', 'binary'), ('url', '=', request.httprequest.path)]
-        fields = ['__last_update', 'datas', 'name', 'mimetype', 'checksum']
-        attach = env['ir.attachment'].search_read(domain, fields)
-        if attach:
-            wdate = attach[0]['__last_update']
-            datas = attach[0]['datas'] or b''
-            name = attach[0]['name']
-            checksum = attach[0]['checksum'] or hashlib.sha1(datas).hexdigest()
-
-            if (not datas and name != request.httprequest.path and
-                    name.startswith(('http://', 'https://', '/'))):
-                return werkzeug.utils.redirect(name, 301)
-
-            response = werkzeug.wrappers.Response()
-            server_format = tools.DEFAULT_SERVER_DATETIME_FORMAT
-            try:
-                response.last_modified = datetime.datetime.strptime(wdate, server_format + '.%f')
-            except ValueError:
-                # just in case we have a timestamp without microseconds
-                response.last_modified = datetime.datetime.strptime(wdate, server_format)
-
-            response.set_etag(checksum)
-            response.make_conditional(request.httprequest)
-
-            if response.status_code == 304:
-                return response
-
-            response.mimetype = attach[0]['mimetype'] or 'application/octet-stream'
-            response.data = base64.b64decode(datas)
-            return response
+    def _geoip_resolve(cls):
+        return request._geoip_resolve()
 
     @classmethod
-    def _serve_fallback(cls, exception):
-        # serve attachment
-        attach = cls._serve_attachment()
-        if attach:
-            return attach
-        return False
+    def _pre_dispatch(cls, rule, args):
+        request.dispatcher.pre_dispatch(rule, args)
+
+        # Replace uid placeholder by the current request.env.uid
+        for key, val in list(args.items()):
+            if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
+                args[key] = val.with_user(request.env.uid)
 
     @classmethod
-    def _handle_exception(cls, exception):
-        # If handle_exception returns something different than None, it will be used as a response
-
-        # This is done first as the attachment path may
-        # not match any HTTP controller
-        if isinstance(exception, werkzeug.exceptions.HTTPException) and exception.code == 404:
-            serve = cls._serve_fallback(exception)
-            if serve:
-                return serve
-
-        # Don't handle exception but use werkeug debugger if server in --dev mode
-        if 'werkzeug' in tools.config['dev_mode']:
-            raise
-        try:
-            return request._handle_exception(exception)
-        except AccessDenied:
-            return werkzeug.exceptions.Forbidden()
-
-    @classmethod
-    def _dispatch(cls):
-        # locate the controller method
-        try:
-            rule, arguments = cls._find_handler(return_rule=True)
-            func = rule.endpoint
-        except werkzeug.exceptions.NotFound as e:
-            return cls._handle_exception(e)
-
-        # check authentication level
-        try:
-            auth_method = cls._authenticate(func.routing["auth"])
-        except Exception as e:
-            return cls._handle_exception(e)
-
-        processing = cls._postprocess_args(arguments, rule)
-        if processing:
-            return processing
-
-        # set and execute handler
-        try:
-            request.set_handler(func, arguments, auth_method)
-            result = request.dispatch()
-            if isinstance(result, Exception):
-                raise result
-        except Exception as e:
-            return cls._handle_exception(e)
-
+    def _dispatch(cls, endpoint):
+        result = endpoint(**request.params)
+        if isinstance(result, Response) and result.is_qweb:
+            result.flatten()
         return result
 
     @classmethod
-    def _postprocess_args(cls, arguments, rule):
-        """ post process arg to set uid on browse records """
-        for key, val in list(arguments.items()):
-            # Replace uid placeholder by the current request.uid
-            if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
-                arguments[key] = val.sudo(request.uid)
-                if not val.exists():
-                    return cls._handle_exception(werkzeug.exceptions.NotFound())
+    def _post_dispatch(cls, response):
+        request.dispatcher.post_dispatch(response)
 
     @classmethod
-    def routing_map(cls):
+    def _handle_error(cls, exception):
+        return request.dispatcher.handle_error(exception)
+
+    @classmethod
+    def _serve_fallback(cls):
+        model = request.env['ir.attachment']
+        attach = model.sudo()._get_serve_attachment(request.httprequest.path)
+        if attach:
+            return Stream.from_attachment(attach).get_response()
+
+    @classmethod
+    def _redirect(cls, location, code=303):
+        return werkzeug.utils.redirect(location, code=code, Response=Response)
+
+    @classmethod
+    def _generate_routing_rules(cls, modules, converters):
+        return http._generate_routing_rules(modules, False, converters)
+
+    @classmethod
+    def routing_map(cls, key=None):
+
         if not hasattr(cls, '_routing_map'):
-            _logger.info("Generating routing map")
-            installed = request.registry._init_modules - {'web'}
+            cls._routing_map = {}
+            cls._rewrite_len = {}
+
+        if key not in cls._routing_map:
+            _logger.info("Generating routing map for key %s" % str(key))
+            installed = request.env.registry._init_modules.union(odoo.conf.server_wide_modules)
             if tools.config['test_enable'] and odoo.modules.module.current_test:
                 installed.add(odoo.modules.module.current_test)
-            mods = [''] + odoo.conf.server_wide_modules + sorted(installed)
+            mods = sorted(installed)
             # Note : when routing map is generated, we put it on the class `cls`
             # to make it available for all instance. Since `env` create an new instance
             # of the model, each instance will regenared its own routing map and thus
             # regenerate its EndPoint. The routing map should be static.
-            cls._routing_map = http.routing_map(mods, False, converters=cls._get_converters())
-        return cls._routing_map
+            routing_map = werkzeug.routing.Map(strict_slashes=False, converters=cls._get_converters())
+            for url, endpoint in cls._generate_routing_rules(mods, converters=cls._get_converters()):
+                routing = submap(endpoint.routing, ROUTING_KEYS)
+                if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
+                    routing['methods'] = routing['methods'] + ['OPTIONS']
+                rule = werkzeug.routing.Rule(url, endpoint=endpoint, **routing)
+                rule.merge_slashes = False
+                routing_map.add(rule)
+            cls._routing_map[key] = routing_map
+        return cls._routing_map[key]
 
     @classmethod
     def _clear_routing_map(cls):
         if hasattr(cls, '_routing_map'):
-            del cls._routing_map
+            cls._routing_map = {}
+            _logger.debug("Clear routing map")
 
-    @classmethod
-    def content_disposition(cls, filename):
-        return content_disposition(filename)
-
-    @classmethod
-    def binary_content(cls, xmlid=None, model='ir.attachment', id=None, field='datas',
-                       unique=False, filename=None, filename_field='datas_fname', download=False,
-                       mimetype=None, default_mimetype='application/octet-stream',
-                       access_token=None, env=None):
-        """ Get file, attachment or downloadable content
-
-        If the ``xmlid`` and ``id`` parameter is omitted, fetches the default value for the
-        binary field (via ``default_get``), otherwise fetches the field for
-        that precise record.
-
-        :param str xmlid: xmlid of the record
-        :param str model: name of the model to fetch the binary from
-        :param int id: id of the record from which to fetch the binary
-        :param str field: binary field
-        :param bool unique: add a max-age for the cache control
-        :param str filename: choose a filename
-        :param str filename_field: if not create an filename with model-id-field
-        :param bool download: apply headers to download the file
-        :param str mimetype: mintype of the field (for headers)
-        :param str default_mimetype: default mintype if no mintype found
-        :param str access_token: optional token for unauthenticated access
-                                 only available  for ir.attachment
-        :param Environment env: by default use request.env
-        :returns: (status, headers, content)
-        """
-        env = env or request.env
-        # get object and content
-        obj = None
-        if xmlid:
-            obj = env.ref(xmlid, False)
-        elif id and model == 'ir.attachment' and access_token:
-            obj = env[model].sudo().browse(int(id))
-            if not consteq(obj.access_token, access_token):
-                return (403, [], None)
-        elif id and model in env.registry:
-            obj = env[model].browse(int(id))
-
-        # obj exists
-        if not obj or not obj.exists() or field not in obj:
-            return (404, [], None)
-
-        # check read access
-        try:
-            last_update = obj['__last_update']
-        except AccessError:
-            return (403, [], None)
-
-        status, headers, content = None, [], None
-
-        # attachment by url check
-        module_resource_path = None
-        if model == 'ir.attachment' and obj.type == 'url' and obj.url:
-            url_match = re.match("^/(\w+)/(.+)$", obj.url)
-            if url_match:
-                module = url_match.group(1)
-                module_path = get_module_path(module)
-                module_resource_path = get_resource_path(module, url_match.group(2))
-                if module_path and module_resource_path:
-                    module_path = os.path.join(os.path.normpath(module_path), '')  # join ensures the path ends with '/'
-                    module_resource_path = os.path.normpath(module_resource_path)
-                    if module_resource_path.startswith(module_path):
-                        with open(module_resource_path, 'rb') as f:
-                            content = base64.b64encode(f.read())
-                        last_update = pycompat.text_type(os.path.getmtime(module_resource_path))
-
-            if not module_resource_path:
-                module_resource_path = obj.url
-
-            if not content:
-                status = 301
-                content = module_resource_path
-        else:
-            content = obj[field] or ''
-
-        # filename
-        if not filename:
-            if filename_field in obj:
-                filename = obj[filename_field]
-            elif module_resource_path:
-                filename = os.path.basename(module_resource_path)
-            else:
-                filename = "%s-%s-%s" % (obj._name, obj.id, field)
-
-        # mimetype
-        mimetype = 'mimetype' in obj and obj.mimetype or False
-        if not mimetype:
-            if filename:
-                mimetype = mimetypes.guess_type(filename)[0]
-            if not mimetype and getattr(env[model]._fields[field], 'attachment', False):
-                # for binary fields, fetch the ir_attachement for mimetype check
-                attach_mimetype = env['ir.attachment'].search_read(domain=[('res_model', '=', model), ('res_id', '=', id), ('res_field', '=', field)], fields=['mimetype'], limit=1)
-                mimetype = attach_mimetype and attach_mimetype[0]['mimetype']
-            if not mimetype:
-                mimetype = guess_mimetype(base64.b64decode(content), default=default_mimetype)
-
-        headers += [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
-
-        # cache
-        etag = bool(request) and request.httprequest.headers.get('If-None-Match')
-        retag = '"%s"' % hashlib.md5(pycompat.to_text(content).encode('utf-8')).hexdigest()
-        status = status or (304 if etag == retag else 200)
-        headers.append(('ETag', retag))
-        headers.append(('Cache-Control', 'max-age=%s' % (STATIC_CACHE if unique else 0)))
-
-        # content-disposition default name
-        if download:
-            headers.append(('Content-Disposition', cls.content_disposition(filename)))
-        return (status, headers, content)
-
-
-def convert_exception_to(to_type, with_message=False):
-    """ Should only be called from an exception handler. Fetches the current
-    exception data from sys.exc_info() and creates a new exception of type
-    ``to_type`` with the original traceback.
-
-    If ``with_message`` is ``True``, sets the new exception's message to be
-    the stringification of the original exception. If ``False``, does not
-    set the new exception's message. Otherwise, uses ``with_message`` as the
-    new exception's message.
-
-    :type with_message: str|bool
-    """
-    etype, original, tb = sys.exc_info()
-    try:
-        if with_message is False:
-            message = None
-        elif with_message is True:
-            message = str(original)
-        else:
-            message = str(with_message)
-
-        raise pycompat.reraise(to_type, to_type(message), tb)
-    except to_type as e:
-        return e
+    @api.autovacuum
+    def _gc_sessions(self):
+        http.root.session_store.vacuum()

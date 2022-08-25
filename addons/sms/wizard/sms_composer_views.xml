@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sms_composer_view_form" model="ir.ui.view">
+        <field name="name">sms.composer.view.form</field>
+        <field name="model">sms.composer</field>
+        <field name="arch" type="xml">
+            <form string="Send an SMS">
+                <!-- Single mode information (invalid number) -->
+                <div colspan="2" class="alert alert-danger text-center mb-0" role="alert"
+                    attrs="{'invisible': ['|', '|', ('res_model_description', '=', False), ('comment_single_recipient', '=', False), ('recipient_single_valid', '=', True)]}">
+                    <p class="my-0">
+                        <strong>Invalid number:</strong>
+                        <span> make sure to set a country on the </span>
+                        <span><field name="res_model_description"/></span>
+                        <span> or to specify the country code.</span>
+                    </p>
+                </div>
+
+                <!-- Mass mode information (res_ids versus active domain) -->
+                <div colspan="2" class="alert alert-info text-center mb-0" role="alert"
+                        attrs="{'invisible': ['|', ('comment_single_recipient', '=', True), ('recipient_invalid_count', '=', 0)]}">
+                    <p class="my-0">
+                        <field class="oe_inline fw-bold" name="recipient_invalid_count"/> out of
+                        <field class="oe_inline fw-bold" name="res_ids_count"/> recipients have an invalid phone number and will not receive this text message.
+                    </p>
+                </div>
+                <sheet>
+                    <group>
+                        <field name="composition_mode" invisible="1"/>
+                        <field name="comment_single_recipient" invisible="1"/>
+                        <field name="res_id" invisible="1"/>
+                        <field name="res_ids" invisible="1"/>
+                        <field name="res_model" invisible="1"/>
+                        <field name="mass_force_send" invisible="1"/>
+                        <field name="recipient_single_valid" invisible="1"/>
+                        <field name="recipient_single_number" invisible="1"/>
+                        <field name="number_field_name" invisible="1"/>
+                        <field name="numbers" invisible="1"/>
+                        <field name="sanitized_numbers" invisible="1"/>
+
+                        <label for="recipient_single_description" string="Recipient"
+                            class="fw-bold"
+                            attrs="{'invisible': [('comment_single_recipient', '=', False)]}"/>
+                        <div attrs="{'invisible': [('comment_single_recipient', '=', False)]}">
+                            <field name="recipient_single_description" class="oe_inline"/>
+                            <field name="recipient_single_number_itf" class="oe_inline" nolabel="1" options="{'onchange_on_keydown': True}" placeholder="e.g. +1 415 555 0100"/>
+                        </div>
+                        <field name="body" widget="sms_widget" attrs="{'invisible': ['|', ('comment_single_recipient', '=', False), ('recipient_single_valid', '=', True)], 'required': ['|', ('comment_single_recipient', '=', False), ('recipient_single_valid', '=', True)]}"/>
+                        <field name="body" widget="sms_widget" attrs="{'invisible': [('comment_single_recipient', '=', True), ('recipient_single_valid', '=', False)], 'required': [('comment_single_recipient', '=', True), ('recipient_single_valid', '=', False)]}" default_focus="1"/>
+                        <field name="mass_keep_log" invisible="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <!-- attrs doesn't work for 'disabled'-->
+                    <button string="Send SMS" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
+                            attrs="{'invisible': ['|',('composition_mode', 'not in', ('comment', 'numbers')),('recipient_single_valid', '=', False)]}"/>
+                    <button string="Send SMS" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
+                            attrs="{'invisible': ['|',('composition_mode', 'not in', ('comment', 'numbers')),('recipient_single_valid', '=', True)]}" disabled='1'/>
+                    <button string="Put in queue" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
+                        attrs="{'invisible': [('composition_mode', '!=', 'mass')]}"/>
+                    <button string="Send Now" type="object" name="action_send_sms_mass_now" data-hotkey="w"
+                        attrs="{'invisible': [('composition_mode', '!=', 'mass')]}"/>
+                    <button string="Close" class="btn btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sms_composer_action_form" model="ir.actions.act_window">
+        <field name="name">Send SMS Text Message</field>
+        <field name="res_model">sms.composer</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

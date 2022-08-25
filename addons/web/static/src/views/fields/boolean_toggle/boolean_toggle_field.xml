@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.BooleanToggleField" owl="1">
+        <CheckBox
+            className="'o_field_boolean o_boolean_toggle form-switch'"
+            id="props.id"
+            value="props.value or false"
+            disabled="isReadonly"
+            onChange="props.update"
+        >
+            &#8203; <!-- Zero width space needed to set height -->
+        </CheckBox>
+    </t>
+
+</templates>

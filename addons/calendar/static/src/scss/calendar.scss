@@ -1,0 +1,94 @@
+.o_calendar_invitation {
+    @extend .o_status;
+
+    &.accepted {
+        background-color: map-get($theme-colors, 'success');
+    }
+
+    &.tentative {
+        background-color: $o-main-color-muted;
+    }
+
+    &.declined {
+        background-color: map-get($theme-colors, 'danger');
+    }
+}
+
+.o_add_favorite_calendar {
+    margin-top: 10px;
+    position: relative;
+}
+
+.o_calendar_invitation_page {
+    flex: 0 0 auto;
+    width: 50%;
+    margin: 30px auto 0;
+    @include o-webclient-padding($top: 10px, $bottom: 10px);
+    background-color: $o-view-background-color;
+
+    .o_logo {
+        width: 15%;
+    }
+    .o_event_title {
+        margin-left: 20%;
+
+        h2 {
+            margin-top: 0;
+        }
+    }
+    .o_event_table {
+        clear: both;
+        margin: 15px 0 0;
+
+        th {
+            padding-right: 15px;
+        }
+        ul {
+            padding-left: 0;
+        }
+    }
+
+    .o_accepted {
+        @extend .text-success;
+    }
+    .o_declined {
+        @extend .text-danger;
+    }
+}
+.o_meeting_filter {
+    @include o-text-overflow();
+    min-width: 0;
+    color: grey;
+    vertical-align: top;
+    &.o_meeting_bold {
+        font-weight: bold;
+    }
+}
+
+.o_cw_body .o_field_copy {
+    max-width: calc(100% - 6rem);
+    width: unset !important;
+}
+
+.o_cw_body .o_clipboard_button {
+    padding-top: 0px !important;
+}
+
+.o_calendar_attendees {
+    max-width:80% !important;
+}
+
+.o_attendee_border {
+    border-width: 2px;
+    border-style: solid;
+}
+
+.o_attendee_border_accepted {
+    border-color: map-get($theme-colors, 'success');
+}
+.o_attendee_border_declined {
+    border-color: map-get($theme-colors, 'danger');
+}
+.o_attendee_border_tentative {
+    border-color: map-get($theme-colors, 'light');
+}

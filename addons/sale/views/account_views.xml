@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="account_invoice_groupby_inherit" model="ir.ui.view">
+        <field name="name">account.move.groupby</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <field name="invoice_user_id" position="after">
+                <field name="team_id"/>
+            </field>
+            <xpath expr="//group/filter[@name='status']" position="after">
+                <filter string="Sales Team" name="sales_channel" domain="[]" context="{'group_by':'team_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_invoice_view_tree" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit.sale</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="invoice_user_id" position="after">
+                <field name="team_id" invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund','out_receipt')" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_invoice_form">
+        <field name="name">Account Invoice</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
+                <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s"/>
+            </xpath>
+            <xpath expr="//group[@id='other_tab_group']" position="inside">
+                <group string="Marketing"
+                        name="utm_link"
+                        groups="base.group_no_one"
+                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}">
+                    <field name="campaign_id"/>
+                    <field name="medium_id"/>
+                    <field name="source_id"/>
+                </group>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button"
+                        name="action_view_source_sale_orders"
+                        type="object"
+                        icon="fa-pencil-square-o"
+                        attrs="{'invisible': ['|', ('sale_order_count', '=', 0), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
+                    <field string="Sale Orders" name="sale_order_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_invoice_salesteams" model="ir.actions.act_window">
+        <field name="name">Invoices</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_id" ref="account.view_move_tree"/>
+        <field name="domain">[
+            ('state', '=', 'posted'),
+            ('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
+        <field name="context">{
+                'search_default_team_id': [active_id],
+                'default_team_id': active_id,
+                'default_move_type':'out_invoice',
+                'move_type':'out_invoice',
+                'journal_type': 'sale',
+            }
+        </field>
+        <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a customer invoice
+            </p><p>
+                Create invoices, register payments and keep track of the discussions with your customers.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_invoice_salesteams_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="sale.action_invoice_salesteams"/>
+    </record>
+
+    <record id="action_invoice_salesteams_view_form" model="ir.actions.act_window.view">
+        <field name="sequence">2</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account.view_move_form"/>
+        <field name="act_window_id" ref="sale.action_invoice_salesteams"/>
+    </record>
+
+</odoo>

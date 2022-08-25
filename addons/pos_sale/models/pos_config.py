@@ -8,6 +8,8 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     crm_team_id = fields.Many2one(
-        'crm.team', string="Sales Channel", domain=[('team_type', '=', 'pos')],
-        default=lambda self: self.env['crm.team'].search([('team_type', '=', 'pos')], limit=1).id,
-        help="This Point of sale's sales will be related to this Sales Channel.")
+        'crm.team', string="Sales Team", ondelete="set null",
+        help="This Point of sale's sales will be related to this Sales Team.")
+    down_payment_product_id = fields.Many2one('product.product',
+        string="Down Payment Product",
+        help="This product will be used as down payment on a sale order.")

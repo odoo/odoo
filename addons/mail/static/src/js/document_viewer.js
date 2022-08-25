@@ -1,14 +1,21 @@
-odoo.define('mail.DocumentViewer', function (require) {
-"use strict";
+/** @odoo-module **/
 
-var core = require('web.core');
-var Widget = require('web.Widget');
+import core from 'web.core';
+import Widget from 'web.Widget';
+import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
 var QWeb = core.qweb;
 
 var SCROLL_ZOOM_STEP = 0.1;
 var ZOOM_STEP = 0.5;
 
+/**
+ * This widget is deprecated, and should instead use AttachmentViewer component.
+ * @see `mail/static/src/components/attachment_viewer/attachment_viewer.js`
+ * TODO: remove this widget when it's not longer used
+ *
+ * @deprecated
+ */
 var DocumentViewer = Widget.extend({
     template: "DocumentViewer",
     events: {
@@ -20,11 +27,13 @@ var DocumentViewer = Widget.extend({
         'click .o_rotate': '_onRotate',
         'click .o_zoom_in': '_onZoomIn',
         'click .o_zoom_out': '_onZoomOut',
+        'click .o_zoom_reset': '_onZoomReset',
         'click .o_close_btn, .o_viewer_img_wrapper': '_onClose',
         'click .o_print_btn': '_onPrint',
         'DOMMouseScroll .o_viewer_content': '_onScroll',    // Firefox
         'mousewheel .o_viewer_content': '_onScroll',        // Chrome, Safari, IE
         'keydown': '_onKeydown',
+        'keyup': '_onKeyUp',
         'mousedown .o_viewer_img': '_onStartDrag',
         'mousemove .o_viewer_content': '_onDrag',
         'mouseup .o_viewer_content': '_onEndDrag'
@@ -41,15 +50,39 @@ var DocumentViewer = Widget.extend({
     init: function (parent, attachments, activeAttachmentID) {
         this._super.apply(this, arguments);
         this.attachment = _.filter(attachments, function (attachment) {
-            var match = attachment.mimetype.match("(image|video|application/pdf)");
-
+            var match = attachment.type === 'url' ? attachment.url.match("(youtu|.png|.jpg|.gif)") : attachment.mimetype.match("(image|video|application/pdf|text)");
             if (match) {
-                attachment.type = match[1];
+                attachment.fileType = match[1];
+                if (match[1].match("(.png|.jpg|.gif)")) {
+                    attachment.fileType = 'image';
+                }
+                if (match[1] === 'youtu') {
+                    var youtube_array = attachment.url.split('/');
+                    var youtube_token = youtube_array[youtube_array.length-1];
+                    if (youtube_token.indexOf('watch') !== -1) {
+                        youtube_token = youtube_token.split('v=')[1];
+                        var amp = youtube_token.indexOf('&')
+                        if (amp !== -1){
+                            youtube_token = youtube_token.substring(0, amp);
+                        }
+                    }
+                    attachment.youtube = youtube_token;
+                }
                 return true;
             }
         });
         this.activeAttachment = _.findWhere(attachments, {id: activeAttachmentID});
+        this.modelName = 'ir.attachment';
         this._reset();
+    },
+    /**
+     * Do some actions after the widget is appended to the DOM
+     * @override
+     */
+    setElement: function () {
+        const result = this._super(...arguments);
+        this._hidePdfButtonsIfPresent();
+        return result;
     },
     /**
      * Open a modal displaying the active attachment
@@ -58,14 +91,35 @@ var DocumentViewer = Widget.extend({
     start: function () {
         this.$el.modal('show');
         this.$el.on('hidden.bs.modal', _.bind(this._onDestroy, this));
-        this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('.o_viewer_img').on("load", _.bind(this._onImageLoaded, this));
+        this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
         return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy: function () {
+        if (this.isDestroyed()) {
+            return;
+        }
+        this.$el.modal('hide');
+        this.$el.remove();
+        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
     // Private
     //---------------------------------------------------------------------------
 
+    /**
+     * Hide some buttons in PDF.js
+     * @override
+     */
+    _hidePdfButtonsIfPresent: function () {
+        if (this.activeAttachment.mimetype === 'application/pdf') {
+            hidePDFJSButtons(this.el);
+        }
+    },
     /**
      * @private
      */
@@ -101,7 +155,9 @@ var DocumentViewer = Widget.extend({
         this.$('.o_viewer_content').html(QWeb.render('DocumentViewer.Content', {
             widget: this
         }));
-        this.$('.o_viewer_img').load(_.bind(this._onImageLoaded, this));
+        this.$('.o_viewer_img').on("load", _.bind(this._onImageLoaded, this));
+        this._hidePdfButtonsIfPresent();
+        this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
         this._reset();
     },
     /**
@@ -112,7 +168,7 @@ var DocumentViewer = Widget.extend({
      * @param {float} angle
      */
     _getTransform: function(scale, angle) {
-        return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)'
+        return 'scale3d(' + scale + ', ' + scale + ', 1) rotate(' + angle + 'deg)';
     },
     /**
      * Rotate image clockwise by provided angle
@@ -139,6 +195,7 @@ var DocumentViewer = Widget.extend({
             this.$('.o_viewer_img').css('transform', this._getTransform(scale, this.angle || 0));
             this.scale = scale;
         }
+        this.$('.o_zoom_reset').add('.o_zoom_out').toggleClass('disabled', scale === 1);
     },
 
     //--------------------------------------------------------------------------
@@ -151,18 +208,15 @@ var DocumentViewer = Widget.extend({
      */
     _onClose: function (e) {
         e.preventDefault();
-        this.$el.modal('hide');
+        this.destroy();
     },
     /**
      * When popup close complete destroyed modal even DOM footprint too
+     *
      * @private
      */
     _onDestroy: function () {
-        if (this.isDestroyed()) {
-            return;
-        }
-        this.$el.modal('hide');
-        this.$el.remove();
+        this.destroy();
     },
     /**
      * @private
@@ -170,7 +224,7 @@ var DocumentViewer = Widget.extend({
      */
     _onDownload: function (e) {
         e.preventDefault();
-        window.location = '/web/content/' + this.activeAttachment.id + '?download=true';
+        window.location = '/web/content/' + this.modelName + '/' + this.activeAttachment.id + '/' + 'datas' + '?download=true';
     },
     /**
      * @private
@@ -184,6 +238,7 @@ var DocumentViewer = Widget.extend({
             var top = $image.prop('offsetHeight') * this.scale > $zoomer.height() ? e.clientY - this.dragStartY : 0;
             var left = $image.prop('offsetWidth') * this.scale > $zoomer.width() ? e.clientX - this.dragStartX : 0;
             $zoomer.css("transform", "translate3d("+ left +"px, " + top + "px, 0)");
+            $image.css('cursor', 'move');
         }
     },
     /**
@@ -196,6 +251,7 @@ var DocumentViewer = Widget.extend({
             this.enableDrag = false;
             this.dragstopX = e.clientX - this.dragStartX;
             this.dragstopY = e.clientY - this.dragStartY;
+            this.$('.o_viewer_img').css('cursor', '');
         }
     },
     /**
@@ -229,6 +285,20 @@ var DocumentViewer = Widget.extend({
             case $.ui.keyCode.LEFT:
                 e.preventDefault();
                 this._previous();
+                break;
+        }
+    },
+    /**
+     * Close popup on ESCAPE keyup
+     *
+     * @private
+     * @param {KeyEvent} e
+     */
+    _onKeyUp: function (e) {
+        switch (e.which) {
+            case $.ui.keyCode.ESCAPE:
+                e.preventDefault();
+                this._onClose(e);
                 break;
         }
     },
@@ -331,6 +401,15 @@ var DocumentViewer = Widget.extend({
         var scale = this.scale - ZOOM_STEP;
         this._zoom(scale);
     },
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
+    _onZoomReset: function (e) {
+        e.preventDefault();
+        this.$('.o_viewer_zoomer').css("transform", "");
+        this._zoom(1);
+    },
 });
-return DocumentViewer;
-});
+
+export default DocumentViewer;

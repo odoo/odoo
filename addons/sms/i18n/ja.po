@@ -3,16 +3,16 @@
 # * sms
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
-# Manami Hashi <manami@roomsfor.hk>, 2017
+# Martin Trigaux, 2018
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
+# Manami Hashi <manami@roomsfor.hk>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:35+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +21,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sms
-#: model:ir.ui.view,arch_db:sms.send_sms_view_form
+#. openerp-web
+#: code:addons/sms/static/src/js/sms_widget.js:93
+#, python-format
+msgid "%s chars, fits in %s SMS (%s) "
+msgstr ""
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Cancel"
 msgstr "取消"
 
@@ -31,18 +38,18 @@ msgid "Contact"
 msgstr "連絡先"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_create_uid
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__create_uid
 msgid "Created by"
 msgstr "作成者"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_create_date
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__create_date
 msgid "Created on"
 msgstr "作成日"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api_display_name
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_display_name
+#: model:ir.model.fields,field_description:sms.field_sms_api__display_name
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__display_name
 msgid "Display Name"
 msgstr "表示名"
 
@@ -52,8 +59,8 @@ msgid "Email Thread"
 msgstr "Eメールスレッド"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api_id
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_id
+#: model:ir.model.fields,field_description:sms.field_sms_api__id
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__id
 msgid "ID"
 msgstr "ID"
 
@@ -64,28 +71,28 @@ msgid "Insufficient credit, unable to send SMS message: %s"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_api___last_update
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms___last_update
+#: model:ir.model.fields,field_description:sms.field_sms_api____last_update
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms____last_update
 msgid "Last Modified on"
 msgstr "最終更新日"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_write_uid
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__write_uid
 msgid "Last Updated by"
 msgstr "最終更新者"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_write_date
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__write_date
 msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_message
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__message
 msgid "Message"
 msgstr "メッセージ"
 
 #. module: sms
-#: code:addons/sms/wizard/send_sms.py:48
+#: code:addons/sms/wizard/send_sms.py:82
 #, python-format
 msgid "Missing mobile number for %s."
 msgstr ""
@@ -97,9 +104,21 @@ msgid "No mobile number defined, unable to send SMS message: %s"
 msgstr ""
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_send_sms_recipients
+#: model:ir.model.fields,field_description:sms.field_sms_send_sms__recipients
 msgid "Recipients"
 msgstr "宛先"
+
+#. module: sms
+#: model:ir.model,name:sms.model_sms_api
+msgid "SMS API"
+msgstr ""
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/xml/sms_widget.xml:4
+#, python-format
+msgid "SMS Pricing"
+msgstr ""
 
 #. module: sms
 #: code:addons/sms/models/mail_thread.py:48
@@ -108,27 +127,19 @@ msgid "SMS message sent: %s"
 msgstr ""
 
 #. module: sms
-#: model:ir.ui.view,arch_db:sms.send_sms_view_form
+#: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send"
 msgstr "送信"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.send_sms_action
 #: model:ir.actions.act_window,name:sms.send_sms_form_action
+#: model:ir.model,name:sms.model_sms_send_sms
+#: model_terms:ir.ui.view,arch_db:sms.partner_form_send_sms_form_view
 msgid "Send SMS"
 msgstr "SMS配信"
 
 #. module: sms
-#: model:ir.ui.view,arch_db:sms.send_sms_view_form
+#: model_terms:ir.ui.view,arch_db:sms.send_sms_view_form
 msgid "Send an SMS"
-msgstr ""
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_api
-msgid "sms.api"
-msgstr ""
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_send_sms
-msgid "sms.send_sms"
 msgstr ""

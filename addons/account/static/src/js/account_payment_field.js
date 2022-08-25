@@ -7,11 +7,12 @@ var field_registry = require('web.field_registry');
 var field_utils = require('web.field_utils');
 
 var QWeb = core.qweb;
-
+var _t = core._t;
 
 var ShowPaymentLineWidget = AbstractField.extend({
     events: _.extend({
         'click .outstanding_credit_assign': '_onOutstandingCreditAssign',
+        'click .open_account_move': '_onOpenPaymentOrMove',
     }, AbstractField.prototype.events),
     supportedFieldTypes: ['char'],
 
@@ -36,8 +37,9 @@ var ShowPaymentLineWidget = AbstractField.extend({
      * @override
      */
     _render: function() {
+        this.viewAlreadyOpened = false;
         var self = this;
-        var info = JSON.parse(this.value);
+        var info = this.value;
         if (!info) {
             this.$el.html('');
             return;
@@ -55,31 +57,22 @@ var ShowPaymentLineWidget = AbstractField.extend({
             title: info.title
         }));
         _.each(this.$('.js_payment_info'), function (k, v){
+            var isRTL = _t.database.parameters.direction === "rtl";
             var content = info.content[v];
             var options = {
                 content: function () {
-                    var $content = $(QWeb.render('PaymentPopOver', {
-                        name: content.name,
-                        journal_name: content.journal_name,
-                        date: content.date,
-                        amount: content.amount,
-                        currency: content.currency,
-                        position: content.position,
-                        payment_id: content.payment_id,
-                        move_id: content.move_id,
-                        ref: content.ref,
-                        account_payment_id: content.account_payment_id,
-                        invoice_id: content.invoice_id,
-                    }));
+                    var $content = $(QWeb.render('PaymentPopOver', content));
                     $content.filter('.js_unreconcile_payment').on('click', self._onRemoveMoveReconcile.bind(self));
-                    $content.filter('.js_open_payment').on('click', self._onOpenPayment.bind(self));
+
+                    $content.filter('.js_open_payment').on('click', self._onOpenPaymentOrMove.bind(self));
                     return $content;
                 },
                 html: true,
-                placement: 'left',
+                placement: isRTL ? 'bottom' : 'left',
                 title: 'Payment Information',
                 trigger: 'focus',
                 delay: { "show": 0, "hide": 100 },
+                container: $(k).parent(), // FIXME Ugly, should use the default body container but system & tests to adapt to properly destroy the popover
             };
             $(k).popover(options);
         });
@@ -94,30 +87,17 @@ var ShowPaymentLineWidget = AbstractField.extend({
      * @override
      * @param {MouseEvent} event
      */
-    _onOpenPayment: function (event) {
-        var invoiceId = parseInt($(event.target).attr('invoice-id'));
-        var paymentId = parseInt($(event.target).attr('payment-id'));
+    _onOpenPaymentOrMove: function (event) {
         var moveId = parseInt($(event.target).attr('move-id'));
-        var res_model;
-        var id;
-        if (invoiceId !== undefined && !isNaN(invoiceId)){
-            res_model = "account.invoice";
-            id = invoiceId;
-        } else if (paymentId !== undefined && !isNaN(paymentId)){
-            res_model = "account.payment";
-            id = paymentId;
-        } else if (moveId !== undefined && !isNaN(moveId)){
-            res_model = "account.move";
-            id = moveId;
-        }
-        //Open form view of account.move with id = move_id
-        if (res_model && id) {
-            this.do_action({
-                type: 'ir.actions.act_window',
-                res_model: res_model,
-                res_id: id,
-                views: [[false, 'form']],
-                target: 'current'
+        if (!this.viewAlreadyOpened && moveId !== undefined && !isNaN(moveId)) {
+            this.viewAlreadyOpened = true;
+            var self = this;
+            this._rpc({
+                model: 'account.move',
+                method: 'open_move',
+                args: [moveId],
+            }).then(function (actionData) {
+                return self.do_action(actionData);
             });
         }
     },
@@ -127,12 +107,14 @@ var ShowPaymentLineWidget = AbstractField.extend({
      * @param {MouseEvent} event
      */
     _onOutstandingCreditAssign: function (event) {
+        event.stopPropagation();
+        event.preventDefault();
         var self = this;
         var id = $(event.target).data('id') || false;
         this._rpc({
-                model: 'account.invoice',
-                method: 'assign_outstanding_credit',
-                args: [JSON.parse(this.value).invoice_id, id],
+                model: 'account.move',
+                method: 'js_assign_outstanding_line',
+                args: [this.value.move_id, id],
             }).then(function () {
                 self.trigger_up('reload');
             });
@@ -144,12 +126,13 @@ var ShowPaymentLineWidget = AbstractField.extend({
      */
     _onRemoveMoveReconcile: function (event) {
         var self = this;
-        var paymentId = parseInt($(event.target).attr('payment-id'));
-        if (paymentId !== undefined && !isNaN(paymentId)){
+        var moveId = parseInt($(event.target).attr('move-id'));
+        var partialId = parseInt($(event.target).attr('partial-id'));
+        if (partialId !== undefined && !isNaN(partialId)){
             this._rpc({
-                model: 'account.move.line',
-                method: 'remove_move_reconcile',
-                args: [paymentId, {'invoice_id': this.res_id}]
+                model: 'account.move',
+                method: 'js_remove_outstanding_partial',
+                args: [moveId, partialId],
             }).then(function () {
                 self.trigger_up('reload');
             });
@@ -158,5 +141,9 @@ var ShowPaymentLineWidget = AbstractField.extend({
 });
 
 field_registry.add('payment', ShowPaymentLineWidget);
+
+return {
+    ShowPaymentLineWidget: ShowPaymentLineWidget
+};
 
 });

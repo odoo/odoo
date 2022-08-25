@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AttachmentBox" owl="1">
+        <t t-if="attachmentBoxView">
+            <div class="o_AttachmentBox position-relative" t-attf-class="{{ className }}" t-ref="root">
+                <div class="o_AttachmentBox_title d-flex align-items-center">
+                    <hr class="o_AttachmentBox_dashedLine flex-grow-1"/>
+                    <span class="o_AttachmentBox_titleText p-3 fw-bold">
+                        Files
+                    </span>
+                    <hr class="o_AttachmentBox_dashedLine flex-grow-1"/>
+                </div>
+                <div class="o_AttachmentBox_content d-flex flex-column">
+                    <t t-if="attachmentBoxView.attachmentList">
+                        <AttachmentList
+                            className="'o_attachmentBox_attachmentList'"
+                            record="attachmentBoxView.attachmentList"
+                        />
+                    </t>
+                    <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="attachmentBoxView.onClickAddAttachment" t-att-disabled="!attachmentBoxView.chatter.hasWriteAccess">
+                        <i class="fa fa-plus-square"/>
+                        Attach files
+                    </button>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

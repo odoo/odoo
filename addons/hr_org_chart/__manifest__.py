@@ -14,11 +14,24 @@ This module extend the employee form with a organizational chart.
 (N+1, N+2, direct subordinates)
         """,
     'depends': ['hr'],
+    'auto_install': True,
     'data': [
-        'views/hr_templates.xml',
         'views/hr_views.xml'
     ],
-    'qweb': [
-        'static/src/xml/hr_org_chart.xml',
-    ]
+    'assets': {
+        'web._assets_primary_variables': [
+            'hr_org_chart/static/src/scss/variables.scss',
+        ],
+        'web.assets_backend': [
+            'hr_org_chart/static/src/fields/*.scss',
+            'hr_org_chart/static/src/fields/*.js',
+        ],
+        'web.qunit_suite_tests': [
+            'hr_org_chart/static/tests/**/*',
+        ],
+        'web.assets_qweb': [
+            'hr_org_chart/static/src/fields/*.xml',
+        ],
+    },
+    'license': 'LGPL-3',
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="time_product" model="product.product">
+            <field name="name">Service on Timesheet</field>
+            <field name="type">service</field>
+            <field name="list_price">40</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">delivered_timesheet</field>
+            <field name="image_1920" type="base64" file="sale_timesheet/static/img/product_product_time_product.png"/>
+        </record>
+    </data>
+    <data>
+        <record model="res.groups" id="base.group_user">
+            <field name="implied_ids" eval="[(4, ref('uom.group_uom'))]"/>
+        </record>
+    </data>
+</odoo>

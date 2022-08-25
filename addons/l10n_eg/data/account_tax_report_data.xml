@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report_vat_return" model="account.tax.report">
+        <field name="name">1. VAT Return</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="tax_report_vat_return_sale_base" model="account.tax.report.line">
+        <field name="name">VAT on Sales and all other Outputs (Base)</field>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_vat_return_sale_base_fourteen" model="account.tax.report.line">
+        <field name="name">1. Standard Rated 14% (Base)</field>
+        <field name="tag_name">1. VAT 14% (Base)</field>
+        <field name="code">STD_SALE_B</field>
+        <field name="parent_id" ref="tax_report_vat_return_sale_base"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_vat_return_sale_base_zero" model="account.tax.report.line">
+        <field name="name">2. Zero Rated (Base)</field>
+        <field name="tag_name">2. Zero Rated (Base)</field>
+        <field name="code">ZERO_SALE_B</field>
+        <field name="parent_id" ref="tax_report_vat_return_sale_base"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_vat_return_sale_base_exempt" model="account.tax.report.line">
+        <field name="name">3. Exempt Sales (Base)</field>
+        <field name="tag_name">3. Exempt Sales (Base)</field>
+        <field name="code">EXM_SALE_B</field>
+        <field name="parent_id" ref="tax_report_vat_return_sale_base"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_vat_return_sale_tax" model="account.tax.report.line">
+        <field name="name">VAT on Sales and all other Outputs (Tax)</field>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_vat_return_sale_tax_fourteen" model="account.tax.report.line">
+        <field name="name">1. Standard Rated 14% (Tax)</field>
+        <field name="tag_name">1. VAT 14% (Tax)</field>
+        <field name="code">STD_SALE_T</field>
+        <field name="parent_id" ref="tax_report_vat_return_sale_tax"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_vat_return_sale_tax_zero" model="account.tax.report.line">
+        <field name="name">2. Zero Rated (Tax)</field>
+        <field name="tag_name">2. Zero Rated (Tax)</field>
+        <field name="code">ZERO_SALE_T</field>
+        <field name="parent_id" ref="tax_report_vat_return_sale_tax"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_vat_return_sale_tax_exempt" model="account.tax.report.line">
+        <field name="name">3. Exempt Sales (Tax)</field>
+        <field name="tag_name">3. Exempt Sales (Tax)</field>
+        <field name="code">EXM_SALE_T</field>
+        <field name="parent_id" ref="tax_report_vat_return_sale_tax"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_vat_return_expense_base" model="account.tax.report.line">
+        <field name="name">VAT on Expenses and all other Inputs (Base)</field>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_vat_return_expense_base_fourteen" model="account.tax.report.line">
+        <field name="name">5. Standard Rated 14% Expenses (Base)</field>
+        <field name="tag_name">5. VAT 14% Expenses (Base)</field>
+        <field name="code">STD_PUR_B</field>
+        <field name="parent_id" ref="tax_report_vat_return_expense_base"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_vat_return_expense_base_zero" model="account.tax.report.line">
+        <field name="name">6. Zero Rated (Base)</field>
+        <field name="tag_name">6. Zero Rated (Base)</field>
+        <field name="code">ZERO_PUR_B</field>
+        <field name="parent_id" ref="tax_report_vat_return_expense_base"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_vat_return_expense_base_exempt" model="account.tax.report.line">
+        <field name="name">7. Exempt Expenses (Base)</field>
+        <field name="tag_name">7. Exempt Expenses (Base)</field>
+        <field name="code">EXM_PUR_B</field>
+        <field name="parent_id" ref="tax_report_vat_return_expense_base"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+
+    <record id="tax_report_vat_return_expense_tax" model="account.tax.report.line">
+        <field name="name">VAT on Expenses and all other Inputs (Tax)</field>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_vat_return_expense_tax_fourteen" model="account.tax.report.line">
+        <field name="name">5. Standard Rated 14% Expenses (Tax)</field>
+        <field name="tag_name">5. VAT 14% Expenses (Tax)</field>
+        <field name="code">STD_PUR_T</field>
+        <field name="parent_id" ref="tax_report_vat_return_expense_tax"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_vat_return_expense_tax_zero" model="account.tax.report.line">
+        <field name="name">6. Zero Rated (Tax)</field>
+        <field name="tag_name">6. Zero Rated (Tax)</field>
+        <field name="code">ZERO_PUR_T</field>
+        <field name="parent_id" ref="tax_report_vat_return_expense_tax"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_vat_return_expense_tax_exempt" model="account.tax.report.line">
+        <field name="name">7. Exempt Expenses (Tax)</field>
+        <field name="tag_name">7. Exempt Expenses (Tax)</field>
+        <field name="code">EXM_PUR_T</field>
+        <field name="parent_id" ref="tax_report_vat_return_expense_tax"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+
+    <record id="tax_report_vat_return_net" model="account.tax.report.line">
+        <field name="name">Net VAT Due</field>
+        <field name="formula">None</field>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="5"/>
+    </record>
+
+    <record id="tax_report_vat_return_net_1" model="account.tax.report.line">
+        <field name="name">Total value of due tax for the period</field>
+        <field name="formula">STD_SALE_T + ZERO_SALE_T + EXM_SALE_T</field>
+        <field name="parent_id" ref="tax_report_vat_return_net"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_vat_return_net_2" model="account.tax.report.line">
+        <field name="name">Total value of recoverable tax for the period</field>
+        <field name="formula">STD_PUR_T + ZERO_PUR_T + EXM_PUR_T</field>
+        <field name="parent_id" ref="tax_report_vat_return_net"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_vat_return_net_3" model="account.tax.report.line">
+        <field name="name">Net VAT due (or reclaimed) for the period</field>
+        <field name="formula">STD_SALE_T + ZERO_SALE_T + EXM_SALE_T - (STD_PUR_T + ZERO_PUR_T + EXM_PUR_T)</field>
+        <field name="parent_id" ref="tax_report_vat_return_net"/>
+        <field name="report_id" ref="tax_report_vat_return"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_withholding_tax" model="account.tax.report">
+        <field name="name">2. Withholding Tax</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_sale_base" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Sales (Base)</field>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_sale_base_half" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Sales -0.5% (Base)</field>
+        <field name="tag_name">WH Sales -0.5% (Base)</field>
+        <field name="code">H_SALE_B</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_sale_base"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_sale_base_one" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Sales -1% (Base)</field>
+        <field name="tag_name">WH on Sales -1% (Base)</field>
+        <field name="code">O_SALE_B</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_sale_base"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_sale_base_three" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Sales -3% (Base)</field>
+        <field name="tag_name">WH on Sales -3% (Base)</field>
+        <field name="code">T_SALE_B</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_sale_base"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_sale_base_five" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Sales -5% (Base)</field>
+        <field name="tag_name">WH on Sales -5% (Base)</field>
+        <field name="code">F_SALE_B</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_sale_base"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_sale_tax" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Sales (Tax)</field>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_sale_tax_half" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Sales -0.5% (Tax)</field>
+        <field name="tag_name">WH Sales -0.5% (Tax)</field>
+        <field name="code">H_SALE_T</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_sale_tax"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_sale_tax_one" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Sales -1% (Tax)</field>
+        <field name="tag_name">WH Sales -1% (Tax)</field>
+        <field name="code">O_SALE_T</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_sale_tax"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_sale_tax_three" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Sales -3% (Tax)</field>
+        <field name="tag_name">WH Sales -3% (Tax)</field>
+        <field name="code">T_SALE_T</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_sale_tax"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_sale_tax_five" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Sales -5% (Tax)</field>
+        <field name="tag_name">WH Sales -5% (Tax)</field>
+        <field name="code">F_SALE_T</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_sale_tax"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_purchase_base" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Purchases (Base)</field>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_purchase_base_half" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Purchases -0.5% (Base)</field>
+        <field name="tag_name">WH Purchases -0.5% (Base)</field>
+        <field name="code">H_PUR_B</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_purchase_base"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_purchase_base_one" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Purchases -1% (Base)</field>
+        <field name="tag_name">WH Purchases -1% (Base)</field>
+        <field name="code">O_PUR_B</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_purchase_base"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_purchase_base_three" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Purchases -3% (Base)</field>
+        <field name="tag_name">WH Purchases -3% (Base)</field>
+        <field name="code">T_PUR_B</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_purchase_base"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_purchase_base_five" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Purchases -5% (Base)</field>
+        <field name="tag_name">WH Purchases -5% (Base)</field>
+        <field name="code">F_PUR_B</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_purchase_base"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_purchase_tax" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Purchases (Tax)</field>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_purchase_tax_half" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Purchases -0.5% (Tax)</field>
+        <field name="tag_name">WH Purchases -0.5% (Tax)</field>
+        <field name="code">H_PUR_T</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_purchase_tax"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_purchase_tax_one" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Purchases -1% (Tax)</field>
+        <field name="tag_name">WH Purchases -1% (Tax)</field>
+        <field name="code">O_PUR_T</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_purchase_tax"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_purchase_tax_three" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Purchases -3% (Tax)</field>
+        <field name="tag_name">WH Purchases -3% (Tax)</field>
+        <field name="code">T_PUR_T</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_purchase_tax"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_withholding_tax_purchase_tax_five" model="account.tax.report.line">
+        <field name="name">Withholding Tax on Purchases -5% (Tax)</field>
+        <field name="tag_name">WH Purchases -5% (Tax)</field>
+        <field name="code">F_PUR_T</field>
+        <field name="parent_id" ref="tax_report_withholding_tax_purchase_tax"/>
+        <field name="report_id" ref="tax_report_withholding_tax"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_schedule_tax" model="account.tax.report">
+        <field name="name">3. Schedule Tax</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_base" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales (Base)</field>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_base_half" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 0.5% (Base)</field>
+        <field name="tag_name">SCHD Sales 0.5% (Base)</field>
+        <field name="code">H_SALE_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_base_one" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 1% (Base)</field>
+        <field name="tag_name">SCHD Sales 1% (Base)</field>
+        <field name="code">O_SALE_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_base_five" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 5% (Base)</field>
+        <field name="tag_name">SCHD Sales 5% (Base)</field>
+        <field name="code">F_SALE_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_base_eight" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 8% (Base)</field>
+        <field name="tag_name">SCHD Sales 8% (Base)</field>
+        <field name="code">E_SALE_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_base_ten" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 10% (Base)</field>
+        <field name="tag_name">SCHD Sales 10% (Base)</field>
+        <field name="code">T_SALE_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="5"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_base_fifteen" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 15% (Base)</field>
+        <field name="tag_name">SCHD Sales 15% (Base)</field>
+        <field name="code">FF_SALE_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="6"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_base_thirty" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 30% (Base)</field>
+        <field name="tag_name">SCHD Sales 30% (Base)</field>
+        <field name="code">TY_SALE_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="7"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_tax" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales (Tax)</field>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_tax_half" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 0.5% (Tax)</field>
+        <field name="tag_name">SCHD Sales 0.5% (Tax)</field>
+        <field name="code">H_SALE_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_tax_one" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 1% (Tax)</field>
+        <field name="tag_name">SCHD Sales 1% (Tax)</field>
+        <field name="code">O_SALE_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_tax_five" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 5% (Tax)</field>
+        <field name="tag_name">SCHD Sales 5% (Tax)</field>
+        <field name="code">F_SALE_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_tax_eight" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 8% (Tax)</field>
+        <field name="tag_name">SCHD Sales 8% (Tax)</field>
+        <field name="code">E_SALE_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_tax_ten" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 10% (Tax)</field>
+        <field name="tag_name">SCHD Sales 10% (Tax)</field>
+        <field name="code">T_SALE_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="5"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_tax_fifteen" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 15% (Tax)</field>
+        <field name="tag_name">SCHD Sales 15% (Tax)</field>
+        <field name="code">FF_SALE_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="6"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_sale_tax_thirty" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Sales 30% (Tax)</field>
+        <field name="tag_name">SCHD Sales 30% (Tax)</field>
+        <field name="code">TY_SALE_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_sale_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="7"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_base" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases (Base)</field>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_base_half" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 0.5% (Base)</field>
+        <field name="tag_name">SCHD Purchases 0.5% (Base)</field>
+        <field name="code">H_PUR_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_base_one" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 1% (Base)</field>
+        <field name="tag_name">SCHD Purchases 1% (Base)</field>
+        <field name="code">O_PUR_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_base_five" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 5% (Base)</field>
+        <field name="tag_name">SCHD Purchases 5% (Base)</field>
+        <field name="code">F_PUR_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_base_eight" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 8% (Base)</field>
+        <field name="tag_name">SCHD Purchases 8% (Base)</field>
+        <field name="code">E_PUR_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_base_ten" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 10% (Base)</field>
+        <field name="tag_name">SCHD Purchases 10% (Base)</field>
+        <field name="code">T_PUR_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="5"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_base_fifteen" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 15% (Base)</field>
+        <field name="tag_name">SCHD Purchases 15% (Base)</field>
+        <field name="code">FF_PUR_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="6"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_base_thirty" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 30% (Base)</field>
+        <field name="tag_name">SCHD Purchases 30% (Base)</field>
+        <field name="code">TY_PUR_SB</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_base"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="7"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_tax" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases (Tax)</field>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_tax_half" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 0.5% (Tax)</field>
+        <field name="tag_name">SCHD Purchases 0.5% (Tax)</field>
+        <field name="code">H_PUR_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_tax_one" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 1% (Tax)</field>
+        <field name="tag_name">SCHD Purchases 1% (Tax)</field>
+        <field name="code">O_PUR_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_tax_five" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 5% (Tax)</field>
+        <field name="tag_name">SCHD Purchases 5% (Tax)</field>
+        <field name="code">F_PUR_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_tax_eight" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 8% (Tax)</field>
+        <field name="tag_name">SCHD Purchases 8% (Tax)</field>
+        <field name="code">E_PUR_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_tax_ten" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 10% (Tax)</field>
+        <field name="tag_name">SCHD Purchases 10% (Tax)</field>
+        <field name="code">T_PUR_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="5"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_tax_fifteen" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 15% (Tax)</field>
+        <field name="tag_name">SCHD Purchases 15% (Tax)</field>
+        <field name="code">FF_PUR_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="6"/>
+    </record>
+
+    <record id="tax_report_schedule_tax_schedule_tax_purchase_tax_thirty" model="account.tax.report.line">
+        <field name="name">Schedule Tax on Purchases 30% (Tax)</field>
+        <field name="tag_name">SCHD Purchases 30% (Tax)</field>
+        <field name="code">TY_PUR_ST</field>
+        <field name="parent_id" ref="tax_report_schedule_tax_schedule_tax_purchase_tax"/>
+        <field name="report_id" ref="tax_report_schedule_tax"/>
+        <field name="sequence" eval="7"/>
+    </record>
+
+    <record id="tax_report_other_taxes" model="account.tax.report">
+        <field name="name">4. Other Taxes</field>
+        <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="tax_report_other_taxes_stamp_tax_base" model="account.tax.report.line">
+        <field name="name">Stamp Tax Sales (Base)</field>
+        <field name="report_id" ref="tax_report_other_taxes"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_other_taxes_stamp_tax_base_sales" model="account.tax.report.line">
+        <field name="name">Stamp Tax Sales 20% (Base)</field>
+        <field name="tag_name">Stamp Tax Sales 20% (Base)</field>
+        <field name="code">STMP_TW_SB</field>
+        <field name="parent_id" ref="tax_report_other_taxes_stamp_tax_base"/>
+        <field name="report_id" ref="tax_report_other_taxes"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_other_taxes_stamp_tax_tax" model="account.tax.report.line">
+        <field name="name">Stamp Tax Sales (Tax)</field>
+        <field name="report_id" ref="tax_report_other_taxes"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_other_taxes_stamp_tax_tax_sales" model="account.tax.report.line">
+        <field name="name">Stamp Tax Sales 20% (Tax)</field>
+        <field name="tag_name">Stamp Tax Sales 20% (Tax)</field>
+        <field name="code">STMP_TW_ST</field>
+        <field name="parent_id" ref="tax_report_other_taxes_stamp_tax_tax"/>
+        <field name="report_id" ref="tax_report_other_taxes"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_other_taxes_stamp_purchase_tax_base" model="account.tax.report.line">
+        <field name="name">Stamp Tax Purchases (Base)</field>
+        <field name="report_id" ref="tax_report_other_taxes"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_other_taxes_stamp_purchase_tax_base_purchase" model="account.tax.report.line">
+        <field name="name">Stamp Tax Purchases 20% (Base)</field>
+        <field name="tag_name">Stamp Tax Purchases 20% (Base)</field>
+        <field name="code">STMP_TW_PB</field>
+        <field name="parent_id" ref="tax_report_other_taxes_stamp_purchase_tax_base"/>
+        <field name="report_id" ref="tax_report_other_taxes"/>
+        <field name="sequence" eval="1"/>
+    </record>
+    
+    <record id="tax_report_other_taxes_stamp_purchase_tax_tax" model="account.tax.report.line">
+        <field name="name">Stamp Tax Purchases (Tax)</field>
+        <field name="report_id" ref="tax_report_other_taxes"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_other_taxes_stamp_purchase_tax_tax_purchase" model="account.tax.report.line">
+        <field name="name">Stamp Tax Purchases 20% (Tax)</field>
+        <field name="tag_name">Stamp Tax Purchases 20% (Tax)</field>
+        <field name="code">STMP_TW_PT</field>
+        <field name="parent_id" ref="tax_report_other_taxes_stamp_purchase_tax_tax"/>
+        <field name="report_id" ref="tax_report_other_taxes"/>
+        <field name="sequence" eval="1"/>
+    </record>
+</odoo>

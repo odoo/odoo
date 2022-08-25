@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_company_gr" model="res.partner">
+        <field name="name">GR Company</field>
+        <field name="vat">GR92303501</field>
+        <field name="street">a</field>
+        <field name="city">Κως</field>
+        <field name="country_id" ref="base.gr"/>
+        
+        <field name="zip">85300</field>
+        <field name="phone">+30 691 234 5678</field>
+        <field name="email">info@company.grexample.com</field>
+        <field name="website">www.grexample.com</field>
+    </record>
+
+    <record id="demo_company_gr" model="res.company">
+        <field name="name">GR Company</field>
+        <field name="partner_id" ref="partner_demo_company_gr"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('demo_company_gr')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_gr.demo_company_gr'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[ref('l10n_gr.l10n_gr_chart_template')]"/>
+        <value model="res.company" eval="obj().env.ref('l10n_gr.demo_company_gr')"/>
+    </function>
+</odoo>

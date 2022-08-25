@@ -1,0 +1,321 @@
+@font-face {
+    font-family: "certification-cursive";
+    src: url("/survey/static/src/fonts/AlexBrush-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "certification-serif";
+    src: url("/survey/static/src/fonts/IbarraRealNova-Regular.ttf") format("truetype");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "certification-serif";
+    src: url("/survey/static/src/fonts/IbarraRealNova-Bold.ttf") format("truetype");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "certification-modern";
+    src: url("/survey/static/src/fonts/Trueno-wml2.otf") format("opentype");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "certification-modern";
+    src: url("/survey/static/src/fonts/TruenoBd.otf") format("opentype");
+    font-weight: bold;
+}
+
+#o_survey_certification.certification-wrapper {
+    background-color: #875A7B;
+    position: relative;
+    display: flex;
+    margin-left: -4mm;
+    margin-right: -4mm;
+
+    &.blue {
+        background-color: #263e86;
+    }
+
+    &.gold {
+        background-color: #d7a520;
+    }
+
+    .test-entry {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         background: url(/survey/static/src/img/watermark.png);
+         background-size: 20%;
+         background-position: center;
+         z-index: 4;
+    }
+
+    .certification {
+        position: relative;
+        text-align: center;
+
+        .certification-failed p{
+            margin-top: 30mm;
+        }
+
+        .certification-seal {
+            position: absolute;
+            background-size: 100%;
+        }
+
+        .certification-top {
+            h1 {
+                font-size: 60pt;
+                text-transform: uppercase;
+                line-height: 24pt;
+
+                span {
+                    font-size: 20pt;
+                   }
+            }
+        }
+
+        .certification-content {
+            p {
+                font-size: 16pt;
+                color: #6b6d70;
+
+                .user-name {
+                    font-family: certification-cursive, cursive;
+                    font-size: 50pt;
+                    line-height: 2;
+                    color: #282f33;
+                    border-bottom: 1pt solid #282f33;
+                }
+
+                .certification-name {
+                    font-size: 18pt;
+                    line-height: 1.5;
+                    text-transform: uppercase;
+                    color: #282f33;
+                }
+            }
+        }
+
+        .certification-bottom {
+            position: absolute;
+            bottom: 15mm;
+
+            .certification-date-wrapper {
+                width: 80mm;
+                padding: 10mm;
+                text-align: center;
+
+                .certification-date {
+                    border-bottom: 1pt solid #282f33;
+                }
+            }
+
+            .certification-company {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: 33%;
+                text-align: center;
+
+                img {
+                    max-width: 100%;
+                    max-height: 100%;
+                }
+            }
+        }
+        .certification-number {
+            color: #6b6d70;
+            position: absolute;
+            font-size: 10pt;
+        }
+    }
+
+// Classic Template
+    &.classic {
+
+        &.blue .certification {
+            color: #263e86;
+
+            .certification-top {
+                &:before, &:after {
+                    background-image: url("/survey/static/src/img/classic-ornament-blue.svg");
+                }
+            }
+
+            .certification-content p .certification-name {
+                color: #263e86;
+            }
+        }
+
+        &.gold .certification {
+            color: #d7a520;
+
+            .certification-top {
+                &:before, &:after{
+                    background-image: url("/survey/static/src/img/classic-ornament-gold.svg");
+                }
+            }
+            .certification-content p .certification-name {
+                color: #d7a520;
+            }
+        }
+
+        .certification {
+            background-image: url("/survey/static/src/img/certification_bg_classic.svg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: "certification-serif", serif;
+            width: 295mm;
+            height: 208mm;
+            margin: 1mm;
+            color: #875A7B;
+
+            .certification-top {
+                padding-top: 10mm;
+
+                &:before, &:after {
+                    content: '';
+                    display: block;
+                    width: 108mm;
+                    height: 16mm;
+                    margin: 0 auto;
+                    background-image: url("/survey/static/src/img/classic-ornament-purple.svg");
+                    background-repeat: no-repeat;
+                }
+
+                &:before {
+                    margin-bottom: 10mm;
+                }
+
+                &:after {
+                    -webkit-transform: scaleY(-1);
+                    transform: scaleY(-1);
+                    margin-bottom: 5mm;
+                }
+            }
+            .certification-content {
+                margin-bottom: 10mm;
+
+                p .certification-name {
+                    color: #875A7B;
+                }
+            }
+
+            .certification-bottom {
+                width: 295mm;
+                bottom: 20mm;
+
+                .certification-date-wrapper {
+                    margin-left: 40mm;
+                    font-size: 18pt;
+                    color: #6b6d70;
+
+                    span {
+                        font-size: 18pt;
+                    }
+
+                }
+
+                .certification-seal {
+                    top: 50%;
+                    left: 50%;
+                    -webkit-transform: translate(-50% , -50%);
+                    transform: translate(-50% , -50%);
+                    width: 24mm;
+                    height: 24mm;
+                    background: url(/survey/static/src/img/classic-seal.png) no-repeat;
+                }
+
+                .certification-company {
+                    padding-left: 10mm;
+                    right: 35mm;
+                }
+
+                .certification-number {
+                    bottom: -15mm;
+                    left: 50%;
+                    -webkit-transform: translateX(-50%);
+                    transform: translateX(-50%);
+                }
+            }
+        }
+    }
+
+// Modern Template
+    &.modern {
+        background-image: url("/survey/static/src/img/certification_bg_modern.svg");
+        background-repeat: no-repeat;
+        background-size: cover;
+
+        &.blue .certification .certification-seal {
+            background-image: url("/survey/static/src/img/modern-seal-blue.svg");
+        }
+
+        &.gold .certification .certification-seal {
+            background-image: url("/survey/static/src/img/modern-seal-gold.svg");
+        }
+
+        .certification {
+            font-family: "certification-modern", sans-serif;
+            width: 272mm;
+            height: 185mm;
+            margin: 12.5mm;
+            background-color: #f2f2f2;
+            text-align: center;
+
+            .certification-seal {
+                top: -7mm;
+                right: 20mm;
+                width: 22mm;
+                height: 42mm;
+                background-image: url("/survey/static/src/img/modern-seal-purple.svg");
+                background-repeat: no-repeat;
+            }
+
+            .certification-top {
+                padding-top: 28mm;
+                padding-bottom: 10mm;
+                color: #282f33;
+
+                h1 b {
+                    font-weight: bold;
+                }
+            }
+
+            .certification-bottom {
+                width: 272mm;
+
+                .certification-date-wrapper {
+                    margin-left: 40mm;
+                    text-transform: uppercase;
+
+                    .certification-date {
+                        font-size: 18pt;
+                        color: #282f33;
+                    }
+
+                    span {
+                        font-size: 14pt;
+                        color: #6b6d70;
+                    }
+
+                }
+
+                .certification-company {
+                    right: 30mm;
+                }
+            }
+
+            .certification-number {
+                bottom: -6mm;
+                right:0;
+                text-align: right;
+            }
+        }
+    }
+}

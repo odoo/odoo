@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * fleet
+# 	* fleet
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2017
-# Murat Kaplan <muratk@projetgrup.com>, 2017
-# Ediz Duman <neps1192@gmail.com>, 2017
-# gezgin biri <gezginbiri@hotmail.com>, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
-# Esin Kandemir <esaykandemir@gmail.com>, 2017
-# Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
-# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
+# Abdullah Onur Uğur <aonurugur@outlook.com>, 2019
+# Metin Akın <aknmetin@gmail.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
+# Martin Trigaux, 2019
+# Levent Karakaş <levent@mektup.at>, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Mehmet Demirel <mdemirell@gmail.com>, 2019
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# Buket Şeker <buket_skr@hotmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-09-09 12:19+0000\n"
+"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"Last-Translator: Buket Şeker <buket_skr@hotmail.com>, 2019\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,319 +31,257 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:198
-#, python-format
-msgid "%s %s has been added to the fleet!"
-msgstr "%s %s filoya eklenmiştir!"
-
-#. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:274
-#, python-format
-msgid "%s contract(s) will expire soon and should be renewed and/or closed!"
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
+msgid "<span class=\"o_form_label\">End Date Contract Alert</span>"
 msgstr ""
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
+msgid "<span> days before the end date</span>"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
+msgid "<span>Send an alert </span>"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "<span>g/km</span>"
 msgstr "<span>g/km</span>"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "<span>kW</span>"
 msgstr "<span>kW</span>"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_1
-msgid "A/C Compressor Replacement"
-msgstr "A/C Kompresör Değiştirme"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction
+msgid "Action Needed"
+msgstr "Eylem Gerekiyor"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_2
-msgid "A/C Condenser Replacement"
-msgstr "A/C Yoğuşturucu Değiştirme"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_3
-msgid "A/C Diagnosis"
-msgstr "A/C Diagnostik"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_4
-msgid "A/C Evaporator Replacement"
-msgstr "A/C Evaporatör Değiştirme"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_5
-msgid "A/C Recharge"
-msgstr "A/C Şarj"
-
-#. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_tree
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Activation Cost"
 msgstr "Etkinleştirme Maliyeti"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_active
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_active
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__active
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__active
 msgid "Active"
-msgstr "Aktif"
+msgstr "Etkin"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_ids
+msgid "Activities"
+msgstr "Aktiviteler"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_exception_decoration
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_state
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_state
+msgid "Activity State"
+msgstr "Aktivite Durumu"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.mail_activity_type_action_config_fleet
+#: model:ir.ui.menu,name:fleet.fleet_menu_config_activity_type
+msgid "Activity Types"
+msgstr "Aktivite Türleri"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
+msgid "Add a new tag"
+msgstr "Yeni bir etiket ekle"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Additional Details"
 msgstr "Ek Detaylar"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Additional Properties"
-msgstr "Ek Özellikler"
+#: model:res.groups,name:fleet.fleet_group_manager
+msgid "Administrator"
+msgstr ""
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_6
-msgid "Air Filter Replacement"
-msgstr "Hava Filtresi Değişimi"
-
-#. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "All vehicles"
 msgstr "Tüm araçlar"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_7
-msgid "Alternator Replacement"
-msgstr "Alternatör Değiştirme"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_amount
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_amount
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__cost_amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__cost_amount
 msgid "Amount"
 msgstr "Tutar"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Apply Change"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
-msgstr "Arşivlenmiş"
+msgstr "Arşivlendi"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_9
-msgid "Assistance"
-msgstr "Yardım"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__next_assignation_date
+msgid "Assignation Date"
+msgstr "Atama Tarihi"
 
 #. module: fleet
-#: selection:fleet.vehicle,transmission:0
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_drivers
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_assignation_log_view_list
+msgid "Assignation Logs"
+msgstr "Atama Kayıtları"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_attachment_count
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_attachment_count
+msgid "Attachment Count"
+msgstr "Ek Sayısı"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Attention: renewal overdue"
+msgstr "Dikkat: geciken yenileme"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__automatic
 msgid "Automatic"
 msgstr "Otomatik"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_auto_generated
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_auto_generated
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_auto_generated
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_auto_generated
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__auto_generated
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__auto_generated
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__auto_generated
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__auto_generated
 msgid "Automatically Generated"
 msgstr "Otomatik Olarak Oluşturuldu"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_8
-msgid "Ball Joint Replacement"
-msgstr "Rotil Değiştirme"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Available"
+msgstr "Uygun"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_9
-msgid "Battery Inspection"
-msgstr "Akü Tetkiki"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_10
-msgid "Battery Replacement"
-msgstr "Akü Değiştirme"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_11
-msgid "Brake Caliper Replacement"
-msgstr "Fren Kaliper Değişimi"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_12
-msgid "Brake Inspection"
-msgstr "Fren Muayenesi"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_13
-msgid "Brake Pad(s) Replacement"
-msgstr "Fren Balatası Değişimi"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__brand_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Brand"
+msgstr "Marka"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
 msgid "Brand of the vehicle"
-msgstr ""
+msgstr "Aracın markası"
 
 #. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
-msgid "Break"
-msgstr "Bozulan"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_co2
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2
 msgid "CO2 Emissions"
 msgstr "CO2 Emisyonları"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_co2
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2
 msgid "CO2 emissions of the vehicle"
 msgstr "Araç CO2 emisyonu"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_1
-msgid "Calculation Benefit In Kind"
-msgstr "Tür Olarak Hesaplanma Faydası"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_14
-msgid "Car Wash"
-msgstr "Arac Yıkama"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_car_value
-msgid "Catalog Value (VAT Incl.)"
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
+msgid "Car Manufacturers"
 msgstr ""
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_15
-msgid "Catalytic Converter Replacement"
-msgstr "Katalitik Konvertör Değiştirme"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__car_value
+msgid "Catalog Value (VAT Incl.)"
+msgstr "Katalog Fiyatı (Vergiler Dahil)"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_category
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__category
 msgid "Category"
-msgstr "Kategorisi"
+msgstr "Kategori"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_cost_type
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_type
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_type
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__cost_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__cost_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__cost_type
 msgid "Category of the cost"
 msgstr "Maliyet Kategorisi"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_16
-msgid "Charging System Diagnosis"
-msgstr "Sistem Teşhis Şarj"
+#: model:mail.message.subtype,description:fleet.mt_fleet_driver_updated
+#: model:mail.message.subtype,name:fleet.mt_fleet_driver_updated
+msgid "Changed Driver"
+msgstr "Değişen Sürücü"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_vin_sn
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__vin_sn
 msgid "Chassis Number"
 msgstr "Şase Numarası"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_state
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__state
 msgid "Choose whether the contract is still valid or not"
-msgstr ""
+msgstr "Sözleşmenin hala geçerli olup olmadığını seçin"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_service_type_category
+#: model:ir.model.fields,help:fleet.field_fleet_service_type__category
 msgid ""
 "Choose whether the service refer to contracts, vehicle services or both"
 msgstr ""
+"Hizmetin sözleşmelerle mi, araç hizmetleriyle mi ya da her ikisiyle de mi "
+"ilgili olduğunu seçin"
 
 #. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_tag_action
-msgid "Click to add a new tag."
-msgstr "Yeni bir etiket eklemek için tıklayın."
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
-msgid "Click to create a new contract."
-msgstr "Yeni bir sözleşme oluşturmak için tıklayın."
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
-msgid "Click to create a new cost."
-msgstr "Yeni bir maliyet oluşturmak için tıklayın."
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
-msgid "Click to create a new fuel log."
-msgstr "Yeni bir yakıt günlüğü oluşturmak için tıklayın."
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
-msgid "Click to create a new make."
-msgstr "Yeni bir marka oluşturmak için tıklayın."
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
-msgid "Click to create a new model."
-msgstr "Yeni bir model oluşturmak için tıklayın."
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
-msgid "Click to create a new odometer log."
-msgstr "Yeni bir kilometre günlüğü oluşturmak için tıklayın."
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
-msgid "Click to create a new service entry."
-msgstr "Yeni bir hizmet kaydı oluşturmak için tıklayın."
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_contract_types_action
-msgid "Click to create a new type of contract."
-msgstr ""
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
-msgid "Click to create a new type of service."
-msgstr "Yeni bir hizmet türü oluşturmak için tıklayın."
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_action
-msgid "Click to create a new vehicle."
-msgstr "Yeni bir araç oluşturmak için tıklayın."
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
-msgid "Click to create a vehicle status."
-msgstr "Yeni bir araç durumu oluşturmak için tıklayın."
-
-#. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Close Contract"
-msgstr ""
+msgstr "Sözleşmeyi Kapat"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,state:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__closed
 msgid "Closed"
-msgstr "Kapalı"
+msgstr "Kapanma"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_color
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__color
 msgid "Color"
 msgstr "Renk"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_color
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__color
 msgid "Color Index"
-msgstr "Renk İndeksi"
+msgstr "Renk"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_color
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__color
 msgid "Color of the vehicle"
 msgstr "Araç rengi"
 
 #. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
-msgid "Compact"
-msgstr "Kompak"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__company_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__company_id
+msgid "Company"
+msgstr "Şirket"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_company_id
-msgid "Company"
-msgstr "Firma"
+#: model:ir.model,name:fleet.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigürasyon Ayarları"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.fleet_configuration
@@ -349,32 +289,48 @@ msgid "Configuration"
 msgstr "Yapılandırma"
 
 #. module: fleet
-#: selection:fleet.service.type,category:0
-#: selection:fleet.vehicle.cost,cost_type:0
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_contract_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_contract_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_contract_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_contract_id
+#: model:ir.model,name:fleet.model_res_partner
+msgid "Contact"
+msgstr "Kontak"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__contract_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__contract_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__contract_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__contract_id
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_service_type__category__contract
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost__cost_type__contract
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Contract"
 msgstr "Sözleşme"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_graph
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_graph
 msgid "Contract Costs Per Month"
 msgstr "Aylık Sözleşme Maliyetleri"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_expiration_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_count
+msgid "Contract Count"
+msgstr "Sözleşme Sayısı"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid "Contract Expiration Date"
 msgstr "Sözleşme Bitiş Tarihi"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_ins_ref
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Contract Informations"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__ins_ref
 msgid "Contract Reference"
 msgstr "Sözleşme Referansı"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_start_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__start_date
 msgid "Contract Start Date"
 msgstr "Sözleşme Başalama Tarihi"
 
@@ -385,17 +341,12 @@ msgid "Contract Types"
 msgstr "Sözleşme Türleri"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_contract_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_contract_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_contract_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_contract_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__contract_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__contract_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__contract_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__contract_id
 msgid "Contract attached to this cost"
 msgstr "Sözleşme bu maliyet eklendi"
-
-#. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Contract details"
-msgstr "Sözleşme Detayları"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
@@ -403,60 +354,55 @@ msgid "Contract information on a vehicle"
 msgstr "Bir aracın sözleşme bilgileri"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_tree
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_tree
 msgid "Contract logs"
 msgstr "Sözleşme kayıtları"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+#: model:mail.activity.type,name:fleet.mail_act_fleet_contract_to_renew
+msgid "Contract to Renew"
+msgstr "Yenilenecek Sözleşme"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Contract(s)"
-msgstr ""
+msgstr "Sözleşmeler"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_purchaser_id
-msgid "Contractor"
-msgstr "Sorumlu"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_count
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contracts
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_contracts
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Contracts"
 msgstr "Sözleşmeler"
 
 #. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
-msgid "Convertible"
-msgstr "Değiştirilebilir"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__cost_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__cost_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_tree
 msgid "Cost"
 msgstr "Maliyet"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_description
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_description
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_description
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_description
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__description
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__description
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__description
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__description
 msgid "Cost Description"
-msgstr ""
+msgstr "Maliyet Açıklaması"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_form
 msgid "Cost Details"
 msgstr "Maliyet Detaylerı"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Cost Subtype"
 msgstr "Maliyet Alt Tür"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Cost Type"
 msgstr "Maliyet Türü"
 
@@ -466,24 +412,24 @@ msgid "Cost related to a vehicle"
 msgstr "Bir araç ile ilgili Maliyet"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Cost that is paid only once at the creation of the contract"
 msgstr "Yalnızca sözleşmenin oluşturulmasında ödenen ücret"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_subtype_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_cost_subtype_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_cost_subtype_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_cost_subtype_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__cost_subtype_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_subtype_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__cost_subtype_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__cost_subtype_id
 msgid "Cost type purchased with this cost"
 msgstr "Bu maliyet ile satınalma maliyet türü"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_count
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__cost_count
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting_costs
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Costs"
-msgstr "Costs"
+msgstr "Maliyetler"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_costs_reporting_action
@@ -491,19 +437,27 @@ msgid "Costs Analysis"
 msgstr "Maliyet Analizleri"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_graph
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_graph
 msgid "Costs Per Month"
 msgstr "Aylık Maliyetleri"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_cost_generated
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_generated
 msgid ""
-"Costs paid at regular intervals, depending on the cost frequency.If the cost"
-" frequency is set to unique, the cost will be logged at the start date"
+"Costs paid at regular intervals, depending on the cost frequency. If the "
+"cost frequency is set to unique, the cost will be logged at the start date"
 msgstr ""
+"Maliyet sıklığına bağlı olarak düzenli aralıklarla ödenen maliyetler. "
+"Maliyet sıklığı eşsiz olarak ayarlanırsa, maliyet başlama tarihinde kayıta "
+"alınır"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
+msgid "Create a new contract"
+msgstr "Yeni Bir Sözleşme Oluştur"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid ""
 "Create a new contract automatically with all the same informations except "
 "for the date that will start at the end of current contract"
@@ -512,69 +466,141 @@ msgstr ""
 " olarak yeni bir sözleşme oluşturur"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_create_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_create_uid
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
+msgid "Create a new cost"
+msgstr "Yeni bir maliyet oluştur"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
+msgid "Create a new fuel log"
+msgstr "Yeni bir yakıt kaydı oluşturun"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
+msgid "Create a new manufacturer"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
+msgid "Create a new model"
+msgstr "Yeni bir model oluştur"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
+msgid "Create a new odometer log"
+msgstr "Yeni bir kilometre kaydı oluştur"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
+msgid "Create a new service entry"
+msgstr "Yeni bir servis girişi oluştur"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_contract_types_action
+msgid "Create a new type of contract"
+msgstr "Yeni bir sözleşme türü oluştur"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
+msgid "Create a new type of service"
+msgstr "Yeni bir servis türü oluştur"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
+msgid "Create a new vehicle"
+msgstr "Yeni bir araç oluştur"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
+msgid "Create a new vehicle status"
+msgstr "Yeni bir araç durumu oluştur"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__create_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__create_uid
 msgid "Created by"
 msgstr "Oluşturan"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_create_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__create_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__create_date
 msgid "Created on"
 msgstr "Oluşturulma"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__odometer
+msgid "Creation Contract Odometer"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__currency_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__currency_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__currency_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__currency_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__currency_id
+msgid "Currency"
+msgstr "Para Birimi"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Current Driver"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__state_id
 msgid "Current state of the vehicle"
 msgstr "Araç mevcut durum"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,cost_frequency:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__daily
 msgid "Daily"
 msgstr "Günlük"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__date
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Date"
-msgstr "Tarih"
+msgstr "Mail"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_date
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_date
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_date
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__date
 msgid "Date when the cost has been executed"
 msgstr "Maliyetin yapıldığı tarih"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_start_date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__start_date
 msgid "Date when the coverage of the contract begins"
 msgstr "Sözleşme kapsamının başladığı Tarihi"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_expiration_date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
 "Date when the coverage of the contract expirates (by default, one year after"
 " begin date)"
@@ -583,207 +609,232 @@ msgstr ""
 "tarihinden bir yıl sonra)"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_acquisition_date
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
 msgid "Date when the vehicle has been immatriculated"
+msgstr "Aracın tescillendiği tarih"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_res_config_settings__delay_alert_contract
+msgid "Delay alert contract outdated"
 msgstr ""
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_2
-msgid "Depreciation and Interests"
-msgstr "Amortisman ve İlgi Alanları"
-
-#. module: fleet
-#: selection:fleet.vehicle,fuel_type:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__diesel
 msgid "Diesel"
 msgstr "Dizel"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_display_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__display_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_17
-msgid "Door Window Motor/Regulator Replacement"
-msgstr "Kapı Pencere Motor / Regülatör Değiştirme"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_doors
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__doors
 msgid "Doors Number"
 msgstr "Kapı Sayısı"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_driver_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_driver_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__driver_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__driver_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__purchaser_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__driver_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Driver"
 msgstr "Sürücü"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_driver_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_driver_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__driver_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer__driver_id
 msgid "Driver of the vehicle"
 msgstr "Aracın sürücüsü"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:216
-#, python-format
-msgid "Driver: from '%s' to '%s'"
-msgstr "Sürücü: den '%s' to '%s'"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Drivers"
+msgstr ""
 
 #. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Drivers History"
+msgstr "Sürücü Geçmişi"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__history_count
+msgid "Drivers History Count"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_assignation_log
+msgid "Drivers history on a vehicle"
+msgstr "Bir araçtaki sürücü geçmişi"
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
 msgid ""
 "Each contract (e.g.: leasing) may include several services\n"
 "            (reparation, insurances, periodic maintenance)."
 msgstr ""
+"Her sözleşme farklı hizmetler içerebilir (onarım, sigorta, periyodik bakım)."
 
 #. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Each service can used in contracts, as a standalone service or both."
 msgstr ""
 "Her hizmet sözleşmelerde kullanılabilir, bağımsız hizmet olarak veya her "
 "ikisi de."
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Effective Costs"
 msgstr "Geçerli Maliyetler"
 
 #. module: fleet
-#: selection:fleet.vehicle,fuel_type:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__electric
 msgid "Electric"
 msgstr "Elektrikli"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_17
-msgid "Emissions"
-msgstr "Emisyon"
-
-#. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
-msgid "Employee Car"
-msgstr "Personel Aracı"
-
-#. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:44
+#: code:addons/fleet/models/fleet_vehicle_cost.py:0
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
 msgstr "Bir aracın kilometre sayacı değerinin boşaltılmasına izin verilmez."
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_18
-msgid "Engine Belt Inspection"
-msgstr "Motor Kayışı Muayenesi"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_end
+msgid "End Date"
+msgstr "Bitiş Tarihi"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_19
-msgid "Engine Coolant Replacement"
-msgstr "Motor Soğutma Suyu Değiştirme"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Engine"
+msgstr ""
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Engine Options"
-msgstr "Motor Seçenekleri"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Exception Activities"
+msgstr ""
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_20
-msgid "Engine/Drive Belt(s) Replacement"
-msgstr "Motor/Emniyet Kemeri Değişimi"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_13
-msgid "Entry into service tax"
-msgstr "Servis vergisi"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_21
-msgid "Exhaust Manifold Replacement"
-msgstr "Egzoz Manifold Değiştirme"
-
-#. module: fleet
-#: selection:fleet.vehicle.log.contract,state:0
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__expired
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Expired"
 msgstr "Süresi Doldu"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,state:0
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__diesoon
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Expiring Soon"
-msgstr ""
+msgstr "Süresi dolmak üzere"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__first_contract_date
+msgid "First Contract Date"
+msgstr "Sözleşme Başlangıç Tarihi"
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
 #: model:ir.ui.menu,name:fleet.menu_root
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
 msgid "Fleet"
 msgstr "Filo"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.res_config_settings_view_form
+msgid "Fleet Management"
+msgstr "Filo Yönetimi"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__manager_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__manager_id
+msgid "Fleet Manager"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_service_type
+msgid "Fleet Service Type"
+msgstr "Filo Servis Türü"
 
 #. module: fleet
 #: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
 #: model:ir.cron,cron_name:fleet.ir_cron_contract_costs_generator
 #: model:ir.cron,name:fleet.ir_cron_contract_costs_generator
 msgid "Fleet: Generate contracts costs based on costs frequency"
-msgstr ""
+msgstr "Filo: Maliyet frekansını baz alarak sözleşme maliyeti oluşturur."
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_cost_type
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_cost_type
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_cost_type
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_cost_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_follower_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_follower_ids
+msgid "Followers"
+msgstr "Takipçiler"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_channel_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Takipçiler (Kanallar)"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_partner_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Tekipçiler (İş ortakları)"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__cost_type
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_type
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__cost_type
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__cost_type
 msgid "For internal purpose only"
 msgstr "Yalnızca iç amaçlar için"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_cost_frequency
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_frequency
 msgid "Frequency of the recuring cost"
 msgstr "Yenileme maliyet sıklığı"
 
 #. module: fleet
-#: selection:fleet.vehicle.cost,cost_type:0
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost__cost_type__fuel
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Fuel"
 msgstr "Yakıt"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_graph
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_graph
 msgid "Fuel Costs Per Month"
 msgstr "Aylık Yakıt Maliyetleri"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_22
-msgid "Fuel Injector Replacement"
-msgstr "Yakıt Enjektörü Değiştirme"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__fuel_logs_count
+msgid "Fuel Log Count"
+msgstr "Yakıt Kayıtları Sayısı"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_fuel_logs_count
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_tree
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_fuel
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_tree
 msgid "Fuel Logs"
 msgstr "Yakıt Kayıtlar"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_23
-msgid "Fuel Pump Replacement"
-msgstr "Yakıt Pompası Değişimi"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_fuel_type
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__fuel_type
 msgid "Fuel Type"
 msgstr "Yakıt Türü"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_fuel_type
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__fuel_type
 msgid "Fuel Used by the vehicle"
 msgstr "Araçın kulandığı yakıt"
 
@@ -793,161 +844,153 @@ msgid "Fuel log for vehicles"
 msgstr "Araçlar için yakıt günlüğü"
 
 #. module: fleet
-#: selection:fleet.vehicle,fuel_type:0
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Future Activities"
+msgstr "Sonraki Aktiviteler"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__future_driver_id
+msgid "Future Driver"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Future Driver :"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__gasoline
 msgid "Gasoline"
 msgstr "Benzin"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "General Properties"
-msgstr "Genel Özellikler"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_generated_cost_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__generated_cost_ids
 msgid "Generated Costs"
 msgstr "Oluşturulan Maliyetleri"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Generated Recurring Costs"
 msgstr "Oluşturulan Yinelenen Maliyetler"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Group By"
 msgstr "Grupla"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
-msgid "Has Alert(s)"
-msgstr "Uyarısı (lar)"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_overdue
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_overdue
 msgid "Has Contracts Overdue"
 msgstr "Süresi geçmiş sözleşmeler var"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_due_soon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_due_soon
 msgid "Has Contracts to renew"
 msgstr "Yenilenecek Sözleşmeler var"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_24
-msgid "Head Gasket(s) Replacement"
-msgstr "Kapak Conta Değiştirme"
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
+msgid "Here you can add refuelling entries for all vehicles."
+msgstr "Tüm araçlar için yakıt kayıtlarını buraya ekleyebilirsiniz."
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_25
-msgid "Heater Blower Motor Replacement"
-msgstr "Kalorifer Fan Motoru Değiştirme"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_26
-msgid "Heater Control Valve Replacement"
-msgstr "Isıtıcı Kontrol Valf Değiştirme"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_27
-msgid "Heater Core Replacement"
-msgstr "Kalorifer Değişimi"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_28
-msgid "Heater Hose Replacement"
-msgstr "Isıtıcı Hortumunun Değiştirilmesi"
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
-msgid ""
-"Here you can add refuelling entries for all vehicles.  You can\n"
-"            also filter logs of a particular vehicle using the search\n"
-"            field."
-msgstr ""
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
-msgid ""
-"Here you can add various odometer entries for all vehicles.\n"
-"            You can also show odometer value for a particular vehicle using\n"
-"            the search field."
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_horsepower
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower
 msgid "Horsepower"
 msgstr "BeygirGücü"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_horsepower_tax
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower_tax
 msgid "Horsepower Taxation"
 msgstr "BeygirGücü Vergilendirme"
 
 #. module: fleet
-#: selection:fleet.vehicle,fuel_type:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__hybrid
 msgid "Hybrid"
 msgstr "Karma"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id_3068
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id_3057
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id_2903
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__id
 msgid "ID"
 msgstr "ID"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_29
-msgid "Ignition Coil Replacement"
-msgstr "Ateşleme Bobini Değiştirme"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_exception_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_exception_icon
+msgid "Icon"
+msgstr "İkon"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_acquisition_date
-msgid "Immatriculation Date"
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_exception_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_exception_icon
+msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,state:0
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_unread
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "İşaretliyse,bazı mesajlar gönderi hatası içermektedir."
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__acquisition_date
+msgid "Immatriculation Date"
+msgstr "Tescil Tarihi"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__open
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "In Progress"
 msgstr "Devam Eden"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_cost_ids
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_ids
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_ids
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_ids
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__cost_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__cost_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__cost_ids
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Included Services"
 msgstr "Servise Dahil Olanlar"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,state:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__futur
 msgid "Incoming"
 msgstr "Girişi Beklenen"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Indicative Cost"
 msgstr "Maliyet Göstergesi"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting_indicative_costs
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Indicative Costs"
 msgstr "Gösterge Maliyetleri"
 
@@ -957,237 +1000,229 @@ msgid "Indicative Costs Analysis"
 msgstr "Maliyetleri Analizi Göstergesi"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_sum_cost
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__sum_cost
 msgid "Indicative Costs Total"
 msgstr "Maliyetleri Toplam Göstergesi"
 
 #. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle
-msgid "Information on a vehicle"
-msgstr "Araç ile ilgili bilgileri"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_30
-msgid "Intake Manifold Gasket Replacement"
-msgstr "Emme Manifold Conta Değiştirme"
-
-#. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Invoice Date"
 msgstr "Fatura Tarihi"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_inv_ref
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_inv_ref
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__inv_ref
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__inv_ref
 msgid "Invoice Reference"
 msgstr "Fatura Referans"
 
 #. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
-msgid "Junior"
-msgstr "Ufak"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_is_follower
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_is_follower
+msgid "Is Follower"
+msgstr "Takipçi mi"
 
 #. module: fleet
-#: selection:fleet.vehicle,odometer_unit:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__odometer_unit__kilometers
 msgid "Kilometers"
 msgstr "Kilometreler"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_kanban
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_kanban
 msgid "Km"
-msgstr ""
+msgstr "Km"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state___last_update
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag___last_update
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__lpg
+msgid "LPG"
+msgstr "LPG"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state____last_update
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag____last_update
 msgid "Last Modified on"
 msgstr "Son Güncelleme"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer
 msgid "Last Odometer"
 msgstr "Son Kilometre Sayacı"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_write_uid
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__write_uid
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__write_uid
 msgid "Last Updated by"
 msgstr "Son Güncelleyen"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_write_date
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__write_date
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__write_date
 msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_contract_leasing
-msgid "Leasing"
-msgstr "Kiralama"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Late Activities"
+msgstr "Geciken Aktiviteler"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_license_plate
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__license_plate
 msgid "License Plate"
 msgstr "Plaka"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:223
-#, python-format
-msgid "License Plate: from '%s' to '%s'"
-msgstr "Plaka: dan '%s' to '%s'"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_license_plate
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__license_plate
 msgid "License plate number of the vehicle (i = plate number for a car)"
-msgstr ""
+msgstr "Aracınızın plaka numarası"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_liter
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_kanban
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__liter
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_kanban
 msgid "Liter"
 msgstr "Litre"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_location
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__location
 msgid "Location"
 msgstr "Konum"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_location
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__location
 msgid "Location of the vehicle (garage, ...)"
-msgstr "Araçın lokasyonu (garaj, ...)"
+msgstr "Aracın lokasyonu (garaj, ...)"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_image
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_image
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__image_128
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__image_128
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__image_128
 msgid "Logo"
 msgstr "Logo"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_image_medium
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_image_medium
-msgid "Logo (medium)"
-msgstr "Logo (orta)"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_main_attachment_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Ana Ek"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_image_small
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_image_small
-msgid "Logo (small)"
-msgstr "Logo (küçük)"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_name
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand__name
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Make"
 msgstr "Marka"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_id
-msgid "Make of the vehicle"
-msgstr "Aracın markası"
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
 msgid ""
 "Manage all your contracts (leasing, insurances, etc.) with\n"
 "            their related services, costs. Odoo will automatically warn\n"
 "            you when some contracts have to be renewed."
 msgstr ""
+"İlgili servisler ve maliyetleri ile bütün sözleşmelerinizi (lesaing, sigorta"
+" gibi) yönetin. Odoo herhangi bir sözleşme yenilendiğinde sizi otomatik "
+"olarak uyaracak."
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_11
-msgid "Management Fee"
-msgstr "Yönetim Ücreti"
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
+msgid ""
+"Manage the costs for your different vehicles.\n"
+"                Costs are created automatically from services, contracts and fuel logs."
+msgstr ""
+"Farklı araçların maliyetlerini yönetin.\n"
+"Maliyetler, servislerden, sözleşmelerden ve yakıt kayıtlarından otomatik olarak oluşturulur."
 
 #. module: fleet
-#: model:res.groups,name:fleet.fleet_group_manager
-msgid "Manager"
-msgstr "Yönetici"
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
+msgid ""
+"Manage your fleet by keeping track of the contracts, services, odometers and"
+" fuel logs associated to each vehicle."
+msgstr ""
+"Her araca ilişkin sözleşmeleri, hizmetleri, sayaçları ve yakıt kayıtlarını "
+"takip ederek filonuzu yönetin."
 
 #. module: fleet
-#: selection:fleet.vehicle,transmission:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__manual
 msgid "Manual"
 msgstr "Manuel"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_medium
-msgid "Medium-sized image"
-msgstr "Orta ölçekli resim"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
+msgid "Manufacturer"
+msgstr "Üretici"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_image_medium
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_medium
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_image_medium
-msgid ""
-"Medium-sized logo of the brand. It is automatically resized as a 128x128px "
-"image, with aspect ratio preserved. Use this field in form views or some "
-"kanban views."
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__brand_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__brand_id
+msgid "Manufacturer of the vehicle"
 msgstr ""
-"Markanın orta ölçekli logosu. Otomatik olarak korunmuş en boy oranına sahip,"
-" bir 128x128px görüntü olarak yeniden boyutlandırılır. Form görünümleri ya "
-"da kanban görünümlerinde bu alanı kullanın."
 
 #. module: fleet
-#: selection:fleet.vehicle,odometer_unit:0
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_error
+msgid "Message Delivery error"
+msgstr "Mesaj Teslim hatası"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_ids
+msgid "Messages"
+msgstr "Mesajlar"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__odometer_unit__miles
 msgid "Miles"
 msgstr "Mil"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_id
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Model"
 msgstr "Model"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_tree
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_tree
 msgid "Model Make"
 msgstr "Model Oluştur"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_year
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_year
 msgid "Model Year"
-msgstr ""
+msgstr "Model Yılı"
 
 #. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
-msgid "Model make of Vehicle"
-msgstr "Aracın modeli"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__name
 msgid "Model name"
 msgstr "Model adı"
 
@@ -1197,129 +1232,174 @@ msgid "Model of a vehicle"
 msgstr "Bir aracın Modeli"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__model_id
 msgid "Model of the vehicle"
 msgstr "Aracın Modeli"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:212
-#, python-format
-msgid "Model: from '%s' to '%s'"
-msgstr "Model: den '%s' to '%s'"
-
-#. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_tree
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_kanban
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_tree
 msgid "Models"
 msgstr "Modeller"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
-msgid "Month"
-msgstr "Ay"
-
-#. module: fleet
-#: selection:fleet.vehicle.log.contract,cost_frequency:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__monthly
 msgid "Monthly"
 msgstr "Aylık"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_service_type_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_name
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_service_type__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__name
 msgid "Name"
-msgstr "İsim"
+msgstr "Adı"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_name
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_name
 msgid "Name of contract to renew soon"
 msgstr "Yakında yenileme için sözleşme Adı"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,cost_frequency:0
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Need Action"
+msgstr "Eylem Gerektiriyor"
+
+#. module: fleet
+#: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_new_request
+msgid "New Request"
+msgstr "Yeni Talep"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Sonraki Aktivite Zaman Sınırı"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_summary
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_summary
+msgid "Next Activity Summary"
+msgstr "Sonraki Aktivite Özeti"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_id
+msgid "Next Activity Type"
+msgstr "Sonraki Aktivite Türü"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__future_driver_id
+msgid "Next Driver of the vehicle"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__no
 msgid "No"
 msgstr "Hayır"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:211
-#: code:addons/fleet/models/fleet_vehicle.py:215
-#: code:addons/fleet/models/fleet_vehicle.py:219
-#: code:addons/fleet/models/fleet_vehicle.py:222
+#: code:addons/fleet/models/fleet_vehicle.py:0
 #, python-format
-msgid "None"
-msgstr "Hiçbiri"
+msgid "No Plate"
+msgstr "Plaka Yok"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_notes
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_notes
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
+#: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
+#: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_non_effective_action
+msgid "No data for analysis"
+msgstr "Analiz için veri yok"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__notes
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__notes
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Notes"
 msgstr "Notlar"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_doors
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Eylemlerin Sayısı"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__doors
 msgid "Number of doors of the vehicle"
 msgstr "Araç kapı sayısı"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_seats
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_has_error_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction_counter
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Eylem gerektiren mesaj sayısı"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error_counter
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Teslimat hatası olan mesaj sayısı"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__seats
 msgid "Number of seats of the vehicle"
 msgstr "Araç koltuk sayısı"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_count
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_unread_counter
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Okunmamış mesaj sayısı"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer_count
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__odometer_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__odometer_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__odometer_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__odometer_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Odometer"
 msgstr "Kilometre Sayacı"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Odometer Details"
 msgstr "Kilometre Sayacı Ayrıntıları"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_tree
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_tree
 msgid "Odometer Logs"
 msgstr "Kilometre Sayacı Kayıtları"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer_unit
 msgid "Odometer Unit"
 msgstr "KilometreSayaç Ünitesi"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_value
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__odometer
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__odometer
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__odometer
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__value
 msgid "Odometer Value"
 msgstr "Kilometre Sayaç Değeri"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_graph
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_graph
 msgid "Odometer Values Per Vehicle"
 msgstr "Her Araç için Odometre Değerleri"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer
-msgid "Odometer at creation"
-msgstr ""
-
-#. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-msgid "Odometer details"
-msgstr "Kilometre Sayacı Ayrıntıları"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_odometer
@@ -1327,44 +1407,25 @@ msgid "Odometer log for a vehicle"
 msgstr "Bir aracın kilometre sayacı kaydı"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_odometer
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__odometer
 msgid "Odometer measure of the vehicle at the moment of the contract creation"
-msgstr ""
+msgstr "Aracın, sözleşme oluşum anında kilometre sayacının ölçümü."
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_odometer
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_odometer_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_odometer_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_odometer
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_odometer_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_odometer
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_odometer_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__odometer
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__odometer
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__odometer_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__odometer_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__odometer
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__odometer_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer_id
 msgid "Odometer measure of the vehicle at the moment of this log"
 msgstr "Araçın bu kayıt anındaki odometre ölçümü"
 
 #. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
-msgid ""
-"Odoo helps you keeping track of all the services done\n"
-"            on your vehicle. Services can be of many type: occasional\n"
-"            repair, fixed maintenance, etc."
-msgstr ""
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_action
-msgid ""
-"Odoo helps you managing the costs for your different\n"
-"                vehicles. Costs are created automatically from services,\n"
-"                contracts (fixed or recurring) and fuel logs."
-msgstr ""
-" Odoo farklı araçlarınızın maliyetlerini yönetmenize yardımcı\n"
-"olur. Maliyetler servislerden, sözleşmelerden, (sabit ya da\n"
-"yinelenen) yakıt kayıtlarından otomatik olarak hesaplanır. "
-
-#. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
-#: model:ir.actions.act_window,help:fleet.fleet_costs_reporting_non_effective_action
+#: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
+#: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_non_effective_action
 msgid ""
 "Odoo helps you managing the costs for your different vehicles\n"
 "          Costs are generally created from services and contract and appears here."
@@ -1373,170 +1434,110 @@ msgstr ""
 "Maliyetler genellikle servis ve sözleşmelerden oluşturulur ve burada görünür."
 
 #. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_action
-msgid ""
-"Odoo will warn you when services or contract have to be\n"
-"            renewed."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_kanban
+msgid "Open"
+msgstr "Açık"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_31
-msgid "Oil Change"
-msgstr "Yağ Değişimi"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_32
-msgid "Oil Pump Replacement"
-msgstr "Yağ Pompası Değişimi"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_contract_omnium
-msgid "Omnium"
-msgstr "Hepsi"
-
-#. module: fleet
-#: sql_constraint:fleet.vehicle:0
-msgid "Only one car can be assigned to the same employee!"
-msgstr ""
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_16
-msgid "Options"
-msgstr "Seçenekler"
-
-#. module: fleet
-#: selection:fleet.vehicle.cost,cost_type:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost__cost_type__other
 msgid "Other"
 msgstr "Diğer"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_33
-msgid "Other Maintenance"
-msgstr "Diğer Bakım"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_34
-msgid "Oxygen Sensor Replacement"
-msgstr "Oksijen Sensörü Değişimi"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_parent_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_parent_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_parent_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_parent_id
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__parent_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__parent_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__parent_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__parent_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
 msgid "Parent"
 msgstr "Üst"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_parent_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_parent_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_parent_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_parent_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__parent_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__parent_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__parent_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__parent_id
 msgid "Parent cost to this current cost"
 msgstr "Bu geçerli maliyetin ana maliyeti"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_purchaser_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__purchaser_id
 msgid "Person to which the contract is signed for"
 msgstr "Sözleşmenin imzalandığı kişi"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_power
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__plan_to_change_car
+#: model:ir.model.fields,field_description:fleet.field_res_partner__plan_to_change_car
+#: model:ir.model.fields,field_description:fleet.field_res_users__plan_to_change_car
+msgid "Plan To Change Car"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Planned for Change"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power
 msgid "Power"
 msgstr "Güç"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_35
-msgid "Power Steering Hose Replacement"
-msgstr "Direksiyon Hortumunun Değiştirilmesi"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_36
-msgid "Power Steering Pump Replacement"
-msgstr "Servo Direksiyon Pompa Değişimi"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_power
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__power
 msgid "Power in kW of the vehicle"
 msgstr "Aracın kW Güç"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_tree
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_tree
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Price"
 msgstr "Fiyat"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_price_per_liter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__price_per_liter
 msgid "Price Per Liter"
 msgstr "Litre Başına Fiyat"
 
 #. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
-msgid "Purchased"
-msgstr "SatınAlınan"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__net_car_value
+msgid "Purchase Value"
+msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_purchaser_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_purchaser_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__net_car_value
+msgid "Purchase Value of the car"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__purchaser_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__purchaser_id
 msgid "Purchaser"
 msgstr "SatınAlan"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_37
-msgid "Radiator Repair"
-msgstr "Radyatör Tamiri"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_generated
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_generated
 msgid "Recurring Cost Amount"
 msgstr "Yinelenen Maliyet Tutarı"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_frequency
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_frequency
 msgid "Recurring Cost Frequency"
 msgstr "Yinelenen Maliyet Sıklığı"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_refueling
-msgid "Refueling"
-msgstr "Akaryakıt"
-
-#. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
 msgid "Refueling Details"
 msgstr "Akaryakıt Detayları"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle_cost.py:200
+#: code:addons/fleet/models/fleet_vehicle_cost.py:0
 #: model:ir.actions.act_window,name:fleet.act_renew_contract
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #, python-format
 msgid "Renew Contract"
 msgstr "Sözleşme Yenileme"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_12
-msgid "Rent (Excluding VAT)"
-msgstr "Kira (KDV Hariç)"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_8
-msgid "Repair and maintenance"
-msgstr "Tamir ve bakım"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_contract_repairing
-msgid "Repairing"
-msgstr "Tamir"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_10
-msgid "Replacement Vehicle"
-msgstr "Yedek Araç"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting
@@ -1544,96 +1545,73 @@ msgid "Reporting"
 msgstr "Raporlama"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_residual_value
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__residual_value
 msgid "Residual Value"
 msgstr "Kalan Değer"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_15
-msgid "Residual value (Excluding VAT)"
-msgstr "Kalan tutar (KDV Hariç)"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__user_id
+msgid "Responsible"
+msgstr "Sorumlu"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_19
-msgid "Residual value in %"
-msgstr "Kalan tutar % olarak"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_user_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_user_id
+msgid "Responsible User"
+msgstr "Sorumlu Kullanıcı"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_38
-msgid "Resurface Rotors"
-msgstr "Disk Yüzey Tornalama"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_39
-msgid "Rotate Tires"
-msgstr "Lastikler"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_40
-msgid "Rotor Replacement"
-msgstr "Rotor Değiştirme"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_seats
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
 msgid "Seats Number"
 msgstr "Koltuk Sayısı"
 
 #. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
-msgid "Sedan"
-msgstr "Sedan"
-
-#. module: fleet
-#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
-msgid "Senior"
-msgstr "Büyük"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_sequence
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__sequence
 msgid "Sequence"
 msgstr "Sıra"
 
 #. module: fleet
-#: selection:fleet.service.type,category:0
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_service_type__category__service
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Service"
 msgstr "Hizmet"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Service Type"
 msgstr "Servis Türü"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_service_types_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_service_types_menu
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_service_types_view_tree
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_service_types_view_tree
 msgid "Service Types"
 msgstr "Servis Türü"
 
 #. module: fleet
-#: selection:fleet.vehicle.cost,cost_type:0
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_service_count
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__service_count
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost__cost_type__services
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Services"
 msgstr "Hizmetler"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_graph
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_graph
 msgid "Services Costs Per Month"
 msgstr "Aylık Servis Maliyetleri"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Services Details"
 msgstr "Servis Detayları"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__log_services
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
 msgid "Services Logs"
 msgstr "Servis Günlükleri"
 
@@ -1643,96 +1621,82 @@ msgid "Services for vehicles"
 msgstr "Araçlar için Servisler"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Set Contract In Progress"
 msgstr "Sözleşmeyi sürüyor olarak ayarla"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_brand_image_small
-msgid "Small-sized image"
-msgstr "Küçük boylu görsel"
+#: model:ir.actions.act_window,name:fleet.fleet_config_settings_action
+#: model:ir.ui.menu,name:fleet.fleet_config_settings_menu
+msgid "Settings"
+msgstr "Ayarlar"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_image_small
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image_small
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_image_small
-msgid ""
-"Small-sized logo of the brand. It is automatically resized as a 64x64px "
-"image, with aspect ratio preserved. Use this field anywhere a small image is"
-" required."
-msgstr ""
-"Markanın küçük boyutlu logosu. Otomatik olarak korunmuş en boy oranına "
-"sahip, bir 64x64px görüntü olarak yeniden boyutlandırılır. Küçük bir resimin"
-" gerektiği her yerde bu alanı kullanın."
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Show all records which has next action date is before today"
+msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_6
-msgid "Snow tires"
-msgstr "Kar lastikleri"
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_start
+msgid "Start Date"
+msgstr "Başlangıç Tarihi"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_41
-msgid "Spark Plug Replacement"
-msgstr "Buji Değişimi"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_42
-msgid "Starter Replacement"
-msgstr "Marş Değişimi"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state_id
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_state_view_tree
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__state_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_state_view_tree
 msgid "State"
-msgstr "Durumu"
+msgstr "İl/Eyalet"
 
 #. module: fleet
-#: sql_constraint:fleet.vehicle.state:0
+#: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_state_fleet_state_name_unique
 msgid "State name already exists"
 msgstr "Durum adı zaten var"
 
 #. module: fleet
-#: code:addons/fleet/models/fleet_vehicle.py:220
-#, python-format
-msgid "State: from '%s' to '%s'"
-msgstr "Durumu: '%s' ten '%s' e"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_state
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__state
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Status"
-msgstr "Durum"
+msgstr "Durumu"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_5
-#: model:fleet.service.type,name:fleet.type_service_service_7
-msgid "Summer tires"
-msgstr "Yaz lastikleri"
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_state
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Etkinliklerdeki aşamalar\n"
+"Zamanı Geçmiş: Tarihi geçmiş \n"
+"Bugün: Etkinlik günü bugün\n"
+"Planlanan: Gelecek etkinlikler."
 
 #. module: fleet
-#: sql_constraint:fleet.vehicle.tag:0
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__name
+msgid "Tag Name"
+msgstr "Etiket Adı"
+
+#. module: fleet
+#: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_tag_name_uniq
 msgid "Tag name already exists !"
 msgstr "Etiket adı halihazırda mevcut !"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__tag_ids
 msgid "Tags"
 msgstr "Etiketler"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_3
-msgid "Tax roll"
-msgstr "Vergi kayıtları"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_notes
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__notes
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Terms and Conditions"
 msgstr "Şartlar ve Koşullar"
 
 #. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
-#: model:ir.actions.act_window,help:fleet.fleet_costs_reporting_non_effective_action
+#: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
+#: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_non_effective_action
 msgid ""
 "Thanks to the different filters, Odoo can only print the effective\n"
 "          costs, sort them by type and by vehicle."
@@ -1741,130 +1705,109 @@ msgstr ""
 "yazdırabilir, onları türüne göre ve araca göre sıralayabilirsiniz."
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_43
-msgid "Thermostat Replacement"
-msgstr "Termostat Değiştirme"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_image
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_brand_image
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_image
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__next_assignation_date
 msgid ""
-"This field holds the image used as logo for the brand, limited to "
-"1024x1024px."
+"This is the date at which the car will be available, if not set it means "
+"available instantly"
 msgstr ""
-"Bu alan markanın logosu olarak kullanılan resmi tutar, 1024x1024px olarak "
-"sınırlıdır."
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_44
-msgid "Tie Rod End Replacement"
-msgstr "Rotbaşı Değiştirme"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Today Activities"
+msgstr "Bugünkü Aktiviteler"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_45
-msgid "Tire Replacement"
-msgstr "Lastik Değiştirme"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_46
-msgid "Tire Service"
-msgstr "Lastik Servisi"
-
-#. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
 msgid "Total"
 msgstr "Toplam"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_amount
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_amount
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_amount
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__amount
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__amount
 msgid "Total Price"
 msgstr "Toplam Fiyat"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_14
-msgid "Total expenses (Excluding VAT)"
-msgstr "Toplam giderler (KDV Hariç)"
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_contract_renewal_total
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_total
 msgid "Total of contracts due or overdue minus one"
 msgstr "Günü gelen ya da günü eksi bir gün geçen sözleşmelerin toplamı"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_18
-msgid "Touring Assistance"
-msgstr "Tur Yardımı"
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_action
+msgid ""
+"Track all the services done on your vehicle.\n"
+"            Services can be of many types: occasional repair, fixed maintenance, etc."
+msgstr ""
+"Aracınız için tamamlanan tüm servisleri takip edin.\n"
+"Servisler birçok türde olabilir: arıza, bakım, tamir gibi."
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_transmission
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__transmission
 msgid "Transmission"
 msgstr "Şanzıman"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_47
-msgid "Transmission Filter Replacement"
-msgstr "Şanzıman Filtre Değişimi"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_48
-msgid "Transmission Fluid Replacement"
-msgstr "Şanzıman Yağı Değiştirme"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_49
-msgid "Transmission Replacement"
-msgstr "Şanzıman Değiştirme"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_transmission
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__transmission
 msgid "Transmission Used by the vehicle"
 msgstr "Bu araç tarafından Kullanılan Aktarma"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_cost_subtype_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_cost_subtype_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_cost_subtype_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_cost_subtype_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__cost_subtype_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_subtype_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__cost_subtype_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__cost_subtype_id
 msgid "Type"
 msgstr "Tür"
 
 #. module: fleet
-#: model:ir.model,name:fleet.model_fleet_service_type
-msgid "Type of services available on a vehicle"
-msgstr "Bir araç için mevcut hizmet türü"
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_exception_decoration
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_vin_sn
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__vin_sn
 msgid "Unique number written on the vehicle motor (VIN/SN number)"
 msgstr "Motor Şase Numarası"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_unit_2892
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__odometer_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__odometer_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__odometer_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__odometer_unit
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__unit
 msgid "Unit"
 msgstr "Birim"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer_unit_2892
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__odometer_unit
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__odometer_unit
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__odometer_unit
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__odometer_unit
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer_unit
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_odometer__unit
 msgid "Unit of the odometer "
 msgstr "Kilometre Sayacı Birimi "
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state_sequence
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_unread
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_unread
+msgid "Unread Messages"
+msgstr "Okunmamış Mesajlar"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_unread_counter
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Okunmamış Mesaj Sayacı"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_state__sequence
 msgid "Used to order the note stages"
-msgstr "Not aşamalarını sıralamak için kullanın"
+msgstr "Not aşamalarını sıralamak için kullanılır"
 
 #. module: fleet
 #: model:res.groups,name:fleet.fleet_group_user
@@ -1872,72 +1815,79 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_car_value
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__car_value
 msgid "Value of the bought vehicle"
 msgstr "Alınan aracın değeri"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_vehicle_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_vehicle_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_vehicle_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_vehicle_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_vehicle_id
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_tree
+#: model:ir.model,name:fleet.model_fleet_vehicle
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__vehicle_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__vehicle_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__vehicle_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__vehicle_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__vehicle_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__vehicle_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_tree
 msgid "Vehicle"
 msgstr "Araç"
 
 #. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_action
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_tree
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_tree
 msgid "Vehicle Costs"
 msgstr "Araç Maliyetleri"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
-msgid "Vehicle Costs by Month"
-msgstr "Aylık Araç Maliyetleri"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
+msgid "Vehicle Costs by Date"
+msgstr "Tarihe Göre Araç Maliyetleri"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
 msgid "Vehicle Details"
 msgstr "Araç Detayları"
 
 #. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_action
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
-msgid "Vehicle Model"
-msgstr "Araç Modeli"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Vehicle Informations"
+msgstr ""
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_action
+#: model:ir.model,name:fleet.model_fleet_vehicle_state
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
 msgid "Vehicle Status"
 msgstr "Araç Durumu"
 
 #. module: fleet
-#: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
-#: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_view_form
-msgid "Vehicle Tags"
-msgstr ""
+#: model:ir.model,name:fleet.model_fleet_vehicle_tag
+msgid "Vehicle Tag"
+msgstr "Araç Etiketi"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost_vehicle_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_vehicle_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel_vehicle_id
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services_vehicle_id
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_tag_view_view_tree
+msgid "Vehicle Tags"
+msgstr "Araç Etiketleri"
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__vehicle_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__vehicle_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__vehicle_id
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__vehicle_id
 msgid "Vehicle concerned by this log"
 msgstr "Bu kayıtı ilgilendiren araç"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_form
 msgid "Vehicle costs"
 msgstr "Araç maliyetleri"
 
@@ -1945,22 +1895,36 @@ msgstr "Araç maliyetleri"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_menu
 #: model:ir.ui.menu,name:fleet.fleet_vehicles
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_activity
 msgid "Vehicles"
 msgstr "Araçlar"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_contract_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_contract_menu
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_activity
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Vehicles Contracts"
 msgstr "Araç Kontratları"
 
 #. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
+msgid "Vehicles Costs"
+msgstr "Araç Maliyetleri"
+
+#. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_search
 msgid "Vehicles Fuel Logs"
 msgstr "Araç Yakıt Kayıtları"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
+msgid "Vehicles Model"
+msgstr "Araçların Modeli"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_action
@@ -1975,172 +1939,142 @@ msgid "Vehicles Services Logs"
 msgstr "Araçlar Hizmet Kayıtları"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_indicative_view_graph
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_indicative_view_pivot
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_graph
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_pivot
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_indicative_view_graph
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_indicative_view_pivot
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_graph
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_cost_view_pivot
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Vehicles costs"
 msgstr "Araç maliyetler"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_search
 msgid "Vehicles odometers"
 msgstr "Araç odometreleri"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_insurer_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel_vendor_id
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services_vendor_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__insurer_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__vendor_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__vendor_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Vendor"
 msgstr "Tedarikçi"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model_vendors
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vendors
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "Vendors"
 msgstr "Tedarikçiler"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract_days_left
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__days_left
 msgid "Warning Date"
 msgstr "Uyarı Tarihi"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_50
-msgid "Water Pump Replacement"
-msgstr "Su Pompası Değiştirme"
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
+msgid "Warning: renewal due soon"
+msgstr "Uyarı: yaklaşan yenileme"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,cost_frequency:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__weekly
 msgid "Weekly"
 msgstr "Haftalık"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_51
-msgid "Wheel Alignment"
-msgstr "Rot Ayarı"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_52
-msgid "Wheel Bearing Replacement"
-msgstr "Tekerlek Rulman Değişim"
-
-#. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_53
-msgid "Windshield Wiper(s) Replacement"
-msgstr "Silecek Değişimi"
-
-#. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Write here all other information relative to this contract"
 msgstr "Buraya bu sözleşmenin ilgili bütün diğer bilgileri yazın"
 
 #. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract_notes
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__notes
 msgid "Write here all supplementary information relative to this contract"
-msgstr ""
+msgstr "Sözleşmeye göre tüm ek bilgileri buraya yazın"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_fuel_view_form
 msgid "Write here any other information"
 msgstr "Burada herhangi bir diğer bilgilerini yazın"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Write here any other information related to the service completed."
 msgstr "Buraya tamamlanan hizmetle ilgili diğer bilgileri yazın."
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_costs_view_search
-msgid "Year"
-msgstr "Yıl"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model_year
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__model_year
 msgid "Year of the model"
-msgstr ""
+msgstr "Model Yılı"
 
 #. module: fleet
-#: selection:fleet.vehicle.log.contract,cost_frequency:0
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__yearly
 msgid "Yearly"
 msgstr "Yıllık"
 
 #. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
-msgid ""
-"You can customize available status to track the evolution of\n"
-"            each vehicle. Example: Active, Being Repaired, Sold."
-msgstr ""
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
+msgid "You can add various odometer entries for all vehicles."
+msgstr "Tüm araçlar için farklı kilometre kayıtları ekleyebilirsiniz."
 
 #. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
+msgid ""
+"You can customize available status to track the evolution of\n"
+"            each vehicle. Example: active, being repaired, sold."
+msgstr ""
+"Her aracın gelişimini izlemek için mevcut durumu özelleştirebilirsiniz. "
+"Örneğin: aktif, tamir edildi, satıldı."
+
+#. module: fleet
+#: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
 msgstr ""
 "Her marka (örn. Tofaş) için çeşitli modeller (örn. Şahin, Doğan, Kartal) "
 "tanımlayabilirsiniz."
 
 #. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_action
-msgid ""
-"You will be able to manage your fleet by keeping track of the\n"
-"            contracts, services, fixed and recurring costs, odometers and\n"
-"            fuel logs associated to each vehicle."
-msgstr ""
-
-#. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "amount"
 msgstr "tutar"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "e.g. Model S"
 msgstr "örn. Murat 124"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "e.g. PAE 326"
 msgstr "örn: 34 ABC 43"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 msgid "e.g. Tesla"
 msgstr "örn: Tofaş"
 
 #. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle_state
-msgid "fleet.vehicle.state"
-msgstr "fleet.vehicle.state"
-
-#. module: fleet
-#: model:ir.model,name:fleet.model_fleet_vehicle_tag
-msgid "fleet.vehicle.tag"
-msgstr "fleet.vehicle.tag"
-
-#. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "show all the costs for this vehicle"
 msgstr "Bu araç için tüm maliyetleri gösterir"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "show the contract for this vehicle"
 msgstr "Bu araç için sözleşme göster"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "show the fuel logs for this vehicle"
 msgstr "Bu araç için yakıt günlükleri göster"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "show the odometer logs for this vehicle"
 msgstr "bu araç için kilometre sayacı kayıtlarını göster"
 
 #. module: fleet
-#: model:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "show the services logs for this vehicle"
 msgstr "Bu araç için hizmet günlükleri göster"

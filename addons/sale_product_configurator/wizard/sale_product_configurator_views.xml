@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_product_configurator_view_form" model="ir.ui.view">
+        <field name="name">sale_product_configurator.product.configurator.view.form</field>
+        <field name="model">sale.product.configurator</field>
+        <field name="arch" type="xml">
+            <form js_class="product_configurator_form">
+                <group>
+                    <field name="product_template_id" class="oe_product_configurator_product_template_id" options="{'no_open': True}" readonly="1"/>
+                    <field name="product_template_attribute_value_ids" invisible="1">
+                        <tree limit="10000"/>
+                    </field>
+                    <field name="product_custom_attribute_value_ids" invisible="1" widget="one2many" >
+                        <tree limit="10000">
+                            <field name="custom_product_template_attribute_value_id"/>
+                            <field name="custom_value"/>
+                        </tree>
+                    </field>
+                    <field name="product_no_variant_attribute_value_ids" invisible="1">
+                        <tree limit="10000"/>
+                    </field>
+                    <field name="quantity" invisible="1" />
+                </group>
+                <footer>
+                    <button string="Add" class="btn-primary o_sale_product_configurator_add" special="add" data-hotkey="g"/>
+                    <button string="Save" class="btn-primary o_sale_product_configurator_edit" style="display: none;" special="save" data-hotkey="v"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_product_configurator_action" model="ir.actions.act_window">
+        <field name="name">Configure a product</field>
+        <field name="res_model">sale.product.configurator</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="sale_product_configurator_view_form"/>
+    </record>
+</odoo>

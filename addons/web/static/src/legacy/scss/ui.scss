@@ -1,0 +1,208 @@
+:root .o_hidden {
+    // Add `:root` as parent selector to increase '.o_hidden' hierarchy.
+    // The aim is to ensure that it overrides any bootstrap default layout
+    // class (eg. d-flex).
+    // TODO: After migrating to BTS5 review how layout/visibility classes
+    // interfere with each other.
+    display: none!important;
+}
+
+.o_disabled {
+    pointer-events: none;
+    opacity: $o-opacity-disabled;
+}
+
+.o_text_overflow {
+    @include o-text-overflow;
+}
+
+.ui-autocomplete {
+    z-index: $zindex-modal + 1;
+    max-width: 600px;
+    .ui-menu-item > a {
+        display: block;
+    }
+}
+
+[aria-hidden="true"], [aria-hidden="1"] {
+    display: none!important;
+}
+
+.dropdown-toggle {
+    white-space: nowrap;
+
+    &.o-no-caret {
+        &::before, &::after {
+            content: normal;
+        }
+    }
+}
+
+// Allow to change data-bs-toggle="collapse" text according to status
+:not(.collapsed) > .o-collapsed-label,
+.collapsed > .o-not-collapsed-label {
+    display: none;
+}
+
+// This is rtl language specific fix
+// It will fix the extra space in ui-autocomplete class
+// and flip the next and previous symbols of jquery ui.
+.o_rtl {
+    .ui-autocomplete {
+        direction: ltr;
+        right: 0;
+        left: auto;
+    }
+    .ui-datepicker-next, .ui-datepicker-prev {
+        -webkit-transform: rotate(180deg);
+         -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+}
+
+.o_catch_attention {
+    position: relative;
+    z-index: 1;
+    animation: catchAttention 200ms ease 0s infinite normal;
+}
+
+// ----------------------------------------------------------------------------
+// Render a "tree-view" design on a set of vertical elements
+
+// @param {number} --treeEntry-padding-h - Entry's horizzontal padding.
+// @param {number} --treeEntry-padding-v - Entry's vertical padding.
+// @param {number} --treeEntry--before-top - Vertical-line top position.
+// @param {string} --treeEntry--after-display - Horizzontal-line display mode.
+// @param {color}  --treeEntry--beforeAfter-color - Lines color
+// @param {color}  --treeEntry--beforeAfter-left - Lines left position
+// ----------------------------------------------------------------------------
+.o_treeEntry {
+    $-padding-h: var(--treeEntry-padding-h, #{map-get($spacers, 4)});
+    $-padding-v: var(--treeEntry-padding-v, #{map-get($spacers, 2)});
+
+    padding-left: $-padding-h;
+    position: relative;
+
+    &:before, &:after {
+        position: absolute;
+        left: var(--treeEntry--beforeAfter-left, calc(#{$-padding-h} * .5));
+        background: var(--treeEntry--beforeAfter-color, #{$border-color});
+        content: '';
+    }
+
+    &:before {
+        top: var(--treeEntry--before-top, 0);
+        width: 1px;
+        height: 100%;
+    }
+
+    &:after {
+        display: var(--treeEntry--after-display, initial);
+        top: calc(.5em + #{$-padding-v});
+        width: calc(#{$-padding-h} * .5);
+        height: 1px;
+    }
+
+    &:last-of-type:before {
+        height: calc(.5em + #{$-padding-v});
+    }
+}
+
+// bounce effect
+@keyframes catchAttention {
+    0%, 20%, 40%, 60%, 80%, 100% {
+        transition-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+    }
+    0% {
+        transform: translateY(-30%);
+    }
+    20% {
+        transform: translateY(-25%);
+    }
+    40% {
+        transform: translateY(-20%);
+    }
+    60% {
+        transform: translateY(-15%);
+    }
+    80% {
+        transform: translateY(-10%);
+    }
+    100% {
+        transform: translateY(-5%);
+    }
+}
+
+span.o_force_ltr {
+    display: inline;
+}
+.o_force_ltr, .o_field_phone {
+    unicode-bidi: embed; // ensure element has level of embedding for direction
+    /*rtl:ignore*/
+    direction: ltr;
+}
+
+// To fill the available space while keeping aspect ratio (crop).
+// Assuming the important part of the image is its center.
+.o_object_fit_cover {
+    object-fit: cover;
+}
+
+.o_image_24_cover {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+}
+
+.o_image_40_cover {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.o_image_64_cover {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+}
+
+// Keep ratio but avoid cropping (so part of the background becomes visible).
+.o_image_64_contain {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+// When having a square is not necessary, the image will take less space if any
+// of its width or height is smaller than 64px.
+.o_image_64_max {
+    max-width: 64px;
+    max-height: 64px;
+}
+
+.o_image_128_max {
+    max-width: 128px !important;
+    max-height: 128px !important;
+}
+
+.o_width_128 {
+    width: 128px;
+}
+
+.o_web_accesskey_overlay {
+    @include o-position-absolute(0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .6);
+    color: #FFFFFF;
+    font-size: 1rem;
+
+    // Needed as the parent button could be using font-awesome.
+    // Can't be put to a BS variable here as we are in assets common (will be
+    // overridden for backend but left with 'sans-serif' for frontend to not
+    // have an useless frontend rule.
+    font-family: sans-serif;
+}

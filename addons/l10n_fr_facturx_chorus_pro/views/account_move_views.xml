@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form_inherit_chorus_pro" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.chorus.pro</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='accounting_info_group']" position="after">
+                    <group name="accounting_info_group_chorus_pro" string="Chorus Pro" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}">
+                        <field name="buyer_reference"/>
+                        <field name="contract_reference"/>
+                        <field name="purchase_order_reference"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

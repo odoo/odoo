@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_ids']//field[@name='account_id']" position="after">
+                <field name='need_vehicle' invisible='1'/>
+                <field name='vehicle_id' attrs="{'required': [('need_vehicle', '=', True), ('parent.move_type', 'in', ('in_invoice', 'in_refund'))], 'column_invisible': [('parent.move_type', 'not in', ('in_invoice', 'in_refund'))]}" optional='hidden'/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']//field[@name='account_id']" position="after">
+                <field name='need_vehicle' invisible='1'/>
+                <field name='vehicle_id' attrs="{'required': [('need_vehicle', '=', True), ('parent.move_type', 'in', ('in_invoice', 'in_refund'))], 'column_invisible': [('parent.move_type', 'not in', ('in_invoice', 'in_refund'))]}" optional='hidden'/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_move_view_tree" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit.fleet</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="string">Creation Date</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="after">
+                <field name="invoice_date" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_line_tree_fleet" model="ir.ui.view">
+        <field name="name">view.move.line.tree.fleet</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position='after'>
+                <field name="vehicle_id" optional='hidden'/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

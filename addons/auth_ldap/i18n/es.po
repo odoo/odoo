@@ -1,26 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auth_ldap
+# 	* auth_ldap
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
-# Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# José Vicente <txusev@gmail.com>, 2016
-# oihane <oihanecruce@gmail.com>, 2016
-# Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
-# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
-# Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
+# Martin Trigaux, 2019
+# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Cristopher Cravioto <ccr@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Cristopher Cravioto <ccr@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_create_user
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
 msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
@@ -43,109 +36,127 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_company
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
 msgid "Company"
 msgstr "Compañía"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_user
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "Company LDAP configuration"
+msgstr "Configuración Compañia LDAP"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_config_settings
+msgid "Config Settings"
+msgstr "Opciones de Configuración"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
 msgstr "Crear usuario"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_uid
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
 msgid "Created by"
 msgstr "Creado por"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_date
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
 msgstr "Creado el"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
 msgid "Display Name"
-msgstr "Nombre a mostrar"
+msgstr "Nombre mostrado"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
 msgid "ID"
 msgstr "ID"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
 msgstr "Configuración LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
-#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings_ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
 msgid "LDAP Parameters"
 msgstr "Parámetros LDAP"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
 msgstr "Servidor LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
 msgstr "Dirección servidor LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server_port
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
 msgstr "Puerto servidor LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_base
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
 msgstr "Base LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_binddn
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
 msgstr "binddn LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_filter
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
 msgid "LDAP filter"
 msgstr "Filtro LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_password
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
 msgstr "Contraseña LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap___last_update
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
 msgid "Last Modified on"
 msgstr "Última modificación en"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_uid
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
 msgstr "Última actualización por"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_date
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
 msgid "Last Updated on"
 msgstr "Última actualización el"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
 msgstr "Información conexión"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: code:addons/auth_ldap/models/res_company_ldap.py:202
+#, python-format
+msgid "No local user found for LDAP login and not configured to create one"
+msgstr ""
+"Usuarios locales no encontrados por el registro del LDAP y no está "
+"configurado la creación de uno"
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
 msgstr "Parámetros del proceso"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_tls
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
 msgid ""
 "Request secure TLS/SSL encryption when connecting to the LDAP server. This "
 "option requires a server with STARTTLS enabled, otherwise all authentication"
@@ -156,12 +167,12 @@ msgstr ""
 "intentos de autenticación fallarán."
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_sequence
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
 msgid "Sequence"
 msgstr "Secuencia"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
 msgstr "Información servidor"
 
@@ -171,12 +182,12 @@ msgid "Setup your LDAP Server"
 msgstr "Configurar servidor LDAP"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_user
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
 msgid "Template User"
 msgstr "Plantilla de usuario"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_password
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
@@ -185,7 +196,7 @@ msgstr ""
 "acceder al directorio"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_binddn
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
@@ -194,17 +205,17 @@ msgstr ""
 "directorio. Dejar vacío para conectar de forma anónima."
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_tls
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
 msgstr "Usar TLS"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
 msgstr "Información usuario"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_user
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
 msgstr "Usuario a duplicar cuando se crean nuevos usuarios"
 
@@ -212,13 +223,3 @@ msgstr "Usuario a duplicar cuando se crean nuevos usuarios"
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
 msgstr "Usuarios"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_company_ldap
-msgid "res.company.ldap"
-msgstr "res.compañía.ldap"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

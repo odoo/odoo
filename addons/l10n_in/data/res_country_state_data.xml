@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="state_in_ot" model="res.country.state">
+        <field name="name">Other Territory</field>
+        <field name="code">IN_OT</field>
+        <field name="country_id" ref="base.in"/>
+        <field name="l10n_in_tin">97</field>
+    </record>
+
     <record id="base.state_in_an" model="res.country.state">
         <field name="l10n_in_tin">35</field>
     </record>
     <record id="base.state_in_ap" model="res.country.state">
-        <field name="l10n_in_tin">28</field>
+        <field name="l10n_in_tin">37</field>
     </record>
     <record id="base.state_in_ar" model="res.country.state">
         <field name="l10n_in_tin">12</field>

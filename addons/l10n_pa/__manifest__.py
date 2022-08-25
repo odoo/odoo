@@ -15,13 +15,13 @@ Con la Colaboración de
 
     """,
     "author": "Cubic ERP",
-    "website": "http://cubicERP.com",
-    'category': 'Localization',
+    'category': 'Accounting/Localizations/Account Charts',
     "depends": ["account"],
     "data": [
         "data/l10n_pa_chart_data.xml",
-        "data/account_data.xml",
+        "data/account_tax_group_data.xml",
         "data/account_tax_data.xml",
         "data/account_chart_template_data.xml",
     ],
+    'license': 'LGPL-3',
 }

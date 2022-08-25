@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Follower" owl="1">
+        <t t-if="followerView">
+            <div class="o_Follower d-flex justify-content-between p-0" t-attf-class="{{ className }}" t-ref="root">
+                <a class="o_Follower_details d-flex align-items-center flex-grow-1 px-3 text-700" t-att-class="{ 'o-inactive fst-italic opacity-25': !followerView.follower.isActive }" href="#" role="menuitem" t-on-click="followerView.onClickDetails">
+                    <img class="o_Follower_avatar me-2 rounded-circle" t-att-src="followerView.follower.partner.avatarUrl" alt=""/>
+                    <span class="o_Follower_name flex-shrink text-truncate" t-esc="followerView.follower.partner.nameOrDisplayName"/>
+                </a>
+                <t t-if="followerView.follower.isEditable">
+                    <button class="o_Follower_button o_Follower_editButton btn btn-icon rounded-0" title="Edit subscription" aria-label="Edit subscription" t-on-click="followerView.onClickEdit">
+                        <i class="fa fa-pencil"/>
+                    </button>
+                    <button class="o_Follower_button o_Follower_removeButton btn btn-icon rounded-0" title="Remove this follower" aria-label="Remove this follower" t-on-click="followerView.onClickRemove">
+                        <i class="fa fa-remove"/>
+                    </button>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

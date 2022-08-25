@@ -3,19 +3,17 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
-class TestMembershipCommon(AccountingTestCase):
+class TestMembershipCommon(AccountTestInvoicingCommon):
 
-    def setUp(self):
-        super(TestMembershipCommon, self).setUp()
-
-        # Usefull models
-        Partner = self.env['res.partner']
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # Test memberships
-        self.membership_1 = self.env['product.product'].create({
+        cls.membership_1 = cls.env['product.product'].create({
             'membership': True,
             'membership_date_from': datetime.date.today() + relativedelta(days=-2),
             'membership_date_to': datetime.date.today() + relativedelta(months=1),
@@ -25,10 +23,10 @@ class TestMembershipCommon(AccountingTestCase):
         })
 
         # Test people
-        self.partner_1 = Partner.create({
+        cls.partner_1 = cls.env['res.partner'].create({
             'name': 'Ignasse Reblochon',
         })
-        self.partner_2 = Partner.create({
+        cls.partner_2 = cls.env['res.partner'].create({
             'name': 'Martine Poulichette',
             'free_member': True,
         })

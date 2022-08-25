@@ -1,0 +1,14 @@
+// TODO: remove second selector when we remove legacy badge field
+.o_field_badge span, span.o_field_badge {
+    border: 0;
+    font-size: 12px;
+    user-select: none;
+    background-color: rgba(lightgray, 0.5);
+    font-weight: 500;
+    @include o-text-overflow;
+    transition: none; // remove transition to prevent badges from flickering at reload
+    color: #444B5A;
+    &.o_field_empty {
+        display: none !important;
+    }
+}

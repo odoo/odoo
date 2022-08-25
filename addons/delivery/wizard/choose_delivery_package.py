@@ -2,65 +2,65 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools.float_utils import float_compare
 
 
 class ChooseDeliveryPackage(models.TransientModel):
     _name = 'choose.delivery.package'
     _description = 'Delivery Package Selection Wizard'
 
-    stock_quant_package_id = fields.Many2one(
-        'stock.quant.package',
-        string="Physical Package",
-        default=lambda self: self._default_stock_quant_package_id()
-    ) 
-    delivery_packaging_id = fields.Many2one(
-        'product.packaging',
-        default=lambda self: self._default_delivery_packaging_id()
-    )
-    shipping_weight = fields.Float(
-        string='Shipping Weight',
-        default=lambda self: self._default_shipping_weight()
-    )
+    picking_id = fields.Many2one('stock.picking', 'Picking')
+    delivery_package_type_id = fields.Many2one('stock.package.type', 'Delivery Package Type', check_company=True)
+    shipping_weight = fields.Float('Shipping Weight', compute='_compute_shipping_weight', store=True, readonly=False)
+    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
+    company_id = fields.Many2one(related='picking_id.company_id')
 
-    def _default_stock_quant_package_id(self):
-        if self.env.context.get('default_stock_quant_package_id'):
-            return self.env['stock.quant.package'].browse(self.env.context['stock_quant_package_id'])
+    @api.depends('delivery_package_type_id')
+    def _compute_weight_uom_name(self):
+        weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+        for package in self:
+            package.weight_uom_name = weight_uom_id.name
 
-    def _default_delivery_packaging_id(self):
-        res = None
-        if self.env.context.get('default_delivery_packaging_id'):
-            res = self.env['product.packaging'].browse(self.env.context['default_delivery_packaging_id'])
-        if self.env.context.get('default_stock_quant_package_id'):
-            stock_quant_package = self.env['stock.quant.package'].browse(self.env.context['default_stock_quant_package_id'])
-            res = stock_quant_package.packaging_id
-        return res
+    @api.depends('delivery_package_type_id')
+    def _compute_shipping_weight(self):
+        for rec in self:
+            move_line_ids = rec.picking_id.move_line_ids.filtered(lambda m:
+                float_compare(m.qty_done, 0.0, precision_rounding=m.product_uom_id.rounding) > 0
+                and not m.result_package_id
+            )
+            # Add package weights to shipping weight, package base weight is defined in package.type
+            total_weight = rec.delivery_package_type_id.base_weight or 0.0
+            for ml in move_line_ids:
+                qty = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+                total_weight += qty * ml.product_id.weight
+            rec.shipping_weight = total_weight
 
-    def _default_shipping_weight(self):
-        if self.env.context.get('default_stock_quant_package_id'):
-            stock_quant_package = self.env['stock.quant.package'].browse(self.env.context['default_stock_quant_package_id'])
-            return stock_quant_package.shipping_weight
-        else:
-            picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])
-            move_line_ids = [po for po in picking_id.move_line_ids if po.qty_done > 0 and not po.result_package_id]
-            total_weight = sum([po.qty_done * po.product_id.weight for po in move_line_ids])
-            return total_weight
-
-    @api.onchange('delivery_packaging_id', 'shipping_weight')
-    def _onchange_packaging_weight(self):
-        if self.delivery_packaging_id.max_weight and self.shipping_weight > self.delivery_packaging_id.max_weight:
+    @api.onchange('delivery_package_type_id', 'shipping_weight')
+    def _onchange_package_type_weight(self):
+        if self.delivery_package_type_id.max_weight and self.shipping_weight > self.delivery_package_type_id.max_weight:
             warning_mess = {
                 'title': _('Package too heavy!'),
                 'message': _('The weight of your package is higher than the maximum weight authorized for this package type. Please choose another package type.')
             }
             return {'warning': warning_mess}
 
-    def put_in_pack(self):
-        picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])
-        if not self.stock_quant_package_id:
-            stock_quant_package = picking_id._put_in_pack()
-            self.stock_quant_package_id = stock_quant_package
-        # write shipping weight and product_packaging on 'stock_quant_package' if needed
-        if self.delivery_packaging_id:
-            self.stock_quant_package_id.packaging_id = self.delivery_packaging_id
-            if self.shipping_weight:
-                self.stock_quant_package_id.shipping_weight = self.shipping_weight
+    def action_put_in_pack(self):
+        picking_move_lines = self.picking_id.move_line_ids
+        if not self.picking_id.picking_type_id.show_reserved and not self.env.context.get('barcode_view'):
+            picking_move_lines = self.picking_id.move_line_nosuggest_ids
+
+        move_line_ids = picking_move_lines.filtered(lambda ml:
+            float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+            and not ml.result_package_id
+        )
+        if not move_line_ids:
+            move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.reserved_uom_qty, 0.0,
+                                 precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
+                                 precision_rounding=ml.product_uom_id.rounding) == 0)
+
+        delivery_package = self.picking_id._put_in_pack(move_line_ids)
+        # write shipping weight and package type on 'stock_quant_package' if needed
+        if self.delivery_package_type_id:
+            delivery_package.package_type_id = self.delivery_package_type_id
+        if self.shipping_weight:
+            delivery_package.shipping_weight = self.shipping_weight

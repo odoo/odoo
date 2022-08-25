@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_template">
+        <xpath expr="//li[.//a[@id='print_invoice_report']]" position="after">
+            <li t-if="sale_order.timesheet_count > 0 and sale_order.state in ('sale', 'done')" class="list-group-item flex-grow-1">
+                <div class="btn-toolbar flex-sm-nowrap justify-content-center">
+                    <div class="btn-group">
+                        <a t-att-href="'/my/timesheets?search_in=so&amp;search=%s' % sale_order.name">View Timesheets</a>
+                    </div>
+                </div>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_timesheets_inherit" inherit_id="hr_timesheet.portal_my_timesheets">
+        <xpath expr="//t[@t-foreach='grouped_timesheets']/tbody/tr[hasclass('table-light')]" position="inside">
+            <t t-elif="groupby == 'sol'">
+                <t t-set="sol" t-value="timesheets[0].so_line"/>
+                <th colspan="5">
+                    <t t-if="sol">
+                        <span t-field="sol.display_name"/>
+                        <t t-if="sol.remaining_hours_available">
+                            <span class="text-muted fw-normal">
+                                <t t-if="is_uom_day">
+                                    (<span t-esc="timesheets._convert_hours_to_days(sol.product_uom_qty)" t-options='{"widget": "timesheet_uom"}'></span> Days Ordered, <span t-esc="timesheets._convert_hours_to_days(sol.remaining_hours)" t-options='{"widget": "timesheet_uom"}'></span> Days Remaining)
+                                </t>
+                                <t t-else="">
+                                    (<span t-field="sol.product_uom_qty" t-options='{"widget": "float_time"}'></span> <span t-field="sol.product_uom.display_name"></span> Ordered, <span t-field="sol.remaining_hours" t-options='{"widget": "float_time"}'></span> <span t-field="sol.product_uom.display_name"></span> Remaining)
+                                </t>
+                            </span>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        No Sales Order Item
+                    </t>
+                </th>
+                <th colspan="1" class="text-end text-muted fw-normal">
+                    <t t-if="is_uom_day">
+                        Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                    </t>
+                    <t t-else="">
+                        Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
+                    </t>
+                </th>
+            </t>
+            <t t-elif="groupby == 'so'">
+                <t t-set="so" t-value="timesheets[0].order_id"/>
+                <th colspan="6">
+                    <t t-if="so">
+                        <span t-field="so.display_name"/>
+                    </t>
+                    <t t-else="">
+                        No Sales Order
+                    </t>
+                </th>
+                <th colspan="1" class="text-end text-muted">
+                    <t t-if="is_uom_day">
+                        Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                    </t>
+                    <t t-else="">
+                        Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
+                    </t>
+                </th>
+            </t>
+            <t t-elif="groupby == 'invoice'">
+                <t t-set="invoice" t-value="timesheets.timesheet_invoice_id"/>
+                <th colspan="6">
+                    <t t-if="invoice">
+                        <span t-field="invoice.display_name"/>
+                    </t>
+                    <t t-else="">
+                        No Invoice
+                    </t>
+                </th>
+                <th colspan="1" class="text-end text-muted">
+                    <t t-if="is_uom_day">
+                        Total: <span t-esc="timesheets._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                    </t>
+                    <t t-else="">
+                        Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
+                    </t>
+                </th>
+            </t>
+        </xpath>
+        <xpath expr="//thead/tr/th[@t-if='is_uom_day']" position="before">
+            <th t-if="not groupby == 'sol'">Sales Order Item</th>
+        </xpath>
+        <xpath expr="//tbody//td[hasclass('text-end')]" position="before">
+            <td t-if="not groupby == 'sol'"><span t-field="timesheet.so_line" t-att-title="timesheet.so_line.display_name"></span></td>
+        </xpath>
+    </template>
+
+    <template id="portal_invoice_page_inherit" inherit_id="account.portal_invoice_page">
+        <xpath expr="//t[@t-set='entries']/ul/li[.//a[@id='print_invoice_report']]" position="after">
+            <li class="list-group-item flex-grow-1">
+                <div class="btn-toolbar flex-sm-nowrap justify-content-center">
+                    <div class="btn-group mb-1">
+                        <a t-if="invoice.move_type == 'out_invoice' and invoice.state in ('draft', 'posted') and invoice.timesheet_count > 0"
+                        target="_blank" t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % invoice.name">View Timesheets</a>
+                    </div>
+                </div>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_task_inherit" inherit_id="project.portal_my_task">
+        <xpath expr="//div[@name='portal_my_task_second_column']" position="inside">
+            <t t-if="task.project_id.allow_billable">
+                <div t-if="task.sale_order_id"><strong>Sales Order:</strong>
+                    <span t-if="so_accessible"><a t-attf-href="/my/orders/{{ task.sale_order_id.id }}" t-field="task.sale_order_id"></a></span>
+                    <span t-else="" t-field="task.sale_order_id"></span>
+                </div>
+                <div t-if="task.sale_order_id.invoice_ids"><strong>Invoices:</strong>
+                    <span t-foreach="task.sale_order_id.invoice_ids" t-as="invoice_line">
+                        <t t-if="invoice_line.id in invoices_accessible">
+                            <a t-attf-href="/my/invoices/{{ invoice_line.id }}">
+                                <i t-if="invoice_line.state == 'draft'">Draft Invoice</i>
+                                <t t-else="" t-esc="invoice_line.name"/></a>
+                            <span t-if="not invoice_line_last">,</span>
+                        </t>
+                        <t t-else=""><span t-esc="invoice_line.name"></span><span t-if="not invoice_line_last">,</span></t>
+                    </span>
+                </div>
+                <div t-if="task.sale_line_id.untaxed_amount_invoiced > 0"><strong>Invoiced:</strong>
+                    <span t-field="task.sale_line_id.untaxed_amount_invoiced"/>
+                </div>
+                <div t-if="task.sale_line_id.untaxed_amount_to_invoice > 0"><strong>To invoice:</strong>
+                    <span t-field="task.sale_line_id.untaxed_amount_to_invoice"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_timesheet_table_inherit" inherit_id="hr_timesheet.portal_timesheet_table">
+        <xpath expr="//div[@name='planned_time']" position="after">
+            <span t-if="task.allow_billable and task.sale_line_id and task.sale_line_id.remaining_hours_available" t-attf-class="{{task.remaining_hours_so &lt; 0 and 'text-danger' or ''}}">
+                <div t-if="is_uom_day">Remaining Days on SO: <span t-esc="timesheets._convert_hours_to_days(task.remaining_hours_so)" t-options='{"widget": "timesheet_uom"}'/></div>
+                <div t-else="">Remaining Hours on SO: <span t-esc="task.remaining_hours_so" t-options='{"widget": "float_time"}'/></div>
+            </span>
+        </xpath>
+    </template>
+
+</odoo>

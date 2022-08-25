@@ -12,7 +12,7 @@
                         <field name="model_id"/>
                         <field name="is_default"/>
                         <field name="action_id"/>
-                        <field name="active"/>
+                        <field name="active" widget="boolean_toggle"/>
                     </group>
                     <group>
                         <field name="domain" widget="domain" options="{'model': 'model_id'}"/>
@@ -47,6 +47,7 @@
                     <filter string="Shared" domain="[('user_id','=',False)]" name="shared" help="Filters shared with all users"/>
                     <filter string="My filters" domain="[('user_id','=',uid)]" name="my_filters" help="Filters created by myself"/>
                     <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter string="User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>

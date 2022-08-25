@@ -20,7 +20,7 @@
 {
     'name': 'Guatemala - Accounting',
     'version': '3.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Guatemala.
 =====================================================================
@@ -33,7 +33,13 @@ taxes and the Quetzal currency.""",
     'depends': ['base', 'account'],
     'data': [
         'data/l10n_gt_chart_data.xml',
-        'data/account_data.xml',
+        'data/account.account.template.csv',
+        'data/l10n_gt_chart_post_data.xml',
+        'data/account_tax_group_data.xml',
         'data/account_chart_template_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

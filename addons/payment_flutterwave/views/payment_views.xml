@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_acquirer_form" model="ir.ui.view">
+        <field name="name">Flutterwave Acquirer Form</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.payment_acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='acquirer']" position="inside">
+                <group attrs="{'invisible': [('provider', '!=', 'flutterwave')]}"
+                       name="flutterwave_credentials">
+                    <field name="flutterwave_public_key"
+                           string="Public Key"
+                           attrs="{'required':[('provider', '=', 'flutterwave'), ('state', '!=', 'disabled')]}"/>
+                    <field name="flutterwave_secret_key"
+                           string="Secret Key"
+                           attrs="{'required':[('provider', '=', 'flutterwave'), ('state', '!=', 'disabled')]}"
+                           password="True"/>
+                    <field name="flutterwave_webhook_secret"
+                           string="Webhook Secret"
+                           attrs="{'required':[('provider', '=', 'flutterwave'), ('state', '!=', 'disabled')]}"
+                           password="True"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

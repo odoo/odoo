@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* product_margin
+# 	* product_margin
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.2\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-22 14:10+0000\n"
-"PO-Revision-Date: 2018-03-22 14:10+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 08:16+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,12 +26,12 @@ msgid "# Invoiced in Sale"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "# Purchased"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Analysis Criteria"
 msgstr ""
 
@@ -56,17 +56,17 @@ msgid "Avg. Sale Unit Price"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Avg. Unit Price"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
+#: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Cancel"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Catalog Price"
 msgstr ""
 
@@ -86,8 +86,8 @@ msgid "Display Name"
 msgstr ""
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__draft_open_paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__draft_open_paid
 msgid "Draft, Open and Paid"
 msgstr ""
 
@@ -127,7 +127,7 @@ msgid "From"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
+#: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "General Information"
 msgstr ""
 
@@ -168,7 +168,7 @@ msgid "Margin Date To"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Margins"
 msgstr ""
 
@@ -183,19 +183,19 @@ msgid "Normal Cost - Total Cost"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
+#: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Open Margins"
 msgstr ""
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__open_paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__open_paid
 msgid "Open and Paid"
 msgstr ""
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__paid
 msgid "Paid"
 msgstr ""
 
@@ -210,18 +210,18 @@ msgid "Product Margin"
 msgstr ""
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:49
+#: code:addons/product_margin/wizard/product_margin.py:0
 #: model:ir.actions.act_window,name:product_margin.product_margin_act_window
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_graph
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_graph
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 #, python-format
 msgid "Product Margins"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.view,arch_db:product_margin.product_margin_form_view
+#: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
 msgid "Properties categories"
 msgstr ""
 
@@ -231,23 +231,23 @@ msgid "Purchase Gap"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Purchases"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Sales"
 msgstr ""
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sales_gap
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Sales Gap"
 msgstr ""
 
 #. module: product_margin
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_form
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Standard Price"
 msgstr ""
 
@@ -258,7 +258,8 @@ msgstr ""
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__turnover
-msgid "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
 msgstr ""
 
 #. module: product_margin
@@ -268,7 +269,9 @@ msgstr ""
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_expected
-msgid "Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgid ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer "
+"Invoices"
 msgstr ""
 
 #. module: product_margin
@@ -288,13 +291,13 @@ msgstr ""
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_cost
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Cost"
 msgstr ""
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_margin
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Margin"
 msgstr ""
 
@@ -310,7 +313,7 @@ msgstr ""
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__turnover
-#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
+#: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Turnover"
 msgstr ""
 
@@ -318,4 +321,3 @@ msgstr ""
 #: model:ir.model.fields,help:product_margin.field_product_product__total_margin
 msgid "Turnover - Standard price"
 msgstr ""
-

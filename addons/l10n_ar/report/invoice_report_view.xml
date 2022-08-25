@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_account_invoice_report_search_inherit">
+        <field name="name">account.invoice.report.search</field>
+        <field name="model">account.invoice.report</field>
+        <field name="inherit_id" ref="account.view_account_invoice_report_search" />
+        <field name="arch" type="xml">
+            <search>
+                <field name="l10n_ar_state_id"/>
+                <filter name="with_document" string="With Document" domain="[('l10n_latam_document_type_id', '!=', False)]"/>
+            </search>
+            <filter name="user" position="after">
+                <filter string="State" name="groupby_l10n_ar_state_id" context="{'group_by': 'l10n_ar_state_id'}"/>
+                <filter string="Account" name="groupby_account_id" context="{'group_by':'account_id'}" groups="account.group_account_readonly" />
+            </filter>
+        </field>
+    </record>
+
+    <record id="action_iibb_sales_by_state_and_account_pivot" model="ir.actions.act_window">
+        <field name="name">IIBB - Sales by jurisdiction</field>
+        <field name="res_model">account.invoice.report</field>
+        <field name="view_mode">pivot</field>
+        <field name="context">{'search_default_current': 1, 'search_default_customer': 1, 'search_default_with_document': 1, 'search_default_company': 1, 'search_default_groupby_l10n_ar_state_id': 2, 'search_default_groupby_account_id': 3, 'time_ranges': {'field': 'date', 'range': 'this_year'}}</field>
+    </record>
+
+    <menuitem
+        id="menu_iibb_sales_by_state_and_account"
+        action="action_iibb_sales_by_state_and_account_pivot"
+        parent="l10n_ar.account_reports_ar_statements_menu"
+        sequence="30"/>
+
+    <record id="action_iibb_purchases_by_state_and_account_pivot" model="ir.actions.act_window">
+        <field name="name">IIBB - Purchases by jurisdiction</field>
+        <field name="res_model">account.invoice.report</field>
+        <field name="view_mode">pivot</field>
+        <field name="context">{'search_default_current': 1, 'search_default_supplier': 1, 'search_default_with_document': 1, 'search_default_company': 1, 'search_default_groupby_l10n_ar_state_id': 2, 'search_default_groupby_account_id': 3, 'time_ranges': {'field': 'date', 'range': 'this_year'}}</field>
+    </record>
+
+    <menuitem
+        id="menu_iibb_purchases_by_state_and_account"
+        action="action_iibb_purchases_by_state_and_account_pivot"
+        parent="l10n_ar.account_reports_ar_statements_menu"
+        sequence="40"/>
+
+</odoo>

@@ -1,37 +1,51 @@
-odoo.define('website_sale.validate', function(require) {
-"use strict";
+odoo.define('website_sale.validate', function (require) {
+'use strict';
 
-var ajax = require('web.ajax');
+var publicWidget = require('web.public.widget');
+var core = require('web.core');
+var _t = core._t;
 
-$(document).ready(function () {
+publicWidget.registry.websiteSaleValidate = publicWidget.Widget.extend({
+    selector: 'div.oe_website_sale_tx_status[data-order-id]',
 
-    var _poll_nbr = 0;
+    /**
+     * @override
+     */
+    start: function () {
+        var def = this._super.apply(this, arguments);
+        this._poll_nbr = 0;
+        this._paymentTransationPollStatus();
+        return def;
+    },
 
-    function payment_transaction_poll_status() {
-        var order_node = $('div.oe_website_sale_tx_status');
-        if (! order_node || order_node.data('order-id') === undefined) {
-            return;
-        }
-        var order_id = parseInt(order_node.data('order-id'));
-        return ajax.jsonRpc('/shop/payment/get_status/' + order_id, 'call', {
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _paymentTransationPollStatus: function () {
+        var self = this;
+        this._rpc({
+            route: '/shop/payment/get_status/' + parseInt(this.$el.data('order-id')),
         }).then(function (result) {
-            _poll_nbr += 1;
-            if(result.recall) {
-                if (_poll_nbr < 20){
-                    setTimeout(function () { payment_transaction_poll_status(); }, Math.ceil(_poll_nbr / 3) * 1000);
-                }
-                else {
+            self._poll_nbr += 1;
+            if (result.recall) {
+                if (self._poll_nbr < 20) {
+                    setTimeout(function () {
+                        self._paymentTransationPollStatus();
+                    }, Math.ceil(self._poll_nbr / 3) * 1000);
+                } else {
                     var $message = $(result.message);
-                    $message.find('span:first').prepend($(
-                        "<i title='We are waiting the confirmation of the bank or payment provider' class='fa fa-warning' style='margin-right:10px;'>"));
+                    var $warning =  $("<i class='fa fa-warning' style='margin-right:10px;'>");
+                    $warning.attr("title", _t("We are waiting for confirmation from the bank or the payment provider"));
+                    $message.find('span:first').prepend($warning);
                     result.message = $message.html();
                 }
             }
-            $('div.oe_website_sale_tx_status').html(result.message);
+            self.$el.html(result.message);
         });
-    }
-
-    payment_transaction_poll_status();
+    },
 });
-
 });

@@ -9,28 +9,32 @@ the ORM does, in fact.
 """
 
 from contextlib import contextmanager
-from functools import wraps
+from datetime import timedelta, datetime
 import itertools
 import logging
+import os
 import time
+import threading
 import uuid
+import warnings
 
+from inspect import currentframe
 import psycopg2
 import psycopg2.extras
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
+from psycopg2.sql import SQL, Identifier
 from werkzeug import urls
+
+from .tools.func import frame_codeinfo, locked
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 _logger = logging.getLogger(__name__)
+_logger_conn = _logger.getChild("connection")
 
-types_mapping = {
-    'date': (1082,),
-    'time': (1083,),
-    'datetime': (1114,),
-}
+real_time = time.time.__call__  # ensure we have a non patched time for query times when using freezegun
 
 def unbuffer(symb, cr):
     if symb is None:
@@ -42,14 +46,10 @@ def undecimalize(symb, cr):
         return None
     return float(symb)
 
-for name, typeoid in types_mapping.items():
-    psycopg2.extensions.register_type(psycopg2.extensions.new_type(typeoid, name, lambda x, cr: x))
 psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,), 'float', undecimalize))
 
 
 from . import tools
-from .tools.func import frame_codeinfo
-from .tools import pycompat
 
 from .tools import parse_version as pv
 if pv(psycopg2.__version__) < pv('2.7'):
@@ -60,12 +60,23 @@ if pv(psycopg2.__version__) < pv('2.7'):
             raise ValueError("A string literal cannot contain NUL (0x00) characters.")
         return QuotedString(adapted)
 
-    for type_ in pycompat.string_types:
-        psycopg2.extensions.register_adapter(type_, adapt_string)
+    psycopg2.extensions.register_adapter(str, adapt_string)
 
-from datetime import timedelta
-import threading
-from inspect import currentframe
+
+
+def flush_env(cr, *, clear=True):
+    warnings.warn("Since Odoo 15.0, use cr.flush() instead of flush_env(cr).",
+                  DeprecationWarning, stacklevel=2)
+    cr.flush()
+    if clear:
+        cr.clear()
+
+
+def clear_env(cr):
+    warnings.warn("Since Odoo 15.0, use cr.clear() instead of clear_env(cr).",
+                  DeprecationWarning, stacklevel=2)
+    cr.clear()
+
 
 import re
 re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
@@ -73,7 +84,129 @@ re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$')
 
 sql_counter = 0
 
-class Cursor(object):
+
+class Savepoint:
+    """ Reifies an active breakpoint, allows :meth:`BaseCursor.savepoint` users
+    to internally rollback the savepoint (as many times as they want) without
+    having to implement their own savepointing, or triggering exceptions.
+
+    Should normally be created using :meth:`BaseCursor.savepoint` rather than
+    directly.
+
+    The savepoint will be rolled back on unsuccessful context exits
+    (exceptions). It will be released ("committed") on successful context exit.
+    The savepoint object can be wrapped in ``contextlib.closing`` to
+    unconditionally roll it back.
+
+    The savepoint can also safely be explicitly closed during context body. This
+    will rollback by default.
+
+    :param BaseCursor cr: the cursor to execute the `SAVEPOINT` queries on
+    """
+    def __init__(self, cr):
+        self.name = str(uuid.uuid1())
+        self._name = Identifier(self.name)
+        self._cr = cr
+        self.closed = False
+        cr.execute(SQL('SAVEPOINT {}').format(self._name))
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close(rollback=exc_type is not None)
+
+    def close(self, *, rollback=True):
+        if not self.closed:
+            self._close(rollback)
+
+    def rollback(self):
+        self._cr.execute(SQL('ROLLBACK TO SAVEPOINT {}').format(self._name))
+
+    def _close(self, rollback):
+        if rollback:
+            self.rollback()
+        self._cr.execute(SQL('RELEASE SAVEPOINT {}').format(self._name))
+        self.closed = True
+
+class _FlushingSavepoint(Savepoint):
+    def __init__(self, cr):
+        cr.flush()
+        super().__init__(cr)
+
+    def rollback(self):
+        self._cr.clear()
+        super().rollback()
+
+    def _close(self, rollback):
+        if not rollback:
+            self._cr.flush()
+        super()._close(rollback)
+
+class BaseCursor:
+    """ Base class for cursors that manage pre/post commit hooks. """
+
+    def __init__(self):
+        self.precommit = tools.Callbacks()
+        self.postcommit = tools.Callbacks()
+        self.prerollback = tools.Callbacks()
+        self.postrollback = tools.Callbacks()
+        # By default a cursor has no transaction object.  A transaction object
+        # for managing environments is instantiated by registry.cursor().  It
+        # is not done here in order to avoid cyclic module dependencies.
+        self.transaction = None
+
+    def flush(self):
+        """ Flush the current transaction, and run precommit hooks. """
+        if self.transaction is not None:
+            self.transaction.flush()
+        self.precommit.run()
+
+    def clear(self):
+        """ Clear the current transaction, and clear precommit hooks. """
+        if self.transaction is not None:
+            self.transaction.clear()
+        self.precommit.clear()
+
+    def reset(self):
+        """ Reset the current transaction (this invalidates more that clear()).
+            This method should be called only right after commit() or rollback().
+        """
+        if self.transaction is not None:
+            self.transaction.reset()
+
+    def savepoint(self, flush=True) -> Savepoint:
+        """context manager entering in a new savepoint
+
+        With ``flush`` (the default), will automatically run (or clear) the
+        relevant hooks.
+        """
+        if flush:
+            return _FlushingSavepoint(self)
+        else:
+            return Savepoint(self)
+
+    def __enter__(self):
+        """ Using the cursor as a contextmanager automatically commits and
+            closes it::
+
+                with cr:
+                    cr.execute(...)
+
+                # cr is committed if no failure occurred
+                # cr is closed in any case
+        """
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        try:
+            if exc_type is None:
+                self.commit()
+        finally:
+            self.close()
+
+
+class Cursor(BaseCursor):
     """Represents an open transaction to the PostgreSQL DB backend,
        acting as a lightweight wrapper around psycopg2's
        ``cursor`` objects.
@@ -145,18 +278,9 @@ class Cursor(object):
     """
     IN_MAX = 1000   # decent limit on size of IN queries - guideline = Oracle limit
 
-    def check(f):
-        @wraps(f)
-        def wrapper(self, *args, **kwargs):
-            if self._closed:
-                msg = 'Unable to use a closed cursor.'
-                if self.__closer:
-                    msg += ' It was closed at %s, line %s' % self.__closer
-                raise psycopg2.OperationalError(msg)
-            return f(self, *args, **kwargs)
-        return wrapper
-
     def __init__(self, pool, dbname, dsn, serialized=True):
+        super().__init__()
+
         self.sql_from_log = {}
         self.sql_into_log = {}
 
@@ -184,14 +308,11 @@ class Cursor(object):
             self.__caller = False
         self._closed = False   # real initialisation value
         self.autocommit(False)
-        self.__closer = False
 
         self._default_log_exceptions = True
 
         self.cache = {}
-
-        # event handlers, see method after() below
-        self._event_handlers = {'commit': [], 'rollback': []}
+        self._now = None
 
     def __build_dict(self, row):
         return {d.name: row[i] for i, d in enumerate(self._obj.description)}
@@ -218,37 +339,52 @@ class Cursor(object):
             _logger.warning(msg)
             self._close(True)
 
-    @check
+    def _format(self, query, params=None):
+        encoding = psycopg2.extensions.encodings[self.connection.encoding]
+        return self._obj.mogrify(query, params).decode(encoding, 'replace')
+
     def execute(self, query, params=None, log_exceptions=None):
+        global sql_counter
         if params and not isinstance(params, (tuple, list, dict)):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         if self.sql_log:
-            now = time.time()
-            _logger.debug("query: %s", query)
-
+            _logger.debug("query: %s", self._format(query, params))
+        start = real_time()
         try:
             params = params or None
             res = self._obj.execute(query, params)
         except Exception as e:
             if self._default_log_exceptions if log_exceptions is None else log_exceptions:
-                _logger.error("bad query: %s\nERROR: %s", self._obj.query or query, e)
+                _logger.error("bad query: %s\nERROR: %s", tools.ustr(self._obj.query or query), e)
             raise
 
         # simple query count is always computed
         self.sql_log_count += 1
+        sql_counter += 1
+
+        delay = (real_time() - start)
+        current_thread = threading.current_thread()
+        if hasattr(current_thread, 'query_count'):
+            current_thread.query_count += 1
+            current_thread.query_time += delay
+
+        # optional hooks for performance and tracing analysis
+        for hook in getattr(current_thread, 'query_hooks', ()):
+            hook(self, query, params, start, delay)
 
         # advanced stats only if sql_log is enabled
         if self.sql_log:
-            delay = (time.time() - now) * 1E6
+            delay *= 1E6
 
-            res_from = re_from.match(query.lower())
+            query_lower = self._obj.query.decode().lower()
+            res_from = re_from.match(query_lower)
             if res_from:
                 self.sql_from_log.setdefault(res_from.group(1), [0, 0])
                 self.sql_from_log[res_from.group(1)][0] += 1
                 self.sql_from_log[res_from.group(1)][1] += delay
-            res_into = re_into.match(query.lower())
+            res_into = re_into.match(query_lower)
             if res_into:
                 self.sql_into_log.setdefault(res_into.group(1), [0, 0])
                 self.sql_into_log[res_into.group(1)][0] += 1
@@ -284,23 +420,30 @@ class Cursor(object):
         self.sql_log_count = 0
         self.sql_log = False
 
-    @check
+    @contextmanager
+    def _enable_logging(self):
+        """ Forcefully enables logging for this cursor, restores it afterwards.
+
+        Updates the logger in-place, so not thread-safe.
+        """
+        previous, self.sql_log = self.sql_log, True
+        level = _logger.level
+        _logger.setLevel(logging.DEBUG)
+        try:
+            yield
+        finally:
+            _logger.setLevel(level)
+            self.sql_log = previous
+
     def close(self):
-        return self._close(False)
+        if not self._closed:
+            return self._close(False)
 
     def _close(self, leak=False):
-        global sql_counter
-
         if not self._obj:
             return
 
         del self.cache
-
-        if self.sql_log:
-            self.__closer = frame_codeinfo(currentframe(), 3)
-
-        # simple query count is always computed
-        sql_counter += self.sql_log_count
 
         # advanced stats only if sql_log is enabled
         self.print_log()
@@ -313,10 +456,11 @@ class Cursor(object):
         # collected as fast as they should). The problem is probably due in
         # part because browse records keep a reference to the cursor.
         del self._obj
-        self._closed = True
 
-        # Clean the underlying connection.
-        self._cnx.rollback()
+        # Clean the underlying connection, and run rollback hooks.
+        self.rollback()
+
+        self._closed = True
 
         if leak:
             self._cnx.leaked = True
@@ -326,14 +470,18 @@ class Cursor(object):
             keep_in_pool = self.dbname not in templates_list
             self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
-    @check
     def autocommit(self, on):
         if on:
+            warnings.warn(
+                "Since Odoo 13.0, the ORM delays UPDATE queries for "
+                "performance reasons. Since then, using the ORM with "
+                " autocommit(True) is unsafe, as computed fields may not be "
+                "fully computed at commit.", DeprecationWarning, stacklevel=2)
             isolation_level = ISOLATION_LEVEL_AUTOCOMMIT
         else:
             # If a serializable cursor was requested, we
             # use the appropriate PotsgreSQL isolation level
-            # that maps to snaphsot isolation.
+            # that maps to snapshot isolation.
             # For all supported PostgreSQL versions (8.3-9.x),
             # this is currently the ISOLATION_REPEATABLE_READ.
             # See also the docstring of this class.
@@ -347,7 +495,6 @@ class Cursor(object):
                 else ISOLATION_LEVEL_READ_COMMITTED
         self._cnx.set_isolation_level(isolation_level)
 
-    @check
     def after(self, event, func):
         """ Register an event handler.
 
@@ -361,64 +508,36 @@ class Cursor(object):
             back or committed independently. You may consider the use of a
             dedicated temporary cursor to do some database operation.
         """
-        self._event_handlers[event].append(func)
+        warnings.warn(
+            "Cursor.after() is deprecated, use Cursor.postcommit.add() instead.",
+            DeprecationWarning,
+        )
+        if event == 'commit':
+            self.postcommit.add(func)
+        elif event == 'rollback':
+            self.postrollback.add(func)
 
-    def _pop_event_handlers(self):
-        # return the current handlers, and reset them on self
-        result = self._event_handlers
-        self._event_handlers = {'commit': [], 'rollback': []}
-        return result
-
-    @check
     def commit(self):
-        """ Perform an SQL `COMMIT`
-        """
+        """ Perform an SQL `COMMIT` """
+        self.flush()
         result = self._cnx.commit()
-        for func in self._pop_event_handlers()['commit']:
-            func()
+        self.clear()
+        self._now = None
+        self.prerollback.clear()
+        self.postrollback.clear()
+        self.postcommit.run()
         return result
 
-    @check
     def rollback(self):
-        """ Perform an SQL `ROLLBACK`
-        """
+        """ Perform an SQL `ROLLBACK` """
+        self.clear()
+        self.postcommit.clear()
+        self.prerollback.run()
         result = self._cnx.rollback()
-        for func in self._pop_event_handlers()['rollback']:
-            func()
+        self._now = None
+        self.postrollback.run()
         return result
 
-    def __enter__(self):
-        """ Using the cursor as a contextmanager automatically commits and
-            closes it::
-
-                with cr:
-                    cr.execute(...)
-
-                # cr is committed if no failure occurred
-                # cr is closed in any case
-        """
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        if exc_type is None:
-            self.commit()
-        self.close()
-
-    @contextmanager
-    @check
-    def savepoint(self):
-        """context manager entering in a new savepoint"""
-        name = uuid.uuid1().hex
-        self.execute('SAVEPOINT "%s"' % name)
-        try:
-            yield
-        except Exception:
-            self.execute('ROLLBACK TO SAVEPOINT "%s"' % name)
-            raise
-        else:
-            self.execute('RELEASE SAVEPOINT "%s"' % name)
-
-    @check
     def __getattr__(self, name):
         return getattr(self._obj, name)
 
@@ -426,105 +545,105 @@ class Cursor(object):
     def closed(self):
         return self._closed
 
+    def now(self):
+        """ Return the transaction's timestamp ``NOW() AT TIME ZONE 'UTC'``. """
+        if self._now is None:
+            self.execute("SELECT (now() AT TIME ZONE 'UTC')")
+            self._now = self.fetchone()[0]
+        return self._now
 
-class TestCursor(object):
+
+class TestCursor(BaseCursor):
     """ A pseudo-cursor to be used for tests, on top of a real cursor. It keeps
         the transaction open across requests, and simulates committing, rolling
         back, and closing:
 
-              test cursor           | queries on actual cursor
-            ------------------------+---------------------------------------
-              cr = TestCursor(...)  | SAVEPOINT test_cursor_N
-                                    |
-              cr.execute(query)     | query
-                                    |
-              cr.commit()           | SAVEPOINT test_cursor_N
-                                    |
-              cr.rollback()         | ROLLBACK TO SAVEPOINT test_cursor_N
-                                    |
-              cr.close()            | ROLLBACK TO SAVEPOINT test_cursor_N
-                                    |
-
+        +------------------------+---------------------------------------------------+
+        |  test cursor           | queries on actual cursor                          |
+        +========================+===================================================+
+        |``cr = TestCursor(...)``| SAVEPOINT test_cursor_N                           |
+        +------------------------+---------------------------------------------------+
+        | ``cr.execute(query)``  | query                                             |
+        +------------------------+---------------------------------------------------+
+        |  ``cr.commit()``       | RELEASE SAVEPOINT test_cursor_N                   |
+        |                        | SAVEPOINT test_cursor_N (lazy)                    |
+        +------------------------+---------------------------------------------------+
+        |  ``cr.rollback()``     | ROLLBACK TO SAVEPOINT test_cursor_N (if savepoint)|
+        +------------------------+---------------------------------------------------+
+        |  ``cr.close()``        | ROLLBACK TO SAVEPOINT test_cursor_N (if savepoint)|
+        |                        | RELEASE SAVEPOINT test_cursor_N (if savepoint)    |
+        +------------------------+---------------------------------------------------+
     """
-    _savepoint_seq = itertools.count()
-
+    _cursors_stack = []
     def __init__(self, cursor, lock):
+        super().__init__()
+        self._now = None
         self._closed = False
         self._cursor = cursor
         # we use a lock to serialize concurrent requests
         self._lock = lock
         self._lock.acquire()
+        self._cursors_stack.append(self)
         # in order to simulate commit and rollback, the cursor maintains a
-        # savepoint at its last commit
-        self._savepoint = "test_cursor_%s" % next(self._savepoint_seq)
-        self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
+        # savepoint at its last commit, the savepoint is created lazily
+        self._savepoint = self._cursor.savepoint(flush=False)
+
+    def execute(self, *args, **kwargs):
+        if not self._savepoint:
+            self._savepoint = self._cursor.savepoint(flush=False)
+
+        return self._cursor.execute(*args, **kwargs)
 
     def close(self):
         if not self._closed:
+            self.rollback()
             self._closed = True
-            self._cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % self._savepoint)
+            if self._savepoint:
+                self._savepoint.close(rollback=False)
+
+            tos = self._cursors_stack.pop()
+            if tos is not self:
+                _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
+
             self._lock.release()
 
     def autocommit(self, on):
         _logger.debug("TestCursor.autocommit(%r) does nothing", on)
 
     def commit(self):
-        self._cursor.execute('SAVEPOINT "%s"' % self._savepoint)
+        """ Perform an SQL `COMMIT` """
+        self.flush()
+        if self._savepoint:
+            self._savepoint.close(rollback=False)
+            self._savepoint = None
+        self.clear()
+        self.prerollback.clear()
+        self.postrollback.clear()
+        self.postcommit.clear()         # TestCursor ignores post-commit hooks
 
     def rollback(self):
-        self._cursor.execute('ROLLBACK TO SAVEPOINT "%s"' % self._savepoint)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        if exc_type is None:
-            self.commit()
-        self.close()
+        """ Perform an SQL `ROLLBACK` """
+        self.clear()
+        self.postcommit.clear()
+        self.prerollback.run()
+        if self._savepoint:
+            self._savepoint.rollback()
+        self.postrollback.run()
 
     def __getattr__(self, name):
-        value = getattr(self._cursor, name)
-        if callable(value) and self._closed:
-            raise psycopg2.OperationalError('Unable to use a closed cursor.')
-        return value
+        return getattr(self._cursor, name)
 
+    def now(self):
+        """ Return the transaction's timestamp ``datetime.now()``. """
+        if self._now is None:
+            self._now = datetime.now()
+        return self._now
 
-class LazyCursor(object):
-    """ A proxy object to a cursor. The cursor itself is allocated only if it is
-        needed. This class is useful for cached methods, that use the cursor
-        only in the case of a cache miss.
-    """
-    def __init__(self, dbname=None):
-        self._dbname = dbname
-        self._cursor = None
-        self._depth = 0
-
-    @property
-    def dbname(self):
-        return self._dbname or threading.currentThread().dbname
-
-    def __getattr__(self, name):
-        cr = self._cursor
-        if cr is None:
-            from odoo import registry
-            cr = self._cursor = registry(self.dbname).cursor()
-            for _ in range(self._depth):
-                cr.__enter__()
-        return getattr(cr, name)
-
-    def __enter__(self):
-        self._depth += 1
-        if self._cursor is not None:
-            self._cursor.__enter__()
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self._depth -= 1
-        if self._cursor is not None:
-            self._cursor.__exit__(exc_type, exc_value, traceback)
 
 class PsycoConnection(psycopg2.extensions.connection):
-    pass
+    def lobject(*args, **kwargs):
+        pass
+
 
 class ConnectionPool(object):
     """ The pool of connections to database(s)
@@ -535,17 +654,6 @@ class ConnectionPool(object):
         The connections are *not* automatically closed. Only a close_db()
         can trigger that.
     """
-
-    def locked(fun):
-        @wraps(fun)
-        def _locked(self, *args, **kwargs):
-            self._lock.acquire()
-            try:
-                return fun(self, *args, **kwargs)
-            finally:
-                self._lock.release()
-        return _locked
-
     def __init__(self, maxconn=64):
         self._connections = []
         self._maxconn = max(maxconn, 1)
@@ -557,7 +665,7 @@ class ConnectionPool(object):
         return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
 
     def _debug(self, msg, *args):
-        _logger.debug(('%r ' + msg), self, *args)
+        _logger_conn.debug(('%r ' + msg), self, *args)
 
     @locked
     def borrow(self, connection_info):
@@ -615,7 +723,7 @@ class ConnectionPool(object):
             raise
         result._original_dsn = connection_info
         self._connections.append((result, True))
-        self._debug('Create new connection')
+        self._debug('Create new connection backend PID %d', result.get_backend_pid())
         return result
 
     @locked
@@ -678,6 +786,7 @@ def connection_info_for(db_or_uri):
     :param str db_or_uri: database name or postgres dsn
     :rtype: (str, dict)
     """
+    app_name = "odoo-%d" % os.getpid()
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
         us = urls.url_parse(db_or_uri)
@@ -687,9 +796,9 @@ def connection_info_for(db_or_uri):
             db_name = us.username
         else:
             db_name = us.hostname
-        return db_name, {'dsn': db_or_uri}
+        return db_name, {'dsn': db_or_uri, 'application_name': app_name}
 
-    connection_info = {'database': db_or_uri}
+    connection_info = {'database': db_or_uri, 'application_name': app_name}
     for p in ('host', 'port', 'user', 'password', 'sslmode'):
         cfg = tools.config['db_' + p]
         if cfg:

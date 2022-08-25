@@ -1,17 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * google_calendar
+# 	* google_calendar
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Michael Yeung <michael@deluxe.hk>, 2017
+# Martin Trigaux, 2019
+# Andy Cheng <andy.cheng@richsoda.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:35+0000\n"
-"PO-Revision-Date: 2017-10-10 11:35+0000\n"
-"Last-Translator: Michael Yeung <michael@deluxe.hk>, 2017\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,127 +22,132 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
 msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>教學"
 
 #. module: google_calendar
-#: model:ir.ui.menu,name:google_calendar.menu_calendar_google_tech_config
-msgid "API Credentials"
-msgstr "API憑證"
-
-#. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:89
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "Accounts"
-msgstr "帳戶"
+msgstr "科目"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:79
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid ""
 "All events have been disconnected from your previous account. You can now "
 "restart the synchronization"
-msgstr "所有活動已經從早前之帳戶分離，現在可以重新同步"
+msgstr "已與您先前的登入之帳戶中斷連接，現在您可以重新同步。"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:57
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
-msgstr "在使用之前需要管理員設定Google的同步設置"
+msgstr "使用前需要系統管理員設定 Google 同步連結! 請洽系統管理員。"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:83
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid ""
 "An error occured while disconnecting events from your previous account. "
 "Please retry or contact your administrator."
-msgstr "在與早前之帳戶分離時發生錯誤，請聯絡你的管理員以重試"
+msgstr "在與您先前的登入之帳戶中斷連接時有錯誤發生，請重新嘗試或聯繫系統管理員。"
+
+#. module: google_calendar
+#: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
+msgid "Calendar"
+msgstr "日曆"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
-msgid "Attendee information"
-msgstr "參與者資訊"
+msgid "Calendar Attendee Information"
+msgstr "日曆出席者資訊"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.view_users_form
-msgid "Calendar"
-msgstr "行事曆"
+#: model:ir.model,name:google_calendar.model_calendar_event
+msgid "Calendar Event"
+msgstr ""
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_cal_id
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
 msgid "Calendar ID"
-msgstr "行事曆ID"
+msgstr "日曆 ID"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client ID"
-msgstr "客戶端ID"
+msgstr "客戶端 ID"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client Secret"
-msgstr "客戶端 Secret"
+msgstr "客戶秘鑰"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_cal_client_id
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_id
 msgid "Client_id"
 msgstr "Client_id"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_cal_client_secret
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_secret
 msgid "Client_key"
 msgstr "Client_key"
 
 #. module: google_calendar
-#. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:54
-#: code:addons/google_calendar/static/src/js/google_calendar.js:58
-#, python-format
-msgid "Configuration"
-msgstr "設置"
+#: model:ir.model,name:google_calendar.model_res_config_settings
+msgid "Config Settings"
+msgstr "配置設定"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_display_name
+#. openerp-web
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
+#, python-format
+msgid "Configuration"
+msgstr "配置"
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:66
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "Do you want to do this now?"
-msgstr "你要現在執行嗎?？"
-
-#. module: google_calendar
-#: model:ir.model,name:google_calendar.model_calendar_event
-msgid "Event"
-msgstr "活動"
+msgstr "您要現在開始嗎？"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:84
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "Event disconnection error"
-msgstr "活動分離錯誤"
+msgstr "事件中斷連結錯誤"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:80
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "Event disconnection success"
-msgstr "活動分離成功"
+msgstr "事件中斷連結成功"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_google_internal_event_id
+#: model:ir.model,name:google_calendar.model_google_calendar
+msgid "Google Calendar"
+msgstr "Google日曆"
+
+#. module: google_calendar
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__google_internal_event_id
 msgid "Google Calendar Event Id"
-msgstr "Google行事曆活動ID"
+msgstr "Google 日曆 事件 Id"
 
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
@@ -150,144 +157,130 @@ msgid "Google Calendar: synchronization"
 msgstr "Google行事曆: 同步"
 
 #. module: google_calendar
-#: sql_constraint:calendar.attendee:0
+#: model:ir.model.constraint,message:google_calendar.constraint_calendar_attendee_google_id_uniq
 msgid "Google ID should be unique!"
-msgstr "Google ID應該是唯一的"
+msgstr "Google ID 必須是唯一的!"
 
 #. module: google_calendar
-#: code:addons/google_calendar/models/google_calendar.py:687
+#: code:addons/google_calendar/models/google_calendar.py:0
 #, python-format
 msgid ""
 "Google is lost... the next synchro will be a full synchro. \n"
 "\n"
 " %s"
 msgstr ""
-"Google迷路了... 下一次將會作出全面性同步。 \n"
+"Google帳號尚未登錄...，下次同步將是一個完整的同步。\n"
 "\n"
 " %s"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar_id
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar__id
 msgid "ID"
-msgstr "編號"
+msgstr "ID"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:65
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid ""
 "In order to do this, you first need to disconnect all existing events from "
 "the old account."
-msgstr "你需要從舊帳戶移除所有現存之活動，方可以執行"
+msgstr "為了進行此操作，您首先需要中斷前登入帳戶中所有進行中的事件。"
 
 #. module: google_calendar
-#: model:ir.model.fields,help:google_calendar.field_res_users_google_calendar_cal_id
+#: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
 msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
-msgstr "上一次的Google行事曆ID已經同步完成。如果已經變更了，我們將會移除所有相關之連結"
+msgstr ""
+"已經被同步的最後一個日曆ID。如果它發生改變， 將清除全部在 GoogleID 和 Odoo Google Internal ID之間的連接"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_google_calendar___last_update
+#: model:ir.model.fields,field_description:google_calendar.field_google_calendar____last_update
 msgid "Last Modified on"
-msgstr "最後修改:"
+msgstr "最後修改於"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_last_sync_date
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_last_sync_date
 msgid "Last synchro date"
-msgstr "最後同步日期"
+msgstr "最後同步的日期"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee_oe_synchro_date
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_attendee__oe_synchro_date
 msgid "Odoo Synchro Date"
-msgstr "Odoo同步日期"
+msgstr "Odoo 同步日期"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_calendar_event_oe_update_date
+#: model:ir.model.fields,field_description:google_calendar.field_calendar_event__oe_update_date
 msgid "Odoo Update Date"
-msgstr "Odoo更新日期"
+msgstr "Odoo 更新日期"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:46
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "Redirection"
-msgstr "重定向"
+msgstr "重導向"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_rtoken
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
 msgid "Refresh Token"
-msgstr "更新安全碼"
-
-#. module: google_calendar
-#: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
-msgid "Settings"
-msgstr "設置"
+msgstr "更新 Token"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:117
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "Sync with <b>Google</b>"
-msgstr "與 <b>Google</b>同步"
+msgstr "和<b>Google</b>保持同步"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:50
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
-msgstr "需要設置Google同步才可使用，你現在要設置嗎?"
+msgstr "使用前需要管理員配置 Google 同步專案, 您想現在配置嗎 ? !"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:64
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
 "one used (%s)!"
-msgstr "你正在同步之帳戶 (%s) 不同於上一次 (%s) !"
+msgstr "您嘗試要同步的帳號 (%s)和先前使用的帳戶 (%s)是不同的！"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token_validity
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
 msgid "Token Validity"
-msgstr "安全碼合法性"
+msgstr "認證有效"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_server_uri
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__server_uri
 msgid "URI for tuto"
-msgstr ""
+msgstr "URI 教程"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_res_users_google_calendar_token
+#: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
 msgid "User token"
-msgstr "用戶安全碼"
+msgstr "使用者教程"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
 msgid "Users"
-msgstr "用戶"
+msgstr "使用者"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:42
+#: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
-msgstr "你將被重定向至Google以授權至行事曆"
+msgstr "您將被重導向到Google來授權Odoo訪問您的日曆!"
 
 #. module: google_calendar
-#: code:addons/google_calendar/models/google_calendar.py:295
+#: code:addons/google_calendar/models/google_calendar.py:0
 #, python-format
 msgid "Your token is invalid or has been revoked !"
-msgstr "你的安全碼無效或已經被廢除!"
-
-#. module: google_calendar
-#: model:ir.model,name:google_calendar.model_google_calendar
-msgid "google.calendar"
-msgstr "google.calendar"
-
-#. module: google_calendar
-#: model:ir.model,name:google_calendar.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+msgstr " 您的token金鑰無效或已到期！ "

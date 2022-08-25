@@ -7,18 +7,27 @@
     'sequence': 9876,
     'summary': 'Mail Tests: performances and tests specific to mail',
     'description': """This module contains tests related to mail. Those are
-contained in a separate module as it contains models used only to perform
+present in a separate module as it contains models used only to perform
 tests independently to functional aspects of other models. """,
-    'depends': ['test_performance', 'mail'],
+    'depends': [
+        'mail',
+        'test_performance',
+    ],
     'data': [
         'security/ir.model.access.csv',
+        'security/test_mail_security.xml',
         'data/data.xml',
+        'data/mail_template_data.xml',
+        'data/subtype_data.xml',
     ],
-    'demo': [
-        'data/demo.xml',
-        'data/subtype_demo.xml',
-        'data/template_demo.xml',
-    ],
+    'assets': {
+        'web.qunit_suite_tests': [
+            'test_mail/static/tests/*',
+        ],
+        'web.tests_assets': [
+            'test_mail/static/tests/helpers/*',
+        ],
+    },
     'installable': True,
-    'application': False,
+    'license': 'LGPL-3',
 }

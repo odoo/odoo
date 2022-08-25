@@ -1,30 +1,34 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from decorator import decorator
 from operator import attrgetter
 import importlib
 import io
 import logging
 import os
+import pkg_resources
 import shutil
 import tempfile
+import threading
 import zipfile
 
 import requests
-
-from odoo.tools import pycompat
+import werkzeug.urls
 
 from docutils import nodes
 from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
 from docutils.writers.html4css1 import Writer
 import lxml.html
+import psycopg2
 
 import odoo
 from odoo import api, fields, models, modules, tools, _
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, UserError
+from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort
 from odoo.http import request
@@ -32,7 +36,6 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 ACTION_DICT = {
-    'view_type': 'form',
     'view_mode': 'form',
     'res_model': 'base.module.upgrade',
     'target': 'new',
@@ -63,8 +66,8 @@ def assert_log_admin_access(method):
     def check_and_log(method, self, *args, **kwargs):
         user = self.env.user
         origin = request.httprequest.remote_addr if request else 'n/a'
-        log_data = (method.__name__, self.sudo().mapped('name'), user.login, user.id, origin)
-        if not self.env.user._is_admin():
+        log_data = (method.__name__, self.sudo().mapped('display_name'), user.login, user.id, origin)
+        if not self.env.is_admin():
             _logger.warning('DENY access to module.%s on %s to user %s ID #%s via %s', *log_data)
             raise AccessDenied()
         _logger.info('ALLOW access to module.%s on %s to user %s #%s via %s', *log_data)
@@ -78,6 +81,8 @@ class ModuleCategory(models.Model):
 
     @api.depends('module_ids')
     def _compute_module_nr(self):
+        self.env['ir.module.module'].flush_model(['category_id'])
+        self.flush_model(['parent_id'])
         cr = self._cr
         cr.execute('SELECT category_id, COUNT(*) \
                       FROM ir_module_module \
@@ -110,7 +115,6 @@ class ModuleCategory(models.Model):
             xml_ids[data['res_id']].append("%s.%s" % (data['module'], data['name']))
         for cat in self:
             cat.xml_id = xml_ids.get(cat.id, [''])[0]
-
 
 class MyFilterMessages(Transform):
     """
@@ -147,15 +151,16 @@ STATES = [
     ('to install', 'To be installed'),
 ]
 
+
 class Module(models.Model):
     _name = "ir.module.module"
     _rec_name = "shortdesc"
     _description = "Module"
-    _order = 'sequence,name'
+    _order = 'application desc,sequence,name'
 
     @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = super(Module, self).fields_view_get(view_id, view_type, toolbar=toolbar, submenu=False)
+    def get_view(self, view_id=None, view_type='form', **options):
+        res = super().get_view(view_id, view_type, **options)
         if view_type == 'form' and res.get('toolbar',False):
             install_id = self.env.ref('base.action_server_module_immediate_install').id
             action = [rec for rec in res['toolbar']['action'] if rec.get('id', False) != install_id]
@@ -165,7 +170,7 @@ class Module(models.Model):
     @classmethod
     def get_module_info(cls, name):
         try:
-            return modules.load_information_from_description_file(name)
+            return modules.get_manifest(name)
         except Exception:
             _logger.debug('Error when trying to fetch information for module %s', name, exc_info=True)
             return {}
@@ -173,8 +178,13 @@ class Module(models.Model):
     @api.depends('name', 'description')
     def _get_desc(self):
         for module in self:
-            path = modules.get_module_resource(module.name, 'static/description/index.html')
-            if path:
+            if not module.name:
+                module.description_html = False
+                continue
+            module_path = modules.get_module_path(module.name, display_warning=False)  # avoid to log warning for fake community module
+            if module_path:
+                path = modules.check_resource_path(module_path, 'static/description/index.html')
+            if module_path and path:
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()
                     html = lxml.html.document_fromstring(doc)
@@ -188,8 +198,9 @@ class Module(models.Model):
                     'doctitle_xform': False,
                     'output_encoding': 'unicode',
                     'xml_declaration': False,
+                    'file_insertion_enabled': False,
                 }
-                output = publish_string(source=module.description or '', settings_overrides=overrides, writer=MyWriter())
+                output = publish_string(source=module.description if not module.application and module.description else '', settings_overrides=overrides, writer=MyWriter())
                 module.description_html = tools.html_sanitize(output)
 
     @api.depends('name')
@@ -237,8 +248,10 @@ class Module(models.Model):
             if module.icon:
                 path_parts = module.icon.split('/')
                 path = modules.get_module_resource(path_parts[1], *path_parts[2:])
-            else:
+            elif module.id:
                 path = modules.module.get_module_icon(module.name)
+            else:
+                path = ''
             if path:
                 with tools.file_open(path, 'rb') as image_file:
                     module.icon_image = base64.b64encode(image_file.read())
@@ -272,7 +285,7 @@ class Module(models.Model):
                                    help='An auto-installable module is automatically installed by the '
                                         'system when all its dependencies are satisfied. '
                                         'If the module has no dependency, it is always installed.')
-    state = fields.Selection(STATES, string='Status', default='uninstalled', readonly=True, index=True)
+    state = fields.Selection(STATES, string='Status', default='uninstallable', readonly=True, index=True)
     demo = fields.Boolean('Demo Data', default=False, readonly=True)
     license = fields.Selection([
         ('GPL-2', 'GPL Version 2'),
@@ -281,7 +294,7 @@ class Module(models.Model):
         ('GPL-3 or any later version', 'GPL-3 or later version'),
         ('AGPL-3', 'Affero GPL-3'),
         ('LGPL-3', 'LGPL Version 3'),
-        ('Other OSI approved licence', 'Other OSI Approved Licence'),
+        ('Other OSI approved licence', 'Other OSI Approved License'),
         ('OEEL-1', 'Odoo Enterprise Edition License v1.0'),
         ('OPL-1', 'Odoo Proprietary License v1.0'),
         ('Other proprietary', 'Other Proprietary')
@@ -292,20 +305,46 @@ class Module(models.Model):
     application = fields.Boolean('Application', readonly=True)
     icon = fields.Char('Icon URL')
     icon_image = fields.Binary(string='Icon', compute='_get_icon_image')
+    to_buy = fields.Boolean('Odoo Enterprise Module', default=False)
+    has_iap = fields.Boolean(compute='_compute_has_iap')
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE (name)', 'The name of the module must be unique!'),
     ]
 
-    @api.multi
-    def unlink(self):
-        if not self:
-            return True
+    def _compute_has_iap(self):
+        for module in self:
+            module.has_iap = bool(module.id) and 'iap' in module.upstream_dependencies(exclude_states=('',)).mapped('name')
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_installed(self):
         for module in self:
             if module.state in ('installed', 'to upgrade', 'to remove', 'to install'):
-                raise UserError(_('You try to remove a module that is installed or will be installed'))
+                raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
+
+    def unlink(self):
         self.clear_caches()
         return super(Module, self).unlink()
+
+    @staticmethod
+    def _check_python_external_dependency(pydep):
+        try:
+            pkg_resources.get_distribution(pydep)
+        except pkg_resources.DistributionNotFound as e:
+            try:
+                importlib.import_module(pydep)
+                _logger.info("python external dependency on '%s' does not appear to be a valid PyPI package. Using a PyPI package name is recommended.", pydep)
+            except ImportError:
+                # backward compatibility attempt failed
+                _logger.warning("DistributionNotFound: %s", e)
+                raise Exception('Python library not installed: %s' % (pydep,))
+        except pkg_resources.VersionConflict as e:
+            _logger.warning("VersionConflict: %s", e)
+            raise Exception('Python library version conflict: %s' % (pydep,))
+        except Exception as e:
+            _logger.warning("get_distribution(%s) failed: %s", pydep, e)
+            raise Exception('Error finding python library %s' % (pydep,))
+
 
     @staticmethod
     def _check_external_dependencies(terp):
@@ -313,10 +352,7 @@ class Module(models.Model):
         if not depends:
             return
         for pydep in depends.get('python', []):
-            try:
-                importlib.import_module(pydep)
-            except ImportError:
-                raise ImportError('No module named %s' % (pydep,))
+            Module._check_python_external_dependency(pydep)
 
         for binary in depends.get('bin', []):
             try:
@@ -338,7 +374,6 @@ class Module(models.Model):
                 msg = _('Unable to process module "%s" because an external dependency is not met: %s')
             raise UserError(msg % (module_name, e.args[0]))
 
-    @api.multi
     def _state_update(self, newstate, states_to_update, level=100):
         if level < 1:
             raise UserError(_('Recursion error in modules dependencies !'))
@@ -347,6 +382,10 @@ class Module(models.Model):
         demo = False
 
         for module in self:
+            if module.state not in states_to_update:
+                demo = demo or module.demo
+                continue
+
             # determine dependency modules to update/others
             update_mods, ready_mods = self.browse(), self.browse()
             for dep in module.dependencies_id:
@@ -362,15 +401,14 @@ class Module(models.Model):
             module_demo = module.demo or update_demo or any(mod.demo for mod in ready_mods)
             demo = demo or module_demo
 
-            # check dependencies and update module itself
-            self.check_external_dependencies(module.name, newstate)
             if module.state in states_to_update:
+                # check dependencies and update module itself
+                self.check_external_dependencies(module.name, newstate)
                 module.write({'state': newstate, 'demo': module_demo})
 
         return demo
 
     @assert_log_admin_access
-    @api.multi
     def button_install(self):
         # domain to select auto-installable (but not yet installed) modules
         auto_domain = [('state', '=', 'uninstalled'), ('auto_install', '=', True)]
@@ -380,7 +418,7 @@ class Module(models.Model):
         #  - at least one dependency is 'to install'
         install_states = frozenset(('installed', 'to install', 'to upgrade'))
         def must_install(module):
-            states = set(dep.state for dep in module.dependencies_id)
+            states = {dep.state for dep in module.dependencies_id if dep.auto_install_required}
             return states <= install_states and 'to install' in states
 
         modules = self
@@ -407,7 +445,7 @@ class Module(models.Model):
             todo = result = module
             while todo:
                 result |= todo
-                todo = todo.mapped('dependencies_id.depend_id')
+                todo = todo.dependencies_id.depend_id
             return result
 
         exclusives = self.env['ir.module.category'].search([('exclusive', '=', True)])
@@ -428,7 +466,6 @@ class Module(models.Model):
         return dict(ACTION_DICT, name=_('Install'))
 
     @assert_log_admin_access
-    @api.multi
     def button_immediate_install(self):
         """ Installs the selected module(s) immediately and fully,
         returns the next res.config action to execute
@@ -437,16 +474,22 @@ class Module(models.Model):
         :rtype: dict[str, object]
         """
         _logger.info('User #%d triggered module installation', self.env.uid)
+        # We use here the request object (which is thread-local) as a kind of
+        # "global" env because the env is not usable in the following use case.
+        # When installing a Chart of Account, I would like to send the
+        # allowed companies to configure it on the correct company.
+        # Otherwise, the SUPERUSER won't be aware of that and will try to
+        # configure the CoA on his own company, which makes no sense.
+        if request:
+            request.allowed_company_ids = self.env.companies.ids
         return self._button_immediate_function(type(self).button_install)
 
     @assert_log_admin_access
-    @api.multi
     def button_install_cancel(self):
         self.write({'state': 'uninstalled', 'demo': False})
         return True
 
     @assert_log_admin_access
-    @api.multi
     def module_uninstall(self):
         """ Perform the various steps required to uninstall a module completely
         including the deletion of all database structures created by the module:
@@ -454,10 +497,23 @@ class Module(models.Model):
         """
         modules_to_remove = self.mapped('name')
         self.env['ir.model.data']._module_data_uninstall(modules_to_remove)
-        self.write({'state': 'uninstalled', 'latest_version': False})
+        # we deactivate prefetching to not try to read a column that has been deleted
+        self.with_context(prefetch_fields=False).write({'state': 'uninstalled', 'latest_version': False})
         return True
 
-    @api.multi
+    def _remove_copied_views(self):
+        """ Remove the copies of the views installed by the modules in `self`.
+
+        Those copies do not have an external id so they will not be cleaned by
+        `_module_data_uninstall`. This is why we rely on `key` instead.
+
+        It is important to remove these copies because using them will crash if
+        they rely on data that don't exist anymore if the module is removed.
+        """
+        domain = expression.OR([[('key', '=like', m.name + '.%')] for m in self])
+        orphans = self.env['ir.ui.view'].with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search(domain)
+        orphans.unlink()
+
     @api.returns('self')
     def downstream_dependencies(self, known_deps=None,
                                 exclude_states=('uninstalled', 'uninstallable', 'to remove')):
@@ -466,6 +522,8 @@ class Module(models.Model):
         """
         if not self:
             return self
+        self.flush_model(['name', 'state'])
+        self.env['ir.module.module.dependency'].flush_model(['module_id', 'name'])
         known_deps = known_deps or self.browse()
         query = """ SELECT DISTINCT m.id
                     FROM ir_module_module_dependency d
@@ -482,7 +540,6 @@ class Module(models.Model):
             known_deps |= missing_mods.downstream_dependencies(known_deps, exclude_states)
         return known_deps
 
-    @api.multi
     @api.returns('self')
     def upstream_dependencies(self, known_deps=None,
                               exclude_states=('installed', 'uninstallable', 'to remove')):
@@ -491,6 +548,8 @@ class Module(models.Model):
         """
         if not self:
             return self
+        self.flush_model(['name', 'state'])
+        self.env['ir.module.module.dependency'].flush_model(['module_id', 'name'])
         known_deps = known_deps or self.browse()
         query = """ SELECT DISTINCT m.id
                     FROM ir_module_module_dependency d
@@ -516,7 +575,7 @@ class Module(models.Model):
         _logger.info('getting next %s', Todos)
         active_todo = Todos.search([('state', '=', 'open')], limit=1)
         if active_todo:
-            _logger.info('next action is %s', active_todo)
+            _logger.info('next action is "%s"', active_todo.name)
             return active_todo.action_launch()
         return {
             'type': 'ir.actions.act_url',
@@ -524,23 +583,38 @@ class Module(models.Model):
             'url': '/web',
         }
 
-    @api.multi
     def _button_immediate_function(self, function):
+        if getattr(threading.current_thread(), 'testing', False):
+            raise RuntimeError(
+                "Module operations inside tests are not transactional and thus forbidden.\n"
+                "If you really need to perform module operations to test a specific behavior, it "
+                "is best to write it as a standalone script, and ask the runbot/metastorm team "
+                "for help."
+            )
+        try:
+            # This is done because the installation/uninstallation/upgrade can modify a currently
+            # running cron job and prevent it from finishing, and since the ir_cron table is locked
+            # during execution, the lock won't be released until timeout.
+            self._cr.execute("SELECT * FROM ir_cron FOR UPDATE NOWAIT")
+        except psycopg2.OperationalError:
+            raise UserError(_("Odoo is currently processing a scheduled action.\n"
+                              "Module operations are not possible at this time, "
+                              "please try again later or contact your system administrator."))
         function(self)
 
         self._cr.commit()
-        api.Environment.reset()
-        modules.registry.Registry.new(self._cr.dbname, update_module=True)
-
+        registry = modules.registry.Registry.new(self._cr.dbname, update_module=True)
         self._cr.commit()
-        env = api.Environment(self._cr, self._uid, self._context)
+        self._cr.reset()
+        assert self.env.registry is registry
+
         # pylint: disable=next-method-called
-        config = env['ir.module.module'].next() or {}
+        config = self.env['ir.module.module'].next() or {}
         if config.get('type') not in ('ir.actions.act_window_close',):
             return config
 
         # reload the client; open the first available root menu
-        menu = env['ir.ui.menu'].search([('parent_id', '=', False)])[:1]
+        menu = self.env['ir.ui.menu'].search([('parent_id', '=', False)])[:1]
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
@@ -548,7 +622,6 @@ class Module(models.Model):
         }
 
     @assert_log_admin_access
-    @api.multi
     def button_immediate_uninstall(self):
         """
         Uninstall the selected module(s) immediately and fully,
@@ -558,16 +631,19 @@ class Module(models.Model):
         return self._button_immediate_function(type(self).button_uninstall)
 
     @assert_log_admin_access
-    @api.multi
     def button_uninstall(self):
         if 'base' in self.mapped('name'):
             raise UserError(_("The `base` module cannot be uninstalled"))
+        if any(state not in ('installed', 'to upgrade') for state in self.mapped('state')):
+            raise UserError(_(
+                "One or more of the selected modules have already been uninstalled, if you "
+                "believe this to be an error, you may try again later or contact support."
+            ))
         deps = self.downstream_dependencies()
         (self + deps).write({'state': 'to remove'})
         return dict(ACTION_DICT, name=_('Uninstall'))
 
     @assert_log_admin_access
-    @api.multi
     def button_uninstall_wizard(self):
         """ Launch the wizard to uninstall the given module. """
         return {
@@ -579,13 +655,11 @@ class Module(models.Model):
             'context': {'default_module_id': self.id},
         }
 
-    @api.multi
     def button_uninstall_cancel(self):
         self.write({'state': 'installed'})
         return True
 
     @assert_log_admin_access
-    @api.multi
     def button_immediate_upgrade(self):
         """
         Upgrade the selected module(s) immediately and fully,
@@ -594,27 +668,45 @@ class Module(models.Model):
         return self._button_immediate_function(type(self).button_upgrade)
 
     @assert_log_admin_access
-    @api.multi
     def button_upgrade(self):
+        if not self:
+            return
         Dependency = self.env['ir.module.module.dependency']
         self.update_list()
 
         todo = list(self)
+        if 'base' in self.mapped('name'):
+            # If an installed module is only present in the dependency graph through
+            # a new, uninstalled dependency, it will not have been selected yet.
+            # An update of 'base' should also update these modules, and as a consequence,
+            # install the new dependency.
+            todo.extend(self.search([
+                ('state', '=', 'installed'),
+                ('name', '!=', 'studio_customization'),
+                ('id', 'not in', self.ids),
+            ]))
         i = 0
         while i < len(todo):
             module = todo[i]
             i += 1
             if module.state not in ('installed', 'to upgrade'):
                 raise UserError(_("Can not upgrade module '%s'. It is not installed.") % (module.name,))
-            self.check_external_dependencies(module.name, 'to upgrade')
+            if self.get_module_info(module.name).get("installable", True):
+                self.check_external_dependencies(module.name, 'to upgrade')
             for dep in Dependency.search([('name', '=', module.name)]):
-                if dep.module_id.state == 'installed' and dep.module_id not in todo:
+                if (
+                    dep.module_id.state == 'installed'
+                    and dep.module_id not in todo
+                    and dep.module_id.name != 'studio_customization'
+                ):
                     todo.append(dep.module_id)
 
         self.browse(module.id for module in todo).write({'state': 'to upgrade'})
 
         to_install = []
         for module in todo:
+            if not self.get_module_info(module.name).get("installable", True):
+                continue
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
                     raise UserError(_('You try to upgrade the module %s that depends on the module: %s.\nBut this module is not available in your system.') % (module.name, dep.name,))
@@ -625,7 +717,6 @@ class Module(models.Model):
         return dict(ACTION_DICT, name=_('Apply Schedule Upgrade'))
 
     @assert_log_admin_access
-    @api.multi
     def button_upgrade_cancel(self):
         self.write({'state': 'installed'})
         return True
@@ -642,24 +733,25 @@ class Module(models.Model):
             'license': terp.get('license', 'LGPL-3'),
             'sequence': terp.get('sequence', 100),
             'application': terp.get('application', False),
-            'auto_install': terp.get('auto_install', False),
+            'auto_install': terp.get('auto_install', False) is not False,
             'icon': terp.get('icon', False),
             'summary': terp.get('summary', ''),
             'url': terp.get('url') or terp.get('live_test_url', ''),
+            'to_buy': False
         }
 
-    @api.model
-    def create(self, vals):
-        new = super(Module, self).create(vals)
-        module_metadata = {
-            'name': 'module_%s' % vals['name'],
+    @api.model_create_multi
+    def create(self, vals_list):
+        modules = super().create(vals_list)
+        module_metadata_list = [{
+            'name': 'module_%s' % module.name,
             'model': 'ir.module.module',
             'module': 'base',
-            'res_id': new.id,
+            'res_id': module.id,
             'noupdate': True,
-        }
-        self.env['ir.model.data'].create(module_metadata)
-        return new
+        } for module in modules]
+        self.env['ir.model.data'].create(module_metadata_list)
+        return modules
 
     # update the list of available packages
     @assert_log_admin_access
@@ -668,7 +760,7 @@ class Module(models.Model):
         res = [0, 0]    # [update, add]
 
         default_version = modules.adapt_version('1.0')
-        known_mods = self.search([])
+        known_mods = self.with_context(lang=None).search([])
         known_mods_names = {mod.name: mod for mod in known_mods}
 
         # iterate through detected modules and update/create them in db
@@ -681,8 +773,7 @@ class Module(models.Model):
                 updated_values = {}
                 for key in values:
                     old = getattr(mod, key)
-                    updated = tools.ustr(values[key]) if isinstance(values[key], pycompat.string_types) else values[key]
-                    if (old or updated) and updated != old:
+                    if (old or values[key]) and values[key] != old:
                         updated_values[key] = values[key]
                 if terp.get('installable', True) and mod.state == 'uninstallable':
                     updated_values['state'] = 'uninstalled'
@@ -692,21 +783,19 @@ class Module(models.Model):
                     mod.write(updated_values)
             else:
                 mod_path = modules.get_module_path(mod_name)
-                if not mod_path:
+                if not mod_path or not terp:
                     continue
-                if not terp or not terp.get('installable', True):
-                    continue
-                mod = self.create(dict(name=mod_name, state='uninstalled', **values))
+                state = "uninstalled" if terp.get('installable', True) else "uninstallable"
+                mod = self.create(dict(name=mod_name, state=state, **values))
                 res[1] += 1
 
-            mod._update_dependencies(terp.get('depends', []))
+            mod._update_dependencies(terp.get('depends', []), terp.get('auto_install'))
             mod._update_exclusions(terp.get('excludes', []))
             mod._update_category(terp.get('category', 'Uncategorized'))
 
         return res
 
     @assert_log_admin_access
-    @api.multi
     def download(self, download=True):
         return []
 
@@ -725,7 +814,7 @@ class Module(models.Model):
             _logger.warning(msg)
             raise UserError(msg)
 
-        apps_server = urls.url_parse(self.get_apps_server())
+        apps_server = werkzeug.urls.url_parse(self.get_apps_server())
 
         OPENERP = odoo.release.product_name.lower()
         tmp = tempfile.mkdtemp()
@@ -736,7 +825,7 @@ class Module(models.Model):
                 if not url:
                     continue    # nothing to download, local version is already the last one
 
-                up = urls.url_parse(url)
+                up = werkzeug.urls.url_parse(url)
                 if up.scheme != apps_server.scheme or up.netloc != apps_server.netloc:
                     raise AccessDenied()
 
@@ -747,7 +836,7 @@ class Module(models.Model):
                     content = response.content
                 except Exception:
                     _logger.exception('Failed to fetch module %s', module_name)
-                    raise UserError(_('The `%s` module appears to be unavailable at the moment, please try again later.') % module_name)
+                    raise UserError(_('The `%s` module appears to be unavailable at the moment, please try again later.', module_name))
                 else:
                     zipfile.ZipFile(io.BytesIO(content)).extractall(tmp)
                     assert os.path.isdir(os.path.join(tmp, module_name))
@@ -810,23 +899,28 @@ class Module(models.Model):
     def get_apps_server(self):
         return tools.config.get('apps_server', 'https://apps.odoo.com/apps')
 
-    def _update_dependencies(self, depends=None):
+    def _update_dependencies(self, depends=None, auto_install_requirements=()):
+        self.env['ir.module.module.dependency'].flush_model()
         existing = set(dep.name for dep in self.dependencies_id)
         needed = set(depends or [])
         for dep in (needed - existing):
             self._cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (self.id, dep))
         for dep in (existing - needed):
             self._cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (self.id, dep))
-        self.invalidate_cache(['dependencies_id'], self.ids)
+        self._cr.execute('UPDATE ir_module_module_dependency SET auto_install_required = (name = any(%s)) WHERE module_id = %s',
+                         (list(auto_install_requirements or ()), self.id))
+        self.env['ir.module.module.dependency'].invalidate_model(['auto_install_required'])
+        self.invalidate_recordset(['dependencies_id'])
 
     def _update_exclusions(self, excludes=None):
+        self.env['ir.module.module.exclusion'].flush_model()
         existing = set(excl.name for excl in self.exclusion_ids)
         needed = set(excludes or [])
         for name in (needed - existing):
             self._cr.execute('INSERT INTO ir_module_module_exclusion (module_id, name) VALUES (%s, %s)', (self.id, name))
         for name in (existing - needed):
             self._cr.execute('DELETE FROM ir_module_module_exclusion WHERE module_id=%s AND name=%s', (self.id, name))
-        self.invalidate_cache(['exclusion_ids'], self.ids)
+        self.invalidate_recordset(['exclusion_ids'])
 
     def _update_category(self, category='Uncategorized'):
         current_category = self.category_id
@@ -840,11 +934,10 @@ class Module(models.Model):
             cat_id = modules.db.create_categories(self._cr, categs)
             self.write({'category_id': cat_id})
 
-    @api.multi
-    def _update_translations(self, filter_lang=None):
+    def _update_translations(self, filter_lang=None, overwrite=False):
         if not filter_lang:
-            langs = self.env['res.lang'].search([('translatable', '=', True)])
-            filter_lang = [lang.code for lang in langs]
+            langs = self.env['res.lang'].get_installed()
+            filter_lang = [code for code, _ in langs]
         elif not isinstance(filter_lang, (list, tuple)):
             filter_lang = [filter_lang]
 
@@ -854,13 +947,25 @@ class Module(models.Model):
             for mod in update_mods
         }
         mod_names = topological_sort(mod_dict)
-        self.env['ir.translation'].load_module_terms(mod_names, filter_lang)
+        self.env['ir.translation']._load_module_terms(mod_names, filter_lang, overwrite)
 
-    @api.multi
     def _check(self):
         for module in self:
             if not module.description_html:
                 _logger.warning('module %s: description is empty !', module.name)
+
+    def _get(self, name):
+        """ Return the (sudoed) `ir.module.module` record with the given name.
+        The result may be an empty recordset if the module is not found.
+        """
+        model_id = self._get_id(name) if name else False
+        return self.browse(model_id).sudo()
+
+    @tools.ormcache('name')
+    def _get_id(self, name):
+        self.flush_model(['name'])
+        self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
+        return self.env.cr.fetchone()
 
     @api.model
     @tools.ormcache()
@@ -871,12 +976,61 @@ class Module(models.Model):
             for module in self.sudo().search([('state', '=', 'installed')])
         }
 
+    @api.model
+    def search_panel_select_range(self, field_name, **kwargs):
+        if field_name == 'category_id':
+            enable_counters = kwargs.get('enable_counters', False)
+            domain = [('parent_id', '=', False), ('child_ids.module_ids', '!=', False)]
+
+            excluded_xmlids = [
+                'base.module_category_website_theme',
+                'base.module_category_theme',
+            ]
+            if not self.user_has_groups('base.group_no_one'):
+                excluded_xmlids.append('base.module_category_hidden')
+
+            excluded_category_ids = []
+            for excluded_xmlid in excluded_xmlids:
+                categ = self.env.ref(excluded_xmlid, False)
+                if not categ:
+                    continue
+                excluded_category_ids.append(categ.id)
+
+            if excluded_category_ids:
+                domain = expression.AND([
+                    domain,
+                    [('id', 'not in', excluded_category_ids)],
+                ])
+
+            records = self.env['ir.module.category'].search_read(domain, ['display_name'], order="sequence")
+
+            values_range = OrderedDict()
+            for record in records:
+                record_id = record['id']
+                if enable_counters:
+                    model_domain = expression.AND([
+                        kwargs.get('search_domain', []),
+                        kwargs.get('category_domain', []),
+                        kwargs.get('filter_domain', []),
+                        [('category_id', 'child_of', record_id), ('category_id', 'not in', excluded_category_ids)]
+                    ])
+                    record['__count'] = self.env['ir.module.module'].search_count(model_domain)
+                values_range[record_id] = record
+
+            return {
+                'parent_field': 'parent_id',
+                'values': list(values_range.values()),
+            }
+
+        return super(Module, self).search_panel_select_range(field_name, **kwargs)
+
 
 DEP_STATES = STATES + [('unknown', 'Unknown')]
 
 class ModuleDependency(models.Model):
     _name = "ir.module.module.dependency"
     _description = "Module dependency"
+    _log_access = False  # inserts are done manually, create and write uid, dates are always null
 
     # the dependency name
     name = fields.Char(index=True)
@@ -885,10 +1039,15 @@ class ModuleDependency(models.Model):
     module_id = fields.Many2one('ir.module.module', 'Module', ondelete='cascade')
 
     # the module corresponding to the dependency, and its status
-    depend_id = fields.Many2one('ir.module.module', 'Dependency', compute='_compute_depend')
+    depend_id = fields.Many2one('ir.module.module', 'Dependency',
+                                compute='_compute_depend', search='_search_depend')
     state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
 
-    @api.multi
+    auto_install_required = fields.Boolean(
+        default=True,
+        help="Whether this dependency blocks automatic installation "
+             "of the dependent")
+
     @api.depends('name')
     def _compute_depend(self):
         # retrieve all modules corresponding to the dependency names
@@ -900,10 +1059,15 @@ class ModuleDependency(models.Model):
         for dep in self:
             dep.depend_id = name_mod.get(dep.name)
 
-    @api.one
+    def _search_depend(self, operator, value):
+        assert operator == 'in'
+        modules = self.env['ir.module.module'].browse(set(value))
+        return [('name', 'in', modules.mapped('name'))]
+
     @api.depends('depend_id.state')
     def _compute_state(self):
-        self.state = self.depend_id.state or 'unknown'
+        for dependency in self:
+            dependency.state = dependency.depend_id.state or 'unknown'
 
 
 class ModuleExclusion(models.Model):
@@ -917,10 +1081,10 @@ class ModuleExclusion(models.Model):
     module_id = fields.Many2one('ir.module.module', 'Module', ondelete='cascade')
 
     # the module corresponding to the exclusion, and its status
-    exclusion_id = fields.Many2one('ir.module.module', 'Exclusion Module', compute='_compute_exclusion')
+    exclusion_id = fields.Many2one('ir.module.module', 'Exclusion Module',
+                                   compute='_compute_exclusion', search='_search_exclusion')
     state = fields.Selection(DEP_STATES, string='Status', compute='_compute_state')
 
-    @api.multi
     @api.depends('name')
     def _compute_exclusion(self):
         # retrieve all modules corresponding to the exclusion names
@@ -932,7 +1096,12 @@ class ModuleExclusion(models.Model):
         for excl in self:
             excl.exclusion_id = name_mod.get(excl.name)
 
-    @api.one
+    def _search_exclusion(self, operator, value):
+        assert operator == 'in'
+        modules = self.env['ir.module.module'].browse(set(value))
+        return [('name', 'in', modules.mapped('name'))]
+
     @api.depends('exclusion_id.state')
     def _compute_state(self):
-        self.state = self.exclusion_id.state or 'unknown'
+        for exclusion in self:
+            exclusion.state = exclusion.exclusion_id.state or 'unknown'

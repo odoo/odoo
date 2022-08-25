@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="TableWidget" owl="1">
+        <div class="table" t-on-click.stop="() => props.onClick(props.table)">
+            <span class="table-cover" t-att-class="{ full: fill >= 1 }"></span>
+            <span t-att-class="orderCountClass" t-att-hidden="orderCount === 0">
+                <t t-esc="orderCount" />
+            </span>
+            <span class="label">
+                <t t-esc="props.table.name" />
+            </span>
+            <span class="table-seats">
+                <t t-esc="customerCountDisplay" />
+            </span>
+        </div>
+    </t>
+
+</templates>

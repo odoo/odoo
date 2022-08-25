@@ -11,6 +11,7 @@ from odoo.exceptions import UserError
 
 class HrHolidaySummaryReport(models.AbstractModel):
     _name = 'report.hr_holidays.report_holidayssummary'
+    _description = 'Holidays Summary Report'
 
     def _get_header_info(self, start_date, holiday_type):
         st_date = fields.Date.from_string(start_date)
@@ -74,30 +75,28 @@ class HrHolidaySummaryReport(models.AbstractModel):
                 if date_from >= start_date and date_from <= end_date:
                     res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
                 date_from += timedelta(1)
-            count += abs(holiday.number_of_days)
-        self.sum = count
-        return res
+            count += holiday.number_of_days
+        employee = self.env['hr.employee'].browse(empid)
+        return {'emp': employee.name, 'display': res, 'sum': count}
 
     def _get_data_from_report(self, data):
         res = []
         Employee = self.env['hr.employee']
         if 'depts' in data:
             for department in self.env['hr.department'].browse(data['depts']):
-                res.append({'dept' : department.name, 'data': [], 'color': self._get_day(data['date_from'])})
-                for emp in Employee.search([('department_id', '=', department.id)]):
-                    res[len(res)-1]['data'].append({
-                        'emp': emp.name,
-                        'display': self._get_leaves_summary(data['date_from'], emp.id, data['holiday_type']),
-                        'sum': self.sum
-                    })
-        elif 'emp' in data:
-            res.append({'data':[]})
-            for emp in Employee.browse(data['emp']):
-                res[0]['data'].append({
-                    'emp': emp.name,
-                    'display': self._get_leaves_summary(data['date_from'], emp.id, data['holiday_type']),
-                    'sum': self.sum
+                res.append({
+                    'dept': department.name,
+                    'data': [
+                        self._get_leaves_summary(data['date_from'], emp.id, data['holiday_type'])
+                        for emp in Employee.search([('department_id', '=', department.id)])
+                    ],
+                    'color': self._get_day(data['date_from']),
                 })
+        elif 'emp' in data:
+            res.append({'data': [
+                self._get_leaves_summary(data['date_from'], emp.id, data['holiday_type'])
+                for emp in Employee.browse(data['emp'])
+            ]})
         return res
 
     def _get_holidays_status(self):
@@ -107,7 +106,7 @@ class HrHolidaySummaryReport(models.AbstractModel):
         return res
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         if not data.get('form'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 

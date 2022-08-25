@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.PopoverManager" owl="1">
+        <div class="o_PopoverManager" t-attf-class="{{ className }}" t-ref="root">
+            <t t-foreach="popoverManager.popoverViews" t-as="popoverView" t-key="popoverView.localId">
+                <PopoverView
+                    className="'o_PopoverManager_popover'"
+                    record="popoverView"
+                />
+            </t>
+        </div>
+    </t>
+
+</templates>

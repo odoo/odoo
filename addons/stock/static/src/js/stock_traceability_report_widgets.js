@@ -24,6 +24,7 @@ var ReportWidget = Widget.extend({
         return this._super.apply(this, arguments);
     },
     boundLink: function(e) {
+        e.preventDefault();
         return this.do_action({
             type: 'ir.actions.act_window',
             res_model: $(e.target).data('res-model'),
@@ -33,25 +34,25 @@ var ReportWidget = Widget.extend({
         });
     },
     actionOpenLot: function(e) {
+        e.preventDefault();
         var $el = $(e.target).parents('tr');
         this.do_action({
             type: 'ir.actions.client',
             tag: 'stock_report_generic',
-            name: $el.data('lot_name'),
+            name: $el.data('lot_name') !== undefined && $el.data('lot_name').toString(),
             context: {
                 active_id : $el.data('lot_id'),
-                active_model : 'stock.production.lot',
-                url: '/stock/output_format/stock/active_id'
+                active_model : 'stock.lot',
+                url: '/stock/output_format/stock?active_id=:active_id&active_model=:active_model',
             },
         });
     },
     updownStream: function(e) {
         var $el = $(e.target).parents('tr');
-        var string = "Traceability Report";
         this.do_action({
             type: "ir.actions.client",
             tag: 'stock_report_generic',
-            name: _t(string),
+            name: _t("Traceability Report"),
             context: {
                 active_id : $el.data('model_id'),
                 active_model : $el.data('model'),

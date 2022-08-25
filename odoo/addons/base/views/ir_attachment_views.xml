@@ -6,15 +6,14 @@
             <field name="arch" type="xml">
                 <form string="Attachments">
                    <sheet>
-                    <label for="name" class="oe_edit_only"/>
+                    <label for="name"/>
                     <h1>
                         <field name="name"/>
                     </h1>
                     <group>
                         <group>
                             <field name="type"/>
-                            <field name="datas" filename="datas_fname" attrs="{'invisible':[('type','=','url')]}"/>
-                            <field name="datas_fname" invisible="1" attrs="{'invisible':[('type','=','url')]}" class="oe_inline oe_right"/>
+                            <field name="datas" filename="name" attrs="{'invisible':[('type','=','url')]}"/>
                             <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
                             <field name="mimetype" groups="base.group_no_one"/>
                         </group>
@@ -26,7 +25,7 @@
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="public"/>
                         </group>
-                        <group string="History" groups="base.group_no_one">
+                        <group string="History" groups="base.group_no_one" attrs="{'invisible':[('create_date','=',False)]}">
                             <label for="create_uid" string="Creation"/>
                             <div name="creation_div">
                                 <field name="create_uid" readonly="1" class="oe_inline"/> on
@@ -49,11 +48,11 @@
             <field name="arch" type="xml">
                 <tree string="Attachments">
                     <field name="name"/>
-                    <field name="datas_fname"/>
                     <field name="res_model"/>
                     <field name="res_field"/>
                     <field name="res_id"/>
                     <field name="type"/>
+                    <field name="file_size"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="create_uid"/>
                     <field name="create_date"/>
@@ -64,23 +63,22 @@
             <field name="model">ir.attachment</field>
             <field name="arch" type="xml">
                 <search string="Attachments">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('datas_fname','ilike',self)]" string="Attachment"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="Attachment"/>
                     <field name="create_date"/>
-                    <filter name="url_filter" string="URL" domain="[('type','=','url')]"/>
-                    <filter name="binary_filter" string="Binary" domain="[('type','=','binary')]"/>
-                    <separator/>
                     <filter name="my_documents_filter"
                         string="My Document(s)"
                         domain="[('create_uid','=',uid)]"
                         help="Filter on my documents"/>
-                    <field name="create_uid"/>
+                    <filter name="url_filter" string="URL" domain="[('type', '=', 'url')]"/>
+                    <filter name="binary_filter" string="Stored" domain="[('type', '=', 'binary')]"/>
+                    <separator/>
+                    <field name="create_uid" string="Created by"/>
                     <field name="type"/>
                     <group expand="0" string="Group By">
                         <filter name="owner" string="Owner" domain="[]" context="{'group_by':'create_uid'}"/>
                         <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}" groups="base.group_no_one"/>
                         <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Creation Month" name="creation_month" domain="[]" context="{'group_by':'create_date'}"/>
-                        <filter string="Attached Document Name" name="attached_document_name" domain="[]" context="{'group_by': 'res_name'}"/>
+                        <filter string="Creation Date" name="creation_month" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                 </search>
             </field>
@@ -89,7 +87,6 @@
             <field name="name">Attachments</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.attachment</field>
-            <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_attachment_search"/>
             <field name="help" type="html">

@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import ast
-
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
+from odoo.tools.safe_eval import safe_eval, datetime
 
 
 class IrFilters(models.Model):
@@ -13,7 +12,7 @@ class IrFilters(models.Model):
     _order = 'model_id, name, id desc'
 
     name = fields.Char(string='Filter Name', translate=True, required=True)
-    user_id = fields.Many2one('res.users', string='User', ondelete='cascade', default=lambda self: self._uid,
+    user_id = fields.Many2one('res.users', string='User', ondelete='cascade',
                               help="The user this filter is private to. When left empty the filter is public "
                                    "and available to all users.")
     domain = fields.Text(default='[]', required=True)
@@ -32,16 +31,17 @@ class IrFilters(models.Model):
         self._cr.execute("SELECT model, name FROM ir_model ORDER BY name")
         return self._cr.fetchall()
 
-    @api.multi
     def copy(self, default=None):
         self.ensure_one()
-        default = dict(default or {}, name=_('%s (copy)') % self.name)
+        default = dict(default or {}, name=_('%s (copy)', self.name))
         return super(IrFilters, self).copy(default)
 
-    @api.multi
     def _get_eval_domain(self):
         self.ensure_one()
-        return ast.literal_eval(self.domain)
+        return safe_eval(self.domain, {
+            'datetime': datetime,
+            'context_today': datetime.datetime.now,
+        })
 
     @api.model
     def _get_action_domain(self, action_id=None):
@@ -57,6 +57,7 @@ class IrFilters(models.Model):
     def get_filters(self, model, action_id=None):
         """Obtain the list of filters available for the user on the given model.
 
+        :param int model: id of model to find filters for
         :param action_id: optional ID of action to restrict filters to this action
             plus global filters. If missing only global filters are returned.
             The action does not have to correspond to the model, it may only be
@@ -69,7 +70,7 @@ class IrFilters(models.Model):
         # and filters for the action (action_id=action_id) or global (action_id=NULL)
         action_domain = self._get_action_domain(action_id)
         filters = self.search(action_domain + [('model_id', '=', model), ('user_id', 'in', [self._uid, False])])
-        user_context = self.env.user.context_get()
+        user_context = self.env['res.users'].context_get()
         return filters.with_context(user_context).read(['name', 'is_default', 'domain', 'context', 'user_id', 'sort'])
 
     @api.model
@@ -146,7 +147,6 @@ class IrFilters(models.Model):
         ('name_model_uid_unique', 'unique (name, model_id, user_id, action_id)', 'Filter names must be unique'),
     ]
 
-    @api.model_cr_context
     def _auto_init(self):
         result = super(IrFilters, self)._auto_init()
         # Use unique index to implement unique constraint on the lowercase name (not possible using a constraint)

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="Colorpicker">
+    <div class="o_colorpicker_widget">
+        <div class="d-flex justify-content-between align-items-stretch mb-2">
+            <div class="o_color_pick_area position-relative w-75" t-att-style="widget.options.noTransparency ? 'width: 89%;' : None">
+                <div class="o_picker_pointer rounded-circle p-1 position-absolute" tabindex="-1"/>
+            </div>
+            <div class="o_color_slider position-relative">
+                <div class="o_slider_pointer" tabindex="-1"/>
+            </div>
+            <div class="o_opacity_slider position-relative" t-if="!widget.options.noTransparency">
+                <div class="o_opacity_pointer" tabindex="-1"/>
+            </div>
+        </div>
+        <div t-if="widget.options.colorPreview" class="o_color_preview mb-1 w-100 p-2"/>
+        <div class="o_color_picker_inputs d-flex justify-content-between mb-2">
+            <t t-set="input_classes" t-value="'p-0 border-0 text-center font-monospace bg-transparent'" />
+
+            <div class="o_hex_div px-1 d-flex align-items-baseline">
+                <input type="text" t-attf-class="o_hex_input {{input_classes}}" data-color-method="hex" size="1"/>
+                <label class="flex-grow-0 ms-1 mb-0">hex</label>
+            </div>
+            <div class="o_rgba_div px-1 d-flex align-items-baseline">
+                <input type="text" t-attf-class="o_red_input {{input_classes}}" data-color-method="rgb" size="1"/>
+                <input type="text" t-attf-class="o_green_input {{input_classes}}" data-color-method="rgb" size="1"/>
+                <input type="text" t-attf-class="o_blue_input me-0 {{input_classes}}" data-color-method="rgb" size="1"/>
+                <t t-if="!widget.options.noTransparency">
+                    <input type="text" t-attf-class="o_opacity_input {{input_classes}}" data-color-method="opacity" size="1"/>
+                    <label class="flex-grow-0 ms-1 mb-0">
+                        RGBA
+                    </label>
+                </t>
+                <label t-else="" class="flex-grow-0 ms-1 mb-0">
+                    RGB
+                </label>
+            </div>
+        </div>
+    </div>
+</t>
+</templates>

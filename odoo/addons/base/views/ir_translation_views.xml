@@ -11,10 +11,11 @@
                         string="Web-only translations"
                         domain="[('comments', 'like', 'openerp-web')]"/>
                     <field name="lang"/>
-                    <field name="source"/>
+                    <field name="src"/>
                     <field name="value"/>
                     <field name="name" filter_domain="('|', ('name', '=', self), ('name', 'ilike', self + ','))" string="Model"/>
                     <field name="res_id" filter_domain="('&amp;', ('name', '=', 'ir.ui.view,arch_db'), ('res_id', '=', self))" string="View ID"/>
+                    <field name="module"/>
                 </search>
             </field>
         </record>
@@ -33,12 +34,12 @@
                             <field name="lang"/>
                         </group>
                         <group>
-                            <field name="module" groups="base.group_no_one"/>
+                            <field name="module"/>
                             <field name="type"/>
                             <field name="res_id"/>
                         </group>
                         <group string="Source Term">
-                           <field name="source" nolabel="1" height="400"/>
+                           <field name="src" nolabel="1" height="400"/>
                         </group>
                         <group string="Translation">
                            <field name="value" nolabel="1" height="400"/>
@@ -55,10 +56,11 @@
             <field name="model">ir.translation</field>
             <field name="arch" type="xml">
                 <tree string="Translations" editable="top">
-                    <field name="source"/>
+                    <field name="src"/>
                     <field name="value"/>
                     <field name="name"/>
                     <field name="lang"/>
+                    <field name="module"/>
                     <field name="type"/>
                     <field name="state"/>
                 </tree>
@@ -71,9 +73,30 @@
                 <tree string="Translations" editable="top" create="false">
                     <field name="lang" readonly="1"/>
                     <field name="name" readonly="1"/>
-                    <field name="source"/>
+                    <field name="src"/>
                     <field name="value"/>
                     <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_translation_lang_value_tree" model="ir.ui.view">
+            <field name="model">ir.translation</field>
+            <field name="arch" type="xml">
+                <tree string="Translations" editable="top" create="false">
+                    <field name="lang" readonly="1"/>
+                    <field name="value"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_translation_lang_src_value_tree" model="ir.ui.view">
+            <field name="model">ir.translation</field>
+            <field name="arch" type="xml">
+                <tree string="Translations" editable="top" create="false">
+                    <field name="lang" readonly="1"/>
+                    <field name="src" readonly="1"/>
+                    <field name="value"/>
                 </tree>
             </field>
         </record>
@@ -81,7 +104,6 @@
         <record id="action_translation" model="ir.actions.act_window">
             <field name="name">Translated Terms</field>
             <field name="res_model">ir.translation</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="view_translation_tree"/>
         </record>
 

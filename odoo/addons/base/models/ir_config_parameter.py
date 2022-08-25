@@ -8,7 +8,7 @@ import uuid
 import logging
 
 from odoo import api, fields, models
-from odoo.tools import config, ormcache, mute_logger, pycompat
+from odoo.tools import config, ormcache, mute_logger
 
 _logger = logging.getLogger(__name__)
 
@@ -16,16 +16,19 @@ _logger = logging.getLogger(__name__)
 A dictionary holding some configuration parameters to be initialized when the database is created.
 """
 _default_parameters = {
-    "database.secret": lambda: pycompat.text_type(uuid.uuid4()),
-    "database.uuid": lambda: pycompat.text_type(uuid.uuid1()),
+    "database.secret": lambda: str(uuid.uuid4()),
+    "database.uuid": lambda: str(uuid.uuid1()),
     "database.create_date": fields.Datetime.now,
     "web.base.url": lambda: "http://localhost:%s" % config.get('http_port'),
+    "base.login_cooldown_after": lambda: 10,
+    "base.login_cooldown_duration": lambda: 60,
 }
 
 
 class IrConfigParameter(models.Model):
     """Per-database storage of configuration key-value pairs."""
     _name = 'ir.config_parameter'
+    _description = 'System Parameter'
     _rec_name = 'key'
     _order = 'key'
 
@@ -36,13 +39,15 @@ class IrConfigParameter(models.Model):
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
 
-    @api.model_cr
     @mute_logger('odoo.addons.base.models.ir_config_parameter')
     def init(self, force=False):
         """
         Initializes the parameters listed in _default_parameters.
         It overrides existing parameters if force is ``True``.
         """
+        # avoid prefetching during module installation, as the res_users table
+        # may not have all prescribed columns
+        self = self.with_context(prefetch_fields=False)
         for key, func in _default_parameters.items():
             # force=True skips search and always performs the 'if' body (because ids=False)
             params = self.sudo().search([('key', '=', key)])
@@ -58,13 +63,18 @@ class IrConfigParameter(models.Model):
         :return: The value of the parameter, or ``default`` if it does not exist.
         :rtype: string
         """
+        self.check_access_rights('read')
         return self._get_param(key) or default
 
     @api.model
-    @ormcache('self._uid', 'key')
+    @ormcache('key')
     def _get_param(self, key):
-        params = self.search_read([('key', '=', key)], fields=['value'], limit=1)
-        return params[0]['value'] if params else None
+        # we bypass the ORM because get_param() is used in some field's depends,
+        # and must therefore work even when the ORM is not ready to work
+        self.flush_model(['key', 'value'])
+        self.env.cr.execute("SELECT value FROM ir_config_parameter WHERE key = %s", [key])
+        result = self.env.cr.fetchone()
+        return result and result[0]
 
     @api.model
     def set_param(self, key, value):
@@ -80,7 +90,8 @@ class IrConfigParameter(models.Model):
         if param:
             old = param.value
             if value is not False and value is not None:
-                param.write({'value': value})
+                if str(value) != old:
+                    param.write({'value': value})
             else:
                 param.unlink()
             return old
@@ -89,17 +100,15 @@ class IrConfigParameter(models.Model):
                 self.create({'key': key, 'value': value})
             return False
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         self.clear_caches()
-        return super(IrConfigParameter, self).create(vals)
+        return super(IrConfigParameter, self).create(vals_list)
 
-    @api.multi
     def write(self, vals):
         self.clear_caches()
         return super(IrConfigParameter, self).write(vals)
 
-    @api.multi
     def unlink(self):
         self.clear_caches()
         return super(IrConfigParameter, self).unlink()

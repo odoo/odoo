@@ -3,15 +3,16 @@
 # * contacts
 # 
 # Translators:
-# Viktor Basso <viktor@voit.no>, 2017
-# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Martin Trigaux, 2019
+# Marius Stedjan <marius@stedjan.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,11 +32,6 @@ msgid "Banks"
 msgstr "Banker"
 
 #. module: contacts
-#: model:ir.actions.act_window,help:contacts.action_contacts
-msgid "Click to add a contact in your contacts directory."
-msgstr "Klikk for å legge til en kontakt i kontaktregisteret"
-
-#. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_config
 msgid "Configuration"
 msgstr "Konfigurasjon"
@@ -52,6 +48,7 @@ msgstr "Kontakt-titler"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
+#: model:ir.actions.act_window,name:contacts.action_contacts_summary
 #: model:ir.ui.menu,name:contacts.menu_contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_contacts
 msgid "Contacts"
@@ -65,7 +62,13 @@ msgstr "Land"
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_group
 msgid "Country Group"
-msgstr "Land-gruppe"
+msgstr "Landegruppe"
+
+#. module: contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
+msgid "Create a contact in your address book"
+msgstr ""
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
@@ -78,14 +81,17 @@ msgid "Localization"
 msgstr "Lokalisering"
 
 #. module: contacts
-#: model:ir.actions.act_window,help:contacts.action_contacts
-msgid ""
-"Odoo helps you easily track all activities related to\n"
-"            a customer: discussions, history of business opportunities,\n"
-"            documents, etc."
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
+msgid "Odoo helps you to easily track all activities related to a customer."
 msgstr ""
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_industry_menu
 msgid "Sectors of Activity"
-msgstr ""
+msgstr "Aktivitetssektorer"
+
+#. module: contacts
+#: model:ir.model,name:contacts.model_res_users
+msgid "Users"
+msgstr "Brukere"

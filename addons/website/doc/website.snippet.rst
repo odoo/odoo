@@ -150,4 +150,4 @@ The snippets are loaded in one time by js and the page stay editable.
 More
 ++++
 
-- Use the class ``o_not_editable`` to prevent the edition from an area.
+- Use the class ``o_not_editable`` to prevent the editing of an area.

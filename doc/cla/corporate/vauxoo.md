@@ -1,4 +1,4 @@
-México, 9-2-2015
+México, 2015-02-09
 
 Vauxoo agrees to the terms of the Odoo Corporate Contributor License Agreement v1.0.
 
@@ -39,7 +39,22 @@ Jesus Zapata jesus@vauxoo.com https://github.com/JesusZapata
 Germana Oliveira germana@vauxoo.com https://github.com/goliveirab
 Mariano Fernandez mariano@vauxoo.com https://github.com/Batuto
 Edgar Rivero edgar@vauxoo.com https://github.com/egrivero
+Edilianny Sánchez esanchez@vauxoo.com https://github.com/edy1192
 Alexander Olivares alexander@vauxoo.com https://github.com/alxolivares
 Jose Manuel Robles josemanuel@vauxoo.com https://github.com/keylor2906
 Erick Birbe erick@vauxoo.com https://github.com/ebirbe
 Tomas Alvarez tomas@vauxoo.com https://github.com/tomeyro
+Carmen Liliana Miranda González carmen@vauxoo.com https://github.com/CarmenMiranda
+Arturo Flores arturo@vauxoo.com https://github.com/umiphos
+Deivis Laya deivis@vauxoo.com https://github.com/deivislaya
+Yennifer Santiago yennifer@vauxoo.com https://github.com/ysantiago
+Randall Castro randall@vauxoo.com https://github.com/randall-vx
+Alejandro Santillan asantillan@vauxoo.com https://github.com/R4Alex
+Williams Estrada williams@vauxoo.com https://github.com/WR-96
+Fernanda Hernández fernanda@vauxoo.com https://github.com/fernandahf
+Luigys Toro luigys@vauxoo.com https://github.com/desdelinux
+Francisco J. Luna fluna@vauxoo.com https://github.com/frahikLV
+Andrea Arce andrea@vauxoo.com https://github.com/andreaarce
+Francisco Alejandro González Luna aluna@vauxoo.com https://github.com/TheAlekLuna
+Juan Benavente jbenavente@vauxoo.com https://github.com/jjbenavaz
+Alejandro Garza agarza@vauxoo.com https://github.com/agarzaarvizu

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import json
 import locale
 import logging
@@ -8,7 +9,6 @@ import re
 from operator import itemgetter
 
 from odoo import api, fields, models, tools, _
-from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -28,18 +28,18 @@ class Lang(models.Model):
     name = fields.Char(required=True)
     code = fields.Char(string='Locale Code', required=True, help='This field is used to set/get locales for user')
     iso_code = fields.Char(string='ISO code', help='This ISO code is the name of po files to use for translations')
-    translatable = fields.Boolean()
+    url_code = fields.Char('URL Code', required=True, help='The Lang Code displayed in the URL')
     active = fields.Boolean()
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
     date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
     time_format = fields.Char(string='Time Format', required=True, default=DEFAULT_TIME_FORMAT)
-    week_start = fields.Selection([(1, 'Monday'),
-                                   (2, 'Tuesday'),
-                                   (3, 'Wednesday'),
-                                   (4, 'Thursday'),
-                                   (5, 'Friday'),
-                                   (6, 'Saturday'),
-                                   (7, 'Sunday')], string='First Day of Week', required=True, default=7)
+    week_start = fields.Selection([('1', 'Monday'),
+                                   ('2', 'Tuesday'),
+                                   ('3', 'Wednesday'),
+                                   ('4', 'Thursday'),
+                                   ('5', 'Friday'),
+                                   ('6', 'Saturday'),
+                                   ('7', 'Sunday')], string='First Day of Week', required=True, default='7')
     grouping = fields.Char(string='Separator Format', required=True, default='[]',
         help="The Separator Format should be like [,n] where 0 < n :starting from Unit digit. "
              "-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500; "
@@ -48,9 +48,21 @@ class Lang(models.Model):
     decimal_point = fields.Char(string='Decimal Separator', required=True, default='.', trim=False)
     thousands_sep = fields.Char(string='Thousands Separator', default=',', trim=False)
 
+    @api.depends('code', 'flag_image')
+    def _compute_field_flag_image_url(self):
+        for lang in self:
+            if lang.flag_image:
+                lang.flag_image_url = f"/web/image/res.lang/{lang.id}/flag_image"
+            else:
+                lang.flag_image_url = f"/base/static/img/country_flags/{lang.code.lower().rsplit('_')[-1]}.png"
+
+    flag_image = fields.Image("Image")
+    flag_image_url = fields.Char(compute=_compute_field_flag_image_url)
+
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'The name of the language must be unique !'),
         ('code_uniq', 'unique(code)', 'The code of the language must be unique !'),
+        ('url_code_uniq', 'unique(url_code)', 'The URL code of the language must be unique !'),
     ]
 
     @api.constrains('active')
@@ -77,26 +89,34 @@ class Lang(models.Model):
                     'Provided as the thousand separator in each case.')
         for lang in self:
             try:
-                if not all(isinstance(x, int) for x in json.loads(lang.grouping)):
+                if any(not isinstance(x, int) for x in json.loads(lang.grouping)):
                     raise ValidationError(warning)
             except Exception:
                 raise ValidationError(warning)
 
-    @api.model_cr
     def _register_hook(self):
         # check that there is at least one active language
         if not self.search_count([]):
             _logger.error("No language is active.")
 
-    @api.model
+    # TODO remove me after v14
     def load_lang(self, lang, lang_name=None):
-        """ Create the given language if necessary, and make it active. """
-        # if the language exists, simply make it active
-        language = self.with_context(active_test=False).search([('code', '=', lang)], limit=1)
-        if language:
-            language.write({'active': True})
-            return language.id
+        _logger.warning("Call to deprecated method load_lang, use _create_lang or _activate_lang instead")
+        language = self._activate_lang(lang) or self._create_lang(lang, lang_name)
+        return language.id
 
+    def _activate_lang(self, code):
+        """ Activate languages
+        :param code: code of the language to activate
+        :return: the language matching 'code' activated
+        """
+        lang = self.with_context(active_test=False).search([('code', '=', code)])
+        if lang and not lang.active:
+            lang.active = True
+        return lang
+
+    def _create_lang(self, lang, lang_name=None):
+        """ Create the given language and make it active. """
         # create the language with locale information
         fail = True
         iso_lang = tools.get_iso_codes(lang)
@@ -142,7 +162,6 @@ class Lang(models.Model):
             'iso_code': iso_lang,
             'name': lang_name,
             'active': True,
-            'translatable': True,
             'date_format' : fix_datetime_format(locale.nl_langinfo(locale.D_FMT)),
             'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
             'decimal_point' : fix_xa0(str(conv['decimal_point'])),
@@ -150,7 +169,7 @@ class Lang(models.Model):
             'grouping' : str(conv.get('grouping', [])),
         }
         try:
-            return self.create(lang_info).id
+            return self.create(lang_info)
         finally:
             tools.resetlocale()
 
@@ -158,43 +177,45 @@ class Lang(models.Model):
     def install_lang(self):
         """
 
-        This method is called from odoo/addons/base/base_data.xml to load
+        This method is called from odoo/addons/base/data/res_lang_data.xml to load
         some language and set it as the default for every partners. The
-        language is set via tools.config by the RPC 'create' method on the
+        language is set via tools.config by the '_initialize_db' method on the
         'db' object. This is a fragile solution and something else should be
         found.
 
         """
         # config['load_language'] is a comma-separated list or None
         lang_code = (tools.config.get('load_language') or 'en_US').split(',')[0]
-        lang = self.search([('code', '=', lang_code)])
-        if not lang:
-            self.load_lang(lang_code)
+        lang = self._activate_lang(lang_code) or self._create_lang(lang_code)
         IrDefault = self.env['ir.default']
         default_value = IrDefault.get('res.partner', 'lang')
         if default_value is None:
             IrDefault.set('res.partner', 'lang', lang_code)
             # set language of main company, created directly by db bootstrap SQL
-            partner = self.env.user.company_id.partner_id
+            partner = self.env.company.partner_id
             if not partner.lang:
                 partner.write({'lang': lang_code})
         return True
 
     @tools.ormcache('code')
     def _lang_get_id(self, code):
-        return (self.search([('code', '=', code)]) or
-                self.search([('code', '=', 'en_US')]) or
-                self.search([], limit=1)).id
+        return self.with_context(active_test=True).search([('code', '=', code)]).id
 
-    @api.model
-    @api.returns('self', lambda value: value.id)
+    @tools.ormcache('code')
+    def _lang_get_direction(self, code):
+        return self.with_context(active_test=True).search([('code', '=', code)]).direction
+
+    @tools.ormcache('url_code')
+    def _lang_get_code(self, url_code):
+        return self.with_context(active_test=True).search([('url_code', '=', url_code)]).code or url_code
+
     def _lang_get(self, code):
+        """ Return the language using this code if it is active """
         return self.browse(self._lang_get_id(code))
 
     @tools.ormcache('self.code', 'monetary')
     def _data_get(self, monetary=False):
-        conv = locale.localeconv()
-        thousands_sep = self.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
+        thousands_sep = self.thousands_sep or ''
         decimal_point = self.decimal_point
         grouping = self.grouping
         return grouping, thousands_sep, decimal_point
@@ -202,9 +223,35 @@ class Lang(models.Model):
     @api.model
     @tools.ormcache()
     def get_available(self):
-        """ Return the available languages as a list of (code, name) sorted by name. """
+        """ Return the available languages as a list of (code, url_code, name,
+            active) sorted by name.
+        """
         langs = self.with_context(active_test=False).search([])
-        return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
+        return langs.get_sorted()
+
+    def get_sorted(self):
+        return sorted([(lang.code, lang.url_code, lang.name, lang.active, lang.flag_image_url) for lang in self], key=itemgetter(2))
+
+    @tools.ormcache('self.id')
+    def _get_cached_values(self):
+        self.ensure_one()
+        return {
+            'id': self.id,
+            'code': self.code,
+            'url_code': self.url_code,
+            'name': self.name,
+        }
+
+    def _get_cached(self, field):
+        return self._get_cached_values()[field]
+
+    @api.model
+    @tools.ormcache('code')
+    def _lang_code_to_urlcode(self, code):
+        for c, urlc, name, *_ in self.get_available():
+            if c == code:
+                return urlc
+        return self._lang_get(code).url_code
 
     @api.model
     @tools.ormcache()
@@ -213,41 +260,56 @@ class Lang(models.Model):
         langs = self.with_context(active_test=True).search([])
         return sorted([(lang.code, lang.name) for lang in langs], key=itemgetter(1))
 
-    @api.model
-    def create(self, vals):
-        self.clear_caches()
-        return super(Lang, self).create(vals)
+    def toggle_active(self):
+        super().toggle_active()
+        # Automatically load translation
+        active_lang = [lang.code for lang in self.filtered(lambda l: l.active)]
+        if active_lang:
+            mods = self.env['ir.module.module'].search([('state', '=', 'installed')])
+            mods._update_translations(active_lang)
 
-    @api.multi
+    @api.model_create_multi
+    def create(self, vals_list):
+        self.clear_caches()
+        for vals in vals_list:
+            if not vals.get('url_code'):
+                vals['url_code'] = vals.get('iso_code') or vals['code']
+        return super(Lang, self).create(vals_list)
+
     def write(self, vals):
         lang_codes = self.mapped('code')
         if 'code' in vals and any(code != vals['code'] for code in lang_codes):
             raise UserError(_("Language code cannot be modified."))
         if vals.get('active') == False:
-            if self.env['res.users'].search([('lang', 'in', lang_codes)]):
-                raise UserError(_("Cannot unactivate a language that is currently used by users."))
+            if self.env['res.users'].search_count([('lang', 'in', lang_codes)]):
+                raise UserError(_("Cannot deactivate a language that is currently used by users."))
+            if self.env['res.partner'].search_count([('lang', 'in', lang_codes)]):
+                raise UserError(_("Cannot deactivate a language that is currently used by contacts."))
             # delete linked ir.default specifying default partner's language
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
         res = super(Lang, self).write(vals)
+        self.env.flush_all()
         self.clear_caches()
         return res
 
-    @api.multi
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _unlink_except_default_lang(self):
         for language in self:
             if language.code == 'en_US':
-                raise UserError(_("Base Language 'en_US' can not be deleted!"))
+                raise UserError(_("Base Language 'en_US' can not be deleted."))
             ctx_lang = self._context.get('lang')
             if ctx_lang and (language.code == ctx_lang):
-                raise UserError(_("You cannot delete the language which is User's Preferred Language!"))
+                raise UserError(_("You cannot delete the language which is the user's preferred language."))
             if language.active:
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
+
+    def unlink(self):
+        for language in self:
             self.env['ir.translation'].search([('lang', '=', language.code)]).unlink()
         self.clear_caches()
         return super(Lang, self).unlink()
 
-    @api.multi
     def format(self, percent, value, grouping=False, monetary=False):
         """ Format() will return the language-specific output for float values"""
         self.ensure_one()
@@ -259,7 +321,7 @@ class Lang(models.Model):
         # floats and decimal ints need special action!
         if grouping:
             lang_grouping, thousands_sep, decimal_point = self._data_get(monetary)
-            eval_lang_grouping = safe_eval(lang_grouping)
+            eval_lang_grouping = ast.literal_eval(lang_grouping)
 
             if percent[-1] in 'eEfFgG':
                 parts = formatted.split('.')
@@ -272,6 +334,22 @@ class Lang(models.Model):
 
         return formatted
 
+    def action_activate_langs(self):
+        """ Activate the selected languages """
+        for lang in self.filtered(lambda l: not l.active):
+            lang.toggle_active()
+        message = _("The languages that you selected have been successfully installed. Users can choose their favorite language in their preferences.")
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'target': 'new',
+            'params': {
+                'message': message,
+                'type': 'success',
+                'sticky': False,
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
 
 def split(l, counts):
     """

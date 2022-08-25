@@ -13,12 +13,12 @@ class TestCrossdock(common.TransactionCase):
         supplier_crossdock = self.env['res.partner'].create({'name': "Crossdocking supplier"})
 
         # I first create a warehouse with pick-pack-ship and reception in 2 steps
-        wh_f = Form(self.env['stock.warehouse'])
-        wh_f.name = 'WareHouse PickPackShip'
-        wh_f.code = 'whpps'
-        wh_f.reception_steps = 'two_steps'
-        wh_f.delivery_steps = 'pick_pack_ship'
-        wh_pps = wh_f.save()
+        wh_pps = self.env['stock.warehouse'].create({
+            'name': 'WareHouse PickPackShip',
+            'code': 'whpps',
+            'reception_steps': 'two_steps',
+            'delivery_steps': 'pick_pack_ship',
+        })
 
         # Check that cross-dock route is active
         self.assertTrue(wh_pps.crossdock_route_id.active,
@@ -26,18 +26,19 @@ class TestCrossdock(common.TransactionCase):
 
         p_f = Form(self.env['product.template'])
         p_f.name = 'PCE'
-        p_f.type = 'product'
+        p_f.detailed_type = 'product'
         p_f.categ_id = self.env.ref('product.product_category_1')
         p_f.list_price = 100.0
-        p_f.standard_price = 70.0
         with p_f.seller_ids.new() as seller:
-            seller.name = supplier_crossdock
+            seller.partner_id = supplier_crossdock
         p_f.route_ids.add(wh_pps.crossdock_route_id)
         cross_shop_product = p_f.save()
 
+        p_f.standard_price = 70.0
+
         # Create a sales order with a line of 100 PCE incoming shipment with route_id crossdock shipping
         so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.env.ref('base.res_partner_4')
+        so_form.partner_id = self.env['res.partner'].create({'name': 'My Test Partner'})
         so_form.warehouse_id = wh_pps
 
         with mute_logger('odoo.tests.common.onchange'):

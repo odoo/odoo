@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <record id="mail_template_totp_invite" model="mail.template">
+        <field name="name">TOTP for users: Invite by email</field>
+        <field name="model_id" ref="base.model_res_users" />
+        <field name="subject">Invitation to activate two-factor authentication on your Odoo account</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear <t t-out="object.partner_id.name or ''"></t><br/><br/>
+        <t t-out="user.name  or ''"></t> requested you activate two-factor authentication to protect your account.<br/><br/>
+        Two-factor Authentication ("2FA") is a system of double authentication.
+        The first one is done with your password and the second one with a code you get from a dedicated mobile app.
+        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.
+
+        <p style="margin: 16px 0px 16px 0px; text-align: center;">
+            <a t-att-href="object.get_totp_invite_url()"
+                style="background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
+                Activate my two-factor Authentication
+            </a>
+        </p>
+    </p>
+</div>
+        </field>
+    </record>
+</data>
+</odoo>

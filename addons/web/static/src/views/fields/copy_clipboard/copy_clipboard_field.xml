@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CopyClipboardField" owl="1">
+        <t t-if="props.value">
+            <Field t-props="props"/>
+            <CopyButton className="`o_btn_${props.type}_copy`" content="props.value" copyText="copyText" successText="successText"/>
+        </t>
+    </t>
+
+</templates>

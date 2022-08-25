@@ -20,6 +20,7 @@ _logger = logging.getLogger(__name__)
 
 class PublisherWarrantyContract(AbstractModel):
     _name = "publisher_warranty.contract"
+    _description = 'Publisher Warranty Contract'
 
     @api.model
     def _get_message(self):
@@ -78,7 +79,6 @@ class PublisherWarrantyContract(AbstractModel):
         r.raise_for_status()
         return literal_eval(r.text)
 
-    @api.multi
     def update_notification(self, cron_mode=True):
         """
         Send a message to Odoo's publisher warranty server to check the
@@ -98,13 +98,9 @@ class PublisherWarrantyContract(AbstractModel):
             # old behavior based on res.log; now on mail.message, that is not necessarily installed
             user = self.env['res.users'].sudo().browse(SUPERUSER_ID)
             poster = self.sudo().env.ref('mail.channel_all_employees')
-            if not (poster and poster.exists()):
-                if not user.exists():
-                    return True
-                poster = user
             for message in result["messages"]:
                 try:
-                    poster.message_post(body=message, subtype='mt_comment', partner_ids=[user.partner_id.id])
+                    poster.message_post(body=message, subtype_xmlid='mail.mt_comment', partner_ids=[user.partner_id.id])
                 except Exception:
                     pass
             if result.get('enterprise_info'):
@@ -113,6 +109,9 @@ class PublisherWarrantyContract(AbstractModel):
                 set_param('database.expiration_date', result['enterprise_info'].get('expiration_date'))
                 set_param('database.expiration_reason', result['enterprise_info'].get('expiration_reason', 'trial'))
                 set_param('database.enterprise_code', result['enterprise_info'].get('enterprise_code'))
+                set_param('database.already_linked_subscription_url', result['enterprise_info'].get('database_already_linked_subscription_url'))
+                set_param('database.already_linked_email', result['enterprise_info'].get('database_already_linked_email'))
+                set_param('database.already_linked_send_mail_url', result['enterprise_info'].get('database_already_linked_send_mail_url'))
 
         except Exception:
             if cron_mode:

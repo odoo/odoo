@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <!-- Account Tax Tags -->
-        <record id="tag_sale" model="account.account.tag">
-            <field name="name">Sale Tax</field>
-            <field name="applicability">taxes</field>
-        </record>
-        <record id="tag_purchase" model="account.account.tag">
-            <field name="name">Purchase Tax</field>
-            <field name="applicability">taxes</field>
-        </record>
-
         <!-- Account Tax Template -->
         <record id="account_tax_template_IV_0" model="account.tax.template">
             <field name="name">Sales Tax</field>
@@ -19,10 +9,31 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
             <field name="chart_template_id" ref="account_chart_template_0"/>
-            <field name="account_id" ref="account_account_template_0_212101"/>
-            <field name="refund_account_id" ref="account_account_template_0_212101"/>
-            <field name="tag_ids" eval="[(6,0,[ref('tag_sale')])]"/>
             <field name="tax_group_id" ref="tax_group_13"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_template_0_212101'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_template_0_212101'),
+                }),
+            ]"/>
         </record>
         <record id="account_tax_template_IV_1" model="account.tax.template">
             <field name="name">Purchase Tax</field>
@@ -32,10 +43,31 @@
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
             <field name="chart_template_id" ref="account_chart_template_0"/>
-            <field name="account_id" ref="account_account_template_0_212101"/>
-            <field name="refund_account_id" ref="account_account_template_0_212101"/>
-            <field name="tag_ids" eval="[(6,0,[ref('tag_purchase')])]"/>
             <field name="tax_group_id" ref="tax_group_13"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_template_0_212101'),
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('account_account_template_0_212101'),
+                }),
+            ]"/>
         </record>
 
         <!-- Default Tax -->

@@ -1,13 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_adyen
+# 	* payment_adyen
+# 
+# Translators:
+# Martin Trigaux, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,69 +21,81 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:186
+#: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
-msgstr ""
+msgstr "; 找到多個訂單"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:184
+#: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "; no order found"
-msgstr ""
+msgstr "; 沒有訂單"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:234
+#: model:ir.model.fields.selection,name:payment_adyen.selection__payment_acquirer__provider__adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "Adyen: feedback error"
-msgstr ""
+msgstr "Adyen: 反饋出錯"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:196
+#: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "Adyen: invalid merchantSig, received %s, computed %s"
-msgstr ""
+msgstr "Adyen: invalid merchantSig, received %s, computed %s"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:182
+#: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid "Adyen: received data for reference %s"
-msgstr ""
+msgstr "Adyen: 供參照的接收數據 %s"
 
 #. module: payment_adyen
-#: code:addons/payment_adyen/models/payment.py:175
+#: code:addons/payment_adyen/models/payment.py:0
 #, python-format
 msgid ""
 "Adyen: received data with missing reference (%s) or missing pspReference "
 "(%s)"
 msgstr ""
+"Adyen: received data with missing reference (%s) or missing pspReference "
+"(%s)"
 
 #. module: payment_adyen
-#: model:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
+#: model_terms:ir.ui.view,arch_db:payment_adyen.acquirer_form_adyen
 msgid "How to configure your Adyen account?"
-msgstr ""
+msgstr "如何設定您的Adyen帳戶？"
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_merchant_account
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
 msgid "Merchant Account"
-msgstr ""
+msgstr "商業帳戶"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr ""
+msgstr "付款收單方"
 
 #. module: payment_adyen
 #: model:ir.model,name:payment_adyen.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "付款交易"
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_code
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "服務商"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_code
 msgid "Skin Code"
-msgstr ""
+msgstr "Skin Code"
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer_adyen_skin_hmac_key
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_skin_hmac_key
 msgid "Skin HMAC Key"
-msgstr ""
+msgstr "Skin HMAC Key"

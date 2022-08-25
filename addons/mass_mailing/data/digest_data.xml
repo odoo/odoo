@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="digest_mail_main" inherit_id="digest.digest_mail_main">
+            <xpath expr="//div[hasclass('by_odoo')]/t[last()]" position="after">
+                <t t-if="mailing_report_token">
+                    –
+                    <a t-attf-href="/mailing/report/unsubscribe?token=#{mailing_report_token}&amp;user_id=#{user_id}"
+                       target="_blank" style="text-decoration: none;">
+                        <span style="color: #8f8f8f;">Turn off Mailing Reports</span>
+                    </a>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

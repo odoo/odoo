@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_chart" name="Chart">
+    <div class="s_chart" data-type="bar" data-legend-position="top" data-tooltip-display="true" data-stacked="false" data-border-width="2"
+            data-data="{
+                &quot;labels&quot;:[&quot;First&quot;,&quot;Second&quot;,&quot;Third&quot;,&quot;Fourth&quot;,&quot;Fifth&quot;],
+                &quot;datasets&quot;:[
+                    {
+                        &quot;label&quot;:&quot;One&quot;,
+                        &quot;data&quot;:[&quot;12&quot;,&quot;24&quot;,&quot;18&quot;,&quot;17&quot;,&quot;10&quot;],
+                        &quot;backgroundColor&quot;:&quot;o-color-1&quot;,
+                        &quot;borderColor&quot;:&quot;o-color-1&quot;
+                    }
+                ]
+            }">
+        <h2>A Chart Title</h2>
+        <canvas/>
+    </div>
+</template>
+
+<template id="s_chart_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="InnerChart" string="Chart" data-selector=".s_chart">
+            <we-row string="Background">
+                <t t-call="web_editor.snippet_options_background_color_widget"/>
+            </we-row>
+            <we-select string="Type" data-attribute-name="type" data-attribute-default-value="bar">
+                <we-button data-select-data-attribute="bar" data-name="bar_chart_opt">Bar Vertical</we-button>
+                <we-button data-select-data-attribute="horizontalBar" data-name="horizontal_bar_chart_opt">Bar Horizontal</we-button>
+                <we-button data-select-data-attribute="line" data-name="line_chart_opt">Line</we-button>
+                <we-button data-select-data-attribute="pie">Pie</we-button>
+                <we-button data-select-data-attribute="doughnut">Doughnut</we-button>
+                <we-button data-select-data-attribute="radar">Radar</we-button>
+            </we-select>
+            <we-checkbox string="Stacked" data-name="stacked_chart_opt" data-dependencies="bar_chart_opt, horizontal_bar_chart_opt" data-select-data-attribute="false|true" data-attribute-name="stacked" data-no-preview="true"/>
+            <we-select string="Legend" data-attribute-name="legendPosition" data-attribute-default-value="top">
+                <we-button data-select-data-attribute="none">None</we-button>
+                <we-button data-select-data-attribute="top">Top</we-button>
+                <we-button data-select-data-attribute="left">Left</we-button>
+                <we-button data-select-data-attribute="bottom">Bottom</we-button>
+                <we-button data-select-data-attribute="right">Right</we-button>
+            </we-select>
+            <we-checkbox string="Tooltip" data-select-data-attribute="false|true" data-attribute-name="tooltipDisplay" data-no-preview="true"/>
+            <we-matrix>
+                <table>
+                    <tr>
+                        <th/>
+                        <th><we-button class="add_column fa fa-fw fa-plus o_we_link o_we_text_success d-inline-block" title="Add Serie"/></th>
+                    </tr>
+                    <tr>
+                        <th><we-button class="add_row fa fa-fw fa-plus o_we_link o_we_text_success d-inline-block" title="Add Row"/></th>
+                    </tr>
+                </table>
+            </we-matrix>
+            <we-input string="Min Axis" data-select-data-attribute="" data-dependencies="bar_chart_opt, horizontal_bar_chart_opt, line_chart_opt" data-attribute-name="minValue"/>
+            <we-input string="Max Axis" data-select-data-attribute="" data-dependencies="bar_chart_opt, horizontal_bar_chart_opt, line_chart_opt" data-attribute-name="maxValue"/>
+            <we-colorpicker string="Background" data-name="chart_bg_color_opt"
+                data-color-change=""
+                data-attribute-name="backgroundColor"
+                data-no-preview="true"/>
+            <we-colorpicker string="Border" data-name="chart_border_color_opt"
+                data-color-change=""
+                data-attribute-name="borderColor"
+                data-no-preview="true"/>
+            <we-input string="Border Width" data-select-data-attribute="2px" data-attribute-name="borderWidth" data-unit="px"/>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_chart_000_js" model="ir.asset">
+    <field name="name">Chart 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_chart/000.js</field>
+</record>
+
+</odoo>

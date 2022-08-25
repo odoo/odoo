@@ -2,7 +2,7 @@ Odoo Manufacturing Resource Planning
 ------------------------------------
 
 Manage Bill of Materials, plan manufacturing orders, track work orders with the
-Odoo <a href="https://www.odoo.com/page/manufacturing">Open Source MRP</a> app.
+Odoo <a href="https://www.odoo.com/app/manufacturing">Open Source MRP</a> app.
 
 Get all your assembly or manufacturing operations managed by Odoo. Schedule
 manufacturing orders and work orders automatically. Review the proposed

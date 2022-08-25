@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_departure_wizard_view_form" model="ir.ui.view">
+            <field name="name">hr.departure.wizard.view.form</field>
+            <field name="model">hr.departure.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <h1><field name="employee_id" readonly="1" options="{'no_open': True}"/></h1>
+                        <group>
+                            <group id="info">
+                                <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                                <field name="departure_date"/>
+                            </group>
+                            <group id="action">
+                                <!-- Override invisible="1" when inheriting -->
+                                <div class="o_td_label" id="activities_label" invisible="1">
+                                    <span class="o_form_label o_hr_form_label cursor-default">Close Activities</span>
+                                </div>
+                                <!-- Override invisible="1" when inheriting -->
+                                <div class="column" id="activities" invisible="1">
+                                </div>
+                                <separator colspan="2"/>
+                                <div class="o_td_label" id="label_info">
+                                    <span class="o_form_label o_hr_form_label cursor-default">HR Info</span>
+                                </div>
+                                <div class="column" id="info">
+                                    <div><field name="archive_private_address"/><label for="archive_private_address"/></div>
+                                </div>
+                            </group>
+                        </group>
+                        <div>
+                            <span class="o_form_label o_hr_form_label cursor-default">Detailed Reason</span>
+                            <field name="departure_description"/>
+                        </div>
+                    </sheet>
+                    <footer>
+                        <button name="action_register_departure" string="Apply" type="object" class="oe_highlight" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_departure_wizard_action" model="ir.actions.act_window">
+            <field name="name">Register Departure</field>
+            <field name="res_model">hr.departure.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

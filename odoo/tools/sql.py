@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+# pylint: disable=sql-injection
+
 import logging
 import psycopg2
+import odoo.sql_db
+from collections import defaultdict
+from contextlib import closing
 
 _schema = logging.getLogger('odoo.schema')
-
-_TABLE_KIND = {
-    'BASE TABLE': 'r',
-    'VIEW': 'v',
-    'FOREIGN TABLE': 'f',
-    'LOCAL TEMPORARY': 't',
-}
 
 _CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -29,7 +27,7 @@ def existing_tables(cr, tablenames):
           JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname IN %s
            AND c.relkind IN ('r', 'v', 'm')
-           AND n.nspname = 'public'
+           AND n.nspname = current_schema
     """
     cr.execute(query, [tuple(tablenames)])
     return [row[0] for row in cr.fetchall()]
@@ -40,17 +38,51 @@ def table_exists(cr, tablename):
 
 def table_kind(cr, tablename):
     """ Return the kind of a table: ``'r'`` (regular table), ``'v'`` (view),
-        ``'f'`` (foreign table), ``'t'`` (temporary table), or ``None``.
+        ``'f'`` (foreign table), ``'t'`` (temporary table),
+        ``'m'`` (materialized view), or ``None``.
     """
-    query = "SELECT table_type FROM information_schema.tables WHERE table_name=%s"
+    query = """
+        SELECT c.relkind
+          FROM pg_class c
+          JOIN pg_namespace n ON (n.oid = c.relnamespace)
+         WHERE c.relname = %s
+           AND n.nspname = current_schema
+    """
     cr.execute(query, (tablename,))
-    return _TABLE_KIND[cr.fetchone()[0]] if cr.rowcount else None
+    return cr.fetchone()[0] if cr.rowcount else None
 
-def create_model_table(cr, tablename, comment=None):
+# prescribed column order by type: columns aligned on 4 bytes, columns aligned
+# on 1 byte, columns aligned on 8 bytes(values have been chosen to minimize
+# padding in rows; unknown column types are put last)
+SQL_ORDER_BY_TYPE = defaultdict(lambda: 9, {
+    'int4': 1,          # 4 bytes aligned on 4 bytes
+    'varchar': 2,       # variable aligned on 4 bytes
+    'date': 3,          # 4 bytes aligned on 4 bytes
+    'text': 4,          # variable aligned on 4 bytes
+    'numeric': 5,       # variable aligned on 4 bytes
+    'bool': 6,          # 1 byte aligned on 1 byte
+    'timestamp': 7,     # 8 bytes aligned on 8 bytes
+    'float8': 8,        # 8 bytes aligned on 8 bytes
+})
+
+def create_model_table(cr, tablename, comment=None, columns=()):
     """ Create the table for a model. """
-    cr.execute('CREATE TABLE "{}" (id SERIAL NOT NULL, PRIMARY KEY(id))'.format(tablename))
+    colspecs = ['id SERIAL NOT NULL'] + [
+        '"{}" {}'.format(columnname, columntype)
+        for columnname, columntype, columncomment in columns
+    ]
+    cr.execute('CREATE TABLE "{}" ({}, PRIMARY KEY(id))'.format(tablename, ", ".join(colspecs)))
+
+    queries, params = [], []
     if comment:
-        cr.execute('COMMENT ON TABLE "{}" IS %s'.format(tablename), (comment,))
+        queries.append('COMMENT ON TABLE "{}" IS %s'.format(tablename))
+        params.append(comment)
+    for columnname, columntype, columncomment in columns:
+        queries.append('COMMENT ON COLUMN "{}"."{}" IS %s'.format(tablename, columnname))
+        params.append(columncomment)
+    if queries:
+        cr.execute("; ".join(queries), params)
+
     _schema.debug("Table %r: created", tablename)
 
 def table_columns(cr, tablename):
@@ -74,7 +106,8 @@ def column_exists(cr, tablename, columnname):
 
 def create_column(cr, tablename, columnname, columntype, comment=None):
     """ Create a column with the given type. """
-    cr.execute('ALTER TABLE "{}" ADD COLUMN "{}" {}'.format(tablename, columnname, columntype))
+    coldefault = (columntype.upper()=='BOOLEAN') and 'DEFAULT false' or ''
+    cr.execute('ALTER TABLE "{}" ADD COLUMN "{}" {} {}'.format(tablename, columnname, columntype, coldefault))
     if comment:
         cr.execute('COMMENT ON COLUMN "{}"."{}" IS %s'.format(tablename, columnname), (comment,))
     _schema.debug("Table %r: added column %r of type %s", tablename, columnname, columntype)
@@ -87,7 +120,7 @@ def rename_column(cr, tablename, columnname1, columnname2):
 def convert_column(cr, tablename, columnname, columntype):
     """ Convert the column to the given type. """
     try:
-        with cr.savepoint():
+        with cr.savepoint(flush=False):
             cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" TYPE {}'.format(tablename, columnname, columntype),
                        log_exceptions=False)
     except psycopg2.NotSupportedError:
@@ -105,40 +138,44 @@ def set_not_null(cr, tablename, columnname):
     """ Add a NOT NULL constraint on the given column. """
     query = 'ALTER TABLE "{}" ALTER COLUMN "{}" SET NOT NULL'.format(tablename, columnname)
     try:
-        with cr.savepoint():
-            cr.execute(query)
+        with cr.savepoint(flush=False):
+            cr.execute(query, log_exceptions=False)
             _schema.debug("Table %r: column %r: added constraint NOT NULL", tablename, columnname)
     except Exception:
-        msg = "Table %r: unable to set NOT NULL on column %r!\n" \
-              "If you want to have it, you should update the records and execute manually:\n%s"
-        _schema.warning(msg, tablename, columnname, query, exc_info=True)
+        raise Exception("Table %r: unable to set NOT NULL on column %r", tablename, columnname)
 
 def drop_not_null(cr, tablename, columnname):
     """ Drop the NOT NULL constraint on the given column. """
     cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" DROP NOT NULL'.format(tablename, columnname))
     _schema.debug("Table %r: column %r: dropped constraint NOT NULL", tablename, columnname)
 
-def constraint_definition(cr, constraintname):
+def constraint_definition(cr, tablename, constraintname):
     """ Return the given constraint's definition. """
-    cr.execute("SELECT pg_get_constraintdef(oid) FROM pg_constraint WHERE conname=%s", (constraintname,))
+    query = """
+        SELECT COALESCE(d.description, pg_get_constraintdef(c.oid))
+        FROM pg_constraint c
+        JOIN pg_class t ON t.oid = c.conrelid
+        LEFT JOIN pg_description d ON c.oid = d.objoid
+        WHERE t.relname = %s AND conname = %s;"""
+    cr.execute(query, (tablename, constraintname))
     return cr.fetchone()[0] if cr.rowcount else None
 
 def add_constraint(cr, tablename, constraintname, definition):
     """ Add a constraint on the given table. """
-    query = 'ALTER TABLE "{}" ADD CONSTRAINT "{}" {}'.format(tablename, constraintname, definition)
+    query1 = 'ALTER TABLE "{}" ADD CONSTRAINT "{}" {}'.format(tablename, constraintname, definition)
+    query2 = 'COMMENT ON CONSTRAINT "{}" ON "{}" IS %s'.format(constraintname, tablename)
     try:
-        with cr.savepoint():
-            cr.execute(query)
+        with cr.savepoint(flush=False):
+            cr.execute(query1, log_exceptions=False)
+            cr.execute(query2, (definition,), log_exceptions=False)
             _schema.debug("Table %r: added constraint %r as %s", tablename, constraintname, definition)
     except Exception:
-        msg = "Table %r: unable to add constraint %r!\n" \
-              "If you want to have it, you should update the records and execute manually:\n%s"
-        _schema.warning(msg, tablename, constraintname, query, exc_info=True)
+        raise Exception("Table %r: unable to add constraint %r as %s", tablename, constraintname, definition)
 
 def drop_constraint(cr, tablename, constraintname):
     """ drop the given constraint. """
     try:
-        with cr.savepoint():
+        with cr.savepoint(flush=False):
             cr.execute('ALTER TABLE "{}" DROP CONSTRAINT "{}"'.format(tablename, constraintname))
             _schema.debug("Table %r: dropped constraint %r", tablename, constraintname)
     except Exception:
@@ -151,6 +188,25 @@ def add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
     _schema.debug("Table %r: added foreign key %r references %r(%r) ON DELETE %s",
                   tablename1, columnname1, tablename2, columnname2, ondelete)
     return True
+
+def get_foreign_keys(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
+    cr.execute(
+        """
+            SELECT fk.conname as name
+            FROM pg_constraint AS fk
+            JOIN pg_class AS c1 ON fk.conrelid = c1.oid
+            JOIN pg_class AS c2 ON fk.confrelid = c2.oid
+            JOIN pg_attribute AS a1 ON a1.attrelid = c1.oid AND fk.conkey[1] = a1.attnum
+            JOIN pg_attribute AS a2 ON a2.attrelid = c2.oid AND fk.confkey[1] = a2.attnum
+            WHERE fk.contype = 'f'
+            AND c1.relname = %s
+            AND a1.attname = %s
+            AND c2.relname = %s
+            AND a2.attname = %s
+            AND fk.confdeltype = %s
+        """, [tablename1, columnname1, tablename2, columnname2, _CONFDELTYPES[ondelete.upper()]]
+    )
+    return [r[0] for r in cr.fetchall()]
 
 def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
     """ Update the foreign keys between tables to match the given one, and
@@ -176,17 +232,39 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
     if not found:
         return add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete)
 
+def install_pg_trgm(cr):
+    cr.execute("SELECT installed_version FROM pg_available_extensions WHERE name='pg_trgm'")
+    version = cr.fetchone()
+    if version is None:
+        return False
+    if version[0]:
+        return True
+    cr.execute('SELECT usesuper FROM pg_user WHERE usename = CURRENT_USER')
+    if not cr.fetchone()[0]:
+        return False
+    try:
+        db = odoo.sql_db.db_connect(cr.dbname)
+        with closing(db.cursor()) as cr:
+            cr.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+            cr.commit()
+        return True
+    except psycopg2.Error:
+        return False
+
+
 def index_exists(cr, indexname):
     """ Return whether the given index exists. """
     cr.execute("SELECT 1 FROM pg_indexes WHERE indexname=%s", (indexname,))
     return cr.rowcount
 
-def create_index(cr, indexname, tablename, expressions):
+def create_index(cr, indexname, tablename, expressions, method='btree', where=''):
     """ Create the given index unless it exists. """
     if index_exists(cr, indexname):
         return
     args = ', '.join(expressions)
-    cr.execute('CREATE INDEX "{}" ON "{}" ({})'.format(indexname, tablename, args))
+    if where:
+        where = f' WHERE {where}'
+    cr.execute(f'CREATE INDEX "{indexname}" ON "{tablename}" USING {method} ({args}){where}')
     _schema.debug("Table %r: created index %r (%s)", tablename, indexname, args)
 
 def create_unique_index(cr, indexname, tablename, expressions):
@@ -215,7 +293,7 @@ def pg_varchar(size=0):
       'infinite' VARCHAR
     * Otherwise return a VARCHAR(n)
 
-    :type int size: varchar size, optional
+    :param int size: varchar size, optional
     :rtype: str
     """
     if size:
@@ -233,3 +311,27 @@ def reverse_order(order):
         direction = 'asc' if item[1:] == ['desc'] else 'desc'
         items.append('%s %s' % (item[0], direction))
     return ', '.join(items)
+
+
+def increment_field_skiplock(record, field):
+    """
+        Increment 'friendly' the [field] of the current [record](s)
+        If record is locked, we just skip the update.
+        It doesn't invalidate the cache since the update is not critical.
+
+        :rtype: bool - if field has been incremented or not
+    """
+    if not record:
+        return False
+
+    assert record._fields[field].type == 'integer'
+
+    cr = record._cr
+    query = """
+        UPDATE {table} SET {field} = {field} + 1 WHERE id IN (
+            SELECT id from {table} WHERE id in %(ids)s FOR UPDATE SKIP LOCKED
+        ) RETURNING id
+    """.format(table=record._table, field=field)
+    cr.execute(query, {'ids': tuple(record.ids)})
+
+    return bool(cr.fetchone())

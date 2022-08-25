@@ -2,169 +2,52 @@ odoo.define('web_tour.TourManager', function(require) {
 "use strict";
 
 var core = require('web.core');
+var config = require('web.config');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
-var RainbowMan = require('web.RainbowMan');
+var utils = require('web_tour.utils');
+var TourStepUtils = require('web_tour.TourStepUtils');
+var RunningTourActionHelper = require('web_tour.RunningTourActionHelper');
 var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
+const {Markup} = require('web.utils');
+const { config: transitionConfig } = require("@web/core/transition");
 
 var _t = core._t;
+const { markup } = owl;
 
 var RUNNING_TOUR_TIMEOUT = 10000;
 
-function get_step_key(name) {
-    return 'tour_' + name + '_step';
-}
-function get_running_key() {
-    return 'running_tour';
-}
-function get_running_delay_key() {
-    return get_running_key() + "_delay";
-}
-
-function get_first_visible_element($elements) {
-    for (var i = 0 ; i < $elements.length ; i++) {
-        var $i = $elements.eq(i);
-        if ($i.is(':visible:hasVisibility')) {
-            return $i;
-        }
-    }
-    return $();
-}
-
-function do_before_unload(if_unload_callback, if_not_unload_callback) {
-    if_unload_callback = if_unload_callback || function () {};
-    if_not_unload_callback = if_not_unload_callback || if_unload_callback;
-
-    var old_before = window.onbeforeunload;
-    var reload_timeout;
-    window.onbeforeunload = function () {
-        clearTimeout(reload_timeout);
-        window.onbeforeunload = old_before;
-        if_unload_callback();
-        if (old_before) return old_before.apply(this, arguments);
-    };
-    reload_timeout = _.defer(function () {
-        window.onbeforeunload = old_before;
-        if_not_unload_callback();
-    });
-}
-
-var RunningTourActionHelper = core.Class.extend({
-    init: function (tip_widget) {
-        this.tip_widget = tip_widget;
-    },
-    click: function (element) {
-        this._click(this._get_action_values(element));
-    },
-    text: function (text, element) {
-        this._text(this._get_action_values(element), text);
-    },
-    drag_and_drop: function (to, element) {
-        this._drag_and_drop(this._get_action_values(element), to);
-    },
-    keydown: function (keyCodes, element) {
-        this._keydown(this._get_action_values(element), keyCodes.split(/[,\s]+/));
-    },
-    auto: function (element) {
-        var values = this._get_action_values(element);
-        if (values.consume_event === "input") {
-            this._text(values);
-        } else {
-            this._click(values);
-        }
-    },
-    _get_action_values: function (element) {
-        var $e = $(element);
-        var $element = element ? get_first_visible_element($e) : this.tip_widget.$anchor;
-        if ($element.length === 0) {
-            $element = $e.first();
-        }
-        var consume_event = element ? Tip.getConsumeEventType($element) : this.tip_widget.consume_event;
-        return {
-            $element: $element,
-            consume_event: consume_event,
-        };
-    },
-    _click: function (values) {
-        trigger_mouse_event(values.$element, "mouseover");
-        values.$element.trigger("mouseenter");
-        trigger_mouse_event(values.$element, "mousedown");
-        trigger_mouse_event(values.$element, "mouseup");
-        trigger_mouse_event(values.$element, "click");
-        trigger_mouse_event(values.$element, "mouseout");
-        values.$element.trigger("mouseleave");
-
-        function trigger_mouse_event($element, type) {
-            var e = document.createEvent("MouseEvents");
-            e.initMouseEvent(type, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, $element[0]);
-            $element[0].dispatchEvent(e);
-        }
-    },
-    _text: function (values, text) {
-        this._click(values);
-
-        text = text || "Test";
-        if (values.consume_event === "input") {
-            values.$element.trigger("keydown").val(text).trigger("keyup").trigger("input");
-        } else if (values.$element.is("select")) {
-            var $options = values.$element.children("option");
-            $options.prop("selected", false).removeProp("selected");
-            var $selectedOption = $options.filter(function () { return $(this).val() === text; });
-            if ($selectedOption.length === 0) {
-                $selectedOption = $options.filter(function () { return $(this).text() === text; });
-            }
-            $selectedOption.prop("selected", true);
-            this._click(values);
-        } else {
-            values.$element.text(text);
-        }
-        values.$element.trigger("change");
-    },
-    _drag_and_drop: function (values, to) {
-        var $to = $(to || document.body);
-
-        var elementCenter = values.$element.offset();
-        elementCenter.left += values.$element.outerWidth()/2;
-        elementCenter.top += values.$element.outerHeight()/2;
-
-        var toCenter = $to.offset();
-        toCenter.left += $to.outerWidth()/2;
-        toCenter.top += $to.outerHeight()/2;
-
-        values.$element.trigger($.Event("mousedown", {which: 1, pageX: elementCenter.left, pageY: elementCenter.top}));
-        values.$element.trigger($.Event("mousemove", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
-        values.$element.trigger($.Event("mouseup", {which: 1, pageX: toCenter.left, pageY: toCenter.top}));
-    },
-    _keydown: function (values, keyCodes) {
-        while (keyCodes.length) {
-            var keyCode = +keyCodes.shift();
-            values.$element.trigger({type: "keydown", keyCode: keyCode});
-            if ((keyCode > 47 && keyCode < 58) // number keys
-                || keyCode === 32 // spacebar
-                || (keyCode > 64 && keyCode < 91) // letter keys
-                || (keyCode > 95 && keyCode < 112) // numpad keys
-                || (keyCode > 185 && keyCode < 193) // ;=,-./` (in order)
-                || (keyCode > 218 && keyCode < 223)) {   // [\]' (in order))
-                document.execCommand("insertText", 0, String.fromCharCode(keyCode));
-            }
-            values.$element.trigger({type: "keyup", keyCode: keyCode});
-        }
-    },
-});
+var get_step_key = utils.get_step_key;
+var get_debugging_key = utils.get_debugging_key;
+var get_running_key = utils.get_running_key;
+var get_running_delay_key = utils.get_running_delay_key;
+var get_first_visible_element = utils.get_first_visible_element;
+var do_before_unload = utils.do_before_unload;
+var get_jquery_element_from_selector = utils.get_jquery_element_from_selector;
 
 return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
-    init: function(parent, consumed_tours) {
+    init: function(parent, consumed_tours, disabled = false) {
         mixins.EventDispatcherMixin.init.call(this);
         this.setParent(parent);
 
         this.$body = $('body');
         this.active_tooltips = {};
         this.tours = {};
-        this.consumed_tours = consumed_tours || [];
+        // remove the tours being debug from the list of consumed tours
+        this.consumed_tours = (consumed_tours || []).filter(tourName => {
+            return !local_storage.getItem(get_debugging_key(tourName));
+        });
+        this.disabled = disabled;
         this.running_tour = local_storage.getItem(get_running_key());
-        this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 10;
+        if (this.running_tour) {
+            // Transitions can cause DOM mutations which will cause the tour_service
+            // MutationObserver to wait longer before proceeding to the next step
+            // this can slow down tours
+            transitionConfig.disabled = true;
+        }
+        this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 0;
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
         this._log = [];
         console.log('Tour Manager is ready.  running_tour=' + this.running_tour);
@@ -181,8 +64,18 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      *        the url to load when manually running the tour
      * @param {boolean} [options.rainbowMan=true]
      *        whether or not the rainbowman must be shown at the end of the tour
-     * @param {Deferred} [options.wait_for]
+     * @param {string} [options.fadeout]
+     *        Delay for rainbowman to disappear. 'fast' will make rainbowman dissapear, quickly,
+     *        'medium', 'slow' and 'very_slow' will wait little longer before disappearing, no
+     *        will keep rainbowman on screen until user clicks anywhere outside rainbowman
+     * @param {boolean} [options.sequence=1000]
+     *        priority sequence of the tour (lowest is first, tours with the same
+     *        sequence will be executed in a non deterministic order).
+     * @param {Promise} [options.wait_for]
      *        indicates when the tour can be started
+     * @param {string|function} [options.rainbowManMessage]
+              text or function returning the text displayed under the rainbowman
+              at the end of the tour.
      * @param {Object[]} steps - steps' descriptions, each step being an object
      *                     containing a tip description
      */
@@ -197,37 +90,67 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         var options = args.length === 2 ? {} : args[1];
         var steps = last_arg instanceof Array ? last_arg : [last_arg];
         var tour = {
-            name: name,
+            name: options.saveAs || name,
             steps: steps,
             url: options.url,
             rainbowMan: options.rainbowMan === undefined ? true : !!options.rainbowMan,
+            rainbowManMessage: options.rainbowManMessage,
+            fadeout: options.fadeout || 'medium',
+            sequence: options.sequence || 1000,
             test: options.test,
-            wait_for: options.wait_for || $.when(),
+            wait_for: options.wait_for || Promise.resolve(),
         };
         if (options.skip_enabled) {
-            tour.skip_link = '<p><span class="o_skip_tour">' + _t('Skip tour') + '</span></p>';
+            tour.skip_link = Markup`<p><span class="o_skip_tour">${_t('Skip tour')}</span></p>`;
             tour.skip_handler = function (tip) {
                 this._deactivate_tip(tip);
                 this._consume_tour(name);
             };
         }
-        this.tours[name] = tour;
+        this.tours[tour.name] = tour;
+    },
+    /**
+     * Returns a promise which is resolved once the tour can be started. This
+     * is when the DOM is ready and at the end of the execution stack so that
+     * all tours have potentially been extended by all apps.
+     *
+     * @private
+     * @returns {Promise}
+     */
+    _waitBeforeTourStart: function () {
+        return new Promise(function (resolve) {
+            $(function () {
+                setTimeout(resolve);
+            });
+        });
     },
     _register_all: function (do_update) {
-        if (this._all_registered) return;
-        this._all_registered = true;
-
-        _.each(this.tours, this._register.bind(this, do_update));
+        var self = this;
+        if (this._allRegistered) {
+            return Promise.resolve();
+        }
+        this._allRegistered = true;
+        return self._waitBeforeTourStart().then(function () {
+            return Promise.all(_.map(self.tours, function (tour, name) {
+                return self._register(do_update, tour, name);
+            })).then(() => self.update());
+        });
     },
     _register: function (do_update, tour, name) {
-        if (tour.ready) return $.when();
+        const debuggingTour = local_storage.getItem(get_debugging_key(name));
+        if (this.disabled && !this.running_tour && !debuggingTour) {
+            this.consumed_tours.push(name);
+        }
 
-        var tour_is_consumed = _.contains(this.consumed_tours, name);
+        if (tour.ready) return Promise.resolve();
+
+        const tour_is_consumed = this._isTourConsumed(name);
 
         return tour.wait_for.then((function () {
             tour.current_step = parseInt(local_storage.getItem(get_step_key(name))) || 0;
             tour.steps = _.filter(tour.steps, (function (step) {
-                return !step.edition || step.edition === this.edition;
+                return (!step.edition || step.edition === this.edition) &&
+                    (step.mobile === undefined || step.mobile === config.device.isMobile);
             }).bind(this));
 
             if (tour_is_consumed || tour.current_step >= tour.steps.length) {
@@ -237,13 +160,36 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
 
             tour.ready = true;
 
-            if (do_update && (this.running_tour === name || (!this.running_tour && !tour.test && !tour_is_consumed))) {
+            if (debuggingTour ||
+                (do_update && (this.running_tour === name ||
+                              (!this.running_tour && !tour.test && !tour_is_consumed)))) {
                 this._to_next_step(name, 0);
-                this.update(name);
             }
         }).bind(this));
     },
-    run: function (tour_name, step_delay) {
+    /**
+     * Resets the given tour to its initial step, and prevent it from being
+     * marked as consumed at reload.
+     *
+     * @param {string} tourName
+     */
+    reset: function (tourName) {
+        // remove it from the list of consumed tours
+        const index = this.consumed_tours.indexOf(tourName);
+        if (index >= 0) {
+            this.consumed_tours.splice(index, 1);
+        }
+        // mark it as being debugged
+        local_storage.setItem(get_debugging_key(tourName), true);
+        // reset it to the first step
+        const tour = this.tours[tourName];
+        tour.current_step = 0;
+        local_storage.removeItem(get_step_key(tourName));
+        this._to_next_step(tourName, 0);
+        // redirect to its starting point (or /web by default)
+        window.location.href = window.location.origin + (tour.url || '/web');
+    },
+    run: async function (tour_name, step_delay) {
         console.log(_.str.sprintf("Preparing tour %s", tour_name));
         if (this.running_tour) {
             this._deactivate_tip(this.active_tooltips[this.running_tour]);
@@ -274,8 +220,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 this.update();
             }).bind(this));
 
-            var url = session.debug ? $.param.querystring(tour.url, {debug: session.debug}) : tour.url;
-            window.location.href = window.location.origin + url;
+            window.location.href = window.location.origin + tour.url;
         } else {
             this.update();
         }
@@ -293,8 +238,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     update: function (tour_name) {
         if (this.paused) return;
 
-        this.$modal_displayed = $('.modal:visible').last();
-
         tour_name = this.running_tour || tour_name;
         if (tour_name) {
             var tour = this.tours[tour_name];
@@ -303,42 +246,90 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             if (this.running_tour && this.running_tour_timeout === undefined) {
                 this._set_running_tour_timeout(this.running_tour, this.active_tooltips[this.running_tour]);
             }
-            this._check_for_tooltip(this.active_tooltips[tour_name], tour_name);
+            var self = this;
+            setTimeout(function () {
+                self._check_for_tooltip(self.active_tooltips[tour_name], tour_name);
+            });
         } else {
-            _.each(this.active_tooltips, this._check_for_tooltip.bind(this));
+            const sortedTooltips = Object.keys(this.active_tooltips).sort(
+                (a, b) => this.tours[a].sequence - this.tours[b].sequence
+            );
+            let visibleTip = false;
+            for (const tourName of sortedTooltips) {
+                var tip = this.active_tooltips[tourName];
+                tip.hidden = visibleTip;
+                visibleTip = this._check_for_tooltip(tip, tourName) || visibleTip;
+            }
         }
     },
+    /**
+     *  Check (and activate or update) a help tooltip for a tour.
+     *
+     * @param {Object} tip
+     * @param {string} tour_name
+     * @returns {boolean} true if a tip was found and activated/updated
+     */
     _check_for_tooltip: function (tip, tour_name) {
-
-        if ($('.blockUI').length) {
+        if (tip === undefined) {
+            return true;
+        }
+        if ($('body').hasClass('o_ui_blocked')) {
             this._deactivate_tip(tip);
             this._log.push("blockUI is preventing the tip to be consumed");
-            return;
+            return false;
         }
+        this.$modal_displayed = $('.modal:visible').last();
 
         var $trigger;
         if (tip.in_modal !== false && this.$modal_displayed.length) {
             $trigger = this.$modal_displayed.find(tip.trigger);
         } else {
-            $trigger = $(tip.trigger);
+            $trigger = get_jquery_element_from_selector(tip.trigger);
         }
         var $visible_trigger = get_first_visible_element($trigger);
 
         var extra_trigger = true;
-        var $extra_trigger = undefined;
+        var $extra_trigger;
         if (tip.extra_trigger) {
-            $extra_trigger = $(tip.extra_trigger);
+            $extra_trigger = get_jquery_element_from_selector(tip.extra_trigger);
             extra_trigger = get_first_visible_element($extra_trigger).length;
+        }
+
+        var $visible_alt_trigger = $();
+        if (tip.alt_trigger) {
+            var $alt_trigger;
+            if (tip.in_modal !== false && this.$modal_displayed.length) {
+                $alt_trigger = this.$modal_displayed.find(tip.alt_trigger);
+            } else {
+                $alt_trigger = get_jquery_element_from_selector(tip.alt_trigger);
+            }
+            $visible_alt_trigger = get_first_visible_element($alt_trigger);
         }
 
         var triggered = $visible_trigger.length && extra_trigger;
         if (triggered) {
             if (!tip.widget) {
-                this._activate_tip(tip, tour_name, $visible_trigger);
+                this._activate_tip(tip, tour_name, $visible_trigger, $visible_alt_trigger);
             } else {
-                tip.widget.update($visible_trigger);
+                tip.widget.update($visible_trigger, $visible_alt_trigger);
             }
         } else {
+            if ($trigger.iframeContainer || ($extra_trigger && $extra_trigger.iframeContainer)) {
+                var $el = $();
+                if ($trigger.iframeContainer) {
+                    $el = $el.add($trigger.iframeContainer);
+                }
+                if (($extra_trigger && $extra_trigger.iframeContainer) && $trigger.iframeContainer !== $extra_trigger.iframeContainer) {
+                    $el = $el.add($extra_trigger.iframeContainer);
+                }
+                var self = this;
+                $el.off('load').one('load', function () {
+                    $el.off('load');
+                    if (self.active_tooltips[tour_name] === tip) {
+                        self.update(tour_name);
+                    }
+                });
+            }
             this._deactivate_tip(tip);
 
             if (this.running_tour === tour_name) {
@@ -352,13 +343,25 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 }
             }
         }
+        return !!triggered;
     },
-    _activate_tip: function(tip, tour_name, $anchor) {
+    /**
+     * Activates the provided tip for the provided tour, $anchor and $alt_trigger.
+     * $alt_trigger is an alternative trigger that can consume the step. The tip is
+     * however only displayed on the $anchor.
+     *
+     * @param {Object} tip
+     * @param {String} tour_name
+     * @param {jQuery} $anchor
+     * @param {jQuery} $alt_trigger
+     * @private
+     */
+    _activate_tip: function(tip, tour_name, $anchor, $alt_trigger) {
         var tour = this.tours[tour_name];
         var tip_info = tip;
         if (tour.skip_link) {
             tip_info = _.extend(_.omit(tip_info, 'content'), {
-                content: tip.content + tour.skip_link,
+                content: Markup`${tip.content}${tour.skip_link}`,
                 event_handlers: [{
                     event: 'click',
                     selector: '.o_skip_tour',
@@ -370,7 +373,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         if (this.running_tour !== tour_name) {
             tip.widget.on('tip_consumed', this, this._consume_tip.bind(this, tip, tour_name));
         }
-        tip.widget.attach_to($anchor).then(this._to_next_running_step.bind(this, tip, tour_name));
+        tip.widget.attach_to($anchor, $alt_trigger).then(this._to_next_running_step.bind(this, tip, tour_name));
     },
     _deactivate_tip: function(tip) {
         if (tip && tip.widget) {
@@ -378,13 +381,17 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             delete tip.widget;
         }
     },
+    _describeTip: function(tip) {
+        return tip.content ? tip.content + ' (trigger: ' + tip.trigger + ')' : tip.trigger;
+    },
     _consume_tip: function(tip, tour_name) {
         this._deactivate_tip(tip);
         this._to_next_step(tour_name);
 
         var is_running = (this.running_tour === tour_name);
         if (is_running) {
-            console.log(_.str.sprintf("Tour %s: step %s succeeded", tour_name, tip.trigger));
+            var stepDescription = this._describeTip(tip);
+            console.log(_.str.sprintf("Tour %s: step '%s' succeeded", tour_name, stepDescription));
         }
 
         if (this.active_tooltips[tour_name]) {
@@ -413,19 +420,35 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
         this.active_tooltips[tour_name] = tour.steps[tour.current_step];
     },
+    /**
+     * @private
+     * @param {string} tourName
+     * @returns {boolean}
+     */
+    _isTourConsumed(tourName) {
+        return this.consumed_tours.includes(tourName);
+    },
     _consume_tour: function (tour_name, error) {
         delete this.active_tooltips[tour_name];
         //display rainbow at the end of any tour
         if (this.tours[tour_name].rainbowMan && this.running_tour !== tour_name &&
             this.tours[tour_name].current_step === this.tours[tour_name].steps.length) {
-            var $rainbow_message = $('<strong>' +
-                                '<b>Good job!</b>' +
-                                ' You went through all steps of this tour.' +
-                                '</strong>');
-            new RainbowMan({message: $rainbow_message}).appendTo(this.$body);
+            let message = this.tours[tour_name].rainbowManMessage;
+            if (message) {
+                message = typeof message === 'function' ? message() : message;
+            } else {
+                message = markup(_t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>'));
+            }
+            const fadeout = this.tours[tour_name].fadeout;
+            core.bus.trigger('show-effect', {
+                type: "rainbow_man",
+                message,
+                fadeout,
+            });
         }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));
+        local_storage.removeItem(get_debugging_key(tour_name));
         if (this.running_tour === tour_name) {
             this._stop_running_tour_timeout();
             local_storage.removeItem(get_running_key());
@@ -436,11 +459,21 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 _.each(this._log, function (log) {
                     console.log(log);
                 });
-                console.log(document.body.outerHTML);
-                console.log("error " + error); // phantomJS wait for message starting by error
+                let documentHTML = document.documentElement.outerHTML;
+                // Replace empty iframe tags with their content
+                const iframeEls = Array.from(document.body.querySelectorAll('iframe.o_iframe'));
+                if (iframeEls.length) {
+                    const matches = documentHTML.match(/<iframe[^>]+class=["'][^"']*\bo_iframe\b[^>]+><\/iframe>/g);
+                    for (let i = 0; i < matches.length; i++) {
+                        const iframeWithContent = matches[i].replace(/></, `>${iframeEls[i].contentDocument.documentElement.outerHTML}<`);
+                        documentHTML = documentHTML.replace(matches[i], `\n${iframeWithContent}\n`);
+                    }
+                }
+                console.log(documentHTML);
+                console.error(error); // will be displayed as error info
             } else {
                 console.log(_.str.sprintf("Tour %s succeeded", tour_name));
-                console.log("ok"); // phantomJS wait for exact message "ok"
+                console.log("test successful"); // browser_js wait for message "test successful"
             }
             this._log = [];
         } else {
@@ -458,7 +491,8 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _set_running_tour_timeout: function (tour_name, step) {
         this._stop_running_tour_timeout();
         this.running_tour_timeout = setTimeout((function() {
-            this._consume_tour(tour_name, _.str.sprintf("Tour %s failed at step %s", tour_name, step.trigger));
+            var descr = this._describeTip(step);
+            this._consume_tour(tour_name, _.str.sprintf("Tour %s failed at step %s", tour_name, descr));
         }).bind(this), (step.timeout || RUNNING_TOUR_TIMEOUT) + this.running_step_delay);
     },
     _stop_running_tour_timeout: function () {
@@ -467,49 +501,51 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     },
     _to_next_running_step: function (tip, tour_name) {
         if (this.running_tour !== tour_name) return;
+        var self = this;
         this._stop_running_tour_timeout();
+        if (this.running_step_delay) {
+            // warning: due to the delay, it may happen that the $anchor isn't
+            // in the DOM anymore when exec is called, either because:
+            // - it has been removed from the DOM meanwhile and the tip's
+            //   selector doesn't match anything anymore
+            // - it has been re-rendered and thus the selector still has a match
+            //   in the DOM, but executing the step with that $anchor won't work
+            _.delay(exec, this.running_step_delay);
+        } else {
+            exec();
+        }
 
-        var action_helper = new RunningTourActionHelper(tip.widget);
-        _.delay((function () {
-            do_before_unload(this._consume_tip.bind(this, tip, tour_name));
+        function exec() {
+            const anchorIsInDocument = tip.widget.$anchor[0].ownerDocument.contains(tip.widget.$anchor[0]);
+            const uiIsBlocked = $('body').hasClass('o_ui_blocked');
+            if (!anchorIsInDocument || uiIsBlocked) {
+                // trigger is no longer in the DOM, or UI is now blocked, so run the same step again
+                self._deactivate_tip(self.active_tooltips[tour_name]);
+                self._to_next_step(tour_name, 0);
+                self.update();
+                return;
+            }
+            var action_helper = new RunningTourActionHelper(tip.widget);
+            do_before_unload(self._consume_tip.bind(self, tip, tour_name));
 
+            var tour = self.tours[tour_name];
             if (typeof tip.run === "function") {
                 tip.run.call(tip.widget, action_helper);
             } else if (tip.run !== undefined) {
                 var m = tip.run.match(/^([a-zA-Z0-9_]+) *(?:\(? *(.+?) *\)?)?$/);
-                action_helper[m[1]](m[2]);
+                try {
+                    action_helper[m[1]](m[2]);
+                } catch (e) {
+                    console.error(`Tour ${tour_name} failed at step ${self._describeTip(tip)}: ${e.message}`);
+                    throw e;
+                }
+            } else if (tour.current_step === tour.steps.length - 1) {
+                console.log('Tour %s: ignoring action (auto) of last step', tour_name);
             } else {
                 action_helper.auto();
             }
-        }).bind(this), this.running_step_delay);
+        }
     },
-
-    /**
-     * Tour predefined steps
-     */
-    STEPS: {
-        MENU_MORE: {
-            edition: "community",
-            trigger: "body > nav",
-            position: "bottom",
-            auto: true,
-            run: function (actions) {
-                actions.auto("#menu_more_container > a");
-            },
-        },
-
-        TOGGLE_HOME_MENU: {
-            edition: "enterprise",
-            trigger: ".o_main_navbar .o_menu_toggle",
-            content: _t('Click the <i>Home icon</i> to navigate across apps.'),
-            position: "bottom",
-        },
-
-        WEBSITE_NEW_PAGE: {
-            trigger: "#new-content-menu > a",
-            auto: true,
-            position: "bottom",
-        },
-    },
+    stepUtils: new TourStepUtils(this)
 });
 });

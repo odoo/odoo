@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="tw_tax_sale_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_tw_chart_template" />
+        <field name="name">Sale (5%)</field>
+        <field name="sequence">1</field>
+        <field name="description">GST Sales</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5.0</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_gst_5" />
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('tw_220400'),
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('tw_220400'),
+                }),
+            ]"/>
+    </record>
+    <record id="tw_tax_sale_inc_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_tw_chart_template" />
+        <field name="name">GST Inc Sale (5%)</field>
+        <field name="sequence">2</field>
+        <field name="description">GST Inclusive Sale</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5.0</field>
+        <field name="price_include" eval="1" />
+        <field name="include_base_amount" eval="1" />
+        <field name="tax_group_id" ref="tax_group_gst_5" />
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('tw_220400'),
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('tw_220400'),
+                }),
+            ]"/>
+    </record>
+    <record id="tw_tax_purchase_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_tw_chart_template" />
+        <field name="name">Purchase (5%)</field>
+        <field name="sequence">1</field>
+        <field name="description">GST Purchase</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5.0</field>
+        <field name="price_include" eval="0"/>
+        <field name="tax_group_id" ref="tax_group_gst_5" />
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('tw_126800'),
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('tw_126800'),
+                }),
+            ]"/>
+    </record>
+    <record id="tw_tax_purchase_inc_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_tw_chart_template" />
+        <field name="name">GST Inc Purchase (5%)</field>
+        <field name="description">GST Inclusive Purchases</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5.0</field>
+        <field name="price_include" eval="1" />
+        <field name="include_base_amount" eval="1" />
+        <field name="tax_group_id" ref="tax_group_gst_5" />
+        <field name="invoice_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('tw_126800'),
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('tw_126800'),
+                }),
+            ]"/>
+    </record>
+</odoo>

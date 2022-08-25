@@ -3,15 +3,15 @@
 # * website_sale_stock
 # 
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2018
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2018-09-21 13:18+0000\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,92 +20,61 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
-"times\"/> Cancelled</span>"
-msgstr ""
-"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
-"times\"/> 取消済</span>"
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Preparation</span>"
-msgstr ""
-"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> 準備中</span>"
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
-"truck\"/> Shipped</span>"
-msgstr ""
-"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
-"truck\"/> 出荷済</span>"
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Partially Available</span>"
-msgstr ""
-"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> 一部利用可能</span>"
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid "<strong>Delivery Orders</strong>"
-msgstr "<strong>配送</strong>"
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
-#: model:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
 msgid "<strong>Warning!</strong>"
 msgstr "<strong>警告!</strong>"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,help:website_sale_stock.field_product_product_inventory_availability
-#: model:ir.model.fields,help:website_sale_stock.field_product_template_inventory_availability
+#: model:ir.model.fields,help:website_sale_stock.field_product_product__inventory_availability
+#: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
 msgid "Adds an inventory availability status on the web product page."
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template_available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings_available_threshold
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Availability"
+msgstr "開始可能日"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
 msgid "Availability Threshold"
 msgstr "利用可能水準"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_cart_qty
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
 msgid "Cart Qty"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_custom_message
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template_custom_message
+#: model:ir.model,name:website_sale_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__custom_message
 msgid "Custom Message"
 msgstr "カスタムメッセージ"
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default Availability Mode"
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Default Mode"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
-"Default availability mode set on newly created stockable products. This can "
+"Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Default threshold"
-msgstr ""
+msgstr "デフォルト基準数"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -115,18 +84,19 @@ msgid "In stock"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings_inventory_availability
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory"
 msgstr "在庫"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_inventory_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template_inventory_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__inventory_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__inventory_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__inventory_availability
 msgid "Inventory Availability"
 msgstr "在庫状況"
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
 "Manage the inventory of your products and display their availability status "
 "on the website."
@@ -135,22 +105,22 @@ msgstr ""
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product"
-msgstr "製品"
+msgstr "プロダクト"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_template
 msgid "Product Template"
-msgstr "製品テンプレート"
+msgstr "プロダクトテンプレート"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
-msgid "Quotation"
-msgstr "見積"
+msgid "Sale Order"
+msgstr "販売オーダ"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "受注明細"
+msgstr "販売オーダ明細"
 
 #. module: website_sale_stock
 #: selection:product.template,inventory_availability:0
@@ -177,7 +147,7 @@ msgid "Show product-specific notifications"
 msgstr "プロダクト固有のメッセージを表示"
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:28
+#: code:addons/website_sale_stock/models/sale_order.py:30
 #, python-format
 msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
@@ -189,18 +159,35 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
 #, python-format
 msgid "Temporarily out of stock"
-msgstr ""
+msgstr "在庫を切らしています"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line_warning_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_warning_stock
+#: model:ir.model,name:website_sale_stock.model_stock_picking
+msgid "Transfer"
+msgstr "運送"
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:13
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__warning_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
+#, python-format
 msgid "Warning"
 msgstr "警告"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__website_id
 msgid "Website"
 msgstr "ウェブサイト"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
+msgid "Website this picking belongs to."
+msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
@@ -210,7 +197,7 @@ msgid "You already added"
 msgstr ""
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:26
+#: code:addons/website_sale_stock/models/sale_order.py:27
 #, python-format
 msgid "You ask for %s products but only %s is available"
 msgstr ""
@@ -228,7 +215,7 @@ msgstr ""
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:14
 #, python-format
 msgid "available"
-msgstr ""
+msgstr "お買上可能"
 
 #. module: website_sale_stock
 #. openerp-web
@@ -236,8 +223,3 @@ msgstr ""
 #, python-format
 msgid "in your cart."
 msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

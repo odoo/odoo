@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests.common import tagged
-import unittest
-
-from ..controllers import main
+from odoo.tests.common import BaseCase
+from odoo.addons.web.controllers.utils import fix_view_modes
 
 
-@tagged('standard', 'at_install')
-class ActionMungerTest(unittest.TestCase):
+class ActionMungerTest(BaseCase):
     def test_actual_treeview(self):
         action = {
             "views": [[False, "tree"], [False, "form"],
@@ -18,7 +14,7 @@ class ActionMungerTest(unittest.TestCase):
         }
         changed = action.copy()
         del action['view_type']
-        main.fix_view_modes(changed)
+        fix_view_modes(changed)
 
         self.assertEqual(changed, action)
 
@@ -30,7 +26,7 @@ class ActionMungerTest(unittest.TestCase):
             "view_id": False,
             "view_mode": "tree,form,calendar"
         }
-        main.fix_view_modes(action)
+        fix_view_modes(action)
 
         self.assertEqual(action, {
             "views": [[False, "list"], [False, "form"],
@@ -48,7 +44,7 @@ class ActionMungerTest(unittest.TestCase):
             "view_id": False,
             "view_mode": "tree,form,calendar"
         }
-        main.fix_view_modes(action)
+        fix_view_modes(action)
 
         self.assertEqual(action, {
             "views": [[False, "list"], [False, "form"],

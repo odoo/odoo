@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Snippet template -->
+<template id="s_facebook_page" name="Facebook">
+    <div class="o_facebook_page"/>
+</template>
+
+<!-- Snippet options-->
+<template id="s_facebook_page_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div string="Page URL" data-js="facebookPage" data-selector=".o_facebook_page">
+            <we-input class="o_we_large" data-page-url="https://www.facebook.com/Odoo" data-no-preview="true"/>
+            <we-checkbox string="Cover Photo" data-option-name="show_cover" data-toggle-option="true" data-no-preview="true"/>
+            <we-checkbox string="Timeline" data-option-name="tab.timeline" data-toggle-option="true" data-no-preview="true"/>
+            <we-checkbox string="Events" data-option-name="tab.events" data-toggle-option="true" data-no-preview="true"/>
+            <we-checkbox string="Messages" data-option-name="tab.messages" data-toggle-option="true" data-no-preview="true"/>
+            <we-checkbox string="Small Header" data-option-name="small_header" data-toggle-option="true" data-no-preview="true"/>
+        </div>
+    </xpath>
+</template>
+
+<!-- Snippet assets -->
+<record id="website.s_facebook_page_000_js" model="ir.asset">
+    <field name="name">Facebook page 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_facebook_page/000.js</field>
+</record>
+
+</odoo>

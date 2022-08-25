@@ -1,20 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_mass_mailing
+# 	* website_mass_mailing
 # 
 # Translators:
-# Shaima Safar <shaima.safar@open-inside.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Mustafa Rawi <mustafa@cubexco.com>, 2017
-# amrnegm <amrnegm.01@gmail.com>, 2017
-# hoxhe Aits <hoxhe0@gmail.com>, 2017
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Akram Alfusayal <akram_ma@hotmail.com>, 2019
+# amrnegm <amrnegm.01@gmail.com>, 2019
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
+# Shaima Safar <shaima.safar@open-inside.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: hoxhe Aits <hoxhe0@gmail.com>, 2017\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,164 +24,180 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
-msgid "&amp;times;"
-msgstr "&amp;times;"
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid ""
-"<strong>Newsletter Popup!</strong> The newsletter popup snippet effect is "
-"active on this page. Click"
+"<strong>Newsletter Popup!</strong> The newsletter popup is active on this "
+"page."
 msgstr ""
-"<strong>الرسائل الإخبارية النوافذ المنبثقة!</strong> مؤثرات المقتطفات النشرة"
-" المنبثقة نشط في هذه الصفحة. اضغط"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:15
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
 #, python-format
 msgid "Add a Newsletter Subscribe Button"
-msgstr "اضف زر النشرة اشتراك البريدية  "
+msgstr "إضافة زر للاشتراك بالنشرة البريدية"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:53
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
 #, python-format
 msgid "Add a Newsletter Subscribe Popup"
-msgstr "إضافة إلى النشرة اشتراك البريدية النوافذ المنبثقة"
+msgstr "إضافة نافذة منبثقة للاشتراك بالنشرة البريدية"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
+msgid "Always First."
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
+msgid "Be the first to find out all the latest news, products and trends."
+msgstr ""
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Change Newsletter"
-msgstr "تغيير الرسائل الإخبارية"
+msgstr "تغيير النشرة البريدية"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
-msgid "Choose your mailing subscriptions."
-msgstr "اختير الاشتراكات البريدية."
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
-#: model:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social_left
 msgid "Contact"
 msgstr "جهة الاتصال"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
-msgid "Encourage to subscribe to mailing lists with a popup"
-msgstr ""
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
-msgid "Here To Edit Dialog Content"
-msgstr "هنا لتحرير المحتوى الحوار"
-
-#. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_mail_mass_mailing_list
-msgid "Mailing List"
-msgstr "قائمة المراسلة"
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
-msgid "Mailing Subscriptions"
-msgstr " الاشتراكات البريدية"
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_date
+msgid "Created on"
+msgstr "أنشئ في"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:21
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #, python-format
-msgid "Newsletter"
-msgstr "نشرة الأخبار"
+msgid "DRAG BUILDING BLOCKS HERE"
+msgstr "اسحب بلوكات البناء إلى هنا"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.view_mail_mass_mailing_list_form
-msgid "Popup Content"
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__display_name
+msgid "Display Name"
+msgstr "الاسم المعروض"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
+msgid "Edit Popup"
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
-#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "Facebook"
+msgstr "فيسبوك"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "Google Plus"
+msgstr "جوجل بلاس"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "Instagram"
+msgstr "إنستجرام"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup____last_update
+msgid "Last Modified on"
+msgstr "آخر تعديل في"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_mailing_list
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__mailing_list_id
+msgid "Mailing List"
+msgstr "القائمة البريدية"
+
+#. module: website_mass_mailing
+#: model:ir.model,name:website_mass_mailing.model_website_mass_mailing_popup
+msgid "Mailing list popup"
+msgstr ""
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
+#, python-format
+msgid "Newsletter"
+msgstr "النشرة البريدية"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Subscribe"
 msgstr "اشتراك"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
+#, python-format
+msgid "Success"
+msgstr "نجاح"
+
+#. module: website_mass_mailing
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "Thanks"
-msgstr "شكراً!"
+msgstr "شكرًا"
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
-msgid "Thanks for your subscription!"
-msgstr "شكراً لاشتراكك معنا!"
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
-msgid ""
-"This adds a new Newsletter Popup snippet to drag & drop on on your website "
-"pages. It triggers a popup when visitors land on the page. This popup "
-"prompts them to enter their email address to join a mailing list."
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__toast_content
+msgid "Toast Content"
 msgstr ""
 
 #. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:83
-#, python-format
-msgid "Type Here ..."
-msgstr "أكتب هنا ..."
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
+msgid "Twitter"
+msgstr "تويتر"
 
 #. module: website_mass_mailing
-#: model:res.groups,name:website_mass_mailing.group_website_popup_on_exit
-msgid "Use subscription pop up on the website"
-msgstr ""
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__website_id
+msgid "Website"
+msgstr "الموقع الإلكتروني"
 
 #. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_res_config_settings_group_website_popup_on_exit
-msgid "Website Popup"
-msgstr ""
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_content
+#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__popup_content
 msgid "Website Popup Content"
+msgstr "محتوى منبثق في الموقع"
+
+#. module: website_mass_mailing
+#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__website_popup_ids
+msgid "Website Popups"
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_redirect_url
-msgid "Website Popup Redirect URL"
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.mailing_list_view_form
+msgid "Website popups"
 msgstr ""
 
 #. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribe
-msgid "You are not subscribed to any of our mailing list."
-msgstr "أنت غير مسجل في أي من قائمتنا البريدية."
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
-msgid "You have been successfully <strong>unsubscribed</strong>!"
-msgstr ""
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:168
-#, python-format
-msgid "Your changes have been saved."
-msgstr "تم حفظ التغييرات."
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:171
-#, python-format
-msgid "Your changes have not been saved, try again later."
-msgstr "لم يتم حفظ التغييرات التي قمت بها، حاول مرة أخرى في وقت لاحق."
-
-#. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_res_config_settings
-msgid "res.config.settings"
-msgstr "الدقة.التكوين.إعدادات"
-
-#. module: website_mass_mailing
-#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
-#: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form
 msgid "your email..."
 msgstr "بريدك الإلكتروني..."

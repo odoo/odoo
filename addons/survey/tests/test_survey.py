@@ -1,268 +1,298 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import random
-import re
-from collections import Counter
-from itertools import product
+from freezegun import freeze_time
 
-from werkzeug import urls
+from odoo import _, fields
+from odoo.addons.survey.tests import common
+from odoo.tests.common import users
 
-from odoo import _
-from odoo.addons.http_routing.models.ir_http import slug
-from odoo.exceptions import UserError
-from odoo.tests.common import TransactionCase
 
-class TestSurvey(TransactionCase):
+class TestSurveyInternals(common.TestSurveyCommon):
 
-    def setUp(self):
-        super(TestSurvey, self).setUp()
-        User = self.env['res.users'].with_context({'no_reset_password': True})
-        (group_survey_user, group_employee) = (self.ref('survey.group_survey_user'), self.ref('base.group_user'))
-        self.survey_manager = User.create({
-            'name': 'Gustave Doré', 'login': 'Gustav','email': 'gustav.dore@example.com',
-            'groups_id': [(6, 0, [self.ref('survey.group_survey_manager'), group_survey_user, group_employee])]})
+    def test_answer_attempts_count(self):
+        """ As 'attempts_number' and 'attempts_count' are computed using raw SQL queries, let us
+        test the results. """
 
-        self.survey_user = User.create({
-            'name': 'Lukas Peeters', 'login': 'Lukas', 'email': 'lukas.petters@example.com',
-            'groups_id': [(6, 0, [group_survey_user, group_employee])]})
-
-        self.user_public = User.create({
-            'name': 'Wout Janssens', 'login': 'Wout', 'email': 'wout.janssens@example.com',
-            'groups_id': [(6, 0, [self.ref('base.group_public')])]})
-
-        self.survey1 = self.env['survey.survey'].sudo(self.survey_manager).create({'title': "S0", 'page_ids': [(0, 0, {'title': "P0"})]})
-        self.page1 = self.survey1.page_ids[0]
-
-    def test_00_create_minimal_survey(self):
-        question = self.env['survey.question'].sudo(self.survey_manager).create({'page_id': self.page1.id, 'question': 'Q0'})
-        self.assertEqual(self.survey1.title, "S0", msg="Title of the survey is somehow modified.")
-        self.assertEqual(len(self.survey1.page_ids), 1, msg="Additional Pages are linked with the survey after creation.")
-        self.assertEqual(self.page1.title, "P0", msg="Title of the page is somehow modified.")
-        self.assertEqual(len(self.page1.question_ids), 1, msg="Additional questions are linked with the page after creation.")
-        self.assertEqual(question.question, "Q0", msg="Title of the Question is somehow modified.")
-
-    def test_01_question_type_validation_save_line_function(self):
-        for (question_type, text) in self.env['survey.question']._fields['type'].selection:
-            # Each question ype must have validation function.
-            self.assertTrue(hasattr(self.env['survey.question'], 'validate_' + question_type), msg="Question must have a validation method in\
-                the form of 'validate_' followed by the name of the type.")
-
-            # Survey Input Lines must have validation function for each line.
-            self.assertTrue(hasattr(self.env['survey.user_input_line'], 'save_line_' + question_type), msg="Inputline must have Save method in \
-                the form of 'save_line_' followed by the name of the type.")
-
-    def test_02_question_answer_required(self):
-        for (question_type, text) in self.env['survey.question']._fields['type'].selection:
-            # Blank value of field is not accepted for mandatory questions.
-            if question_type == 'multiple_choice':
-                question = self.env['survey.question'].sudo(self.survey_manager).create({
-                    'page_id': self.page1.id, 'question': 'Q0', 'type': 'multiple_choice',
-                    'constr_mandatory': True, 'constr_error_msg': 'Error',
-                    'labels_ids': [(0, 0, {'value': "MChoice0", "quizz_mark": 0}), (0, 0, {'value': "MChoice1", "quizz_mark": 0})]})
-
-            elif question_type == 'matrix':
-                question = self.env['survey.question'].sudo(self.survey_manager).create({
-                    'page_id': self.page1.id, 'question': 'Q0', 'type': 'matrix', 'matrix_subtype': 'simple',
-                    'constr_mandatory': True, 'constr_error_msg': 'Error',
-                    'labels_ids': [(0, 0, {'value': "Column0", "quizz_mark": 0}), (0, 0, {'value': "Column1", "quizz_mark": 0})],
-                    'labels_ids_2': [(0, 0, {'value': "Row0", "quizz_mark": 0}), (0, 0, {'value': "Row1", "quizz_mark": 0})]})
-
-            else:
-                question = self.env['survey.question'].sudo(self.survey_manager).create({
-                    'page_id': self.page1.id, 'question': 'Q0', 'type': question_type, 'constr_mandatory': True, 'constr_error_msg': 'Error'})
-            answer_tag = '%s_%s_%s' % (self.survey1.id, self.page1.id, question.id)
-            self.assertDictEqual({answer_tag: "Error"}, question.validate_question({answer_tag: ''}, answer_tag),
-                msg=("Validation function for type %s is unable to generate error if it is mandatory and answer is blank." % question_type))
-
-    def test_03_question_textbox(self):
-        questions = [
-            self.env['survey.question'].sudo(self.survey_manager).create({
-                'page_id': self.page1.id, 'question': 'Q0', 'type': 'textbox', 'validation_email': True}),
-            self.env['survey.question'].sudo(self.survey_manager).create({
-                'page_id': self.page1.id, 'question': 'Q1', 'type': 'textbox', 'validation_required': True,
-                'validation_length_min': 2, 'validation_length_max': 8, 'validation_error_msg': "Error"})]
-
-        results = [('test @ testcom', _('This answer must be an email address')), ('t', 'Error')]
-        for i in range(len(questions)):
-            answer_tag = '%s_%s_%s' % (self.survey1.id, self.page1.id, questions[i].id)
-            self.assertEqual(questions[i].validate_question({answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
-                Validation function for textbox is unable to notify if answer is violating the validation rules")
-
-    def test_04_question_numerical_box(self):
-        question = self.env['survey.question'].sudo(self.survey_manager).create({
-            'page_id': self.page1.id, 'question': 'Q0', 'type': 'numerical_box', 'validation_required': True,
-            'validation_min_float_value': 2.1, 'validation_max_float_value': 3.0, 'validation_error_msg': "Error"})
-        answer_tag = '%s_%s_%s' % (self.survey1.id, self.page1.id, question.id)
-        results = [('aaa', _('This is not a number')), ('4.5', 'Error'), ('0.1', 'Error')]
-        for i in range(len(results)):
-            self.assertEqual(question.validate_question({answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
-                Validation function for type numerical_box is unable to notify if answer is violating the validation rules")
-
-    def test_05_question_date(self):
-        question = self.env['survey.question'].sudo(self.survey_manager).create({
-            'page_id': self.page1.id, 'question': 'Q0', 'type': 'date', 'validation_required': True,
-            'validation_min_date': '2015-03-20', 'validation_max_date': '2015-03-25', 'validation_error_msg': "Error"})
-        answer_tag = '%s_%s_%s' % (self.survey1.id, self.page1.id, question.id)
-        results = [('2015-55-10', _('This is not a date')), ('2015-03-19', 'Error'), ('2015-03-26', 'Error')]
-        for i in range(len(results)):
-            self.assertEqual(question.validate_question({answer_tag: results[i][0]}, answer_tag), {answer_tag: results[i][1]}, msg="\
-                Validation function for type date is unable to notify if answer is violating the validation rules")
-
-    def test_06_survey_sharing(self):
-        # Case-1: Executing action with correct data.
-        correct_survey = self.env['survey.survey'].sudo(self.survey_manager).create({
-            'title': "S0", 'stage_id': self.env['survey.stage'].search([('sequence', '=', 1)]).id,
-            'page_ids': [(0, 0, {'title': "P0", 'question_ids': [(0, 0, {'question': "Q0", 'type': 'free_text'})]})]})
-        action = correct_survey.action_send_survey()
-        template = self.env.ref('survey.email_template_survey', raise_if_not_found=False)
-
-        ctx = dict(
-            self.env.context,
-            default_model='survey.survey',
-            default_res_id=correct_survey.id,
-            default_survey_id=correct_survey.id,
-            default_use_template=bool(template),
-            default_template_id=template and template.id or False,
-            default_composition_mode='comment')
-
-        self.assertDictEqual(action, {
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'survey.mail.compose.message',
-            'target': 'new',
-            'context': ctx,
+        test_survey = self.env['survey.survey'].create({
+            'title': 'Test Survey',
+            'is_attempts_limited': True,
+            'attempts_limit': 4,
         })
 
-        # Case-2: Executing action with incorrect data.
-        surveys = [
-            self.env['survey.survey'].sudo(self.survey_manager).create({  # Survey without any page or question.
-                'title': "Test survey"}),
-            self.env['survey.survey'].sudo(self.survey_manager).create({  # Closed Survey.
-                'title': "S0", 'stage_id': self.env['survey.stage'].search([('closed', '=', True)]).id,  # Getting Closed stage id.
-                'page_ids': [(0, 0, {'title': "P0", 'question_ids': [(0, 0, {'question': "Q0", 'type': 'free_text'})]})]})]
-        for survey in surveys:
-            self.assertRaises(UserError, survey.action_send_survey)
+        all_attempts = self.env['survey.user_input']
+        for _i in range(4):
+            all_attempts |= self._add_answer(test_survey, self.survey_user.partner_id, state='done')
 
-    def test_07_survey_email_message(self):
-        # Case-1: Executing send_mail with correct data.
-        partner = self.env['res.partner'].create({'name': 'Marie De Cock', 'email': 'marie.de.cock@gmail.com'})
-        survey_mail_message = self.env['survey.mail.compose.message'].sudo(self.survey_manager).create({
-            'survey_id': self.survey1.id, 'public': 'email_public_link', 'body': '__URL__', 'partner_ids': [(4, partner.id)]})
-        survey_mail_message.send_mail()
+        # read both fields at once to allow computing their values in batch
+        attempts_results = all_attempts.read(['attempts_number', 'attempts_count'])
+        first_attempt = attempts_results[0]
+        second_attempt = attempts_results[1]
+        third_attempt = attempts_results[2]
+        fourth_attempt = attempts_results[3]
 
-        # Case-2: Executing send_mail with incorrect data.
-        mail_messages = [
-            self.env['survey.mail.compose.message'].sudo(self.survey_manager).create({  # Mail Message without __URL__ in body.
-                'survey_id': self.survey1.id, 'public': 'email_public_link'}),
-            self.env['survey.mail.compose.message'].sudo(self.survey_manager).create({  # Mail Message without recipents.
-                'survey_id': self.survey1.id, 'public': 'email_public_link', 'body': "__URL__"})]
-        for message in mail_messages:
-            self.assertRaises(UserError, message.send_mail)
+        self.assertEqual(first_attempt['attempts_number'], 1)
+        self.assertEqual(first_attempt['attempts_count'], 4)
 
-    def test_08_survey_urls(self):
-        def validate_url(url):
-            """ Reference: https://github.com/django/django/blob/master/django/core/validators.py """
-            url_regex = re.compile(
-                r'^https?://'  # http:// or https://
-                r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
-                r'localhost|'  # localhost...
-                r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|'  # ...or ipv4
-                r'\[?[A-F0-9]*:[A-F0-9:]+\]?)'  # ...or ipv6
-                r'(?::\d+)?'  # optional port
-                r'(?:/?|[/?]\S+)$', re.IGNORECASE)
-            return True if url_regex.match(url) else False
+        self.assertEqual(second_attempt['attempts_number'], 2)
+        self.assertEqual(second_attempt['attempts_count'], 4)
 
-        base_url = self.env['ir.config_parameter'].get_param('web.base.url')
-        urltypes = {'public': 'start', 'print': 'print', 'result': 'results'}
-        for urltype, urltxt in urltypes.items():
-            survey_url = getattr(self.survey1, urltype + '_url')
-            survey_url_relative = getattr(self.survey1.with_context({'relative_url': True}), urltype + '_url')
-            self.assertTrue(validate_url(survey_url))
-            url = "survey/%s/%s" % (urltxt, slug(self.survey1))
-            full_url = urls.url_join(base_url, url)
-            self.assertEqual(full_url, survey_url)
-            self.assertEqual('/' + url, survey_url_relative)
-            if urltype == 'public':
-                url_html = '<a href="%s">Click here to start survey</a>'
-                self.assertEqual(url_html % full_url, getattr(self.survey1, urltype + '_url_html'), msg="Public URL is incorrect")
-                self.assertEqual(url_html % ('/' + url), getattr(self.survey1.with_context({'relative_url': True}), urltype + '_url_html'), msg="Public URL is incorrect.")
+        self.assertEqual(third_attempt['attempts_number'], 3)
+        self.assertEqual(third_attempt['attempts_count'], 4)
 
-    def test_09_answer_survey(self):
-        question = self.env['survey.question'].sudo(self.survey_manager).create({'page_id': self.page1.id, 'question': 'Q0'})
-        input_portal = self.env['survey.user_input'].sudo(self.survey_user).create({
-            'survey_id': self.survey1.id,
-            'partner_id': self.survey_user.partner_id.id,
-            'user_input_line_ids': [(0, 0, {
-                'skipped': False, 'answer_type': 'free_text', 'value_free_text': "Test Answer",
-                'survey_id': self.survey1.id, 'question_id': question.id})]})
+        self.assertEqual(fourth_attempt['attempts_number'], 4)
+        self.assertEqual(fourth_attempt['attempts_count'], 4)
 
-        input_public = self.env['survey.user_input'].sudo(self.user_public).create({
-            'survey_id': self.survey1.id,
-            'partner_id': self.survey_user.partner_id.id,
-            'user_input_line_ids': [(0, 0, {
-                'skipped': False, 'answer_type': 'free_text', 'value_free_text': "Test Answer",
-                'survey_id': self.survey1.id, 'question_id': question.id})]})
+    @freeze_time("2020-02-15 18:00")
+    def test_answer_display_name(self):
+        """ The "display_name" field in a survey.user_input.line is a computed field that will
+        display the answer label for any type of question.
+        Let us test the various question types. """
 
-        answers = [input_portal.user_input_line_ids[0], input_public.user_input_line_ids[0]]
-        expected_values = {'answer_type': 'free_text', 'value_free_text': "Test Answer"}
-        for answer in answers:
-            for field, value in expected_values.items():
-                self.assertEqual(answer[field], value, msg="Unable to answer the survey. Expected behaviour of %s is not proper." % (field))
+        questions = self._create_one_question_per_type()
+        user_input = self._add_answer(self.survey, self.survey_user.partner_id)
 
-    def test_10_survey_result_simple_multiple_choice(self):
-        question = self.env['survey.question'].sudo(self.survey_manager).create({
-            'page_id': self.page1.id, 'question': 'Q0', 'type': 'simple_choice',
-            'labels_ids': [(0, 0, {'value': "Choice0", 'quizz_mark': 0}), (0, 0, {'value': "Choice1", 'quizz_mark': 0})]})
-        for i in range(3):
-            self.env['survey.user_input'].sudo(self.user_public).create({'survey_id': self.survey1.id, 'user_input_line_ids': [(0, 0, {
-                'question_id': question.id,
-                'answer_type': 'suggestion',
-                'value_suggested': random.choice(question.labels_ids.ids)})]})
-        lines = [line.value_suggested.id for line in question.user_input_line_ids]
-        answers = [{'text': label.value, 'count': lines.count(label.id), 'answer_id': label.id} for label in question.labels_ids]
-        prp_result = self.env['survey.survey'].prepare_result(question)['answers']
-        self.assertItemsEqual(prp_result, answers, msg="Statistics of simple, multiple choice questions are different from expectation")
+        for question in questions:
+            if question.question_type == 'char_box':
+                question_answer = self._add_answer_line(question, user_input, 'Char box answer')
+                self.assertEqual(question_answer.display_name, 'Char box answer')
+            elif question.question_type == 'text_box':
+                question_answer = self._add_answer_line(question, user_input, 'Text box answer')
+                self.assertEqual(question_answer.display_name, 'Text box answer')
+            elif question.question_type == 'numerical_box':
+                question_answer = self._add_answer_line(question, user_input, 7)
+                self.assertEqual(question_answer.display_name, '7.0')
+            elif question.question_type == 'date':
+                question_answer = self._add_answer_line(question, user_input, fields.Datetime.now())
+                self.assertEqual(question_answer.display_name, '2020-02-15')
+            elif question.question_type == 'datetime':
+                question_answer = self._add_answer_line(question, user_input, fields.Datetime.now())
+                self.assertEqual(question_answer.display_name, '2020-02-15 18:00:00')
+            elif question.question_type == 'simple_choice':
+                question_answer = self._add_answer_line(question, user_input, question.suggested_answer_ids[0].id)
+                self.assertEqual(question_answer.display_name, 'SChoice0')
+            elif question.question_type == 'multiple_choice':
+                question_answer_1 = self._add_answer_line(question, user_input, question.suggested_answer_ids[0].id)
+                self.assertEqual(question_answer_1.display_name, 'MChoice0')
+                question_answer_2 = self._add_answer_line(question, user_input, question.suggested_answer_ids[1].id)
+                self.assertEqual(question_answer_2.display_name, 'MChoice1')
+            elif question.question_type == 'matrix':
+                question_answer_1 = self._add_answer_line(question, user_input,
+                    question.suggested_answer_ids[0].id, **{'answer_value_row': question.matrix_row_ids[0].id})
+                self.assertEqual(question_answer_1.display_name, 'Column0: Row0')
+                question_answer_2 = self._add_answer_line(question, user_input,
+                    question.suggested_answer_ids[0].id, **{'answer_value_row': question.matrix_row_ids[1].id})
+                self.assertEqual(question_answer_2.display_name, 'Column0: Row1')
 
-    def test_11_survey_result_matrix(self):
-        question = self.env['survey.question'].sudo(self.survey_manager).create({
-            'page_id': self.page1.id, 'question': 'Q0', 'type': 'matrix', 'matrix_subtype': 'simple',
-            'labels_ids': [(0, 0, {'value': "Column0", "quizz_mark": 0}), (0, 0, {'value': "Column1", "quizz_mark": 0})],
-            'labels_ids_2': [(0, 0, {'value': "Row0", "quizz_mark": 0}), (0, 0, {'value': "Row1", "quizz_mark": 0})]})
-        for i in range(3):
-            self.env['survey.user_input'].sudo(self.user_public).create({'survey_id': self.survey1.id, 'user_input_line_ids': [(0, 0, {
-                'question_id': question.id, 'answer_type': 'suggestion', 'value_suggested': random.choice(question.labels_ids.ids),
-                'value_suggested_row': random.choice(question.labels_ids_2.ids)})]})
-        lines = [(line.value_suggested_row.id, line.value_suggested.id) for line in question.user_input_line_ids]
-        res = {}
-        for i in product(question.labels_ids_2.ids, question.labels_ids.ids):
-            res[i] = lines.count((i))
-        self.assertEqual(self.env['survey.survey'].prepare_result(question)['result'], res, msg="Statistics of matrix type questions are different from expectations")
+    @users('survey_manager')
+    def test_answer_validation_mandatory(self):
+        """ For each type of question check that mandatory questions correctly check for complete answers """
+        for question in self._create_one_question_per_type():
+            self.assertDictEqual(
+                question.validate_question(''),
+                {question.id: 'TestError'}
+            )
 
-    def test_12_survey_result_numeric_box(self):
-        question = self.env['survey.question'].sudo(self.survey_manager).create({'page_id': self.page1.id, 'question': 'Q0', 'type': 'numerical_box'})
-        num = [float(n) for n in random.sample(range(1, 100), 3)]
-        nsum = sum(num)
-        for i in range(3):
-            self.env['survey.user_input'].sudo(self.user_public).create({'survey_id': self.survey1.id, 'user_input_line_ids': [(0, 0, {
-                'question_id': question.id, 'answer_type': 'number', 'value_number': num[i]})]})
-        exresult = {
-            'average': round((nsum / len(num)), 2), 'max': round(max(num), 2),
-            'min': round(min(num), 2), 'sum': nsum, 'most_common': Counter(num).most_common(5)}
-        result = self.env['survey.survey'].prepare_result(question)
-        for key in exresult:
-            self.assertEqual(result[key], exresult[key], msg="Statistics of numeric box type questions are different from expectations")
+    @users('survey_manager')
+    def test_answer_validation_date(self):
+        question = self._add_question(
+            self.page_0, 'Q0', 'date', validation_required=True,
+            validation_min_date='2015-03-20', validation_max_date='2015-03-25', validation_error_msg='ValidationError')
 
-    def test_13_survey_actions(self):
-        self.env['survey.question'].sudo(self.survey_manager).create({'page_id': self.page1.id, 'question': 'Q0', 'type': 'numerical_box'})
+        self.assertEqual(
+            question.validate_question('Is Alfred an answer ?'),
+            {question.id: _('This is not a date')}
+        )
 
-        actions = {
-            'start': {'method': 'public', 'token': '/test', 'text': 'Start'},
-            'print': {'method': 'print', 'token': '/test', 'text': 'Print'},
-            'result': {'method': 'result', 'token': '', 'text': 'Results of the'},
-            'test': {'method': 'public', 'token': '/phantom', 'text': 'Results of the'}}
-        for action, val in actions.items():
-            result = getattr(self.survey1.with_context({'survey_token': val['token'][1:]}), 'action_' + action + '_survey')()
-            url = getattr(self.survey1.with_context({'relative_url': True}), val['method'] + '_url') + val['token']
-            self.assertEqual(result['url'], url)
+        self.assertEqual(
+            question.validate_question('2015-03-19'),
+            {question.id: 'ValidationError'}
+        )
+
+        self.assertEqual(
+            question.validate_question('2015-03-26'),
+            {question.id: 'ValidationError'}
+        )
+
+        self.assertEqual(
+            question.validate_question('2015-03-25'),
+            {}
+        )
+
+    @users('survey_manager')
+    def test_answer_validation_numerical(self):
+        question = self._add_question(
+            self.page_0, 'Q0', 'numerical_box', validation_required=True,
+            validation_min_float_value=2.2, validation_max_float_value=3.3, validation_error_msg='ValidationError')
+
+        self.assertEqual(
+            question.validate_question('Is Alfred an answer ?'),
+            {question.id: _('This is not a number')}
+        )
+
+        self.assertEqual(
+            question.validate_question('2.0'),
+            {question.id: 'ValidationError'}
+        )
+
+        self.assertEqual(
+            question.validate_question('4.0'),
+            {question.id: 'ValidationError'}
+        )
+
+        self.assertEqual(
+            question.validate_question('2.9'),
+            {}
+        )
+
+    @users('survey_manager')
+    def test_answer_validation_char_box_email(self):
+        question = self._add_question(self.page_0, 'Q0', 'char_box', validation_email=True)
+
+        self.assertEqual(
+            question.validate_question('not an email'),
+            {question.id: _('This answer must be an email address')}
+        )
+
+        self.assertEqual(
+            question.validate_question('email@example.com'),
+            {}
+        )
+
+    @users('survey_manager')
+    def test_answer_validation_char_box_length(self):
+        question = self._add_question(
+            self.page_0, 'Q0', 'char_box', validation_required=True,
+            validation_length_min=2, validation_length_max=8, validation_error_msg='ValidationError')
+
+        self.assertEqual(
+            question.validate_question('l'),
+            {question.id: 'ValidationError'}
+        )
+
+        self.assertEqual(
+            question.validate_question('waytoomuchlonganswer'),
+            {question.id: 'ValidationError'}
+        )
+
+        self.assertEqual(
+            question.validate_question('valid'),
+            {}
+        )
+
+    def test_partial_scores_simple_choice(self):
+        """" Check that if partial scores are given for partially correct answers, in the case of a multiple
+        choice question with single choice, choosing the answer with max score gives 100% of points. """
+
+        partial_scores_survey = self.env['survey.survey'].create({
+            'title': 'How much do you know about words?',
+            'scoring_type': 'scoring_with_answers',
+            'scoring_success_min': 90.0,
+        })
+        [a_01, a_02, a_03] = self.env['survey.question.answer'].create([{
+            'value': 'A thing full of letters.',
+            'answer_score': 1.0
+        }, {
+            'value': 'A unit of language, [...], carrying a meaning.',
+            'answer_score': 4.0,
+            'is_correct': True
+        }, {
+            'value': '42',
+            'answer_score': -4.0
+        }])
+        q_01 = self.env['survey.question'].create({
+            'survey_id': partial_scores_survey.id,
+            'title': 'What is a word?',
+            'sequence': 1,
+            'question_type': 'simple_choice',
+            'suggested_answer_ids': [(6, 0, (a_01 | a_02 | a_03).ids)]
+        })
+
+        user_input = self.env['survey.user_input'].create({'survey_id': partial_scores_survey.id})
+        self.env['survey.user_input.line'].create({
+            'user_input_id': user_input.id,
+            'question_id': q_01.id,
+            'answer_type': 'suggestion',
+            'suggested_answer_id': a_02.id
+        })
+
+        # Check that scoring is correct and survey is passed
+        self.assertEqual(user_input.scoring_percentage, 100)
+        self.assertTrue(user_input.scoring_success)
+
+    @users('survey_manager')
+    def test_skipped_values(self):
+        """ Create one question per type of questions.
+        Make sure they are correctly registered as 'skipped' after saving an empty answer for each
+        of them. """
+
+        questions = self._create_one_question_per_type()
+        survey_user = self.survey._create_answer(user=self.survey_user)
+
+        for question in questions:
+            answer = '' if question.question_type in ['char_box', 'text_box'] else None
+            survey_user.save_lines(question, answer)
+
+        for question in questions:
+            self._assert_skipped_question(question, survey_user)
+
+    @users('survey_manager')
+    def test_copy_conditional_question_settings(self):
+        """ Create a survey with conditional layout, clone it and verify that the cloned survey has the same conditional
+        layout as the original survey.
+        The test also check that the cloned survey doesn't reference the original survey.
+        """
+        def get_question_by_title(survey, title):
+            return survey.question_ids.filtered(lambda q: q.title == title)[0]
+
+        # Create the survey questions (! texts of the questions must be unique as they are used to query them)
+        q_is_vegetarian_text = 'Are you vegetarian ?'
+        q_is_vegetarian = self._add_question(
+            self.page_0, q_is_vegetarian_text, 'multiple_choice', survey_id=self.survey.id,
+            sequence=100, labels=[{'value': 'Yes'}, {'value': 'No'}])
+        q_food_vegetarian_text = 'Choose your green meal'
+        self._add_question(self.page_0, q_food_vegetarian_text, 'multiple_choice',
+                           is_conditional=True, sequence=101,
+                           triggering_question_id=q_is_vegetarian.id,
+                           triggering_answer_id=q_is_vegetarian.suggested_answer_ids[0].id,
+                           survey_id=self.survey.id,
+                           labels=[{'value': 'Vegetarian pizza'}, {'value': 'Vegetarian burger'}])
+        q_food_not_vegetarian_text = 'Choose your meal'
+        self._add_question(self.page_0, q_food_not_vegetarian_text, 'multiple_choice',
+                           is_conditional=True, sequence=102,
+                           triggering_question_id=q_is_vegetarian.id,
+                           triggering_answer_id=q_is_vegetarian.suggested_answer_ids[1].id,
+                           survey_id=self.survey.id,
+                           labels=[{'value': 'Steak with french fries'}, {'value': 'Fish'}])
+
+        # Clone the survey
+        survey_clone = self.survey.copy()
+
+        # Verify the conditional layout and that the cloned survey doesn't reference the original survey
+        q_is_vegetarian_cloned = get_question_by_title(survey_clone, q_is_vegetarian_text)
+        q_food_vegetarian_cloned = get_question_by_title(survey_clone, q_food_vegetarian_text)
+        q_food_not_vegetarian_cloned = get_question_by_title(survey_clone, q_food_not_vegetarian_text)
+
+        self.assertFalse(q_is_vegetarian_cloned.is_conditional)
+
+        # Vegetarian choice
+        self.assertTrue(q_food_vegetarian_cloned)
+        # Correct conditional layout
+        self.assertEqual(q_food_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian_cloned.id)
+        self.assertEqual(q_food_vegetarian_cloned.triggering_answer_id.id,
+                         q_is_vegetarian_cloned.suggested_answer_ids[0].id)
+        # Doesn't reference the original survey
+        self.assertNotEqual(q_food_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian.id)
+        self.assertNotEqual(q_food_vegetarian_cloned.triggering_answer_id.id,
+                            q_is_vegetarian.suggested_answer_ids[0].id)
+
+        # Not vegetarian choice
+        self.assertTrue(q_food_not_vegetarian_cloned.is_conditional)
+        # Correct conditional layout
+        self.assertEqual(q_food_not_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian_cloned.id)
+        self.assertEqual(q_food_not_vegetarian_cloned.triggering_answer_id.id,
+                         q_is_vegetarian_cloned.suggested_answer_ids[1].id)
+        # Doesn't reference the original survey
+        self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_question_id.id, q_is_vegetarian.id)
+        self.assertNotEqual(q_food_not_vegetarian_cloned.triggering_answer_id.id,
+                            q_is_vegetarian.suggested_answer_ids[1].id)

@@ -1,289 +1,250 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
-import threading
-
-from odoo.tools.misc import split_every
-
-from odoo import _, api, fields, models, registry, SUPERUSER_ID
+from odoo import _, api, fields, models, tools
+from odoo.addons.bus.models.bus_presence import AWAY_TIMER
+from odoo.addons.bus.models.bus_presence import DISCONNECTION_TIMER
 from odoo.osv import expression
-
-_logger = logging.getLogger(__name__)
 
 
 class Partner(models.Model):
     """ Update partner to add a field about notification preferences. Add a generic opt-out field that can be used
        to restrict usage of automatic email templates. """
     _name = "res.partner"
-    _inherit = ['res.partner', 'mail.thread', 'mail.activity.mixin']
+    _inherit = ['res.partner', 'mail.activity.mixin', 'mail.thread.blacklist']
     _mail_flat_thread = False
 
-    message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
-    opt_out = fields.Boolean(
-        'Opt-Out', help="If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. "
-                        "Filter 'Available for Mass Mailing' allows users to filter the partners when performing mass mailing.")
-    channel_ids = fields.Many2many('mail.channel', 'mail_channel_partner', 'partner_id', 'channel_id', string='Channels', copy=False)
+    # override to add and order tracking
+    email = fields.Char(tracking=1)
+    phone = fields.Char(tracking=2)
+    parent_id = fields.Many2one(tracking=3)
+    user_id = fields.Many2one(tracking=4)
+    vat = fields.Char(tracking=5)
+    # channels
+    channel_ids = fields.Many2many('mail.channel', 'mail_channel_member', 'partner_id', 'channel_id', string='Channels', copy=False)
 
-    @api.multi
-    def message_get_suggested_recipients(self):
-        recipients = super(Partner, self).message_get_suggested_recipients()
+    def _compute_im_status(self):
+        super()._compute_im_status()
+        odoobot_id = self.env['ir.model.data']._xmlid_to_res_id('base.partner_root')
+        odoobot = self.env['res.partner'].browse(odoobot_id)
+        if odoobot in self:
+            odoobot.im_status = 'bot'
+
+    # pseudo computes
+
+    def _get_needaction_count(self):
+        """ compute the number of needaction of the current partner """
+        self.ensure_one()
+        self.env['mail.notification'].flush_model(['is_read', 'res_partner_id'])
+        self.env.cr.execute("""
+            SELECT count(*) as needaction_count
+            FROM mail_notification R
+            WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.id,))
+        return self.env.cr.dictfetchall()[0].get('needaction_count')
+
+    def _get_starred_count(self):
+        """ compute the number of starred of the current partner """
+        self.ensure_one()
+        self.env.cr.execute("""
+            SELECT count(*) as starred_count
+            FROM mail_message_res_partner_starred_rel R
+            WHERE R.res_partner_id = %s """, (self.id,))
+        return self.env.cr.dictfetchall()[0].get('starred_count')
+
+    # ------------------------------------------------------------
+    # MESSAGING
+    # ------------------------------------------------------------
+
+    def _message_get_suggested_recipients(self):
+        recipients = super(Partner, self)._message_get_suggested_recipients()
         for partner in self:
             partner._message_add_suggested_recipient(recipients, partner=partner, reason=_('Partner Profile'))
         return recipients
 
-    @api.multi
-    def message_get_default_recipients(self):
-        return dict((res_id, {'partner_ids': [res_id], 'email_to': False, 'email_cc': False}) for res_id in self.ids)
-
-    @api.model
-    def _notify_prepare_template_context(self, message, notif_values):
-        # compute signature
-        if not notif_values.pop('add_sign', True):
-            signature = False
-        elif message.author_id and message.author_id.user_ids and message.author_id.user_ids[0].signature:
-            signature = message.author_id.user_ids[0].signature
-        elif message.author_id:
-            signature = "<p>-- <br/>%s</p>" % message.author_id.name
-        else:
-            signature = ""
-
-        # compute Sent by
-        if message.author_id and message.author_id.user_ids:
-            user = message.author_id.user_ids[0]
-        else:
-            user = self.env.user
-        if user.company_id.website:
-            website_url = 'http://%s' % user.company_id.website if not user.company_id.website.lower().startswith(('http:', 'https:')) else user.company_id.website
-        else:
-            website_url = False
-
-        model_name = False
-        if message.model:
-            model_name = self.env['ir.model']._get(message.model).display_name
-
-        record_name = message.record_name
-
-        tracking = []
-        for tracking_value in self.env['mail.tracking.value'].sudo().search([('mail_message_id', '=', message.id)]):
-            tracking.append((tracking_value.field_desc,
-                             tracking_value.get_old_display_value()[0],
-                             tracking_value.get_new_display_value()[0]))
-
-        is_discussion = message.subtype_id.id == self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
-
-        record = False
-        if message.res_id and message.model in self.env:
-            record = self.env[message.model].browse(message.res_id)
-
-        company = user.company_id
-        if record and hasattr(record, 'company_id'):
-            company = record.company_id
-
+    def _message_get_default_recipients(self):
         return {
-            'message': message,
-            'signature': signature,
-            'website_url': website_url,
-            'company': company,
-            'model_name': model_name,
-            'record': record,
-            'record_name': record_name,
-            'tracking_values': tracking,
-            'is_discussion': is_discussion,
-            'subtype': message.subtype_id,
-        }
-
-    @api.model
-    def _notify_prepare_email_values(self, message, notif_values):
-        # compute email references
-        references = message.parent_id.message_id if message.parent_id else False
-
-        # custom values
-        custom_values = dict()
-        if message.res_id and message.model in self.env and hasattr(self.env[message.model], '_notify_specific_email_values'):
-            custom_values = self.env[message.model].browse(message.res_id)._notify_specific_email_values(message)
-
-        mail_values = {
-            'mail_message_id': message.id,
-            'mail_server_id': message.mail_server_id.id,
-            'auto_delete': notif_values.pop('mail_auto_delete', True),
-            'references': references,
-        }
-        mail_values.update(custom_values)
-        return mail_values
-
-    @api.model
-    def _notify_send(self, body, subject, recipients, **mail_values):
-        emails = self.env['mail.mail']
-        recipients_nbr = len(recipients)
-        for email_chunk in split_every(50, recipients.ids):
-            # TDE FIXME: missing message parameter. So we will find mail_message_id
-            # in the mail_values and browse it. It should already be in the
-            # cache so should not impact performances.
-            mail_message_id = mail_values.get('mail_message_id')
-            message = self.env['mail.message'].browse(mail_message_id) if mail_message_id else None
-            if message and message.model and message.res_id and message.model in self.env and hasattr(self.env[message.model], '_notify_email_recipients'):
-                tig = self.env[message.model].browse(message.res_id)
-                recipient_values = tig._notify_email_recipients(message, email_chunk)
-            else:
-                recipient_values = self.env['mail.thread']._notify_email_recipients(message, email_chunk)
-            create_values = {
-                'body_html': body,
-                'subject': subject,
+            r.id:
+            {'partner_ids': [r.id],
+             'email_to': False,
+             'email_cc': False
             }
-            create_values.update(mail_values)
-            create_values.update(recipient_values)
-            emails |= self.env['mail.mail'].create(create_values)
-        return emails, recipients_nbr
+            for r in self
+        }
+
+    # ------------------------------------------------------------
+    # ORM
+    # ------------------------------------------------------------
 
     @api.model
-    def _notify_udpate_notifications(self, emails):
-        for email in emails:
-            notifications = self.env['mail.notification'].sudo().search([
-                ('mail_message_id', '=', email.mail_message_id.id),
-                ('res_partner_id', 'in', email.recipient_ids.ids)])
-            notifications.write({
-                'is_email': True,
-                'is_read': True,  # handle by email discards Inbox notification
-                'email_status': 'ready',
-            })
+    @api.returns('self', lambda value: value.id)
+    def find_or_create(self, email, assert_valid_email=False):
+        """ Override to use the email_normalized field. """
+        if not email:
+            raise ValueError(_('An email is required for find_or_create to work'))
 
-    @api.multi
-    def _notify(self, message, layout=False, force_send=False, send_after_commit=True, values=None):
-        """ Method to send email linked to notified messages. The recipients are
-        the recordset on which this method is called.
+        parsed_name, parsed_email = self._parse_partner_name(email)
+        if not parsed_email and assert_valid_email:
+            raise ValueError(_('%(email)s is not recognized as a valid email. This is required to create a new customer.'))
+        if parsed_email:
+            email_normalized = tools.email_normalize(parsed_email)
+            if email_normalized:
+                partners = self.search([('email_normalized', '=', email_normalized)], limit=1)
+                if partners:
+                    return partners
 
-        :param boolean force_send: send notification emails now instead of letting the scheduler handle the email queue
-        :param boolean send_after_commit: send notification emails after the transaction end instead of durign the
-                                          transaction; this option is used only if force_send is True
-        :param dict values: values used to compute the notification process, containing
+        # We don't want to call `super()` to avoid searching twice on the email
+        # Especially when the search `email =ilike` cannot be as efficient as
+        # a search on email_normalized with a btree index
+        # If you want to override `find_or_create()` your module should depend on `mail`
+        create_values = {self._rec_name: parsed_name or parsed_email}
+        if parsed_email:  # otherwise keep default_email in context
+            create_values['email'] = parsed_email
+        return self.create(create_values)
 
-         * add_sign: add user signature to notification email, default is True
-         * mail_auto_delete: auto delete send emails, default is True
-         * other values are given to the context used to render the notification template, allowing customization
+    # ------------------------------------------------------------
+    # DISCUSS
+    # ------------------------------------------------------------
 
-        """
-        if not self.ids:
-            return True
-        values = values if values is not None else {}
-
-        template_xmlid = layout if layout else 'mail.message_notification_email'
-        try:
-            base_template = self.env.ref(template_xmlid, raise_if_not_found=True)
-        except ValueError:
-            _logger.warning('QWeb template %s not found when sending notification emails. Skipping.' % (template_xmlid))
-            return False
-
-        base_template_ctx = self._notify_prepare_template_context(message, values)
-        base_mail_values = self._notify_prepare_email_values(message, values)
-
-        # classify recipients: actions / no action
-        if message.model and message.res_id and hasattr(self.env[message.model], '_notify_classify_recipients'):
-            recipients = self.env[message.model].browse(message.res_id)._notify_classify_recipients(message, self)
-        else:
-            recipients = self.env['mail.thread']._notify_classify_recipients(message, self)
-
-        emails = self.env['mail.mail']
-        recipients_nbr, recipients_max = 0, 50
-        for email_type, recipient_template_values in recipients.items():
-            if recipient_template_values['recipients']:
-                # generate notification email content
-                template_ctx = {**base_template_ctx, **recipient_template_values, **values}  # fixme: set button_unfollow to none
-                fol_values = {
-                    'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
-                    'body': base_template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True),
-                }
-                fol_values['body'] = self.env['mail.thread']._replace_local_links(fol_values['body'])
-                # send email
-                new_emails, new_recipients_nbr = self._notify_send(fol_values['body'], fol_values['subject'], recipient_template_values['recipients'], **base_mail_values)
-                # update notifications
-                self._notify_udpate_notifications(new_emails)
-
-                emails |= new_emails
-                recipients_nbr += new_recipients_nbr
-
-        # NOTE:
-        #   1. for more than 50 followers, use the queue system
-        #   2. do not send emails immediately if the registry is not loaded,
-        #      to prevent sending email during a simple update of the database
-        #      using the command-line.
-        test_mode = getattr(threading.currentThread(), 'testing', False)
-        if force_send and recipients_nbr < recipients_max and \
-                (not self.pool._init or test_mode):
-            email_ids = emails.ids
-            dbname = self.env.cr.dbname
-            _context = self._context
-
-            def send_notifications():
-                db_registry = registry(dbname)
-                with api.Environment.manage(), db_registry.cursor() as cr:
-                    env = api.Environment(cr, SUPERUSER_ID, _context)
-                    env['mail.mail'].browse(email_ids).send()
-
-            # unless asked specifically, send emails after the transaction to
-            # avoid side effects due to emails being sent while the transaction fails
-            if not test_mode and send_after_commit:
-                self._cr.after('commit', send_notifications)
-            else:
-                emails.send()
-
-        return True
-
-    @api.multi
-    def _notify_by_chat(self, message):
-        """ Broadcast the message to all the partner since """
-        message_values = message.message_format()[0]
-        notifications = []
+    def mail_partner_format(self):
+        partners_format = dict()
         for partner in self:
-            notifications.append([(self._cr.dbname, 'ir.needaction', partner.id), dict(message_values)])
-        self.env['bus.bus'].sendmany(notifications)
+            internal_users = partner.user_ids - partner.user_ids.filtered('share')
+            main_user = internal_users[0] if len(internal_users) > 0 else partner.user_ids[0] if len(partner.user_ids) > 0 else self.env['res.users']
+            partners_format[partner] = {
+                "id": partner.id,
+                "display_name": partner.display_name,
+                "name": partner.name,
+                "email": partner.email,
+                "active": partner.active,
+                "im_status": partner.im_status,
+                "user_id": main_user.id,
+                "is_internal_user": not partner.partner_share,
+            }
+            if 'guest' in self.env.context:
+                partners_format[partner].pop('email')
+        return partners_format
+
+    def _message_fetch_failed(self):
+        """Returns first 100 messages, sent by the current partner, that have errors, in
+        the format expected by the web client."""
+        self.ensure_one()
+        notifications = self.env['mail.notification'].search([
+            ('author_id', '=', self.id),
+            ('notification_status', 'in', ('bounce', 'exception')),
+            ('mail_message_id.message_type', '!=', 'user_notification'),
+            ('mail_message_id.model', '!=', False),
+            ('mail_message_id.res_id', '!=', 0),
+        ], limit=100)
+        return notifications.mail_message_id._message_notification_format()
+
+    def _get_channels_as_member(self):
+        """Returns the channels of the partner."""
+        self.ensure_one()
+        channels = self.env['mail.channel']
+        # get the channels and groups
+        channels |= self.env['mail.channel'].search([
+            ('channel_type', 'in', ('channel', 'group')),
+            ('channel_partner_ids', 'in', [self.id]),
+        ])
+        # get the pinned direct messages
+        channels |= self.env['mail.channel'].search([
+            ('channel_type', '=', 'chat'),
+            ('channel_member_ids', 'in', self.env['mail.channel.member'].sudo()._search([
+                ('partner_id', '=', self.id),
+                ('is_pinned', '=', True),
+            ])),
+        ])
+        return channels
 
     @api.model
-    def get_needaction_count(self):
-        """ compute the number of needaction of the current user """
-        if self.env.user.partner_id:
-            self.env.cr.execute("""
-                SELECT count(*) as needaction_count
-                FROM mail_message_res_partner_needaction_rel R
-                WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.env.user.partner_id.id,))
-            return self.env.cr.dictfetchall()[0].get('needaction_count')
-        _logger.error('Call to needaction_count without partner_id')
-        return 0
+    def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
+        """ Returns partners matching search_term that can be invited to a channel.
+        If the channel_id is specified, only partners that can actually be invited to the channel
+        are returned (not already members, and in accordance to the channel configuration).
+        """
+        domain = expression.AND([
+            expression.OR([
+                [('name', 'ilike', search_term)],
+                [('email', 'ilike', search_term)],
+            ]),
+            [('active', '=', True)],
+            [('type', '!=', 'private')],
+            [('user_ids', '!=', False)],
+            [('user_ids.active', '=', True)],
+            [('user_ids.share', '=', False)],
+        ])
+        if channel_id:
+            channel = self.env['mail.channel'].search([('id', '=', int(channel_id))])
+            domain = expression.AND([domain, [('channel_ids', 'not in', channel.id)]])
+            if channel.public == 'groups':
+                domain = expression.AND([domain, [('user_ids.groups_id', 'in', channel.group_public_id.id)]])
+        query = self.env['res.partner']._search(domain, order='name, id')
+        query.order = 'LOWER("res_partner"."name"), "res_partner"."id"'  # bypass lack of support for case insensitive order in search()
+        query.limit = int(limit)
+        return {
+            'count': self.env['res.partner'].search_count(domain),
+            'partners': list(self.env['res.partner'].browse(query).mail_partner_format().values()),
+        }
 
     @api.model
-    def get_starred_count(self):
-        """ compute the number of starred of the current user """
-        if self.env.user.partner_id:
-            self.env.cr.execute("""
-                SELECT count(*) as starred_count
-                FROM mail_message_res_partner_starred_rel R
-                WHERE R.res_partner_id = %s """, (self.env.user.partner_id.id,))
-            return self.env.cr.dictfetchall()[0].get('starred_count')
-        _logger.error('Call to starred_count without partner_id')
-        return 0
-
-    @api.model
-    def get_static_mention_suggestions(self):
-        """ To be overwritten to return the id, name and email of partners used as static mention
-            suggestions loaded once at webclient initialization and stored client side. """
-        return []
-
-    @api.model
-    def get_mention_suggestions(self, search, limit=8):
-        """ Return 'limit'-first partners' id, name and email such that the name or email matches a
-            'search' string. Prioritize users, and then extend the research to all partners. """
+    def get_mention_suggestions(self, search, limit=8, channel_id=None):
+        """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
+            Prioritize partners that are also (internal) users, and then extend the research to all partners.
+            If channel_id is given, only members of this channel are returned.
+            The return format is a list of partner data (as per returned by `mail_partner_format()`).
+        """
         search_dom = expression.OR([[('name', 'ilike', search)], [('email', 'ilike', search)]])
-        fields = ['id', 'name', 'email']
+        search_dom = expression.AND([[('active', '=', True), ('type', '!=', 'private')], search_dom])
+        if channel_id:
+            search_dom = expression.AND([[('channel_ids', 'in', channel_id)], search_dom])
+        domain_is_user = expression.AND([[('user_ids', '!=', False), ('user_ids.active', '=', True)], search_dom])
+        priority_conditions = [
+            expression.AND([domain_is_user, [('partner_share', '=', False)]]),  # Search partners that are internal users
+            domain_is_user,  # Search partners that are users
+            search_dom,  # Search partners that are not users
+        ]
+        partners = self.env['res.partner']
+        for domain in priority_conditions:
+            remaining_limit = limit - len(partners)
+            if remaining_limit <= 0:
+                break
+            partners |= self.search(expression.AND([[('id', 'not in', partners.ids)], domain]), limit=remaining_limit)
+        return list(partners.mail_partner_format().values())
 
-        # Search users
-        domain = expression.AND([[('user_ids.id', '!=', False)], search_dom])
-        users = self.search_read(domain, fields, limit=limit)
-
-        # Search partners if less than 'limit' users found
-        partners = []
-        if len(users) < limit:
-            partners = self.search_read(search_dom, fields, limit=limit)
-            # Remove duplicates
-            partners = [p for p in partners if not len([u for u in users if u['id'] == p['id']])] 
-
-        return [users, partners]
+    @api.model
+    def im_search(self, name, limit=20):
+        """ Search partner with a name and return its id, name and im_status.
+            Note : the user must be logged
+            :param name : the partner name to search
+            :param limit : the limit of result to return
+        """
+        # This method is supposed to be used only in the context of channel creation or
+        # extension via an invite. As both of these actions require the 'create' access
+        # right, we check this specific ACL.
+        if self.env['mail.channel'].check_access_rights('create', raise_exception=False):
+            name = '%' + name + '%'
+            excluded_partner_ids = [self.env.user.partner_id.id]
+            self.env.cr.execute("""
+                SELECT
+                    U.id as user_id,
+                    P.id as id,
+                    P.name as name,
+                    P.email as email,
+                    CASE WHEN B.last_poll IS NULL THEN 'offline'
+                         WHEN age(now() AT TIME ZONE 'UTC', B.last_poll) > interval %s THEN 'offline'
+                         WHEN age(now() AT TIME ZONE 'UTC', B.last_presence) > interval %s THEN 'away'
+                         ELSE 'online'
+                    END as im_status
+                FROM res_users U
+                    JOIN res_partner P ON P.id = U.partner_id
+                    LEFT JOIN bus_presence B ON B.user_id = U.id
+                WHERE P.name ILIKE %s
+                    AND P.id NOT IN %s
+                    AND U.active = 't'
+                    AND U.share IS NOT TRUE
+                ORDER BY P.name ASC, P.id ASC
+                LIMIT %s
+            """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids), limit))
+            return self.env.cr.dictfetchall()
+        else:
+            return {}

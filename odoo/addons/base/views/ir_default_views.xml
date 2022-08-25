@@ -6,16 +6,18 @@
         <field name="model">ir.default</field>
         <field name="arch" type="xml">
             <form string="User-defined Defaults">
+            <sheet>
                 <group>
-                    <group>
+                    <group name="field_value">
                         <field name="field_id"/>
                         <field name="json_value"/>
                     </group>
-                    <group>
+                    <group name="user_company_details">
                         <field name="user_id"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                 </group>
+            </sheet>
             </form>
         </field>
     </record>
@@ -53,7 +55,6 @@
         <field name="name">User-defined Defaults</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">ir.default</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="ir_default_search_view"/>
     </record>

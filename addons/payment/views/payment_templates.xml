@@ -1,164 +1,411 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="assets_backend" name="Payment Assets Backend" inherit_id="web.assets_backend">
-        <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/payment/static/src/less/payment_acquirer.less"/>
-        </xpath>
-    </template>
 
-    <template id="payment_tokens_list" name="Payment Tokens list">
-        <!--
-        Variables description:
-            - 'submit_txt' the text displayed inside the submit button
-            - 'submit_class' the css classes to style the submit button
-            - 'icon_class' font awesome class (e.g. 'fa-trash', 'fa-lock')
-            - 'form_action' the URI to the page that will handle the form values given for server2server
-            - 'pms' the tokens
-            - 'checked_pm_id' the payment token that should be checked (for radio buttons)
-            - 'mode' can take two values, either 'payment' or 'manage'. 'manage' displays the add a new card and delete buttons. 'payment'
-                display a form that is used to pay and send the information to the form action url.
-            - 's2s_acquirers' the list of the server2server acquirers
-            - 'form_acquirers' the list of the payment acquirers to pay with forms
-            - 'verify_validity' if we need to verify if the payment method is valid when adding a new one
-            - 'prepare_tx_url' the url of the route which will handle the creation of a transaction for a form base payment (handles if the transaction is form or form_save)
+    <!-- Checkout form -->
+    <template id="checkout" name="Payment Checkout">
+        <!-- Variables description:
+            - 'acquirers' - The payment acquirers compatible with the current transaction
+            - 'tokens' - The payment tokens of the current partner and payment acquirers
+            - 'default_token_id' - The id of the token that should be pre-selected. Optional
+            - 'fees_by_acquirer' - The dict of transaction fees for each acquirer. Optional
+            - 'show_tokenize_input' - Whether the option to save the payment method is shown
+            - 'reference_prefix' - The custom prefix to compute the full transaction reference
+            - 'amount' - The amount to pay. Optional (sale_subscription)
+            - 'currency' - The currency of the transaction, as a `res.currency` record
+            - 'partner_id' - The id of the partner on behalf of whom the payment should be made
+            - 'access_token' - The access token used to authenticate the partner.
+            - 'transaction_route' - The route used to create a transaction when the user clicks Pay
+            - 'landing_route' - The route the user is redirected to after the transaction
+            - 'footer_template_id' - The template id for the submit button. Optional
+            - 'invoice_id' - The id of the account move being paid. Optional
         -->
-        <form t-if="s2s_acquirers or pms or form_acquirers" method="post" class="o_payment_form"
-                t-att-action="form_action if form_action else '#'"
-                t-att-data-success-url="success_url or ''"
-                t-att-data-error-url="error_url or ''"
-                t-att-data-access-token="access_token or ''"
-                t-att-data-partner-id="partner_id"
-                t-att-data-callback-method="callback_method or ''">
-            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <input type="hidden" t-if="verify_validity==True" name="verify_validity" value="1"/>
-            <input type="hidden" t-if="prepare_tx_url" name="prepare_tx_url" t-att-value="prepare_tx_url"/>
-            <!-- s2s form submission -->
-            <input type="hidden" t-if="access_token" name="access_token" t-att-value="access_token"/>
-            <input type="hidden" t-if="success_url" name="success_url" t-att-value="success_url"/>
-            <input type="hidden" t-if="error_url" name="error_url" t-att-value="error_url"/>
-            <input type="hidden" t-if="callback_method" name="callback_method" t-att-value="callback_method"/>
+        <form name="o_payment_checkout"
+              class="o_payment_form mt-3 clearfix"
+              t-att-data-reference-prefix="reference_prefix"
+              t-att-data-amount="amount"
+              t-att-data-currency-id="currency and currency.id"
+              t-att-data-partner-id="partner_id"
+              t-att-data-access-token="access_token"
+              t-att-data-transaction-route="transaction_route"
+              t-att-data-landing-route="landing_route"
+              t-att-data-allow-token-selection="True"
+              t-att-data-invoice-id="invoice_id">
 
-            <div class="panel panel-default">
-                <t t-set="acquirers_count" t-value="(len(s2s_acquirers) if s2s_acquirers else 0) + (len(form_acquirers) if form_acquirers else 0)"/>
-                <t t-set="pms_count" t-value="len(pms) if pms else 0"/>
-                <t t-set="MAX_BRAND_LINE" t-value="3"/>
-                <t t-foreach="s2s_acquirers" t-as="acq">
-                    <div class="panel-body">
+            <t t-set="acquirer_count" t-value="len(acquirers) if acquirers else 0"/>
+            <t t-set="token_count" t-value="len(tokens) if tokens else 0"/>
+            <!-- Check the radio button of the default token, if set, or of the first acquirer if
+                 it is the only payment option -->
+            <t t-set="default_payment_option_id"
+               t-value="default_token_id if default_token_id and token_count > 0
+                        else acquirers[0].id if acquirer_count == 1 and token_count == 0
+                        else None"/>
+            <t t-set="fees_by_acquirer" t-value="fees_by_acquirer or dict()"/>
+            <t t-set="footer_template_id"
+               t-value="footer_template_id or 'payment.footer'"/>
+
+            <div class="card">
+                <!-- === Acquirers === -->
+                <t t-foreach="acquirers" t-as="acquirer">
+                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
                         <label>
-                            <t t-if="mode == 'manage'">
-                                <input type="radio" t-att-data-acquirer-id="acq.id"
-                                    t-att-data-s2s-payment="true"
-                                    t-att-data-provider="acq.provider"
-                                    name="pm_id" t-attf-value="new_{{acq.id}}"
-                                    t-att-class="'hidden' if acquirers_count==1 else ''"
-                                    t-att-checked="acquirers_count == 1"/>
+                            <!-- === Radio button === -->
+                            <!-- Only shown if linked to the only payment option -->
+                            <input name="o_payment_radio"
+                                   type="radio"
+                                   t-att-checked="acquirer.id == default_payment_option_id"
+                                   t-att-class="'' if acquirer_count + token_count > 1 else 'd-none'"
+                                   t-att-data-payment-option-id="acquirer.id"
+                                   t-att-data-provider="acquirer.provider"
+                                   data-payment-option-type="acquirer"/>
+                            <!-- === Acquirer name === -->
+                            <span class="payment_option_name">
+                                <b t-esc="acquirer.display_as or acquirer.name"/>
+                            </span>
+                            <!-- === "Test Mode" badge === -->
+                            <span t-if="acquirer.state == 'test'"
+                                  class="rounded-pill text-bg-warning ms-1">
+                                Test Mode
+                            </span>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not acquirer.is_published"
+                                  class="badge text-bg-danger ms-1">
+                                Unpublished
+                            </span>
+                            <!-- === Extra fees badge === -->
+                            <t t-if="fees_by_acquirer.get(acquirer)">
+                                <span class="rounded-pill text-bg-secondary ms-1">
+                                    + <t t-esc="fees_by_acquirer.get(acquirer)"
+                                         t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                    Fees
+                                </span>
                             </t>
-                            <t t-else="">
-                                <input type="radio" t-att-data-acquirer-id="acq.id"
-                                    t-att-data-s2s-payment="true"
-                                    t-att-data-provider="acq.provider"
-                                    name="pm_id" t-attf-value="new_{{acq.id}}"
-                                    t-att-class="'hidden' if (acquirers_count==1 and pms_count==0) else ''"
-                                    t-att-checked="acquirers_count==1 and pms_count==0"/>
-                            </t>
-                            <span class="payment_option_name" t-esc="acq.name"/>
                         </label>
-                        <ul class="pull-right list-inline payment_icon_list">
-                            <t t-set="i" t-value="0"/>
-                            <t t-foreach="acq.payment_icon_ids" t-as="pm_icon">
-                                <li t-att-class="'' if (i &lt; MAX_BRAND_LINE) else 'hidden'">
-                                    <span t-field="pm_icon.image_payment_form"
-                                        t-options='{"widget": "image", "alt-field": "name"}' />
-                                </li>
-                                <li t-if="i==MAX_BRAND_LINE" style="display:block;">
-                                    <span class="pull-right more_option text-info">
-                                        <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_icon_ids[MAX_BRAND_LINE:]])">and more</a>
-                                    </span>
-                                </li>
-                                <t t-set="i" t-value="i+1"/>
-                            </t>
-                        </ul>
+                        <!-- === Payment icon list === -->
+                        <t t-call="payment.icon_list"/>
+                        <!-- === Help message === -->
+                        <div t-if="not is_html_empty(acquirer.pre_msg)"
+                             t-out="acquirer.pre_msg"
+                             class="text-muted ms-3"/>
                     </div>
-                    <div t-attf-id="o_payment_add_token_acq_{{acq.id}}" t-attf-class="panel-footer {{'hidden' if(acquirers_count &gt; 1 and pms_count==0 and s2s_acquirers[0]!=acq) else 'hidden' if pms_count &gt;0 else ''}}">
-                        <div class="clearfix">
-                            <t t-call="{{acq.sudo().get_s2s_form_xml_id()}}">
-                                <t t-set="id" t-value="acq.id"/>
-                                <t t-set="partner_id" t-value="partner_id"/>
-                                <t t-if="not return_url" t-set="return_url" t-value="''"/>
+                    <!-- === Acquirer inline form === -->
+                    <div t-attf-id="o_payment_acquirer_inline_form_{{acquirer.id}}"
+                         name="o_payment_inline_form"
+                         class="card-footer px-3 d-none">
+                        <t t-if="acquirer.sudo()._should_build_inline_form(is_validation=False)">
+                            <t t-set="inline_form_xml_id"
+                               t-value="acquirer.sudo().inline_form_view_id.xml_id"/>
+                            <!-- === Inline form content (filled by acquirer) === -->
+                            <div t-if="inline_form_xml_id" class="clearfix">
+                                <t t-call="{{inline_form_xml_id}}">
+                                    <t t-set="acquirer_id" t-value="acquirer.id"/>
+                                </t>
+                            </div>
+                        </t>
+                        <!-- === "Save my payment details" checkbox === -->
+                        <label t-if="show_tokenize_input[acquirer.id]">
+                            <input name="o_payment_save_as_token" type="checkbox"/>
+                            Save my payment details
+                        </label>
+                    </div>
+                </t>
+                <!-- === Tokens === -->
+                <t t-foreach="tokens" t-as="token">
+                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
+                        <label>
+                            <!-- === Radio button === -->
+                            <input name="o_payment_radio"
+                                   type="radio"
+                                   t-att-checked="token.id == default_payment_option_id"
+                                   t-att-data-payment-option-id="token.id"
+                                   t-att-data-provider="token.provider"
+                                   data-payment-option-type="token"/>
+                            <!-- === Token name === -->
+                            <span class="payment_option_name" t-esc="token.display_name"/>
+                            <!-- === "V" check mark === -->
+                            <t t-call="payment.verified_token_checkmark"/>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not token.acquirer_id.is_published" class="badge text-bg-danger ms-1">
+                                Unpublished
+                            </span>
+                        </label>
+                    </div>
+                    <!-- === Token inline form === -->
+                    <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
+                         name="o_payment_inline_form"
+                         class="card-footer d-none">
+                        <t t-set="token_inline_form_xml_id"
+                           t-value="token.sudo().acquirer_id.token_inline_form_view_id.xml_id"/>
+                        <!-- === Inline form content (filled by acquirer) === -->
+                        <div t-if="token_inline_form_xml_id" class="clearfix">
+                            <t t-call="{{token_inline_form_xml_id}}">
+                                <t t-set="token" t-value="token"/>
                             </t>
                         </div>
                     </div>
                 </t>
-                <t t-if="mode == 'payment'" t-foreach="form_acquirers" t-as="acq">
-                    <div class="panel-body">
-                        <label>
-                            <input type="radio" t-att-data-acquirer-id="acq.id"
-                                t-att-data-form-payment="true"
-                                t-att-data-provider="acq.provider"
-                                t-att-class="'hidden' if (acquirers_count==1 and pms_count==0) else ''"
-                                t-att-checked="acquirers_count==1 and pms_count==0"
-                                name="pm_id" t-attf-value="form_{{acq.id}}"/>
-                            <span class="payment_icon_name" t-esc="acq.name"/>
-                        </label>
-                        <ul class="pull-right list-inline payment_icon_list">
-                            <t t-set="i" t-value="0"/>
-                            <t t-foreach="acq.payment_icon_ids" t-as="pm_icon">
-                                <li t-att-class=" '' if (i &lt; MAX_BRAND_LINE) else 'hidden'">
-                                    <span t-field="pm_icon.image_payment_form"
-                                        t-options='{"widget": "image", "alt-field": "name"}' />
-                                </li>
-                                <li t-if="i==MAX_BRAND_LINE" style="display:block;">
-                                    <span class="pull-right more_option text-info">
-                                        <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_icon_ids[MAX_BRAND_LINE:]])">and more</a>
-                                    </span>
-                                </li>
-                                <t t-set="i" t-value="i+1"/>
-                            </t>
-                        </ul>
-                    </div>
-                    <div t-attf-id="o_payment_form_acq_{{acq.id}}" t-attf-class="hidden {{'panel-footer' if acq.save_token == 'ask' else ''}}">
-                        <label t-if="acq.save_token == 'ask'"><input type="checkbox" name="o_payment_form_save_token" data-remove-me=""/> Save my payment data</label>
-                    </div>
-                </t>
-                <t t-foreach="pms" t-as="pm">
-                    <div class="panel-body">
-                        <label>
-                            <input t-if="mode == 'payment'" type="radio" name="pm_id" t-att-value="pm.id" t-att-checked="checked_pm_id == pm.id"/>
-                            <span class="payment_option_name" t-esc="pm.name"/>
-                            <t t-if="pm.verified">
-                                <i class="fa fa-check text-success" title="This payment method is verified by our system."></i>
-                            </t>
-                            <t t-else="">
-                                <i class="fa fa-close text-danger" title="This payment method has not been verified by our system."></i>
-                            </t>
-                        </label>
-                        <button t-if="mode == 'manage'" name="delete_pm" t-att-value="pm.id" class="btn btn-primary btn-xs pull-right">
-                            <i class="fa fa-trash"></i> Delete
-                        </button>
-                    </div>
-                </t>
             </div>
-            <div t-if='back_button_txt' class="pull-left">
-                <a t-att-href="back_button_link or '#'" t-att-class="back_button_class or 'btn btn-lg btn-default'">
-                    <i t-if="back_button_icon_class" t-attf-class="fa {{back_button_icon_class}}"/>
-                    <t t-esc="back_button_txt"/>
-                </a>
-            </div>
-            <div class="pull-right">
-                <button t-if="mode == 'payment'" id="o_payment_form_pay" type="submit" t-att-class="submit_class if submit_class else 'btn btn-primary btn-lg mb8 mt8'">
-                    <t t-if="submit_txt">
-                        <i t-if="icon_class and not icon_right" t-attf-class="fa {{icon_class}}"/>
-                        <t t-esc="submit_txt"/>
-                        <i t-if="icon_class and icon_right" t-attf-class="fa {{icon_class}}"/>
-                    </t>
-                    <t t-else="">
-                        <i class="fa fa-lock"> Pay</i>
-                    </t>
-                </button>
-                <button t-if="mode == 'manage' and s2s_acquirers" id="o_payment_form_add_pm" class="btn btn-primary btn-lg mb8 mt8">
-                    <i class="fa fa-plus-circle"> Add new card</i>
-                </button>
-            </div>
+            <!-- === "Pay" button === -->
+            <t t-call="{{footer_template_id}}">
+                <t t-set="label">Pay</t>
+                <t t-set="icon_class" t-value="'fa-lock'"/>
+            </t>
         </form>
     </template>
+
+    <!-- Manage (token create and deletion) form -->
+    <template id="manage" name="Payment Manage">
+        <!-- Variables description:
+            - 'acquirers' - The payment acquirers supporting tokenization
+            - 'tokens' - The set of payment tokens of the current partner
+            - 'default_token_id' - The id of the token that should be pre-selected. Optional
+            - 'reference_prefix' - The custom prefix to compute the full transaction reference
+            - 'partner_id' - The id of the partner managing the tokens
+            - 'access_token' - The access token used to authenticate the partner.
+            - 'transaction_route' - The route used to create a validation transaction
+            - 'assign_token_route' - The route to call to assign a token to a record. If set, it
+                                     enables the token assignation mechanisms: creation of a new
+                                     token through a refunded transaction and assignation of an
+                                     existing token
+            - 'landing_route' - The route the user is redirected to at then end of the flow
+            - 'footer_template_id' - The template id for the submit button. Optional
+        -->
+        <form name="o_payment_manage"
+              class="o_payment_form mt-3 clearfix"
+              t-att-data-reference-prefix="reference_prefix"
+              t-att-data-partner-id="partner_id"
+              t-att-data-access-token="access_token"
+              t-att-data-invoice-id="invoice_id"
+              t-att-data-transaction-route="transaction_route"
+              t-att-data-assign-token-route="assign_token_route"
+              t-att-data-landing-route="landing_route"
+              t-att-data-allow-token-selection="bool(assign_token_route)">
+            <t t-set="acquirer_count" t-value="len(acquirers) if acquirers else 0"/>
+            <t t-set="token_count" t-value="len(tokens) if tokens else 0"/>
+            <t t-set="no_selectable_token" t-value="token_count == 0 or not assign_token_route"/>
+            <t t-set="default_payment_option_id"
+               t-value="default_token_id if default_token_id and token_count > 0
+                        else acquirers[0].id if acquirer_count == 1 and no_selectable_token
+                        else None"/>
+            <t t-set="footer_template_id"
+               t-value="footer_template_id or 'payment.footer'"/>
+            <div class="card">
+                <!-- === Acquirers === -->
+                <t t-foreach="acquirers" t-as="acquirer">
+                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
+                        <label>
+                            <!-- === Radio button === -->
+                            <!-- Only shown if linked to the only payment option -->
+                            <input name="o_payment_radio"
+                                   type="radio"
+                                   t-att-checked="acquirer.id == default_payment_option_id"
+                                   t-att-class="'' if acquirer_count + token_count > 1 else 'd-none'"
+                                   t-att-data-payment-option-id="acquirer.id"
+                                   t-att-data-provider="acquirer.provider"
+                                   data-payment-option-type="acquirer"/>
+                            <!-- === Acquirer name === -->
+                            <span class="payment_option_name">
+                                <b t-esc="acquirer.display_as or acquirer.name"/>
+                            </span>
+                            <!-- === "Test Mode" badge === -->
+                            <span t-if="acquirer.state == 'test'"
+                                  class="rounded-pill text-bg-warning"
+                                  style="margin-left:5px">
+                                Test Mode
+                            </span>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not acquirer.is_published" class="badge text-bg-danger">
+                                Unpublished
+                            </span>
+                        </label>
+                        <!-- === Payment icon list === -->
+                        <t t-call="payment.icon_list"/>
+                        <!-- === Help message === -->
+                        <div t-if="not is_html_empty(acquirer.pre_msg)"
+                             t-out="acquirer.pre_msg"
+                             class="text-muted ms-3"/>
+                    </div>
+                    <!-- === Acquirer inline form === -->
+                    <t t-if="acquirer.sudo()._should_build_inline_form(is_validation=True)">
+                        <div t-attf-id="o_payment_acquirer_inline_form_{{acquirer.id}}"
+                             name="o_payment_inline_form"
+                             class="card-footer d-none">
+                            <t t-set="inline_form_xml_id"
+                               t-value="acquirer.sudo().inline_form_view_id.xml_id"/>
+                            <!-- === Inline form content (filled by acquirer) === -->
+                            <div t-if="inline_form_xml_id" class="clearfix">
+                                <t t-call="{{inline_form_xml_id}}">
+                                    <t t-set="acquirer_id" t-value="acquirer.id"/>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+                <!-- === Tokens === -->
+                <t t-foreach="tokens" t-as="token">
+                    <div name="o_payment_option_card" class="card-body o_payment_option_card">
+                        <label>
+                            <!-- === Radio button === -->
+                            <!-- Only shown if 'assign_token_route' is set -->
+                            <input name="o_payment_radio"
+                                   type="radio"
+                                   t-att-checked="token.id == default_payment_option_id"
+                                   t-att-class="'' if bool(assign_token_route) else 'd-none'"
+                                   t-att-data-payment-option-id="token.id"
+                                   t-att-data-provider="token.provider"
+                                   data-payment-option-type="token"/>
+                            <!-- === Token name === -->
+                            <span class="payment_option_name" t-esc="token.display_name"/>
+                            <!-- === "V" check mark === -->
+                            <t t-call="payment.verified_token_checkmark"/>
+                            <!-- === "Unpublished" badge === -->
+                            <span t-if="not token.acquirer_id.is_published and token.env.user._is_internal()"
+                                  class="badge text-bg-danger ms-1">
+                                Unpublished
+                            </span>
+                        </label>
+                        <!-- === "Delete" token button === -->
+                        <button name="o_payment_delete_token"
+                                class="btn btn-primary btn-sm float-end">
+                            <i class="fa fa-trash"/> Delete
+                        </button>
+                    </div>
+                    <!-- === Token inline form === -->
+                    <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
+                         name="o_payment_inline_form"
+                         class="card-footer d-none">
+                        <t t-set="token_inline_form_xml_id"
+                           t-value="token.sudo().acquirer_id.token_inline_form_view_id.xml_id"/>
+                        <!-- === Inline form content (filled by acquirer) === -->
+                        <div t-if="token_inline_form_xml_id" class="clearfix">
+                            <t t-call="{{token_inline_form_xml_id}}">
+                                <t t-set="token" t-value="token"/>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <!-- === "Save Payment Method" button === -->
+            <t t-call="{{footer_template_id}}">
+                <t t-set="label">Save Payment Method</t>
+                <t t-set="icon_class" t-value="'fa-plus-circle'"/>
+            </t>
+        </form>
+    </template>
+
+    <!-- Expandable payment icon list -->
+    <template id="icon_list" name="Payment Icon List">
+        <ul class="payment_icon_list float-end list-inline" data-max-icons="3">
+            <t t-set="icon_index" t-value="0"/>
+            <t t-set="MAX_ICONS" t-value="3"/>
+            <!-- === Icons === -->
+            <!-- Only shown if in the first 3 icons -->
+            <t t-foreach="acquirer.payment_icon_ids.filtered(lambda r: r.image_payment_form)" t-as="icon">
+                <li t-attf-class="list-inline-item{{'' if (icon_index &lt; MAX_ICONS) else ' d-none'}}">
+                    <span t-esc="icon.image_payment_form"
+                          t-options="{'widget': 'image', 'alt-field': 'name'}"
+                          data-bs-toggle="tooltip"
+                          t-att-title="icon.name"/>
+                </li>
+                <t t-set="icon_index" t-value="icon_index + 1"/>
+            </t>
+            <t t-if="icon_index >= MAX_ICONS">
+                <!-- === "show more" button === -->
+                <!-- Only displayed if too many payment icons -->
+                <li style="display:block;" class="list-inline-item">
+                    <span class="float-end more_option text-info">
+                        <a name="o_payment_icon_more"
+                           data-bs-toggle="tooltip"
+                           t-att-title="', '.join([icon.name for icon in acquirer.payment_icon_ids[MAX_ICONS:]])">
+                            show more
+                        </a>
+                    </span>
+                </li>
+                <!-- === "show less" button === -->
+                <!-- Only displayed when "show more" is clicked -->
+                <li style="display:block;" class="list-inline-item d-none">
+                    <span class="float-end more_option text-info">
+                        <a name="o_payment_icon_less">show less</a>
+                    </span>
+                </li>
+            </t>
+        </ul>
+    </template>
+
+    <!-- Verified token checkmark -->
+    <template id="verified_token_checkmark" name="Payment Verified Token Checkmark">
+        <t t-if="0" name="payment_test_hook"/>
+        <t t-else="">
+            <i t-if="token.verified" class="fa fa-check text-success"
+                title="This payment method has been verified by our system."
+                role="img"
+                aria-label="Ok"/>
+            <i t-else="" class="fa fa-check text-muted"
+                title="This payment method has not been verified by our system."
+                role="img"
+                aria-label="Not verified"/>
+        </t>
+    </template>
+
+    <!-- Generic footer for payment forms -->
+    <template id="footer" name="Payment Footer">
+        <!-- Variables description:
+            - 'label' - The label for the submit button
+            - 'icon_class' - The Font Awesome icon class (e.g. 'fa-lock') for the submit button
+        -->
+        <div class="float-end mt-2">
+            <button name="o_payment_submit_button"
+                    type="submit"
+                    class="btn btn-primary btn-lg mb8 mt8"
+                    disabled="true"
+                    t-att-data-icon-class="icon_class">
+                <i t-attf-class="fa {{icon_class}}"/> <t t-esc="label"/>
+            </button>
+        </div>
+    </template>
+
+    <!-- Transaction status in portal -->
+    <template id="transaction_status">
+        <!-- Variables description:
+            - 'tx' - The transaction whose status must be displayed
+        -->
+        <t t-if="tx.state == 'draft'">
+            <t t-set="alert_style">info</t>
+            <t t-set="status_message">
+                <p>Your payment has not been processed yet.</p>
+            </t>
+        </t>
+        <t t-elif="tx.state == 'pending'">
+            <t t-set="alert_style">warning</t>
+            <t t-set="status_message" t-value="tx.acquirer_id.sudo().pending_msg"/>
+        </t>
+        <t t-elif="tx.state == 'authorized'">
+            <t t-set="alert_style">success</t>
+            <t t-set="status_message" t-value="tx.acquirer_id.sudo().auth_msg"/>
+        </t>
+        <t t-elif="tx.state == 'done'">
+            <t t-set="alert_style">success</t>
+            <t t-set="status_message" t-value="tx.acquirer_id.sudo().done_msg"/>
+        </t>
+        <t t-elif="tx.state == 'cancel'">
+            <t t-set="alert_style">danger</t>
+            <t t-set="status_message" t-value="tx.acquirer_id.sudo().cancel_msg"/>
+        </t>
+        <t t-elif="tx.state == 'error'">
+            <t t-set="alert_style">danger</t>
+            <t t-set="status_message">
+                <p>An error occurred during the processing of your payment.</p>
+            </t>
+        </t>
+
+        <t t-if="is_html_empty(status_message)" t-set="status_message" t-value="''"/>
+
+        <div t-if="status_message or tx.state_message"
+             id="o_payment_status_alert"
+             t-attf-class="alert alert-{{alert_style}} alert-dismissible">
+            <button class="btn-close" data-bs-dismiss="alert" title="Dismiss"/>
+            <t t-if="status_message" t-out="status_message"/>
+            <t t-if="tx.state_message" t-out="tx.state_message"/>
+        </div>
+    </template>
+
 </odoo>

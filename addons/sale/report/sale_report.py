@@ -1,23 +1,26 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 
 
 class SaleReport(models.Model):
     _name = "sale.report"
-    _description = "Sales Orders Statistics"
+    _description = "Sales Analysis Report"
     _auto = False
     _rec_name = 'date'
     _order = 'date desc'
 
+    @api.model
+    def _get_done_states(self):
+        return ['sale', 'done']
+
     name = fields.Char('Order Reference', readonly=True)
-    date = fields.Datetime('Date Order', readonly=True)
-    confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
-    product_id = fields.Many2one('product.product', 'Product', readonly=True)
+    date = fields.Datetime('Order Date', readonly=True)
+    product_id = fields.Many2one('product.product', 'Product Variant', readonly=True)
     product_uom = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
     product_uom_qty = fields.Float('Qty Ordered', readonly=True)
+    qty_to_deliver = fields.Float('Qty To Deliver', readonly=True)
     qty_delivered = fields.Float('Qty Delivered', readonly=True)
     qty_to_invoice = fields.Float('Qty To Invoice', readonly=True)
     qty_invoiced = fields.Float('Qty Invoiced', readonly=True)
@@ -26,16 +29,17 @@ class SaleReport(models.Model):
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
     price_total = fields.Float('Total', readonly=True)
     price_subtotal = fields.Float('Untaxed Total', readonly=True)
-    amount_to_invoice = fields.Float('Amount To Invoice', readonly=True)
-    amount_invoiced = fields.Float('Amount Invoiced', readonly=True)
-    product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
+    untaxed_amount_to_invoice = fields.Float('Untaxed Amount To Invoice', readonly=True)
+    untaxed_amount_invoiced = fields.Float('Untaxed Amount Invoiced', readonly=True)
+    product_tmpl_id = fields.Many2one('product.template', 'Product', readonly=True)
     categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     nbr = fields.Integer('# of Lines', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Channel', readonly=True, oldname='section_id')
+    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
     country_id = fields.Many2one('res.country', 'Customer Country', readonly=True)
-    commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
+    industry_id = fields.Many2one('res.partner.industry', 'Customer Industry', readonly=True)
+    commercial_partner_id = fields.Many2one('res.partner', 'Customer Entity', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft Quotation'),
         ('sent', 'Quotation Sent'),
@@ -46,99 +50,153 @@ class SaleReport(models.Model):
     weight = fields.Float('Gross Weight', readonly=True)
     volume = fields.Float('Volume', readonly=True)
 
-    def _select(self):
-        select_str = """
-            WITH currency_rate as (%s)
-             SELECT min(l.id) as id,
-                    l.product_id as product_id,
-                    t.uom_id as product_uom,
-                    sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
-                    sum(l.qty_delivered / u.factor * u2.factor) as qty_delivered,
-                    sum(l.qty_invoiced / u.factor * u2.factor) as qty_invoiced,
-                    sum(l.qty_to_invoice / u.factor * u2.factor) as qty_to_invoice,
-                    sum(l.price_total / COALESCE(cr.rate, 1.0)) as price_total,
-                    sum(l.price_subtotal / COALESCE(cr.rate, 1.0)) as price_subtotal,
-                    sum(l.price_reduce * l.qty_to_invoice / COALESCE(cr.rate, 1.0)) as amount_to_invoice,
-                    sum(l.price_reduce * l.qty_invoiced / COALESCE(cr.rate, 1.0)) as amount_invoiced,
-                    count(*) as nbr,
-                    s.name as name,
-                    s.date_order as date,
-                    s.confirmation_date as confirmation_date,
-                    s.state as state,
-                    s.partner_id as partner_id,
-                    s.user_id as user_id,
-                    s.company_id as company_id,
-                    extract(epoch from avg(date_trunc('day',s.date_order)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
-                    t.categ_id as categ_id,
-                    s.pricelist_id as pricelist_id,
-                    s.analytic_account_id as analytic_account_id,
-                    s.team_id as team_id,
-                    p.product_tmpl_id,
-                    partner.country_id as country_id,
-                    partner.commercial_partner_id as commercial_partner_id,
-                    sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
-                    sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume
-        """ % self.env['res.currency']._select_companies_rates()
-        return select_str
+    discount = fields.Float('Discount %', readonly=True)
+    discount_amount = fields.Float('Discount Amount', readonly=True)
+    campaign_id = fields.Many2one('utm.campaign', 'Campaign', readonly=True)
+    medium_id = fields.Many2one('utm.medium', 'Medium', readonly=True)
+    source_id = fields.Many2one('utm.source', 'Source', readonly=True)
 
-    def _from(self):
-        from_str = """
-                sale_order_line l
-                      join sale_order s on (l.order_id=s.id)
-                      join res_partner partner on s.partner_id = partner.id
-                        left join product_product p on (l.product_id=p.id)
-                            left join product_template t on (p.product_tmpl_id=t.id)
-                    left join uom_uom u on (u.id=l.product_uom)
-                    left join uom_uom u2 on (u2.id=t.uom_id)
-                    left join product_pricelist pp on (s.pricelist_id = pp.id)
-                    left join currency_rate cr on (cr.currency_id = pp.currency_id and
-                        cr.company_id = s.company_id and
-                        cr.date_start <= coalesce(s.date_order, now()) and
-                        (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
+    order_id = fields.Many2one('sale.order', 'Order #', readonly=True)
+
+    def _with_sale(self):
+        return ""
+
+    def _select_sale(self):
+        select_ = f"""
+            COALESCE(min(l.id), -s.id) AS id,
+            l.product_id AS product_id,
+            t.uom_id AS product_uom,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS product_uom_qty,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_delivered / u.factor * u2.factor) ELSE 0 END AS qty_delivered,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM((l.product_uom_qty - l.qty_delivered) / u.factor * u2.factor) ELSE 0 END AS qty_to_deliver,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_invoiced / u.factor * u2.factor) ELSE 0 END AS qty_invoiced,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_to_invoice / u.factor * u2.factor) ELSE 0 END AS qty_to_invoice,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_total
+                * {self._case_value_or_one('s.currency_rate')}
+                * {self._case_value_or_one('currency_table.rate')}
+                ) ELSE 0
+            END AS price_total,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_subtotal
+                * {self._case_value_or_one('s.currency_rate')}
+                * {self._case_value_or_one('currency_table.rate')}
+                ) ELSE 0
+            END AS price_subtotal,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.untaxed_amount_to_invoice
+                * {self._case_value_or_one('s.currency_rate')}
+                * {self._case_value_or_one('currency_table.rate')}
+                ) ELSE 0
+            END AS untaxed_amount_to_invoice,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.untaxed_amount_invoiced
+                * {self._case_value_or_one('s.currency_rate')}
+                * {self._case_value_or_one('currency_table.rate')}
+                ) ELSE 0
+            END AS untaxed_amount_invoiced,
+            COUNT(*) AS nbr,
+            s.name AS name,
+            s.date_order AS date,
+            s.state AS state,
+            s.partner_id AS partner_id,
+            s.user_id AS user_id,
+            s.company_id AS company_id,
+            s.campaign_id AS campaign_id,
+            s.medium_id AS medium_id,
+            s.source_id AS source_id,
+            t.categ_id AS categ_id,
+            s.pricelist_id AS pricelist_id,
+            s.analytic_account_id AS analytic_account_id,
+            s.team_id AS team_id,
+            p.product_tmpl_id,
+            partner.country_id AS country_id,
+            partner.industry_id AS industry_id,
+            partner.commercial_partner_id AS commercial_partner_id,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(p.weight * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS weight,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(p.volume * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS volume,
+            l.discount AS discount,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_unit * l.product_uom_qty * l.discount / 100.0
+                * {self._case_value_or_one('s.currency_rate')}
+                * {self._case_value_or_one('currency_table.rate')}
+                ) ELSE 0
+            END AS discount_amount,
+            s.id AS order_id"""
+
+        additional_fields_info = self._select_additional_fields()
+        template = """,
+            %s AS %s"""
+        for fname, query_info in additional_fields_info.items():
+            select_ += template % (query_info, fname)
+
+        return select_
+
+    def _case_value_or_one(self, value):
+        return f"""CASE COALESCE({value}, 0) WHEN 0 THEN 1.0 ELSE {value} END"""
+
+    def _select_additional_fields(self):
+        """Hook to return additional fields SQL specification for select part of the table query.
+
+        :returns: mapping field -> SQL computation of field, will be converted to '_ AS _field' in the final table definition
+        :rtype: dict
         """
-        return from_str
+        return {}
 
-    def _group_by(self):
-        group_by_str = """
-            GROUP BY l.product_id,
-                    l.order_id,
-                    t.uom_id,
-                    t.categ_id,
-                    s.name,
-                    s.date_order,
-                    s.confirmation_date,
-                    s.partner_id,
-                    s.user_id,
-                    s.state,
-                    s.company_id,
-                    s.pricelist_id,
-                    s.analytic_account_id,
-                    s.team_id,
-                    p.product_tmpl_id,
-                    partner.country_id,
-                    partner.commercial_partner_id
+    def _from_sale(self):
+        return """
+            sale_order_line l
+            RIGHT OUTER JOIN sale_order s ON s.id=l.order_id
+            JOIN res_partner partner ON s.partner_id = partner.id
+            LEFT JOIN product_product p ON l.product_id=p.id
+            LEFT JOIN product_template t ON p.product_tmpl_id=t.id
+            LEFT JOIN uom_uom u ON u.id=l.product_uom
+            LEFT JOIN uom_uom u2 ON u2.id=t.uom_id
+            JOIN {currency_table} ON currency_table.company_id = s.company_id
+            """.format(
+            currency_table=self.env['res.currency']._get_query_currency_table(
+                {
+                    'multi_company': True,
+                    'date': {'date_to': fields.Date.today()}
+                }),
+            )
+
+    def _where_sale(self):
+        return """
+            l.display_type IS NULL"""
+
+    def _group_by_sale(self):
+        return """
+            l.product_id,
+            l.order_id,
+            t.uom_id,
+            t.categ_id,
+            s.name,
+            s.date_order,
+            s.partner_id,
+            s.user_id,
+            s.state,
+            s.company_id,
+            s.campaign_id,
+            s.medium_id,
+            s.source_id,
+            s.pricelist_id,
+            s.analytic_account_id,
+            s.team_id,
+            p.product_tmpl_id,
+            partner.country_id,
+            partner.industry_id,
+            partner.commercial_partner_id,
+            l.discount,
+            s.id,
+            currency_table.rate"""
+
+    def _query(self):
+        with_ = self._with_sale()
+        return f"""
+            {"WITH" + with_ + "(" if with_ else ""}
+            SELECT {self._select_sale()}
+            FROM {self._from_sale()}
+            WHERE {self._where_sale()}
+            GROUP BY {self._group_by_sale()}
+            {")" if with_ else ""}
         """
-        return group_by_str
 
-    @api.model_cr
-    def init(self):
-        # self._table = sale_report
-        tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
-            %s
-            FROM ( %s )
-            %s
-            )""" % (self._table, self._select(), self._from(), self._group_by()))
-
-class SaleOrderReportProforma(models.AbstractModel):
-    _name = 'report.sale.report_saleproforma'
-
-    @api.multi
-    def get_report_values(self, docids, data=None):
-        docs = self.env['sale.order'].browse(docids)
-        return {
-            'doc_ids': docs.ids,
-            'doc_model': 'sale.order',
-            'docs': docs,
-            'proforma': True
-        }
+    @property
+    def _table_query(self):
+        return self._query()

@@ -1,18 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_membership
+# 	* website_membership
 # 
 # Translators:
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
+# Martin Trigaux, 2019
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2019
+# Jon Perez <jop@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2016\n"
+"POT-Creation-Date: 2019-08-12 11:33+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Jon Perez <jop@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +22,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.index
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+msgid ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+msgstr ""
+"<span class=\"fa fa-external-link\" role=\"img\" aria-label=\"External "
+"link\" title=\"External link\"/>"
+
+#. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "All"
 msgstr "Todos"
 
@@ -32,12 +42,17 @@ msgid "All Countries"
 msgstr "Todos los países"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.index
+#: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "Associations"
 msgstr "Asociaciones"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.index
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
+msgid "Close"
+msgstr "Cerrar"
+
+#. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "Find a business partner"
 msgstr "Encontrar un socio de negocios"
 
@@ -48,37 +63,37 @@ msgid "Free Members"
 msgstr "Miembros Gratis"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.opt_index_country
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_country
 msgid "Location"
 msgstr "Ubicación"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.footer_custom
-#: model:ir.ui.view,arch_db:website_membership.index
+#: model_terms:ir.ui.view,arch_db:website_membership.index
+#: model:website.menu,name:website_membership.menu_members
 msgid "Members"
 msgstr "Socios"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.index
+#: model:ir.model,name:website_membership.model_membership_membership_line
+msgid "Membership Line"
+msgstr "Linea de Membresia"
+
+#. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "No result found."
 msgstr "No se han encontrado resultados."
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.index
+#: model_terms:ir.ui.view,arch_db:website_membership.index
 msgid "Our Members Directory"
 msgstr "Nuestro directorio de miembros"
 
 #. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.opt_index_google_map
+#: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
 msgid "World Map"
 msgstr "Mapa mundial"
 
 #. module: website_membership
-#: model:ir.model,name:website_membership.model_membership_membership_line
-msgid "membership.membership_line"
-msgstr "membership.membership_line"
-
-#. module: website_membership
-#: model:ir.ui.view,arch_db:website_membership.index
-msgid "pull-left"
-msgstr "pull-left"
+#: model_terms:ir.ui.view,arch_db:website_membership.index
+msgid "float-left"
+msgstr "Flotar hacia izquierda"

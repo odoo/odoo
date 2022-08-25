@@ -8,7 +8,7 @@
 {
     'name': 'Luxembourg - Accounting',
     'version': '2.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Luxembourg.
 ======================================================================
@@ -32,18 +32,22 @@ Notes:
     ],
     'data': [
         # basic accounting data
-        'data/account_financial_report_data.xml',
-        'data/account_financial_report_abr_data.xml',
         'data/l10n_lu_chart_data.xml',
-        'data/account.account.template-2011.csv',
-        'data/account.account.tag.csv',
+        'data/account.account.template.csv',
+        'data/account.group.template.csv',
+        'data/account_tax_report_line.xml',
         'data/account.tax.group.csv',
-        'data/account.tax.template-2015.csv',
+        'data/account_tax_template_2015.xml',
         'data/account.fiscal.position.template-2011.csv',
         'data/account.fiscal.position.tax.template-2015.csv',
+        'data/account_reconcile_model_template_data.xml',
         # configuration wizard, views, reports...
         'data/account.chart.template.csv',
         'data/account_chart_template_data.xml',
     ],
-    'post_init_hook': '_preserve_tag_on_taxes',
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'post_init_hook': '_post_init_hook',
+    'license': 'LGPL-3',
 }

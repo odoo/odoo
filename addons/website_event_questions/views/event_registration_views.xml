@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_registration_view_form_inherit_question" model="ir.ui.view">
+        <field name="name">event.registration.view.form.inherit.question</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_form" />
+        <field name="arch" type="xml">
+            <sheet position="inside">
+                <notebook>
+                    <page string="Questions" name="questions">
+                        <field name="registration_answer_ids" widget="one2many">
+                            <tree editable="bottom">
+                                <field name="event_id" invisible="1" />
+                                <field name="question_id" domain="[('event_id', '=', event_id)]" options="{'no_create': True}" />
+                                <field name="question_type" string="Type" />
+                                <field name="value_answer_id"
+                                    attrs="{'invisible': [('question_type', '!=', 'simple_choice')]}"
+                                    domain="[('question_id', '=', question_id)]" options="{'no_create': True}"/>
+                                <field name="value_text_box" attrs="{'invisible': [('question_type', '!=', 'text_box')]}" />
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </sheet>
+        </field>
+    </record>
+
+    <record id="event_registration_view_tree" model="ir.ui.view">
+        <field name="name">event.registration.view.tree.inherit.website.event.questions</field>
+        <field name="model">event.registration</field>
+        <field name="inherit_id" ref="event.view_event_registration_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="registration_answer_ids" string="Selected Answers" widget="many2many_tags" optional="hide" readonly="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,20 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_slides
+# 	* website_slides
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Eric Geens <ericgeens@yahoo.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Cas Vissers <casvissers@brahoo.nl>, 2016
+# Eric Geens <ericgeens@yahoo.com>, 2019
+# Cas Vissers <casvissers@brahoo.nl>, 2019
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2019
+# Thijs van Oers <thijsvanoers@yahoo.com>, 2019
+# Martin Trigaux, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Charles Vervaecke <cvk@odoo.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:27+0000\n"
-"PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"POT-Creation-Date: 2019-09-27 09:12+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Charles Vervaecke <cvk@odoo.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,75 +27,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_slides
-#: model:mail.template,body_html:website_slides.slide_template_shared
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>\n"
-"    ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
-"    </a>\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
-"        View <strong>${object.name}</strong>\n"
-"    </a>\n"
-"</p>\n"
-msgstr ""
-"\n"
-"<p>Hallo,</p>\n"
-"<p> ${user.name} deelde het ${object.slide_type} <strong>${object.name}</strong> met u! </p> <p style=\"text-align: center; margin-top: 10px;\"> <a href=\"${object.website_url}\"> <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\"> </a> </p> <p style=\"text-align: center; margin-top: 10px;\"> <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #a24689; border: 1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\"> Bekijk <strong>${object.name}</strong> </a> </p>\n"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completion
+msgid "# Completed Slides"
+msgstr "# Voltooide slides"
 
 #. module: website_slides
-#: model:mail.template,body_html:website_slides.slide_template_published
-msgid ""
-"\n"
-"<p>Hello,</p>\n"
-"<p>\n"
-"    A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
-"    </a>\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
-"        View <strong>${object.name}</strong>\n"
-"    </a>\n"
-"</p>\n"
-msgstr ""
-"\n"
-"<p>Hallo,</p>\n"
-"<p>\n"
-"    Een nieuwe ${object.slide_type} <strong>${object.name}</strong> is gepubliceerd op ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
-"    </a>\n"
-"</p>\n"
-"<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
-"        Bekijk <strong>${object.name}</strong>\n"
-"    </a>\n"
-"</p>\n"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_count_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__count_views
 msgid "# Views"
 msgstr "# Weergaven"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_views
-msgid "# of Embedded Views"
-msgstr "# ingesloten waargaven"
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__public_views
+msgid "# of Public Views"
+msgstr "# publieke weergaven"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_views
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_views
 msgid "# of Website Views"
 msgstr "# weergaven op website"
 
@@ -101,353 +52,1157 @@ msgid "${user.name} shared a ${object.slide_type} with you!"
 msgstr "${user.name} deelde een ${object.slide_type} met u!"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "&times;"
+msgstr "&times;"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
+msgid "50%"
+msgstr "50%"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
+msgid "<b>(empty)</b>"
+msgstr "<b>(leeg)</b>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<b>Order by</b>"
+msgstr "<b>Sorteren op</b>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
+msgid "<b>Uncategorized</b>"
+msgstr "<b>Niet gecategoriseerd</b>"
+
+#. module: website_slides
+#: model:mail.template,body_html:website_slides.mail_template_slide_channel_invite
 msgid ""
-"(Un)archiving a channel automatically (un)archives its slides. Do you want "
-"to proceed?"
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        You have been invited to join a new course: ${object.channel_id.name}.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${(object.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Click here to start the course.\n"
+"            </a>\n"
+"        </div>\n"
+"        Enjoy this exclusive content !\n"
+"    </p>\n"
+"</div>\n"
+"            "
 msgstr ""
-"(On)archiveren van een kanaal (on)archiveert automatisch de dia's. Wilt u "
-"verder gaan?"
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Beste ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        U bent uitgenodigd om deel te nemen aan een nieuwe opleiding: ${object.channel_id.name}.\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${(object.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                Klik hier om de nieuwe opleiding te starten.\n"
+"            </a>\n"
+"        </div>\n"
+"        Geniet van deze exclusieve content !\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_search
-msgid ". Please try again with different keywords."
-msgstr ". Probeer a.u.b opnieuw met andere sleutelwoorden."
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.embed_slide
+#: model:mail.template,body_html:website_slides.slide_template_shared
 msgid ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hello<br/><br/>\n"
+"                        ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\">\n"
+"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View <strong>${object.name}</strong></a>\n"
+"                        </div>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> E-mail</b>"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hallo<br/><br/>\n"
+"                        ${user.name} heeft ${object.slide_type} <strong>${object.name}</strong> met u gedeeld!\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\">\n"
+"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${(object.website_url + '?fullscreen=1') if ctx['fullscreen'] else object.website_url | safe}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Bekijk <strong>${object.name}</strong></a>\n"
+"                        </div>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.embed_slide
+#: model:mail.template,body_html:website_slides.slide_template_published
 msgid ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hello<br/><br/>\n"
+"                        There is something new in the course <strong>${object.channel_id.name}</strong> you are following:<br/><br/>\n"
+"                        <center><strong>${object.name}</strong></center>\n"
+"                        % if object.image_1024\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\">\n"
+"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        % endif\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View content</a>\n"
+"                        </div>\n"
+"                        Enjoy this exclusive content!\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Insluiten</b>"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hallo<br/><br/>\n"
+"                        Er is iets nieuws in de cursus <strong>${object.channel_id.name}</strong> die u volgt:<br/><br/>\n"
+"                        <center><strong>${object.name}</strong></center>\n"
+"                        % if object.image_1024\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\">\n"
+"                                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        % endif\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"${object.website_url}\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Bekijk inhoud</a>\n"
+"                        </div>\n"
+"                        Geniet van deze exclusieve inhoud!\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.embed_slide
-msgid ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
-msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
-"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Delen</b>"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.home
-msgid "<b>Share:</b>"
-msgstr "<b>Deel:</b>"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<i class=\"fa fa-align-justify\"/> Transcript"
-msgstr "<i class=\"fa fa-align-justify\"/> Transcriptie"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.home
-msgid "<i class=\"fa fa-arrow-right\"/> See all"
-msgstr "<i class=\"fa fa-arrow-right\"/> Bekijk alle"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<i class=\"fa fa-bar-chart\"/> Statistics"
 msgstr "<i class=\"fa fa-bar-chart\"/> Statistieken"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<i class=\"fa fa-circle-o\"/> Website Views"
-msgstr "<i class=\"fa fa-circle-o\"/> Websiteweergaven"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.home
-#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
-msgid "<i class=\"fa fa-cloud-upload\"/> Upload"
-msgstr "<i class=\"fa fa-cloud-upload\"/> Uploaden"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<i class=\"fa fa-code\"/> Embeded Views"
-msgstr "<i class=\"fa fa-code\"/> Ingesloten weergaven"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<i class=\"fa fa-comments-o\"/> Comments"
-msgstr "<i class=\"fa fa-comments-o\"/> Opmerkingen"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<i class=\"fa fa-envelope-o\"/>\n"
-"                        Send Email"
+"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">Lessons</span>"
 msgstr ""
-"<i class=\"fa fa-envelope-o\"/>\n"
-"                        E-mail sturen"
+"<i class=\"fa fa-bars\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">Lessen</span>"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.embed_slide
-#: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<i class=\"fa fa-exclamation-triangle\"/> This"
-msgstr "<i class=\"fa fa-exclamation-triangle\"/> Deze"
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"<i class=\"fa fa-chevron-left mr-2\"/> <span class=\"d-none d-sm-inline-"
+"block\">Prev</span>"
+msgstr ""
+"<i class=\"fa fa-chevron-left mr-2\"/> <span class=\"d-none d-sm-inline-"
+"block\">Vorige</span>"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "<i class=\"fa fa-circle-o-notch fa-spin mr-2\"/><b>Loading...</b>"
+msgstr "<i class=\"fa fa-circle-o-notch fa-spin mr-2\"/><b>Laden...</b>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"fa fa-clock-o mr-2\" aria-label=\"Duration\" role=\"img\" "
+"title=\"Duration\"/>"
+msgstr "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Duur\" role=\"img\" title=\"Duur\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<i class=\"fa fa-cloud-upload mr-1\"/>Upload new content"
+msgstr "<i class=\"fa fa-cloud-upload mr-1\"/>Upload de nieuwe inhoud"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "<i class=\"fa fa-code\"/> Embed"
+msgstr "<i class=\"fa fa-code\"/>Insluiten"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"fa fa-comments-o\"/> Comments ("
+msgstr "<i class=\"fa fa-comments-o\"/> Opmerkingen ("
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"<i class=\"fa fa-desktop mr-2\"/>\n"
+"                <span class=\"d-none d-sm-inline-block\">Fullscreen</span>"
+msgstr ""
+"<i class=\"fa fa-desktop mr-2\"/>\n"
+"                <span class=\"d-none d-sm-inline-block\">Fullscreen</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "<i class=\"fa fa-envelope\"/> Email"
+msgstr "<i class=\"fa fa-envelope\"/> E-mail"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid "<i class=\"fa fa-envelope-o\"/> Send Email"
+msgstr "<i class=\"fa fa-envelope-o\"/> Verzend e-mail"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "<i class=\"fa fa-eraser mr-1\"/>Clear filters"
+msgstr "<i class=\"fa fa-eraser mr-1\"/>Filters wissen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+msgid "<i class=\"fa fa-eraser\"/> Clear filters"
+msgstr "<i class=\"fa fa-eraser\"/>Wis filters"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-"
+"label=\"Attention\" title=\"Attention\"/> This document is private."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\" role=\"img\" aria-label=\"Opgelet\" "
+"title=\"Opgelet\"/>Dit document is privé."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid "<i class=\"fa fa-eye mr-2\" aria-label=\"Views\" role=\"img\" title=\"Views\"/>"
+msgstr "<i class=\"fa fa-eye mr-2\" aria-label=\"Views\" role=\"img\" title=\"Views\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"fa fa-file-code-o mr-2\" aria-label=\"Webpage\" role=\"img\" "
+"title=\"Webpage\"/>"
+msgstr ""
+"<i class=\"fa fa-file-code-o mr-2\" aria-label=\"Webpagina\" role=\"img\" "
+"title=\"Webpagina\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"fa fa-file-image-o mr-2\" aria-label=\"Infographic\" role=\"img\""
+" title=\"Infographic\"/>"
+msgstr ""
+"<i class=\"fa fa-file-image-o mr-2\" aria-label=\"Infographic\" role=\"img\""
+" title=\"Infographic\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"fa fa-file-pdf-o mr-2\" aria-label=\"Document\" role=\"img\" "
+"title=\"Document\"/>"
+msgstr ""
+"<i class=\"fa fa-file-pdf-o mr-2\" aria-label=\"Document\" role=\"img\" "
+"title=\"Document\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"fa fa-file-video-o mr-2\" aria-label=\"Video\" role=\"img\" "
+"title=\"Video\"/>"
+msgstr ""
+"<i class=\"fa fa-file-video-o mr-2\" aria-label=\"Video\" role=\"img\" "
+"title=\"Video\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid "<i class=\"fa fa-flag mr-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/>"
+msgstr "<i class=\"fa fa-flag mr-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
+msgid "<i class=\"fa fa-flag text-warning\"/> Quiz"
+msgstr "<i class=\"fa fa-flag text-warning\"/> Enquête"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen_sidebar_category
+msgid "<i class=\"fa fa-flag-checkered text-warning mr-2\"/>Quiz"
+msgstr "<i class=\"fa fa-flag-checkered text-warning mr-2\"/>Quiz"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
+msgid "<i class=\"fa fa-folder-o mr-1\"/><span>Add Section</span>"
+msgstr "<i class=\"fa fa-folder-o mr-1\"/><span>Sectie Toevoegen</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "<i class=\"fa fa-graduation-cap mr-1\"/>All courses"
+msgstr "<i class=\"fa fa-graduation-cap mr-1\"/>Alle opleidingen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid ""
+"<i class=\"fa fa-home d-md-none\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">Back to course</span>"
+msgstr ""
+"<i class=\"fa fa-home d-md-none\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">Terug naar opleiding</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+msgid ""
+"<i class=\"fa fa-home\"/>\n"
+"                                            Course"
+msgstr ""
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<i class=\"fa fa-home\"/> About"
 msgstr "<i class=\"fa fa-home\"/> Over"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
-msgid "<i class=\"fa fa-home\"/> Home"
-msgstr "<i class=\"fa fa-home\"/> Home"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+msgid "<i class=\"fa fa-home\"/> Course"
+msgstr "<i class=\"fa fa-home\"/>Opleiding"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
-"                                        The social sharing module will be unlocked when a moderator will allow your publication."
+"                    The social sharing module will be unlocked when a moderator will allow your publication."
 msgstr ""
 "<i class=\"fa fa-info-circle\"/>\n"
-"                                        De module voor delen op sociale media wordt ontgrendeld van zodra een moderator uw publicatie vrijgeeft."
+"De module voor delen op sociale media wordt ontgrendeld van zodra een moderator toestaat om te publiceren."
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<i class=\"fa fa-play\"/> Total Views"
-msgstr "<i class=\"fa fa-play\"/> Totale weergaven"
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid ""
+"<i class=\"fa fa-pencil\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">Write a review</span>"
+msgstr ""
+"<i class=\"fa fa-pencil\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">Schrijf een review</span>"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
+msgid ""
+"<i class=\"fa fa-plus mr-1\"/> <span class=\"d-none d-md-inline-block\">Add "
+"Content</span>"
+msgstr ""
+"<i class=\"fa fa-plus mr-1\"/> <span class=\"d-none d-md-inline-"
+"block\">Inhoud Toevoegen</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
+msgid "<i class=\"fa fa-plus mr-1\"/><span>Add Content</span>"
+msgstr "<i class=\"fa fa-plus mr-1\"/><span>Inhoud Toevoegen</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
+msgid ""
+"<i class=\"fa fa-question mr-2\" aria-label=\"Number of Questions\" "
+"role=\"img\" title=\"Number of Questions\"/>"
+msgstr ""
+"<i class=\"fa fa-question mr-2\" aria-label=\"Aantal Vragen\" role=\"img\" "
+"title=\"Aantal Vragen\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<i class=\"fa fa-share-alt\"/> Share"
-msgstr "<i class=\"fa fa-share-alt\"/> Deel"
+msgstr "<i class=\"fa fa-share-alt\"/> Delen"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "<i class=\"fa fa-spinner fa-spin\"/> Loading ..."
-msgstr "<i class=\"fa fa-spinner fa-spin\"/> Laden..."
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<i class=\"fa fa-thumbs-down\"/> Dislikes"
-msgstr "<i class=\"fa fa-thumbs-down\"/> Vind-ik-niet-leuks"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<i class=\"fa fa-thumbs-up\"/> Likes"
-msgstr "<i class=\"fa fa-thumbs-up\"/> Vind-ik-leuks"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
+"<i class=\"fa fa-share-alt\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">Share</span>"
 msgstr ""
-"<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
+"<i class=\"fa fa-share-alt\"/><span class=\"d-none d-md-inline-block "
+"ml-1\">Delen</span>"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+msgid "<i class=\"fa fa-share-square fa-fw\"/> Share"
+msgstr "<i class=\"fa fa-share-square fa-fw\"/> Delen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+msgid "<i class=\"fa fa-share-square\"/> Share"
+msgstr "<i class=\"fa fa-share-square\"/>Delen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
 msgid ""
-"<span class=\"badge\" id=\"google-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
+"<i class=\"fa fa-sign-out d-md-none\"/><span class=\"d-none d-md-inline-"
+"block ml-1\">Exit Fullscreen</span>"
 msgstr ""
-"<span class=\"badge\" id=\"google-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
+"<i class=\"fa fa-sign-out d-md-none\"/><span class=\"d-none d-md-inline-"
+"block ml-1\">Fullscreen verlaten</span>"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid ""
-"<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
+"<i class=\"fa fa-thumbs-down fa-1x\" role=\"img\" aria-label=\"Dislikes\" "
+"title=\"Dislikes\"/>"
 msgstr ""
-"<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
+"<i class=\"fa fa-thumbs-down fa-1x\" role=\"img\" aria-label=\"Niet leuk\" "
+"title=\"Niet leuk\"/>"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid ""
-"<span class=\"badge\" id=\"total-share\">0</span>\n"
-"                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<i class=\"fa fa-thumbs-up fa-1x\" role=\"img\" aria-label=\"Likes\" title=\"Likes\"/>"
 msgstr ""
-"<span class=\"badge\" id=\"total-share\">0</span>\n"
-"                                                    <i class=\"fa fa-share-alt\"/> Gedeeld op sociale media"
+"<i class=\"fa fa-thumbs-up fa-1x\" role=\"img\" aria-label=\"Vind ik leuks\""
+" title=\"Vind ik leuks\"/>"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz
+msgid "<span aria-hidden=\"true\">&amp;times;</span>"
+msgstr "<span aria-hidden=\"true\">&amp;times;</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
+msgid "<span class=\"badge badge-danger\">Unpublished</span>"
+msgstr "<span class=\"badge badge-danger\">Niet gepubliceerd</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
+msgid "<span class=\"badge badge-info\">Free preview</span>"
+msgstr "<span class=\"badge badge-info\">Gratis preview</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_card
 msgid ""
-"<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
+"<span class=\"badge badge-pill badge-success pull-right py-1 px-2\"><i "
+"class=\"fa fa-check\"/> Completed</span>"
 msgstr ""
-"<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
+"<span class=\"badge badge-pill badge-success pull-right py-1 px-2\"><i "
+"class=\"fa fa-check\"/> Voltooid</span>"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_email
-msgid "<span class=\"help-block\">Send presentation through email</span>"
-msgstr "<span class=\"help-block\">Presentatie versturen via e-mail</span>"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_media
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 msgid ""
-"<span class=\"help-block\">Use permanent link to share in social "
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-check\"/> "
+"Completed</span>"
+msgstr ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-check\"/> "
+"Voltooid</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid ""
+"<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"fa fa-"
+"chevron-right ml-2\"/>"
+msgstr ""
+"<span class=\"d-none d-sm-inline-block\">Volgende</span> <i class=\"fa fa-"
+"chevron-right ml-2\"/>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-arrow-right\"/>\n"
+"                                    Create a Google Project and Get a Key"
+msgstr ""
+"<span class=\"fa fa-arrow-right\"/>\n"
+"                                    Maak een Google project en krijg een sleutel"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
+msgid "<span class=\"fa fa-clipboard\"> Copy Text</span>"
+msgstr "<span class=\"fa fa-clipboard\">Tekst Kopiëren</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
+msgid "<span class=\"font-weight-bold text-muted mr-2\">Current rank:</span>"
+msgstr "<span class=\"font-weight-bold text-muted mr-2\">Huidige rank:</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_main
+msgid "<span class=\"font-weight-normal\">Last update:</span>"
+msgstr "<span class=\"font-weight-normal\">Laatste update:</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
+msgid ""
+"<span class=\"form-text text-muted d-block w-100\">Send presentation through"
+" email</span>"
+msgstr ""
+"<span class=\"form-text text-muted d-block w-100\">Verstuur presentatie via "
+"e-mail</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
+msgid ""
+"<span class=\"form-text text-muted\">Use permanent link to share in social "
 "media</span>"
 msgstr ""
-"<span class=\"help-block\">Gebruik permanente koppeling om te delen via "
+"<span class=\"form-text text-muted\">Gebruik permanente link om te delen op "
 "sociale media</span>"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "<span class=\"text-muted small\">views</span>"
-msgstr "<span class=\"text-muted small\">weergaven</span>"
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "<span class=\"ml-2\">Hours</span>"
+msgstr "<span class=\"ml-2\">Uren</span>"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
-msgid "<span class=\"text-muted\">Sort by:</span>"
-msgstr "<span class=\"text-muted\">Sorteren op:</span>"
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Slides</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"o_form_label\">Presentaties</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"De hier ingestelde waarden zijn website-specifiek.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_slides
-#: sql_constraint:slide.tag:0
+#: model_terms:ir.ui.view,arch_db:website_slides.res_partner_view_form
+msgid "<span class=\"o_stat_text\">Courses</span>"
+msgstr "<span class=\"o_stat_text\">Cursussen</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training
+msgid "<span class=\"p-2\">Course content</span>"
+msgstr "<span class=\"p-2\">Inhoud opleiding</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<span class=\"text-muted font-weight-bold mr-3\">Rating</span>"
+msgstr "<span class=\"text-muted font-weight-bold mr-3\">Beoordeling</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "<span class=\"text-muted\">Attendees</span>"
+msgstr "<span class=\"text-muted\">Deelnemers</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "<span class=\"text-muted\">Contents</span>"
+msgstr "<span class=\"text-muted\">Inhoud</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "<span name=\"done_members_count_label\" class=\"text-muted\">Finished</span>"
+msgstr "<span name=\"done_members_count_label\" class=\"text-muted\">Afgewerkt</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "<span name=\"members_done_count_label\" class=\"o_stat_text\">Finished</span>"
+msgstr ""
+"<span name=\"members_done_count_label\" "
+"class=\"o_stat_text\">Afgewerkt</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "<span name=\"total_slides_label\" class=\"o_stat_text\">Contents</span>"
+msgstr "<span name=\"total_slides_label\" class=\"o_stat_text\">Inhoud</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "<span> hours</span>"
+msgstr "<span> uren</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+msgid "<span>&amp;times;</span>"
+msgstr "<span>&amp;times;</span>"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "<span>XP</span>"
+msgstr "<span>XP</span>"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
+#, python-format
+msgid "<strong>Thank you!</strong> Mail has been sent."
+msgstr "<strong>Dank u!</strong> Mail is verstuurd."
+
+#. module: website_slides
+#: model:ir.model.constraint,message:website_slides.constraint_slide_slide_exclusion_html_content_and_url
+msgid ""
+"A slide is either filled with a document url or HTML content. Not both."
+msgstr ""
+"Een slide wordt ingevuld via een document URL of HTML inhoud. Niet beide."
+
+#. module: website_slides
+#: model:ir.model.constraint,message:website_slides.constraint_slide_tag_slide_tag_unique
 msgid "A tag must be unique!"
 msgstr "Een label moet uniek zijn!"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "API Key"
 msgstr "API-code"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model:ir.model,name:website_slides.model_res_groups
+msgid "Access Groups"
+msgstr "Toegangsgroepen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Access Rights"
+msgstr "Toegangsrechten"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction
+msgid "Action Needed"
+msgstr "Actie gevraagd"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Actions"
 msgstr "Acties"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__active
 msgid "Active"
 msgstr "Actief"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_slide_comment
+msgid "Add Comment"
+msgstr "Opmerking Toevoegen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Add Content"
+msgstr "Inhoud toevoegen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_review
+msgid "Add Review"
+msgstr "Review Toevoegen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Add Section"
+msgstr "Sectie toevoegen"
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action
+msgid "Add a new lesson"
+msgstr "Voeg een nieuwe les toe"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_category_add.js:0
+#, python-format
+msgid "Add a section"
+msgstr "Sectie toevoegen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Add existing contacts..."
+msgstr "Voeg bestaande contacten toe..."
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
+msgid ""
+"Add quizzes at the end of your lessons to evaluate what your students "
+"understood."
+msgstr ""
+"Voeg quizzes toe aan het einde van uw lessen om te evalueren wat uw "
+"studenten hebben geleerd."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+msgid "All Courses"
+msgstr "Alle opleidingen"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__partner_ids
+msgid "All members of the channel."
+msgstr "Alle leden van het kanaal."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
+#, python-format
+msgid "All questions must be answered !"
+msgstr "Alle vragen moeten beantwoord worden!"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_preview
+msgid "Allow Preview"
+msgstr "Laat Preview Toe"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Allow Rating"
+msgstr "Laat Rating Toe"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__allow_comment
+msgid "Allow rating on Course"
+msgstr "Sta beoordeling op opleiding toe"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#, python-format
+msgid "Allow review on Course"
+msgstr "Sta beoordeling toe op opleiding"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_allow_comment
+msgid "Allows comment"
+msgstr "Laat Opmerking Toe"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#, python-format
+msgid "Already installing \"%s\"."
+msgstr "Reeds \"%s\" aan het installeren."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Amazing!"
+msgstr "Geweldig!"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_answer__text_value
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__answer_ids
+msgid "Answer"
+msgstr "Antwoord"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_answer
+msgid "Answer for a slide question"
+msgstr "Antwoord voor een slide vraag"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__category
+msgid "Appears in"
+msgstr "Komt voor in"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__visibility
+msgid ""
+"Applied directly as ACLs. Allow to hide channels and their content for non "
+"members."
+msgstr ""
+"Direct toegepast als ACL's. Sta het verbergen van kanalen en hun inhoud toe "
+"voor niet leden."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_slide_archive.js:0
+#, python-format
+msgid "Archive"
+msgstr "Archief"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_slide_archive.js:0
+#, python-format
+msgid "Archive Slide"
+msgstr "Archiveer slide"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Archived"
 msgstr "Gearchiveerd"
 
 #. module: website_slides
-#: selection:slide.slide,download_security:0
-msgid "Authentified Users Only"
-msgstr "Enkel geauthentificeerde gebruikers"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_management.xml:0
+#, python-format
+msgid "Are you sure you want to archive this slide ?"
+msgstr "Bent u zeker dat u deze slide wilt archiveren?"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_5
-msgid "Awesome Timesheet by Odoo"
-msgstr "Geweldige urenstaat door Odoo"
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Attachment"
+msgstr "Bijlage"
 
 #. module: website_slides
-#: model:slide.tag,name:website_slides.tag1
-msgid "CMS"
-msgstr "CMS"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_attachment_count
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_attachment_count
+msgid "Attachment Count"
+msgstr "Aantal bijlagen"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see
-msgid "Can See"
-msgstr "Kan bekijken"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__attachment_ids
+msgid "Attachments"
+msgstr "Bijlagen"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_upload
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__attempts_avg
+msgid "Attempts Avg"
+msgstr "Gemiddelde Pogingen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__attempts_count
+msgid "Attempts Count"
+msgstr "Aantal Pogingen"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.slide_channel_partner_action
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Attendees"
+msgstr "Deelnemers"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_done_count
+msgid "Attendees Done Count"
+msgstr "Deelnemers gereed teller"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_count
+msgid "Attendees count"
+msgstr "Deelnemers teller"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "Attendees of %s"
+msgstr "Deelnemers aan %s"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__author_id
+msgid "Author"
+msgstr "Auteur"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_group_ids
+msgid "Auto Enroll Groups"
+msgstr "Automatisch groepen inschrijven"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_comment
+msgid "Can Comment"
+msgstr "Kan reageren"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_publish
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__can_publish
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__can_publish
+msgid "Can Publish"
+msgstr "Kan publiceren"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_review
+msgid "Can Review"
+msgstr "Kan beoordelelen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_upload
 msgid "Can Upload"
 msgstr "Kan uploaden"
 
 #. module: website_slides
-#: model:ir.actions.act_window,name:website_slides.action_ir_slide_category
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_category_ids
-#: model:ir.ui.menu,name:website_slides.menu_action_ir_slide_category
-#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_vote
+msgid "Can Vote"
+msgstr "Kan stemmen"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_slide_archive.js:0
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+#, python-format
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_category_ids
 msgid "Categories"
 msgstr "Categorieën"
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:250
-#: code:addons/website_slides/static/src/xml/website_slides.xml:54
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_category_id
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
-#: model:ir.ui.view,arch_db:website_slides.view_slides_category_form
-#: model:ir.ui.view,arch_db:website_slides.view_slides_category_tree
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Category"
 msgstr "Categorie"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
-#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
-#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_survey
+msgid "Certifications"
+msgstr "Certificeringen"
+
+#. module: website_slides
+#: model:gamification.badge,name:website_slides.badge_data_certification
+#: model:gamification.challenge.line,name:website_slides.badge_data_certification_challenge_line_0
+#: model:gamification.goal.definition,name:website_slides.badge_data_certification_goal
+msgid "Certified Knowledge"
+msgstr "Gecertificeerde kennis"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__channel_id
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Channel"
 msgstr "Kanaal"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_group_ids
-msgid "Channel Groups"
-msgstr "Kanaalgroepen"
+#: model:ir.model,name:website_slides.model_slide_channel_partner
+msgid "Channel / Partners (Members)"
+msgstr "Kanaal / Partners (leden)"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.home
-msgid "Channel Settings"
-msgstr "Instellingen kanaal"
+#: model:ir.model,name:website_slides.model_slide_channel_invite
+msgid "Channel Invitation Wizard"
+msgstr "Kanaal uitnodiging wizard"
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:170
-#, python-format
-msgid ""
-"Channel contains the given title, please change before Save or Publish."
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
+msgid "Channel Member"
+msgstr "Kanaallid"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_type
+msgid "Channel type"
+msgstr "Kanaalsoort"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel_partner__completed
+msgid "Channel validated, even if slides / lessons are added once done."
 msgstr ""
-"Kanaal bevat de gegeven naam, wijzig aub voor het opslaan of publiceren."
+"Kanaal gevalideerd, zelfs als slides / opleidingen worden toegevoegd nadat "
+"ze gedaan zijn."
 
 #. module: website_slides
-#: model:ir.model,name:website_slides.model_slide_channel
-msgid "Channel for Slides"
-msgstr "Kanaal voor presentaties"
+#: model:ir.model,name:website_slides.model_slide_channel_tag
+#: model:ir.model,name:website_slides.model_slide_channel_tag_group
+msgid "Channel/Course tags"
+msgstr "Kanaal/Opleiding labels"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid "Channel visibility"
-msgstr "Zichtbaarheid kanaal"
-
-#. module: website_slides
-#: model:ir.actions.act_url,name:website_slides.action_open_channels
-#: model:ir.actions.act_window,name:website_slides.action_slide_channels
-#: model:ir.ui.menu,name:website_slides.menu_action_slide_channels
-#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__channel_ids
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Channels"
 msgstr "Kanalen"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_10
-msgid "Company Culture"
-msgstr "Bedrijfscultuur"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Check answers"
+msgstr "Bekijk antwoorden"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Check your answers"
+msgstr "Controleer uw antwoorden"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Choose a Cover Image"
+msgstr "Kies een Omslagfoto"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Choose a PDF or an Image"
+msgstr "Kies een PDF of een Afbeelding"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+msgid "Clear filters"
+msgstr "Filters verwijderen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "Click on \"New\" in the top-right corner to write your first course."
+msgstr ""
+"Klik op 'Nieuw' in de rechterbovenhoek om uw eerste cursus te schrijven."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+#: model_terms:ir.ui.view,arch_db:website_slides.lesson_content_quiz
+msgid "Close"
+msgstr "Sluiten"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__color
+msgid "Color Index"
+msgstr "Kleurindex"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Comments"
+msgstr "Opmerkingen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Communication"
+msgstr "Communicatie"
+
+#. module: website_slides
+#: model:gamification.badge,name:website_slides.badge_data_karma
+#: model:gamification.challenge.line,name:website_slides.badge_data_karma_challenge_line_0
+#: model:gamification.goal.definition,name:website_slides.badge_data_karma_goal
+msgid "Community hero"
+msgstr "Community held"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_company_count
+#: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_company_count
+msgid "Company Course Count"
+msgstr "Aantal Bedrijfscursussen"
+
+#. module: website_slides
+#: model:gamification.badge,description:website_slides.badge_data_course
+#: model:gamification.challenge,name:website_slides.badge_data_course_challenge
+msgid "Complete a course"
+msgstr "Voltooi een opleiding"
+
+#. module: website_slides
+#: model:gamification.badge,description:website_slides.badge_data_profile
+#: model:gamification.challenge,name:website_slides.badge_data_profile_challenge
+msgid "Complete your profile"
+msgstr "Voltooi uw profiel"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__completed
+msgid "Completed"
+msgstr "Voltooid"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "Completed Courses"
+msgstr "Voltooide opleidingen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__completion
+msgid "Completion"
+msgstr "Voltooiing"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+msgid "Completion Time"
+msgstr "Doorlooptijd"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Compose Email"
+msgstr "E-mail opstellen"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__enroll
+msgid "Condition to enroll: everyone, on invite, on payment (sale bridge)."
+msgstr ""
+"Conditie om in te schrijven: iedereen, op uitnodiging, bij betaling (verkoop"
+" brug)."
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
+
+#. module: website_slides
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_configuration
+msgid "Configuration"
+msgstr "Configuratie"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
+msgid "Congratulations, you have reached the last rank!"
+msgstr "Proficiat, u hebt de laatste rank bereikt!"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_res_partner
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+msgid "Contact"
+msgstr "Contact"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid "Contact all the members of a course via mass mailing"
+msgstr "Contacteer alle deelnemers van een cursus via massamailing"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Contact the website administrator"
+msgstr "Contacteer de website beheerder"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+msgid "Contact website administrator."
+msgstr "Contacteer websitebeheerder."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__datas
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Content"
 msgstr "Inhoud"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:20
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Content Preview"
 msgstr "Voorbeeldweergave inhoud"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:255
+#: model:ir.model,name:website_slides.model_slide_question
+msgid "Content Quiz Question"
+msgstr ""
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.action_slide_tag
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_config_content_tags
+msgid "Content Tags"
+msgstr "Inhoud Tags"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Content Title"
+msgstr "Titel Inhoud"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.slide_slide_action
+#: model:ir.actions.act_window,name:website_slides.slide_slide_action_report
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__body
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_courses_content
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_report_contents
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
+msgid "Contents"
+msgstr "Inhoud"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Continue"
+msgstr "Doorgaan"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#, python-format
+msgid "Copy Link"
+msgstr "Kopieer Link"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
@@ -457,7 +1212,7 @@ msgstr ""
 "toegangsrechten zijn niet beschikbaar. Foutmelding: %s"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:322
+#: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
@@ -467,314 +1222,680 @@ msgstr ""
 "%s"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
-msgid "Create a Google Project and Get a Key"
-msgstr "Maak een Google Project en krijg een sleutel"
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_id
+#: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_search_slide_channel
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Course"
+msgstr "Opleiding"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_count
+#: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_count
+msgid "Course Count"
+msgstr "Aantal Cursussen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_form
+msgid "Course Tag"
+msgstr "Cursus Tag"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
+msgid "Course Tag Group"
+msgstr "Curssus Tag Groep"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_tree
+msgid "Course Tag Groups"
+msgstr "Cursus Tag Groepen"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.slide_channel_tag_action
+#: model:ir.actions.act_window,name:website_slides.slide_channel_tag_group_action
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_config_course_tags
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_tree
+msgid "Course Tags"
+msgstr "Cursus Tags"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:219
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #, python-format
-msgid "Create new tag '%s'"
-msgstr "Maak nieuw label '%s'"
+msgid "Course Title"
+msgstr "Titel opleiding"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_finish
+msgid "Course finished"
+msgstr "Opleiding voltooid"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_rank
+msgid "Course ranked"
+msgstr "Opleiding ranking"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__channel_type
+msgid "Course type"
+msgstr "Soort opleiding"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.slide_channel_action_report
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_courses
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_courses_courses
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_report_courses
+#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_graph
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
+#: model:website.menu,name:website_slides.website_menu_slides
+msgid "Courses"
+msgstr "Opleidingen"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:0
+#, python-format
+msgid "Create"
+msgstr "Aanmaken"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid "Create a community and let the members help each others"
+msgstr "Maak een gemeenschap en laat leden elkaar helpen"
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_overview
+#: model_terms:ir.actions.act_window,help:website_slides.slide_channel_action_report
+msgid "Create a course"
+msgstr "Maak een cursus"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#, python-format
+msgid "Create new %s '%s'"
+msgstr "Maak nieuwe %s'%s'"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_answer__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__create_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_create_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_answer__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__create_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: website_slides
-#: model:slide.channel,description:website_slides.channel_public
-msgid ""
-"Default channel for slides, all public users can access content of this "
-"channel."
-msgstr ""
-"Standaardkanaal voor presentaties, alle publieke gebruikers kunnen de inhoud"
-" van dit kanaal bekijken."
+#: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_search_slide_channel
+msgid "Creation Date"
+msgstr "Aanmaakdatum"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide__html_content
+msgid "Custom HTML content for slides of type 'Web Page'."
+msgstr "Aangepaste HTML inhoud voor slides van het soort 'Web pagina'."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_gamification_challenge__category
+msgid "Define the visibility of the challenge through menus"
+msgstr "Definieer de zichtbaarheid van uitdagingen door menu's"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "Delete"
+msgstr "Verwijder"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:60
-#: code:addons/website_slides/static/src/xml/website_slides.xml:62
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_description
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_description
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__description_html
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__description
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 #, python-format
 msgid "Description"
 msgstr "Omschrijving"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:71
+#: code:addons/website_slides/static/src/js/slides_category_add.js:0
+#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Discard"
 msgstr "Negeren"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_6
-msgid "Discover how easy marketing your business can be with Odoo"
-msgstr "Ontdek hoe gemakkelijk het is om uw bedrijf te adverteren met Odoo"
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_0
-msgid ""
-"Discover how you can integrate MRP, PLM, Quality and Maintenance in a single application to maximize the efficiency of your manufacturing operations.\n"
-"\n"
-"Read more about the features at: https://www.odoo.com/page/manufacturing-features\n"
-"\n"
-"Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
-msgstr ""
-"Ontdek hoe MRP. PLM, Kwaliteit en Onderhoud kan integreren in een enkele applicatie om de efficiency van uw productie proces te maximaliseren.\n"
-"\n"
-"Lees meer over de opties op: https://www.odoo.com/page/manufacturing-features\n"
-"\n"
-"Ontdek Odoo MRP: https://www.odoo.com/page/manufacturing"
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_1
-msgid "Discover the CRM sales people love https://www.odoo.com/page/crm"
-msgstr ""
-"Ontdek de CRM voor verkopen waar mensen van houden op "
-"https://www.odoo.com/page/crm"
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_2
-msgid ""
-"Discover the all-in-one business management software solution that fits any business size and use case.\n"
-"\n"
-"Learn more at https://odoo.com"
-msgstr ""
-"Ontdek de all-in-one business management software-oplossing voor elke bedrijfsgrootte en use case.\n"
-"\n"
-"Meer informatie op https://odoo.com"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_dislikes
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__dislikes
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Dislikes"
 msgstr "Vind-ik-niet-leuks"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_display_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_display_name
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Display"
+msgstr "Tonen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_answer__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__display_name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_category_sequence
-#: model:ir.model.fields,help:website_slides.field_slide_channel_sequence
+#: model:ir.model.fields,help:website_slides.field_slide_channel__sequence
 msgid "Display order"
 msgstr "Weergavevolgorde"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
-#: selection:slide.slide,slide_type:0
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
+#, python-format
+msgid "Do you really want to leave the course?"
+msgstr "Wenst u echt de cursus te verlaten?"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#, python-format
+msgid "Do you want to install the \"%s\" app?"
+msgstr "Wilt u de \"%s\" applicatie installeren?"
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__document
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Document"
 msgstr "Document"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_document_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__document_id
 msgid "Document ID"
 msgstr "Document ID"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__url
 msgid "Document URL"
 msgstr "Document URL"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__channel_type__documentation
+#, python-format
+msgid "Documentation"
+msgstr "Documentatie"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_document
 msgid "Documents"
 msgstr "Documenten"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "Download"
-msgstr "Downloaden"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Don't have an account ?"
+msgstr "Heeft u geen account?"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_5
-msgid ""
-"Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!\n"
-"\n"
-"Chrome: http://bit.ly/2613LcY\n"
-"iOS: http://bit.ly/1ZUZsZD"
-msgstr ""
-"Download geweldige urenstaten door Odoo en ontdek hoe eenvoudig aanwezigheid controle en HRM kan zijn! \n"
-"\n"
-"Chrome: http://bit.ly/2613LcY\n"
-"iOS: http://bit.ly/1ZUZsZD"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__completed
+#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
+msgid "Done"
+msgstr "Gereed"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
-msgid "Download Security"
-msgstr "Beveiliging downloaden"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Done !"
+msgstr "Gereed!"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_publish_template_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__done_count
+msgid "Done Count"
+msgstr "Aantal Uitgevoerd"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "Dropdown menu"
+msgstr "Dropdown menu"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_time
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__completion_time
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#, python-format
+msgid "Duration"
+msgstr "Tijdsduur"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "Edit"
+msgstr "Wijzig"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_email
+msgid "Email"
+msgstr "E-mail"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
 msgid "Email template to send slide publication through email"
-msgstr "Sjabloon e-mail om een presentatie te versturen per email "
+msgstr "Sjabloon e-mail om een presentatie te versturen per e-mail "
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_share_template_id
+#: model:ir.model.fields,help:website_slides.field_slide_channel__share_template_id
 msgid "Email template used when sharing a slide"
 msgstr ""
 "E-mailsjabloon dat gebruikt wordt wanneer een presentatie gedeeld wordt"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embed_code
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code
 msgid "Embed Code"
 msgstr "Code insluiten"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_embedcount_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__embedcount_ids
 msgid "Embed Count"
 msgstr "Aantal insluitingen"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_embed
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Embed in your website"
 msgstr "In uw website insluiten"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_embed
 msgid "Embedded Slides View Counter"
-msgstr "Ingesloten code opties aantal"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "Embeds"
-msgstr "Insluitingen"
-
-#. module: website_slides
-#: model:slide.channel,name:website_slides.channel_private
-msgid "Employee Channel"
-msgstr "Personeelskanaal"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_access_error_msg
-#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid "Error Message"
-msgstr "Foutmelding"
-
-#. module: website_slides
-#: selection:slide.slide,download_security:0
-msgid "Everyone"
-msgstr "Iedereen"
-
-#. module: website_slides
-#: selection:slide.channel,promote_strategy:0
-msgid "Featured Presentation"
-msgstr "Presentatie in de kijker"
-
-#. module: website_slides
-#: model:slide.category,name:website_slides.category_1
-msgid "Featured Presentations"
-msgstr "Presentaties in de kijker"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promoted_slide_id
-msgid "Featured Slide"
-msgstr "Aanbevolen presentatie"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_promote_strategy
-msgid "Featuring Policy"
-msgstr "Beleidsregelsopties"
+msgstr "Aantal ingesloten weergaven"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/controllers/main.py:263
-#: code:addons/website_slides/static/src/js/slides_upload.js:89
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "End course"
+msgstr "Stop opleiding"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_msg
+msgid "Enroll Message"
+msgstr "Registratie bericht"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll
+msgid "Enroll Policy"
+msgstr "Inschrijving policy"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Estimated slide completion time"
+msgstr "Geschatte doorlooptijd slide"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:0
+#, python-format
+msgid "Evaluate and certificate your students."
+msgstr "Evalueer en certificeer uw studenten"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid "Evaluate your students and certify them"
+msgstr "Evalueer uw studenten and certificeer hen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "External Links"
+msgstr "Externe links"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_slide_link
+msgid "External URL for a particular slide"
+msgstr "Externe URL voor een particuliere slide"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__link_ids
+msgid "External URL for this slide"
+msgstr "Externe URL voor deze slide"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "External sources"
+msgstr "Externe bronnen"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#, python-format
+msgid "Failed to install \"%s\"."
+msgstr "Mislukt om \"%s\" te installeren."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__promote_strategy
+msgid "Featured Content"
+msgstr "Uitgelichte Inhoud"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/controllers/main.py:0
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
-msgstr "Bestand is te groot. Bestand mag niet groter zijn dan 5MB"
+msgstr "Bestand is te groot. Bestand mag niet groter zijn dan 25MB"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
-msgid "Full Access"
-msgstr "Volledige toegang"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "Filter &amp; order"
+msgstr "Filter &amp; sorteer"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid "General"
-msgstr "Algemeen"
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Finish Course"
+msgstr "Werk Cursus Af"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_res_config_settings_website_slide_google_app_key
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "First attempt"
+msgstr "Eerste poging"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_first_attempt_reward
+msgid "First attempt reward"
+msgstr "Beloning eerste poging"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "First slide"
+msgstr "Eerste slide"
+
+#. module: website_slides
+#: code:addons/website_slides/models/res_partner.py:0
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+#, python-format
+msgid "Followed Courses"
+msgstr "Gevolgde opleidingen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_follower_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_follower_ids
+msgid "Followers"
+msgstr "Volgers"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_channel_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Volgers (Kanalen)"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_partner_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Volgers (Relaties)"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_forum
+msgid "Forum"
+msgstr "Forum"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Fourth and more attempt"
+msgstr "Vierde en verdere pogingen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
+msgid "Free preview"
+msgstr "Gratis preview"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__email_from
+msgid "From"
+msgstr "Van"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Fullscreen"
+msgstr "Volledig scherm"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_gamification_challenge
+msgid "Gamification Challenge"
+msgstr "Gamificatie uitdaging"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid "Generate revenues thanks to your courses"
+msgstr "Genereer omzet dankzij uw cursussen"
+
+#. module: website_slides
+#: model:gamification.badge,description:website_slides.badge_data_certification
+#: model:gamification.challenge,name:website_slides.badge_data_certification_challenge
+msgid "Get a certification"
+msgstr "Behaal een certificering"
+
+#. module: website_slides
+#: model:gamification.badge,name:website_slides.badge_data_register
+#: model:gamification.challenge.line,name:website_slides.badge_data_register_challenge_line_0
+#: model:gamification.goal.definition,name:website_slides.badge_data_register_goal
+msgid "Get started"
+msgstr "Beginnen"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#, python-format
+msgid "Go Back"
+msgstr "Ga terug"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_footer
+msgid "Go meet them"
+msgstr "Ga ze ontmoeten"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_res_config_settings__website_slide_google_app_key
+#: model:ir.model.fields,field_description:website_slides.field_website__website_slide_google_app_key
 msgid "Google Doc Key"
 msgstr "Google Doc Key"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "Google Drive API Key"
 msgstr "Google Drive API sleutel"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
-msgid "Graph of Slides"
-msgstr "Grafiek van de presentaties"
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_graph
+msgid "Graph of Contents"
+msgstr "Grafiek van Inhoud"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__group_id
+msgid "Group"
+msgstr "Groep"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Group By"
 msgstr "Groepeer op"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_group_ids
-msgid "Groups allowed to see presentations in this channel"
-msgstr "Groepen die presentaties via dit kanaal mogen bekijken"
-
-#. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_upload_group_ids
-msgid ""
-"Groups allowed to upload presentations in this channel. If void, every user "
-"can upload."
+#: model:ir.model.fields,help:website_slides.field_slide_channel__upload_group_ids
+msgid "Group of users allowed to publish contents on a documentation course."
 msgstr ""
-"Groepen die presentaties naar dit kanaal mogen uploaden. Indien leeg mag "
-"elke gebruiker uploaden."
+"Groep van gebruikers met toelating om inhoud te publiceren op een "
+"documentatiecursus."
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_id
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__group_sequence
+msgid "Group sequence"
+msgstr "Groep reeks"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__html_content
+msgid "HTML Content"
+msgstr "HTML inhoud"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
+msgid "Home"
+msgstr "Home"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_answer__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__id
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
+#: model:ir.model.fields,help:website_slides.field_slide_channel__allow_comment
+#: model:ir.model.fields,help:website_slides.field_slide_slide__channel_allow_comment
+msgid ""
+"If checked it allows members to either:\n"
+" * like content and post comments on documentation course;\n"
+" * post comment and review on training course;"
+msgstr ""
+"Indien aangevinkt staat het leden toe om:\n"
+"* content te liken en nieuwe reacties te plaatsen op uw documentatie;\n"
+"* reacties en reviews te plaatsen op trainingen;"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_sms_error
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "indien aangevinkt hebben sommige leveringen een fout."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_1920
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_1920
 msgid "Image"
 msgstr "Afbeelding"
 
 #. module: website_slides
-#: selection:slide.slide,slide_type:0
-msgid "Infographic"
-msgstr "Infografiek"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_1024
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_1024
+msgid "Image 1024"
+msgstr "Afbeelding 1024"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_128
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_128
+msgid "Image 128"
+msgstr "Afbeelding 128"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_256
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_256
+msgid "Image 256"
+msgstr "Afbeelding 256"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_512
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_512
+msgid "Image 512"
+msgstr "Afbeelding 512"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Image File"
+msgstr "Afbeelding bestand"
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__infographic
+msgid "Infographic"
+msgstr "Infographic"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_infographic
 msgid "Infographics"
 msgstr "Infografieken"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:285
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#, python-format
+msgid "Install"
+msgstr "Installeren"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#, python-format
+msgid "Installing \"%s\"."
+msgstr " \"%s\" aan het installeren."
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid ""
 "Internal server error, please try again later or contact administrator.\n"
@@ -785,97 +1906,342 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:84
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
 msgstr "Ongeldig bestandstype. Kies een pdf- of beeldbestand"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide___last_update
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag___last_update
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Invite"
+msgstr "Uitnodigen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completed
+msgid "Is Completed"
+msgstr "Is voltooid"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_is_follower
+msgid "Is Follower"
+msgstr "Is een volger"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_member
+msgid "Is Member"
+msgstr "Is lid"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_published
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__is_published
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_published
+msgid "Is Published"
+msgstr "Is gepubliceerd"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_category
+msgid "Is a category"
+msgstr "Is een categorie"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_answer__is_correct
+msgid "Is correct answer"
+msgstr "Is een correct antwoord"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/channel_management.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+#, python-format
+msgid "Join Course"
+msgstr "Word lid van opleiding"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Karma Rules"
+msgstr "Karma regels"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_comment
+msgid "Karma needed to add a comment on a slide of this course"
+msgstr ""
+"Karma benodigd om een reactie toe te voegen op een slide van een opleiding"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__karma_review
+msgid "Karma needed to add a review on the course"
+msgstr "Karma benodigd om een beoordeling toe te voegen aan deze opleiding"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_vote
+msgid "Karma needed to like/dislike a slide of this course."
+msgstr "Karma nodig om een slide in de opleiding te liken/te ontliken."
+
+#. module: website_slides
+#: model:gamification.badge,name:website_slides.badge_data_profile
+#: model:gamification.challenge.line,name:website_slides.badge_data_profile_challenge_line_0
+#: model:gamification.goal.definition,name:website_slides.badge_data_profile_goal
+msgid "Know yourself"
+msgstr "Ken uw eigen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_answer____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_question____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner____last_update
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_uid
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_last_update
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+msgid "Last Update"
+msgstr "Laatst bijgewerkt"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_answer__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__write_uid
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_write_date
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_answer__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__write_date
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__write_date
 msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: website_slides
-#: selection:slide.channel,promote_strategy:0
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Last slide"
+msgstr "Laatste slide"
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__latest
 msgid "Latest Published"
 msgstr "Laatste publicatie"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_8
-msgid "Learn more at https://www.odoo.com/page/sales"
-msgstr "Leer meer op https://www.odoo.com/page/sales"
+#: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
+msgid "Latest achievements"
+msgstr "Laatste prestaties"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
+msgid "Leaderboard"
+msgstr "Scorebord"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#, python-format
+msgid "Leave the course"
+msgstr "Verlaat de cursus"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Lesson"
+msgstr "Les"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "Lesson Nav"
+msgstr "Opleiding navigatie"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_slide_vote
+msgid "Lesson voted"
+msgstr "Gestemd op opleiding"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid "Lessons"
+msgstr "Lessen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__likes
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Likes"
 msgstr "Vind-ik-leuks"
 
 #. module: website_slides
-#: model:slide.tag,name:website_slides.tag2
-msgid "Marketing"
-msgstr "Marketing"
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__link
+msgid "Link"
+msgstr "Link"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
-msgid "Medium"
-msgstr "Kanaal"
+#: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_mass_mailing_slides
+msgid "Mailing"
+msgstr "Mailing"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
-msgid "Message to display when not accessible due to access rights"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_main_attachment_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Hoofdbijlage"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_footer
+msgid "Meet The Heros Who Transformed Their Company!"
+msgstr "Ontmoet de helden die hun bedrijf hebben getransformeerd!"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Member"
+msgstr "Lid"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_ids
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+msgid "Members"
+msgstr "Leden"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__channel_partner_ids
+msgid "Members Information"
+msgstr "Informatie leden"
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__members
+msgid "Members Only"
+msgstr "Enkel Leden"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "Members Views"
+msgstr "Leden weergaven"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__enroll_group_ids
+msgid ""
+"Members of those groups are automatically added as members of the channel."
 msgstr ""
-"Bericht welke getoond moet worden wanneer de toegangsrechten onvoldoende "
-"zijn."
+"Leden van deze groepen worden automatisch toegevoegd als leden van het "
+"kanaal."
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_mime_type
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_tree
+msgid "Menu Entry"
+msgstr "Menu Invoer"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
+msgid "Menu entry"
+msgstr "Menu ingave"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
+msgid "Message Delivery error"
+msgstr "Bericht afleverfout"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__enroll_msg
+msgid "Message explaining the enroll process"
+msgstr "Bericht dat het inschrijvingsproces uitlegt"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_ids
+msgid "Messages"
+msgstr "Berichten"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__mime_type
 msgid "Mime-type"
 msgstr "Mime-type"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
-#: selection:slide.channel,promote_strategy:0
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Minutes"
+msgstr "Minuten"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
+msgid "Mobile sub-nav"
+msgstr "Mobiele sub-nav"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "More info"
+msgstr "Meer info"
+
+#. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__most_viewed
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
 msgid "Most Viewed"
 msgstr "Meest bekeken"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
-#: selection:slide.channel,promote_strategy:0
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__most_voted
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Most Voted"
 msgstr "Meest gestemd"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_name
-#: model:ir.model.fields,field_description:website_slides.field_slide_tag_name
-#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "Most popular courses"
+msgstr "Meest populaire opleidingen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+msgid "My Courses"
+msgstr "Mijn opleidingen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "My courses"
+msgstr "Mijn opleidingen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__name
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__name
+#: model:ir.model.fields,field_description:website_slides.field_slide_tag__name
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
 msgid "Name"
 msgstr "Naam"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
+msgid "Nav"
+msgstr "Nav"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
@@ -883,152 +2249,282 @@ msgid "New ${object.slide_type} published on ${object.channel_id.name}"
 msgstr "Nieuwe ${object.slide_type} gepubliceerd in ${object.channel_id.name}"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#, python-format
+msgid "New Certification"
+msgstr "Nieuwe Certificering"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__publish_template_id
+msgid "New Content Email"
+msgstr "Nieuwe inhoud e-mail"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/website_slides.editor.js:0
+#, python-format
+msgid "New Course"
+msgstr "Nieuwe opleiding"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Newest"
 msgstr "Nieuwste"
 
 #. module: website_slides
-#: selection:slide.channel,promote_strategy:0
-msgid "No Featured Presentation"
-msgstr "Geen presentatie in de kijker"
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "Newest courses"
+msgstr "Nieuwste opleidingen"
 
 #. module: website_slides
-#: selection:slide.slide,download_security:0
-msgid "No One"
-msgstr "Niemand"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Next"
+msgstr "Volgende"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.channel_not_found
-msgid "No channel created or published yet."
-msgstr "Nog geen kanaal aangemaakt of gepubliceerd."
+#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
+msgid "Next rank:"
+msgstr "Volgende rank:"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Next slide"
+msgstr "Volgende slide"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "No Course created yet."
+msgstr "Nog geen opleiding aangemaakt."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.toggle_latest_achievements
+msgid "No achievements currently :("
+msgstr "Nog geen prestaties :("
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "No completed course yet"
+msgstr "Nog geen voltooide opleiding"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "No content was found using your search"
+msgstr "Er is geen inhoud gevonden met uw zoekopdracht"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+msgid "No course was found matching your search"
+msgstr "Geen cursus gevonden die voldoet aan uw zoekopdracht"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+msgid "No course was found matching your search."
+msgstr "Geen cursus gevonden die voldoet aan uw zoekopdracht"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
+msgid "No followed course yet"
+msgstr "Nog geen gevolgde opleiding"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
+msgid "No leaderboard currently :("
+msgstr "Nog geen scorebord :("
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
 msgid "No presentation available."
 msgstr "Geen presentatie beschikbaar."
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.home
-msgid "No presentation published yet."
-msgstr "Nog geen presentatie gepubliceerd."
+#: code:addons/website_slides/models/slide_slide.py:0
+#, python-format
+msgid "Not enough karma to comment"
+msgstr "Niet genoeg karma om te reageren"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "Not enough karma to review"
+msgstr "Niet genoeg karma om te bekijken"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_document
 msgid "Number of Documents"
 msgstr "Aantal documenten"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_infographics
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_infographics
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_infographic
 msgid "Number of Infographics"
 msgstr "Aantal infografieken"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_presentations
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_presentations
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_presentation
 msgid "Number of Presentations"
 msgstr "Aantal presentaties"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_videos
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_videos
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_quiz
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_quiz
+msgid "Number of Quizs"
+msgstr "Aantal quizen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_video
 msgid "Number of Videos"
 msgstr "Aantal video's"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_2
-msgid "Odoo All-in-One Software Demonstration"
-msgstr "Odoo All-in-One Software Demonstratie"
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_webpage
+msgid "Number of Webpages"
+msgstr "Aantal webpagina's"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_1
-msgid "Odoo CRM"
-msgstr "Odoo CRM"
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__comments_count
+msgid "Number of comments"
+msgstr "Aantal opmerkingen"
 
 #. module: website_slides
-#: model:slide.category,name:website_slides.category_2
-#: model:slide.tag,name:website_slides.tag5
-msgid "Odoo Days"
-msgstr "Odoo Days"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error_counter
+msgid "Number of errors"
+msgstr "Aantal fouten"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_7
-msgid "Odoo Inventory"
-msgstr "Odoo voorraad"
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_0
-msgid "Odoo MRP"
-msgstr "Odoo MRP"
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error_counter
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Aantal berichten met leveringsfout"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_6
-msgid "Odoo Marketing"
-msgstr "Odoo Marketing"
+#: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread_counter
+#: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Aantal ongelezen berichten"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_8
-msgid "Odoo Sales"
-msgstr "Odoo Verkoop"
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__questions_count
+msgid "Numbers of Questions"
+msgstr "Aantal Vragen"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_3
-msgid "Odoo Sign Demonstration"
-msgstr "Odoo tekenen demonstratie"
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__invite
+msgid "On Invitation"
+msgstr "Op uitnodiging"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_9
-msgid "Open Days 2014 Infographic"
-msgstr "Infografiek Open Days 2014"
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Options"
+msgstr "Opties"
 
 #. module: website_slides
-#: model:slide.slide,name:website_slides.slide_11
-msgid "OpenSource CMS, A performance comparison - Mantavya Gajjar"
-msgstr "OpenSource CMS, een vergelijking in performantie - Mantavya Gajjar"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__partner_id
+msgid "Partner"
+msgstr "Relatie"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "Pick a course"
+msgstr "Kies een opleiding"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:28
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
-msgid "PDF or Image File"
-msgstr "PDF- of beeldbestand"
-
-#. module: website_slides
-#: model:slide.channel,name:website_slides.channel_partial
-msgid "Partner Channel"
-msgstr "Partnerkanaal"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Please"
 msgstr "Alstublieft"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:56
+#: code:addons/website_slides/static/src/js/slides_course_join.js:0
 #, python-format
-msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
+msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to join this course"
 msgstr ""
-"U moet eerst <a href=\"/web?redirect=%s\">inloggen</a> om op deze dia te "
-"kunnen stemmen"
+"Gelieve <a href=\"/web/login?redirect=%s\">in te loggen</a>om deel te nemen "
+"aan deze opleiding"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:325
-#: code:addons/website_slides/models/slides.py:545
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_slide_like.js:0
+#, python-format
+msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to vote this lesson"
+msgstr ""
+"Gelieve <a href=\"/web/login?redirect=%s\">in te loggen</a> om te stemmen op"
+" deze opleiding"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_join.js:0
+#, python-format
+msgid ""
+"Please <a href=\"/web/signup?redirect=%s\">create an account</a> to join "
+"this course"
+msgstr ""
+"Gelieve <a href=\"/web/signup?redirect=%s\">een account aan te maken</a> om "
+"te stemmen op deze opleiding"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_slide_like.js:0
+#, python-format
+msgid ""
+"Please <a href=\"/web/signup?redirect=%s\">create an account</a> to vote "
+"this lesson"
+msgstr ""
+"Gelieve <a href=\"/web/signup?redirect=%s\">een account aan te maken</a> om "
+"te stemmen op deze opleiding"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_slide.py:0
+#: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Geef een geldige Youtube of Google Doc URL in"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:247
+#: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Please enter valid youtube or google doc url"
 msgstr "Geef een geldige Youtube of Google Doc URL in"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
-#: selection:slide.slide,slide_type:0
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#, python-format
+msgid "Please fill in this field"
+msgstr "Gelieve dit veld in te vullen"
+
+#. module: website_slides
+#: model:gamification.badge,name:website_slides.badge_data_course
+#: model:gamification.challenge.line,name:website_slides.badge_data_course_challenge_line_0
+#: model:gamification.goal.definition,name:website_slides.badge_data_course_goal
+msgid "Power User"
+msgstr "Supergebruiker"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__slide_id
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__presentation
+#, python-format
 msgid "Presentation"
 msgstr "Presentatie"
 
@@ -1039,140 +2535,513 @@ msgid "Presentation Published"
 msgstr "Presentatie gepubliceerd"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_footer
-#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
-#: model:website.menu,name:website_slides.website_menu_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_presentation
 msgid "Presentations"
 msgstr "Presentaties"
 
 #. module: website_slides
-#: selection:slide.channel,visibility:0
-msgid "Private"
-msgstr "Privé"
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "Previous slide"
+msgstr "Vorige slide"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.channels
-msgid "Private channel"
-msgstr "Privé-kanaal"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+msgid "Private Course"
+msgstr "Privé opleiding"
 
 #. module: website_slides
-#: selection:slide.channel,visibility:0
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Public"
 msgstr "Openbaar"
 
 #. module: website_slides
-#: model:slide.channel,name:website_slides.channel_public
-msgid "Public Channel"
-msgstr "Openbaar kanaal"
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "Public Views"
+msgstr "Publieke weergaven"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_date_published
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#, python-format
+msgid "Publish"
+msgstr "Publiceer"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__date_published
 msgid "Publish Date"
 msgstr "Publicatiedatum"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Published"
 msgstr "Gepubliceerd"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_publish_template_id
-msgid "Published Template"
-msgstr "Voorbeeld gepubliceerd"
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Published Date"
+msgstr "Publicatiedatum"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
+#: code:addons/website_slides/models/slide_channel.py:0
+#: code:addons/website_slides/models/slide_slide.py:0
+#, python-format
+msgid ""
+"Publishing is restricted to the responsible of training courses or members "
+"of the publisher group for documentation courses"
+msgstr ""
+"Publiceren is alleen mogelijk voor de verantwoordelijke van een opleiding of"
+" leden van de publiceer groep voor documentatie opleidingen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_answer__question_id
+msgid "Question"
+msgstr "Vraag"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_question.py:0
+#, python-format
+msgid "Question \"%s\" can only have one good answer"
+msgstr "Vraag \"%s\" kan maar één goed antwoord hebben"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_question.py:0
+#, python-format
+msgid "Question \"%s\" has no valid answer, please set one"
+msgstr "Vraag \"%s\" heeft geen geldig antwoord, gelieve een in te stellen"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_question.py:0
+#, python-format
+msgid "Question \"%s\" must at least have one good answer"
+msgstr "Vraag \"%s\" moet minstens één goed antwoord hebben"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__question
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
+msgid "Question Name"
+msgstr "Naam van de vraag"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__question_ids
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Questions"
+msgstr "Vragen"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__quiz
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#, python-format
+msgid "Quiz"
+msgstr "Quiz"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__quiz_attempts_count
+msgid "Quiz attempts count"
+msgstr "Quiz pogingen teller"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.slide_question_action_report
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_report_quizzes
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_search
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_tree
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_tree_report
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Quizzes"
+msgstr "Toetsen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Rank Course"
+msgstr "Cursusgraad"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.rating_rating_action_slide_channel
+#: model:ir.actions.act_window,name:website_slides.rating_rating_action_slide_channel_report
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_ids
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Rating"
+msgstr "Beoordeling"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg
+#: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_graph_slide_channel
+msgid "Rating Average"
+msgstr "Gemiddelde beoordeling"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg_stars
+msgid "Rating Average (Stars)"
+msgstr "Gemiddelde Rating (Sterren)"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_feedback
+msgid "Rating Last Feedback"
+msgstr "Beoordeling laatste feedback"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_image
+msgid "Rating Last Image"
+msgstr "Beoordeling laatste afbeelding"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_value
+msgid "Rating Last Value"
+msgstr "Beoordeling laatste waarde"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_count
+msgid "Rating count"
+msgstr "Aantal beoordelingen"
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid "Rating of %s"
+msgstr "Rating van %s"
+
+#. module: website_slides
+#: model:gamification.badge,description:website_slides.badge_data_karma
+msgid "Reach 2000 XP"
+msgstr "Bereik 2000 XP"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "Reach new heights"
+msgstr "Bereik nieuwe hoogtes"
+
+#. module: website_slides
+#: model:gamification.challenge,name:website_slides.badge_data_karma_challenge
+msgid "Read 2000 XP"
+msgstr "Lees 2000 XP"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__rating_last_feedback
+msgid "Reason of the rating"
+msgstr "Reden van de beoordeling"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__partner_ids
+msgid "Recipients"
+msgstr "Ontvangers"
+
+#. module: website_slides
+#: model:gamification.badge,description:website_slides.badge_data_register
+#: model:gamification.challenge,name:website_slides.badge_data_register_challenge
+msgid "Register to the platform"
+msgstr "Registreer op het platform"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
 msgid "Related"
 msgstr "Gerelateerd"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.home
-msgid "Results for"
-msgstr "Resultaten voor"
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
+msgid "Remove"
+msgstr "Verwijderen"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.home
-msgid ""
-"Review your channel settings to promote your most viewed or recent published"
-" presentation"
-msgstr ""
-"Wijzig uw kanaalinstellingen om uw meest bekeken of meest recente publicatie"
-" te promoten"
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_report
+msgid "Reporting"
+msgstr "Rapportages"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__user_id
+msgid "Responsible"
+msgstr "Verantwoordelijke"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__website_id
+#: model:ir.model.fields,help:website_slides.field_slide_slide__website_id
+msgid "Restrict publishing to this website."
+msgstr "Publiceren op deze website beperken."
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:70
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
-msgid "Save and Publish"
-msgstr "Opslaan en publiceren"
+msgid "Retry"
+msgstr "Opnieuw proberen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.private_profile
+msgid "Return to the course."
+msgstr "Terugkeren naar de opleiding"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:69
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+#, python-format
+msgid "Review"
+msgstr "Controle"
+
+#. module: website_slides
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_courses_reviews
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_report_reviews
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Reviews"
+msgstr "Beoordelingen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_fourth_attempt_reward
+msgid "Reward for every attempt after the third try"
+msgstr "Beloning voor elke poging na de derde poging"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Rewards"
+msgstr "Beloningen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_seo_optimized
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_seo_optimized
+msgid "SEO optimized"
+msgstr "SEO geoptimaliseerd"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_sms_error
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "SMS Fout bij versturen"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_category_add.js:0
+#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#, python-format
+msgid "Save"
+msgstr "Opslaan"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Save as Draft"
 msgstr "Opslaan als sjabloon"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
-msgid "Search Slides"
-msgstr "Presenttaies doorzoeken"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "Search"
+msgstr "Zoek"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
-msgid "Security"
-msgstr "Beveiliging"
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Search Contents"
+msgstr "Zoek Inhoud"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.channels
-msgid "Select a Channel"
-msgstr "Kies een kanaal"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "Search courses"
+msgstr "Zoek opleidingen"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_embed
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "Search in content"
+msgstr "Zoek in inhoud"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Second attempt"
+msgstr "Tweede poging"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_second_attempt_reward
+msgid "Second attempt reward"
+msgstr "Beloning tweede poging"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
+#, python-format
+msgid "Section"
+msgstr "Sectie"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_management.xml:0
+#, python-format
+msgid "Section name"
+msgstr "Naam sectie"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
+msgid "Security Token"
+msgstr "Veiligheidstoken"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Select page to start with"
 msgstr "Kies de startpagina"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_sequence
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_sequence
+#: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_sale_slides
+msgid "Sell on eCommerce"
+msgstr "Verkoop via eCommerce"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Send"
+msgstr "Verzenden"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#, python-format
+msgid "Send Email"
+msgstr "Verzend e-mail"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_question__sequence
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__sequence
 msgid "Sequence"
 msgstr "Reeks"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_media
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "Set Done"
+msgstr "Zet op voltooid"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.website_slides_action_settings
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_config_settings
+msgid "Settings"
+msgstr "Instellingen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
+msgid "Share"
+msgstr "Delen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+msgid "Share Channel"
+msgstr "Deel kanaal"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
+#, python-format
 msgid "Share Link"
 msgstr "Koppeling delen"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "Share count"
-msgstr "Aantal malen gedeeld"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__share_template_id
+msgid "Share Template"
+msgstr "Deel Sjabloon"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_media
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
+#, python-format
+msgid "Share by mail"
+msgstr "Delen via e-mail"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slides_share
+#, python-format
+msgid "Share on Facebook"
+msgstr "Deel op Facebook"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slides_share
+#, python-format
+msgid "Share on LinkedIn"
+msgstr "Deel op LinkedIn"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.course_main
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
+#, python-format
 msgid "Share on Social Networks"
 msgstr "Delen op sociale netwerken"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_email
-msgid "Share with a friend"
-msgstr "Deel met een vriend"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slides_share
+#, python-format
+msgid "Share on Twitter"
+msgstr "Deel op Twitter"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_share_template_id
-msgid "Shared Template"
-msgstr "Gedeeld voorbeeld"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__description
+msgid "Short Description"
+msgstr "Korte omschrijving"
 
 #. module: website_slides
-#: selection:slide.channel,visibility:0
-msgid "Show channel but restrict presentations"
-msgstr "Toon kanaal, maar niet de presentaties"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Sign Up !"
+msgstr "Aanmelden!"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Sign in"
+msgstr "Aanmelden"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Sign in and join the course to take the quiz!"
+msgstr "Meld aan en sluit aan bij de cursus om de test af te leggen!"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid ""
+"Skill up and have an impact! Your business career starts here. Time to start"
+" a course."
+msgstr ""
+"Train uw skills om impact te hebben! Uw zakelijke carrière start hier. Tijd "
+"om een opleiding te starten."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__slide_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__slide_id
 msgid "Slide"
 msgstr "Dia"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_slide_partner
+msgid "Slide / Partner decorated m2m"
+msgstr "Slide / Partner decorated m2m"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_slide_channel
+msgid "Slide Channel"
+msgstr "Presentatiekanaal"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
@@ -1180,72 +3049,164 @@ msgid "Slide Tag"
 msgstr "Presentatie label"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_custom_slide_id
-msgid "Slide to Promote"
-msgstr "Presentatie om te promoten"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_partner_ids
+msgid "Slide User Data"
+msgstr "Slide gebruikersdata"
 
 #. module: website_slides
-#: model:ir.actions.act_window,name:website_slides.action_slides_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__channel_id
+msgid "Slide channel"
+msgstr "Presentatiekanaal"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_fullscreen.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+#, python-format
+msgid "Slide image"
+msgstr "Dia afbeelding"
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:0
+#, python-format
+msgid ""
+"Slide with questions must be marked as done when submitting all good answers"
+" "
+msgstr ""
+"Slide met vragen moet gemarkeerd worden als gereed wanneer alle goede "
+"antwoorden ingediend worden"
+
+#. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_slide_ids
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_slide_ids
-#: model:ir.ui.menu,name:website_slides.menu_website_slides_root
-#: model:ir.ui.menu,name:website_slides.submenu_action_slides_slides
-#: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_content_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_ids
 msgid "Slides"
 msgstr "Presentaties"
 
 #. module: website_slides
-#: model:ir.model,name:website_slides.model_slide_category
-msgid "Slides Category"
-msgstr "Presentatie categorie"
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_ids
+msgid "Slides and categories"
+msgstr "Presentaties en categorieën"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_search
-msgid "Sorry, but nothing matches your search criteria"
-msgstr "Sorry, maar deze zoekopdracht leverde geen resultaten op"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+msgid "Sort by"
+msgstr "Sorteer op"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_3
-msgid ""
-"Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!\n"
-"\n"
-"Discover more at https://www.odoo.com/page/sign"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/channel_management.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+#, python-format
+msgid "Start Course"
+msgstr "Start opleiding"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+msgid "Start Course Channel"
+msgstr "Start opleiding kanaal"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "Start your online course today !"
+msgstr "Start vandaag uw online opleiding!"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Statistics"
+msgstr "Statistieken"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__subject
+msgid "Subject"
+msgstr "Onderwerp"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Subject..."
+msgstr "Onderwerp..."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#, python-format
+msgid "Subscribe"
+msgstr "Inschrijven"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
+#, python-format
+msgid "Subscribe to get notified when a new content is added."
 msgstr ""
-"Stop met het handmatig afdrukken en scannen. Gebruik elektronische handtekening met Odoo ondertekenen! \n"
-"\n"
-"Ontdek meer op https://www.odoo.com/page/sign"
+"Abboneer om een melding te krijgen wanneer nieuw materiaal wordt toegevoegd."
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_tag_form
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_membership_id
+msgid "Subscriber information"
+msgstr "Informatie abonnees"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_slide__user_membership_id
+msgid "Subscriber information for the current logged in user"
+msgstr "Abonnee informatie voor de huidige ingelogde gebruiker"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__partner_ids
+msgid "Subscribers"
+msgstr "Abonnees"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_partner_ids
+msgid "Subscribers information"
+msgstr "Informatie abonnees"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "Succeed and gain karma"
+msgstr "Slaag en krijg karma"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 msgid "Tag"
 msgstr "Label"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:273
-#: code:addons/website_slides/static/src/xml/website_slides.xml:48
-#: model:ir.actions.act_window,name:website_slides.action_slide_tag
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_tag_ids
-#: model:ir.ui.menu,name:website_slides.menu_slide_tag
-#: model:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__tag_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__tag_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__tag_ids
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
+#: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_data_other
 #, python-format
 msgid "Tags"
 msgstr "Labels"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Tags..."
 msgstr "Labels..."
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.home
-msgid "The"
-msgstr "De"
+#: model:ir.model.fields,help:website_slides.field_slide_slide__is_preview
+msgid ""
+"The course is accessible by anyone : the users don't need to join the "
+"channel to access the content of the course."
+msgstr ""
+"De opleiding is voor iedereen toegankelijk: de gebruikers moeten geen lid "
+"worden van het kanaal om de inhoud te bekijken."
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
+#: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
 msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
@@ -1254,264 +3215,678 @@ msgstr ""
 "en eigenschappen (bv. hoogte en breedte voor presentatie en document)."
 
 #. module: website_slides
-#: sql_constraint:slide.slide:0
-msgid "The slide name must be unique within a channel"
-msgstr "De naam van een presentatie moet uniek zijn in een kanaal"
+#: model:ir.model.fields,help:website_slides.field_slide_slide__completion_time
+msgid "The estimated completion time for this slide"
+msgstr "De geschatte doorlooptijd voor deze slide"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_embed_url
+#: code:addons/website_slides/wizard/slide_channel_invite.py:0
+#, python-format
+msgid ""
+"The following recipients have no user account: %s. You should create user "
+"accounts for them or allow external sign up in configuration."
+msgstr ""
+"De volgende ontvangers hebben geen gebruikersaccount: %s. U kan beter "
+"gebruikers aanmaken voor deze personen of extern registreren toestaan in de "
+"configuratie."
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
+#: model:ir.model.fields,help:website_slides.field_slide_channel_invite__channel_url
+#: model:ir.model.fields,help:website_slides.field_slide_channel_tag_group__website_url
+#: model:ir.model.fields,help:website_slides.field_slide_slide__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+"De volledige URL om toegang tot het document te krijgen via de website."
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
+msgid "There is no quiz"
+msgstr "Er is geen quiz"
+
+#. module: website_slides
+#: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
+#: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel_report
+msgid "There is no rating for these courses at the moment"
+msgstr "Op dit moment is er geen rating voor deze cursussen "
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
+#, python-format
+msgid "There was an error validating this quiz."
+msgstr "Er was een fout in het valideren van de quiz."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_embed__url
 msgid "Third Party Website URL"
 msgstr "URL van een externe website "
 
 #. module: website_slides
-#: model:slide.channel,access_error_msg:website_slides.channel_partial
-#: model:slide.channel,access_error_msg:website_slides.channel_private
-#: model:slide.channel,access_error_msg:website_slides.channel_public
-msgid "This channel is private and its content is restricted to some users."
-msgstr ""
-"Dit kanaal is privé en de inhoud ervan is beperkt tot een aantal gebruikers."
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "Third attempt"
+msgstr "Derde poging"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:251
-#, python-format
-msgid ""
-"This video already exists in this channel <a target=\"_blank\" "
-"href=\"/slides/slide/%s\">click here to view it </a>"
-msgstr ""
-"Deze video bestaat reeds in het kanaal. <a target=\"_blank\" "
-"href=\"/slides/slide/%s\">Klik hier om hem te bekijken</a>"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
-msgid "Thumbnail"
-msgstr "Miniatuur"
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_third_attempt_reward
+msgid "Third attempt reward"
+msgstr "Beloning derde poging"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:42
-#: code:addons/website_slides/static/src/xml/website_slides.xml:44
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_name
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "This course is private."
+msgstr "Deze opleiding is privé."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
+#, python-format
+msgid "This quiz is already done. Retaking it is not possible."
+msgstr "Deze quiz is al voltooid. Deze quiz kan niet opnieuw gedaan worden."
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:0
+#, python-format
+msgid "This video already exists in this channel on the following slide: %s"
+msgstr "Deze video bestaat al in dit kanaal op de volgende slide: %s"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__name
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__name
 #, python-format
 msgid "Title"
 msgstr "Titel"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_category_total
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_total
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_all
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "Toggle navigation"
+msgstr "Navigatie aan/uitzetten"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Total"
 msgstr "Totaal"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_total_views
-msgid "Total # Views"
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_slides
+msgid "Total Slides"
+msgstr "Totaal slides"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "Total Views"
 msgstr "Totaal # weergaven"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_index_content
-msgid "Transcript"
-msgstr "Transcriptie"
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__channel_type__training
+msgid "Training"
+msgstr "Training"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_slide_type
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#, python-format
+msgid "Training (with progress)"
+msgstr "Training (met voortgang)"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#, python-format
 msgid "Type"
 msgstr "Soort"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:151
+#: code:addons/website_slides/wizard/slide_channel_invite.py:0
+#, python-format
+msgid "Unable to post message, please configure the sender's email address."
+msgstr ""
+"Bericht kan niet worden geplaatst, configureer het e-mailadres van de "
+"afzender."
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_channel.py:0
+#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #, python-format
 msgid "Uncategorized"
 msgstr "Niet gecategoriseerd"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.home
-msgid "Uncategorized presentation"
-msgstr "Presentatie niet gecategoriseerd"
-
-#. module: website_slides
-#: code:addons/website_slides/models/slides.py:534
+#: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Unknown document"
 msgstr "Document onbekend"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_join.js:0
+#: code:addons/website_slides/static/src/js/slides_slide_like.js:0
+#, python-format
+msgid "Unknown error"
+msgstr "Onbekende fout"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_card
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 msgid "Unpublished"
 msgstr "Niet gepubliceerd"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_unread
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_unread
+msgid "Unread Messages"
+msgstr "Ongelezen berichten"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_unread_counter
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Aantal ongelezen berichten"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
+#, python-format
+msgid "Unsubscribe"
+msgstr "Uitschrijven"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Upload"
+msgstr "Upload"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__upload_group_ids
 msgid "Upload Groups"
 msgstr "Upload-groepen"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.home
-msgid ""
-"Upload PDF presentations, documents, videos or infographic using the button "
-"below."
-msgstr ""
-"Upload PDF-presentaties, documenten, video's of infografieken met "
-"onderstaande knop."
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Upload Image"
+msgstr "Upload afbeelding"
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:9
-#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
-#, python-format
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid "Upload Presentation"
 msgstr "Presentatie uploaden"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:12
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
-msgid "Uploading presentation..."
-msgstr "Presentatie wordt geladen..."
+msgid "Upload a document"
+msgstr "Upload een document"
 
 #. module: website_slides
-#: model:slide.channel,description:website_slides.channel_private
-msgid "Used to publish internal slides of company."
-msgstr "Wordt gebruikt om interne presentaties van het bedrijf te publiceren."
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_id
+msgid "Uploaded by"
+msgstr "Geupload door"
 
 #. module: website_slides
-#: model:slide.channel,description:website_slides.channel_partial
-msgid "Used to publish slides in partner network privately."
-msgstr ""
-"Wordt gebruikt om presentaties te publiceren in een afgeschermd "
-"partnernetwerk."
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Uploading Image..."
+msgstr "Afbeelding aan het uploaden..."
 
 #. module: website_slides
-#: selection:slide.slide,slide_type:0
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Uploading document ..."
+msgstr "Document aan het uploaden..."
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
+msgid "Use template"
+msgstr "Gebruik sjabloon"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
+msgid "Used to categorize and filter displayed channels/courses"
+msgstr "Gebruikt om getoonde kanalen/opleidingen te categoriseren en filteren"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__color
+msgid "Used to decorate kanban view"
+msgstr "Gebruikt om kanban view in te richten"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_vote
+msgid "User vote"
+msgstr "Gebruiker stem"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_res_users
+msgid "Users"
+msgstr "Gebruikers"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__video
+#, python-format
 msgid "Video"
 msgstr "Video"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_channel_header
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_video
 msgid "Videos"
 msgstr "Video's"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+msgid "View"
+msgstr "Bekijk"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
+#: model_terms:ir.ui.view,arch_db:website_slides.courses_home
+#: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
+msgid "View all"
+msgstr "Bekijk alle"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "View course"
+msgstr "Cursus raadplegen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
+msgid "View fullscreen"
+msgstr "Bekijk fullscreen"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_views
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Views"
 msgstr "Weergaven"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.related_slides
-msgid "Views ."
-msgstr "Weergaven."
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_card
+msgid "Views •"
+msgstr "Weergaven"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_channel_visibility
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
 msgid "Visibility"
 msgstr "Zichtbaarheid"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_published
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__website_published
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_published
+msgid "Visible on current website"
+msgstr "Zichtbaar op huidige website"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_views
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Visits"
+msgstr "Bezoeken"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_slide_vote
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__vote
+msgid "Vote"
+msgstr "Stem"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_votes
+msgid "Votes"
+msgstr "Stemmen"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_slide_like.js:0
+#, python-format
+msgid "Votes and comments are disabled for this course"
+msgstr "Stemmen en reacties zijn uitgeschakeld voor deze opleiding"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Waiting for validation"
 msgstr "Wacht op bevestiging"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_7
-msgid ""
-"Warehouse management software for the 21st century.\n"
-"\n"
-"Discover Odoo Inventory: https://www.odoo.com/page/warehouse"
-msgstr ""
-"Voorraad beheer software voor de 21ste eeuw.\n"
-"\n"
-"Ontdek Odoo Magazijn: https://www.odoo.com/page/warehouse"
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid "Watch Time"
+msgstr "Tijd bekijken"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
+#: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__webpage
+#, python-format
+msgid "Web Page"
+msgstr "Webpagina"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_webpage
+msgid "Webpages"
+msgstr "Webpagina's"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_website
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_id
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_id
 msgid "Website"
 msgstr "Website"
 
 #. module: website_slides
+#: model:ir.model.fields.selection,name:website_slides.selection__gamification_challenge__category__slides
+msgid "Website / Slides"
+msgstr "Website / Slide"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_message_ids
+msgid "Website Messages"
+msgstr "Website berichten"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__channel_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__website_url
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_url
+msgid "Website URL"
+msgstr "Website URL"
+
+#. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__website_message_ids
+#: model:ir.model.fields,help:website_slides.field_slide_slide__website_message_ids
+msgid "Website communication history"
+msgstr "Website communicatie geschiedenis"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_description
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_description
+msgid "Website meta description"
+msgstr "Website meta omschrijving"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_keywords
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Website meta keywords"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_title
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_title
+msgid "Website meta title"
+msgstr "Website meta titel"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_og_img
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_og_img
+msgid "Website opengraph image"
+msgstr "Website opengraph afbeelding"
+
+#. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:114
+#: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
+#, python-format
+msgid "Write here a short description of your first course"
+msgstr "Schrijf hier een korte omschrijving over uw eerste opleiding"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "XP"
+msgstr "XP"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "You can not upload password protected file."
 msgstr "Bestanden beveiligd met een wachtwoord kunt u niet uploaden."
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:65
+#: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
-msgid "You have already voted for this slide"
-msgstr "U hebt al voor deze presentatie gestemd"
+msgid "You cannot mark a slide as completed if you are not among its members."
+msgstr "U kan een slide niet markeren als voltooid als u geen lid bent."
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_slide.py:0
+#, python-format
+msgid "You cannot mark a slide as viewed if you are not among its members."
+msgstr "U kan een slide niet als bekeken markeren als u geen lid bent."
+
+#. module: website_slides
+#: code:addons/website_slides/models/slide_slide.py:0
+#, python-format
+msgid ""
+"You cannot mark a slide quiz as completed if you are not among its members."
+msgstr "U kan een slide quit niet als compleet markeren als u geen lid bent."
+
+#. module: website_slides
+#: code:addons/website_slides/controllers/main.py:0
+#, python-format
+msgid "You cannot upload on this channel."
+msgstr "U kan niet uploaden op dit kanaal."
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:36
+#: code:addons/website_slides/static/src/js/slides_slide_like.js:0
+#, python-format
+msgid "You don't have access to this lesson"
+msgstr "U heeft geen toegang tot deze opleiding"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_slide_like.js:0
+#, python-format
+msgid "You don't have enough karma to vote"
+msgstr "U heeft niet genoeg karma om te stemmen"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "You gained"
+msgstr "U heeft gekregen"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_join.js:0
+#, python-format
+msgid "You have already joined this channel"
+msgstr "U bent al lid van dit kanaal"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_slide_like.js:0
+#, python-format
+msgid "You have already voted for this lesson"
+msgstr "U heeft al gestemd op deze les"
+
+#. module: website_slides
+#: model:mail.template,subject:website_slides.mail_template_slide_channel_invite
+msgid "You have been invited to join ${object.channel_id.name}"
+msgstr "U bent uitgenodigd om deel te nemen aan ${object.channel_id.name}"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
+#, python-format
+msgid "You must be logged to submit the quiz."
+msgstr "U moet ingelogd zijn om de quiz in te dienen."
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/js/slides_slide_like.js:0
+#, python-format
+msgid "You must be member of this course to vote"
+msgstr "U moet lid zijn van deze opleiding om te stemmen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
+msgid "You're enrolled"
+msgstr "U bent ingeschreven"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Youtube Link"
+msgstr "Youtube link"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Youtube Video URL"
 msgstr "URL van de Youtube video"
 
 #. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:34
-#, python-format
-msgid "Youtube or Google Doc URL"
-msgstr "URL van de Youtube video of Google Doc"
-
-#. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_document_id
+#: model:ir.model.fields,help:website_slides.field_slide_slide__document_id
 msgid "Youtube or Google Document ID"
 msgstr "ID van de Youtube video of Google document"
 
 #. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_url
+#: model:ir.model.fields,help:website_slides.field_slide_slide__url
 msgid "Youtube or Google Document URL"
 msgstr "URL van de Youtube video of het Google document"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_email
-msgid "by email!"
-msgstr "per email!"
+#: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
+msgid "achieved"
+msgstr "behaald"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.home
-msgid "is empty."
-msgstr "is leeg."
+#: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_profile_small
+msgid "bg-200"
+msgstr "bg-200"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "is private"
-msgstr "is privé"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
+msgid "breadcrumb"
+msgstr "kruimelpad"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.embed_slide
-#: model:ir.ui.view,arch_db:website_slides.embed_slide_forbidden
-msgid "is private."
-msgstr "is privé."
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
+#, python-format
+msgid "by email."
+msgstr "via e-mail."
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "e.g. How to grow your business with Odoo?"
+msgstr "bijv. Hoe jouw onderneming doen groeien met Odoo?"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid ""
+"e.g. In this video, we'll give you the keys on how Odoo can help you to grow"
+" your business. At the end, we'll propose you a quiz to test your knowledge."
+msgstr ""
+"bijv. In deze video, geven we u de sleutels om uw bedrijf te doen groeien "
+"met Odoo. Aan het einde, zullen we u een quiz voorstellen om uw kennis te "
+"testen."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
+msgid "e.g. https://www.odoo.com"
+msgstr "bijvoorbeeld https://www.odoo.com"
+
+#. module: website_slides
+#: model:ir.ui.menu,name:website_slides.website_slides_menu_root
+#: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid "eLearning"
+msgstr "eLearning"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_ids
+#: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_ids
+msgid "eLearning Courses"
+msgstr "eLearning Cursussen"
+
+#. module: website_slides
+#: model:ir.actions.act_window,name:website_slides.slide_channel_action_overview
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "eLearning Overview"
+msgstr "eLearning overzicht"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
+#, python-format
 msgid "login"
 msgstr "in te loggen"
 
 #. module: website_slides
-#: model:ir.model,name:website_slides.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "mr-1"
+msgstr "mr-1"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_search
-msgid "results found for the given criteria"
-msgstr "resultaten gevonden voor deze zoekterm"
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
+msgid "reviews"
+msgstr "beoordelingen"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.embed_slide
-msgid "suggest_slide.name"
-msgstr "suggest_slide.name"
+#: model_terms:ir.ui.view,arch_db:website_slides.course_card
+msgid "steps"
+msgstr "stappen"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_email
-msgid "to send this"
-msgstr "voor het versturen van deze"
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
+#, python-format
+msgid "to enroll."
+msgstr "om in te schrijven."
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_social_email
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
+#, python-format
+msgid "to share this"
+msgstr "om dit te delen"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
+#: model_terms:ir.ui.view,arch_db:website_slides.user_quickkarma_card
+msgid "xp"
+msgstr "xp"
+
+#. module: website_slides
+#. openerp-web
+#: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
+#, python-format
 msgid "your-friend@domain.com"
 msgstr "uw-vriend@domein.com"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.course_nav
+msgid "└<span class=\"ml-1\">Uncategorized</span>"
+msgstr "└<span class=\"ml-1\">Niet gecategoriseerd</span>"

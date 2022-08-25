@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<odoo>
+<odoo noupdate="1">
 
-    <data noupdate="1">
 
-        <record id="account_analytic_line_rule_billing_user" model="ir.rule">
-            <field name="name">account.analytic.line.billing.user</field>
-            <field name="model_id" ref="analytic.model_account_analytic_line"/>
+        <!-- Override this rule because in hr_timesheet,
+            the lowest access right can only see own timesheets (model: account.analytic.line)
+            and this ir.rule accept all account.analytic.line in its domain.
+            Therefore, we need to override this rule to change the domain, and then the
+            rules for the account.analytic.line defined in timesheet will be apply.
+         -->
+        <record id="account.account_analytic_line_rule_billing_user" model="ir.rule">
             <field name="domain_force">[('project_id', '=', False)]</field>
-            <field name="groups" eval="[(4, ref('account.group_account_invoice'))]"/>
-            <field name="perm_create" eval="1"/>
-            <field name="perm_write" eval="1"/>
-            <field name="perm_unlink" eval="1"/>
-            <field name="perm_read" eval="0"/>
         </record>
-
-    </data>
 
 </odoo>

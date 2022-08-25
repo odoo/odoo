@@ -2,35 +2,42 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # Copyright (C) 2014 InnOpen Group Kft (<http://www.innopen.eu>).
+# Copyright (C) 2021 Odoo S.A.
 
 {
     'name': 'Hungarian - Accounting',
-    'version': '2.0',
-    'category': 'Localization',
+    'version': '3.0',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 
 Base module for Hungarian localization
 ==========================================
 
-This module consists :
+This module consists of:
 
  - Generic Hungarian chart of accounts
  - Hungarian taxes
  - Hungarian Bank information
  """,
-    'author': 'InnOpen Group Kft',
-    'website': 'http://www.innopen.eu',
-    'depends': ['account'],
+    'depends': [
+        'account'
+    ],
     'data': [
         'data/l10n_hu_chart_data.xml',
         'data/account.account.template.csv',
-        'data/account.account.tag.csv',
+        'data/account.group.template.csv',
         'data/account.tax.group.csv',
-        'data/account.tax.template.csv',
+        'data/account_tax_report_data.xml',
+        'data/account_tax_template_data.xml',
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
         'data/res.bank.csv',
         'data/account_chart_template_data.xml',
         'data/account_chart_template_configure_data.xml',
+        'data/menuitem_data.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
+    'license': 'LGPL-3',
 }

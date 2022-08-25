@@ -1,0 +1,33 @@
+.o_field_image {
+    button {
+        transition: opacity ease 400ms;
+        width: 26px;
+        height: 26px;
+        opacity: 0;
+        background: $white;
+    }
+
+    &:hover button {
+        @include o-hover-opacity(0.6, 0.9);
+    }
+
+    .o_mobile_controls {
+        button {
+            @include o-hover-opacity(0.6, 0.9);
+            width: 30px;
+            height: 30px;
+            padding: 6px !important;
+        }
+    }
+
+    &.o_field_invalid img {
+        border: 1px solid map-get($theme-colors, 'danger');
+    }
+}
+
+.o_image_zoom {
+    img {
+        max-width: 50vw;
+        max-height: 50vh;
+    }
+}

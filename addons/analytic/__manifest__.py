@@ -4,9 +4,8 @@
 {
     'name' : 'Analytic Accounting',
     'version': '1.1',
-    'website' : 'https://www.odoo.com/page/accounting',
-    'category': 'Hidden/Dependency',
-    'depends' : ['base', 'decimal_precision', 'mail'],
+    'category': 'Accounting/Accounting',
+    'depends' : ['base', 'mail', 'uom'],
     'description': """
 Module for defining analytic accounting object.
 ===============================================
@@ -25,5 +24,5 @@ that have no counterpart in the general financial accounts.
         'data/analytic_account_demo.xml',
     ],
     'installable': True,
-    'auto_install': False,
+    'license': 'LGPL-3',
 }

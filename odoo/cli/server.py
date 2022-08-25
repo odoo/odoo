@@ -36,8 +36,8 @@ _logger = logging.getLogger('odoo')
 def check_root_user():
     """Warn if the process's user is 'root' (on POSIX system)."""
     if os.name == 'posix':
-        import pwd
-        if pwd.getpwuid(os.getuid())[0] == 'root':
+        import getpass
+        if getpass.getuser() == 'root':
             sys.stderr.write("Running as user 'root' is a security risk.\n")
 
 def check_postgres_user():
@@ -59,7 +59,9 @@ def report_configuration():
     _logger.info("Odoo version %s", __version__)
     if os.path.isfile(config.rcfile):
         _logger.info("Using configuration file at " + config.rcfile)
-    _logger.info('addons paths: %s', odoo.modules.module.ad_paths)
+    _logger.info('addons paths: %s', odoo.addons.__path__)
+    if config.get('upgrade_path'):
+        _logger.info('upgrade path: %s', config['upgrade_path'])
     host = config['db_host'] or os.environ.get('PGHOST', 'default')
     port = config['db_port'] or os.environ.get('PGPORT', 'default')
     user = config['db_user'] or os.environ.get('PGUSER', 'default')
@@ -97,27 +99,28 @@ def export_translation():
         config["translate_out"])
 
     fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
+    # .pot is the same fileformat as .po
+    if fileformat == "pot":
+        fileformat = "po"
 
     with open(config["translate_out"], "wb") as buf:
         registry = odoo.modules.registry.Registry.new(dbname)
-        with odoo.api.Environment.manage():
-            with registry.cursor() as cr:
-                odoo.tools.trans_export(config["language"],
-                    config["translate_modules"] or ["all"], buf, fileformat, cr)
+        with registry.cursor() as cr:
+            odoo.tools.trans_export(config["language"],
+                config["translate_modules"] or ["all"], buf, fileformat, cr)
 
     _logger.info('translation file written successfully')
 
 def import_translation():
     config = odoo.tools.config
-    context = {'overwrite': config["overwrite_existing_translations"]}
+    overwrite = config["overwrite_existing_translations"]
     dbname = config['db_name']
 
     registry = odoo.modules.registry.Registry.new(dbname)
-    with odoo.api.Environment.manage():
-        with registry.cursor() as cr:
-            odoo.tools.trans_load(
-                cr, config["translate_in"], config["language"], context=context,
-            )
+    with registry.cursor() as cr:
+        odoo.tools.trans_load(
+            cr, config["translate_in"], config["language"], overwrite=overwrite,
+        )
 
 def main(args):
     check_root_user()
@@ -138,6 +141,7 @@ def main(args):
         for db_name in preload:
             try:
                 odoo.service.db._create_empty_database(db_name)
+                config['init']['base'] = True
             except ProgrammingError as err:
                 if err.pgcode == errorcodes.INSUFFICIENT_PRIVILEGE:
                     # We use an INFO loglevel on purpose in order to avoid
@@ -159,7 +163,7 @@ def main(args):
         sys.exit(0)
 
     # This needs to be done now to ensure the use of the multiprocessing
-    # signaling mecanism for registries loaded with -d
+    # signaling mechanism for registries loaded with -d
     if config['workers']:
         odoo.multi_process = True
 

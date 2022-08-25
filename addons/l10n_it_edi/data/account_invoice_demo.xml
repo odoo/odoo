@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- add VAT, codice fiscal and tax system for main company -->
+        <record id="l10n_it.demo_company_it" model="res.company">
+            <field name="vat">IT01654010345</field>
+            <field name="street">Test Street</field>
+            <field name="city">Prova</field>
+            <field name="zip">12345</field>
+            <field name="l10n_it_codice_fiscale">01654010345</field>
+            <field name="l10n_it_tax_system">RF01</field>
+            <field name="zip">12345</field>
+        </record>
+
+        <record id="l10n_it.partner_demo_company_it" model="res.partner">
+            <field name="l10n_it_pa_index">0803HR0</field>
+        </record>
+
+        <record id="partner_demo_it" model="res.partner">
+            <field name="name">Palazzo dell'Arte</field>
+            <field name="vat">IT00000010215</field>
+            <field name="street">Piazza Marconi 5</field>
+            <field name="city">Cremona</field>
+            <field name="country_id" ref="base.it"/>
+            <field name="state_id" ref="base.state_it_cr"/>
+            <field name="zip">26000</field>
+            <field name="email">info@partner.itexample.com</field>
+            <field name="website">www.itexample.com</field>
+        </record>
+
+        <record id="base.res_partner_2" model="res.partner">
+            <field name="vat">IT00079760328</field>
+            <field name="l10n_it_pa_index">XS00001</field>
+        </record>
+        <record id="base.res_partner_12" model="res.partner">
+            <field name="vat">IT00140390501</field>
+            <field name="l10n_it_pa_index">XS00001</field>
+        </record>
+
+    <record id="demo_l10n_it_edi_bank" model="res.partner.bank">
+        <field name="acc_type">iban</field>
+        <field name="acc_number">BE71096123456769</field>
+        <field name="bank_id" ref="base.bank_bnp"/>
+        <field name="partner_id" ref="l10n_it.partner_demo_company_it"/>
+        <field name="company_id" ref="l10n_it.demo_company_it"/>
+    </record>
+
+    <record id="demo_l10n_it_edi_partner_a" model="res.partner">
+      <field name="name">Vendhoreconi</field>
+      <field name="company_type">company</field>
+      <field name="country_id" ref="base.it"/>
+      <field name="street">1234 Strada del Caffè</field>
+      <field name="city">Test Milano</field>
+      <field name="zip">12345</field>
+      <field name="vat">IT04353580402</field>
+      <field name="l10n_it_codice_fiscale">04353580402</field>
+    </record>
+    </data>
+</odoo>

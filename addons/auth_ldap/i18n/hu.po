@@ -1,18 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auth_ldap
+# 	* auth_ldap
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# gezza <geza.nagy@oregional.hu>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux, 2019
+# krnkris, 2019
+# gezza <geza.nagy@oregional.hu>, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_create_user
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
 msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
@@ -35,109 +38,125 @@ msgid "Companies"
 msgstr "Vállalatok"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_company
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__company
 msgid "Company"
 msgstr "Vállalat"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_user
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "Company LDAP configuration"
+msgstr ""
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurációs beállítások"
+
+#. module: auth_ldap
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
 msgstr "Felhasználó létrehozás"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_uid
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
 msgid "Created by"
-msgstr "Készítette"
+msgstr "Létrehozta"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_create_date
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
-msgstr "Létrehozás dátuma"
+msgstr "Létrehozva"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_display_name
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_id
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
 msgid "ID"
-msgstr "Azonosító ID"
+msgstr "Azonosító"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
 msgstr "LDAP konfiguráció"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldaps
-#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings_ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
+#: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
 msgid "LDAP Parameters"
 msgstr "LDAP paraméterek"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
 msgstr "LDAP szerver"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
 msgstr "LDAP szervercím"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_server_port
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
 msgstr "LDAP szerverport"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_base
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
 msgstr "LDAP alap"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_binddn
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
 msgstr "LDAP binddn"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_filter
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
 msgid "LDAP filter"
 msgstr "LDAP szűrő"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_password
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
 msgstr "LDAP jelszó"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap___last_update
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
 msgid "Last Modified on"
-msgstr "Utoljára frissítve ekkor"
+msgstr "Legutóbb frissítve"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_uid
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr "Frissítette"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_write_date
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
+msgstr "Frissítve "
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
 msgstr "Bejelentkezési információk"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: code:addons/auth_ldap/models/res_company_ldap.py:202
+#, python-format
+msgid "No local user found for LDAP login and not configured to create one"
+msgstr ""
+
+#. module: auth_ldap
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
 msgstr "Feldolgozási paraméter"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_tls
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
 msgid ""
 "Request secure TLS/SSL encryption when connecting to the LDAP server. This "
 "option requires a server with STARTTLS enabled, otherwise all authentication"
@@ -148,12 +167,12 @@ msgstr ""
 "bekapcsolását, egyéb esetben az összes hitelesítés sikertelen lesz."
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_sequence
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
 msgid "Sequence"
 msgstr "Sorszám"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
 msgstr "Szerver információk"
 
@@ -163,12 +182,12 @@ msgid "Setup your LDAP Server"
 msgstr "LDAP Szerver beállítása"
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_user
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
 msgid "Template User"
 msgstr "Sablon felhasználó"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_password
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
@@ -177,7 +196,7 @@ msgstr ""
 "könyvtárát."
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_ldap_binddn
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
@@ -186,17 +205,17 @@ msgstr ""
 "üresen névtelken bejelentkezéshez."
 
 #. module: auth_ldap
-#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap_ldap_tls
+#: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
 msgid "Use TLS"
 msgstr "TLS (titkosítás) használata"
 
 #. module: auth_ldap
-#: model:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
+#: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
 msgstr "Felhasználói információk"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap_user
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
 msgstr "Új felhassználók létrehozásakor másolható felhasználó"
 
@@ -204,13 +223,3 @@ msgstr "Új felhassználók létrehozásakor másolható felhasználó"
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "Users"
 msgstr "Felhasználók"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_company_ldap
-msgid "res.company.ldap"
-msgstr "res.company.ldap"
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_config_settings
-msgid "res.config.settings"
-msgstr "res.config.settings"

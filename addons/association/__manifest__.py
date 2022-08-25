@@ -15,7 +15,6 @@ membership products (schemes).
     """,
     'depends': ['base_setup', 'membership', 'event'],
     'data': ['views/association_views.xml'],
-    'demo': [],
     'installable': True,
-    'auto_install': False,
+    'license': 'LGPL-3',
 }

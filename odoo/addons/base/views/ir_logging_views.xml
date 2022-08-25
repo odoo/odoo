@@ -4,9 +4,13 @@
             <field name="model">ir.logging</field>
             <field name="arch" type="xml">
                 <form string="Log">
-                    <group>
+                <sheet>
+                    <group name="creation_details" string="Creation details">
                         <field name="create_date" />
+                        <field name="create_uid" />
                         <field name="dbname" />
+                    </group>
+                    <group name="log_details" string="Logging details">
                         <field name="type" />
                         <field name="name" />
                         <field name="level" />
@@ -15,6 +19,7 @@
                         <field name="func" />
                         <field name="message" />
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>
@@ -47,8 +52,7 @@
                         <filter string="Database" name="database" domain="[]" context="{'group_by': 'dbname'}" />
                         <filter string="Level" name="group_by_level" domain="[]" context="{'group_by': 'level'}" />
                         <filter string="Type" name="group_by_type" domain="[]" context="{'group_by': 'type'}" />
-                        <filter string="Month" name="group_by_month" domain="[]" context="{'group_by': 'create_date'}" />
-                        <filter string="Day" name="group_by_day" domain="[]" context="{'group_by': 'create_date:day'}" />
+                        <filter string="Creation Date" name="group_by_month" domain="[]" context="{'group_by': 'create_date'}" />
                     </group>
                 </search>
             </field>
@@ -56,7 +60,6 @@
         <record model="ir.actions.act_window" id="ir_logging_all_act">
             <field name="name">Logging</field>
             <field name="res_model">ir.logging</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="ir_logging_search_view" />
         </record>

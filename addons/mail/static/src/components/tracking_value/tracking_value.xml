@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="mail.TrackingValue" owl="1">
+        <div class="o_TrackingValue d-flex align-items-center flex-wrap mb-1" t-attf-class="{{ className }}" role="group" t-ref="root">
+            <span class="o_TrackingValue_oldValue me-1 px-1 text-muted fw-bold" t-esc="trackingValue.oldValue.formattedValueOrNone" t-att-class="{ 'fst-italic': !trackingValue.oldValue.formattedValue }"/>
+            <i class="o_TrackingValue_separator fa fa-long-arrow-right mx-1 text-600" title="Changed" role="img" aria-label="Changed"/>
+            <span class="o_TrackingValue_newValue me-1 fw-bold text-info" t-esc="trackingValue.newValue.formattedValueOrNone" t-att-class="{ 'fst-italic': !trackingValue.newValue.formattedValue }"/>
+            <span class="o_TrackingValue_fieldName ms-1 fst-italic text-muted" t-esc="'(' + trackingValue.formattedChangedField + ')'"/>
+        </div>
+    </t>
+</templates>

@@ -3,17 +3,19 @@
 # * web_tour
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
-# liulixia <liu.lixia@elico-corp.com>, 2016
-# liAnGjiA <liangjia@qq.com>, 2017
-# 苏州远鼎 <tiexinliu@126.com>, 2017
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# ChinaMaker <liuct@chinamaker.net>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: 苏州远鼎 <tiexinliu@126.com>, 2017\n"
+"POT-Creation-Date: 2018-09-21 13:18+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,89 +25,96 @@ msgstr ""
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:485
+#: code:addons/web_tour/static/src/js/tour_manager.js:386
 #, python-format
-msgid "Click the <i>Home icon</i> to navigate across apps."
-msgstr "点击<i>首页</i>在应用之间跳转."
+msgid "Click on the <i>Home icon</i> to navigate across apps."
+msgstr "点击 <i>首页</i> 导航可在功能应用间跳转。"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_user_id
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__user_id
 msgid "Consumed by"
 msgstr "消费"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:8
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:7
 #, python-format
 msgid "Disable Tours"
-msgstr "禁用导览"
+msgstr "禁用向导"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_display_name
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: web_tour
 #: model:ir.model,name:web_tour.model_ir_http
-msgid "HTTP routing"
+msgid "HTTP Routing"
 msgstr "HTTP 路由"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_id
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__id
 msgid "ID"
 msgstr "ID"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour___last_update
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后更改日"
 
 #. module: web_tour
-#: model:ir.ui.view,arch_db:web_tour.edit_tour_list
+#: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_list
 msgid "Menu"
 msgstr "菜单"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:21
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:17
 #, python-format
 msgid "Name"
 msgstr "名称"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:22
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:18
 #, python-format
 msgid "Path"
 msgstr "路径"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:198
+#: code:addons/web_tour/static/src/js/tour_manager.js:76
 #, python-format
 msgid "Skip tour"
-msgstr "跳过游览"
+msgstr "跳过向导"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:11
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:8
 #, python-format
 msgid "Start Tour"
-msgstr "开始导览"
+msgstr "开始向导"
 
 #. module: web_tour
-#: model:ir.ui.view,arch_db:web_tour.edit_tour_search
+#: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_search
 msgid "Tip"
 msgstr "提示"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour_name
+#. openerp-web
+#: code:addons/web_tour/static/src/xml/debug_manager.xml:25
+#, python-format
+msgid "Tour"
+msgstr "向导"
+
+#. module: web_tour
+#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__name
 msgid "Tour name"
-msgstr "游览名称"
+msgstr "向导名称"
 
 #. module: web_tour
 #: model:ir.actions.act_window,name:web_tour.edit_tour_action
 #: model:ir.model,name:web_tour.model_web_tour_tour
 #: model:ir.ui.menu,name:web_tour.menu_tour_action
 msgid "Tours"
-msgstr "游览"
+msgstr "向导"

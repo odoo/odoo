@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageSeenIndicator" owl="1">
+        <t t-if="messageSeenIndicatorView and messageSeenIndicatorView.messageSeenIndicator">
+            <span class="o_MessageSeenIndicator position-relative d-flex opacity-75-hover opacity-50" t-att-class="{ 'o-all-seen text-odoo': messageSeenIndicatorView.messageSeenIndicator.hasEveryoneSeen }" t-attf-class="{{ className }}" t-att-title="messageSeenIndicatorView.messageSeenIndicator.text" t-ref="root">
+                <t t-if="!messageSeenIndicatorView.messageSeenIndicator.isMessagePreviousToLastCurrentPartnerMessageSeenByEveryone">
+                    <t t-if="messageSeenIndicatorView.messageSeenIndicator.hasSomeoneFetched or messageSeenIndicatorView.messageSeenIndicator.hasSomeoneSeen">
+                        <i class="o_MessageSeenIndicator_icon o-first fa fa-check ps-1"/>
+                    </t>
+                    <t t-if="messageSeenIndicatorView.messageSeenIndicator.hasSomeoneSeen">
+                        <i class="o_MessageSeenIndicator_icon o-second fa fa-check position-absolute"/>
+                    </t>
+                </t>
+            </span>
+        </t>
+    </t>
+</templates>

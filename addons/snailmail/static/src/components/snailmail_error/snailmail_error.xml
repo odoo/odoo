@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="snailmail.SnailmailError" owl="1">
+        <t t-if="snailmailErrorView">
+            <div class="o_SnailmailError card bg-white" t-attf-class="{{ className }}" t-ref="root">
+                <h4 class="m-3">Failed letter</h4>
+                <hr class="mt-0 mb-3"/>
+                <t t-if="snailmailErrorView.notification.failure_type === 'sn_credit'">
+                    <p class="o_SnailmailError_contentCredit mx-3 mb-3">
+                        The letter could not be sent due to insufficient credits on your IAP account.
+                    </p>
+                    <t t-if="messaging.snailmail_credits_url">
+                        <div class="text-end mx-3 mb-3">
+                            <a class="btn btn-link" t-att-href="messaging.snailmail_credits_url" target="_blank">
+                                <i class="fa fa-arrow-right"/> Buy credits
+                            </a>
+                        </div>
+                    </t>
+                </t>
+                <t t-elif="snailmailErrorView.notification.failure_type === 'sn_trial'">
+                    <p class="o_SnailmailError_contentTrial mx-3 mb-3">
+                        You need credits on your IAP account to send a letter.
+                    </p>
+                    <t t-if="messaging.snailmail_credits_url_trial">
+                        <div class="text-end mx-3 mb-3">
+                            <a class="btn btn-link" t-att-href="messaging.snailmail_credits_url_trial">
+                                <i class="fa fa-arrow-right"/> Buy credits
+                            </a>
+                        </div>
+                    </t>
+                </t>
+                <t t-elif="snailmailErrorView.notification.failure_type === 'sn_price'">
+                    <p class="o_SnailmailError_contentPrice mx-3 mb-3">
+                        The country to which you want to send the letter is not supported by our service.
+                    </p>
+                </t>
+                <t t-elif="snailmailErrorView.notification.failure_type === 'sn_error'">
+                    <p class="o_SnailmailError_contentError mx-3 mb-3">
+                        An unknown error occurred. Please contact our <a href="https://www.odoo.com/help" target="new">support</a> for further assistance.
+                    </p>
+                </t>
+                <hr class="mt-0 mb-3"/>
+                <div class="o_SnailmailError_buttons mx-3 mb-3">
+                    <t t-if="snailmailErrorView.hasCreditsError">
+                        <button class="o_SnailmailError_resendLetterButton btn btn-primary me-2" t-on-click="snailmailErrorView.onClickResendLetter">Re-send letter</button>
+                    </t>
+                    <button class="o_SnailmailError_cancelLetterButton btn me-2"
+                        t-att-class="{
+                        'btn-primary': !snailmailErrorView.hasCreditsError,
+                        'btn-secondary': snailmailErrorView.hasCreditsError,
+                        }"
+                        t-on-click="snailmailErrorView.onClickCancelLetter"
+                    >
+                        Cancel letter
+                    </button>
+                    <button class="o_SnailmailError_closeButton btn btn-secondary me-2" t-on-click="snailmailErrorView.onClickClose">Close</button>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

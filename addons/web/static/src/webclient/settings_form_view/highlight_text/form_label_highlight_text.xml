@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.FormLabelHighlightText" owl="1">
+        <label class="o_form_label" t-att-for="props.id" t-att-class="className">
+            <HighlightText originalText="props.string"/>
+            <t t-if="upgradeEnterprise">
+                <span class="badge text-bg-primary oe_inline o_enterprise_label">Enterprise</span>
+            </t>
+        </label>
+    </t>
+</templates>

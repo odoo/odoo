@@ -1,20 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_crm
+# 	* sale_crm
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
-# Rona Lin <ssauapw@qq.com>, 2016
-# Xu Lei <xulei8@qq.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# zpq001 <zpq001@live.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.1\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-13 14:37+0000\n"
-"PO-Revision-Date: 2017-12-13 14:37+0000\n"
-"Last-Translator: Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,24 +25,74 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
 msgstr "<span class=\"o_stat_text\"> 订单</span>"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
-msgid "<span class=\"o_stat_text\"> Quotation(s) </span>"
-msgstr "<span class=\"o_stat_text\">报价</span>"
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__lead_id
+msgid "Associated Lead"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
-msgstr "发票"
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
+msgid "Cancel"
+msgstr "取消日期"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_res_users_target_sales_invoiced
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
+msgid "Confirm"
+msgstr "确认"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_quotation_partner
+msgid "Create new or use existing Customer on new Quotation"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__create_uid
+msgid "Created by"
+msgstr "创建者"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__partner_id
+msgid "Customer"
+msgstr "客户"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
 msgid "Invoiced in Sales Orders Target"
 msgstr "销售订单目标发票"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
+msgid "Last Modified on"
+msgstr "最后更改日"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
+msgid "Last Updated by"
+msgstr "最后更新者"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_date
+msgid "Last Updated on"
+msgstr "更新时间"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -48,75 +100,91 @@ msgid "Lead/Opportunity"
 msgstr "线索/商机"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
+#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
 msgstr "登录到订单所属商机的会话"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Marketing"
-msgstr "市场营销"
+#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
+msgid "My Quotations"
+msgstr "我的报价单"
 
 #. module: sale_crm
-#: model:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model:ir.actions.act_window,name:sale_crm.crm_quotation_partner_action
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
 msgid "New Quotation"
-msgstr "新报价单"
+msgstr "新采购报价"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_number
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__quotation_count
 msgid "Number of Quotations"
 msgstr "报价单的数量"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_opportunity_id
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_order_count
+msgid "Number of Sale Orders"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__opportunity_id
 msgid "Opportunity"
 msgstr "商机"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_order_ids
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__order_ids
 msgid "Orders"
 msgstr "订单"
 
 #. module: sale_crm
-#: code:addons/sale_crm/models/crm_team.py:12
-#, python-format
-msgid "Pipeline"
-msgstr "漏斗"
-
-#. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
-#: model:ir.model,name:sale_crm.model_sale_order
 msgid "Quotation"
 msgstr "报价单"
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
-#: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__action
+msgid "Quotation Customer"
+msgstr ""
+
+#. module: sale_crm
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "Quotations"
 msgstr "报价单"
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.sale_action_orders
-msgid "Sale orders"
+#: code:addons/sale_crm/models/crm_team.py:0
+#, python-format
+msgid "Sales Analysis"
+msgstr "销售分析"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+msgid "Sales Order"
 msgstr "销售订单"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_team
-msgid "Sales Channel"
-msgstr "销售渠道"
+msgid "Sales Team"
+msgstr "销售团队"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead_sale_amount_total
+#: code:addons/sale_crm/models/crm_team.py:0
+#, python-format
+msgid "Sales: Untaxed Total"
+msgstr "销售：不含税合计"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
 msgid "Sum of Orders"
 msgstr "销售订单的总数"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order_tag_ids
+#: model:ir.model.fields,field_description:sale_crm.field_sale_order__tag_ids
 msgid "Tags"
 msgstr "标签"
 
 #. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_crm_lead_sale_amount_total
+#: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
 msgid "Untaxed Total of Confirmed Orders"
 msgstr "免税的总订单确认"
 
@@ -124,3 +192,9 @@ msgstr "免税的总订单确认"
 #: model:ir.model,name:sale_crm.model_res_users
 msgid "Users"
 msgstr "用户"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
+#, python-format
+msgid "You can only apply this action from a lead."
+msgstr ""

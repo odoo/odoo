@@ -5,8 +5,11 @@ from odoo import fields, models
 
 
 class SaleOrder(models.Model):
-    _name = "sale.order"
-    _inherit = ['sale.order', 'utm.mixin']
+    _inherit = 'sale.order'
 
-    tag_ids = fields.Many2many('crm.lead.tag', 'sale_order_tag_rel', 'order_id', 'tag_id', string='Tags')
-    opportunity_id = fields.Many2one('crm.lead', string='Opportunity', domain="[('type', '=', 'opportunity')]")
+    opportunity_id = fields.Many2one(
+        'crm.lead', string='Opportunity', check_company=True,
+        domain="[('type', '=', 'opportunity'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+
+    def action_confirm(self):
+        return super(SaleOrder, self.with_context({k:v for k,v in self._context.items() if k != 'default_tag_ids'})).action_confirm()

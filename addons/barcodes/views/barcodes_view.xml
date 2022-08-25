@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Barcode Nomenclature">
                     <sheet>
-                        <group col="4">
+                        <group name="general_attributes" col="4">
                             <field name="name" />
                             <field name="upc_ean_conv"/>
                         </group>
@@ -54,7 +54,6 @@
             <field name="name">Barcode Nomenclatures</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">barcode.nomenclature</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

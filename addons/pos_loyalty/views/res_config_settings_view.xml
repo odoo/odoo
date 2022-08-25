@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_view_form_inherit_pos_loyalty" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_loyalty</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="warning_text_pos_loyalty" position="replace">
+                <div class="mt16">
+                    <label for="pos_loyalty_program_id" string="Loyalty Program"/>
+                    <field name="pos_loyalty_program_id"/>
+                </div>
+            </div>
+            <xpath expr="//div[@id='pos-loyalty']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" title="Manage gift card." id="pos-gift-card">
+                    <div class="o_setting_left_pane">
+                        <field name="pos_use_gift_card"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="pos_use_gift_card" string="Gift Card"/>
+                        <div class="text-muted">
+                            Manage gift card
+                        </div>
+                        <div class="content-group" attrs="{'invisible': [('pos_use_gift_card', '=', False)]}">
+                            <div class="mt16">
+                                <label for="pos_gift_card_program_id" class="o_light_label"/>
+                                <field name="pos_gift_card_program_id"/>
+                            </div>
+                            <div>
+                                <label for="pos_gift_card_settings" string="Gift Card Settings" class="o_light_label"/>
+                                <field name="pos_gift_card_settings" widget="radio"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box" id="pos-coupon">
+                    <div class="o_setting_left_pane">
+                        <field name="pos_use_coupon_programs" nolabel="1"/>
+                    </div>
+                    <div class="o_setting_right_pane" title="Define the coupon and promotion programs you can use in this PoS.">
+                        <label for="pos_use_coupon_programs"/>
+                        <div class="text-muted">
+                            Define the coupon and promotion programs you can use in this PoS.
+                        </div>
+                        <div attrs="{'invisible': [('pos_use_coupon_programs', '=', False)]}" title="Promotion &amp; coupon programs to use.">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="pos_promo_program_ids" class="col-lg-3 o_light_label"/>
+                                    <field name="pos_promo_program_ids"
+                                        widget="many2many_tags"
+                                        domain="[('program_type', '=', 'promotion'), ('active', '=', True)]" />
+                                </div>
+                            </div>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="pos_coupon_program_ids" class="col-lg-3 o_light_label"/>
+                                    <field name="pos_coupon_program_ids"
+                                        widget="many2many_tags"
+                                        domain="[('program_type', '=', 'coupons'), ('active', '=', True)]"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

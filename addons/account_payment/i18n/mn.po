@@ -1,13 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_payment
+# 	* account_payment
+# 
+# Translators:
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:08+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,63 +21,103 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:61
-#, python-format
-msgid "<%s>  transaction (%s) invoice confirmation failed : <%s>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
+msgid "&amp;times;"
+msgstr "&amp;цаг;"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:45
-#, python-format
-msgid "<%s> transaction (%s) failed : <%s>"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid "<b>Communication: </b>"
+msgstr "<b>Холбох лавлагаа: </b>"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:52
-#, python-format
-msgid "<%s> transaction (%s) invalid state : %s"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
-msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid ""
-"<i class=\"fa fa-arrow-circle-right\"/><span class=\"hidden-xs\"> Pay "
-"Now</span>"
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Pay Now</span>"
 msgstr ""
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
+"Одоо төлөх</span>"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
-msgid "<i class=\"fa fa-check-circle\"/> Paid"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Pay Now"
+msgstr "<i class=\"fa fa-fw fa-arrow-circle-right\"/> Одоо төлөх"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
-msgid "<i class=\"fa fa-check-circle\"/> Pending"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Paid"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Төлөх"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+msgid "<i class=\"fa fa-fw fa-check-circle\"/> Pending"
+msgstr "<i class=\"fa fa-fw fa-check-circle\"/> Хүлээгдэж буй"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid ""
-"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
-" fa-clock-o\"/> Waiting</span>"
+"<i class=\"fa fa-info\"/> You have credits card registered, you can log-in "
+"to be able to use them."
 msgstr ""
+"<i class=\"fa fa-info\"/> Таны кредит картаа бүртгэлтэй байна. Та нэвтэрч "
+"орсоноор түүнийг ашиглах боломжтой."
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid ""
-"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
-"fa-fw fa-check\"/> Done</span>"
+"<span class=\"badge badge-pill badge-danger\"><i class=\"fa fa-fw fa-"
+"remove\"/><span class=\"d-none d-md-inline\"> Cancelled</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-danger\"><i class=\"fa fa-fw fa-"
+"remove\"/><span class=\"d-none d-md-inline\"> Цуцлагдсан</span></span>"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
-msgid "<strong>Transactions</strong>"
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-"
+"clock-o\"/><span class=\"d-none d-md-inline\"> Waiting for "
+"Payment</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-"
+"clock-o\"/><span class=\"d-none d-md-inline\"> Төлөлт хүлээж "
+"буй</span></span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<span class=\"badge badge-pill badge-primary\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Authorized</span></span>"
+msgstr ""
+"<span class=\"badge badge-pill badge-primary\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Эрх бүхий</span></span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Paid</span></span>"
+msgstr ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"d-none d-md-inline\"> Төлсөн</span></span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid ""
+"<span class=\"badge badge-pill badge-warning\"><span class=\"d-none d-md-"
+"inline\"> Pending</span></span>"
+msgstr ""
+"<span class=\"badge badge-pill badge-warning\"><span class=\"d-none d-md-"
+"inline\"> Хүлээгдэж буй</span></span>"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_success
+msgid ""
+"Done, your online payment has been successfully processed. Thank you for "
+"your order."
+msgstr ""
+"Дууслаа, таны онлайн төлбөр амжилттай хийгдлээ. Захиалгаа баталгаажуулсанд "
+"тань баярлалаа."
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:53
@@ -81,113 +126,62 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_account_invoice
-#: model:ir.model.fields,field_description:account_payment.field_payment_transaction_account_invoice_id
-msgid "Invoice"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
-msgid "Invoice successfully paid."
-msgstr ""
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
-msgid "Last Transaction"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_count
-msgid "Number of payment transactions"
-msgstr ""
+"Хэрэв бид таны төлбөрийн мэдээллийг өөрсдийн сервер дээр хадгалвал, энэ "
+"үйлчилгээний төлбөр автоматаар нэхэмжлэгдэнэ."
 
 #. module: account_payment
 #: code:addons/account_payment/controllers/payment.py:50
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Төлөх & Батлах"
 
 #. module: account_payment
-#: code:addons/account_payment/models/payment.py:119
-#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+#: code:addons/account_payment/models/payment.py:21
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 #, python-format
 msgid "Pay Now"
-msgstr ""
+msgstr "Одоо төлөх"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+msgid "Pay now"
+msgstr "Одоо төлөх"
+
+#. module: account_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Pay with"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_acquirer_id
-msgid "Payment Acquirer"
-msgstr ""
+msgstr "Төлөх"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Төлбөрийн гүйлгээ"
 
 #. module: account_payment
-#: code:addons/account_payment/models/account_invoice.py:28
-#, python-format
-msgid "Payment Transactions"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "Status"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
-msgid ""
-"There was an error processing your payment: impossible to validate invoice."
-msgstr ""
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
-msgid "There was an error processing your payment: invalid invoice state."
-msgstr ""
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr ""
+msgstr "Таны төлбөрийг гүйцэлдүүлэхэд алдаа үүслээ: нэхэмжлэл хүчингүй."
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
+"Таны төлбөрийг гүйцэлдүүлэхэд алдаа үүслээ: кредит картын ID баталгаажилт "
+"асуудалтай."
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
-msgid ""
-"There was an error processing your payment: transaction amount issue.<br/>"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr ""
+msgstr "Таны төлбөрийг гүйцэлдүүлэхэд алдаа үүслээ: гүйлгээ амжилтгүй.<br/>"
 
 #. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
-msgid "There was an error processing your payment: transaction issue.<br/>"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
+#: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr ""
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids
-#: model:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
-msgid "Transactions"
-msgstr ""
+msgstr "Таны төлбөрийг гүйцэлдүүлэхэд алдаа үүслээ: хүчингүй кредит карт."

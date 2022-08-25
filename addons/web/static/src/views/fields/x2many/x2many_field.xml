@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.X2ManyField" owl="1">
+        <div t-attf-class="o_field_x2many o_field_x2many_{{viewMode}}">
+            <div class="o_x2m_control_panel">
+                <t t-if="displayAddButton">
+                    <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                        <div>
+                            <button type="button" class="btn btn-secondary o-kanban-button-new" title="Create record" accesskey="c" t-on-click="() => this.onAdd()">
+                                <t t-esc="addButtonText"/>
+                            </button>
+                        </div>
+                    </div>
+                </t>
+                <div class="o_cp_pager" role="search">
+                    <Pager t-if="props.value.count > props.value.limit" t-props="pagerProps"/>
+                </div>
+            </div>
+            <t t-if="Renderer" t-component="Renderer" t-props="rendererProps"/>
+        </div>
+    </t>
+
+</templates>

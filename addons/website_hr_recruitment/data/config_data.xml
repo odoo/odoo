@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <record id="menu_jobs" model="website.menu">
-            <field name="name">Jobs</field>
-            <field name="url">/jobs</field>
-            <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">50</field>
-        </record>
         <record id="action_open_website" model="ir.actions.act_url">
             <field name="name">Website Recruitment Form</field>
             <field name="target">self</field>
@@ -19,6 +13,7 @@
     </data>
     <data>
         <record id="hr_recruitment.model_hr_applicant" model="ir.model">
+            <field name="website_form_key">apply_job</field>
             <field name="website_form_default_field_id" ref="hr_recruitment.field_hr_applicant__description" />
             <field name="website_form_access">True</field>
             <field name="website_form_label">Apply for a Job</field>

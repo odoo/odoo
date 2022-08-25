@@ -17,8 +17,11 @@
             <field name="arch" type="xml">
                 <tree string="Currency Rates" editable="bottom">
                     <field name="name"/>
-                    <field name="rate"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_rate" digits="[12,12]"/>
+                    <field name="inverse_company_rate" digits="[12,12]"/>
+                    <field name="rate" digits="[12,12]" optional="hide"/>
+                    <field name="write_date" optional="hide"/>
                 </tree>
             </field>
         </record>
@@ -32,35 +35,44 @@
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="rate"/>
+                                <field name="rate" digits="[12,12]" groups="base.group_no_one"/>
+                                <field name="company_rate" digits="[12,12]"/>
+                                <field name="inverse_company_rate" digits="[12,12]"/>
                             </group>
                             <group>
                                 <field name="currency_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
-
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
 
-        <act_window
-           id="act_view_currency_rates"
-           name="Currency Rates"
-           view_mode='tree,form'
-           view_id='view_currency_rate_tree'
-           domain="[('currency_id','=', active_id)]"
-           context="{'default_currency_id': active_id}"
-           res_model="res.currency.rate"/>
+        <record id="act_view_currency_rates" model="ir.actions.act_window">
+            <field name="name">Show Currency Rates</field>
+            <field name="res_model">res.currency.rate</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='view_id' ref='view_currency_rate_tree'/>
+            <field name="domain">[('currency_id','=', active_id)]</field>
+            <field name="context">{'default_currency_id': active_id}</field>
+            <!-- <field name="target">fullscreen</field> -->
+            <field name="binding_model_id" ref="model_res_currency"/>
+            <field name="binding_view_types">form</field>
+        </record>
 
         <record id="view_currency_search" model="ir.ui.view">
             <field name="name">res.currency.search</field>
             <field name="model">res.currency</field>
             <field name="arch" type="xml">
                 <search string="Currencies">
-                    <field name="name" string="Currency"/>
-                    <field name="active"/>
+                    <field name="name" string="Currency" filter_domain="('|','|','|','|',
+                                                                        ('name', 'ilike', self),
+                                                                        ('full_name', 'ilike', self),
+                                                                        ('symbol', 'ilike', self),
+                                                                        ('currency_unit_label', 'ilike', self),
+                                                                        ('currency_subunit_label', 'ilike', self),
+                                                                        )"/>
                     <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active currencies"/>
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive currencies"/>
                 </search>
@@ -74,9 +86,10 @@
                 <tree string="Currencies" decoration-muted="(not active)">
                     <field name="name"/>
                     <field name="symbol"/>
-                    <field name="rate_ids" invisible="1"/>
-                    <field name="date"/>
-                    <field name="rate"/>
+                    <field name="full_name" string="Name" optional="show"/>
+                    <field name="date" string="Last Update"/>
+                    <field name="rate" digits="[12,6]"/>
+                    <field name="inverse_rate" digits="[12,6]" optional="hide"/>
                     <field name="active" widget="boolean_toggle"/>
                 </tree>
             </field>
@@ -89,21 +102,26 @@
                 <kanban class="o_kanban_mobile">
                     <field name="name"/>
                     <field name="symbol"/>
+                    <field name="full_name"/>
+                    <field name="active"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="row mb4">
-                                    <div class="col-xs-6">
-                                        <strong><span><t t-esc="record.name.value"/></span></strong>
+                                    <div class="col-2">
+                                        <h3><t t-esc="record.name.value"/></h3>
                                     </div>
-                                    <div class="col-xs-6 pull-right text-right">
-                                        <span class="badge"><t t-esc="record.symbol.value"/></span>
+                                    <div class="col-5">
+                                        <span class="badge rounded-pill"><t t-esc="record.symbol.value"/></span>
+                                    </div>
+                                    <div class="col-5 text-end">
+                                        <t t-if="! record.active.raw_value"><span class="badge rounded-pill bg-light border">inactive</span></t>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-12">
-                                        <strong><span>Current Rate: </span></strong>
-                                        <field name="rate"/>
+                                    <div class="col-12">
+                                        <div><field name="rate_string"/></div>
+                                        <t t-if="record.date.raw_value"><div>Last update: <field name="date"/></div></t>
                                     </div>
                                 </div>
                             </div>
@@ -118,20 +136,20 @@
             <field name="model">res.currency</field>
             <field name="arch" type="xml">
                 <form string="Currency">
+                    <field name="is_current_company_currency" invisible="1"/>
+                    <div class="oe_edit_only alert alert-info text-center" role="alert" groups="base.group_no_one">
+                        You cannot reduce the number of decimal places of a currency already used on an accounting entry.
+                    </div>
+
+                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': [('is_current_company_currency','=',False)]}">
+                        This is your company's currency.
+                    </div>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" string="Rates" type="action" name="%(act_view_currency_rates)d"
-                                icon="fa-money" widget="statinfo" attrs="{'invisible': [('active', '=', False)]}"/>
-                            <button name="toggle_active" type="object"
-                                    class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "active"}'/>
-                            </button>
-                        </div>
                         <group>
                             <group>
                                 <field name="name"/>
-                                <field name="rate"/>
+                                <field name="full_name" string="Name"/>
+                                <field name="active" widget="boolean_toggle"/>
                             </group>
                             <group>
                                 <field name="currency_unit_label"/>
@@ -150,40 +168,31 @@
                                 <field name="position"/>
                             </group>
                         </group>
+                        <notebook class="o_currency_rate_list" attrs="{'invisible': [('is_current_company_currency','=',True)]}">
+                            <page string="Rates" name="rates">
+                                <field name="rate_ids" widget="one2many">
+                                    <tree string="Rates"  editable="top" limit="25">
+                                        <field name="name"/>
+                                        <field name="company_id" groups="base.group_multi_company"/>
+                                        <field name="company_rate" digits="[12,12]"/>
+                                        <field name="inverse_company_rate" digits="[12,12]"/>
+                                        <field name="rate" digits="[12,12]" optional="hide"/>
+                                        <field name="write_date" optional="hide"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
+
         <record id="action_currency_form" model="ir.actions.act_window">
             <field name="name">Currencies</field>
             <field name="res_model">res.currency</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,kanban,form</field>
-            <field name="search_view_id" ref="view_currency_search"/>
-            <field name="context">{'active_test': False, 'search_default_active': 1}</field>
-        </record>
-        <record id="action_currency_all_form" model="ir.actions.act_window">
-            <field name="name">Currencies</field>
-            <field name="res_model">res.currency</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="view_currency_search"/>
             <field name="context">{'active_test': False}</field>
-        </record>
-
-        <!-- We override the view res_company here because the action wasn't defined before -->
-        <record id="action_view_company_form_link_2_currencies" model="ir.ui.view">
-            <field name="name">res.company.form</field>
-            <field name="model">res.company</field>
-            <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@id='company_currency']" position="after">
-                    <label for="id" invisible="1"/>
-                    <p class="text-muted">
-                        <a href="" type="action" name="%(base.action_currency_all_form)d">Activate more currencies</a>.
-                    </p>
-                </xpath>
-            </field>
         </record>
 
     </data>

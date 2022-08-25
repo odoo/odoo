@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ColorField" owl="1">
+        <div class="o_field_color d-flex" t-att-class="{ 'o_field_cursor_disabled': readonly }" t-attf-style="background-color: {{state.color}}">
+            <input t-on-click.stop="" class="w-100 h-100 opacity-0" type="color" t-att-value="state.color" t-att-disabled="readonly" t-on-input="(ev) => this.state.color = ev.target.value" t-on-change="(ev) => this.props.update(ev.target.value)" />
+        </div>
+    </t>
+
+</templates>

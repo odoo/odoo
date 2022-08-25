@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="exception_purchase_on_sale_quantity_decreased" name="Message: Alert on purchase orders when ordered quantity decreased on Sales Orders">
+    <div>
+        <p>
+            Exception(s) occurred on the sale order(s):
+            <t t-foreach="sale_orders" t-as="sale_order">
+                <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_order.id"><t t-esc="sale_order.name"/></a>.
+            </t>
+            Manual actions may be needed.
+        </p>
+        <div class="mt16">
+            <p>Exception(s):</p>
+            <ul t-foreach="sale_lines" t-as="sale_line">
+                <li>
+                    <t t-set="new_qty" t-value="sale_line.product_uom_qty"/>
+                    <t t-set="old_qty" t-value="origin_values.get(sale_line.id, 0.0)"/>
+
+                    <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_line.order_id.id"><t t-esc="sale_line.order_id.name"/></a>:
+                    <t t-esc="new_qty"/> <t t-esc="sale_line.product_uom.name"/> of <t t-esc="sale_line.product_id.name"/> ordered instead of <t t-esc="old_qty"/> <t t-esc="sale_line.product_uom.name"/>
+                  </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<template id="exception_purchase_on_sale_cancellation" name="Message: Alert on purchase orders when sales orders are cancelled">
+    <div>
+        <p>
+            Exception(s) occurred on the sale order(s):
+            <t t-foreach="sale_orders" t-as="sale_order">
+                <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_order.id"><t t-esc="sale_order.name"/></a>
+            </t>.
+            Manual actions may be needed.
+        </p>
+        <div class="mt16">
+            <p>Exception(s):</p>
+            <ul t-foreach="sale_order_lines" t-as="sale_line">
+                <li>
+                    <a href="#" data-oe-model="sale.order" t-att-data-oe-id="sale_line.order_id.id"><t t-esc="sale_line.order_id.name"/></a>: <t t-esc="sale_line.product_uom_qty"/> <t t-esc="sale_line.product_uom.name"/> of <t t-esc="sale_line.product_id.name"/> cancelled
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<template id="exception_sale_on_purchase_cancellation" name="Message: Alert on sale orders when purchase orders are cancelled">
+    <div>
+        <p>
+            Exception(s) occurred on the purchase order(s):
+            <t t-foreach="purchase_orders" t-as="purchase_order">
+                <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_order.id"><t t-esc="purchase_order.name"/></a>
+            </t>.
+            Manual actions may be needed.
+        </p>
+        <div class="mt16">
+            <p>Exception(s):</p>
+            <ul t-foreach="purchase_order_lines" t-as="purchase_line">
+                <li>
+                    <a href="#" data-oe-model="purchase.order" t-att-data-oe-id="purchase_line.order_id.id"><t t-esc="purchase_line.order_id.name"/></a>: <t t-esc="purchase_line.product_qty"/> <t t-esc="purchase_line.product_uom.name"/> of <t t-esc="purchase_line.product_id.name"/> cancelled
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+</odoo>

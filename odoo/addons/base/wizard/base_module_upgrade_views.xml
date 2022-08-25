@@ -13,8 +13,8 @@
                     <separator string="Impacted Apps"/>
                     <field name="module_info"/>
                     <footer>
-                        <button name="upgrade_module" string="Confirm" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" name="upgrade_module_cancel" type="object"/>
+                        <button name="upgrade_module" string="Confirm" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" name="upgrade_module_cancel" type="object" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>
@@ -24,7 +24,6 @@
             <field name="name">Apply Schedule Upgrade</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.module.upgrade</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
@@ -43,11 +42,11 @@
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <form string="Apply Schedule Upgrade">
-                    <div><label string="The selected modules have been updated / installed !"/></div>
-                    <div><label string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."/></div>
+                    <div><span class="o_form_label">The selected modules have been updated / installed !</span></div>
+                    <div><span class="o_form_label">We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."</span></div>
                     <footer>
-                        <button name="config" string="Start configuration" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel"/>
+                        <button name="config" string="Start configuration" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>
@@ -57,7 +56,6 @@
             <field name="name">Module Upgrade Install</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.module.upgrade</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_base_module_upgrade_install"/>
             <field name="target">new</field>

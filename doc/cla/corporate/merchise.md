@@ -21,3 +21,5 @@ Medardo Rodríguez med@merchise.org https://github.com/med-merchise
 Abel Firvida firvida@merchise.org
 Abel Firvida abel@merchise.org
 Mónica Díaz Pena monicadp@merchise.org  https://github.com/mdpena
+Larisa González larisa@merchise.org
+Luis Enrique Biosca  pitufo@merchise.org https://github.com/scrat911

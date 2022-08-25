@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="survey_survey_view_tree_slides" model="ir.ui.view">
+        <field name="name">survey.survey.view.tree.slides</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <field name="title" position="attributes">
+                <attribute name="string">Certification Title</attribute>
+            </field>
+            <field name="answer_count" position="replace"/>
+            <field name="success_ratio" position="attributes">
+                <attribute name="string">Success Ratio (%)</attribute>
+            </field>
+            <field name="answer_score_avg" position="attributes">
+                <attribute name="string">Avg Score (%)</attribute>
+            </field>
+            <button name="certification" position="replace"/>
+        </field>
+    </record>
+
+    <record id="survey_survey_view_search_slides" model="ir.ui.view">
+        <field name="name">survey.survey.view.search.slides</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_search"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr='//filter[@name="certification"]' position="replace"/>
+        </field>
+    </record>
+
+    <record id="survey_survey_view_form" model="ir.ui.view">
+        <field name="name">survey.survey.view.form.inherit.website.slides</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_survey_user_input_certified']" position="before">
+                <button name="action_survey_view_slide_channels"
+                    type="object"
+                    class="oe_stat_button"
+                    attrs="{'invisible': [('slide_channel_count', '=', 0)]}"
+                    icon="fa-graduation-cap"
+                    groups="website_slides.group_website_slides_officer">
+                    <field string="Courses" name="slide_channel_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="survey_survey_view_kanban" model="ir.ui.view">
+        <field name="name">survey.survey.view.kanban.inherit.website.slides</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='session_state']" position="after">
+                <field name="slide_channel_count"/>
+            </xpath>
+            <xpath expr="//div[@name='o_survey_kanban_card_section_success']" position="after">
+                <div class="col-lg-1 col-sm-4 col-6 py-0 my-2">
+                    <a t-if="record.slide_channel_count.raw_value"
+                       type="object"
+                       name="action_survey_view_slide_channels"
+                       class="fw-bold">
+                        <field name="slide_channel_count"/><br />
+                        <span class="text-muted">Courses</span>
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="survey_survey_action_slides" model="ir.actions.act_window">
+        <field name="name">Certifications</field>
+        <field name="res_model">survey.survey</field>
+        <field name="view_mode">kanban,tree,pivot,graph,form</field>
+        <field name="domain">[('certification', '=', True)]</field>
+        <field name="search_view_id" ref="survey_survey_view_search_slides"/>
+        <field name="context">{'default_certification': True, 'default_scoring_type': 'scoring_with_answers'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Certification
+            </p>
+            <p>
+                Assess the level of understanding of your attendees
+                <br/>and send them a document if they pass the test.
+            </p>
+        </field>
+    </record>
+    <record id="survey_survey_action_slides_view_kanban" model="ir.actions.act_window.view">
+         <field name="sequence" eval="0"/>
+         <field name="view_mode">kanban</field>
+         <field name="view_id" ref="survey.survey_survey_view_kanban"/>
+         <field name="act_window_id" ref="survey_survey_action_slides"/>
+     </record>
+     <record id="survey_survey_action_slides_view_tree" model="ir.actions.act_window.view">
+         <field name="sequence" eval="1"/>
+         <field name="view_mode">tree</field>
+         <field name="view_id" ref="survey_survey_view_tree_slides"/>
+         <field name="act_window_id" ref="survey_survey_action_slides"/>
+     </record>
+     <record id="survey_survey_action_slides_view_form" model="ir.actions.act_window.view">
+         <field name="sequence" eval="4"/>
+         <field name="view_mode">form</field>
+         <field name="view_id" ref="survey.survey_survey_view_form"/>
+         <field name="act_window_id" ref="survey_survey_action_slides"/>
+     </record>
+</odoo>

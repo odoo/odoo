@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="product.consu_delivery_01" model="product.product">
+        <field name="invoice_policy">order</field>
+    </record>
+
+    <record id="product.consu_delivery_02" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.consu_delivery_03" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_order_01" model="product.product">
+        <field name="invoice_policy">order</field>
+    </record>
+
+    <record id="product.product_delivery_01" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_delivery_02" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_27" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_25" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_24" model="product.product">
+        <field name="invoice_policy">order</field>
+    </record>
+
+    <record id="product.product_product_22" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_20" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_16" model="product.product">
+        <field name="invoice_policy">order</field>
+    </record>
+
+    <record id="product.product_product_13" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_12" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_11b" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_11" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_10" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_9" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_8" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_7" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_6" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_5" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_4d" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_4c" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_4b" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_4" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_3" model="product.product">
+        <field name="invoice_policy">delivery</field>
+        <field name="expense_policy">cost</field>
+    </record>
+
+    <record id="product.product_product_2" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <record id="product.product_product_1" model="product.product">
+        <field name="invoice_policy">delivery</field>
+    </record>
+
+    <!-- Expensable products -->
+    <record id="product.expense_product" model="product.product">
+        <field name="invoice_policy">order</field>
+        <field name="expense_policy">sales_price</field>
+    </record>
+
+    <record id="product.expense_hotel" model="product.product">
+        <field name="invoice_policy">delivery</field>
+        <field name="expense_policy">cost</field>
+    </record>
+
+    <record id="product.product_attribute_2" model="product.attribute">
+        <field name="display_type">color</field>
+    </record>
+    <record id="product.product_attribute_3" model="product.attribute">
+        <field name="display_type">select</field>
+    </record>
+
+    <record id="product.product_attribute_value_3" model="product.attribute.value">
+        <field name="html_color">#FFFFFF</field>
+    </record>
+    <record id="product.product_attribute_value_4" model="product.attribute.value">
+        <field name="html_color">#000000</field>
+    </record>
+
+    <record id="product_attribute_value_7" model="product.attribute.value">
+        <field name="name">Custom</field>
+        <field name="attribute_id" ref="product.product_attribute_1"/>
+        <field name="is_custom">True</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="product.product_4_attribute_1_product_template_attribute_line" model="product.template.attribute.line">
+        <field name="value_ids" eval="[(4,ref('product_attribute_value_7'))]"/>
+    </record>
+
+    <!--
+    Handle automatically created product.template.attribute.value.
+    Check "product.product_4_attribute_1_value_2" for more information about this
+    -->
+    <function model="ir.model.data" name="_update_xmlids">
+        <value model="base" eval="[{
+            'xml_id': 'sale.product_4_attribute_1_value_3',
+            'record': obj().env.ref('product.product_4_attribute_1_product_template_attribute_line').product_template_value_ids[2],
+            'noupdate': True,
+        }]"/>
+    </function>
+
+    <function model="ir.model.data" name="_update_xmlids">
+        <value model="base" eval="[{
+            'xml_id': 'sale.product_product_4e',
+            'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('sale.product_4_attribute_1_value_3') + obj().env.ref('product.product_4_attribute_2_value_1')),
+            'noupdate': True,
+        }, {
+            'xml_id': 'sale.product_product_4f',
+            'record': obj().env.ref('product.product_product_4_product_template')._get_variant_for_combination(obj().env.ref('sale.product_4_attribute_1_value_3') + obj().env.ref('product.product_4_attribute_2_value_2')),
+            'noupdate': True,
+        },]"/>
+    </function>
+
+    <record id="product_product_4e" model="product.product">
+        <field name="default_code">DESK0005</field>
+        <field name="weight">0.01</field>
+    </record>
+
+    <record id="product_product_4f" model="product.product">
+        <field name="default_code">DESK0006</field>
+        <field name="weight">0.01</field>
+    </record>
+
+    <record id="product_template_attribute_exclusion_1" model="product.template.attribute.exclusion">
+        <field name="product_tmpl_id" ref="product.product_product_4_product_template" />
+        <field name="value_ids" eval="[(6,0,[ref('product.product_4_attribute_2_value_2')])]"/>
+    </record>
+
+    <record id="product_template_attribute_exclusion_2" model="product.template.attribute.exclusion">
+        <field name="product_tmpl_id" ref="product.product_product_11_product_template" />
+        <field name="value_ids" eval="[(6,0,[ref('product.product_11_attribute_1_value_1')])]"/>
+    </record>
+
+    <!--
+    The "Customizable Desk's Aluminium" attribute value will excude:
+    - The "Customizable Desk's Black" attribute
+    - The "Office Chair's Steel" attribute
+     -->
+    <record id="product.product_4_attribute_1_value_2" model="product.template.attribute.value">
+        <field name="exclude_for" eval="[(6,0,[ref('sale.product_template_attribute_exclusion_1') ,ref('sale.product_template_attribute_exclusion_2')])]" />
+    </record>
+
+    <record id="product_template_attribute_exclusion_3" model="product.template.attribute.exclusion">
+        <field name="product_tmpl_id" ref="product.product_product_11_product_template" />
+        <field name="value_ids" eval="[(6,0,[ref('product.product_11_attribute_1_value_2')])]"/>
+    </record>
+
+    <!--
+    The "Customizable Desk's Steel" attribute value will excude:
+    - The "Office Chair's Aluminium" attribute
+     -->
+    <record id="product.product_4_attribute_1_value_1" model="product.template.attribute.value">
+        <field name="exclude_for" eval="[(6,0,[ref('sale.product_template_attribute_exclusion_3')])]" />
+    </record>
+
+    <record id="advance_product_0" model="product.product">
+        <field name="name">Deposit</field>
+        <field name="categ_id" ref="product.product_category_3"/>
+        <field name="type">service</field>
+        <field name="list_price">150.0</field>
+        <field name="invoice_policy">order</field>
+        <field name="standard_price">100.0</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        <field name="company_id" eval="[]"/>
+        <field name="image_1920" type="base64" file="sale/static/img/advance_product_0-image.jpg"/>
+        <field name="taxes_id" eval="[]"/>
+        <field name="supplier_taxes_id" eval="[]"/>
+    </record>
+</odoo>

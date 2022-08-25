@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class StockScrap(models.Model):
@@ -9,11 +9,11 @@ class StockScrap(models.Model):
 
     production_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
-        states={'done': [('readonly', True)]})
+        states={'done': [('readonly', True)]}, check_company=True)
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order',
         states={'done': [('readonly', True)]},
-        help='Not to restrict or prefer quants, but informative.')
+        check_company=True) # Not to restrict or prefer quants, but informative
 
     @api.onchange('workorder_id')
     def _onchange_workorder_id(self):
@@ -35,5 +35,18 @@ class StockScrap(models.Model):
                 vals.update({'raw_material_production_id': self.production_id.id})
         return vals
 
-    def _get_origin_moves(self):
-        return super(StockScrap, self)._get_origin_moves() or self.production_id and self.production_id.move_raw_ids.filtered(lambda x: x.product_id == self.product_id)
+    @api.onchange('lot_id')
+    def _onchange_serial_number(self):
+        if self.product_id.tracking == 'serial' and self.lot_id:
+            if self.production_id:
+                message, recommended_location = self.env['stock.quant']._check_serial_number(self.product_id,
+                                                                                             self.lot_id,
+                                                                                             self.company_id,
+                                                                                             self.location_id,
+                                                                                             self.production_id.location_dest_id)
+                if message:
+                    if recommended_location:
+                        self.location_id = recommended_location
+                    return {'warning': {'title': _('Warning'), 'message': message}}
+            else:
+                return super()._onchange_serial_number()

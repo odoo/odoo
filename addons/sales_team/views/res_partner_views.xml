@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_partner_view_team" model="ir.ui.view">
+        <field name="name">res.partner.view.team</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales_purchases']//field[@name='user_id']" position="after">
+                <field name="team_id" groups="base.group_no_one" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

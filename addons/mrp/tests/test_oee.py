@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta, time
+from pytz import timezone, utc
 
+from odoo import fields
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.addons.resource.models.resource import to_naive_utc
 
 
 class TestOee(TestMrpCommon):
@@ -24,8 +25,12 @@ class TestOee(TestMrpCommon):
         if day.weekday() in (5, 6):
             day -= timedelta(days=2)
 
+        tz = timezone(self.workcenter_1.resource_calendar_id.tz)
+
         def time_to_string_utc_datetime(time):
-            return str(to_naive_utc(datetime.combine(day, time), self.workcenter_1.resource_id))
+            return fields.Datetime.to_string(
+                tz.localize(datetime.combine(day, time)).astimezone(utc)
+            )
 
         start_time = time_to_string_utc_datetime(time(10, 43, 22))
         end_time = time_to_string_utc_datetime(time(10, 56, 22))

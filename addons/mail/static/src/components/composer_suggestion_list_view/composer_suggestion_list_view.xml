@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ComposerSuggestionListView" owl="1">
+        <t t-if="composerSuggestionListView">
+            <div class="o_ComposerSuggestionListView position-absolute w-100" t-att-class="{ 'o-lowPosition bottom-0': composerSuggestionListView.composerViewOwner.hasMentionSuggestionsBelowPosition }" t-attf-class="{{ className }}" t-ref="root">
+                <div class="o_ComposerSuggestionListView_drop w-100" t-att-class="{ 'dropdown': composerSuggestionListView.composerViewOwner.hasMentionSuggestionsBelowPosition, 'dropup': !composerSuggestionListView.composerViewOwner.hasMentionSuggestionsBelowPosition }">
+                    <div class="o_ComposerSuggestionListView_list dropdown-menu show w-100 overflow-auto" t-att-class="{ 'bottom-100': !composerSuggestionListView.composerViewOwner.hasMentionSuggestionsBelowPosition }">
+                        <t t-foreach="composerSuggestionListView.composerSuggestionListViewMainComposerSuggestionViewItems" t-as="composerSuggestionListViewMainComposerSuggestionViewItem" t-key="composerSuggestionListViewMainComposerSuggestionViewItem.localId">
+                            <ComposerSuggestionView record="composerSuggestionListViewMainComposerSuggestionViewItem.composerSuggestionView"/>
+                        </t>
+                        <t t-if="composerSuggestionListView.composerSuggestionListViewMainComposerSuggestionViewItems.length > 0 and composerSuggestionListView.composerSuggestionListViewExtraComposerSuggestionViewItems.length > 0">
+                            <div role="separator" class="dropdown-divider"/>
+                        </t>
+                        <t t-foreach="composerSuggestionListView.composerSuggestionListViewExtraComposerSuggestionViewItems" t-as="composerSuggestionListViewExtraComposerSuggestionViewItem" t-key="composerSuggestionListViewExtraComposerSuggestionViewItem.localId">
+                            <ComposerSuggestionView record="composerSuggestionListViewExtraComposerSuggestionViewItem.composerSuggestionView"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

@@ -4,7 +4,7 @@
 {
     'name': 'Drop Shipping',
     'version': '1.0',
-    'category': 'Warehouse',
+    'category': 'Inventory/Inventory',
     'summary': 'Drop Shipping',
     'description': """
 Manage drop shipping orders
@@ -20,9 +20,12 @@ going through the retailer's warehouse. In this case no
 internal transfer document is needed.
 
 """,
-    'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['purchase', 'sale_stock'],
-    'data': ['data/stock_data.xml'],
+    'depends': ['sale_purchase_stock'],
+    'data': [
+        'data/stock_data.xml',
+        'views/sale_order_views.xml',
+        'views/purchase_order_views.xml'
+    ],
     'installable': True,
-    'auto_install': False,
+    'license': 'LGPL-3',
 }

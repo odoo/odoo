@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainSelectorFieldInputWithTags" owl="1">
+        <div class="o_ds_value_cell">
+            <div class="o_domain_leaf_value_input">
+                <t t-foreach="props.value" t-as="tag" t-key="tag_index">
+                    <span class="badge rounded-pill">
+                        <t t-esc="tag" /> <i
+                            class="o_domain_leaf_value_remove_tag_button fa fa-times"
+                            role="img"
+                            aria-label="Remove tag"
+                            title="Remove tag"
+                            t-on-click="removeTag(tag_index)"
+                        />
+                    </span>
+                </t>
+            </div>
+            <div class="o_domain_leaf_value_tags">
+                <input type="text" class="o_input" placeholder="Add new value" t-ref="input" />
+                <button
+                    class="btn btn-sm btn-primary fa fa-plus o_domain_leaf_value_add_tag_button"
+                    aria-label="Add tag"
+                    title="Add tag"
+                    t-on-click="onBtnClick"
+                />
+            </div>
+        </div>
+    </t>
+
+</templates>

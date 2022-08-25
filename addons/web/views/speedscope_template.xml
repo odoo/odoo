@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="view_speedscope_index">
+        &lt;!DOCTYPE html&gt;
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8"/>
+                <title>Speedscope for odoo</title>
+                <script t-if="profile">window.location.hash="#profileURL=<t t-esc="url_root"/>web/content/ir.profile/<t t-esc="profile.id"/>/speedscope"</script>
+                <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet"/>
+                <link rel="stylesheet"
+                    t-attf-href="{{cdn}}reset.8c46b7a1.css"
+                    crossorigin="anonymous"
+                    integrity="sha256-mrA/937EwtEDE+8XZ/62tNz2T/BnCLth8QmWsWKpvD8="
+                />
+            </head>
+            <body>
+                <script
+                    t-attf-src="{{cdn}}speedscope.026f36b0.js"
+                    crossorigin="anonymous"
+                    integrity="sha256-CvDqAOMjq0Sv/D59O5JSbzzXoClZ3rptt6ts8D/6CWw="
+                ></script>
+            </body>
+        </html>
+    </template>
+</odoo>

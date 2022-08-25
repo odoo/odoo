@@ -1,0 +1,53 @@
+<odoo>
+    <data>
+        <record id="action_sign_invoices" model="ir.actions.server">
+            <field name="name">Sign invoices</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="code">
+                action = records.action_post_sign_invoices()
+            </field>
+        </record>
+
+
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">view_move_form_inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="priority" eval="40"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[@name='action_post']" position="after">
+                    <button name="action_post_sign_invoices" type="object"
+                            class="oe_highlight"
+                            groups="account.group_account_manager"
+                            string="Sign Invoice"
+                            attrs="{'invisible': ['|', '|', ('country_code', '!=', 'EG'), ('l10n_eg_is_signed', '=', True), ('state', '!=', 'posted')]}"/>
+                </xpath>
+                <notebook position="inside">
+                    <page string="ETA E-Invoice" attrs="{'invisible': [('country_code', '!=', 'EG')]}">
+                        <group>
+                            <group>
+                                <field name="l10n_eg_uuid" readonly="1"/>
+                                <field name="l10n_eg_submission_number" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="l10n_eg_eta_json_doc_id" readonly="1" invisible="1"/>
+                                <field name="l10n_eg_is_signed" invisible="1"/>
+                            </group>
+                            <group>
+                                <button name="action_get_eta_invoice_pdf" type="object"
+                                        groups="account.group_account_invoice"
+                                        class="oe_link"
+                                        icon="fa-clone"
+                                        string="Get ETA Invoice PDF"
+                                        attrs="{'invisible': [('edi_state', '!=', 'sent')]}"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</odoo>

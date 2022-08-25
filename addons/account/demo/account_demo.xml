@@ -16,16 +16,10 @@
         <record id="demo_ceo_wages_account" model="account.account.tag">
             <field name="name">Demo CEO Wages Account</field>
         </record>
-        <record id="demo_coffee_machine_account" model="account.account.tag">
-            <field name="name">Demo Coffe Machine Account</field>
+        <record id="demo_office_furniture_account" model="account.account.tag">
+            <field name="name">Office Furniture</field>
         </record>
         <!-- Payment Terms -->
-
-        <record id="account_payment_term" model="account.payment.term">
-            <field name="name">End of Following Month</field>
-            <field name="note">Payment terms: End of Following Month</field>
-            <field name="line_ids" eval="[(5, 0), (0, 0, {'value': 'balance', 'value_amount': 0.0, 'sequence': 500, 'days': 31, 'option': 'day_following_month'})]"/>
-        </record>
 
         <record id="account_payment_term_advance" model="account.payment.term">
             <field name="name">30% Advance End of Following Month</field>
@@ -40,17 +34,17 @@
 
         <!-- Add Payment terms on some demo partners -->
         <record id="base.res_partner_2" model="res.partner">
-            <field name="property_payment_term_id" ref="account.account_payment_term_net"/>
+            <field name="property_payment_term_id" ref="account.account_payment_term_30days"/>
         </record>
         <record id="base.res_partner_12" model="res.partner">
-            <field name="property_payment_term_id" ref="account_payment_term"/>
-            <field name="property_supplier_payment_term_id" ref="account_payment_term"/>
+            <field name="property_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+            <field name="property_supplier_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         </record>
         <record id="base.res_partner_4" model="res.partner">
-            <field name="property_supplier_payment_term_id" ref="account.account_payment_term_net"/>
+            <field name="property_supplier_payment_term_id" ref="account.account_payment_term_30days"/>
         </record>
         <record id="base.res_partner_1" model="res.partner">
-            <field name="property_supplier_payment_term_id" ref="account_payment_term"/>
+            <field name="property_supplier_payment_term_id" ref="account.account_payment_term_end_following_month"/>
         </record>
     </data>
 </odoo>

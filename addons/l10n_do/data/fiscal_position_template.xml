@@ -1,45 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data>
         <!-- = = = = = = = = = = = = = = = -->
         <!-- Fiscal Position Templates     -->
         <!-- = = = = = = = = = = = = = = = -->
         <!-- Principal Fiscal Position for Dominican Republic internally -->
-        <record id="position_buyer_final" model="account.fiscal.position.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Consumidor Final</field>
-        </record>
-        <record id="position_buyer_moral" model="account.fiscal.position.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Crédito Fiscal</field>
-        </record>
-        <record id="position_provider_moral" model="account.fiscal.position.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Proveedor Fiscal</field>
-        </record>
-        <record id="position_construction_moral" model="account.fiscal.position.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Proveedor Fiscal (Construcción)</field>
-        </record>
-        <record id="position_construction_person" model="account.fiscal.position.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Persona Física (Construcción)</field>
-        </record>
         <record id="position_person" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Persona Física</field>
+            <field name="name">P. Física de Servicios</field>
+        </record>
+        <record id="position_service_moral" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">P. Jurídica de Servicios</field>
+        </record>
+        <record id="position_security_moral" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">P. Jurídica de Vigilancia</field>
         </record>
         <record id="position_nonformal" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Proveedor Informal (Bienes)</field>
+            <field name="name">Proveedor Informal de Bienes</field>
         </record>
         <record id="position_exterior" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Proveedor del Exterior</field>
-        </record>
-        <record id="position_expenses" model="account.fiscal.position.template">
-            <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">Gastos Menores</field>
+            <field name="name">Servicios del Exterior</field>
         </record>
         <record id="position_gov" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
@@ -47,11 +31,19 @@
         </record>
         <record id="position_nonprofit" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
-            <field name="name">No lucrativas</field>
+            <field name="name">No Lucrativa de Servicios</field>
         </record>
         <record id="position_especial" model="account.fiscal.position.template">
             <field name="chart_template_id" ref="do_chart_template"/>
             <field name="name">Regímenes Especiales</field>
+        </record>
+        <record id="position_restaurant" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">Restaurantes</field>
+        </record>
+        <record id="position_restaurant_takeout" model="account.fiscal.position.template">
+            <field name="chart_template_id" ref="do_chart_template"/>
+            <field name="name">Para Llevar</field>
         </record>
         <!-- = = = = = = = = = = = = = = = -->
         <!-- Fiscal Position Tax Templates -->
@@ -68,7 +60,7 @@
             <field name="position_id" ref="position_nonformal"/>
             <field name="tax_dest_id" ref="tax_group_nonformal"/>
         </record>
-        <!-- Persona Física>-->
+        <!-- Persona Física de Servicios>-->
         <record id="fiscal_position_tax_9" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch"/>
             <field name="position_id" ref="position_person"/>
@@ -83,38 +75,38 @@
         <record id="fiscal_position_tax_1" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_sale"/>
             <field name="position_id" ref="position_gov"/>
-            <field name="tax_dest_id" ref="tax_0_sale"/>
+            <field name="tax_dest_id" ref="ret_5_income_gov"/>
         </record>
         <record id="fiscal_position_tax_2" model="account.fiscal.position.tax.template">
-            <field name="tax_src_id" ref="tax_18_purch"/>
+            <field name="tax_src_id" ref="tax_18_sale_incl"/>
             <field name="position_id" ref="position_gov"/>
-            <field name="tax_dest_id" ref="tax_0_purch"/>
+            <field name="tax_dest_id" ref="ret_5_income_gov"/>
         </record>
         <!-- No Lucrativas -->
         <record id="fiscal_position_tax_12" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch"/>
             <field name="position_id" ref="position_nonprofit"/>
-            <field name="tax_dest_id" ref="tax_0_purch"/>
+            <field name="tax_dest_id" ref="ret_100_tax_nonprofit"/>
         </record>
         <record id="fiscal_position_tax_13" model="account.fiscal.position.tax.template">
-            <field name="tax_src_id" ref="tax_18_purch_serv"/>
+            <field name="tax_src_id" ref="tax_18_purch_incl"/>
             <field name="position_id" ref="position_nonprofit"/>
             <field name="tax_dest_id" ref="ret_100_tax_nonprofit"/>
         </record>
-        <!-- Proveedor Moral Construcción -->
+        <!-- Proveedor Moral de Seguridad -->
         <record id="fiscal_position_tax_8" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch"/>
-            <field name="position_id" ref="position_construction_moral"/>
-            <field name="tax_dest_id" ref="tax_group_moral_construction"/>
+            <field name="position_id" ref="position_security_moral"/>
+            <field name="tax_dest_id" ref="ret_100_tax_security"/>
         </record>
-        <!-- Persona Física Construcción -->
+        <!-- Proveedor Moral de Servicio -->
         <record id="fiscal_position_tax_7" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch"/>
-            <field name="position_id" ref="position_construction_person"/>
-            <field name="tax_dest_id" ref="tax_group_person_construction"/>
+            <field name="position_id" ref="position_service_moral"/>
+            <field name="tax_dest_id" ref="tax_group_moral_services"/>
         </record>
         <!-- Importación / Exportación -->
-        <!-- Proveedo del Exterior -->
+        <!-- Proveedor del Exterior -->
         <record id="fiscal_position_tax_5" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch_serv"/>
             <field name="position_id" ref="position_exterior"/>
@@ -123,8 +115,54 @@
         <record id="fiscal_position_tax_6" model="account.fiscal.position.tax.template">
             <field name="tax_src_id" ref="tax_18_purch"/>
             <field name="position_id" ref="position_exterior"/>
-            <field name="tax_dest_id" ref="tax_0_purch"/>
+            <field name="tax_dest_id" ref="ret_27_income_remittance"/>
         </record>
+        <!-- Restaurantes -->
+        <record id="fiscal_position_tax_14" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="tax_18_purch"/>
+            <field name="position_id" ref="position_restaurant"/>
+            <field name="tax_dest_id" ref="tax_group_restaurant_purch"/>
+        </record>
+        <record id="fiscal_position_tax_15" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="tax_18_purch_incl"/>
+            <field name="position_id" ref="position_restaurant"/>
+            <field name="tax_dest_id" ref="tax_group_restaurant_purch"/>
+        </record>
+        <record id="fiscal_position_tax_16" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="tax_18_sale"/>
+            <field name="position_id" ref="position_restaurant"/>
+            <field name="tax_dest_id" ref="tax_group_restaurant_sale"/>
+        </record>
+        <record id="fiscal_position_tax_17" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="tax_18_sale_incl"/>
+            <field name="position_id" ref="position_restaurant"/>
+            <field name="tax_dest_id" ref="tax_group_restaurant_sale"/>
+        </record>
+
+        <!-- Restaurantes Take-Out -->
+        <record id="fiscal_position_tax_18" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="tax_group_restaurant_sale"/>
+            <field name="position_id" ref="position_restaurant_takeout"/>
+            <field name="tax_dest_id" ref="tax_18_sale"/>
+        </record>
+
+        <!-- Regímenes Especiales -->
+        <record id="fiscal_position_tax_19" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="tax_18_sale"/>
+            <field name="position_id" ref="position_especial"/>
+            <field name="tax_dest_id" ref="tax_0_sale"/>
+        </record>
+        <record id="fiscal_position_tax_20" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="tax_18_sale_incl"/>
+            <field name="position_id" ref="position_especial"/>
+            <field name="tax_dest_id" ref="tax_0_sale"/>
+        </record>
+        <record id="fiscal_position_tax_21" model="account.fiscal.position.tax.template">
+            <field name="tax_src_id" ref="tax_group_restaurant_sale"/>
+            <field name="position_id" ref="position_especial"/>
+            <field name="tax_dest_id" ref="tax_tip_sale"/>
+        </record>
+
         <!-- = = = = = = = = = = = = = = = = = -->
         <!-- Fiscal Position Accounts Template -->
         <!-- = = = = = = = = = = = = = = = = = -->

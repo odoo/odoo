@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ComposerSuggestedRecipientList" owl="1">
+        <t t-if="composerSuggestedRecipientListView">
+            <div class="o_ComposerSuggestedRecipientList mb-2" t-attf-class="{{ className }}" t-ref="root">
+                <t t-foreach="composerSuggestedRecipientListView.composerSuggestedRecipientViews" t-as="composerSuggestedRecipientView" t-key="composerSuggestedRecipientView.localId">
+                    <ComposerSuggestedRecipient record="composerSuggestedRecipientView"/>
+                </t>
+                <t t-if="composerSuggestedRecipientListView.thread.suggestedRecipientInfoList.length > 3">
+                    <t t-if="!composerSuggestedRecipientListView.hasShowMoreButton" >
+                        <button class="o_ComposerSuggestedRecipientList_showMore btn btn-sm btn-link" t-on-click="composerSuggestedRecipientListView.onClickShowMore">
+                            Show more
+                        </button>
+                    </t>
+                    <t t-else="">
+                        <button class="o_ComposerSuggestedRecipientList_showLess btn btn-sm btn-link" t-on-click="composerSuggestedRecipientListView.onClickShowLess">
+                            Show less
+                        </button>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </t>
+</templates>

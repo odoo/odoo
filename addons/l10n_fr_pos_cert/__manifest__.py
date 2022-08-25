@@ -3,8 +3,9 @@
 
 {
     'name': 'France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)',
+    'icon': '/l10n_fr/static/description/icon.png',
     'version': '1.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations/Point of Sale',
     'description': """
 This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -21,13 +22,28 @@ The module adds following features:
 
     Access to download the mandatory Certificate of Conformity delivered by Odoo SA (only for Odoo Enterprise users)
 """,
-    'depends': ['l10n_fr_sale_closing', 'point_of_sale'],
+    'depends': ['l10n_fr', 'point_of_sale'],
     'installable': True,
-    'auto_install': False,
-    'application': False,
+    'auto_install': True,
     'data': [
-        'data/pos_inalterability.xml',
         'views/account_views.xml',
+        'views/pos_views.xml',
+        'views/account_sale_closure.xml',
+        'views/pos_inalterability_menuitem.xml',
+        'report/pos_hash_integrity.xml',
+        'data/account_sale_closure_cron.xml',
+        'security/ir.model.access.csv',
+        'security/account_closing_intercompany.xml',
     ],
     'post_init_hook': '_setup_inalterability',
+    'assets': {
+        'point_of_sale.assets': [
+            'l10n_fr_pos_cert/static/src/js/**/*',
+            'l10n_fr_pos_cert/static/src/css/pos.css',
+        ],
+        'web.assets_qweb': [
+            'l10n_fr_pos_cert/static/src/xml/**/*',
+        ],
+    },
+    'license': 'LGPL-3',
 }

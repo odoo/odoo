@@ -1,0 +1,20 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ChatWindowHiddenMenu {
+    z-index: $zindex-dropdown;
+}
+
+.o_ChatWindowHiddenMenu_unreadCounter {
+    transform: translate(50%, -50%);
+    z-index: $zindex-tooltip; // on top of bootstrap dropup menu
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ChatWindowHiddenMenu_windowCounter {
+    user-select: none;
+}

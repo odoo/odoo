@@ -3,14 +3,14 @@
 # * payment_payumoney
 # 
 # Translators:
-# Boško Stojaković <bluesoft83@gmail.com>, 2017
+# Boško Stojaković <bluesoft83@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,19 +19,43 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: payment_payumoney
-#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_key
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Ručna konfiguracija"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
 msgid "Merchant Key"
 msgstr ""
 
 #. module: payment_payumoney
-#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_salt
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
 msgid "Merchant Salt"
 msgstr ""
 
 #. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:146
-#, python-format
-msgid "PayUmoney: feedback error"
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
 msgstr ""
 
 #. module: payment_payumoney
@@ -69,3 +93,28 @@ msgstr "Sticaoc plaćanja"
 #: model:ir.model,name:payment_payumoney.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Transakcija plaćanja"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr ""
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Provajder"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Slipovi"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr ""
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Žičani prenos"

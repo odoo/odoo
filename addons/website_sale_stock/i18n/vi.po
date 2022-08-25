@@ -1,17 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_stock
+# 	* website_sale_stock
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# fanha99 <fanha99@hotmail.com>, 2017
+# fanha99 <fanha99@hotmail.com>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2019
+# Chinh Chinh <trinhttp@trobz.com>, 2019
+# Dung Nguyen Thi <dungnt@trobz.com>, 2019
+# Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: fanha99 <fanha99@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,109 +25,82 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-danger label-text-align\"><i class=\"fa fa-fw fa-"
-"times\"/> Cancelled</span>"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-info label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Preparation</span>"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-success label-text-align\"><i class=\"fa fa-fw fa-"
-"truck\"/> Shipped</span>"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid ""
-"<span class=\"label label-warning label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Partially Available</span>"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.portal_order_page_shipping
-msgid "<strong>Delivery Orders</strong>"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
-#: model:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
 msgid "<strong>Warning!</strong>"
-msgstr ""
+msgstr "<strong>Chú ý!</strong>"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,help:website_sale_stock.field_product_product_inventory_availability
-#: model:ir.model.fields,help:website_sale_stock.field_product_template_inventory_availability
+#: model:ir.model.fields,help:website_sale_stock.field_product_product__inventory_availability
+#: model:ir.model.fields,help:website_sale_stock.field_product_template__inventory_availability
 msgid "Adds an inventory availability status on the web product page."
-msgstr ""
+msgstr "Thêm trạng thái tồn kho trên trang web sản phẩm"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template_available_threshold
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings_available_threshold
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
+msgid "Availability"
+msgstr "Khả dụng"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
 msgid "Availability Threshold"
-msgstr ""
+msgstr "Ngưỡng khả dụng"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_cart_qty
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__cart_qty
 msgid "Cart Qty"
-msgstr ""
+msgstr "Số lượng giỏ hàng"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_custom_message
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template_custom_message
+#: model:ir.model,name:website_sale_stock.model_res_config_settings
+msgid "Config Settings"
+msgstr "Cấu hình"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__custom_message
 msgid "Custom Message"
-msgstr ""
+msgstr "Tùy chỉnh thông điệp"
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default Availability Mode"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
-"Default availability mode set on newly created stockable products. This can "
+"Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default threshold"
-msgstr ""
-
-#. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:16
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "In stock"
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings_inventory_availability
-msgid "Inventory"
 msgstr "Tồn kho"
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_product_inventory_availability
-#: model:ir.model.fields,field_description:website_sale_stock.field_product_template_inventory_availability
-msgid "Inventory Availability"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Inventory"
+msgstr "Kho vận"
 
 #. module: website_sale_stock
-#: model:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_product__inventory_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_product_template__inventory_availability
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__inventory_availability
+msgid "Inventory Availability"
+msgstr "Tính khả dụng của kho"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
 "Manage the inventory of your products and display their availability status "
 "on the website."
 msgstr ""
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Mode"
+msgstr "Chế độ"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
@@ -132,44 +110,51 @@ msgstr "Sản phẩm"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_template
 msgid "Product Template"
-msgstr "Mẫu sản phẩm"
+msgstr "Bản mẫu sản phẩm"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
-msgid "Quotation"
-msgstr "Báo giá"
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Chi tiết Đơn hàng Bán"
+msgstr "Chi tiết đơn hàng"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__never
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__never
 msgid "Sell regardless of inventory"
-msgstr ""
+msgstr "Bán bất kể tồn kho"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__threshold
 msgid "Show inventory below a threshold and prevent sales if not enough stock"
-msgstr ""
+msgstr "Hiển thị tồn kho dưới ngưỡng và tạm ngừng bán hàng nếu không đủ kho"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__always
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__always
 msgid "Show inventory on website and prevent sales if not enough stock"
 msgstr ""
+"Hiển thị tồn kho trên trang web và tạm ngừng bán hàng nếu không đủ kho"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
-msgid "Show product-specific notifications"
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__threshold
+msgid ""
+"Show inventory when below the threshold and prevent sales if not enough "
+"stock"
 msgstr ""
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:28
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__custom
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__custom
+msgid "Show product-specific notifications"
+msgstr "Hiển thị thông báo dành riêng cho sản phẩm"
+
+#. module: website_sale_stock
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
@@ -178,58 +163,82 @@ msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Temporarily out of stock"
+msgstr "Tạm thời hết hàng"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Threshold"
 msgstr ""
 
 #. module: website_sale_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line_warning_stock
-#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_warning_stock
+#: model:ir.model,name:website_sale_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Điều chuyển"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__warehouse_id
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Warehouse"
+msgstr "Kho"
+
+#. module: website_sale_stock
+#. openerp-web
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__warning_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_payment
+#, python-format
 msgid "Warning"
 msgstr "Cảnh báo"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
+#: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__website_id
 msgid "Website"
-msgstr "Trang web"
+msgstr "Website"
+
+#. module: website_sale_stock
+#: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
+msgid "Website this picking belongs to."
+msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:19
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added"
-msgstr ""
+msgstr "Bạn đã thêm"
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:26
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %s products but only %s is available"
-msgstr ""
+msgstr "Bạn yêu cầu %s nhưng chỉ có %s sản phẩm"
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "all"
-msgstr ""
+msgstr "tất cả"
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:9
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:14
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "available"
-msgstr ""
+msgstr "có sẵn"
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
-msgstr ""
-
-#. module: website_sale_stock
-#: model:ir.model,name:website_sale_stock.model_res_config_settings
-msgid "res.config.settings"
-msgstr ""
+msgstr "trong giỏ hàng của bạn"
