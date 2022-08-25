@@ -3930,7 +3930,7 @@ X[]
                                             '<td style="width: 25px;">cd</td>' +
                                             '<td style="width: 30px;">ef[]</td>' +
                                         '</tr></tbody></table>',
-                            stepFunction: async editor => editor.execCommand('addRowAbove'),
+                            stepFunction: async editor => editor.execCommand('addRow', 'before'),
                             contentAfter: '<table><tbody><tr style="height: 20px;">' +
                                             '<td style="width: 20px;"><br></td>' +
                                             '<td style="width: 25px;"><br></td>' +
@@ -3955,7 +3955,7 @@ X[]
                                             '<td>cd</td>' +
                                             '<td>ef[]</td>' +
                                         '</tr></tbody></table>',
-                            stepFunction: async editor => editor.execCommand('addRowAbove'),
+                            stepFunction: async editor => editor.execCommand('addRow', 'before'),
                             contentAfter: '<table><tbody><tr style="height: 20px;">' +
                                             '<td style="width: 20px;">ab</td>' +
                                             '<td style="width: 25px;">cd</td>' +
@@ -3982,7 +3982,7 @@ X[]
                                             '<td style="width: 25px;">cd</td>' +
                                             '<td style="width: 30px;">ef[]</td>' +
                                         '</tr></tbody></table>',
-                            stepFunction: async editor => editor.execCommand('addRowBelow'),
+                            stepFunction: async editor => editor.execCommand('addRow', 'after'),
                             contentAfter: '<table><tbody><tr style="height: 20px;">' +
                                             '<td style="width: 20px;">ab</td>' +
                                             '<td style="width: 25px;">cd</td>' +
@@ -4007,7 +4007,7 @@ X[]
                                             '<td>cd</td>' +
                                             '<td>ef</td>' +
                                         '</tr></tbody></table>',
-                            stepFunction: async editor => editor.execCommand('addRowBelow'),
+                            stepFunction: async editor => editor.execCommand('addRow', 'after'),
                             contentAfter: '<table><tbody><tr style="height: 20px;">' +
                                             '<td style="width: 20px;">ab</td>' +
                                             '<td style="width: 25px;">cd</td>' +
@@ -4041,7 +4041,7 @@ X[]
                                             '<td>cd</td>' +
                                             '<td>ef</td>' +
                                         '</tr></tbody></table>',
-                            stepFunction: async editor => editor.execCommand('addColumnLeft'),
+                            stepFunction: async editor => editor.execCommand('addColumn', 'before'),
                             contentAfter: '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
                                             '<td style="width: 32px;"><br></td>' +
                                             '<td style="width: 32px;">ab[]</td>' +
@@ -4073,7 +4073,7 @@ X[]
                                             '<td>cd</td>' +
                                             '<td>ef</td>' +
                                         '</tr></tbody></table>',
-                            stepFunction: async editor => editor.execCommand('addColumnLeft'),
+                            stepFunction: async editor => editor.execCommand('addColumn', 'before'),
                             contentAfter: '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
                                             '<td style="width: 38px;">ab</td>' +
                                             '<td style="width: 50px;"><br></td>' +
@@ -4108,7 +4108,7 @@ X[]
                                             '<td>cd</td>' +
                                             '<td>ef</td>' +
                                         '</tr></tbody></table>',
-                            stepFunction: async editor => editor.execCommand('addColumnRight'),
+                            stepFunction: async editor => editor.execCommand('addColumn', 'after'),
                             contentAfter: '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
                                             '<td style="width: 29px;">ab</td>' +
                                             '<td style="width: 36px;">cd</td>' +
@@ -4143,7 +4143,7 @@ X[]
                                             '<td>cd</td>' +
                                             '<td>ef</td>' +
                                         '</tr></tbody></table>',
-                            stepFunction: async editor => editor.execCommand('addColumnRight'),
+                            stepFunction: async editor => editor.execCommand('addColumn', 'after'),
                             contentAfter: '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
                                             '<td style="width: 38px;">ab</td>' +
                                             '<td style="width: 50px;">cd</td>' +

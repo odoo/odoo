@@ -543,82 +543,6 @@ export function toggleFormat(editor, format) {
     }
     return changedElements;
 }
-function addColumn(editor, beforeOrAfter, referenceCell) {
-    if (!referenceCell) {
-        getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
-        referenceCell = getInSelection(editor.document, 'td');
-        if (!referenceCell) return;
-    }
-    const columnIndex = getColumnIndex(referenceCell);
-    const table = closestElement(referenceCell, 'table');
-    const tableWidth = table.style.width ? pxToFloat(table.style.width) : table.clientWidth;
-    const referenceColumn = table.querySelectorAll(`tr td:nth-of-type(${columnIndex + 1})`);
-    const referenceCellWidth = referenceCell.style.width ? pxToFloat(referenceCell.style.width) : referenceCell.clientWidth;
-    // Temporarily set widths so proportions are respected.
-    const firstRow = table.querySelector('tr');
-    const firstRowCells = [...firstRow.children].filter(child => child.nodeName === 'TD' || child.nodeName === 'TH');
-    let totalWidth = 0;
-    for (const cell of firstRowCells) {
-        const width = cell.style.width ? pxToFloat(cell.style.width) : cell.clientWidth;
-        cell.style.width = width + 'px';
-        // Spread the widths to preserve proportions.
-        // -1 for the width of the border of the new column.
-        const newWidth = Math.max(Math.round((width * tableWidth) / (tableWidth + referenceCellWidth - 1)), 13);
-        cell.style.width = newWidth + 'px';
-        totalWidth += newWidth;
-    }
-    referenceColumn.forEach((cell, rowIndex) => {
-        const newCell = document.createElement('td');
-        newCell.append(document.createElement('br'));
-        cell[beforeOrAfter](newCell);
-        if (rowIndex === 0) {
-            newCell.style.width = cell.style.width;
-            totalWidth += pxToFloat(cell.style.width);
-        }
-    });
-    if (totalWidth !== tableWidth - 1) { // -1 for the width of the border of the new column.
-        firstRowCells[firstRowCells.length - 1].style.width = pxToFloat(firstRowCells[firstRowCells.length - 1].style.width) + (tableWidth - totalWidth - 1) + 'px';
-    }
-    // Fix the table and row's width so it doesn't change.
-    table.style.width = tableWidth + 'px';
-}
-function addRow(editor, beforeOrAfter, referenceRow) {
-    if (!referenceRow) {
-        getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding tr.
-        referenceRow = getInSelection(editor.document, 'tr');
-        if (!referenceRow) return;
-    }
-    const referenceRowHeight = referenceRow.style.height ? pxToFloat(referenceRow.style.height) : referenceRow.clientHeight;
-    const newRow = document.createElement('tr');
-    newRow.style.height = referenceRowHeight + 'px';
-    const cells = referenceRow.querySelectorAll('td');
-    const referenceRowWidths = [...cells].map(cell => cell.style.width || cell.clientWidth + 'px');
-    newRow.append(...Array.from(Array(cells.length)).map(() => {
-        const td = document.createElement('td');
-        td.append(document.createElement('br'));
-        return td;
-    }));
-    referenceRow[beforeOrAfter](newRow);
-    newRow.style.height = referenceRowHeight + 'px';
-    // Preserve the width of the columns (applied only on the first row).
-    if (getRowIndex(newRow) === 0) {
-        let columnIndex = 0;
-        for (const column of newRow.children) {
-            column.style.width = referenceRowWidths[columnIndex];
-            cells[columnIndex].style.width = '';
-            columnIndex++;
-        }
-    }
-}
-function deleteTable(editor, table) {
-    table = table || getInSelection(editor.document, 'table');
-    if (!table) return;
-    const p = document.createElement('p');
-    p.appendChild(document.createElement('br'));
-    table.before(p);
-    table.remove();
-    setSelection(p, 0);
-}
 
 // This is a whitelist of the commands that are implemented by the
 // editor itself rather than the node prototypes. It might be
@@ -929,17 +853,72 @@ export const editorCommands = {
         const [table] = editorCommands.insertHTML(editor, tableHtml);
         setCursorStart(table.querySelector('td'));
     },
-    addColumnLeft: (editor, referenceColumn) => {
-        return addColumn(editor, 'before', referenceColumn);
+    addColumn: (editor, beforeOrAfter, referenceCell) => {
+        if (!referenceCell) {
+            getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
+            referenceCell = getInSelection(editor.document, 'td');
+            if (!referenceCell) return;
+        }
+        const columnIndex = getColumnIndex(referenceCell);
+        const table = closestElement(referenceCell, 'table');
+        const tableWidth = table.style.width ? pxToFloat(table.style.width) : table.clientWidth;
+        const referenceColumn = table.querySelectorAll(`tr td:nth-of-type(${columnIndex + 1})`);
+        const referenceCellWidth = referenceCell.style.width ? pxToFloat(referenceCell.style.width) : referenceCell.clientWidth;
+        // Temporarily set widths so proportions are respected.
+        const firstRow = table.querySelector('tr');
+        const firstRowCells = [...firstRow.children].filter(child => child.nodeName === 'TD' || child.nodeName === 'TH');
+        let totalWidth = 0;
+        for (const cell of firstRowCells) {
+            const width = cell.style.width ? pxToFloat(cell.style.width) : cell.clientWidth;
+            cell.style.width = width + 'px';
+            // Spread the widths to preserve proportions.
+            // -1 for the width of the border of the new column.
+            const newWidth = Math.max(Math.round((width * tableWidth) / (tableWidth + referenceCellWidth - 1)), 13);
+            cell.style.width = newWidth + 'px';
+            totalWidth += newWidth;
+        }
+        referenceColumn.forEach((cell, rowIndex) => {
+            const newCell = document.createElement('td');
+            newCell.append(document.createElement('br'));
+            cell[beforeOrAfter](newCell);
+            if (rowIndex === 0) {
+                newCell.style.width = cell.style.width;
+                totalWidth += pxToFloat(cell.style.width);
+            }
+        });
+        if (totalWidth !== tableWidth - 1) { // -1 for the width of the border of the new column.
+            firstRowCells[firstRowCells.length - 1].style.width = pxToFloat(firstRowCells[firstRowCells.length - 1].style.width) + (tableWidth - totalWidth - 1) + 'px';
+        }
+        // Fix the table and row's width so it doesn't change.
+        table.style.width = tableWidth + 'px';
     },
-    addColumnRight: (editor, referenceColumn) => {
-        return addColumn(editor, 'after', referenceColumn);
-    },
-    addRowAbove: (editor, referenceRow) => {
-        return addRow(editor, 'before', referenceRow);
-    },
-    addRowBelow: (editor, referenceRow) => {
-        return addRow(editor, 'after', referenceRow);
+    addRow: (editor, beforeOrAfter, referenceRow) => {
+        if (!referenceRow) {
+            getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding tr.
+            referenceRow = getInSelection(editor.document, 'tr');
+            if (!referenceRow) return;
+        }
+        const referenceRowHeight = referenceRow.style.height ? pxToFloat(referenceRow.style.height) : referenceRow.clientHeight;
+        const newRow = document.createElement('tr');
+        newRow.style.height = referenceRowHeight + 'px';
+        const cells = referenceRow.querySelectorAll('td');
+        const referenceRowWidths = [...cells].map(cell => cell.style.width || cell.clientWidth + 'px');
+        newRow.append(...Array.from(Array(cells.length)).map(() => {
+            const td = document.createElement('td');
+            td.append(document.createElement('br'));
+            return td;
+        }));
+        referenceRow[beforeOrAfter](newRow);
+        newRow.style.height = referenceRowHeight + 'px';
+        // Preserve the width of the columns (applied only on the first row).
+        if (getRowIndex(newRow) === 0) {
+            let columnIndex = 0;
+            for (const column of newRow.children) {
+                column.style.width = referenceRowWidths[columnIndex];
+                cells[columnIndex].style.width = '';
+                columnIndex++;
+            }
+        }
     },
     removeColumn: (editor, cell) => {
         if (!cell) {
@@ -952,7 +931,7 @@ export const editorCommands = {
         const index = cells.findIndex(td => td === cell);
         const siblingCell = cells[index - 1] || cells[index + 1];
         table.querySelectorAll(`tr td:nth-of-type(${index + 1})`).forEach(td => td.remove());
-        siblingCell ? setSelection(...startPos(siblingCell)) : deleteTable(editor, table);
+        siblingCell ? setSelection(...startPos(siblingCell)) : editorCommands.deleteTable(editor, table);
     },
     removeRow: (editor, row) => {
         if (!row) {
@@ -965,9 +944,17 @@ export const editorCommands = {
         const rowIndex = rows.findIndex(tr => tr === row);
         const siblingRow = rows[rowIndex - 1] || rows[rowIndex + 1];
         row.remove();
-        siblingRow ? setSelection(...startPos(siblingRow)) : deleteTable(editor, table);
+        siblingRow ? setSelection(...startPos(siblingRow)) : editorCommands.deleteTable(editor, table);
     },
-    deleteTable: (editor, table) => deleteTable(editor, table),
+    deleteTable: (editor, table) => {
+        table = table || getInSelection(editor.document, 'table');
+        if (!table) return;
+        const p = document.createElement('p');
+        p.appendChild(document.createElement('br'));
+        table.before(p);
+        table.remove();
+        setSelection(p, 0);
+    },
     // Structure
     columnize: (editor, numberOfColumns, addParagraphAfter=true) => {
         const sel = editor.document.getSelection();
