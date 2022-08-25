@@ -42,7 +42,7 @@ class PaymentWizard(models.TransientModel):
     def _get_manual_payment_acquirer(self, env=None):
         if env is None:
             env = self.env
-        module_id = env.ref('base.module_payment_transfer').id
+        module_id = env.ref('base.module_payment_custom').id
         return env['payment.acquirer'].search([('module_id', '=', module_id),
             ('company_id', '=', env.company.id)], limit=1)
 

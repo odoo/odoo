@@ -1,18 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Wire Transfer Payment Acquirer',
+    'name': 'Custom Payment Modes',
     'version': '2.0',
     'category': 'Accounting/Payment Acquirers',
-    'summary': 'Payment Acquirer: Wire Transfer Implementation',
-    'description': """Wire Transfer Payment Acquirer""",
+    'summary': 'Payment Acquirer: Custom payment modes',
     'depends': ['payment'],
     'data': [
+        'views/payment_custom_templates.xml',
         'views/payment_views.xml',
-        'views/payment_transfer_templates.xml',
         'data/payment_acquirer_data.xml',
     ],
-    'auto_install': True,
     'assets': {
         'web.assets_frontend': [
             'payment_transfer/static/src/js/post_processing.js',

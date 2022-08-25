@@ -67,12 +67,33 @@ class TestUi(HttpCaseWithUserDemo):
         self.start_tour(self.env['website'].get_client_action_url('/shop'), 'shop', login='admin')
 
     def test_02_admin_checkout(self):
+        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
+            self.skipTest("Transfer acquirer is not installed")
+
+        self.env.ref('payment.payment_acquirer_transfer').write({
+            'state': 'enabled',
+            'is_published': True,
+        })
         self.start_tour("/", 'shop_buy_product', login="admin")
 
     def test_03_demo_checkout(self):
+        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
+            self.skipTest("Transfer acquirer is not installed")
+
+        self.env.ref('payment.payment_acquirer_transfer').write({
+            'state': 'enabled',
+            'is_published': True,
+        })
         self.start_tour("/", 'shop_buy_product', login="demo")
 
     def test_04_admin_website_sale_tour(self):
+        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
+            self.skipTest("Transfer acquirer is not installed")
+
+        self.env.ref('payment.payment_acquirer_transfer').write({
+            'state': 'enabled',
+            'is_published': True,
+        })
         tax_group = self.env['account.tax.group'].create({'name': 'Tax 15%'})
         tax = self.env['account.tax'].create({
             'name': 'Tax 15%',
