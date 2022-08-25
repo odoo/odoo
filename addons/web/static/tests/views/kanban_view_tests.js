@@ -3,6 +3,7 @@
 import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import {
     click,
+    drag,
     dragAndDrop,
     editInput,
     getFixture,
@@ -4039,6 +4040,34 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".thisiseditable", 4);
 
         assert.verifySteps(["resequence"]);
+    });
+
+    QUnit.test("drag and drop highlight on hover", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                <field name="product_id"/>
+                <templates><t t-name="kanban-box">
+                <div class="oe_kanban_global_click"><field name="foo"/>
+                </div>
+                </t></templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+
+        // first record of first column moved to the bottom of second column
+        const drop = drag(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+        assert.hasClass(target.querySelector(".o_kanban_group:nth-child(2)"), "o_kanban_hover");
+        await drop();
+        assert.containsNone(target, ".o_kanban_group:nth-child(2).o_kanban_hover");
     });
 
     QUnit.test("drag and drop a record, grouped by selection", async (assert) => {
