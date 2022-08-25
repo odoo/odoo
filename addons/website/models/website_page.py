@@ -277,14 +277,6 @@ class Page(models.Model):
         url = '/' + slugify(page_url, max_length=1024, path=True)
         return self.env['website'].with_context(website_id=website_id).get_unique_path(url)
 
-    def action_manage_website_pages(self):
-        return {
-            'name': _('Website Pages'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'website.page',
-            'view_mode': 'tree',
-            'view_id': self.env.ref('website.website_pages_tree_view').id,
-        }
 
 # this is just a dummy function to be used as ormcache key
 def _cached_response():

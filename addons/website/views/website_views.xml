@@ -215,13 +215,11 @@
             </field>
         </record>
 
-        <record id="action_website_pages_list" model="ir.actions.server">
-            <field name="name">Website: Pages</field>
-            <field name="model_id" ref="website.model_website_page"/>
-            <field name="state">code</field>
-            <field name="code">
-                action = model.action_manage_website_pages()
-            </field>
+        <record id="action_website_pages_list" model="ir.actions.act_window">
+            <field name="name">Website Pages</field>
+            <field name="res_model">website.page</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="website.website_pages_tree_view"/>
         </record>
 
         <!-- ====== website.menu views =========================================
@@ -328,8 +326,8 @@
                 </field>
                 <sheet position="before">
                     <header>
-                        <button name="redirect_to_page_manager" string="Go to Page Manager"
-                            type="object" attrs="{'invisible': [('page_ids', '=', [])]}"/>
+                        <button type="action" name="website.action_website_pages_list"
+                            string="Go to Page Manager" attrs="{'invisible': [('page_ids', '=', [])]}"/>
                     </header>
                 </sheet>
                 <field name="active" position="after">
