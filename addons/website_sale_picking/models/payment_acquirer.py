@@ -23,6 +23,7 @@ class PaymentAcquirer(models.Model):
         if not onsite_carriers:
             compatible_acquirers -= self.env.ref('website_sale_picking.payment_acquirer_onsite')
 
+        # FIXME MULTI COMPANY !!!
         # Show onsite payment only if it is a physical product
         order = self.env['sale.order'].browse(sale_order_id).exists()
         if not any(product.type in ['consu', 'product'] for product in order.order_line.product_id):

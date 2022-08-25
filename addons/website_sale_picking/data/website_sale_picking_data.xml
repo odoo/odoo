@@ -3,10 +3,10 @@
 
     <record id="payment_acquirer_onsite" model="payment.acquirer">
         <field name="name">Pay in store when picking the product</field>
-        <field name="provider">transfer</field>
+        <field name="provider">custom</field>
         <field name="state">enabled</field>
         <field name="is_onsite_acquirer">true</field>
-        <field name="redirect_form_view_id" ref="payment_transfer.redirect_form"/>
+        <field name="redirect_form_view_id" ref="payment_custom.redirect_form"/>
         <field name="pending_msg" type="html">
             <p>
                 <i>Your order has been saved.</i> Please come to the store to pay for your products

@@ -7,9 +7,9 @@
         </form>
     </template>
 
-    <template id="transfer_transaction_status" inherit_id="payment.transaction_status">
+    <template id="custom_transaction_status" inherit_id="payment.transaction_status">
         <xpath expr="//div[@id='o_payment_status_alert']" position="inside">
-            <t t-if="tx.acquirer_id.sudo().provider == 'transfer'">
+            <t t-if="tx.acquirer_id.sudo().provider == 'custom'">
                 <div t-if="tx.reference">
                     <strong>Communication: </strong><span t-esc="tx.reference"/>
                 </div>
