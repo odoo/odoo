@@ -14,7 +14,7 @@ inclusion of rating directly within the customer portal discuss widget.
         'rating',
     ],
     'data': [
-        'views/rating_views.xml',
+        'views/rating_rating_views.xml',
         'views/portal_templates.xml',
         'views/rating_templates.xml',
     ],

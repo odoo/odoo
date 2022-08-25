@@ -34,7 +34,7 @@
         'data/digest_data.xml',
         'data/ir_action_data.xml',
         'data/ir_cron_data.xml',
-        'data/mail_data.xml',
+        'data/mail_message_subtype_data.xml',
         'data/crm_recurring_plan_data.xml',
 
         'wizard/crm_lead_lost_views.xml',
@@ -64,7 +64,7 @@
         'data/crm_team_demo.xml',
         'data/mail_template_demo.xml',
         'data/crm_team_member_demo.xml',
-        'data/mail_activity_demo.xml',
+        'data/mail_activity_type_demo.xml',
         'data/crm_lead_demo.xml',
     ],
     'installable': True,
