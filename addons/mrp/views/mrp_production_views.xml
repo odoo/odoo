@@ -6,7 +6,7 @@
             <field name="name">mrp.production.tree</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <tree string="Manufacturing Orders" js_class="lazy_column_list" default_order="priority desc, date_planned_start desc" multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                <tree string="Manufacturing Orders" default_order="priority desc, date_planned_start desc" multi_edit="1" sample="1" decoration-info="state == 'draft'">
                     <header>
                         <button name="button_plan" type="object" string="Plan"/>
                         <button name="do_unreserve" type="object" string="Unreserve"/>
