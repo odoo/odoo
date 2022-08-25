@@ -57,7 +57,8 @@ class SaleOrder(models.Model):
         for coupon, rewards in claimable_rewards.items():
             if len(coupon.program_id.reward_ids) != 1 or\
                 coupon.program_id.is_nominative or\
-                (rewards.reward_type == 'product' and rewards.multi_product):
+                (rewards.reward_type == 'product' and rewards.multi_product) or\
+                rewards in self.order_line.reward_id:
                 continue
             res = self._apply_program_reward(rewards, coupon)
             if 'error' not in res:

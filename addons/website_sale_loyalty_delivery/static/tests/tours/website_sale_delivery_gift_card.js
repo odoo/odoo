@@ -1,11 +1,11 @@
-odoo.define('website_sale_delivery.test', function (require) {
+odoo.define('website_sale_loyalty_giftcard.test', function (require) {
     'use strict';
 
     require("website_sale.tour");
     var tour = require("web_tour.tour");
     const tourUtils = require('website_sale.tour_utils');
 
-    tour.register('shop_sale_giftcard_delivery', {
+    tour.register('shop_sale_loyalty_delivery', {
         test: true,
         url: '/shop?search=Accoustic',
     },
@@ -30,7 +30,7 @@ odoo.define('website_sale_delivery.test', function (require) {
                 run: 'click'
             },
             {
-                content: "select free delivery method",
+                content: "select delivery method 1",
                 trigger: "li label:contains(delivery1)",
                 run: 'click'
             },
@@ -41,8 +41,8 @@ odoo.define('website_sale_delivery.test', function (require) {
             },
             {
                 content: "Enter gift card code",
-                trigger: "input[name='promo']",
-                run: 'text 044c-7c9c-432f-810e-dcff'
+                trigger: "form[name='gift_card_code'] input[name='promo']",
+                run: 'text 123456'
             },
             {
                 content: "click on 'Pay'",
@@ -52,6 +52,12 @@ odoo.define('website_sale_delivery.test', function (require) {
             {
                 content: "check if delivery price is correct'",
                 trigger: "#order_delivery .oe_currency_value:contains(5.00)",
+                run: () => {} // this is a check
+            },
+            {
+                content: "check if total price is correct",
+                trigger: "tr#order_total span.oe_currency_value:contains(0.00)",
+                run: () => {} // this is a check
             },
         ]
     );
