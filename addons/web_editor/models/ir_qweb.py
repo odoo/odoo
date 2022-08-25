@@ -65,7 +65,7 @@ class QWeb(models.AbstractModel):
                 sub_call = el.get('t-call')
                 if sub_call:
                     el.set('t-call-options', f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}")
-                # If it already has a data-snippet it is a saved snippet.
+                # If it already has a data-snippet it is a saved or an inherited snippet.
                 # Do not override it.
                 elif 'data-snippet' not in el.attrib:
                     el.attrib['data-snippet'] = snippet_key.split('.', 1)[-1]
