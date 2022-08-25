@@ -106,31 +106,37 @@
 </record>
 
 <record id="view_forum_post_list" model="ir.ui.view">
-    <field name="name">forum.post.list</field>
+    <field name="name">Forum Post Pages Tree</field>
     <field name="model">forum.post</field>
+    <field name="priority">99</field>
     <field name="arch" type="xml">
-        <tree string="Forum Posts">
-            <field name="name"/>
+        <tree js_class="website_pages_list" create="false" type="object" action="go_to_website">
             <field name="active" invisible="1"/>
-            <field name="forum_id"/>
-            <field name="views" string="# Views" sum="Total Views"/>
-            <field name="child_count" string="# Answers" sum="Total Answers"/>
+            <field name="name"/>
+            <field name="website_url"/>
+
+            <field name="forum_id" optional="show"/>
+            <field name="views" string="# Views" sum="Total Views" optional="hide"/>
+            <field name="child_count" string="# Answers" sum="Total Answers" optional="hide"/>
             <field name="state" widget="badge"
                 decoration-success="state == 'active'"
                 decoration-danger="state == 'close'"
-                decoration-warning="state not in ('active', 'close')"/>
-            <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+                decoration-warning="state not in ('active', 'close')" optional="show"/>
+
+            <field name="is_seo_optimized"/>
+
+            <field name="website_id" groups="website.group_multi_website"/>
         </tree>
     </field>
 </record>
 
 <record id="action_forum_post" model="ir.actions.act_window">
-    <field name="name">Forum Posts</field>
+    <field name="name">Forum Post Pages</field>
     <field name="res_model">forum.post</field>
-    <field name="view_mode">tree,form,graph</field>
+    <field name="view_mode">tree,graph</field>
     <field name="view_id" ref="view_forum_post_list"/>
     <field name="search_view_id" ref="view_forum_post_search"/>
-    <field name="context">{'search_default_posts':1}</field>
+    <field name="context">{'search_default_posts': 1, 'create_action': 'website_forum.forum_forum_action_add'}</field>
     <field name="help" type="html">
         <p class="o_view_nocontent_smiling_face">
             Create a new forum post
@@ -138,6 +144,10 @@
     </field>
 </record>
 
-<menuitem id="menu_forum_posts" parent="menu_website_forum_global" name="Forum Post" action="action_forum_post" sequence="20"/>
+<menuitem id="menu_forum_post_pages"
+    parent="website.menu_content"
+    sequence="80"
+    name="Forum Posts"
+    action="action_forum_post"/>
 
 </odoo>

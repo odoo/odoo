@@ -47,6 +47,7 @@ Featuring
         'views/website_slides_templates_lesson_embed.xml',
         'views/website_slides_templates_profile.xml',
         'views/website_slides_templates_utils.xml',
+        'views/website_pages_views.xml',
         'views/slide_channel_add.xml',
         'wizard/slide_channel_invite_views.xml',
         'data/gamification_data.xml',

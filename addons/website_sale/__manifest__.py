@@ -34,6 +34,7 @@
         'views/base_unit_view.xml',
         'views/product_product_add.xml',
         'views/website_views.xml',
+        'views/website_pages_views.xml',
     ],
     'demo': [
         'data/demo.xml',

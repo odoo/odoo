@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <odoo>
-
         <!-- Blog views -->
         <record id="view_blog_blog_list" model="ir.ui.view">
             <field name="name">blog.blog.list</field>
@@ -128,8 +127,8 @@
 
         <menuitem id="menu_blog_global" parent="menu_website_blog_root_global" name="Blogs" action="action_blog_blog" sequence="20"/>
 
-        <menuitem id="menu_blog_tag_global" parent="menu_website_blog_root_global" name="Tags" action="action_tags" sequence="40" />
+        <menuitem id="menu_blog_tag_global" parent="menu_website_blog_root_global" name="Tags" action="action_tags" sequence="30"/>
 
         <menuitem id="menu_website_blog_tag_category_global" parent="menu_website_blog_root_global"
-                  name="Tag Categories" action="action_tag_category" sequence="50" />
+                  name="Tag Categories" action="action_tag_category" sequence="40"/>
 </odoo>
