@@ -14,6 +14,11 @@
         <field name="price">1500.0</field>
     </record>
 
+    <record id="event.event_1_ticket_1" model="event.event.ticket">
+        <field name="price">15.0</field>
+        <field name="product_id" ref="event_sale.product_product_sport_event"/>
+    </record>
+
     <record id="event.event_2_ticket_1" model="event.event.ticket">
         <field name="product_id" ref="product_product_event_standard"/>
         <field name="price">1000.0</field>

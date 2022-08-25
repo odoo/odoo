@@ -25,6 +25,36 @@
         <field name="detailed_type">event</field>
     </record>
 
+    <record id="product_product_sport_event" model="product.product">
+        <field name="categ_id" ref="event_sale.product_category_events"/>
+        <field name="currency_id" ref="base.USD"/>
+        <field name="detailed_type">event</field>
+        <field name="invoice_policy">order</field>
+        <field name="list_price">15.0</field>
+        <field name="name">Event Registration - Sport Events</field>
+        <field name="standard_price">5.0</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <!-- ****** Price list ****** -->
+    <record id="list_event_deals" model="product.pricelist">
+        <field name="currency_id" ref="base.USD"/>
+        <field name="discount_policy">without_discount</field>
+        <field name="name">Event Deals</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="item_event_vip_event" model="product.pricelist.item">
+        <field name="applied_on">0_product_variant</field>
+        <field name="base">list_price</field>
+        <field name="compute_price">formula</field>
+        <field name="min_quantity">2</field>
+        <field name="price_discount">20</field>
+        <field name="pricelist_id" ref="event_sale.list_event_deals"/>
+        <field name="product_id" ref="event_sale.product_product_sport_event"/>
+    </record>
+
     <!-- ****** Registrations ****** -->
     <!-- Design fair -->
     <record id="event_0_sale_order_0" model="sale.order">
@@ -50,6 +80,28 @@
         <field name="product_uom_qty">1</field>
         <field name="event_id" ref="event.event_0"/>
         <field name="event_ticket_id" ref="event.event_0_ticket_0"/>
+    </record>
+
+    <!-- Great Reno Ballon Race -->
+    <record id="event_1_sale_order_0" model="sale.order">
+        <field name="currency_id" ref="base.USD"/>
+        <field name="date_order" eval="DateTime.now() - relativedelta(hours=5)"/>
+        <field name="partner_id" ref="base.res_partner_address_16"/>
+        <field name="pricelist_id" ref="event_sale.list_event_deals"/>
+        <field name="state">draft</field>
+        <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="event_1_sale_order_0_line_0" model="sale.order.line">
+        <field name="event_id" ref="event.event_1"/>
+        <field name="event_ticket_id" ref="event.event_1_ticket_1"/>
+        <field name="name">Event Registration - Sport Events
+Standard
+Great Reno Ballon Race</field>
+        <field name="order_id" ref="event_1_sale_order_0"/>
+        <field name="price_unit">15</field>  <!-- force it because not auto-computed -->
+        <field name="discount">20</field>    <!-- force it because not auto-computed -->
+        <field name="product_id" ref="event_sale.product_product_sport_event"/>
+        <field name="product_uom_qty">8</field>
     </record>
 
     <!-- Conference for architects -->
