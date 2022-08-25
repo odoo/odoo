@@ -799,6 +799,9 @@ class HolidaysRequest(models.Model):
     def name_get(self):
         res = []
         for leave in self:
+            user_tz = timezone(leave.tz)
+            date_from_utc = leave.date_from and leave.date_from.astimezone(user_tz).date()
+            date_to_utc = leave.date_to and leave.date_to.astimezone(user_tz).date()
             if self.env.context.get('short_name'):
                 if leave.leave_type_request_unit == 'hour':
                     res.append((leave.id, _("%s : %.2f hours") % (leave.name or leave.holiday_status_id.name, leave.number_of_hours_display)))
@@ -823,25 +826,23 @@ class HolidaysRequest(models.Model):
                                 person=target,
                                 leave_type=leave.holiday_status_id.name,
                                 duration=leave.number_of_hours_display,
-                                date=fields.Date.to_string(leave.date_from),
+                                date=fields.Date.to_string(date_from_utc) or "",
                             )
                         ))
                     else:
-                        user_tz = timezone(leave.tz)
-                        date_from_utc = leave.date_from and leave.date_from.astimezone(user_tz).date()
                         res.append((
                             leave.id,
                             _("%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s",
                                 person=target,
                                 leave_type=leave.holiday_status_id.name,
                                 duration=leave.number_of_hours_display,
-                                date=fields.Date.to_string(date_from_utc),
+                                date=fields.Date.to_string(date_from_utc) or "",
                             )
                         ))
                 else:
-                    display_date = fields.Date.to_string(leave.date_from)
-                    if leave.number_of_days > 1:
-                        display_date += ' / %s' % fields.Date.to_string(leave.date_to)
+                    display_date = fields.Date.to_string(date_from_utc) or ""
+                    if leave.number_of_days > 1 and date_from_utc and date_to_utc:
+                        display_date += ' / %s' % fields.Date.to_string(date_to_utc) or ""
                     if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
                         res.append((
                             leave.id,
