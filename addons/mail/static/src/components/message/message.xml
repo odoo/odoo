@@ -19,7 +19,7 @@
                     'o-starred': messageView.message.isStarred,
                     'o-currentAuthor': messageView.message.isCurrentUserOrGuestAuthor,
                     'mt-1': !messageView.isSquashed,
-                    'mt-5': !messageView.isSquashed and messageView.messageListViewOwner,
+                    'mt-5': !messageView.isSquashed and messageView.messageListViewMessageViewItemOwner,
                     'px-3': !messageView.isInChatWindow,
                     'px-1': messageView.isInChatWindow,
                     'opacity-50': (messageView.messageListViewMessageViewItemOwner and messageView.messageListViewMessageViewItemOwner.messageListViewOwner.threadViewOwner.replyingToMessageView) and !messageView.isSelected,
