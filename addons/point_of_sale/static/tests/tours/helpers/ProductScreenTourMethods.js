@@ -80,15 +80,16 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
             return keys.split(' ').map(generateStep);
         }
 
-        clickPayButton() {
-            return [
-                { content: 'click pay button', trigger: '.product-screen .actionpad .button.pay' },
-                {
+        clickPayButton(shouldCheck = true) {
+            const steps = [{ content: 'click pay button', trigger: '.product-screen .actionpad .button.pay' }];
+            if (shouldCheck) {
+                steps.push({
                     content: 'now in payment screen',
                     trigger: '.pos-content .payment-screen',
                     run: () => {},
-                },
-            ];
+                });
+            }
+            return steps;
         }
 
         clickPartnerButton() {

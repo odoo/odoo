@@ -98,7 +98,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             return res
         }
         get isBalanceDisplayed() {
-            return this.env.pos.config.module_pos_loyalty;
+            return false;
         }
         get partnerLink() {
             return `/web#model=res.partner&id=${this.state.editModeProps.partner.id}`;
@@ -176,7 +176,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         }
         async searchPartner() {
             let result = await this.getNewPartners();
-            this.env.pos.db.add_partners(result);
+            this.env.pos.addPartners(result);
             if (!this.env.pos.isEveryPartnerLoaded) await this.env.pos.updateIsEveryPartnerLoaded();
             this.render(true);
             return result;

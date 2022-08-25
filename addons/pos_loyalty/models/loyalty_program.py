@@ -10,7 +10,7 @@ class LoyaltyProgram(models.Model):
 
     # NOTE: `pos_config_ids` satisfies an excpeptional use case: when no PoS is specified, the loyalty program is
     # applied to every PoS. You can access the loyalty programs of a PoS using _get_program_ids() of pos.config
-    pos_config_ids = fields.Many2many('pos.config', compute="_compute_pos_config_ids", store=True, readonly=False)
+    pos_config_ids = fields.Many2many('pos.config', compute="_compute_pos_config_ids", store=True, readonly=False, help="Restrict publishing to those shops.")
     pos_order_count = fields.Integer("PoS Order Count", compute='_compute_pos_order_count')
     pos_ok = fields.Boolean("Point of Sale", default=True)
     pos_report_print_id = fields.Many2one('ir.actions.report', string="Print Report", domain=[('model', '=', 'loyalty.card')], compute='_compute_pos_report_print_id', inverse='_inverse_pos_report_print_id', readonly=False,

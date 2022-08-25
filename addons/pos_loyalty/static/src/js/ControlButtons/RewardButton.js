@@ -28,7 +28,13 @@ export class RewardButton extends PosComponent {
 
     _getPotentialRewards() {
         const order = this.env.pos.get_order();
-        const rewards = order ? order.getClaimableRewards() : [];
+        // Claimable rewards excluding those from eWallet programs.
+        // eWallet rewards are handled in the eWalletButton.
+        let rewards = [];
+        if (order) {
+            const claimableRewards = order.getClaimableRewards();
+            rewards = claimableRewards.filter(({ reward }) => reward.program_id.program_type !== 'ewallet');
+        }
         const discountRewards = rewards.filter(({ reward }) => reward.reward_type == 'discount');
         const freeProductRewards = rewards.filter(({ reward }) => reward.reward_type == 'product');
         const potentialFreeProductRewards = order.getPotentialFreeProductRewards();
@@ -119,7 +125,7 @@ RewardButton.template = 'RewardButton';
 ProductScreen.addControlButton({
     component: RewardButton,
     condition: function() {
-        return this.env.pos.config.use_coupon_programs || this.env.pos.config.loyalty_program_id || this.env.pos.config.use_gift_card;
+        return this.env.pos.programs.length > 0;
     }
 });
 

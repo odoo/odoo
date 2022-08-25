@@ -6,11 +6,11 @@ import Registries from 'point_of_sale.Registries';
 
 export const PosSaleLoyaltyOrderline = (Orderline) => class PosSaleLoyaltyOrderline extends Orderline {
     //@override
-    ignoreLoyaltyPoints() {
+    ignoreLoyaltyPoints(args) {
         if (this.sale_order_origin_id) {
             return true;
         }
-        return super.ignoreLoyaltyPoints(...arguments);
+        return super.ignoreLoyaltyPoints(args);
     }
     //@override
     setQuantityFromSOL(saleOrderLine) {
