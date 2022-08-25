@@ -63,19 +63,19 @@ class TestDiscussFullPerformance(TransactionCase):
         self.env['mail.channel'].sudo().search([('id', '!=', self.channel_general.id)]).unlink()
         self.user_root = self.env.ref('base.user_root')
         # create public channels
-        self.channel_channel_public_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public 1', privacy='public')['id'])
+        self.channel_channel_public_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public 1', privacy='public', group_id=None)['id'])
         self.channel_channel_public_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[4] + self.users[8]).partner_id.ids)
-        self.channel_channel_public_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public 2', privacy='public')['id'])
+        self.channel_channel_public_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public 2', privacy='public', group_id=None)['id'])
         self.channel_channel_public_2.add_members((self.users[0] + self.users[2] + self.users[4] + self.users[7] + self.users[9]).partner_id.ids)
         # create groups channels
-        self.channel_channel_group_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group 1', privacy='groups')['id'])
+        self.channel_channel_group_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group 1', privacy='groups', group_id=self.env.ref('base.group_user').id)['id'])
         self.channel_channel_group_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[6] + self.users[12]).partner_id.ids)
-        self.channel_channel_group_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group 2', privacy='groups')['id'])
+        self.channel_channel_group_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group 2', privacy='groups', group_id=self.env.ref('base.group_user').id)['id'])
         self.channel_channel_group_2.add_members((self.users[0] + self.users[2] + self.users[6] + self.users[7] + self.users[13]).partner_id.ids)
         # create private channels
-        self.channel_channel_private_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='private 1', privacy='private')['id'])
+        self.channel_channel_private_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='private 1', privacy='private', group_id=None)['id'])
         self.channel_channel_private_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[5] + self.users[10]).partner_id.ids)
-        self.channel_channel_private_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='private 2', privacy='private')['id'])
+        self.channel_channel_private_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='private 2', privacy='private', group_id=None)['id'])
         self.channel_channel_private_2.add_members((self.users[0] + self.users[2] + self.users[5] + self.users[7] + self.users[11]).partner_id.ids)
         # create chats
         self.channel_chat_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[14]).partner_id.ids)['id'])
@@ -145,7 +145,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': self.channel_general.uuid,
                 },
                 {
-                    'authorizedGroupFullName': self.group_user.full_name,
+                    'authorizedGroupFullName': False,
                     'channel': {
                         'avatarCacheKey': self.channel_channel_public_1._get_avatar_cache_key(),
                         'channel_type': 'channel',
@@ -173,7 +173,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': self.channel_channel_public_1.uuid,
                 },
                 {
-                    'authorizedGroupFullName': self.group_user.full_name,
+                    'authorizedGroupFullName': False,
                     'channel': {
                         'avatarCacheKey': self.channel_channel_public_2._get_avatar_cache_key(),
                         'channel_type': 'channel',
@@ -257,7 +257,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': self.channel_channel_group_2.uuid,
                 },
                 {
-                    'authorizedGroupFullName': self.group_user.full_name,
+                    'authorizedGroupFullName': False,
                     'channel': {
                         'avatarCacheKey': self.channel_channel_private_1._get_avatar_cache_key(),
                         'channel_type': 'channel',
@@ -285,7 +285,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'uuid': self.channel_channel_private_1.uuid,
                 },
                 {
-                    'authorizedGroupFullName': self.group_user.full_name,
+                    'authorizedGroupFullName': False,
                     'channel': {
                         'avatarCacheKey': self.channel_channel_private_2._get_avatar_cache_key(),
                         'channel_type': 'channel',
@@ -795,6 +795,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'substitution': 'Thanks for your feedback. Good bye!',
                 },
             ],
+            'internalUserGroupId': self.env.ref('base.group_user').id,
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
             'partner_root': {
                 'active': False,
@@ -841,4 +842,4 @@ class TestDiscussFullPerformance(TransactionCase):
             Returns the expected query count.
             The point of having a separate getter is to allow it to be overriden.
         """
-        return 85
+        return 86

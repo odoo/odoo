@@ -17,7 +17,7 @@ class TestChannelInternals(MailCommon):
     @mute_logger('odoo.models.unlink')
     def test_01_join_call(self):
         """Join call should remove existing sessions, remove invitation, create a new session, and return data."""
-        channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Test Channel')['id'])
+        channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Test Channel', group_id=self.env.ref('base.group_user').id)['id'])
         channel_member = channel.sudo().channel_member_ids.filtered(lambda channel_member: channel_member.partner_id == self.user_employee.partner_id)
         channel_member._rtc_join_call()
         self.env['bus.bus'].sudo().search([]).unlink()

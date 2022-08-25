@@ -416,6 +416,7 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
+        internalUserGroupId: attr(),
         isCurrentUserGuest: attr({
             compute: '_computeIsCurrentUserGuest',
         }),
