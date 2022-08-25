@@ -173,13 +173,13 @@ class CarPooling(models.Model):
     def book_or_unbook(self):
         for record in self:
             if self.env.user in record.passenger_ids.passenger:
-                get_passenger_trip=self.env['car.pooling.passenger'].search([('passenger_uid', '=', str(self.env.user.id)), ('trip_id_id', '=', str(record.id))])
-                if get_passenger_trip.status=="accepted":
-                     msg="You cannot unbook the trip because the book has been accepted by the driver. Contact " + str(record.driver.name) + " at " + str(record.driver.email) + " or by " + str(record.driver.phone_number) + " to ask booking refusal."
+                get_passenger_trip = self.env['car.pooling.passenger'].search([('passenger_uid', '=', str(self.env.user.id)), ('trip_id_id', '=', str(record.id))])
+                if get_passenger_trip.status == "accepted":
+                     msg = "You cannot unbook the trip because the book has been accepted by the driver. Contact " + str(record.driver.name) + " at " + str(record.driver.email) + " or by " + str(record.driver.phone_number) + " to ask booking refusal."
                      raise UserError(msg)
                 get_passenger_trip.unlink()
             else:
-                add_to_passenger = self.env['car.pooling.passenger'].create({'passenger':self.env.user.id,'trip_id':record.id, 'trip_date':record.departure_date,'trip_driver':record.driver.name,'is_round_trip':record.is_round_trip})
+                add_to_passenger = self.env['car.pooling.passenger'].create({'passenger':self.env.user.id, 'trip_id':record.id, 'trip_date':record.departure_date, 'trip_driver':record.driver.name, 'is_round_trip':record.is_round_trip})
         return True
 
     _sql_constraints = [
@@ -215,14 +215,14 @@ class CarPoolingPassenger(models.Model):
     _order = "id desc"
 
     passenger = fields.Many2one('res.users', required=True, readonly=True, string='Passenger', index=True, default=lambda self: self.env.user)
-    passenger_uid= fields.Integer(compute="_get_passenger_uid", store=True)
+    passenger_uid = fields.Integer(compute="_get_passenger_uid", store=True)
     @api.depends('passenger')
     def _get_passenger_uid(self):
         for record in self:
             record.passenger_uid = record.passenger.id
 
     trip_id = fields.Many2one('car.pooling', string="Trip", ondelete='cascade')
-    trip_id_id=fields.Integer(compute="_get_trip_uid", store=True)
+    trip_id_id = fields.Integer(compute="_get_trip_uid", store=True)
     @api.depends('trip_id')
     def _get_trip_uid(self):
         for record in self:
