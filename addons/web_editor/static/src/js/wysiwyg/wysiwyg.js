@@ -1584,6 +1584,7 @@ const Wysiwyg = Widget.extend({
                             this.odooEditor.document.getSelection().collapseToStart();
                         }
                         this._updateEditorUI();
+                        colorpicker.off('color_leave');
                     });
                     colorpicker.on('color_hover', null, ev => {
                         if (hadNonCollapsedSelection) {
