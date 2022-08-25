@@ -351,11 +351,11 @@ registerModel({
          * @param {string} [param0.privacy]
          * @returns {Thread} the created channel
          */
-        async performRpcCreateChannel({ name, privacy }) {
+        async performRpcCreateChannel({ name, group_id, privacy }) {
             const data = await this.messaging.rpc({
                 model: 'mail.channel',
                 method: 'channel_create',
-                args: [name, privacy],
+                args: [name, group_id, privacy],
             });
             return this.messaging.models['Thread'].insert(
                 this.messaging.models['Thread'].convertData(data)
