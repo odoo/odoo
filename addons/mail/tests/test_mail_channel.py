@@ -30,7 +30,7 @@ class TestChannelAccessRights(MailCommon):
         # Channel for certain group
         cls.group_restricted_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Channel for Groups', privacy='groups', group_id=cls.env.ref('base.group_user').id)['id'])
         # Public Channel
-        cls.public_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Public Channel', privacy='public')['id'])
+        cls.public_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Public Channel', privacy='public', group_id=None)['id'])
         # Group
         cls.private_group = cls.env['mail.channel'].browse(cls.env['mail.channel'].create_group(partners_to=cls.user_employee.partner_id.ids, name="Group")['id'])
         # Chat
@@ -473,7 +473,7 @@ class TestChannelInternals(MailCommon):
     def test_channel_private_unfollow(self):
         """ Test that a partner can leave (unfollow) a channel/group/chat. """
         group_restricted_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Channel for Groups', privacy='groups', group_id=self.env.ref('base.group_user').id)['id'])
-        public_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Channel for Everyone', privacy='public')['id'])
+        public_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Channel for Everyone', privacy='public', group_id=None)['id'])
         private_group = self.env['mail.channel'].browse(self.env['mail.channel'].create_group(partners_to=self.user_employee.partner_id.ids, name="Group")['id'])
         chat_user_current = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get(self.env.user.partner_id.ids)['id'])
 
@@ -530,7 +530,7 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(messages_1, messages_2)
 
     def test_channel_should_generate_correct_default_avatar(self):
-        test_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Channel')['id'])
+        test_channel = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='Channel', group_id=self.env.ref('base.group_user').id)['id'])
         test_channel.uuid = 'channel-uuid'
         private_group = self.env['mail.channel'].browse(self.env['mail.channel'].create_group(partners_to=self.user_employee.partner_id.ids)['id'])
         private_group.uuid = 'group-uuid'

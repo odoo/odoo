@@ -60,6 +60,7 @@ registerModel({
             currentGuest,
             current_user_id,
             current_user_settings,
+            internalUserGroupId,
             menu_id,
             needaction_inbox_counter = 0,
             partner_root,
@@ -102,6 +103,8 @@ registerModel({
             discuss.update({ menu_id });
             // company related data
             this.messaging.update({ companyName });
+
+            this.messaging.update({ internalUserGroupId });
         },
         /**
          * @private

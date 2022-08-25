@@ -41,6 +41,7 @@ registerModel({
             if (ui.item.special) {
                 const channel = await this.messaging.models['Thread'].performRpcCreateChannel({
                     name,
+                    group_id: ui.item.special === 'private' ? false : this.messaging.internalUserGroupId,
                     privacy: ui.item.special === 'private' ? 'private' : 'groups',
                 });
                 channel.open();
