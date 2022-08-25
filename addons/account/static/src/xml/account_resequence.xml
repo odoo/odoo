@@ -8,8 +8,10 @@
                     <th>Before</th>
                     <th>After</th>
                 </tr></thead>
-                <tbody t-foreach="data.changeLines" t-as="changeLine" t-key="changeLine.id">
-                    <ChangeLine changeLine="changeLine" ordering="data.ordering"/>
+                <tbody>
+                    <t t-foreach="data.changeLines" t-as="changeLine" t-key="changeLine.id">
+                        <ChangeLine changeLine="changeLine" ordering="data.ordering"/>
+                    </t>
                 </tbody>
             </table>
     </t>
