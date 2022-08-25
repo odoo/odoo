@@ -5,6 +5,14 @@ const options = require('web_editor.snippets.options');
 const s_dynamic_snippet_options = require('website.s_dynamic_snippet_options');
 
 const dynamicSnippetCarouselOptions = s_dynamic_snippet_options.extend({
+    /**
+     * @override
+     */
+    onBuilt() {
+        this._super(...arguments);
+        // TODO Remove in master.
+        this.$target[0].dataset['snippet'] = 's_dynamic_snippet_carousel';
+    },
 
     //--------------------------------------------------------------------------
     // Options
