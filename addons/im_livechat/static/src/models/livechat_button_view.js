@@ -38,8 +38,8 @@ registerModel({
                 legacyPublicLivechatMessage: legacyMessage,
             });
 
-            if (this.messaging.publicLivechatGlobal.publicLivechat && this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat) {
-                this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.addMessage(legacyMessage);
+            if (this.messaging.publicLivechatGlobal.publicLivechat && this.messaging.publicLivechatGlobal.publicLivechat.widget) {
+                this.messaging.publicLivechatGlobal.publicLivechat.widget.addMessage(legacyMessage);
             }
 
             if (options && options.prepend) {
@@ -357,7 +357,7 @@ registerModel({
                         this.widget._renderMessages();
                         this.messaging.publicLivechatGlobal.update({ notificationHandler: {} });
 
-                        set_cookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
+                        set_cookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60);
                         set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60);
                         if (this.messaging.publicLivechatGlobal.publicLivechat.operator) {
                             const operatorPidId = this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
@@ -405,7 +405,7 @@ registerModel({
          * @param {Object} message
          */
         async _sendMessage(message) {
-            this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat._notifyMyselfTyping({ typing: false });
+            this.messaging.publicLivechatGlobal.publicLivechat.widget._notifyMyselfTyping({ typing: false });
             const messageId = await this.messaging.rpc({
                 route: '/mail/chat_post',
                 params: { uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid, message_content: message.content },
