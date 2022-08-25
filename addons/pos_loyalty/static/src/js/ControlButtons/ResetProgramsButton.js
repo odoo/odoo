@@ -21,7 +21,7 @@ ResetProgramsButton.template = 'ResetProgramsButton';
 ProductScreen.addControlButton({
     component: ResetProgramsButton,
     condition: function () {
-        return this.env.pos.config.use_coupon_programs;
+        return this.env.pos.programs.some(p => ['coupon', 'promotion'].includes(p.program_type));
     }
 });
 

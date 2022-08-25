@@ -3,7 +3,7 @@ odoo.define('pos_restaurant.tour.FloorScreen', function (require) {
 
     const { Chrome } = require('pos_restaurant.tour.ChromeTourMethods');
     const { FloorScreen } = require('pos_restaurant.tour.FloorScreenTourMethods');
-    const { TextInputPopup } = require('pos_restaurant.tour.TextInputPopupTourMethods');
+    const { TextInputPopup } = require('point_of_sale.tour.TextInputPopupTourMethods');
     const { NumberPopup } = require('point_of_sale.tour.NumberPopupTourMethods');
     const { ProductScreen } = require('pos_restaurant.tour.ProductScreenTourMethods');
     const { getSteps, startSteps } = require('point_of_sale.tour.utils');

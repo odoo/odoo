@@ -69,6 +69,9 @@ class LoyaltyCard(models.Model):
         self.ensure_one()
         return None
 
+    def _has_source_order(self):
+        return False
+
     def action_coupon_send(self):
         """ Open a window to compose an email, with the default template returned by `_get_default_template`
             message loaded by default

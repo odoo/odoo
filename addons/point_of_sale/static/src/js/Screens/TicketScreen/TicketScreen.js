@@ -190,13 +190,17 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         }
         async _onDoRefund() {
             const order = this.getSelectedSyncedOrder();
+
+            if (this._doesOrderHaveSoleItem(order)) {
+                if (!this._prepareAutoRefundOnOrder(order)) {
+                    // Don't proceed on refund if preparation returned false.
+                    return;
+                }
+            }
+
             if (!order) {
                 this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
                 return;
-            }
-
-            if (this._doesOrderHaveSoleItem(order)) {
-                this._prepareAutoRefundOnOrder(order);
             }
 
             const partner = order.get_partner();
@@ -415,13 +419,14 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         _prepareAutoRefundOnOrder(order) {
             const selectedOrderlineId = this.getSelectedOrderlineId();
             const orderline = order.orderlines.find((line) => line.id == selectedOrderlineId);
-            if (!orderline) return;
+            if (!orderline) return false;
 
             const toRefundDetail = this._getToRefundDetail(orderline);
             const refundableQty = orderline.get_quantity() - orderline.refunded_qty;
             if (this.env.pos.isProductQtyZero(refundableQty - 1)) {
                 toRefundDetail.qty = 1;
             }
+            return true;
         }
         /**
          * Returns the corresponding toRefundDetail of the given orderline.

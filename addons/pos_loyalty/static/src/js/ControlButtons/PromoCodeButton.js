@@ -12,12 +12,16 @@ export class PromoCodeButton extends PosComponent {
     }
 
     async onClick() {
-        const { confirmed, payload: code } = await this.showPopup('TextInputPopup', {
-            title: this.env._t('Enter Promotion or Coupon Code'),
+        let { confirmed, payload: code } = await this.showPopup('TextInputPopup', {
+            title: this.env._t('Enter Code'),
             startingValue: '',
+            placeholder: this.env._t('Gift card or Discount code'),
         });
-        if (confirmed && code !== '') {
-            this.env.pos.get_order().activateCode(code);
+        if (confirmed) {
+            code = code.trim();
+            if (code !== '') {
+                this.env.pos.get_order().activateCode(code);
+            }
         }
     }
 }
@@ -27,7 +31,7 @@ PromoCodeButton.template = 'PromoCodeButton';
 ProductScreen.addControlButton({
     component: PromoCodeButton,
     condition: function () {
-        return this.env.pos.config.use_coupon_programs;
+        return this.env.pos.programs.some(p => ['coupon', 'promotion', 'gift_card'].includes(p.program_type));
     }
 });
 

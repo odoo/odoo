@@ -14,7 +14,7 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
             for (const pe of Object.values(this.currentOrder.couponPointChanges)) {
                 if (pe.coupon_id > 0) {
                     pointChanges[pe.coupon_id] = pe.points;
-                } else if (pe.barcode) {
+                } else if (pe.barcode && !pe.giftCardId) {
                     // New coupon with a specific code, validate that it does not exist
                     newCodes.push(pe.barcode);
                 }
@@ -78,21 +78,14 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
         async _postPushOrderResolve(order, server_ids) {
             // Compile data for our function
             const rewardLines = order._get_reward_lines();
-            const loyaltyProgramId = this.env.pos.config.loyalty_program_id ? this.env.pos.config.loyalty_program_id[0] : 0;
             const partner = order.get_partner();
-            let partnerLoyaltyCardId = partner ? partner.loyalty_card_id : 0;
             let couponData = Object.values(order.couponPointChanges).reduce((agg, pe) => {
                 agg[pe.coupon_id] = Object.assign({}, pe, {
                     points: pe.points - order._getPointsCorrection(this.env.pos.program_by_id[pe.program_id]),
                 });
                 const program = this.env.pos.program_by_id[pe.program_id];
-                if (program.is_nominative && order.get_partner()) {
+                if (program.is_nominative && partner) {
                     agg[pe.coupon_id].partner_id = partner.id;
-                }
-                if (program.id === loyaltyProgramId) {
-                    if (!partnerLoyaltyCardId) {
-                        partnerLoyaltyCardId = pe.coupon_id;
-                    }
                 }
                 return agg;
             }, {});
@@ -139,9 +132,6 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                         } else {
                             dbCoupon = new PosLoyaltyCard(
                                 couponUpdate.code, couponUpdate.id, couponUpdate.program_id, couponUpdate.partner_id, couponUpdate.points);
-                        }
-                        if (couponUpdate.old_id === partnerLoyaltyCardId) {
-                            partner.loyalty_card_id = couponUpdate.id;
                         }
                         delete this.env.pos.couponCache[couponUpdate.old_id];
                         this.env.pos.couponCache[couponUpdate.id] = dbCoupon;

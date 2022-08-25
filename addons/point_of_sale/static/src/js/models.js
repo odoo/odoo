@@ -193,7 +193,7 @@ class PosGlobalState extends PosModel {
         this._loadPoSConfig();
         this.bills = loadedData['pos.bill'];
         this.partners = loadedData['res.partner'];
-        this._loadResPartner();
+        this.addPartners(this.partners);
         this.picking_type = loadedData['stock.picking.type'];
         this.user = loadedData['res.users'];
         this.pricelists = loadedData['product.pricelist'];
@@ -222,8 +222,8 @@ class PosGlobalState extends PosModel {
     _loadPoSConfig() {
         this.db.set_uuid(this.config.uuid);
     }
-    _loadResPartner() {
-        this.db.add_partners(this.partners);
+    addPartners(partners) {
+        return this.db.add_partners(partners);
     }
     _assignApplicableItems(pricelist, correspondingProduct, pricelistItem) {
         if (!(pricelist.id in correspondingProduct.applicablePricelistItems)) {
@@ -343,7 +343,7 @@ class PosGlobalState extends PosModel {
                 shadow: true,
             })
             .then(partners => {
-                if (this.db.add_partners(partners)) {   // check if the partners we got were real updates
+                if (this.addPartners(partners)) {   // check if the partners we got were real updates
                     resolve();
                 } else {
                     reject('Failed in updating partners.');
@@ -492,7 +492,7 @@ class PosGlobalState extends PosModel {
                 timeout: 3000,
                 shadow: true,
             });
-            this.env.pos.db.add_partners(fetchedPartners);
+            this.addPartners(fetchedPartners);
         }
     }
     async _loadMissingPartners(orders) {
@@ -540,7 +540,7 @@ class PosGlobalState extends PosModel {
                 ],
                 context: this.env.session.user_context,
             }, { shadow: true });
-            this.db.add_partners(partners);
+            this.addPartners(partners);
             i += 1;
         } while(partners.length);
     }

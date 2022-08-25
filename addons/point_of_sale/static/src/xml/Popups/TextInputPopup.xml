@@ -6,11 +6,11 @@
                 <header class="title">
                     <t t-esc="props.title" />
                 </header>
-                <div class="div">
+                <div class="body">
                     <p>
                         <t t-esc="props.body" />
                     </p>
-                    <input type="text" t-model="state.inputValue" t-ref="input" />
+                    <input type="text" t-model="state.inputValue" t-ref="input" t-att-placeholder="props.placeholder"/>
                 </div>
                 <div class="footer">
                     <div class="button confirm highlight" t-on-click="confirm">

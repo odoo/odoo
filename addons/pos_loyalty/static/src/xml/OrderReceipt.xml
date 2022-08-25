@@ -3,27 +3,31 @@
 
     <t t-name="pos_coupon.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[hasclass('pos-receipt')]//div[hasclass('before-footer')]" position="inside">
-            <t t-if='receipt.loyalty'>
-                <div class='loyalty'>
-                    <span class="pos-receipt-center-align">
-                        <div>--------------------------------</div>
-                        <br/>
-                        <div t-esc='receipt.loyalty.name' class="pos-receipt-title"/>
+            <t t-if='receipt.loyaltyStats'>
+                <t t-foreach="receipt.loyaltyStats" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
+                    <!-- Show only if portal_visible. -->
+                    <div t-if="_loyaltyStat.program.portal_visible" class='loyalty'>
+                        <span class="pos-receipt-center-align">
+                            <div>--------------------------------</div>
+                            <br/>
+                            <div t-esc='_loyaltyStat.program.name' class="pos-receipt-title" />
+                            <div t-esc='receipt.partner.name' />
+                            <br />
+                        </span>
+                        <t t-if='_loyaltyStat.points.won'>
+                            <div><t t-esc="_loyaltyStat.points.name"/> Won: <span t-esc='_loyaltyStat.points.won' class="pos-receipt-right-align"/></div>
+                        </t>
+                        <t t-if='_loyaltyStat.points.spent'>
+                            <div><t t-esc="_loyaltyStat.points.name"/> Spent: <span t-esc='_loyaltyStat.points.spent' class="pos-receipt-right-align"/></div>
+                        </t>
+                        <!-- Don't use points.total, it's wrong in this context (after the order synced). -->
+                        <!-- Show balance as it's updated during _postPushOrderResolve. -->
+                        <t t-if='_loyaltyStat.points.balance'>
+                            <div>Balance <t t-esc="_loyaltyStat.points.name"/>: <span t-esc='_loyaltyStat.points.balance' class="pos-receipt-right-align"/></div>
+                        </t>
                         <br />
-                        <div><t t-esc='receipt.loyalty.partner_name' /></div>
-                        <br/>
-                    </span>
-                    <t t-if='receipt.loyalty.newPoints.won'>
-                        <div><t t-esc="receipt.loyalty.point_name"/> Won: <span t-esc='receipt.loyalty.newPoints.won' class="pos-receipt-right-align"/></div>
-                    </t>
-                    <t t-if='receipt.loyalty.newPoints.spent'>
-                        <div><t t-esc="receipt.loyalty.point_name"/> Spent: <span t-esc='receipt.loyalty.newPoints.spent' class="pos-receipt-right-align"/></div>
-                    </t>
-                    <t t-if='receipt.loyalty.newPoints.total'>
-                        <div>Total <t t-esc="receipt.loyalty.point_name"/>: <span t-esc='receipt.loyalty.newPoints.total' class="pos-receipt-right-align"/></div>
-                    </t>
-                    <br />
-                </div>
+                    </div>
+                </t>
             </t>
             <t t-if="receipt.new_coupon_info and receipt.new_coupon_info.length !== 0">
                 <div class="pos-coupon-rewards">

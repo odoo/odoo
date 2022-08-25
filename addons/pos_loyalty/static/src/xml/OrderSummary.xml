@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="OrderSummary" t-inherit="point_of_sale.OrderSummary" t-inherit-mode="extension" owl="1">
-        <xpath expr="//div[hasclass('summary')]//div[hasclass('line')]" position="before">
-            <t t-set="newPoints" t-value="getLoyaltyPoints()"/>
-            <t t-if="newPoints.won || newPoints.spent">
-                <div class='loyalty-points'>
-                    <div class='loyalty-points-title'>
-                        <t t-esc="newPoints.name"/>
-                    </div>
-                    <t t-if='newPoints.won'>
-                        <div class="loyalty-points-won">
-                            <span class='value'>+<t t-esc='newPoints.won'/></span>
+        <xpath expr="//div[hasclass('summary')]" position="after">
+            <div class="summary clearfix">
+                <t t-set="_loyaltyStats" t-value="getLoyaltyPoints()"/>
+                <t t-foreach="_loyaltyStats" t-as="_loyaltyStat" t-key="_loyaltyStat.couponId">
+                    <t t-if="_loyaltyStat.points.won || _loyaltyStat.points.spent">
+                        <div class='loyalty-points'>
+                            <div class='loyalty-points-title'>
+                                <t t-esc="_loyaltyStat.points.name"/>
+                            </div>
+                            <t t-if='_loyaltyStat.points.won'>
+                                <div class="loyalty-points-won">
+                                    <span class='value'>+<t t-esc='_loyaltyStat.points.won'/></span>
+                                </div>
+                            </t>
+                            <t t-if='_loyaltyStat.points.spent'>
+                                <div class="loyalty-points-spent">
+                                    <span class='value'>-<t t-esc='_loyaltyStat.points.spent'/></span>
+                                </div>
+                            </t>
+                            <div class='loyalty-points-total'>
+                                <span class='value'><t t-esc='_loyaltyStat.points.total'/></span>
+                            </div>
                         </div>
                     </t>
-                    <t t-if='newPoints.spent'>
-                        <div class="loyalty-points-spent">
-                            <span class='value'>-<t t-esc='newPoints.spent'/></span>
-                        </div>
+                    <t t-else="">
+                        <div></div>
                     </t>
-                    <div class='loyalty-points-total'>
-                        <span class='value'><t t-esc='newPoints.total'/></span>
-                    </div>
-                </div>
-            </t>
-            <t t-else="">
-                <div></div>
-            </t>
+                </t>
+            </div>
         </xpath>
     </t>
 </templates>

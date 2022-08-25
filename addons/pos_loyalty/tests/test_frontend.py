@@ -117,7 +117,19 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.open_ui()
 
-
+    def create_programs(self, details):
+        """
+        Create loyalty programs based on the details given.
+        :param details: list of tuple ('name': str, 'program_type': 'gift_card' or 'ewallet')
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        programs = {} # map: name -> program
+        for (name, program_type) in details:
+            program_id = LoyaltyProgram.create_from_template(program_type)['res_id']
+            program = LoyaltyProgram.browse(program_id)
+            program.write({'name': name})
+            programs[name] = program
+        return programs
 
     def test_pos_loyalty_tour_basic(self):
         """PoS Loyalty Basic Tour"""
@@ -414,3 +426,158 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyTour3",
             login="accountman",
         )
+
+    def test_gift_card_program_create_set(self):
+        """
+        Test for gift card program when pos.config.gift_card_settings == 'create_set'.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        # But activate the gift_card_product_50 because it's shared among new gift card programs.
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        # Create gift card program
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        # Change the gift card program settings
+        self.main_pos_config.write({'gift_card_settings': 'create_set'})
+        # Run the tour to create a gift card
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "GiftCardProgramCreateSetTour1",
+            login="accountman",
+        )
+        # Check that gift cards are created
+        self.assertEqual(len(gift_card_program.coupon_ids), 1)
+        # Change the code to 044123456 so that we can use it in the next tour.
+        # Make sure it starts with 044 because it's the prefix of the loyalty cards.
+        gift_card_program.coupon_ids.code = '044123456'
+        # Run the tour to use the gift card
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "GiftCardProgramCreateSetTour2",
+            login="accountman",
+        )
+        # Check that gift cards are used
+        self.assertEqual(gift_card_program.coupon_ids.points, 46.8)
+
+    def test_gift_card_program_scan_use(self):
+        """
+        Test for gift card program with pos.config.gift_card_settings == 'scan_use'.
+        - The gift card coupon codes are known before opening pos.
+        - They will be scanned and paid by the customer which links the coupon to the order.
+            - Meaning, it's paid.
+        - Then it will be scanned for usage.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        # But activate the gift_card_product_50 because it's shared among new gift card programs.
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        # Create gift card program
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        # Change the gift card program settings
+        self.main_pos_config.write({'gift_card_settings': 'scan_use'})
+        # Generate 5$ gift card.
+        self.env["loyalty.generate.wizard"].with_context(
+            {"active_id": gift_card_program.id}
+        ).create({"coupon_qty": 1, 'points_granted': 5}).generate_coupons()
+        # Change the code of the gift card.
+        gift_card_program.coupon_ids.code = '044123456'
+        # Run the tour. It will pay the gift card and use it.
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "GiftCardProgramScanUseTour",
+            login="accountman",
+        )
+        # Check that gift cards are used
+        self.assertAlmostEqual(gift_card_program.coupon_ids.points, 0, places=2)
+        # 3 order should be created.
+        self.assertEqual(len(self.main_pos_config.current_session_id.order_ids), 3)
+
+    def test_ewallet_program(self):
+        """
+        Test for ewallet program.
+        - Collect points in EWalletProgramTour1.
+        - Use points in EWalletProgramTour2.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        # But activate the ewallet_product_50 because it's shared among new ewallet programs.
+        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
+        # Create ewallet program
+        ewallet_program = self.create_programs([('arbitrary_name', 'ewallet')])['arbitrary_name']
+        # Create test partners
+        partner_aaa = self.env['res.partner'].create({'name': 'AAAAAAA'})
+        partner_bbb = self.env['res.partner'].create({'name': 'BBBBBBB'})
+        # Run the tour to topup ewallets.
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "EWalletProgramTour1",
+            login="accountman",
+        )
+        # Check that ewallets are created for partner_aaa.
+        ewallet_aaa = self.env['loyalty.card'].search([('partner_id', '=', partner_aaa.id), ('program_id', '=', ewallet_program.id)])
+        self.assertEqual(len(ewallet_aaa), 1)
+        self.assertAlmostEqual(ewallet_aaa.points, 50, places=2)
+        # Check that ewallets are created for partner_bbb.
+        ewallet_bbb = self.env['loyalty.card'].search([('partner_id', '=', partner_bbb.id), ('program_id', '=', ewallet_program.id)])
+        self.assertEqual(len(ewallet_bbb), 1)
+        self.assertAlmostEqual(ewallet_bbb.points, 10, places=2)
+        # Run the tour consume ewallets.
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "EWalletProgramTour2",
+            login="accountman",
+        )
+        # Check that ewallets are consumed for partner_aaa.
+        self.assertAlmostEqual(ewallet_aaa.points, 0, places=2)
+        # Check final balance after consumption and refund eWallet for partner_bbb.
+        self.assertAlmostEqual(ewallet_bbb.points, 20, places=2)
+
+    def test_multiple_gift_wallet_programs(self):
+        """
+        Test for multiple gift_card and ewallet programs.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        # But activate the gift_card_product_50 and ewallet_product_50 because they're shared among new programs.
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
+        # Create programs
+        programs = self.create_programs([
+            ('gift_card_1', 'gift_card'),
+            ('gift_card_2', 'gift_card'),
+            ('ewallet_1', 'ewallet'),
+            ('ewallet_2', 'ewallet')
+        ])
+        # Change the gift card program settings
+        self.main_pos_config.write({'gift_card_settings': 'create_set'})
+        # Create test partners
+        partner_aaa = self.env['res.partner'].create({'name': 'AAAAAAA'})
+        partner_bbb = self.env['res.partner'].create({'name': 'BBBBBBB'})
+        # Run the tour to topup ewallets.
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "MultipleGiftWalletProgramsTour",
+            login="accountman",
+        )
+        # Check the created gift cards.
+        self.assertEqual(len(programs['gift_card_1'].coupon_ids), 1)
+        self.assertAlmostEqual(programs['gift_card_1'].coupon_ids.points, 10)
+        self.assertEqual(len(programs['gift_card_2'].coupon_ids), 1)
+        self.assertAlmostEqual(programs['gift_card_2'].coupon_ids.points, 20)
+        # Check the created ewallets.
+        ewallet_1_aaa = self.env['loyalty.card'].search([('partner_id', '=', partner_aaa.id), ('program_id', '=', programs['ewallet_1'].id)])
+        self.assertEqual(len(ewallet_1_aaa), 1)
+        self.assertAlmostEqual(ewallet_1_aaa.points, 18, places=2)
+        ewallet_2_aaa = self.env['loyalty.card'].search([('partner_id', '=', partner_aaa.id), ('program_id', '=', programs['ewallet_2'].id)])
+        self.assertEqual(len(ewallet_2_aaa), 1)
+        self.assertAlmostEqual(ewallet_2_aaa.points, 40, places=2)
+        ewallet_1_bbb = self.env['loyalty.card'].search([('partner_id', '=', partner_bbb.id), ('program_id', '=', programs['ewallet_1'].id)])
+        self.assertEqual(len(ewallet_1_bbb), 1)
+        self.assertAlmostEqual(ewallet_1_bbb.points, 50, places=2)
+        ewallet_2_bbb = self.env['loyalty.card'].search([('partner_id', '=', partner_bbb.id), ('program_id', '=', programs['ewallet_2'].id)])
+        self.assertEqual(len(ewallet_2_bbb), 1)
+        self.assertAlmostEqual(ewallet_2_bbb.points, 0, places=2)
