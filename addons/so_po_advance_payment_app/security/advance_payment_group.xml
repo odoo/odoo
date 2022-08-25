@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="group_sale_advance_payment" model="res.groups">
+		<field name="name">Advance Payment (Sale)</field>
+		<field name="category_id" ref="base.module_category_hidden"/>
+		<field name="implied_ids" eval="[(4,ref('account.group_account_manager'))]"/>
+	</record>
+
+	<record id="group_purchase_advance_payment" model="res.groups">
+		<field name="name">Advance Payment (Purchase)</field>
+		<field name="category_id" ref="base.module_category_hidden"/>
+		<field name="implied_ids" eval="[(4,ref('account.group_account_manager'))]"/>
+	</record>
+
+</odoo>

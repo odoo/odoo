@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+	    <record id="res_config_setting_inherit" model="ir.ui.view">
+				<field name="name">RES config inehrit</field>
+				<field name="model">res.config.settings</field>
+				<field name="inherit_id" ref="account.res_config_settings_view_form"/>
+				<field name="arch" type="xml">
+					<field name="has_accounting_entries" position="after">
+						<h2> Configure Advance Account </h2>
+						<div class="row mt16 o_settings_container">
+							<div class="col-12 col-lg-6 o_setting_box">
+								<div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+									<label for="adv_account_id" string="Customer Advance Account"/>
+									<div class="text-muted">
+                                            Default Advance Account applied to Advance payment Entries.
+                                        </div>
+                                        <field name="adv_account_id"/>
+                            	</div>
+							</div>
+							<div class="col-12 col-lg-6 o_setting_box">
+								<div class="o_setting_left_pane"/>
+								<div class="o_setting_right_pane">
+									<label for="adv_account_creditors_id" string="Supplier Advance Account"/>
+									<div class="text-muted">
+                                            Default Advance Account applied to Advance payment Entries.
+                                        </div>
+                                        <field name="adv_account_creditors_id"/>
+                                </div>
+                            </div>
+						</div>
+					</field>
+				</field>
+		</record>
+
+	</data>
+</odoo>

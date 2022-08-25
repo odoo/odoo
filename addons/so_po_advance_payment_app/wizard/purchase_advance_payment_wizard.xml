@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+
+        <record id="purchase_advance_payment_wizard" model="ir.ui.view">
+            <field name="name">purchase.advance.payment.wizard</field>
+            <field name="model">purchase.advance.payment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group string="Payment Details" name="pur_advance_pay">
+                        <group>
+                            <field name="name"/>
+                            <label for="advance_amount"/>
+                            <div name="adv_amount_div" class="o_row">
+                                <field name="advance_amount"/>
+                                <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
+                            </div>
+                            <field name="multi_currency_id" invisible="1"/>
+                            <field name="company_curr_id" invisible="1"/>
+                            <field name="total_amount" string="Total Amount"/>
+                            <field name="paid_payment" string="Paid Amount"/>
+                            <field name="payment_difference" />
+                        </group>
+                        <group>
+                          <field name="payment_method_id"/>
+                          <field name="journal_id"/>
+                          <field name="payment_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="gen_purchase_advance_payment" type="object" string=" Advance Payment"
+                           class="oe_highlight" icon="fa-money"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" icon="fa-times"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Purchase Advance Payment History -->
+        <record id="advance_payment_history_form_pur" model="ir.ui.view">
+            <field name="name">advance.payment.history.form</field>
+            <field name="model">purchase.payment.history</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group string="Payment Details">
+                        <group>
+                            <field name="name"/>
+                            <field name="amount_currency" />
+                            <field name="advance_amount"/>
+                            <field name="total_amount"/>
+                        </group>
+                        <group>
+                            <field name="payment_method_id"/>
+                            <field name="journal_id"/>
+                            <field name="payment_date"/>
+                        </group>
+                    </group>
+                    <group string="Currency">
+                        <field name="currency_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+  </data>
+</odoo>
