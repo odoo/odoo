@@ -787,7 +787,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
     position: 'bottom',
 }, {
     mobile: false,
-    trigger: '.o_data_row:has(.o_data_cell:contains("the_flow.product")):first',
+    trigger: '.o_data_row:has(.o_data_cell:contains("the_flow.product")):first .o_data_cell:first',
     content: _t('Select the generated manufacturing order'),
     position: 'bottom',
 }, {
