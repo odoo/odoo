@@ -55,6 +55,13 @@ class StripeController(http.Controller):
     def stripe_s2s_process_payment_intent(self, **post):
         return request.env['payment.transaction'].sudo().form_feedback(post, 'stripe')
 
+    @http.route('/payment/stripe/s2s/process_payment_error', type='json', auth='public', csrf=False)
+    def stripe_s2s_process_payment_error(self, **post):
+        transaction_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', post['reference']),
+                                                                            ('provider', '=', 'stripe'),
+                                                                            ('stripe_payment_intent_secret', '=', post['stripe_payment_intent_secret'])])
+        transaction_sudo.write({'state': 'error', 'state_message': post['error']})
+
     @http.route('/payment/stripe/webhook', type='json', auth='public', csrf=False)
     def stripe_webhook(self, **kwargs):
         data = json.loads(request.httprequest.data)
