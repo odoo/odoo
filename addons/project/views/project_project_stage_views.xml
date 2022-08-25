@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <tree editable="bottom" sample="1" delete="0">
                 <field name="sequence" widget="handle"/>
-                <field name="name"/>
+                <field name="name" placeholder="e.g. To Do"/>
                 <field name="mail_template_id" optional="hide" context="{'default_model': 'project.project'}"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                 <field name="fold" optional="show"/>
@@ -20,7 +20,7 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="name"/>
+                    <field name="name" placeholder="e.g. To Do"/>
                     <field name="mail_template_id"/>
                     <field name="fold"/>
                 </group>
@@ -35,7 +35,7 @@
             <form delete="0">
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <h1><field name="name" placeholder="New"/></h1>
+                    <h1><field name="name" placeholder="e.g. To Do"/></h1>
                     <group>
                         <group>
                             <field name="active" invisible="1"/>

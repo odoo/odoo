@@ -24,7 +24,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
                         <group>
                             <group>
-                                <field name="name"/>
+                                <field name="name" placeholder="e.g. To Do"/>
                                 <field name="mail_template_id" context="{'default_model': 'project.task'}"/>
                                 <field name="rating_template_id" placeholder="Task: Rating Request" groups="project.group_project_rating" context="{'default_model': 'project.task'}"/>
                                 <div class="alert alert-warning" role="alert" colspan='2' invisible="not rating_template_id or not disabled_rating_warning" groups="project.group_project_rating">
@@ -54,7 +54,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
                         <group>
                             <group>
-                                <field name="name"/>
+                                <field name="name" placeholder="e.g. To Do"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                             </group>
                             <group>
@@ -71,8 +71,8 @@
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
                 <tree string="Task Stage" delete="0" sample="1" multi_edit="1" editable="bottom" open_form_view="True">
-                    <field name="sequence" widget="handle"/>
-                    <field name="name"/>
+                    <field name="sequence" widget="handle" optional="show"/>
+                    <field name="name" placeholder="e.g. To Do"/>
                     <field name="fold" optional="show"/>
                 </tree>
             </field>
