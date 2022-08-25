@@ -65,9 +65,13 @@ export class KanbanRenderer extends Component {
                 },
                 onGroupEnter: (group) => group.classList.add("o_kanban_hover"),
                 onGroupLeave: (group) => group.classList.remove("o_kanban_hover"),
-                onStop: (_group, element) => element.classList.remove("o_dragged", "shadow"),
+                onStop: (group, element) => {
+                    group && group.classList && group.classList.remove("o_kanban_hover");
+                    element.classList.remove("o_dragged", "shadow");
+                },
                 onDrop: async ({ element, previous, parent }) => {
                     element.classList.remove("o_record_draggable");
+                    parent && parent.classList && parent.classList.remove("o_kanban_hover");
                     const refId = previous ? previous.dataset.id : null;
                     const targetGroupId = parent && parent.dataset.id;
                     await this.props.list.moveRecord(
@@ -262,7 +266,12 @@ export class KanbanRenderer extends Component {
         if (!this.env.isSmall && group.isFolded) {
             classes.push("o_column_folded");
         }
-        if (this.canResequenceGroups && group.value && !group.isFolded && !group.hasActiveProgressValue) {
+        if (
+            this.canResequenceGroups &&
+            group.value &&
+            !group.isFolded &&
+            !group.hasActiveProgressValue
+        ) {
             classes.push("bg-100");
         }
         if (group.progressBars.length) {
