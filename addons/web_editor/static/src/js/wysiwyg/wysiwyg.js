@@ -1080,7 +1080,7 @@ const Wysiwyg = Widget.extend({
     openLinkToolsFromSelection() {
         const targetEl = this.odooEditor.document.getSelection().getRangeAt(0).startContainer;
         // Link tool is different if the selection is an image or a text.
-        if (targetEl instanceof HTMLElement
+        if (targetEl.nodeType === Node.ELEMENT_NODE
                 && (targetEl.tagName === 'IMG' || targetEl.querySelectorAll('img').length === 1)) {
             core.bus.trigger('activate_image_link_tool');
             return;
