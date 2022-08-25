@@ -295,6 +295,20 @@ class KanbanGroup extends Group {
         await this.checkActiveValue();
     }
 
+    async validateQuickCreate() {
+        const record = this.list.quickCreateRecord;
+        if (!record) {
+            return false;
+        }
+        const saved = await record.save();
+        if (saved) {
+            this.addRecord(this.removeRecord(record), 0);
+            this.count++;
+            this.list.count++;
+            return record;
+        }
+    }
+
     // ------------------------------------------------------------------------
     // Protected
     // ------------------------------------------------------------------------

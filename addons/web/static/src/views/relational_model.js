@@ -2542,22 +2542,6 @@ export class Group extends DataPoint {
         this.model.notify();
     }
 
-    async validateQuickCreate() {
-        const record = this.list.quickCreateRecord;
-        if (!record) {
-            return false;
-        }
-        const saved = await record.save();
-        if (saved) {
-            this.addRecord(this.removeRecord(record), 0);
-            this.count++;
-            this.list.count++;
-            return record;
-        } else {
-            this.removeRecord(record);
-        }
-    }
-
     valueEquals(value) {
         return this.value instanceof DateTime ? this.value.equals(value) : this.value === value;
     }
