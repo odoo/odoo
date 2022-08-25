@@ -856,8 +856,8 @@ class Project(models.Model):
                 icon = 'frown-o text-danger'
             buttons.append({
                 'icon': icon,
-                'text': _lt('Satisfaction'),
-                'number': f'{round(100 * self.rating_avg_percentage, 2)} %',
+                'text': _lt('Average Rating'),
+                'number': f'{int(self.rating_avg) if self.rating_avg.is_integer() else round(self.rating_avg, 1)} / 5',
                 'action_type': 'object',
                 'action': 'action_view_all_rating',
                 'show': self.rating_active,

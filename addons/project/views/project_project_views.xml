@@ -459,7 +459,12 @@
                                                         <span style="font-weight:bold;" class="fa mt4 fa-meh-o text-warning" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Okay" role="img" aria-label="Neutral face"/>
                                                         <span style="font-weight:bold;" class="fa mt4 fa-frown-o text-danger" t-else="" title="Average Rating: Dissatisfied" role="img" aria-label="Sad face"/>
                                                     </b>
-                                                    <field name="rating_avg_percentage" widget="percentage"/>
+                                                    <t t-if="record.rating_avg.raw_value % 1 == 0">
+                                                        <field name="rating_avg" nolabel="1" widget="float" digits="[1, 0]"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <field name="rating_avg" nolabel="1" widget="float" digits="[1, 1]"/>
+                                                    </t> / 5
                                                 </div>
                                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                             </div>
