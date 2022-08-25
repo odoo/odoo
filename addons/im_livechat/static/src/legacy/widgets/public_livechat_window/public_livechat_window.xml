@@ -13,7 +13,7 @@
                     <t t-set="status" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.status"/>
                     <t t-set="title" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.name"/>
                     <t t-set="unreadCounter" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"/>
-                    <t t-set="thread" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat"/>
+                    <t t-set="thread" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.widget"/>
                 </t>
             </div>
             <div class="o_thread_window_content">
@@ -34,7 +34,7 @@
         <span class="o_thread_window_title">
             <t t-esc="widget.messaging.publicLivechatGlobal.publicLivechat.title"/>
             <span t-if="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"> (<t t-esc="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"/>)</span>
-            <t t-if="widget.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
+            <t t-if="widget.messaging.publicLivechatGlobal.publicLivechat.widget.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
         </span>
         <span t-if="!widget.isMobile()" class="o_thread_window_buttons">
             <a href="#" class="o_thread_window_close fa fa-close"/>
@@ -45,7 +45,7 @@
         @param {mail.model.Thread} thread with typing feature
     -->
     <t t-name="im_livechat.legacy.mail.ThreadTypingIcon">
-        <span class="o_mail_thread_typing_icon" t-att-title="widget.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.getTypingMembersToText()">
+        <span class="o_mail_thread_typing_icon" t-att-title="widget.messaging.publicLivechatGlobal.publicLivechat.widget.getTypingMembersToText()">
             <span class="o_mail_thread_typing_icon_dot"/>
             <span class="o_mail_thread_typing_icon_dot"/>
             <span class="o_mail_thread_typing_icon_dot"/>
