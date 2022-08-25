@@ -121,7 +121,7 @@ class Team(models.Model):
             )
 
         members_data, population, weights = dict(), list(), list()
-        members = self.filtered(lambda member: not member.assignment_optout and member.assignment_max > 0)
+        members = self.filtered(lambda member: not member.assignment_optout and member.assignment_max > 0 and member.user_id.active)
         if not members:
             return members_data
 
