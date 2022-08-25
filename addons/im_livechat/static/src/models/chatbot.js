@@ -2,13 +2,32 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, increment } from '@mail/model/model_field_command';
 
 import { qweb } from 'web.core';
+import { Markup } from 'web.utils';
 
 registerModel({
     name: 'Chatbot',
     recordMethods: {
+        /**
+         * Add message posted by the bot into the conversation.
+         * This allows not having to wait for the bus (since we run checks based on messages in the
+         * conversation, having the result be there immediately eases the process).
+         *
+         * It also helps while running test tours since those don't have the bus enabled.
+         */
+        addMessage(message, options) {
+            message.body = Markup(message.body);
+            this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(message, options);
+            if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom()) {
+                this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: increment() });
+            }
+
+            if (!options || !options.skipRenderMessages) {
+                this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+            }
+        },
         /**
          * Once the script ends, adds a visual element at the end of the chat window allowing to restart
          * the whole script.
@@ -121,7 +140,7 @@ registerModel({
 
             if (nextStep) {
                 if (nextStep.chatbot_posted_message) {
-                    this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotAddMessage(nextStep.chatbot_posted_message);
+                    this.addMessage(nextStep.chatbot_posted_message);
                 }
 
                 this.update({ currentStep: { data: nextStep.chatbot_step } });
