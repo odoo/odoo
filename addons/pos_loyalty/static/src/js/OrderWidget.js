@@ -32,7 +32,7 @@ export const PosLoyaltyOrderWidget = (OrderWidget) =>
                 };
             });
             return {
-                activePrograms,
+                activePrograms: [...new Set(activePrograms)],
                 activeCoupons,
                 activeRewards,
             }
