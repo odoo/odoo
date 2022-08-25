@@ -22,6 +22,19 @@ registerModel({
         },
     },
     recordMethods: {
+        enableInput() {
+            const $composerTextField = this.legacyChatWindow.$('.o_composer_text_field');
+            $composerTextField
+                .prop('disabled', false)
+                .removeClass('text-center fst-italic bg-200')
+                .val('')
+                .focus();
+
+            $composerTextField.off('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
+            if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
+                $composerTextField.on('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
+            }
+        },
         /**
          * @private
          * @returns {string}

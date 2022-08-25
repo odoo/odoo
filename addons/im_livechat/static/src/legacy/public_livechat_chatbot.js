@@ -101,22 +101,6 @@ const _t = core._t;
     },
 
     /**
-     * @private
-     */
-    _chatbotEnableInput() {
-        const $composerTextField = this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field');
-        $composerTextField
-            .prop('disabled', false)
-            .removeClass('text-center fst-italic bg-200')
-            .val('')
-            .focus();
-
-        $composerTextField.off('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
-        if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
-            $composerTextField.on('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
-        }
-    },
-    /**
      * Processes the step, depending on the current state of the script and the author of the last
      * message that was typed into the conversation.
      *
@@ -148,7 +132,7 @@ const _t = core._t;
             this.messaging.publicLivechatGlobal.chatbot.endScript();
         } else if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'forward_operator'
                    && this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_operator_found) {
-            this._chatbotEnableInput();
+            this.messaging.publicLivechatGlobal.chatWindow.enableInput();
         }  else if (this.messaging.publicLivechatGlobal.chatbot.isExpectingUserInput) {
             if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
                 // user has already typed a message in -> trigger next step
@@ -160,7 +144,7 @@ const _t = core._t;
                     ),
                 });
             } else {
-                this._chatbotEnableInput();
+                this.messaging.publicLivechatGlobal.chatWindow.enableInput();
             }
         } else {
             let triggerNextStep = true;
@@ -220,7 +204,7 @@ const _t = core._t;
             return true;
         } else {
             // email is not valid, let the user try again
-            this._chatbotEnableInput();
+            this.messaging.publicLivechatGlobal.chatWindow.enableInput();
             if (emailValidResult.posted_message) {
                 this._chatbotAddMessage(emailValidResult.posted_message);
             }
