@@ -44,7 +44,7 @@ class TestStockValuation(TransactionCase):
         })
         cls.stock_valuation_account = Account.create({
             'name': 'Stock Valuation',
-            'code': 'Stock Valuation',
+            'code': 'StockValuation',
             'account_type': 'asset_current',
         })
         cls.stock_journal = cls.env['account.journal'].create({
@@ -265,12 +265,12 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         })
         cls.stock_valuation_account = Account.create({
             'name': 'Stock Valuation',
-            'code': 'Stock Valuation',
+            'code': 'StockValuation',
             'account_type': 'asset_current',
         })
         cls.price_diff_account = Account.create({
             'name': 'price diff account',
-            'code': 'price diff account',
+            'code': 'priceDiffAccount',
             'account_type': 'asset_current',
         })
         cls.stock_journal = cls.env['account.journal'].create({

@@ -28,13 +28,13 @@ def _create_accounting_data(env):
     })
     stock_valuation_account = env['account.account'].create({
         'name': 'Stock Valuation',
-        'code': 'Stock Valuation',
+        'code': 'StockValuation',
         'account_type': 'asset_current',
         'reconcile': True,
     })
     expense_account = env['account.account'].create({
         'name': 'Expense Account',
-        'code': 'Expense Account',
+        'code': 'ExpenseAccount',
         'account_type': 'expense',
         'reconcile': True,
     })

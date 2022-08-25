@@ -1043,13 +1043,13 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon):
         })
         cls.stock_valuation_account = cls.env['account.account'].create({
             'name': 'Stock Valuation',
-            'code': 'Stock Valuation',
+            'code': 'StockValuation',
             'account_type': 'asset_current',
             'reconcile': True,
         })
         cls.expense_account = cls.env['account.account'].create({
             'name': 'Expense Account',
-            'code': 'Expense Account',
+            'code': 'ExpenseAccount',
             'account_type': 'expense',
             'reconcile': True,
         })
