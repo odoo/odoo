@@ -5,6 +5,7 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tests import Form
 from odoo.tools import email_split, float_is_zero
 
 
@@ -238,11 +239,13 @@ class HrExpense(models.Model):
             raise UserError(_("You need to have at least one product that can be expensed in your database to proceed!"))
 
         for attachment in attachments:
-            expense = self.env['hr.expense'].create({
-                'name': attachment.name.split('.')[0],
-                'unit_amount': 0,
-                'product_id': product.id
-            })
+            with Form(self) as expense_form:
+                expense_form.name = attachment.name.split('.')[0]
+                expense_form.unit_amount = 1.0
+                expense_form.product_id = product
+
+            expense = expense_form.save()
+
             expense.message_post(body=_('Uploaded Attachment'))
             attachment.write({
                 'res_model': 'hr.expense',
