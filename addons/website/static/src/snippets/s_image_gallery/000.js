@@ -26,6 +26,9 @@ const GalleryWidget = publicWidget.Widget.extend({
      * @param {Event} ev
      */
     _onClickImg: function (ev) {
+        if (this.$modal) {
+            return;
+        }
         var self = this;
         var $cur = $(ev.currentTarget);
 
@@ -43,26 +46,27 @@ const GalleryWidget = publicWidget.Widget.extend({
         var $img = ($cur.is('img') === true) ? $cur : $cur.closest('img');
 
         const milliseconds = $cur.closest('.s_image_gallery').data('interval') || false;
-        var $modal = $(qweb.render('website.gallery.slideshow.lightbox', {
+        this.$modal = $(qweb.render('website.gallery.slideshow.lightbox', {
             images: $images.get(),
             index: $images.index($img),
             dim: dimensions,
             interval: milliseconds || 0,
             id: _.uniqueId('slideshow_'),
         }));
-        $modal.on('hidden.bs.modal', function () {
+        this.$modal.on('hidden.bs.modal', function () {
             $(this).hide();
             $(this).siblings().filter('.modal-backdrop').remove(); // bootstrap leaves a modal-backdrop
             $(this).remove();
+            self.$modal = undefined;
         });
-        $modal.one('shown.bs.modal', function () {
+        this.$modal.one('shown.bs.modal', function () {
             self.trigger_up('widgets_start_request', {
                 editableMode: false,
-                $target: $modal.find('.modal-body.o_slideshow'),
+                $target: self.$modal.find('.modal-body.o_slideshow'),
             });
         });
-        $modal.appendTo(document.body);
-        const modalBS = new Modal($modal[0], {keyboard: true, backdrop: true});
+        this.$modal.appendTo(document.body);
+        const modalBS = new Modal(this.$modal[0], {keyboard: true, backdrop: true});
         modalBS.show();
     },
 });
