@@ -740,8 +740,7 @@ class StockMove(models.Model):
             moves_to_unreserve.add(move.id)
         moves_to_unreserve = self.env['stock.move'].browse(moves_to_unreserve)
 
-        ml_to_update, ml_to_unlink = OrderedSet(), OrderedSet()
-        moves_not_to_recompute = OrderedSet()
+        ml_to_update, ml_to_unlink, moves_not_to_recompute = OrderedSet(), OrderedSet(), OrderedSet()
         for ml in moves_to_unreserve.move_line_ids:
             if ml.qty_done:
                 ml_to_update.add(ml.id)
