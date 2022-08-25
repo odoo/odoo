@@ -14,6 +14,15 @@ class TestUi(HttpCaseWithUserDemo):
 
     def setUp(self):
         super().setUp()
+
+        if self.env['ir.module.module']._get('payment_custom').state != 'installed':
+            self.skipTest("Transfer acquirer is not installed")
+
+        self.env.ref('payment.payment_acquirer_transfer').write({
+            'state': 'enabled',
+            'is_published': True,
+        })
+
         self.event_2 = self.env['event.event'].create({
             'name': 'Conference for Architects TEST',
             'user_id': self.env.ref('base.user_admin').id,
@@ -53,7 +62,6 @@ class TestUi(HttpCaseWithUserDemo):
             'price': 1500.0,
             'seats_max': 2,
         }])
-
 
         # flush event to ensure having tickets available in the tests
         self.env.flush_all()

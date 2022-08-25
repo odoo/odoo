@@ -8,7 +8,7 @@
     'description': """
 Allows customers to pay for their orders at a shop, instead of paying online.
 """,
-    'depends': ['website_sale_delivery', 'payment_transfer'],
+    'depends': ['website_sale_delivery', 'payment_custom'],
     'data': [
         'data/website_sale_picking_data.xml',
         'views/res_config_settings_views.xml',

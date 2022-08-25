@@ -2,18 +2,18 @@
 <odoo>
 
     <record id="payment_acquirer_form" model="ir.ui.view">
-        <field name="name">Wire Transfer Acquirer Form</field>
+        <field name="name">Custom Acquirer Form</field>
         <field name="model">payment.acquirer</field>
         <field name="inherit_id" ref="payment.payment_acquirer_form"/>
         <field name="arch" type="xml">
             <field name="capture_manually" position="after">
-                <field name="qr_code" attrs="{'invisible': [('provider', '!=', 'transfer')]}" />
+                <field name="qr_code" attrs="{'invisible': [('provider', '!=', 'custom')]}" />
             </field>
-            <xpath expr="//group[@name='payment_followup']" position="attributes">
+            <group name="payment_followup" position="attributes">
                 <attribute name="attrs">
-                    {'invisible': [('provider', '=', 'transfer')]}
+                    {'invisible': [('provider', '=', 'custom')]}
                 </attribute>
-            </xpath>
+            </group>
         </field>
     </record>
 

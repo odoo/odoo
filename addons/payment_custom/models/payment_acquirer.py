@@ -7,8 +7,8 @@ class PaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
     provider = fields.Selection(
-        selection_add=[('transfer', "Wire Transfer")], default='transfer',
-        ondelete={'transfer': 'set default'})
+        selection_add=[('custom', "Custom")],
+        ondelete={'custom': 'set default'})
     qr_code = fields.Boolean(
         string="Enable QR Codes", help="Enable the use of QR-codes when paying by wire transfer.")
 
@@ -19,7 +19,7 @@ class PaymentAcquirer(models.Model):
         :return: None
         """
         super()._compute_view_configuration_fields()
-        self.filtered(lambda acq: acq.provider == 'transfer').update({
+        self.filtered(lambda acq: acq.provider == 'custom').update({
             'show_credentials_page': False,
             'show_payment_icon_ids': False,
             'show_pre_msg': False,
@@ -27,23 +27,8 @@ class PaymentAcquirer(models.Model):
             'show_cancel_msg': False,
         })
 
-    @api.model_create_multi
-    def create(self, values_list):
-        """ Make sure to have a pending_msg set. """
-        # This is done here and not in a default to have access to all required values.
-        acquirers = super().create(values_list)
-        acquirers._transfer_ensure_pending_msg_is_set()
-        return acquirers
-
-    def write(self, values):
-        """ Make sure to have a pending_msg set. """
-        # This is done here and not in a default to have access to all required values.
-        res = super().write(values)
-        self._transfer_ensure_pending_msg_is_set()
-        return res
-
     def _transfer_ensure_pending_msg_is_set(self):
-        for acquirer in self.filtered(lambda a: a.provider == 'transfer' and not a.pending_msg):
+        for acquirer in self.filtered(lambda a: a.provider == 'custom' and not a.pending_msg):
             company_id = acquirer.company_id.id
             # filter only bank accounts marked as visible
             accounts = self.env['account.journal'].search([
