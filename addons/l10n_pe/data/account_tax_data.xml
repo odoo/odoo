@@ -132,6 +132,43 @@
             }),
         ]"/>
     </record>
+    <record id="sale_tax_ics_0" model="account.tax.template">
+        <field name="chart_template_id" ref="pe_chart_template"/>
+        <field name="name">0% ISC</field>
+        <field name="description">ISC</field>
+        <field name="l10n_pe_edi_tax_code">2000</field>
+        <field name="l10n_pe_edi_unece_category">S</field>
+        <field name="amount">0.0</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence">1</field>
+        <field name="include_base_amount">1</field>
+        <field name="tax_group_id" ref="tax_group_isc"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart4012'),
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('chart4012'),
+            }),
+        ]"/>
+    </record>
     <!--    VAT for purchase-->
     <record id="purchase_tax_igv_18" model="account.tax.template">
         <field name="chart_template_id" ref="pe_chart_template"/>
