@@ -349,6 +349,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
         this.model.addEventListener("group-updated", ({ detail }) => {
             if (this.groups.some((g) => g.id === detail.group.id)) {
                 this.updateGroupProgressData([detail.group], detail.withProgressBars);
+                this.model.notify();
             }
         });
     }
@@ -417,8 +418,6 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             const result = await promises.readProgressBar;
             await Promise.all(groups.map((group) => group.updateProgressData(result)));
         }
-
-        this.model.notify();
     }
 
     /**
@@ -447,6 +446,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
         }
 
         // Move from one group to another
+        const fullyLoadGroup = targetGroup.isFolded;
         if (dataGroupId !== targetGroupId) {
             const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
             // Quick update: moves the record at the right position and notifies components
@@ -470,14 +470,24 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
                 throw err;
             }
 
-            // Record can be loaded along with the group metadata
-            await Promise.all([
-                this.updateGroupProgressData([sourceGroup, targetGroup], true),
-                record.load(),
-            ]);
+            const promises = [this.updateGroupProgressData([sourceGroup, targetGroup], true)];
+            if (fullyLoadGroup) {
+                // The group is folded: we need to load it
+                // In this case since we load after saving the record there is no
+                // need to reload the record nor to resequence the list.
+                promises.push(targetGroup.toggle());
+            } else {
+                // Record can be loaded along with the group metadata
+                promises.push(record.load());
+            }
+
+            await Promise.all(promises);
         }
 
-        await targetGroup.list.resequence(dataRecordId, refId);
+        if (!fullyLoadGroup) {
+            // Only trigger resequence if the group hasn't been fully loaded
+            await targetGroup.list.resequence(dataRecordId, refId);
+        }
 
         this.model.transaction.commit(dataRecordId);
     }
