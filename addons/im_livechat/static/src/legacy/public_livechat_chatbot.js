@@ -116,7 +116,7 @@ const _t = core._t;
         }
 
         if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
-            this.chatbotInputKeyDownHandler = this._onChatbotInputKeyDown.bind(this);
+            this.chatbotInputKeyDownHandler = this.messaging.publicLivechatGlobal.chatbot.onKeydownInput;
             $composerTextField.on('keydown', this.chatbotInputKeyDownHandler);
         }
     },
@@ -375,16 +375,6 @@ const _t = core._t;
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    _onChatbotInputKeyDown() {
-        if (
-            this.messaging.publicLivechatGlobal.chatbot.currentStep &&
-            this.messaging.publicLivechatGlobal.chatbot.currentStep.data &&
-            this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi'
-        ) {
-            this.messaging.publicLivechatGlobal.chatbot.debouncedAwaitUserInput();
-        }
-    },
 
     /**
      * Saves the selected chatbot.script.answer onto our chatbot.message.

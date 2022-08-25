@@ -27,6 +27,15 @@ registerModel({
             this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
             this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click', this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript);
         },
+        onKeydownInput() {
+            if (
+                this.currentStep &&
+                this.currentStep.data &&
+                this.currentStep.data.chatbot_step_type === 'free_input_multi'
+            ) {
+                this.debouncedAwaitUserInput();
+            }
+        },
         /**
          * See 'Chatbot/saveSession'.
          *
