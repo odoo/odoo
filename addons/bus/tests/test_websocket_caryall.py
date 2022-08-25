@@ -127,16 +127,19 @@ class TestWebsocketCaryall(WebsocketCase):
 
     def test_user_logout_outgoing_message(self):
         subscribe_done_event = Event()
-        original_subscribe = dispatch.subscribe
+        original_subscribe = Websocket.subscribe
+        odoo_ws = None
 
-        def patched_subscribe(*args):
-            original_subscribe(*args)
+        def patched_subscribe(self, *args):
+            nonlocal odoo_ws
+            odoo_ws = self
+            original_subscribe(self, *args)
             subscribe_done_event.set()
 
         new_test_user(self.env, login='test_user', password='Password!1')
         user_session = self.authenticate('test_user', 'Password!1')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
-        with patch.object(dispatch, 'subscribe', patched_subscribe):
+        with patch.object(Websocket, 'subscribe', patched_subscribe):
             websocket.send(json.dumps({
                 'event_name': 'subscribe',
                 'data': {'channels': ['channel1'], 'last': 0}
@@ -147,7 +150,7 @@ class TestWebsocketCaryall(WebsocketCase):
             # receiving the message.
             subscribe_done_event.wait(timeout=5)
             self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
-            dispatch._dispatch_notifications(next(iter(dispatch._ws_to_subscription.keys())))
+            odoo_ws.trigger_notification_dispatching()
             self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     def test_channel_subscription_disconnect(self):
@@ -198,3 +201,35 @@ class TestWebsocketCaryall(WebsocketCase):
             subscribe_done_event.wait(timeout=5)
             # channel is removed as expected when updating the subscription.
             self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
+
+    def test_trigger_notification(self):
+        original_subscribe = Websocket.subscribe
+        odoo_ws = None
+
+        def patched_subscribe(self, *args):
+            nonlocal odoo_ws
+            odoo_ws = self
+            original_subscribe(self, *args)
+
+        with patch.object(Websocket, 'subscribe', patched_subscribe):
+            websocket = self.websocket_connect()
+            self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
+            websocket.send(json.dumps({
+                'event_name': 'subscribe',
+                'data': {'channels': ['my_channel'], 'last': 0}
+            }))
+
+            notifications = json.loads(websocket.recv())
+            self.assertEqual(1, len(notifications))
+            self.assertEqual(notifications[0]['message']['type'], 'notif_type')
+            self.assertEqual(notifications[0]['message']['payload'], 'message')
+
+            self.env['bus.bus']._sendone('my_channel', 'notif_type', 'another_message')
+            odoo_ws.trigger_notification_dispatching()
+
+            notifications = json.loads(websocket.recv())
+            # First notification has been received, we should only receive
+            # the second one.
+            self.assertEqual(1, len(notifications))
+            self.assertEqual(notifications[0]['message']['type'], 'notif_type')
+            self.assertEqual(notifications[0]['message']['payload'], 'another_message')
