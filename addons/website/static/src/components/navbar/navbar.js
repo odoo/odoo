@@ -38,6 +38,9 @@ patch(NavBar.prototype, 'website_navbar', {
                 Component: OptimizeSEODialog,
                 isDisplayed: () => this.websiteService.currentWebsite && !!this.websiteService.currentWebsite.metadata.mainObject,
             },
+            'website.menu_current_page': {
+                isDisplayed: () => this.canShowAceEditor(),
+            },
             'website.menu_ace_editor': {
                 openWidget: () => this.websiteContext.showAceEditor = true,
                 isDisplayed: () => this.canShowAceEditor(),
