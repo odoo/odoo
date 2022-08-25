@@ -7,6 +7,7 @@ from collections import defaultdict
 import re
 
 ACCOUNT_REGEX = re.compile(r'(?:(\S*\d+\S*)\s)?(.*)')
+ACCOUNT_CODE_REGEX = re.compile(r'^[A-Za-z0-9.]+$')
 
 class AccountAccount(models.Model):
     _name = "account.account"
@@ -286,6 +287,14 @@ class AccountAccount(models.Model):
                 journal_names=journals.mapped('display_name'),
                 journal_ids=journals.ids
             ))
+
+    @api.constrains('code')
+    def _check_account_code(self):
+        for account in self:
+            if not re.match(ACCOUNT_CODE_REGEX, account.code):
+                raise ValidationError(_(
+                    "The account code can only contain alphanumeric characters and dots."
+                ))
 
     @api.depends('code')
     def _compute_account_root(self):
@@ -579,7 +588,7 @@ class AccountAccount(models.Model):
                 default['code'] = (str(int(default['code']) + 10) or '')
                 default['name'] = _("%s (copy)") % (self.name or '')
         except ValueError:
-            default['code'] = _("%s (copy)") % (self.code or '')
+            default['code'] = _("%s.copy") % (self.code or '')
             default['name'] = self.name
         return super(AccountAccount, self).copy(default)
 

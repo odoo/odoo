@@ -37,7 +37,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         # ==== Cash Basis Taxes setup ====
 
         cls.cash_basis_base_account = cls.env['account.account'].create({
-            'code': 'cash_basis_base_account',
+            'code': 'cash.basis.base.account',
             'name': 'cash_basis_base_account',
             'account_type': 'income',
             'company_id': cls.company_data['company'].id,
@@ -45,21 +45,21 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         cls.company_data['company'].account_cash_basis_base_account_id = cls.cash_basis_base_account
 
         cls.cash_basis_transfer_account = cls.env['account.account'].create({
-            'code': 'cash_basis_transfer_account',
+            'code': 'cash.basis.transfer.account',
             'name': 'cash_basis_transfer_account',
             'account_type': 'income',
             'company_id': cls.company_data['company'].id,
         })
 
         cls.tax_account_1 = cls.env['account.account'].create({
-            'code': 'tax_account_1',
+            'code': 'tax.account.1',
             'name': 'tax_account_1',
             'account_type': 'income',
             'company_id': cls.company_data['company'].id,
         })
 
         cls.tax_account_2 = cls.env['account.account'].create({
-            'code': 'tax_account_2',
+            'code': 'tax.account.2',
             'name': 'tax_account_2',
             'account_type': 'income',
             'company_id': cls.company_data['company'].id,

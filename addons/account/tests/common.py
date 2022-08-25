@@ -20,7 +20,7 @@ class AccountTestInvoicingCommon(TransactionCase):
     def copy_account(cls, account, default=None):
         suffix_nb = 1
         while True:
-            new_code = '%s (%s)' % (account.code, suffix_nb)
+            new_code = '%s.%s' % (account.code, suffix_nb)
             if account.search_count([('company_id', '=', account.company_id.id), ('code', '=', new_code)]):
                 suffix_nb += 1
             else:

@@ -216,7 +216,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         ''' Test the generation of the CABA move after bill payment
         '''
         cash_basis_base_account = self.env['account.account'].create({
-            'code': 'cash_basis_base_account',
+            'code': 'cash.basis.base.account',
             'name': 'cash_basis_base_account',
             'account_type': 'income',
             'company_id': self.company_data['company'].id,
@@ -224,14 +224,14 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         self.company_data['company'].account_cash_basis_base_account_id = cash_basis_base_account
 
         cash_basis_transfer_account = self.env['account.account'].create({
-            'code': 'cash_basis_transfer_account',
+            'code': 'cash.basis.transfer.account',
             'name': 'cash_basis_transfer_account',
             'account_type': 'income',
             'company_id': self.company_data['company'].id,
         })
 
         tax_account_1 = self.env['account.account'].create({
-            'code': 'tax_account_1',
+            'code': 'tax.account.1',
             'name': 'tax_account_1',
             'account_type': 'income',
             'company_id': self.company_data['company'].id,
