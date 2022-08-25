@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="base_onboarding_view_tree" model="ir.ui.view">
+        <field name="name">base.onboarding.tree</field>
+        <field name="model">base.onboarding</field>
+        <field name="arch" type="xml">
+            <tree string="Onboardings">
+                <field name="name"/>
+                <field name="route_name"/>
+                <field name="panel_background_color"/>
+                <field name="is_per_company"/>
+                <field name="onboarding_state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="base_onboarding_step_view_tree" model="ir.ui.view">
+        <field name="name">base.onboarding.step.tree</field>
+        <field name="model">base.onboarding.step</field>
+        <field name="arch" type="xml">
+            <tree string="Onboarding Steps">
+                <field name="onboarding_id"/>
+                <field name="name"/>
+                <field name="is_per_company"/>
+                <field name="step_state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_view_onboardings" model="ir.actions.act_window">
+        <field name="name">Onboardings</field>
+        <field name="res_model">base.onboarding</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <record id="action_view_onboardings_steps" model="ir.actions.act_window">
+        <field name="name">Onboarding Steps</field>
+        <field name="res_model">base.onboarding.step</field>
+        <field name="view_mode">tree</field>
+    </record>
+</odoo>

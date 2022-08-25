@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="onboarding_panel">
+        <t t-call="base.onboarding_container">
+            <t t-foreach="steps" t-as="step_string">
+                <t t-set="step" t-value="json.loads(step_string)"/>
+                <t t-call="base.onboarding_step">
+                    <t t-set="title" t-value="step['title']"/>
+                    <t t-set="description" t-value="step['description']"/>
+                    <t t-set="done_icon" t-value="step['done_icon']"/>
+                    <t t-set="btn_text" t-value="step['btn_text']"/>
+                    <t t-set="done_text" t-value="step['done_text']"/>
+                    <t t-set="method" t-value="step['method']"/>
+                    <t t-set="model" t-value="step['model']"/>
+                    <t t-set="state" t-value="step['state']"/>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
