@@ -181,7 +181,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     _postMessage(messageData) {
         this.trigger_up('post_message_chat_window', { messageData });
-        this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.postMessage(messageData)
+        this.messaging.publicLivechatGlobal.publicLivechat.widget.postMessage(messageData)
             .then(() => {
                 this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
             });
@@ -205,7 +205,7 @@ const PublicLivechatWindow = Widget.extend({
             this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter > 0 &&
             !this.messaging.publicLivechatGlobal.publicLivechat.isFolded
         ) {
-            this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.markAsRead();
+            this.messaging.publicLivechatGlobal.publicLivechat.widget.markAsRead();
         }
         this.close();
     },
@@ -240,7 +240,7 @@ const PublicLivechatWindow = Widget.extend({
      */
     _onInput() {
         const isTyping = this.$input.val().length > 0;
-        this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.setMyselfTyping({ typing: isTyping });
+        this.messaging.publicLivechatGlobal.publicLivechat.widget.setMyselfTyping({ typing: isTyping });
     },
     /**
      * Called when typing something on the composer of this thread window.
@@ -283,7 +283,7 @@ const PublicLivechatWindow = Widget.extend({
             return;
         }
         if (this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom()) {
-            this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.markAsRead();
+            this.messaging.publicLivechatGlobal.publicLivechat.widget.markAsRead();
         }
     },
     /**

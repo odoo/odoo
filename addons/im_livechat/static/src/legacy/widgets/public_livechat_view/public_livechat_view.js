@@ -109,7 +109,7 @@ const PublicLivechatView = Widget.extend({
         this._currentThreadID = this.messaging.publicLivechatGlobal.publicLivechat.id;
 
         // copy so that reverse do not alter order in the thread object
-        const messages = _.clone(this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.getMessages());
+        const messages = _.clone(this.messaging.publicLivechatGlobal.publicLivechat.widget.getMessages());
 
         const modeOptions = options.isCreateMode ? this._disabledOptions :
                                                     this._enabledOptions;

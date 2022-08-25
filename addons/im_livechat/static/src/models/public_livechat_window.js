@@ -10,18 +10,43 @@ registerModel({
     lifecycleHooks: {
         _created() {
             this.update({
-                legacyChatWindow: new PublicLivechatWindow(
+                widget: new PublicLivechatWindow(
                     this.messaging.publicLivechatGlobal.livechatButtonView.widget,
                     this.messaging,
-                    this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
+                    this.messaging.publicLivechatGlobal.publicLivechat.widget,
                 ),
             });
         },
         _willDelete() {
-            this.legacyChatWindow.destroy();
+            this.widget.destroy();
         },
     },
     recordMethods: {
+        enableInput() {
+            const $composerTextField = this.widget.$('.o_composer_text_field');
+            $composerTextField
+                .prop('disabled', false)
+                .removeClass('text-center fst-italic bg-200')
+                .val('')
+                .focus();
+
+            $composerTextField.off('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
+            if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
+                $composerTextField.on('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
+            }
+        },
+        /**
+         * Disable the input allowing the user to type.
+         * This is typically used when we want to force him to click on one of the chatbot options.
+         *
+         * @private
+         */
+        disableInput(disableText) {
+            this.widget.$('.o_composer_text_field')
+                .prop('disabled', true)
+                .addClass('text-center fst-italic bg-200')
+                .val(disableText);
+        },
         /**
          * @private
          * @returns {string}
@@ -37,9 +62,6 @@ registerModel({
         inputPlaceholder: attr({
             compute: '_computeInputPlaceholder',
         }),
-        legacyChatWindow: attr({
-            default: null,
-        }),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,
             inverse: 'chatWindow',
@@ -49,5 +71,6 @@ registerModel({
             inverse: 'publicLivechatWindowOwner',
             isCausal: true,
         }),
+        widget: attr(),
     },
 });

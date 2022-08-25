@@ -11,14 +11,14 @@ registerModel({
     lifecycleHooks: {
         _created() {
             this.update({
-                legacyPublicLivechat: new PublicLivechat(this.messaging, {
+                widget: new PublicLivechat(this.messaging, {
                     parent: this.publicLivechatGlobalOwner.livechatButtonView.widget,
                     data: this.data,
                 }),
             });
         },
         _willDelete() {
-            this.legacyPublicLivechat.destroy();
+            this.widget.destroy();
         },
     },
     recordMethods: {
@@ -90,7 +90,6 @@ registerModel({
         isFolded: attr({
             default: false,
         }),
-        legacyPublicLivechat: attr(),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,
             inverse: 'publicLivechat',
@@ -111,5 +110,6 @@ registerModel({
         uuid: attr({
             compute: '_computeUuid',
         }),
+        widget: attr(),
     },
 });

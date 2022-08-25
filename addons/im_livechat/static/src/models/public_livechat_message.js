@@ -26,6 +26,6 @@ registerModel({
         id: attr({
             identifying: true,
         }),
-        legacyPublicLivechatMessage: attr(),
+        widget: attr(),
     },
 });

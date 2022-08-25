@@ -62,7 +62,7 @@ const LivechatButton = Widget.extend({
      */
      _renderMessages() {
         const shouldScroll = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded && this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom();
-        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.render();
+        this.messaging.publicLivechatGlobal.chatWindow.widget.render();
         if (shouldScroll) {
             this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
         }
@@ -102,12 +102,12 @@ const LivechatButton = Widget.extend({
      */
     _onCloseChatWindow(ev) {
         ev.stopPropagation();
-        const isComposerDisabled = this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled');
+        const isComposerDisabled = this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_thread_composer input').prop('disabled');
         const shouldAskFeedback = !isComposerDisabled && this.messaging.publicLivechatGlobal.messages.find(function (message) {
             return message.id !== '_welcome';
         });
         if (shouldAskFeedback) {
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.toggleFold(false);
+            this.messaging.publicLivechatGlobal.chatWindow.widget.toggleFold(false);
             this.messaging.publicLivechatGlobal.livechatButtonView.askFeedback();
         } else {
             this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
@@ -135,7 +135,7 @@ const LivechatButton = Widget.extend({
      */
     _onSaveChatWindow(ev) {
         ev.stopPropagation();
-        utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.toData()), true), 60 * 60);
+        utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60);
     },
     /**
      * @private
@@ -143,7 +143,7 @@ const LivechatButton = Widget.extend({
      */
     _onUpdatedTypingPartners(ev) {
         ev.stopPropagation();
-        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.renderHeader();
+        this.messaging.publicLivechatGlobal.chatWindow.widget.renderHeader();
     },
     /**
      * @private
@@ -151,7 +151,7 @@ const LivechatButton = Widget.extend({
      */
     _onUpdatedUnreadCounter(ev) {
         ev.stopPropagation();
-        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.renderHeader();
+        this.messaging.publicLivechatGlobal.chatWindow.widget.renderHeader();
     },
 });
 
