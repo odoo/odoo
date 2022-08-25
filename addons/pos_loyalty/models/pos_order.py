@@ -64,7 +64,7 @@ class PosOrder(models.Model):
         coupon_new_id_map = {k: k for k in coupon_data.keys() if k > 0}
 
         # Create the coupons that were awarded by the order.
-        coupons_to_create = {k: v for k, v in coupon_data.items() if k < 0}
+        coupons_to_create = {k: v for k, v in coupon_data.items() if k < 0 and not v.get('giftCardId')}
         coupon_create_vals = [{
             'program_id': p['program_id'],
             'partner_id': p.get('partner_id', False),
@@ -72,8 +72,22 @@ class PosOrder(models.Model):
             'points': 0,
             'source_pos_order_id': self.id,
         } for p in coupons_to_create.values()]
+
         # Pos users don't have the create permission
         new_coupons = self.env['loyalty.card'].sudo().create(coupon_create_vals)
+
+        # We update the gift card that we sold when the gift_card_settings = 'scan_use'.
+        gift_cards_to_update = [v for v in coupon_data.values() if v.get('giftCardId')]
+        updated_gift_cards = self.env['loyalty.card']
+        for coupon_vals in gift_cards_to_update:
+            gift_card = self.env['loyalty.card'].browse(coupon_vals.get('giftCardId'))
+            gift_card.write({
+                'points': coupon_vals['points'],
+                'source_pos_order_id': self.id,
+                'partner_id': coupon_vals.get('partner_id', False),
+            })
+            updated_gift_cards |= gift_card
+
         # Map the newly created coupons
         for old_id, new_id in zip(coupons_to_create.keys(), new_coupons):
             coupon_new_id_map[new_id.id] = old_id
@@ -93,7 +107,8 @@ class PosOrder(models.Model):
         # Reports per program
         report_per_program = {}
         coupon_per_report = defaultdict(list)
-        for coupon in new_coupons:
+        # Important to include the updated gift cards so that it can be printed. Check coupon_report.
+        for coupon in new_coupons | updated_gift_cards:
             if coupon.program_id not in report_per_program:
                 report_per_program[coupon.program_id] = coupon.program_id.communication_plan_ids.\
                     filtered(lambda c: c.trigger == 'create').pos_report_print_id
@@ -116,7 +131,12 @@ class PosOrder(models.Model):
                 'program_name': coupon.program_id.name,
                 'expiration_date': coupon.expiration_date,
                 'code': coupon.code,
-            } for coupon in new_coupons if coupon.program_id.applies_on == 'future'],
+            } for coupon in new_coupons if (
+                coupon.program_id.applies_on == 'future'
+                # Don't send the coupon code for the gift card and ewallet programs.
+                # It should not be printed in the ticket.
+                and coupon.program_id.program_type not in ['gift_card', 'ewallet']
+            )],
             'coupon_report': coupon_per_report,
         }
 

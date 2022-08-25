@@ -67,6 +67,9 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                 },
             ];
         }
+        clickEWalletButton(text = 'eWallet') {
+            return [{ trigger: `.control-button:contains("${text}")` }];
+        }
         claimReward(rewardName) {
             return [
                 {
@@ -131,6 +134,16 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                     trigger: isHighlighted
                         ? '.control-button.highlight:contains("Reward")'
                         : '.control-button:contains("Reward"):not(:has(.highlight))',
+                    run: function () {}, // it's a check
+                },
+            ];
+        }
+        eWalletButtonState({ highlighted, text = 'eWallet' }) {
+            return [
+                {
+                    trigger: highlighted
+                        ? `.control-button.highlight:contains("${text}")`
+                        : `.control-button:contains("${text}"):not(:has(.highlight))`,
                     run: function () {}, // it's a check
                 },
             ];

@@ -12,12 +12,128 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
                 coupon: this._onCouponScan,
             });
         }
+        async _onClickPay() {
+            const order = this.env.pos.get_order();
+            const eWalletLine = order.get_orderlines().find(line => line.getEWalletGiftCardProgramType() === 'ewallet');
+            if (eWalletLine && !order.get_partner()) {
+                const {confirmed} = await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('Customer needed'),
+                    body: this.env._t('eWallet requires a customer to be selected'),
+                });
+                if (confirmed) {
+                    const { confirmed, payload: newPartner } = await this.showTempScreen(
+                        'PartnerListScreen',
+                        { partner: null }
+                    );
+                    if (confirmed) {
+                        order.set_partner(newPartner);
+                        order.updatePricelist(newPartner);
+                    }
+                }
+            } else {
+                return super._onClickPay(...arguments);
+            }
+        }
+        /**
+         * Sets up the options for the gift card product.
+         * @param {object} program
+         * @param {object} options
+         * @returns {Promise<boolean>} whether to proceed with adding the product or not
+         */
+        async _setupGiftCardOptions(program, options) {
+            options.quantity = 1;
+            options.merge = false;
+            options.eWalletGiftCardProgram = program;
 
+            // If gift card program setting is 'scan_use', ask for the code.
+            if (this.env.pos.config.gift_card_settings == 'scan_use') {
+                const { confirmed, payload: code } = await this.showPopup('TextInputPopup', {
+                    title: this.env._t('Generate a Gift Card'),
+                    startingValue: '',
+                    placeholder: this.env._t('Enter the gift card code'),
+                });
+                if (!confirmed) {
+                    return false;
+                }
+                const trimmedCode = code.trim();
+                if (trimmedCode && trimmedCode.startsWith('044')) {
+                    // check if the code exist in the database
+                    // if so, use its balance, otherwise, use the unit price of the gift card product
+                    const fetchedGiftCard = await this.rpc({
+                        model: 'loyalty.card',
+                        method: 'search_read',
+                        args: [
+                            [['code', '=', trimmedCode], ['program_id', '=', program.id]],
+                            ['points', 'source_pos_order_id'],
+                        ],
+                    });
+                    // There should be maximum one gift card for a given code.
+                    const giftCard = fetchedGiftCard[0];
+                    if (giftCard && giftCard.source_pos_order_id) {
+                        this.showPopup('ErrorPopup', {
+                            title: this.env._t('This gift card has already been sold'),
+                            body: this.env._t('You cannot sell a gift card that has already been sold.'),
+                        });
+                        return false;
+                    }
+                    options.giftBarcode = trimmedCode;
+                    if (giftCard) {
+                        // Use the balance of the gift card as the price of the orderline.
+                        // NOTE: No need to convert the points to price because when opening a session,
+                        // the gift card programs are made sure to have 1 point = 1 currency unit.
+                        options.price = giftCard.points;
+                        options.giftCardId = giftCard.id;
+                    }
+                } else {
+                    this.showNotification('Please enter a valid gift card code.');
+                    return false;
+                }
+            }
+            return true;
+        }
+        async setupEWalletOptions(program, options) {
+            options.quantity = 1;
+            options.merge = false;
+            options.eWalletGiftCardProgram = program;
+            return true;
+        }
         /**
          * If the product is a potential reward, also apply the reward.
          * @override
          */
         async _addProduct(product, options) {
+            const linkedProgramIds = this.env.pos.productId2ProgramIds[product.id] || [];
+            const linkedPrograms = linkedProgramIds.map(id => this.env.pos.program_by_id[id]);
+            let selectedProgram = null;
+            if (linkedPrograms.length > 1) {
+                const { confirmed, payload: program } = await this.showPopup('SelectionPopup', {
+                    title: this.env._t('Select program'),
+                    list: linkedPrograms.map((program) => ({
+                        id: program.id,
+                        item: program,
+                        label: program.name,
+                    })),
+                });
+                if (confirmed) {
+                    selectedProgram = program;
+                } else {
+                    // Do nothing here if the selection is cancelled.
+                    return;
+                }
+            } else if (linkedPrograms.length === 1) {
+                selectedProgram = linkedPrograms[0];
+            }
+            if (selectedProgram && selectedProgram.program_type == 'gift_card') {
+                const shouldProceed = await this._setupGiftCardOptions(selectedProgram, options);
+                if (!shouldProceed) {
+                    return;
+                }
+            } else if (selectedProgram && selectedProgram.program_type == 'ewallet') {
+                const shouldProceed = await this.setupEWalletOptions(selectedProgram, options);
+                if (!shouldProceed) {
+                    return;
+                }
+            }
             const order = this.env.pos.get_order();
             const potentialRewards = order.getPotentialFreeProductRewards();
             let rewardsToApply = [];
@@ -37,11 +153,20 @@ export const PosLoyaltyProductScreen = (ProductScreen) =>
         }
 
         _onCouponScan(code) {
+            // IMPROVEMENT: Ability to understand if the scanned code is to be paid or to be redeemed.
             this.currentOrder.activateCode(code.base_code);
         }
 
         async _updateSelectedOrderline(event) {
             const selectedLine = this.currentOrder.get_selected_orderline();
+            if (event.detail.key === '-') {
+                if (selectedLine.eWalletGiftCardProgram) {
+                    // Do not allow negative quantity or price in a gift card or ewallet orderline.
+                    // Refunding gift card or ewallet is not supported.
+                    this.showNotification(this.env._t('You cannot set negative quantity or price to gift card or ewallet.'), 4000);
+                    return;
+                }
+            }
             if (selectedLine && selectedLine.is_reward_line && !selectedLine.manual_reward &&
                     (event.detail.key === 'Backspace' || event.detail.key === 'Delete')) {
                 const reward = this.env.pos.reward_by_id[selectedLine.reward_id];

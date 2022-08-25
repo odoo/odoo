@@ -88,7 +88,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
             });
 
             onError((error) => {
-                console.error(error);
+                // error is an OwlError object.
+                console.error(error.cause);
             });
 
             this.props.setupIsDone(this);

@@ -29,6 +29,7 @@ odoo.define('point_of_sale.TextInputPopup', function(require) {
         title: '',
         body: '',
         startingValue: '',
+        placeholder: '',
     };
 
     Registries.Component.add(TextInputPopup);
