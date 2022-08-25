@@ -43,7 +43,7 @@ export class WebsocketWorker {
     constructor(websocketURL) {
         this.websocketURL = websocketURL;
         this.channelsByClient = new Map();
-        this.connectRetryDelay = 0;
+        this.connectRetryDelay = 1000;
         this.connectTimeout = null;
         this.isReconnecting = false;
         this.lastChannelSubscription = null;
@@ -216,6 +216,10 @@ export class WebsocketWorker {
         // WebSocket was not closed cleanly, let's try to reconnect.
         this.broadcast('reconnecting', { closeCode: code });
         this.isReconnecting = true;
+        if (code === WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT) {
+            // Don't wait to reconnect on keep alive timeout.
+            this.connectRetryDelay = 0;
+        }
         this._onWebsocketError();
     }
 
