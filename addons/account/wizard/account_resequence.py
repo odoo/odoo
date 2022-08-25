@@ -100,7 +100,7 @@ class ReSequenceWizard(models.TransientModel):
             for move in record.move_ids._origin:  # Sort the moves by period depending on the sequence number reset
                 moves_by_period[_get_move_key(move)] += move
 
-            format, format_values = self.env['account.move']._get_sequence_format_param(record.first_name)
+            seq_format, format_values = record.move_ids[0]._get_sequence_format_param(record.first_name)
 
             new_values = {}
             for j, period_recs in enumerate(moves_by_period.values()):
@@ -114,7 +114,7 @@ class ReSequenceWizard(models.TransientModel):
                         'server-date': str(move.date),
                     }
 
-                new_name_list = [format.format(**{
+                new_name_list = [seq_format.format(**{
                     **format_values,
                     'year': period_recs[0].date.year % (10 ** format_values['year_length']),
                     'month': period_recs[0].date.month,
