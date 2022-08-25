@@ -3,9 +3,13 @@
 
 import base64
 
+from datetime import datetime, timedelta
+from freezegun import freeze_time
+from markupsafe import escape
 from unittest.mock import patch
 
 from odoo import tools
+from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
@@ -15,8 +19,6 @@ from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tools import mute_logger, formataddr
 from odoo.tests.common import users
-
-from markupsafe import escape
 
 
 @tagged('mail_post')
@@ -77,6 +79,7 @@ class TestMessagePostCommon(TestMailCommon, TestRecipients):
 @tagged('mail_post')
 class TestMailNotifyAPI(TestMessagePostCommon):
 
+    @mute_logger('odoo.models.unlink')
     @users('employee')
     def test_email_notifiction_layouts(self):
         self.user_employee.write({'notification_type': 'email'})
@@ -410,7 +413,7 @@ class TestMessageNotify(TestMessagePostCommon):
 
 
 @tagged('mail_post')
-class TestMessagePost(TestMessagePostCommon):
+class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
     def test_initial_values(self):
         self.assertFalse(self.test_record.message_ids)
@@ -540,8 +543,130 @@ class TestMessagePost(TestMessagePostCommon):
         # notifications emails should not have been deleted: one for customers, one for user
         self.assertEqual(self.env['mail.mail'].sudo().search_count([('mail_message_id', '=', msg.id)]), 2)
 
-    @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_message_schedule', 'odoo.models.unlink')
+    def test_message_post_schedule(self):
+        """ Test delaying notifications through scheduled_date usage """
+        cron_id = self.env.ref('mail.ir_cron_send_scheduled_message').id
+        now = datetime.utcnow().replace(second=0, microsecond=0)
+        scheduled_datetime = now + timedelta(days=5)
+        self.user_admin.write({'notification_type': 'inbox'})
+
+        test_record = self.test_record.with_env(self.env)
+        test_record.message_subscribe((self.partner_1 | self.partner_admin).ids)
+
+        with freeze_time(now), \
+             self.assertMsgWithoutNotifications(), \
+             self.capture_triggers(cron_id) as capt:
+            msg = test_record.message_post(
+                body='<p>Test</p>',
+                message_type='comment',
+                subject='Subject',
+                subtype_xmlid='mail.mt_comment',
+                scheduled_date=scheduled_datetime,
+            )
+        self.assertEqual(capt.records.call_at, scheduled_datetime,
+                         msg='Should have created a cron trigger for the scheduled sending')
+        self.assertFalse(self._new_mails)
+        self.assertFalse(self._mails)
+
+        schedules = self.env['mail.message.schedule'].sudo().search([('mail_message_id', '=', msg.id)])
+        self.assertEqual(len(schedules), 1, msg='Should have scheduled the message')
+        self.assertEqual(schedules.scheduled_datetime, scheduled_datetime)
+
+        # trigger cron now -> should not sent as in future
+        with freeze_time(now):
+            self.env['mail.message.schedule'].sudo()._send_notifications_cron()
+        self.assertTrue(schedules.exists(), msg='Should not have sent the message')
+
+        # Send the scheduled message from the cron at right date
+        with freeze_time(now + timedelta(days=5)), self.mock_mail_gateway(mail_unlink_sent=True):
+            self.env['mail.message.schedule'].sudo()._send_notifications_cron()
+        self.assertFalse(schedules.exists(), msg='Should have sent the message')
+        # check notifications have been sent
+        recipients_info = [{'content': '<p>Test</p>', 'notif': [
+            {'partner': self.partner_admin, 'type': 'inbox'},
+            {'partner': self.partner_1, 'type': 'email'},
+        ]}]
+        self.assertMailNotifications(msg, recipients_info)
+
+        # manually create a new schedule date, resend it -> should not crash (aka
+        # don't create duplicate notifications, ...)
+        self.env['mail.message.schedule'].sudo().create({
+            'mail_message_id': msg.id,
+            'scheduled_datetime': scheduled_datetime,
+        })
+
+        # Send the scheduled message from the CRON
+        with freeze_time(now + timedelta(days=5)), self.assertNoNotifications():
+            self.env['mail.message.schedule'].sudo()._send_notifications_cron()
+
+        # schedule in the past = send when posting
+        with freeze_time(now), \
+             self.mock_mail_gateway(mail_unlink_sent=False), \
+             self.capture_triggers(cron_id) as capt:
+            msg = test_record.message_post(
+                body='<p>Test</p>',
+                message_type='comment',
+                subject='Subject',
+                subtype_xmlid='mail.mt_comment',
+                scheduled_date=now,
+            )
+        self.assertFalse(capt.records)
+        recipients_info = [{'content': '<p>Test</p>', 'notif': [
+            {'partner': self.partner_admin, 'type': 'inbox'},
+            {'partner': self.partner_1, 'type': 'email'},
+        ]}]
+        self.assertMailNotifications(msg, recipients_info)
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_message_schedule', 'odoo.models.unlink')
+    def test_message_post_schedule_update(self):
+        """ Test tools to update scheduled notifications """
+        cron = self.env.ref('mail.ir_cron_send_scheduled_message')
+        now = datetime.utcnow().replace(second=0, microsecond=0)
+        scheduled_datetime = now + timedelta(days=5)
+        self.user_admin.write({'notification_type': 'inbox'})
+
+        test_record = self.test_record.with_env(self.env)
+        test_record.message_subscribe((self.partner_1 | self.partner_admin).ids)
+
+        with freeze_time(now), \
+             self.assertMsgWithoutNotifications():
+            msg = test_record.message_post(
+                body='<p>Test</p>',
+                message_type='comment',
+                subject='Subject',
+                subtype_xmlid='mail.mt_comment',
+                scheduled_date=scheduled_datetime,
+            )
+        schedules = self.env['mail.message.schedule'].sudo().search([('mail_message_id', '=', msg.id)])
+        self.assertEqual(len(schedules), 1, msg='Should have scheduled the message')
+
+        # update scheduled datetime, should create new triggers
+        with freeze_time(now), \
+             self.assertNoNotifications(), \
+             self.capture_triggers(cron.id) as capt:
+            self.env['mail.message.schedule'].sudo()._update_message_scheduled_datetime(msg, now - timedelta(hours=1))
+        self.assertEqual(capt.records.call_at, now - timedelta(hours=1),
+                         msg='Should have created a new cron trigger for the new scheduled sending')
+        self.assertTrue(schedules.exists(), msg='Should not have sent the message')
+
+        # run cron, notifications have been sent
+        with freeze_time(now), self.mock_mail_gateway(mail_unlink_sent=False):
+            schedules._send_notifications_cron()
+        self.assertFalse(schedules.exists(), msg='Should have sent the message')
+        recipients_info = [{'content': '<p>Test</p>', 'notif': [
+            {'partner': self.partner_admin, 'type': 'inbox'},
+            {'partner': self.partner_1, 'type': 'email'},
+        ]}]
+        self.assertMailNotifications(msg, recipients_info)
+
+        self.assertFalse(self.env['mail.message.schedule'].sudo()._update_message_scheduled_datetime(msg, now - timedelta(hours=1)),
+                         'Mail scheduler: should return False when no schedule is found')
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_message_schedule')
     def test_message_post_w_attachments(self):
         _attachments = [
             ('List1', b'My first attachment'),

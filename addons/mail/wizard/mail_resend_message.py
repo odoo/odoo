@@ -75,7 +75,7 @@ class MailResendMessage(models.TransientModel):
 
                 record._notify_thread_by_email(
                     message, email_partners_data,
-                    check_existing=True,
+                    resend_existing=True,
                     send_after_commit=False
                 )
 

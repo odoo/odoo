@@ -24,6 +24,7 @@ from . import mail_blacklist
 from . import mail_followers
 from . import mail_gateway_allowed
 from . import mail_message_reaction
+from . import mail_message_schedule
 from . import mail_message_subtype
 from . import mail_message
 from . import mail_mail

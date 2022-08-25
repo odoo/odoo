@@ -808,25 +808,6 @@ class Message(models.Model):
         reaction.unlink()
         self.env[self.model].browse(self.res_id)._message_remove_reaction_after_hook(message=self, content=content)
 
-    def _update_content(self, body, attachment_ids):
-        self.ensure_one()
-        thread = self.env[self.model].browse(self.res_id)
-        thread._check_can_update_message_content(self)
-        self.body = body
-        if not attachment_ids:
-            self.attachment_ids._delete_and_notify()
-        else:
-            message_values = {
-                'model': self.model,
-                'body': body,
-                'res_id': self.res_id,
-            }
-            attachement_values = thread._message_post_process_attachments([], attachment_ids, message_values)
-            self.update(attachement_values)
-        # Cleanup related message data if the message is empty
-        self.sudo()._filter_empty()._cleanup_side_records()
-        thread._message_update_content_after_hook(self)
-
     # ------------------------------------------------------
     # MESSAGE READ / FETCH / FAILURE API
     # ------------------------------------------------------

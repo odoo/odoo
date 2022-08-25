@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail.tests.test_mail_template import TestMailTemplate
+from odoo.addons.test_mail.tests.test_mail_template import TestMailTemplateCommon
 from odoo.tests import tagged
 
 
-@tagged('mail_template')
-class TestMailTemplateTools(TestMailTemplate):
+@tagged('mail_template', 'multi_lang')
+class TestMailTemplateTools(TestMailTemplateCommon):
 
     def test_mail_template_preview_force_lang(self):
         test_record = self.env['mail.test.lang'].browse(self.test_record.ids)
