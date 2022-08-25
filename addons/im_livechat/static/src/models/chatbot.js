@@ -28,6 +28,87 @@ registerModel({
             this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click', this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript);
         },
         /**
+         * Processes the step, depending on the current state of the script and the author of the last
+         * message that was typed into the conversation.
+         *
+         * This is a rather complicated process since we have many potential states to handle.
+         * Here are the detailed possible outcomes:
+         *
+         * - Check if the script is finished, and if so end it.
+         *
+         * - If a human operator has taken over the conversation
+         *   -> enable the input and let the operator handle the visitor.
+         *
+         * - If the received step is of type expecting an input from the user
+         *   - the last message if from the user (he has already answered)
+         *     -> trigger the next step
+         *   - otherwise
+         *     -> enable the input and let the user type
+         *
+         * - Otherwise
+         *   - if the the step is of type 'question_selection' and we are still waiting for the user to
+         *     select one of the options
+         *     -> don't do anything, wait for the user to click one of the options
+         *   - otherwise
+         *     -> trigger the next step
+         */
+        processStep() {
+            if (this.shouldEndScript) {
+                this.endScript();
+            } else if (
+                this.currentStep.data.chatbot_step_type === 'forward_operator' &&
+                this.currentStep.data.chatbot_operator_found
+            ) {
+                this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotEnableInput();
+            } else if (this.isExpectingUserInput) {
+                if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
+                    // user has already typed a message in -> trigger next step
+                    this.setIsTyping();
+                    this.update({
+                        nextStepTimeout: setTimeout(
+                            this.triggerNextStep,
+                            this.messageDelay,
+                        ),
+                    });
+                } else {
+                    this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotEnableInput();
+                }
+            } else {
+                let triggerNextStep = true;
+                if (this.currentStep.data.chatbot_step_type === 'question_selection') {
+                    if (!this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
+                        // if there is no last message or if the last message is from the bot
+                        // -> don't trigger the next step, we are waiting for the user to pick an option
+                        triggerNextStep = false;
+                    }
+                }
+
+                if (triggerNextStep) {
+                    let nextStepDelay = this.messageDelay;
+                    if (this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_typing').length !== 0) {
+                        // special case where we already have a "is typing" message displayed
+                        // can happen when the previous step did not trigger any message posted from the bot
+                        // e.g: previous step was "forward_operator" and no-one is available
+                        // -> in that case, don't wait and trigger the next step immediately
+                        nextStepDelay = 0;
+                    } else {
+                        this.setIsTyping();
+                    }
+
+                    this.update({
+                        nextStepTimeout: setTimeout(
+                            this.triggerNextStep,
+                            nextStepDelay,
+                        ),
+                    });
+                }
+            }
+
+            if (!this.hasRestartButton) {
+                this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+            }
+        },
+        /**
          * See 'Chatbot/saveSession'.
          *
          * We retrieve the livechat uuid from the session cookie since the livechat Widget is not yet
@@ -126,7 +207,7 @@ registerModel({
 
                 this.update({ currentStep: { data: nextStep.chatbot_step } });
 
-                this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotProcessStep();
+                this.processStep();
             } else {
                 // did not find next step -> end the script
                 this.currentStep.data.chatbot_step_is_last = true;

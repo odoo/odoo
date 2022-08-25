@@ -397,7 +397,7 @@ registerModel({
                 this.messaging.publicLivechatGlobal.messages &&
                 this.messaging.publicLivechatGlobal.messages.length !== 0
             ) {
-                this.widget._chatbotProcessStep();
+                this.messaging.publicLivechatGlobal.chatbot.processStep();
             }
         },
         /**

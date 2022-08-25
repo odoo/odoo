@@ -121,87 +121,6 @@ const _t = core._t;
         }
     },
     /**
-     * Processes the step, depending on the current state of the script and the author of the last
-     * message that was typed into the conversation.
-     *
-     * This is a rather complicated process since we have many potential states to handle.
-     * Here are the detailed possible outcomes:
-     *
-     * - Check if the script is finished, and if so end it.
-     *
-     * - If a human operator has taken over the conversation
-     *   -> enable the input and let the operator handle the visitor.
-     *
-     * - If the received step is of type expecting an input from the user
-     *   - the last message if from the user (he has already answered)
-     *     -> trigger the next step
-     *   - otherwise
-     *     -> enable the input and let the user type
-     *
-     * - Otherwise
-     *   - if the the step is of type 'question_selection' and we are still waiting for the user to
-     *     select one of the options
-     *     -> don't do anything, wait for the user to click one of the options
-     *   - otherwise
-     *     -> trigger the next step
-     *
-     * @private
-     */
-    _chatbotProcessStep() {
-        if (this.messaging.publicLivechatGlobal.chatbot.shouldEndScript) {
-            this.messaging.publicLivechatGlobal.chatbot.endScript();
-        } else if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'forward_operator'
-                   && this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_operator_found) {
-            this._chatbotEnableInput();
-        }  else if (this.messaging.publicLivechatGlobal.chatbot.isExpectingUserInput) {
-            if (this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
-                // user has already typed a message in -> trigger next step
-                this.messaging.publicLivechatGlobal.chatbot.setIsTyping();
-                this.messaging.publicLivechatGlobal.chatbot.update({
-                    nextStepTimeout: setTimeout(
-                        this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
-                        this.messaging.publicLivechatGlobal.chatbot.messageDelay,
-                    ),
-                });
-            } else {
-                this._chatbotEnableInput();
-            }
-        } else {
-            let triggerNextStep = true;
-            if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'question_selection') {
-                if (!this.messaging.publicLivechatGlobal.isLastMessageFromCustomer) {
-                    // if there is no last message or if the last message is from the bot
-                    // -> don't trigger the next step, we are waiting for the user to pick an option
-                    triggerNextStep = false;
-                }
-            }
-
-            if (triggerNextStep) {
-                let nextStepDelay = this.messaging.publicLivechatGlobal.chatbot.messageDelay;
-                if (this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_typing').length !== 0) {
-                    // special case where we already have a "is typing" message displayed
-                    // can happen when the previous step did not trigger any message posted from the bot
-                    // e.g: previous step was "forward_operator" and no-one is available
-                    // -> in that case, don't wait and trigger the next step immediately
-                    nextStepDelay = 0;
-                } else {
-                    this.messaging.publicLivechatGlobal.chatbot.setIsTyping();
-                }
-
-                this.messaging.publicLivechatGlobal.chatbot.update({
-                    nextStepTimeout: setTimeout(
-                        this.messaging.publicLivechatGlobal.chatbot.triggerNextStep,
-                        nextStepDelay,
-                    ),
-                });
-            }
-        }
-
-        if (!this.messaging.publicLivechatGlobal.chatbot.hasRestartButton) {
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
-        }
-     },
-    /**
      * A special case is handled for email steps, where we first validate the email (server side)
      * and we allow the user to try again in case the format is incorrect.
      *
@@ -368,7 +287,7 @@ const _t = core._t;
             }
 
             // we are done posting welcome messages, let's start the actual script
-            this._chatbotProcessStep();
+            this.messaging.publicLivechatGlobal.chatbot.processStep();
         }
     },
 
