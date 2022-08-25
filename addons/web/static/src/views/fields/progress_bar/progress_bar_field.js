@@ -3,24 +3,27 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useAutofocus } from "@web/core/utils/hooks";
+import { useDebounced } from "@web/core/utils/timing";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-const { Component, onWillUpdateProps, useState } = owl;
+const { Component, onWillUpdateProps, useRef, useState } = owl;
 const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");
 
 export class ProgressBarField extends Component {
     setup() {
         useNumpadDecimal();
-        useAutofocus({ refName: "max-value", selectAll: true });
-        useAutofocus({ refName: "current-value", selectAll: true });
+        useAutofocus({ refName: "maxValue", selectAll: true });
+        useAutofocus({ refName: "currentValue", selectAll: true });
+        this.root = useRef("numpadDecimal");
         this.state = useState({
             currentValue: this.getCurrentValue(this.props),
             maxValue: this.getMaxValue(this.props),
             isEditing: false,
         });
+        this.onBlurDebounced = useDebounced(this.onBlur);
         onWillUpdateProps((nextProps) => {
             Object.assign(this.state, {
                 currentValue: this.getCurrentValue(nextProps),
@@ -37,6 +40,9 @@ export class ProgressBarField extends Component {
     }
     get isMaxValueInteger() {
         return this.state.maxValue % 1 === 0;
+    }
+    get isPercentage() {
+        return !this.props.maxValueField || !isNaN(this.props.maxValueField);
     }
 
     getCurrentValueField(p) {
@@ -80,7 +86,6 @@ export class ProgressBarField extends Component {
         this.state.currentValue = parsedValue;
         this.props.record.update({ [this.getCurrentValueField(this.props)]: parsedValue });
         if (this.props.readonly) {
-            this.state.isEditing = false;
             this.props.record.save();
         }
     }
@@ -99,7 +104,6 @@ export class ProgressBarField extends Component {
         this.state.maxValue = parsedValue;
         this.props.record.update({ [this.getMaxValueField(this.props)]: parsedValue });
         if (this.props.readonly) {
-            this.state.isEditing = false;
             this.props.record.save();
         }
     }
@@ -109,10 +113,14 @@ export class ProgressBarField extends Component {
             this.state.isEditing = true;
         }
     }
+    // When both max and current value are editable, as one input is blurred when
+    // switching to the other, the state would revert to isEditing = false. We need
+    // to stay in edition mode if the focus is still in the field.
     onBlur() {
-        if (this.props.readonly) {
-            this.state.isEditing = false;
+        if (this.root.el && this.root.el.contains(document.activeElement)) {
+            return;
         }
+        this.state.isEditing = false;
     }
 
     onCurrentValueInput(ev) {
@@ -138,7 +146,6 @@ ProgressBarField.props = {
     ...standardFieldProps,
     maxValueField: { type: [String, Number], optional: true },
     currentValueField: { type: String, optional: true },
-    isPercentage: { type: Boolean, optional: true },
     isEditable: { type: Boolean, optional: true },
     isEditableInReadonly: { type: Boolean, optional: true },
     isCurrentValueEditable: { type: Boolean, optional: true },
@@ -153,7 +160,6 @@ ProgressBarField.extractProps = ({ attrs }) => {
     return {
         maxValueField: attrs.options.max_value,
         currentValueField: attrs.options.current_value,
-        isPercentage: !attrs.options.max_value,
         isEditable: !attrs.options.readonly && attrs.options.editable,
         isEditableInReadonly: attrs.options.editable_readonly,
         isCurrentValueEditable:

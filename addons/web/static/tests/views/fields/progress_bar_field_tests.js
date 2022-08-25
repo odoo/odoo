@@ -4,7 +4,12 @@ import {
     makeFakeLocalizationService,
     makeFakeNotificationService,
 } from "@web/../tests/helpers/mock_services";
-import { click, editInput, getFixture } from "@web/../tests/helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    nextTick
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 
@@ -54,7 +59,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("ProgressBarField: max_value should update", async function (assert) {
         assert.expect(3);
 
-        serverData.models.partner.records = serverData.models.partner.records.slice(0, 1);
         serverData.models.partner.records[0].float_field = 2;
 
         serverData.models.partner.onchanges = {
@@ -107,7 +111,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "ProgressBarField: value should update in edit mode when typing in input",
         async function (assert) {
-            assert.expect(5);
+            assert.expect(6);
             serverData.models.partner.records[0].int_field = 99;
 
             await makeView({
@@ -151,13 +155,21 @@ QUnit.module("Fields", (hooks) => {
             );
 
             await editInput(target, ".o_progressbar_value.o_input", "69");
+            target.querySelector(".o_progressbar_value.o_input").blur();
+
+            await nextTick();
+            assert.strictEqual(
+                target.querySelector(".o_progressbar_value").textContent,
+                "69%",
+                "New value should be different after focusing out of the field"
+            );
 
             await click(target.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
                 target.querySelector(".o_progressbar_value").textContent,
                 "69%",
-                "New value should be different than initial after click"
+                "New value is still displayed after save"
             );
         }
     );
@@ -271,7 +283,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "ProgressBarField: update both max value and current value in edit mode when both options are given",
         async function (assert) {
-            assert.expect(7);
+            assert.expect(10);
             serverData.models.partner.records[0].int_field = 99;
 
             await makeView({
@@ -310,9 +322,23 @@ QUnit.module("Fields", (hooks) => {
 
             const currentVal = target.querySelectorAll(".o_progressbar_value.o_input")[0];
             const maxVal = target.querySelectorAll(".o_progressbar_value.o_input")[1];
+            assert.strictEqual(document.activeElement, currentVal, "First input is focused");
             assert.strictEqual(currentVal.value, "99", "Initial value in input is correct");
             assert.strictEqual(maxVal.value, "0.44", "Initial value in input is correct");
 
+            maxVal.focus();
+            await nextTick();
+            assert.strictEqual(document.activeElement, maxVal, "Second input is focused");
+
+            maxVal.blur();
+            await nextTick();
+            assert.containsNone(
+                target,
+                ".o_progressbar input",
+                "Inputs are no longer visible when focusing out"
+            );
+
+            await click(target.querySelector(".o_progress"));
             await editInput(target, ".o_progressbar input:nth-of-type(1)", "2000");
             await editInput(target, ".o_progressbar input:nth-of-type(2)", "69");
 

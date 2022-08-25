@@ -3,12 +3,12 @@
 
     <t t-name="web.ProgressBarField" owl="1">
         <t t-if="!state.isEditing">
-            <div class="o_progressbar w-100" t-on-click="onClick">
+            <div class="o_progressbar w-100 d-flex align-items-center" t-on-click="onClick">
                 <div t-if="props.title" class="o_progressbar_title"><t t-esc="props.title"/></div>
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
-                <t t-if="props.isPercentage">
+                <t t-if="isPercentage">
                     <div class="o_progressbar_value" t-esc="formatCurrentValue(true) + '%'"/>
                 </t>
                 <t t-else="">
@@ -17,15 +17,16 @@
             </div>
         </t>
         <t t-else="">
-            <div class="o_progressbar w-100 d-flex" t-ref="numpadDecimal">
+            <div class="o_progressbar w-100 d-flex align-items-center" t-ref="numpadDecimal">
                 <div t-if="props.title" class="o_progressbar_title"><t t-esc="props.title"/></div>
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
                     <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
-                <t t-if="props.isPercentage">
+                <t t-if="isPercentage">
                     <div class="d-flex">
                         <input
-                            class="o_input o_progressbar_value"
+                            t-ref="currentValue"
+                            class="o_input o_progressbar_value h-100"
                             type="text"
                             inputmode="numeric"
                             t-att-value="formatCurrentValue() or ''"
@@ -40,26 +41,26 @@
                 <t t-else="">
                     <input
                         t-if="props.isCurrentValueEditable"
-                        t-ref="current-value"
-                        class="o_progressbar_value o_input"
+                        t-ref="currentValue"
+                        class="o_progressbar_value o_input h-100"
                         type="text"
                         inputmode="numeric"
                         t-att-value="formatCurrentValue()"
                         t-on-change="onCurrentValueChange"
                         t-on-input="onCurrentValueInput"
-                        t-on-blur="onBlur"
+                        t-on-blur="onBlurDebounced"
                     />
                     <span t-if="props.isCurrentValueEditable and props.isMaxValueEditable" t-esc="'/'" />
                     <input
                         t-if="props.isMaxValueEditable"
-                        t-ref="max-value"
-                        class="o_progressbar_value o_input"
+                        t-ref="maxValue"
+                        class="o_progressbar_value o_input h-100"
                         type="text"
                         inputmode="numeric"
                         t-att-value="formatMaxValue()"
                         t-on-change="onMaxValueChange"
                         t-on-input="onMaxValueInput"
-                        t-on-blur="onBlur"
+                        t-on-blur="onBlurDebounced"
                     />
                 </t>
             </div>

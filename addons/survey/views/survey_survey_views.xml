@@ -263,10 +263,7 @@
                                    type="object"
                                    name="action_survey_user_input_certified"
                                    class="fw-bold">
-                                    <field name="success_ratio" widget="progressbar"
-                                           options="{'current_value': 'success_ratio',
-                                                     'max_value': 100,
-                                                     'editable': false}"/>
+                                    <field name="success_ratio" widget="progressbar"/>
                                     <span class="text-muted" t-if="!record.certification.raw_value">Passed</span>
                                     <span class="text-muted" t-else="">Certified</span>
                                 </a>
