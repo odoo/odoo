@@ -11053,4 +11053,99 @@ QUnit.module("Views", (hooks) => {
             productFieldName + "..."
         );
     });
+
+    QUnit.test("fold a column and drag record on it should unfold it", async (assert) => {
+        let searchReadProm;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(_route, { method }) {
+                if (method === "web_search_read") {
+                    await searchReadProm;
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.containsN(getColumn(0), ".o_kanban_record", 2);
+        assert.containsN(getColumn(1), ".o_kanban_record", 2);
+
+        const clickColumnAction = await toggleColumnActions(1);
+        await clickColumnAction("Fold");
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 2);
+        assert.hasClass(getColumn(1), "o_column_folded");
+        assert.strictEqual(getColumn(1).innerText, "xmo (2)");
+
+        searchReadProm = makeDeferred();
+
+        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", ".o_column_folded");
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 1);
+        assert.hasClass(getColumn(1), "o_column_folded");
+        assert.strictEqual(getColumn(1).innerText, "xmo (3)");
+
+        searchReadProm.resolve();
+        await nextTick();
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 1);
+        assert.doesNotHaveClass(getColumn(1), "o_column_folded");
+        assert.containsN(getColumn(1), ".o_kanban_record", 3);
+    });
+
+    QUnit.test("drag record on initially folded column should load it", async (assert) => {
+        let searchReadProm;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="id"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route, args, performRPC) {
+                if (args.method === "web_read_group") {
+                    const result = await performRPC(route, args);
+                    result.groups[1].__fold = true;
+                    return result;
+                } else if (args.method === "web_search_read") {
+                    await searchReadProm;
+                }
+            },
+        });
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 2);
+        assert.hasClass(getColumn(1), "o_column_folded");
+        assert.strictEqual(getColumn(1).innerText, "xmo (2)");
+
+        searchReadProm = makeDeferred();
+
+        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", ".o_column_folded");
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 1);
+        assert.hasClass(getColumn(1), "o_column_folded");
+        assert.strictEqual(getColumn(1).innerText, "xmo (3)");
+
+        searchReadProm.resolve();
+        await nextTick();
+
+        assert.containsN(getColumn(0), ".o_kanban_record", 1);
+        assert.doesNotHaveClass(getColumn(1), "o_column_folded");
+        assert.containsN(getColumn(1), ".o_kanban_record", 3);
+    });
 });
