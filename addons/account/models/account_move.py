@@ -444,12 +444,6 @@ class AccountMove(models.Model):
         tracking=True,
     )
 
-    # ==== Early payment cash discount field ====
-    invoice_early_pay_amount_after_discount = fields.Monetary(
-        compute='_compute_early_pay_amount_after_discount',
-        help="Total amount left to pay after the discount was applied",
-    )
-
     # === Reverse feature fields === #
     reversed_entry_id = fields.Many2one(
         comodel_name='account.move',
@@ -1162,21 +1156,6 @@ class AccountMove(models.Model):
                 # Non-invoice moves don't support that field (because of multicurrency: all lines of the invoice share the same currency)
                 move.tax_totals = None
 
-    def _get_report_early_payment_totals_values(self):
-        self.ensure_one()
-
-        if self.move_type not in ['out_invoice', 'out_receipt', 'in_invoice', 'in_receipt'] or \
-                not self.payment_state == 'not_paid' or \
-                not self.invoice_payment_term_id.has_early_payment:
-            return
-
-        base_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
-        return self.env['account.tax']._prepare_tax_totals(
-            [x._convert_to_tax_base_line_dict() for x in base_lines],
-            self.currency_id,
-            early_payment_term=self.invoice_payment_term_id,
-        )
-
     @api.depends('partner_id', 'invoice_source_email', 'partner_id.name')
     def _compute_invoice_partner_display_info(self):
         for move in self:
@@ -1294,36 +1273,6 @@ class AccountMove(models.Model):
             if show_warning:
                 updated_credit = move.partner_id.credit + move.amount_total_signed
                 move.partner_credit_warning = self._build_credit_warning_message(move, updated_credit)
-
-    @api.depends('invoice_payment_term_id', 'amount_residual_signed', 'currency_id')
-    def _compute_early_pay_amount_after_discount(self):
-        for record in self:
-            if record.invoice_payment_term_id.has_early_payment:
-                percentage_to_discount = record.invoice_payment_term_id.percentage_to_discount
-                discount_computation = self.invoice_payment_term_id.discount_computation
-
-                discounted_amount_untaxed = (100 - percentage_to_discount) * record.amount_untaxed / 100
-                if discount_computation == 'included':
-                    discounted_amount_tax = (100 - percentage_to_discount) * record.amount_tax / 100
-                else:
-                    discounted_amount_tax = record.amount_tax
-                record.invoice_early_pay_amount_after_discount = discounted_amount_untaxed + discounted_amount_tax
-                if record.currency_id.compare_amounts(record.invoice_early_pay_amount_after_discount, 0.0) <= 0.0:
-                    record.invoice_early_pay_amount_after_discount = 0
-            else:
-                record.invoice_early_pay_amount_after_discount = 0
-
-    def _is_eligible_for_early_discount(self, payment_date):
-        '''
-        An early payment discount is possible if the option has been activated,
-        no partial payment was registered,
-        and the payment date is before the last early_payment_date possible.
-        '''
-        self.ensure_one()
-        return self.move_type in ['out_invoice', 'out_receipt', 'in_invoice', 'in_receipt'] and \
-               self.invoice_payment_term_id.has_early_payment and \
-               self.payment_state == 'not_paid' and \
-               payment_date <= self.invoice_payment_term_id._get_last_date_for_discount(self.invoice_date)
 
     def _build_credit_warning_message(self, record, updated_credit):
         ''' Build the warning message that will be displayed in a yellow banner on top of the current record

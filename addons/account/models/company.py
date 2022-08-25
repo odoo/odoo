@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import calendar
 from datetime import timedelta, datetime, date
+import calendar
 
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
-from odoo.tools.float_utils import float_round, float_is_zero
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
 from odoo.tools.float_utils import float_round, float_is_zero
@@ -66,10 +65,6 @@ class ResCompany(models.Model):
     account_journal_suspense_account_id = fields.Many2one('account.account', string='Journal Suspense Account')
     account_journal_payment_debit_account_id = fields.Many2one('account.account', string='Journal Outstanding Receipts Account')
     account_journal_payment_credit_account_id = fields.Many2one('account.account', string='Journal Outstanding Payments Account')
-
-    account_journal_cash_discount_income_id = fields.Many2one(comodel_name='account.account', string='Cash Discount Write-Off Income Account')
-    account_journal_cash_discount_expense_id = fields.Many2one(comodel_name='account.account', string='Cash Discount Write-Off Expense Account')
-
     transfer_account_code_prefix = fields.Char(string='Prefix of the transfer accounts')
     account_sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax")
     account_purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax")

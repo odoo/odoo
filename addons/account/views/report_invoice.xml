@@ -197,29 +197,7 @@
                             </div>
                         </div>
                     </div>
-                    <t t-set="early_pay_totals" t-value="o._get_report_early_payment_totals_values()"/>
-                    <t t-if="early_pay_totals">
-                        <div>
-                            <p>
-                                <strong>
-                                    Early Payment (before <span t-esc="o.invoice_payment_term_id._get_last_date_for_discount(o.invoice_date)"/>):
-                                    <span t-esc="early_pay_totals['formatted_amount_total']"/>
-                                    (<span t-esc="o.invoice_payment_term_id.percentage_to_discount"/> % discount)
-                                </strong>
-                            </p>
-                        </div>
-                        <div id="total-early" class="row">
-                            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'}">
-                                <table class="table table-sm" style="page-break-inside: avoid;">
-                                    <t t-call="account.document_tax_totals">
-                                        <t t-set="tax_totals" t-value="early_pay_totals"/>
-                                    </t>
-                                </table>
-                            </div>
-                        </div>
-                    </t>
-
-                    <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication" class="mt-4">
+                    <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
                         Please use the following communication for your payment : <b><span t-field="o.payment_reference"/></b>
                     </p>
                     <div t-if="o.invoice_payment_term_id" name="payment_term">
