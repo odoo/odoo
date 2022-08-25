@@ -159,21 +159,6 @@ class ResConfigSettings(models.TransientModel):
     # Quick encoding (fiduciary mode)
     quick_edit_mode = fields.Selection(string="Quick encoding", readonly=False, related='company_id.quick_edit_mode')
 
-    account_journal_cash_discount_income_id = fields.Many2one(
-        comodel_name='account.account',
-        string='Cash Discount Write-Off Income Account',
-        readonly=False,
-        related='company_id.account_journal_cash_discount_income_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', 'in', ('income', 'income_other'))]")
-    account_journal_cash_discount_expense_id = fields.Many2one(
-        comodel_name='account.account',
-        string='Cash Discount Write-Off Expense Account',
-        readonly=False,
-        related='company_id.account_journal_cash_discount_expense_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), \
-                ('account_type', '=', 'expense')]")
-
     def set_values(self):
         super().set_values()
         # install a chart of accounts for the given company (if required)

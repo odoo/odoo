@@ -102,48 +102,6 @@
                             The last line's computation type should be "Balance" to ensure that the whole amount will be allocated.
                         </p>
                         <field name="line_ids"/>
-
-                        <!-- ============================== Early payment section ============================== -->
-                        <field name="early_payment_applicable" invisible="1"/>
-                        <div attrs="{'invisible':[('early_payment_applicable','=',False)]}">
-                            <field name="has_early_payment"/>
-                            <label for="has_early_payment"/>
-                            <div attrs="{'invisible':[('has_early_payment','=',False)]}">
-                                <div class="row mt-2">
-                                    <div class="col-2">
-                                        <strong><label for="percentage_to_discount"/></strong>
-                                    </div>
-                                    <div class="col-1">
-                                        <field name="percentage_to_discount"/>
-                                    </div>
-                                    <div class="col-1 oe_inline">
-                                        <span>%</span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-2">
-                                        <strong><label for="discount_computation"/></strong>
-                                    </div>
-                                    <div class="col-4">
-                                        <field name="discount_computation"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-2">
-                                        <strong><label for="discount_days"/></strong>
-                                    </div>
-                                    <div class="col-1 pe-0">
-                                        Within
-                                    </div>
-                                    <div class="col-1 px-0">
-                                        <field name="discount_days"/>
-                                    </div>
-                                    <div class="col-3 px-0">
-                                        days of the invoice date
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </sheet>
                 </form>
             </field>

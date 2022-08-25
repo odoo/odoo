@@ -36,4 +36,3 @@ from . import test_account_incoming_supplier_invoice
 from . import test_payment_term
 from . import test_account_payment_register
 from . import test_tour
-from . import test_early_payment_discount

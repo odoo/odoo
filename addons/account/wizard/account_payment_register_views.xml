@@ -26,8 +26,6 @@
                     <field name="available_payment_method_line_ids" invisible="1"/>
                     <field name="available_partner_bank_ids" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
-                    <field name="show_early_pay_discount_button" invisible="1"/>
-                    <field name="discounted_amount" invisible="1"/>
 
                     <group>
                         <group name="group1">
@@ -50,10 +48,7 @@
                                        required="1"
                                        options="{'no_create': True, 'no_open': True}"
                                        groups="base.group_multi_currency"/>
-
                             </div>
-                            <field name="early_pay_discount_toggle_button"
-                                   attrs="{'invisible':[('show_early_pay_discount_button', '=', False)]}"/>
                             <field name="payment_date"/>
                             <field name="communication"
                                    attrs="{'invisible': ['|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}"/>
