@@ -261,13 +261,8 @@ registerModel({
             return Boolean(
                 this.isHovered ||
                 this.messagingAsClickedMessageView ||
-                (
-                    this.messageActionList &&
-                    (
-                        this.messageActionList.reactionPopoverView ||
-                        this.messageActionList.deleteConfirmDialog
-                    )
-                )
+                (this.messageActionList && this.messageActionList.actionReaction && this.messageActionList.actionReaction.messageActionView && this.messageActionList.actionReaction.messageActionView.reactionPopoverView) ||
+                (this.messageActionList && this.messageActionList.actionDelete && this.messageActionList.actionDelete.messageActionView && this.messageActionList.actionDelete.messageActionView.deleteConfirmDialog)
             );
         },
         /**

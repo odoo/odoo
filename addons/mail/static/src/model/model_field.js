@@ -873,7 +873,7 @@ export class ModelField {
             return;
         }
         // support for inherited models (eg. relation targeting `Record`)
-        for (const subModel of Object.values(this.models)) {
+        for (const subModel of Object.values(record.models)) {
             if (!(subModel.prototype instanceof otherModel)) {
                 continue;
             }
