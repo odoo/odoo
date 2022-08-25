@@ -275,19 +275,7 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
         this.set_synch('connecting', 1);
         return this._get_from_server(table.id).then(function (server_orders) {
             var orders = self.get_order_list();
-            orders.forEach(function(order){
-                // We don't remove the validated orders because we still want to see them
-                // in the ticket screen. Orders in 'ReceiptScreen' or 'TipScreen' are validated
-                // orders.
-                if (order.server_id && !order.finalized){
-                    self.orders.remove(order);
-                    order.destroy();
-                }
-            });
-            server_orders.forEach(function(server_order){
-                var new_order = self.createAutomaticallySavedOrder(server_order);
-                self.orders.add(new_order);
-            })
+            self._replace_orders(orders, server_orders);
             if (!ids_to_remove.length) {
                 self.set_synch('connected');
             } else {
@@ -299,7 +287,28 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
             self.set_order_on_table(order);
         });
     }
-
+    _replace_orders(orders_to_replace, new_orders) {
+        var self = this;
+        orders_to_replace.forEach(function(order){
+            // We don't remove the validated orders because we still want to see them
+            // in the ticket screen. Orders in 'ReceiptScreen' or 'TipScreen' are validated
+            // orders.
+            if (order.server_id && !order.finalized){
+                self.orders.remove(order);
+                order.destroy();
+            }
+        });
+        new_orders.forEach(function(server_order){
+            var new_order = self.createAutomaticallySavedOrder(server_order);
+            self.orders.add(new_order);
+        })
+    }
+    //@throw error
+    async replace_table_orders_from_server(table) {
+        const server_orders = await this._get_from_server(table.id);
+        const orders = this.get_table_orders(table);
+        this._replace_orders(orders, server_orders);
+    }
     get_order_with_uid() {
         var order_ids = [];
         this.get_order_list().forEach(function(o){
@@ -383,7 +392,7 @@ const PosRestaurantPosGlobalState = (PosGlobalState) => class PosRestaurantPosGl
 
     // get the list of orders associated to a table. FIXME: should be O(1)
     get_table_orders(table) {
-        var orders   = this.get_order_list();
+        var orders   = super.get_order_list();
         var t_orders = [];
         for (var i = 0; i < orders.length; i++) {
             if (orders[i].table === table) {
