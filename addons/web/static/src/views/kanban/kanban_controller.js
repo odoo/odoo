@@ -112,7 +112,6 @@ KanbanController.props = {
     defaultGroupBy: { validate: (dgb) => !dgb || typeof dgb === "string", optional: true },
     editable: { type: Boolean, optional: true },
     forceGlobalClick: { type: Boolean, optional: true },
-    hasSelectors: { type: Boolean, optional: true },
     onSelectionChanged: { type: Function, optional: true },
     showButtons: { type: Boolean, optional: true },
     Model: Function,

@@ -189,7 +189,7 @@ export class ListRenderer extends Component {
     }
 
     get hasSelectors() {
-        return this.props.hasSelectors && !this.env.isSmall;
+        return this.props.allowSelectors && !this.env.isSmall;
     }
 
     add(params) {
@@ -1680,6 +1680,9 @@ export class ListRenderer extends Component {
     }
 
     onRowTouchStart(record, ev) {
+        if (!this.props.allowSelectors) {
+            return;
+        }
         if (this.props.list.selection.length) {
             // in selection mode, only selection is allowed.
             ev.preventDefault();
@@ -1719,7 +1722,7 @@ ListRenderer.props = [
     "openRecord",
     "onAdd?",
     "cycleOnTab?",
-    "hasSelectors?",
+    "allowSelectors?",
     "editable?",
     "noContentHelp?",
     "nestedKeyOptionalFieldsData?",
