@@ -1562,6 +1562,41 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("quick create record validation: stays open when invalid", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                    <field name="bar"/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>
+            `,
+            groupBy: ["bar"],
+            async mockRPC(route, { method }) {
+                assert.step(method || route);
+            },
+        });
+        assert.verifySteps(["get_views", "web_read_group", "web_search_read", "web_search_read"]);
+
+        await createRecord();
+        assert.verifySteps(["onchange"]);
+
+        // do not fill anything and validate
+        await validateRecord();
+        assert.verifySteps([]);
+        assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_quick_create");
+        assert.hasClass(target.querySelector("[name=display_name]"), "o_field_invalid");
+        assert.containsOnce(target, ".o_notification_manager .o_notification");
+        assert.equal(
+            target.querySelector(".o_notification").textContent,
+            "Invalid fields: Display Name"
+        );
+    });
+
     QUnit.test("quick create record with default values and onchanges", async (assert) => {
         serverData.models.partner.fields.int_field.default = 4;
         serverData.models.partner.onchanges = {
