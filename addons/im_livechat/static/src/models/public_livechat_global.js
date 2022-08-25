@@ -83,6 +83,15 @@ registerModel({
             }
             return clear();
         },
+        _computeWelcomeMessages() {
+            const welcomeMessages = this.messaging.publicLivechatGlobal.messages.filter((message) => {
+                return message.id && typeof message.id === 'string' && message.id.startsWith('_welcome_');
+            });
+            if (welcomeMessages.length === 0) {
+                return clear();
+            }
+            return welcomeMessages;
+        },
         async _willStart() {
             const cookie = get_cookie('im_livechat_session');
             if (cookie) {
@@ -249,5 +258,8 @@ registerModel({
         }),
         sessionCookie: attr(),
         testChatbotData: attr(),
+        welcomeMessages: many('PublicLivechatMessage', {
+            compute: '_computeWelcomeMessages',
+        }),
     },
 });

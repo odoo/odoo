@@ -57,7 +57,7 @@ const _t = core._t;
      * that has a linked mail.message.
      */
     async _chatbotPostWelcomeMessages() {
-        const welcomeMessages = this._getWelcomeMessages();
+        const welcomeMessages = this.messaging.publicLivechatGlobal.welcomeMessages;
 
         if (welcomeMessages.length === 0) {
             // we already posted the welcome messages, nothing to do
@@ -231,17 +231,6 @@ const _t = core._t;
 
             return false;
         }
-    },
-    /**
-     * Returns the 'this.messaging.publicLivechatGlobal.messages' filtered on our special 'welcome' ones.
-     * See '_sendWelcomeChatbotMessage'.
-     *
-     * @private
-     */
-    _getWelcomeMessages() {
-        return this.messaging.publicLivechatGlobal.messages.filter((message) => {
-            return message.id && typeof message.id === 'string' && message.id.startsWith('_welcome_');
-        });
     },
 
      //--------------------------------------------------------------------------
