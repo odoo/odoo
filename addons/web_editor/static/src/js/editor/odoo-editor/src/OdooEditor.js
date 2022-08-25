@@ -168,14 +168,7 @@ export const CLIPBOARD_WHITELISTS = {
 };
 
 // Commands that don't require a DOM selection but take an argument instead.
-const SELECTIONLESS_COMMANDS = [
-    'addRowAbove',
-    'addRowBelow',
-    'addColumnLeft',
-    'addColumnRight',
-    'removeRow',
-    'removeColumn',
-];
+const SELECTIONLESS_COMMANDS = ['addRow', 'addColumn', 'removeRow', 'removeColumn'];
 
 function defaultOptions(defaultObject, object) {
     const newObject = Object.assign({}, defaultObject, object);
@@ -385,15 +378,15 @@ export class OdooEditor extends EventTarget {
                     <div class="o_insert_left"><span class="fa fa-plus"></span>Insert left</div>
                     <div class="o_insert_right"><span class="fa fa-plus"></span>Insert right</div>
                 `, 'text/html').body.children);
-                this.addDomListener(uiMenu.querySelector('.o_insert_left'), 'click', () => this.execCommand('addColumnLeft', this._columnUiTarget));
-                this.addDomListener(uiMenu.querySelector('.o_insert_right'), 'click', () => this.execCommand('addColumnRight', this._columnUiTarget));
+                this.addDomListener(uiMenu.querySelector('.o_insert_left'), 'click', () => this.execCommand('addColumn', 'before', this._columnUiTarget));
+                this.addDomListener(uiMenu.querySelector('.o_insert_right'), 'click', () => this.execCommand('addColumn', 'after', this._columnUiTarget));
             } else {
                 uiMenu.append(...parser.parseFromString(`
                     <div class="o_insert_above"><span class="fa fa-plus"></span>Insert above</div>
                     <div class="o_insert_below"><span class="fa fa-plus"></span>Insert below</div>
                 `, 'text/html').body.children);
-                this.addDomListener(uiMenu.querySelector('.o_insert_above'), 'click', () => this.execCommand('addRowAbove', this._rowUiTarget));
-                this.addDomListener(uiMenu.querySelector('.o_insert_below'), 'click', () => this.execCommand('addRowBelow', this._rowUiTarget));
+                this.addDomListener(uiMenu.querySelector('.o_insert_above'), 'click', () => this.execCommand('addRow', 'before', this._rowUiTarget));
+                this.addDomListener(uiMenu.querySelector('.o_insert_below'), 'click', () => this.execCommand('addRow', 'after', this._rowUiTarget));
             }
 
             // Add the delete button.
@@ -3935,7 +3928,7 @@ export class OdooEditor extends EventTarget {
         if (cursorDestination) {
             setSelection(...startPos(cursorDestination), ...endPos(cursorDestination), true);
         } else if (direction === DIRECTIONS.RIGHT) {
-            this.execCommand('addRowBelow');
+            this.execCommand('addRow', 'after');
             this._onTabulationInTable(ev);
         }
     }
