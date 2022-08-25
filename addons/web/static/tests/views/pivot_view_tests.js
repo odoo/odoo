@@ -5551,4 +5551,85 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+
+    QUnit.test("pivot_measures must work in favorites", async function (assert) {
+        assert.expect(6);
+
+        const ids = [1, 2];
+        const expectedContexts = [
+            {
+                group_by: ["bar"],
+                pivot_column_groupby: [],
+                pivot_measures: ["foo"],
+                pivot_row_groupby: ["bar"],
+            },
+            {
+                group_by: ["bar"],
+                pivot_column_groupby: [],
+                pivot_measures: ["__count"],
+                pivot_row_groupby: ["bar"],
+            },
+        ];
+
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <pivot>
+                    <field name="foo" type="measure"/>
+                    </pivot>
+                `,
+            searchViewArch: `
+                <search>
+                    <filter name='product_id' string="Product" context="{'group_by':'product_id'}"/>
+                    <filter name='customer' string="Customer" context="{'group_by':'customer'}"/>
+                </search>
+            `,
+            groupBy: ["bar"],
+            mockRPC(route, args) {
+                if (args.method === "create_or_replace") {
+                    assert.deepEqual(args.args[0].context, expectedContexts.shift());
+                    return ids.shift();
+                }
+            },
+        });
+
+        function checkColumns(columns) {
+            assert.deepEqual(
+                [...pivot.el.querySelectorAll("th")].slice(2, 3).map((el) => el.innerText),
+                columns,
+                "The column headers should be as expected"
+            );
+        }
+
+        await toggleFavoriteMenu(pivot);
+        await toggleSaveFavorite(pivot);
+        await editFavoriteName(pivot, "Favorite1");
+        await saveFavorite(pivot);
+
+
+        checkColumns(["Foo"]);
+
+        // Disable Foo, activate Count
+        await click(pivot.el.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+        assert.containsN(pivot, ".o_cp_bottom_left .dropdown-menu .dropdown-item", 2);
+        await click(
+            pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[0]
+        );
+        await click(
+            pivot.el.querySelectorAll(".o_cp_bottom_left .dropdown-menu .dropdown-item")[1]
+        );
+
+        checkColumns(["Count"]);
+
+        await toggleFavoriteMenu(pivot);
+        await toggleSaveFavorite(pivot);
+        await editFavoriteName(pivot, "Favorite2");
+        await saveFavorite(pivot);
+
+        checkColumns(["Count"]);
+    });
+
 });

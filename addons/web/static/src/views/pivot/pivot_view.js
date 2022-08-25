@@ -1,9 +1,11 @@
 /** @odoo-module **/
 
 import { _lt } from "@web/core/l10n/translation";
+import { makeContext } from "@web/core/context";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { deepCopy } from "@web/core/utils/objects";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
@@ -175,6 +177,18 @@ class PivotSearchModel extends SearchModel {
             return context.pivot_row_groupby;
         }
         return super._getSearchItemGroupBys(...arguments);
+    }
+
+    get context() {
+        if (!this._context) {
+            const context = this._getContext();
+            this._context = makeContext([context, this.globalContext]);
+            // globalContext context has default pivot_measures value, while we need value from user-defined filters (aka Favorites)
+            if (context.pivot_measures) {
+                this._context.pivot_measures = context.pivot_measures;
+            }
+        }
+        return deepCopy(this._context);
     }
 }
 
