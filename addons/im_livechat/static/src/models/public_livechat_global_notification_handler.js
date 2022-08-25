@@ -47,9 +47,9 @@ registerModel({
                         return;
                     }
                     if (payload.is_typing) {
-                        this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.registerTyping({ partnerID });
+                        this.messaging.publicLivechatGlobal.publicLivechat.widget.registerTyping({ partnerID });
                     } else {
-                        this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat.unregisterTyping({ partnerID });
+                        this.messaging.publicLivechatGlobal.publicLivechat.widget.unregisterTyping({ partnerID });
                     }
                     return;
                 }
@@ -75,7 +75,7 @@ registerModel({
                     if (!message) {
                         return;
                     }
-                    message.legacyPublicLivechatMessage._body = utils.Markup(payload.body);
+                    message.widget._body = utils.Markup(payload.body);
                     this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
                     return;
                 }
