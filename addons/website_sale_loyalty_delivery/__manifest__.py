@@ -10,7 +10,10 @@
     'auto_install': True,
     'assets': {
         'web.assets_frontend': [
-            'website_sale_loyalty_delivery/static/**/*',
+            'website_sale_loyalty_delivery/static/src/**/*',
+        ],
+        'web.assets_tests': [
+            'website_sale_loyalty_delivery/static/tests/**/*',
         ],
     },
     'license': 'LGPL-3',

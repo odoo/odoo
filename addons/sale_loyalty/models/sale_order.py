@@ -158,7 +158,8 @@ class SaleOrder(models.Model):
 
         discountable = 0
         discountable_per_tax = defaultdict(int)
-        for line in (self.order_line - self._get_no_effect_on_threshold_lines()):
+        lines = self.order_line if reward.program_id.is_payment_program else (self.order_line - self._get_no_effect_on_threshold_lines())
+        for line in lines:
             # Ignore lines from this reward
             if not line.product_uom_qty or not line.price_unit:
                 continue
@@ -710,7 +711,7 @@ class SaleOrder(models.Model):
                 not line.coupon_id:
                 continue
             seen_rewards.add(line.reward_identifier_code)
-            if line.reward_id.program_id.program_type not in ('gift_card', 'ewallet'):
+            if line.reward_id.program_id.is_payment_program:
                 line_rewards.append((line.reward_id, line.coupon_id, line.reward_identifier_code, line.product_id))
             else:
                 payment_rewards.append((line.reward_id, line.coupon_id, line.reward_identifier_code, line.product_id))

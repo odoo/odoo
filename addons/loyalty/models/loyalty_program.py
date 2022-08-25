@@ -69,6 +69,7 @@ class LoyaltyProgram(models.Model):
     portal_point_name = fields.Char(default='Points', translate=True,
          compute='_compute_from_program_type', readonly=False, store=True)
     is_nominative = fields.Boolean(compute='_compute_is_nominative')
+    is_payment_program = fields.Boolean(compute='_compute_is_payment_program')
 
     _sql_constraints = [
         ('check_max_usage', 'CHECK (limit_usage = False OR max_usage > 0)',
@@ -100,6 +101,11 @@ class LoyaltyProgram(models.Model):
         for program in self:
             program.is_nominative = program.applies_on == 'both' or\
                 (program.program_type == 'ewallet' and program.applies_on == 'future')
+
+    @api.depends('program_type')
+    def _compute_is_payment_program(self):
+        for program in self:
+            program.is_payment_program = program.program_type in ('gift_card', 'ewallet')
 
     @api.model
     def _program_type_default_values(self):
