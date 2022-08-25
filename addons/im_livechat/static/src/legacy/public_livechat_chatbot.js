@@ -24,50 +24,6 @@ const _t = core._t;
     //--------------------------------------------------------------------------
 
     /**
-     * When the user first interacts with the bot, we want to make sure to actually post the welcome
-     * messages into the conversation.
-     *
-     * Indeed, before that, they are 'virtual' messages that are not tied to mail.messages, see
-     * #_sendWelcomeChatbotMessage() for more information.
-     *
-     * Posting them as real messages allows to have a cleaner model and conversation, that will be
-     * kept intact when changing page on the website.
-     *
-     * It also allows tying any first response / question_selection choice to a chatbot.message
-     * that has a linked mail.message.
-     */
-    async _chatbotPostWelcomeMessages() {
-        const welcomeMessages = this.messaging.publicLivechatGlobal.welcomeMessages;
-
-        if (welcomeMessages.length === 0) {
-            // we already posted the welcome messages, nothing to do
-            return;
-        }
-
-        const postedWelcomeMessages = await session.rpc('/chatbot/post_welcome_steps', {
-            channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
-            chatbot_script_id: this.messaging.publicLivechatGlobal.chatbot.scriptId,
-        });
-
-        const welcomeMessagesIds = welcomeMessages.map(welcomeMessage => welcomeMessage.id);
-        this.messaging.publicLivechatGlobal.update({
-            messages: this.messaging.publicLivechatGlobal.messages.filter((message) => {
-                !welcomeMessagesIds.includes(message.id);
-            }),
-        });
-
-        postedWelcomeMessages.reverse();
-        postedWelcomeMessages.forEach((message) => {
-            this.messaging.publicLivechatGlobal.chatbot.addMessage(message, {
-                prepend: true,
-                skipRenderMessages: true,
-            });
-        });
-
-        this._renderMessages();
-    },
-
-    /**
      * Disable the input allowing the user to type.
      * This is typically used when we want to force him to click on one of the chatbot options.
      *
@@ -333,7 +289,7 @@ const _t = core._t;
                 // indeed, if there are no operator available, the script will continue
                 // with steps that are NOT included in the welcome messages
                 // (hence why we need to have those welcome messages posted BEFORE that)
-                this._chatbotPostWelcomeMessages();
+                this.messaging.publicLivechatGlobal.chatbot.postWelcomeMessages();
             }
 
             // we are done posting welcome messages, let's start the actual script

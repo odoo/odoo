@@ -488,7 +488,7 @@ registerModel({
                 this.messaging.publicLivechatGlobal.chatbot.currentStep &&
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
-                await this.widget._chatbotPostWelcomeMessages();
+                await this.messaging.publicLivechatGlobal.chatbot.postWelcomeMessages();
             }
         },
     },
