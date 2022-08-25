@@ -302,12 +302,11 @@ class ProductProduct(models.Model):
         them has to be found on the variant.
         """
         self.ensure_one()
-        if not product_template_attribute_value_ids:
-            return True
-        for _, iter_ptav in groupby(product_template_attribute_value_ids, lambda ptav: ptav.attribute_line_id):
-            if not any(ptav in self.product_template_attribute_value_ids for ptav in iter_ptav):
-                return False
-        return True
+        # The intersection of the values of the product and those of the line satisfy:
+        # * the number of items equals the number of attributes (since a product cannot
+        #   have multiple values for the same attribute),
+        # * the attributes are a subset of the attributes of the line.
+        return len(self.product_template_attribute_value_ids & product_template_attribute_value_ids) == len(product_template_attribute_value_ids.attribute_id)
 
     def _count_returned_sn_products(self, sn_lot):
         res = self.env['stock.move.line'].search_count([
