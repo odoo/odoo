@@ -24,8 +24,9 @@ class TestRatingCommon(TestMailFullCommon, TestSMSRecipients):
 
 @tagged('rating')
 class TestRatingFlow(TestRatingCommon):
+
     def test_initial_values(self):
-        record_rating = self.env['mail.test.rating'].browse(self.record_rating.ids)
+        record_rating = self.record_rating.with_env(self.env)
         self.assertFalse(record_rating.rating_ids)
         self.assertEqual(record_rating.message_partner_ids, self.partner_admin)
         self.assertEqual(len(record_rating.message_ids), 1)
@@ -33,7 +34,7 @@ class TestRatingFlow(TestRatingCommon):
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_rating_prepare(self):
-        record_rating = self.env['mail.test.rating'].browse(self.record_rating.ids)
+        record_rating = self.record_rating.with_env(self.env)
 
         # prepare rating token
         access_token = record_rating._rating_get_access_token()
@@ -50,15 +51,15 @@ class TestRatingFlow(TestRatingCommon):
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_rating_rating_apply(self):
-        record_rating = self.env['mail.test.rating'].browse(self.record_rating.ids)
+        record_rating = self.record_rating.with_env(self.env)
         record_messages = record_rating.message_ids
 
         # prepare rating token
         access_token = record_rating._rating_get_access_token()
 
-        # apply a rate as note (first click)
+        # simulate an email click: notification should be delayed
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
-            record_rating.rating_apply(5, token=access_token, feedback='Top Feedback', subtype_xmlid='mail.mt_note')
+            record_rating.rating_apply(5, token=access_token, feedback='Top Feedback', notify_delay_send=True)
         message = record_rating.message_ids[0]
         rating = record_rating.rating_ids
 
@@ -69,7 +70,7 @@ class TestRatingFlow(TestRatingCommon):
         self.assertEqual(message.author_id, self.partner_1)
         self.assertEqual(message.rating_ids, rating)
         self.assertFalse(message.notified_partner_ids)
-        self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(message.subtype_id, self.env.ref('test_mail_full.mt_mail_test_rating_rating_done'))
 
         # check rating update
         self.assertTrue(rating.consumed)
@@ -78,14 +79,14 @@ class TestRatingFlow(TestRatingCommon):
         self.assertEqual(rating.rating, 5)
         self.assertEqual(record_rating.rating_last_value, 5)
 
-        # apply a rate again (second click with feedback)
+        # give a feedback: send notifications (notify_delay_send set to False)
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
             record_rating.rating_apply(1, token=access_token, feedback='Bad Feedback')
 
-        # check posted message: a new message is posted with default subtype
+        # check posted message: message is updated
         update_message = record_rating.message_ids[0]
-        self.assertNotEqual(update_message, message)
-        self.assertEqual(record_rating.message_ids, record_messages + message + update_message)
+        self.assertEqual(update_message, message, 'Should update first message')
+        self.assertEqual(record_rating.message_ids, record_messages + update_message)
         self.assertIn('Bad Feedback', update_message.body)
         self.assertIn('/rating/static/src/img/rating_1.png', update_message.body)
         self.assertEqual(update_message.author_id, self.partner_1)
@@ -94,22 +95,22 @@ class TestRatingFlow(TestRatingCommon):
         self.assertEqual(update_message.subtype_id, self.env.ref("test_mail_full.mt_mail_test_rating_rating_done"))
 
         # check rating update
-        rating = record_rating.rating_ids
-        self.assertTrue(rating.consumed)
-        self.assertEqual(rating.feedback, 'Bad Feedback')
-        self.assertEqual(rating.message_id, update_message)
-        self.assertEqual(rating.rating, 1)
+        new_rating = record_rating.rating_ids
+        self.assertEqual(new_rating, rating, 'Should update first rating')
+        self.assertTrue(new_rating.consumed)
+        self.assertEqual(new_rating.feedback, 'Bad Feedback')
+        self.assertEqual(new_rating.message_id, update_message)
+        self.assertEqual(new_rating.rating, 1)
         self.assertEqual(record_rating.rating_last_value, 1)
 
 
-@tagged('rating', 'mail_performance', 'post_install', '-at_install')
-class TestRatingPerformance(TestRatingCommon):
+@tagged('rating')
+class TestRatingMixin(TestRatingCommon):
 
-    @users('__system__')
+    @users('employee')
     @warmup
-    def test_rating_last_value_perfs(self):
-
-        record_rating = self.env['mail.test.rating'].browse(self.record_rating.ids)
+    def test_rating_values(self):
+        record_rating = self.record_rating.with_env(self.env)
 
         # prepare rating token
         access_0 = record_rating._rating_get_access_token()
@@ -127,29 +128,38 @@ class TestRatingPerformance(TestRatingCommon):
         self.assertEqual(record_rating.rating_last_value, 5, "The last rating is kept.")
         self.assertEqual(record_rating.rating_avg, 3, "The average should be equal to 3")
 
+
+@tagged('rating', 'mail_performance', 'post_install', '-at_install')
+class TestRatingPerformance(TestRatingCommon):
+
+    @users('employee')
+    @warmup
+    def test_rating_last_value_perfs(self):
         RECORD_COUNT = 100
-        partners = self.env['res.partner'].create([
+        partners = self.env['res.partner'].sudo().create([
             {'name': 'Jean-Luc %s' % (idx), 'email': 'jean-luc-%s@opoo.com' % (idx)} for idx in range(RECORD_COUNT)])
 
-        with self.assertQueryCount(__system__=5910):  # tmf 4710 / com 5510
+        with self.assertQueryCount(employee=1516):  # tmf 1516 / com 5510
             record_ratings = self.env['mail.test.rating'].create([{
                 'customer_id': partners[idx].id,
                 'name': 'Test Rating',
                 'user_id': self.user_admin.id,
             } for idx in range(RECORD_COUNT)])
+            self.flush_tracking()
+
+        with self.assertQueryCount(employee=2604):  # tmf 2204 / com 2404
             for record in record_ratings:
                 access_token = record._rating_get_access_token()
                 record.rating_apply(1, token=access_token)
+            self.flush_tracking()
 
-            record_ratings.rating_ids.write_date = datetime(2022, 1, 1, 14, 00)
+        with self.assertQueryCount(employee=2603):  # tmf 2203 / com 2403
             for record in record_ratings:
                 access_token = record._rating_get_access_token()
                 record.rating_apply(5, token=access_token)
+            self.flush_tracking()
 
-        new_ratings = record_ratings.rating_ids.filtered(lambda r: r.rating == 1)
-        new_ratings.write_date = datetime(2022, 2, 1, 14, 00)
-        new_ratings.flush_model(['write_date'])
-        with self.assertQueryCount(__system__=1):
+        with self.assertQueryCount(employee=1):
             record_ratings._compute_rating_last_value()
             vals = [val == 5 for val in record_ratings.mapped('rating_last_value')]
             self.assertTrue(all(vals), "The last rating is kept.")
@@ -157,6 +167,7 @@ class TestRatingPerformance(TestRatingCommon):
 
 @tagged('rating')
 class TestRatingRoutes(HttpCase, TestRatingCommon):
+
     def test_open_rating_route(self):
         access_token = self.record_rating._rating_get_access_token()
         self.url_open(f"/rate/{access_token}/5")

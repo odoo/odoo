@@ -12,6 +12,94 @@ from odoo.tests.common import tagged, HttpCase, users
 from odoo.tools import mute_logger
 
 
+@tagged('mail_thread')
+class TestAPI(TestMailCommon, TestRecipients):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestAPI, cls).setUpClass()
+        cls.ticket_record = cls.env['mail.test.ticket'].with_context(cls._test_context).create({
+            'email_from': '"Paulette Vachette" <paulette@test.example.com>',
+            'name': 'Test',
+            'user_id': cls.user_employee.id,
+        })
+
+    @mute_logger('openerp.addons.mail.models.mail_mail')
+    @users('employee')
+    def test_message_update_content(self):
+        """ Test updating message content. """
+        ticket_record = self.ticket_record.with_env(self.env)
+        attachments = self.env['ir.attachment'].create(
+            self._generate_attachments_data(2, 'mail.compose.message', 0)
+        )
+
+        # post a note
+        message = ticket_record.message_post(
+            attachment_ids=attachments.ids,
+            body="<p>Initial Body</p>",
+            message_type="comment",
+            partner_ids=self.partner_1.ids,
+        )
+        self.assertEqual(message.attachment_ids, attachments)
+        self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
+        self.assertEqual(set(message.mapped('attachment_ids.res_model')), set([ticket_record._name]))
+        self.assertEqual(message.body, "<p>Initial Body</p>")
+        self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
+
+        # update the content with new attachments
+        new_attachments = self.env['ir.attachment'].create(
+            self._generate_attachments_data(2, 'mail.compose.message', 0)
+        )
+        ticket_record._message_update_content(
+            message, "<p>New Body</p>",
+            attachment_ids=new_attachments.ids
+        )
+        self.assertEqual(message.attachment_ids, attachments + new_attachments)
+        self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
+        self.assertEqual(set(message.mapped('attachment_ids.res_model')), set([ticket_record._name]))
+        self.assertEqual(message.body, "<p>New Body</p>")
+
+        # void attachments
+        ticket_record._message_update_content(
+            message, "<p>Another Body, void attachments</p>",
+            attachment_ids=[]
+        )
+        self.assertFalse(message.attachment_ids)
+        self.assertFalse((attachments + new_attachments).exists())
+        self.assertEqual(message.body, "<p>Another Body, void attachments</p>")
+
+    @mute_logger('openerp.addons.mail.models.mail_mail')
+    @users('employee')
+    def test_message_update_content_check(self):
+        """ Test cases where updating content should be prevented """
+        ticket_record = self.ticket_record.with_env(self.env)
+
+        # cannot edit user comments (subtype)
+        message = ticket_record.message_post(
+            body="<p>Initial Body</p>",
+            message_type="comment",
+            subtype_id=self.env.ref('mail.mt_comment').id,
+        )
+        with self.assertRaises(exceptions.UserError):
+            ticket_record._message_update_content(
+                message, "<p>New Body</p>"
+            )
+
+        message.sudo().write({'subtype_id': self.env.ref('mail.mt_note')})
+        ticket_record._message_update_content(
+            message, "<p>New Body</p>"
+        )
+
+        # cannot edit notifications
+        for message_type in ['notification', 'user_notification', 'email']:
+            message.sudo().write({'message_type': message_type})
+            with self.assertRaises(exceptions.UserError):
+                ticket_record._message_update_content(
+                    message, "<p>New Body</p>"
+                )
+
+
+@tagged('mail_thread')
 class TestChatterTweaks(TestMailCommon, TestRecipients):
 
     @classmethod

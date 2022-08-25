@@ -2,18 +2,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import datetime
+
+from freezegun import freeze_time
 
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
-from odoo.tests import tagged
+from odoo.tests import tagged, users
 from odoo.tools import mute_logger
 
 
 @tagged('mail_template', 'multi_lang')
-class TestMailTemplate(TestMailCommon, TestRecipients):
+class TestMailTemplateCommon(TestMailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMailTemplate, cls).setUpClass()
+        super(TestMailTemplateCommon, cls).setUpClass()
         cls.test_record = cls.env['mail.test.lang'].with_context(cls._test_context).create({
             'email_from': 'ignasse@example.com',
             'name': 'Test',
@@ -60,6 +63,36 @@ class TestMailTemplate(TestMailCommon, TestRecipients):
         cls.user_admin.write({'notification_type': 'email'})
         # Force the attachments of the template to be in the natural order.
         cls.test_template.invalidate_recordset(['attachment_ids'])
+
+
+@tagged('mail_template', 'multi_lang')
+class TestMailTemplate(TestMailTemplateCommon):
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    @users('employee')
+    def test_template_schedule_email(self):
+        """ Test scheduling email sending from template. """
+        now = datetime.datetime.now()
+        test_template = self.test_template.with_env(self.env)
+
+        # schedule the mail in 3 days
+        test_template.scheduled_date = '{{datetime.datetime.now() + datetime.timedelta(days=3)}}'
+        with freeze_time(now):
+            mail_id = test_template.send_mail(self.test_record.id)
+        mail = self.env['mail.mail'].sudo().browse(mail_id)
+        self.assertEqual(
+            mail.scheduled_date.replace(second=0, microsecond=0),
+            (now + datetime.timedelta(days=3)).replace(second=0, microsecond=0),
+        )
+        self.assertEqual(mail.state, 'outgoing')
+
+        # check a wrong format
+        test_template.scheduled_date = '{{"test " * 5}}'
+        with freeze_time(now):
+            mail_id = test_template.send_mail(self.test_record.id)
+        mail = self.env['mail.mail'].sudo().browse(mail_id)
+        self.assertFalse(mail.scheduled_date)
+        self.assertEqual(mail.state, 'outgoing')
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_template_send_email(self):

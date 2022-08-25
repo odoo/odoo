@@ -231,7 +231,7 @@ class TestMailMail(TestMailCommon):
             (now + timedelta(hours=-3)).strftime("%H:%M:%S %d-%m-%Y") + " -0400",
         ]
         expected_datetimes = [
-            False, '', False,
+            False, False, False,
             now, now - pytz.timezone('Australia/Brisbane').utcoffset(now),
             now - timedelta(days=1), now + timedelta(days=1), now + timedelta(days=1),
             now + timedelta(hours=-1),
@@ -253,9 +253,8 @@ class TestMailMail(TestMailCommon):
         ])
 
         for mail, expected_datetime, scheduled_datetime in zip(mails, expected_datetimes, scheduled_datetimes):
-            expected = expected_datetime.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT) if expected_datetime else expected_datetime
-            self.assertEqual(mail.scheduled_date, expected,
-                             'Scheduled date: %s should be stored as %s, received %s' % (scheduled_datetime, expected, mail.scheduled_date))
+            self.assertEqual(mail.scheduled_date, expected_datetime,
+                             'Scheduled date: %s should be stored as %s, received %s' % (scheduled_datetime, expected_datetime, mail.scheduled_date))
             self.assertEqual(mail.state, 'outgoing')
 
         with freeze_time(now):
