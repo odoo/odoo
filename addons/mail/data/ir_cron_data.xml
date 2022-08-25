@@ -42,5 +42,17 @@
             <field name="state">code</field>
         </record>
 
+        <record id="ir_cron_mail_gateway_action" model="ir.cron">
+            <field name="name">Mail: Fetchmail Service</field>
+            <field name="model_id" ref="model_fetchmail_server"/>
+            <field name="state">code</field>
+            <field name="code">model._fetch_mails()</field>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <!-- Active flag is set on fetchmail_server.create/write -->
+            <field name="active" eval="False"/>
+        </record>
     </data>
 </odoo>
