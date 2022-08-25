@@ -188,11 +188,6 @@ class CustomerPortal(portal.CustomerPortal):
         if order_sudo.has_to_be_paid():
             logged_in = not request.env.user._is_public()
 
-            # Make sure that the partner's company matches the sales order's company.
-            payment_portal.PaymentPortal._ensure_matching_companies(
-                order_sudo.partner_id, order_sudo.company_id
-            )
-
             acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
                 order_sudo.company_id.id,
                 order_sudo.partner_id.id,
@@ -203,6 +198,14 @@ class CustomerPortal(portal.CustomerPortal):
                 ('acquirer_id', 'in', acquirers_sudo.ids),
                 ('partner_id', '=', order_sudo.partner_id.id)
             ]) if logged_in else request.env['payment.token']
+
+            # Make sure that the partner's company matches the order's company.
+            if not payment_portal.PaymentPortal._can_partner_pay_in_company(
+                order_sudo.partner_id, order_sudo.company_id
+            ):
+                acquirers_sudo = request.env['payment.acquirer'].sudo()
+                tokens = request.env['payment.token']
+
             fees_by_acquirer = {
                 acquirer: acquirer._compute_fees(
                     order_sudo.amount_total,
