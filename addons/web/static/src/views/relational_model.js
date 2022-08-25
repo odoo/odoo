@@ -2423,7 +2423,6 @@ export class Group extends DataPoint {
      */
     addRecord(record, index) {
         this.count++;
-        this.isFolded = false;
         return this.list.addRecord(record, index);
     }
 
