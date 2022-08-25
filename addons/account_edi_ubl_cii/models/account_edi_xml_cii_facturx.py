@@ -190,7 +190,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         if supplier.country_id.code == 'DE':
             template_values['document_context_id'] = "urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2"
         else:
-            template_values['document_context_id'] = "urn:cen.eu:en16931:2017"
+            template_values['document_context_id'] = "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended"
 
         return template_values
 
