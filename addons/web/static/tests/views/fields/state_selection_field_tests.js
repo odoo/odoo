@@ -508,4 +508,37 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.deepEqual(dropdownItemTexts, ["Custom blocked", "Custom done"]);
     });
+
+    QUnit.test("works when required in a readonly view ", async function (assert) {
+        serverData.models.partner.records[0].selection = "normal";
+        serverData.models.partner.records = [serverData.models.partner.records[0]];
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="selection" widget="state_selection" required="1"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            mockRPC: (route, args, performRPC) => {
+                if (route === "/web/dataset/call_kw/partner/write") {
+                    assert.step("write");
+                }
+                return performRPC(route, args);
+            },
+        });
+
+        await click(target, ".o_field_state_selection button");
+        const doneItem = target.querySelectorAll(".dropdown-item")[1]; // item "done";
+        await click(doneItem);
+
+        assert.verifySteps(["write"]);
+        assert.hasClass(target.querySelector(".o_field_state_selection span"), "o_status_green");
+    });
 });

@@ -119,13 +119,11 @@ export class Field extends Component {
         const fieldInfo = this.props.fieldInfo;
 
         const modifiers = fieldInfo.modifiers || {};
-        const required = evalDomain(modifiers.required, evalContext);
         const readonlyFromModifiers = evalDomain(modifiers.readonly, evalContext);
         const readonlyFromRecord = !record.isInEdition;
         const readonlyFromViewMode = record.model.root
             ? !record.model.root.isInEdition
             : readonlyFromRecord;
-        const emptyRequiredValue = required && !this.props.value;
 
         // Decoration props
         const decorationMap = {};
@@ -162,7 +160,7 @@ export class Field extends Component {
                     return;
                 }
                 // We save only if we're on view mode readonly and no readonly field modifier
-                if (readonlyFromViewMode && !readonlyFromModifiers && !emptyRequiredValue) {
+                if (readonlyFromViewMode && !readonlyFromModifiers) {
                     // TODO: maybe move this in the model
                     return record.save();
                 }
