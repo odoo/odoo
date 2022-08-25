@@ -111,13 +111,9 @@ const _t = core._t;
             .val('')
             .focus();
 
-        if (this.chatbotInputKeyDownHandler) {
-            $composerTextField.off('keydown', this.chatbotInputKeyDownHandler);
-        }
-
+        $composerTextField.off('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
         if (this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_step_type === 'free_input_multi') {
-            this.chatbotInputKeyDownHandler = this.messaging.publicLivechatGlobal.chatbot.onKeydownInput;
-            $composerTextField.on('keydown', this.chatbotInputKeyDownHandler);
+            $composerTextField.on('keydown', this.messaging.publicLivechatGlobal.chatbot.onKeydownInput);
         }
     },
     /**
