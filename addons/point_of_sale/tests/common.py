@@ -167,7 +167,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.receivable_account = cls.company_data['default_account_receivable']
         cls.tax_received_account = cls.company_data['default_account_tax_sale']
         cls.company.account_default_pos_receivable_account_id = cls.env['account.account'].create({
-            'code': 'X1012 - POS',
+            'code': 'X1012.POS',
             'name': 'Debtors - (POS)',
             'reconcile': True,
             'account_type': 'asset_receivable',
@@ -179,7 +179,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         cls.c1_receivable = cls.copy_account(cls.receivable_account, {'name': 'Customer 1 Receivable'})
         cls.other_receivable_account = cls.env['account.account'].create({
             'name': 'Other Receivable',
-            'code': 'RCV00' ,
+            'code': 'RCV00',
             'account_type': 'asset_receivable',
             'internal_group': 'asset',
             'reconcile': True,

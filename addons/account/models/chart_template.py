@@ -6,8 +6,10 @@ from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
 from odoo.addons.account.models.account_tax import TYPE_TAX_USE
+from odoo.addons.account.models.account_account import ACCOUNT_CODE_REGEX
 
 import logging
+import re
 
 _logger = logging.getLogger(__name__)
 
@@ -101,6 +103,14 @@ class AccountAccountTemplate(models.Model):
                 name = record.code + ' ' + name
             res.append((record.id, name))
         return res
+
+    @api.constrains('code')
+    def _check_account_code(self):
+        for account in self:
+            if not re.match(ACCOUNT_CODE_REGEX, account.code):
+                raise ValidationError(_(
+                    "The account code can only contain alphanumeric characters and dots."
+                ))
 
 
 class AccountChartTemplate(models.Model):

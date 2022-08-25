@@ -60,7 +60,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
         # Create an account using a foreign currency
         cls.test_currency_account = cls.env['account.account'].create({
             'name': 'test destination account',
-            'code': 'test_dest_acc',
+            'code': 'test.dest.acc',
             'account_type': 'asset_current',
             'currency_id': cls.test_currency_3.id,
         })
