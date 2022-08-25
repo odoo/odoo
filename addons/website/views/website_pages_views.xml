@@ -73,6 +73,7 @@
 <record id="website_pages_tree_view" model="ir.ui.view">
     <field name="name">website.page.list</field>
     <field name="model">website.page</field>
+    <field name="priority">99</field>
     <field name="arch" type="xml">
         <tree js_class="website_pages_list" type="object" action="open_website_url" default_order="url">
             <field name="is_homepage" invisible="1"/>
