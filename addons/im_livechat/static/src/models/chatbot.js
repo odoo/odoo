@@ -23,9 +23,9 @@ registerModel({
                 // handle the display
                 return;
             }
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field').addClass('d-none');
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').show();
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_restart').one('click', this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript);
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field').addClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_end').show();
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_restart').one('click', this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript);
         },
         /**
          * See 'Chatbot/saveSession'.
@@ -78,7 +78,7 @@ registerModel({
             this.messaging.publicLivechatGlobal.livechatButtonView.update({
                 isTypingTimeout: setTimeout(
                     () => {
-                        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_mail_thread_content').append(
+                        this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_mail_thread_content').append(
                             $(qweb.render('im_livechat.legacy.chatbot.is_typing_message', {
                                 'chatbotImageSrc': `/im_livechat/operator/${
                                     this.messaging.publicLivechatGlobal.publicLivechat.operator.id

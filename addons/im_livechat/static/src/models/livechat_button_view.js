@@ -53,7 +53,7 @@ registerModel({
             }
         },
         askFeedback() {
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_thread_composer input').prop('disabled', true);
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_thread_composer input').prop('disabled', true);
             this.messaging.publicLivechatGlobal.update({ feedbackView: {} });
             /**
              * When we enter the "ask feedback" process of the chat, we hide some elements that become
@@ -67,9 +67,9 @@ registerModel({
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data.conversation_closed = true;
                 this.messaging.publicLivechatGlobal.chatbot.saveSession();
             }
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field')
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_end').hide();
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field')
                 .removeClass('d-none')
                 .val('');
         },
@@ -78,8 +78,8 @@ registerModel({
          * in this case).
          */
         async onChatbotRestartScript(ev) {
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field').removeClass('d-none');
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_end').hide();
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field').removeClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_end').hide();
 
             if (this.messaging.publicLivechatGlobal.chatbot.nextStepTimeout) {
                 clearTimeout(this.messaging.publicLivechatGlobal.chatbot.nextStepTimeout);
@@ -135,10 +135,10 @@ registerModel({
         },
         async openChatWindow() {
             this.messaging.publicLivechatGlobal.update({ chatWindow: {} });
-            await this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.appendTo($('body'));
+            await this.messaging.publicLivechatGlobal.chatWindow.widget.appendTo($('body'));
             const cssProps = { bottom: 0 };
             cssProps[this.messaging.locale.textDirection === 'rtl' ? 'left' : 'right'] = 0;
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$el.css(cssProps);
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$el.css(cssProps);
             this.widget.$el.hide();
             this._openChatWindowChatbot();
         },

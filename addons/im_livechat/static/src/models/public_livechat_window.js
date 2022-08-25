@@ -10,7 +10,7 @@ registerModel({
     lifecycleHooks: {
         _created() {
             this.update({
-                legacyChatWindow: new PublicLivechatWindow(
+                widget: new PublicLivechatWindow(
                     this.messaging.publicLivechatGlobal.livechatButtonView.widget,
                     this.messaging,
                     this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat,
@@ -18,7 +18,7 @@ registerModel({
             });
         },
         _willDelete() {
-            this.legacyChatWindow.destroy();
+            this.widget.destroy();
         },
     },
     recordMethods: {
@@ -37,9 +37,6 @@ registerModel({
         inputPlaceholder: attr({
             compute: '_computeInputPlaceholder',
         }),
-        legacyChatWindow: attr({
-            default: null,
-        }),
         publicLivechatGlobalOwner: one('PublicLivechatGlobal', {
             identifying: true,
             inverse: 'chatWindow',
@@ -49,5 +46,6 @@ registerModel({
             inverse: 'publicLivechatWindowOwner',
             isCausal: true,
         }),
+        widget: attr(),
     },
 });

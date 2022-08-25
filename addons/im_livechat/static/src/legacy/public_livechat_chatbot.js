@@ -94,7 +94,7 @@ const _t = core._t;
      * @private
      */
     _chatbotDisableInput(disableText) {
-        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field')
+        this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field')
             .prop('disabled', true)
             .addClass('text-center fst-italic bg-200')
             .val(disableText);
@@ -104,7 +104,7 @@ const _t = core._t;
      * @private
      */
     _chatbotEnableInput() {
-        const $composerTextField = this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field');
+        const $composerTextField = this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_composer_text_field');
         $composerTextField
             .prop('disabled', false)
             .removeClass('text-center fst-italic bg-200')
@@ -178,7 +178,7 @@ const _t = core._t;
 
             if (triggerNextStep) {
                 let nextStepDelay = this.messaging.publicLivechatGlobal.chatbot.messageDelay;
-                if (this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_typing').length !== 0) {
+                if (this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_typing').length !== 0) {
                     // special case where we already have a "is typing" message displayed
                     // can happen when the previous step did not trigger any message posted from the bot
                     // e.g: previous step was "forward_operator" and no-one is available
@@ -198,7 +198,7 @@ const _t = core._t;
         }
 
         if (!this.messaging.publicLivechatGlobal.chatbot.hasRestartButton) {
-            this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').addClass('d-none');
+            this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').addClass('d-none');
         }
      },
     /**
@@ -269,11 +269,11 @@ const _t = core._t;
 
         const self = this;
 
-        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
+        this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
             $(this).on('click', self._onChatbotOptionClicked.bind(self));
         });
 
-        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_livechat_chatbot_main_restart').on('click',
+        this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').on('click',
             this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript
         );
 
