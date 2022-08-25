@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Carpooling",
+    'name': "car_pooling",
 
     'summary': """
         An app to share the vehicles by Odoo users for free commuting.""",
