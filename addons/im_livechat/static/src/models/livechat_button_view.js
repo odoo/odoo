@@ -98,7 +98,7 @@ registerModel({
             });
 
             if (postedMessage) {
-                this.widget._chatbotAddMessage(postedMessage);
+                this.messaging.publicLivechatGlobal.chatbot.addMessage(postedMessage);
             }
 
             this.messaging.publicLivechatGlobal.chatbot.update({ currentStep: clear() });

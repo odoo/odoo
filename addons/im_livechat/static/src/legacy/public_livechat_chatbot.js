@@ -6,7 +6,6 @@ import time from 'web.time';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-import { increment } from '@mail/model/model_field_command';
 
 const _t = core._t;
 
@@ -23,25 +22,6 @@ const _t = core._t;
     //--------------------------------------------------------------------------
     // Private - Chatbot specifics
     //--------------------------------------------------------------------------
-
-    /**
-     * Add message posted by the bot into the conversation.
-     * This allows not having to wait for the bus (since we run checks based on messages in the
-     * conversation, having the result be there immediately eases the process).
-     *
-     * It also helps while running test tours since those don't have the bus enabled.
-     */
-    _chatbotAddMessage(message, options) {
-        message.body = utils.Markup(message.body);
-        this.messaging.publicLivechatGlobal.livechatButtonView.addMessage(message, options);
-        if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom()) {
-            this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: increment() });
-        }
-
-        if (!options || !options.skipRenderMessages) {
-            this._renderMessages();
-        }
-    },
 
     /**
      * When the user first interacts with the bot, we want to make sure to actually post the welcome
@@ -78,7 +58,7 @@ const _t = core._t;
 
         postedWelcomeMessages.reverse();
         postedWelcomeMessages.forEach((message) => {
-            this._chatbotAddMessage(message, {
+            this.messaging.publicLivechatGlobal.chatbot.addMessage(message, {
                 prepend: true,
                 skipRenderMessages: true,
             });
@@ -226,7 +206,7 @@ const _t = core._t;
             // email is not valid, let the user try again
             this._chatbotEnableInput();
             if (emailValidResult.posted_message) {
-                this._chatbotAddMessage(emailValidResult.posted_message);
+                this.messaging.publicLivechatGlobal.chatbot.addMessage(emailValidResult.posted_message);
             }
 
             return false;
