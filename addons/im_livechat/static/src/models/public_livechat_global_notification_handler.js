@@ -75,7 +75,7 @@ registerModel({
                     if (!message) {
                         return;
                     }
-                    message.legacyPublicLivechatMessage._body = utils.Markup(payload.body);
+                    message.widget._body = utils.Markup(payload.body);
                     this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
                     return;
                 }

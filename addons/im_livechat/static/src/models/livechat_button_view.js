@@ -35,7 +35,7 @@ registerModel({
             const message = this.messaging.models['PublicLivechatMessage'].insert({
                 data,
                 id: data.id,
-                legacyPublicLivechatMessage: legacyMessage,
+                widget: legacyMessage,
             });
 
             if (this.messaging.publicLivechatGlobal.publicLivechat && this.messaging.publicLivechatGlobal.publicLivechat.legacyPublicLivechat) {

@@ -279,8 +279,8 @@ const _t = core._t;
 
         if (this.messaging.publicLivechatGlobal.messages.length !== 0) {
             const lastMessage = this.messaging.publicLivechatGlobal.lastMessage;
-            const stepAnswers = lastMessage.legacyPublicLivechatMessage.getChatbotStepAnswers();
-            if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.legacyPublicLivechatMessage.getChatbotStepAnswerId()) {
+            const stepAnswers = lastMessage.widget.getChatbotStepAnswers();
+            if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.widget.getChatbotStepAnswerId()) {
                 this._chatbotDisableInput(_t('Select an option above'));
             }
         }
@@ -419,12 +419,12 @@ const _t = core._t;
             // but here we only care about the very last one (the current step of the script)
             // reversing the this.messages variable seems like a bad idea because it could have
             // bad implications for other flows (as the reverse is in-place, not in a copy)
-            if (message.legacyPublicLivechatMessage.getChatbotStepId() === stepId) {
+            if (message.widget.getChatbotStepId() === stepId) {
                 stepMessage = message;
             }
         }
         const messageId = stepMessage.id;
-        stepMessage.legacyPublicLivechatMessage.setChatbotStepAnswerId(selectedAnswer);
+        stepMessage.widget.setChatbotStepAnswerId(selectedAnswer);
         this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_selected_answer_id = selectedAnswer;
         this._renderMessages();
         this.messaging.publicLivechatGlobal.chatbot.saveSession();
