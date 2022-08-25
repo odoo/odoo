@@ -23,6 +23,18 @@ registerModel({
     },
     recordMethods: {
         /**
+         * Disable the input allowing the user to type.
+         * This is typically used when we want to force him to click on one of the chatbot options.
+         *
+         * @private
+         */
+        disableInput(disableText) {
+            this.legacyChatWindow.$('.o_composer_text_field')
+                .prop('disabled', true)
+                .addClass('text-center fst-italic bg-200')
+                .val(disableText);
+        },
+        /**
          * @private
          * @returns {string}
          */

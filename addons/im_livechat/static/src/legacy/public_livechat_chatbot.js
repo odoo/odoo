@@ -88,19 +88,6 @@ const _t = core._t;
     },
 
     /**
-     * Disable the input allowing the user to type.
-     * This is typically used when we want to force him to click on one of the chatbot options.
-     *
-     * @private
-     */
-    _chatbotDisableInput(disableText) {
-        this.messaging.publicLivechatGlobal.chatWindow.legacyChatWindow.$('.o_composer_text_field')
-            .prop('disabled', true)
-            .addClass('text-center fst-italic bg-200')
-            .val(disableText);
-    },
-
-    /**
      * @private
      */
     _chatbotEnableInput() {
@@ -281,7 +268,7 @@ const _t = core._t;
             const lastMessage = this.messaging.publicLivechatGlobal.lastMessage;
             const stepAnswers = lastMessage.legacyPublicLivechatMessage.getChatbotStepAnswers();
             if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.legacyPublicLivechatMessage.getChatbotStepAnswerId()) {
-                this._chatbotDisableInput(_t('Select an option above'));
+                this.messaging.publicLivechatGlobal.chatWindow.disableInput(_t('Select an option above'));
             }
         }
     },

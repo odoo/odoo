@@ -74,7 +74,7 @@ registerModel({
             if (this.messaging.publicLivechatGlobal.livechatButtonView.isTypingTimeout) {
                 clearTimeout(this.messaging.publicLivechatGlobal.livechatButtonView.isTypingTimeout);
             }
-            this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotDisableInput('');
+            this.messaging.publicLivechatGlobal.chatWindow.disableInput('');
             this.messaging.publicLivechatGlobal.livechatButtonView.update({
                 isTypingTimeout: setTimeout(
                     () => {
