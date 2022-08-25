@@ -329,7 +329,9 @@ export async function triggerScroll(
     const isScrollable =
         (target.scrollHeight > target.clientHeight && target.clientHeight > 0) ||
         (target.scrollWidth > target.clientWidth && target.clientWidth > 0);
-    if (!isScrollable && !canPropagate) return;
+    if (!isScrollable && !canPropagate) {
+        return;
+    }
     if (isScrollable) {
         const canScrollFrom = {
             left:
@@ -351,7 +353,9 @@ export async function triggerScroll(
         target.scrollTo(scrollCoordinates);
         target.dispatchEvent(new UIEvent("scroll"));
         await nextTick();
-        if (!canPropagate || !Object.entries(coordinates).length) return;
+        if (!canPropagate || !Object.entries(coordinates).length) {
+            return;
+        }
     }
     target.parentElement
         ? triggerScroll(target.parentElement, coordinates)
@@ -672,6 +676,25 @@ function getDifferentParents(n1, n2) {
  * @returns {Promise<void>}
  */
 export async function dragAndDrop(from, to, position) {
+    const dropFunction = drag(from, to, position);
+    await dropFunction();
+}
+
+/**
+ * Helper performing a drag.
+ *
+ * - the 'from' selector is used to determine the element on which the drag will
+ *  start;
+ * - the 'to' selector will determine the element on which the dragged element will be
+ * moved.
+ *
+ * Returns a drop function
+ * @param {Element|string} from
+ * @param {Element|string} to
+ * @param {string} [position] "top" | "bottom" | "left" | "right"
+ * @returns {function: Promise<void>}
+ */
+export function drag(from, to, position) {
     const fixture = getFixture();
     from = from instanceof Element ? from : fixture.querySelector(from);
     to = to instanceof Element ? to : fixture.querySelector(to);
@@ -715,7 +738,14 @@ export async function dragAndDrop(from, to, position) {
     for (const target of getDifferentParents(from, to)) {
         triggerEvent(target, null, "mouseenter", toPos);
     }
-    await triggerEvent(from, null, "mouseup", toPos);
+
+    return function () {
+        return drop(from, toPos);
+    };
+}
+
+function drop(from, toPos) {
+    return triggerEvent(from, null, "mouseup", toPos);
 }
 
 export async function clickDropdown(target, fieldName) {
