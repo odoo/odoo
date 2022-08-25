@@ -173,16 +173,13 @@ class CarPooling(models.Model):
     def book_or_unbook(self):
         for record in self:
             if self.env.user in record.passenger_ids.passenger:
-                query = "SELECT * FROM car_pooling_passenger where passenger = " + str(self.env.user.id) + " and trip_id =" + str(record.id)
-                self.env.cr.execute(query)
-                result = self.env.cr.fetchall()
-                if result[0][3] == "accepted":
-                    msg = "You cannot unbook the trip because the book has been accepted by the driver. Contact " + str(record.driver.name) + " at " + str(record.driver.email) + " or by " + str(record.driver.phone_number) + " to ask booking refusal."
-                    raise UserError(msg)
-                query_exc = "delete from car_pooling_passenger where passenger = " + str(self.env.user.id) + " and trip_id = " + str(record.id)
+                get_passenger_trip=self.env['car.pooling.passenger'].search([('passenger_uid', '=', str(self.env.user.id)), ('trip_id_id', '=', str(record.id))])
+                if get_passenger_trip.status=="accepted":
+                     msg="You cannot unbook the trip because the book has been accepted by the driver. Contact " + str(record.driver.name) + " at " + str(record.driver.email) + " or by " + str(record.driver.phone_number) + " to ask booking refusal."
+                     raise UserError(msg)
+                get_passenger_trip.unlink()
             else:
-                query_exc = "INSERT INTO car_pooling_passenger (passenger, trip_id, trip_date, trip_driver, is_round_trip) VALUES ("+ str(self.env.user.id) +", "+ str(record.id)+ ", '" + str(record.departure_date) + "', '"+ str(record.driver.name) + "', " +str(record.is_round_trip)+");"
-            self.env.cr.execute(query_exc)
+                add_to_passenger = self.env['car.pooling.passenger'].create({'passenger':self.env.user.id,'trip_id':record.id, 'trip_date':record.departure_date,'trip_driver':record.driver.name,'is_round_trip':record.is_round_trip})
         return True
 
     _sql_constraints = [
@@ -216,8 +213,21 @@ class CarPoolingPassenger(models.Model):
     _name = "car.pooling.passenger"
     _description = "Passenger"
     _order = "id desc"
+
     passenger = fields.Many2one('res.users', required=True, readonly=True, string='Passenger', index=True, default=lambda self: self.env.user)
+    passenger_uid= fields.Integer(compute="_get_passenger_uid", store=True)
+    @api.depends('passenger')
+    def _get_passenger_uid(self):
+        for record in self:
+            record.passenger_uid = record.passenger.id
+
     trip_id = fields.Many2one('car.pooling', string="Trip", ondelete='cascade')
+    trip_id_id=fields.Integer(compute="_get_trip_uid", store=True)
+    @api.depends('trip_id')
+    def _get_trip_uid(self):
+        for record in self:
+            record.trip_id_id = record.trip_id.id
+
     status = fields.Selection(string="Status", selection=[("accepted", "Accepted"), ("refused", "Refused")], help="The status of the trip offer")
     accept_count = fields.Integer(readonly=True, string="Number of Refusals")
     refuse_count = fields.Integer(readonly=True, string="Number of Acceptances")
