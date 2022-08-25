@@ -6,7 +6,11 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from '@web/core/registry';
 
 const { EventBus } = owl;
-const NO_POPUP_CLOSE_CODES = [WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED, WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT];
+const NO_POPUP_CLOSE_CODES = [
+    WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED,
+    WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT,
+    WEBSOCKET_CLOSE_CODES.TRY_LATER,
+];
 
 /**
  * Communicate with a SharedWorker in order to provide a single websocket
