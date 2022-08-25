@@ -12542,4 +12542,24 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
         assert.verifySteps(["write partner", "read partner"]);
     });
+
+    QUnit.test("can't select a record in a one2many", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                    <form>
+                        <field name="turtles">
+                            <tree>
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+            resId: 1,
+        });
+
+        await triggerEvents(target, ".o_data_row", ["touchstart", "touchend"]);
+        assert.containsNone(target, ".o_data_row_selected");
+    });
 });
