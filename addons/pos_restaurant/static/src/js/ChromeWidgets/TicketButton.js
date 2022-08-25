@@ -6,6 +6,29 @@ odoo.define('pos_restaurant.TicketButton', function (require) {
 
     const PosResTicketButton = (TicketButton) =>
         class extends TicketButton {
+            async onClick() {
+                if (this.env.pos.config.iface_floorplan && !this.props.isTicketScreenShown && !this.env.pos.table) {
+                    await this._syncAllFromServer();
+                    this.showScreen('TicketScreen');
+                } else {
+                    super.onClick();
+                }
+            }
+            async _syncAllFromServer() {
+                const pos = this.env.pos;
+                try {
+                    for (const floor of pos.floors) {
+                        for (const table of floor.tables) {
+                            await pos.replace_table_orders_from_server(table);
+                        }
+                    }
+                } catch (_error) {
+                    await this.showPopup('ErrorPopup', {
+                        title: this.env._t('Connection Error'),
+                        body: this.env._t('Due to a connection error, the orders are not synchronized.'),
+                    });
+                }
+            }
             /**
              * If no table is set to pos, which means the current main screen
              * is floor screen, then the order count should be based on all the orders.
