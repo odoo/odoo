@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<odoo>
+
+<record id="event_pages_tree_view" model="ir.ui.view">
+    <field name="name">Event Pages Tree</field>
+    <field name="model">event.event</field>
+    <field name="priority">99</field>
+    <field name="mode">primary</field>
+    <field name="inherit_id" ref="event.view_event_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr="//tree" position="attributes">
+            <attribute name="js_class">website_pages_list</attribute>
+            <attribute name="type">object</attribute>
+            <attribute name="action">open_website_url</attribute>
+        </xpath>
+
+        <field name="name" position="after">
+            <field name="website_url"/>
+        </field>
+        <xpath expr="//tree">
+            <field name="is_seo_optimized"/>
+            <field name="is_published"/>
+
+            <field name="website_id" position="move"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="action_event_pages_list" model="ir.actions.act_window">
+    <field name="name">Event Pages</field>
+    <field name="res_model">event.event</field>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="event_pages_tree_view"/>
+    <field name="context">{'create_action': 'website_event.event_event_action_add'}</field>
+</record>
+
+<menuitem id="menu_event_pages"
+    parent="website.menu_content"
+    sequence="40"
+    name="Events"
+    action="action_event_pages_list"/>
+
+</odoo>
