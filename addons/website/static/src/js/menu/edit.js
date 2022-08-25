@@ -125,7 +125,9 @@ var EditPageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         };
         if (!this.wysiwyg.isDirty()) {
             destroy();
-            window.location.reload();
+            if (reload) {
+                window.location.reload();
+            }
             return;
         }
         this.wysiwyg.__edition_will_stopped_already_done = true; // TODO adapt in master, see above
