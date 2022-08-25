@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 import io
 import json
 import logging
@@ -8,17 +9,20 @@ import os
 import re
 import subprocess
 import tempfile
+import urllib.parse
 
 from collections import OrderedDict
 from collections.abc import Iterable
 from contextlib import closing
 
+import werkzeug
 from lxml import etree
 from markupsafe import Markup
 from PIL import Image, ImageFile
 from PyPDF2 import PdfFileWriter, PdfFileReader, utils
 from reportlab.graphics.barcode import createBarcodeDrawing
 
+import odoo
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, AccessError
 from odoo.http import request
@@ -384,6 +388,54 @@ class IrActionsReport(models.Model):
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 
+    def _inline_assets(self, document):
+        """
+        Find and replace urls to local assets (css/js/img) by data urls
+        to prevent wkhtmltopdf from requesting us as it would require
+        an extra http worker
+        """
+        root = lxml.html.fromstring(document)
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base_url', '')
+        base_netloc = urllib.parse.urlparse(base_url).netloc
+
+        wsgi_client = werkzeug.test.Client(
+            application=odoo.http.root,
+            response_wrapper=werkzeug.wrappers.Response,
+        )
+        if request and request.db:
+            wsgi_client.set_cookie('session_id', 'request.session.sid', httponly=True)
+
+        for node in root.xpath('//link[@href] | //script[@src] | //img[@src]'):
+            attr = 'href' if node.tag == 'link' else 'src'
+            urlstr = node.attrib[attr]
+            url = urllib.parse.urlparse(urlstr)
+            if url.scheme not in ('http', 'https', ''):
+                _logger.debug("skipped %s..., protocol not supported", urlstr[:32])
+                continue
+            if url.netloc not in (base_netloc, ''):
+                _logger.debug("skipped %s, external url", urlstr)
+                continue
+
+            # Request the document right away using this same worker
+            response = wsgi_client.get(f'{url.path}?{url.query}', follow_redirects=True)
+            if response.status_code not in (200, 204):
+                if config['test_enable']:
+                    # wkhtmltopdf would make an extra http request to
+                    # get the file. That request would timeout as there
+                    # is no extra worker available during tests
+                    # crash here with a nice message instead
+                    werkzeug.exceptions.abort(response.status_code, urlstr)
+                _logger.warning("couldn't download [%s] %s, skipped", response.status_code, url.path)
+                continue
+
+            node.attrib[attr] = 'data:{content_type};base64,{content}'.format(
+                content_type=response.headers['Content-Type'].replace(' ', ''),
+                content=base64.b64encode(response.get_data()).decode()
+            )
+            _logger.debug("inlined %s", url.path)
+
+        return lxml.html.tostring(root, encoding='unicode')
+
     @api.model
     def _run_wkhtmltopdf(
             self,
@@ -419,12 +471,14 @@ class IrActionsReport(models.Model):
         files_command_args = []
         temporary_files = []
         if header:
+            header = self._inline_assets(header)
             head_file_fd, head_file_path = tempfile.mkstemp(suffix='.html', prefix='report.header.tmp.')
             with closing(os.fdopen(head_file_fd, 'wb')) as head_file:
                 head_file.write(header.encode())
             temporary_files.append(head_file_path)
             files_command_args.extend(['--header-html', head_file_path])
         if footer:
+            footer = self._inline_assets(footer)
             foot_file_fd, foot_file_path = tempfile.mkstemp(suffix='.html', prefix='report.footer.tmp.')
             with closing(os.fdopen(foot_file_fd, 'wb')) as foot_file:
                 foot_file.write(footer.encode())
@@ -433,6 +487,7 @@ class IrActionsReport(models.Model):
 
         paths = []
         for i, body in enumerate(bodies):
+            body = self._inline_assets(body)
             prefix = '%s%d.' % ('report.body.tmp.', i)
             body_file_fd, body_file_path = tempfile.mkstemp(suffix='.html', prefix=prefix)
             with closing(os.fdopen(body_file_fd, 'wb')) as body_file:
