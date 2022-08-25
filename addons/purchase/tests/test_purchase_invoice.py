@@ -467,3 +467,61 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         ]
         for line in invoice.invoice_line_ids.sorted('sequence'):
             self.assertEqual(line.purchase_order_id, expected_purchase.pop(0))
+
+    def test_on_change_quantity_price_unit(self):
+        """ When a user changes the quantity of a product in a purchase order it
+        should only update the unit price if PO line has no invoice line. """
+
+        supplierinfo_vals = {
+            'name': self.partner_a.id,
+            'price': 10.0,
+            'min_qty': 1,
+            "product_id": self.product_order.id,
+            "product_tmpl_id": self.product_order.product_tmpl_id.id,
+        }
+
+        supplierinfo = self.env["product.supplierinfo"].create(supplierinfo_vals)
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line_form:
+            po_line_form.product_id = self.product_order
+            po_line_form.product_qty = 1
+        po = po_form.save()
+        po_line = po.order_line[0]
+
+        self.assertEqual(10.0, po_line.price_unit, "Unit price should be set to 10.0 for 1 quantity")
+
+        # Ensure price unit is updated when changing quantity on a un-confirmed PO
+        supplierinfo.write({'min_qty': 2, 'price': 20.0})
+        po_line.write({'product_qty': 2})
+        po_line._onchange_quantity()
+        self.assertEqual(20.0, po_line.price_unit, "Unit price should be set to 20.0 for 2 quantity")
+
+        po.button_confirm()
+
+        # Ensure price unit is updated when changing quantity on a confirmed PO
+        supplierinfo.write({'min_qty': 3, 'price': 30.0})
+        po_line.write({'product_qty': 3})
+        po_line._onchange_quantity()
+        self.assertEqual(30.0, po_line.price_unit, "Unit price should be set to 30.0 for 3 quantity")
+
+        po.action_create_invoice()
+
+        # Ensure price unit is NOT updated when changing quantity on PO confirmed and line linked to an invoice line
+        supplierinfo.write({'min_qty': 4, 'price': 40.0})
+        po_line.write({'product_qty': 4})
+        po_line._onchange_quantity()
+        self.assertEqual(30.0, po_line.price_unit, "Unit price should be set to 30.0 for 3 quantity")
+
+        with po_form.order_line.new() as po_line_form:
+            po_line_form.product_id = self.product_order
+            po_line_form.product_qty = 1
+        po = po_form.save()
+        po_line = po.order_line[1]
+
+        self.assertEqual(235.0, po_line.price_unit, "Unit price should be reset to 235.0 since the supplier supplies minimum of 4 quantities")
+
+        # Ensure price unit is updated when changing quantity on PO confirmed and line NOT linked to an invoice line
+        po_line.write({'product_qty': 4})
+        po_line._onchange_quantity()
+        self.assertEqual(40.0, po_line.price_unit, "Unit price should be set to 40.0 for 4 quantity")
