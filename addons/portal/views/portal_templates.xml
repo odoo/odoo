@@ -187,6 +187,8 @@
                 <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
                 <h3>Documents</h3>
                 <div class="o_portal_docs list-group">
+                    <div class="o_portal_doc_spinner spinner-border text-o-color-2 align-self-center mt-5"/>
+                    <p class="o_portal_no_doc_message d-none">No Documents to display</p>
                 </div>
             </div>
             <div class="oe_structure" id="oe_structure_portal_my_home_2"/>
@@ -194,7 +196,7 @@
     </template>
 
     <template id="portal_docs_entry" name="My Portal Docs Entry">
-        <a t-att-href="url" t-att-title="title" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+        <a t-att-href="url" t-att-title="title" class="list-group-item list-group-item-action d-flex align-items-center justify-content-between d-none">
             <t t-esc="title"/>
             <t t-if='count'>
                 <span class="badge text-bg-secondary rounded-pill" t-esc="count"/>

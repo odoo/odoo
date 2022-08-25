@@ -103,6 +103,7 @@ You could use this simplified accounting in case you work with an (external) acc
         ],
         'web.assets_frontend': [
             'account/static/src/js/account_portal_sidebar.js',
+            'account/static/src/js/account_portal.js',
         ],
         'web.assets_tests': [
             'account/static/tests/tours/**/*',
