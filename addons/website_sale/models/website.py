@@ -46,7 +46,8 @@ class Website(models.Model):
             return False
 
     cart_recovery_mail_template_id = fields.Many2one('mail.template', string='Cart Recovery Email', default=_default_recovery_mail_template, domain="[('model', '=', 'sale.order')]")
-    cart_abandoned_delay = fields.Float("Abandoned Delay", default=1.0)
+    cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
+    send_abandoned_cart_email = fields.Boolean(string="Send email to customers who abandoned their cart.")
 
     shop_ppg = fields.Integer(default=20, string="Number of products in the grid on the shop")
     shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
@@ -516,6 +517,27 @@ class Website(models.Model):
         }
         return spacing_map.get(self.product_page_image_spacing) + ' ' +\
                 columns_map.get(self.product_page_grid_columns)
+
+    @api.model
+    def _send_abandoned_cart_email(self):
+        for website in self.search([]):
+            if not website.send_abandoned_cart_email:
+                continue
+            all_abandoned_carts = self.env['sale.order'].search([
+                ('is_abandoned_cart', '=', True),
+                ('cart_recovery_email_sent', '=', False),
+                ('website_id', '=', website.id),
+            ])
+            if not all_abandoned_carts:
+                continue
+
+            abandoned_carts = all_abandoned_carts._filter_can_send_abandoned_cart_mail()
+            # Mark abandoned carts that failed the filter as sent to avoid rechecking them again and again.
+            (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
+            for sale_order in abandoned_carts:
+                template = self.env.ref('website_sale.mail_template_sale_cart_recovery')
+                template.send_mail(sale_order.id, email_values=dict(email_to=sale_order.partner_id.email))
+                sale_order.cart_recovery_email_sent = True
 
 class WebsiteSaleExtraField(models.Model):
     _name = 'website.sale.extra.field'

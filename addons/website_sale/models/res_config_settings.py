@@ -34,8 +34,8 @@ class ResConfigSettings(models.TransientModel):
 
     cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email', domain="[('model', '=', 'sale.order')]",
                                                   related='website_id.cart_recovery_mail_template_id', readonly=False)
-    cart_abandoned_delay = fields.Float("Abandoned Delay", help="Number of hours after which the cart is considered abandoned.",
-                                        related='website_id.cart_abandoned_delay', readonly=False)
+    cart_abandoned_delay = fields.Float(string="Send After", related='website_id.cart_abandoned_delay', readonly=False)
+    send_abandoned_cart_email = fields.Boolean('Abandoned Email', related='website_id.send_abandoned_cart_email', readonly=False)
     add_to_cart_action = fields.Selection(related='website_id.add_to_cart_action', readonly=False)
     terms_url = fields.Char(compute='_compute_terms_url', string="URL", help="A preview will be available at this URL.")
 
@@ -146,4 +146,14 @@ class ResConfigSettings(models.TransientModel):
             'res_model': 'mail.template',
             'view_id': False,
             'view_mode': 'tree,form',
+        }
+
+    def action_open_abandoned_cart_mail_template(self):
+        return {
+            'name': _('Customize Email Templates'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mail.template',
+            'view_id': False,
+            'view_mode': 'form',
+            'res_id': 15
         }
