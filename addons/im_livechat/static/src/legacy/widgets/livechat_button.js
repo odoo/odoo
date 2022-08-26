@@ -9,7 +9,6 @@ const LivechatButton = Widget.extend({
     custom_events: {
         'close_chat_window': '_onCloseChatWindow',
         'post_message_chat_window': '_onPostMessageChatWindow',
-        'save_chat_window': '_onSaveChatWindow',
         'updated_typing_partners': '_onUpdatedTypingPartners',
         'updated_unread_counter': '_onUpdatedUnreadCounter',
     },
@@ -128,14 +127,6 @@ const LivechatButton = Widget.extend({
             reason.event.preventDefault();
             return this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData); // try again just in case
         }
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onSaveChatWindow(ev) {
-        ev.stopPropagation();
-        utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60);
     },
     /**
      * @private

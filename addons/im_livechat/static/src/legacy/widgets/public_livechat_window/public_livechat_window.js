@@ -4,6 +4,8 @@ import config from 'web.config';
 import { _t, qweb } from 'web.core';
 import Widget from 'web.Widget';
 
+import { set_cookie, unaccent } from 'web.utils';
+
 /**
  * This is the widget that represent windows of livechat in the frontend.
  *
@@ -125,7 +127,7 @@ const PublicLivechatWindow = Widget.extend({
             folded = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded;
         }
         this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: folded });
-        this.trigger_up('save_chat_window');
+        set_cookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60);
         this.updateVisualFoldState();
     },
     /**
