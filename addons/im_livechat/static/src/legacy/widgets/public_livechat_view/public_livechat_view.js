@@ -136,19 +136,7 @@ const PublicLivechatView = Widget.extend({
                 prevMessage.getType() !== 'comment' ||
                 message.getType() !== 'comment' ||
                 // from a different author
-                (prevMessage.getAuthorID() !== message.getAuthorID()) ||
-                (
-                    // messages are linked to a document thread
-                    (
-                        prevMessage.isLinkedToDocumentThread() &&
-                        message.isLinkedToDocumentThread()
-                    ) &&
-                    (
-                        // are from different documents
-                        prevMessage.getDocumentModel() !== message.getDocumentModel() ||
-                        prevMessage.getDocumentID() !== message.getDocumentID()
-                    )
-                )
+                (prevMessage.getAuthorID() !== message.getAuthorID())
             ) {
                 displayAuthorMessages[message.getID()] = true;
             } else {

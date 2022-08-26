@@ -179,9 +179,6 @@
                     </t>
 
                     <span t-if="!message.isVisitorTheAuthor()" class="o_PublicLivechatMessage_headerDatePrefix">-</span> <small class="o_mail_timestamp o_PublicLivechatMessage_headerDate" t-att-title="message.getDate().format(dateFormat)"><t t-esc="message.getTimeElapsed()"/></small>
-                    <t t-if="message.isLinkedToDocumentThread() and options.displayDocumentLinks">
-                        <small>on</small> <a t-att-href="message.getURL()" t-att-data-oe-model="message.getDocumentModel()" t-att-data-oe-id="message.getDocumentID()" class="o_document_link"><t t-esc="message.getDocumentName()"/></a>
-                    </t>
                     <span t-attf-class="o_thread_icons">
                     </span>
                 </p>

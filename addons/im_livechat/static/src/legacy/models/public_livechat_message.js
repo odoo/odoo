@@ -204,15 +204,6 @@ const PublicLivechatMessage = Class.extend({
         return this._isDiscussion;
     },
     /**
-     * State whether this message is linked to a document thread
-     * By default, messages are not linked to a document thread.
-     *
-     * @return {boolean}
-     */
-    isLinkedToDocumentThread() {
-        return false;
-    },
-    /**
      * State whether this message is a note (i.e. a message from "Log note")
      *
      * @return {boolean}
