@@ -12,6 +12,7 @@ import {getAdjacentPreviousSiblings, getAdjacentNextSiblings} from '../../../lib
 import 'web._field_registry';
 
 var _lt = core._lt;
+var _t = core._t;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
 var QWeb = core.qweb;
 
@@ -552,13 +553,19 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _onLoadWysiwyg: function () {
         var $button = this._renderTranslateButton();
-        $button.css({
-            'font-size': '15px',
-            position: 'absolute',
-            right: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
-            top: '5px',
-        });
-        this.$el.append($button);
+        var $container;
+        if (this.nodeOptions.cssEdit && this.wysiwyg) {
+            $container = this.wysiwyg.$iframeBody.find('.email_designer_top_actions');
+        } else {
+            $container = this.$el;
+            $button.css({
+                'font-size': '15px',
+                position: 'absolute',
+                top: '5px',
+                [_t.database.parameters.direction === 'rtl' ? 'left' : 'right']: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
+            });
+        }
+        $container.append($button);
         if (odoo.debug && this.nodeOptions.codeview) {
             const $codeviewButtonToolbar = $(`
                 <div id="codeview-btn-group" class="btn-group">
