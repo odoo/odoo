@@ -66,7 +66,7 @@ const _t = core._t;
     _prepareGetSessionParameters() {
         const parameters = this._super(...arguments);
 
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.isChatbot) {
+        if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
             parameters.chatbot_script_id = this.messaging.publicLivechatGlobal.chatbot.scriptId;
         }
 
@@ -101,7 +101,7 @@ const _t = core._t;
      * @private
      */
     _sendWelcomeMessage() {
-        if (this.messaging.publicLivechatGlobal.livechatButtonView.isChatbot) {
+        if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
             this._sendWelcomeChatbotMessage(
                 0,
                 this.messaging.publicLivechatGlobal.chatbot.state === 'welcome' ? 0 : this.messaging.publicLivechatGlobal.chatbot.messageDelay,

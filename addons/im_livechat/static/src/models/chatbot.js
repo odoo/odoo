@@ -363,6 +363,28 @@ registerModel({
         },
         /**
          * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsActive() {
+            if (this.messaging.publicLivechatGlobal.isTestChatbot) {
+                return true;
+            }
+            if (this.messaging.publicLivechatGlobal.rule && this.messaging.publicLivechatGlobal.rule.chatbot) {
+                return true;
+            }
+            if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
+                return true;
+            }
+            if (this.state === 'welcome') {
+                return true;
+            }
+            if (this.localStorageState) {
+                return true;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsExpectingUserInput() {
@@ -553,6 +575,10 @@ registerModel({
         }),
         hasRestartButton: attr({
             compute: '_computeHasRestartButton',
+            default: false,
+        }),
+        isActive: attr({
+            compute: '_computeIsActive',
             default: false,
         }),
         isExpectingUserInput: attr({
