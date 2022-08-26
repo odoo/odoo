@@ -719,3 +719,69 @@ class TestSaleService(TestCommonSaleTimesheet):
         invoice.action_post()
 
         self.assertEqual(invoice, timesheet.timesheet_invoice_id)
+
+    def test_prevent_update_project_allocated_hours_after_confirming_quotation(self):
+        """ Test allocated hours in the project linked to a SO is not automatically updated
+
+            When the project is linked to a SO (confirmed quotation) the allocated
+            hours should not be recomputed when the quantity ordered of a product
+            is changed in the SO.
+
+            Test Cases:
+            ==========
+            1) Create a SOL on a SO
+            2) Confirm the SO
+            3) Store the project allocated hour
+            4) Modify the SOL product qty
+            5) Check the project allocated hour is modify
+        """
+        order_line = self.env['sale.order.line'].create({
+            'order_id': self.sale_order.id,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 8,
+        })
+        self.sale_order.action_confirm()
+        allocated_hours = order_line.project_id.allocated_hours
+        order_line.product_uom_qty = 10
+        self.assertEqual(allocated_hours, order_line.project_id.allocated_hours, 'Project allocated hours should not be changed.')
+
+    def test_different_uom_sol_to_hours_when_confrim_sale_order(self):
+        """ Test check whether the project allocated hours are set correctly or not when the product is different in the sale order line.
+
+            The conversion to time should be processed as follows :
+                H : qty = uom_qty [Hours]
+                D : qty = uom_qty * 8 [Hours]
+                U : qty =  uom_qty [Hours]
+                Other : qty = 0
+
+            Test Cases:
+            ==========
+            1) Create a 4 SOL on a SO With different UOM
+            2) Confirm the SO
+            3) Check the project allocated hour is correctly set
+        """
+
+        self.env['sale.order.line'].create([{
+            'order_id': self.sale_order.id,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 2,
+            'product_uom': self.env.ref('uom.product_uom_day').id,
+        }, {
+            'order_id': self.sale_order.id,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 8,
+            'product_uom': self.env.ref('uom.product_uom_hour').id,
+        }, {
+            'order_id': self.sale_order.id,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 1,
+            'product_uom': self.env.ref('uom.product_uom_dozen').id,
+        }, {
+            'order_id': self.sale_order.id,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 6,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
+        }])
+        self.sale_order.action_confirm()
+        project_allocated_hours = self.sale_order.order_line[0].project_id.allocated_hours
+        self.assertEqual(30, project_allocated_hours, 'current set the project allocated hours.')
