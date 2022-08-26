@@ -24,14 +24,13 @@ registerModel({
          * @param {Object} [options={}]
          */
         addMessage(data, options) {
-            const messageWidget = new PublicLivechatMessage(this, this.messaging, data);
-
             const hasAlreadyMessage = _.some(this.messaging.publicLivechatGlobal.messages, function (msg) {
-                return messageWidget.getID() === msg.id;
+                return data.id === msg.id;
             });
             if (hasAlreadyMessage) {
                 return;
             }
+            const messageWidget = new PublicLivechatMessage(this, this.messaging, data);
             const message = this.messaging.models['PublicLivechatMessage'].insert({
                 data,
                 id: data.id,
