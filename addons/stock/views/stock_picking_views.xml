@@ -94,7 +94,7 @@
                            decoration-success="state == 'done'"
                            decoration-warning="state not in ('draft','cancel','done','assigned')"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
-                    <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
+                    <field name="json_popover" widget="stock_rescheduling_popover" nolabel="1" attrs="{'invisible': [('json_popover', '=', False)]}"/>
                 </tree>
             </field>
         </record>
