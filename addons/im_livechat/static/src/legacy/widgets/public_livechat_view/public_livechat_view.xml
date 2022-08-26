@@ -195,24 +195,6 @@
             <t t-call="im_livechat.legacy.mail.MessagesSeparator"/>
         </t>
     </t>
-
-    <!--
-        @param {Object[]} notifications: list of notifications
-           A notification is an object with at least the following keys:
-           {notification_status, partner_name}
-    -->
-    <t t-name="im_livechat.legacy.mail.widget.Thread.Message.MailTooltip">
-        <div t-foreach="notifications" t-as="notification">
-            <span name="notification_status" class="d-inline-block text-center o_thread_tooltip_icon">
-                <i t-if="notification.notification_status === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
-                <i t-if="notification.notification_status === 'bounce'" class='fa fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
-                <i t-if="notification.notification_status === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
-                <i t-if="notification.notification_status === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
-                <i t-if="notification.notification_status === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
-            </span>
-            <span name="partner_name" t-esc="notification.partner_name"/>
-        </div>
-    </t>
     
     <!--
         @param {mail.model.Message} message
