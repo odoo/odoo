@@ -1702,6 +1702,11 @@ export class ListRenderer extends Component {
 }
 
 ListRenderer.template = "web.ListRenderer";
+
+ListRenderer.rowsTemplate = "web.ListRenderer.Rows";
+ListRenderer.recordRowTemplate = "web.ListRenderer.RecordRow";
+ListRenderer.groupRowTemplate = "web.ListRenderer.GroupRow";
+
 ListRenderer.components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager };
 ListRenderer.props = [
     "activeActions?",
