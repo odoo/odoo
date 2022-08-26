@@ -166,15 +166,6 @@ const PublicLivechatMessage = Class.extend({
         return 'fa fa-envelope';
     },
     /**
-     * Gets the list of notifications of this message, in no specific order.
-     * By default messages do not have notifications.
-     *
-     * @returns {Object[]}
-     */
-    getNotifications() {
-        return [];
-    },
-    /**
      * Gets the text to display next to the notification icon.
      *
      * @returns {string}
@@ -213,7 +204,7 @@ const PublicLivechatMessage = Class.extend({
      * @returns {boolean}
      */
     hasNotifications() {
-        return this.getNotifications().length > 0;
+        return false;
     },
     /**
      * States whether this message has notifications that are in error.
@@ -221,10 +212,7 @@ const PublicLivechatMessage = Class.extend({
      * @returns {boolean}
      */
     hasNotificationsError() {
-        return this.getNotifications().some(notif =>
-            notif.notification_status === 'exception' ||
-            notif.notification_status === 'bounce'
-        );
+        return false;
     },
     /**
      * State whether this message is empty
