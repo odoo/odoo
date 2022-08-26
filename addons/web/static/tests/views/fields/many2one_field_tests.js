@@ -3103,8 +3103,8 @@ QUnit.module("Fields", (hooks) => {
 
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".modal-footer button")),
-            ["Cancel"],
-            "Only the cancel button is present in modal"
+            ["Close"],
+            "Only the close button is present in modal"
         );
     });
 

@@ -66,6 +66,9 @@ export class DomainField extends Component {
             resModel: this.getResModel(this.props),
             domain: this.getDomain(this.props.value).toList(this.getContext(this.props)) || [],
             context: this.getContext(this.props) || {},
+        }, {
+            // The counter is reloaded "on close" because some modal allows to modify data that can impact the counter
+            onClose: () => this.loadCount(this.props)
         });
     }
     get isValidDomain() {
