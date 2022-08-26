@@ -198,12 +198,6 @@
                         <div t-attf-class="o_PublicLivechatMessage_background {{ message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '' }} {{ message.isOperatorTheAuthor() ? 'o-isOperatorTheAuthor' : '' }}"/>
                         <div class="o_thread_message_content o_PublicLivechatMessage_content">
                             <t t-out="message.getBody()"/>
-                            <t t-if="message.hasTrackingValues()">
-                                <t t-if="message.hasSubtypeDescription()">
-                                    <p><t t-esc="message.getSubtypeDescription()"/></p>
-                                </t>
-                                <t t-call="im_livechat.legacy.mail.widget.Thread.MessageTracking"/>
-                            </t>
                         </div>
                     </div>
                 </div>

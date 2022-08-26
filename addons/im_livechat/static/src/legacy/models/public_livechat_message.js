@@ -250,8 +250,7 @@ const PublicLivechatMessage = Class.extend({
      * @return {boolean}
      */
     isEmpty() {
-        return !this.hasTrackingValues() &&
-        !this.getBody();
+        return !this.getBody();
     },
     /**
      * By default, messages do not have any subtype description
@@ -259,15 +258,6 @@ const PublicLivechatMessage = Class.extend({
      * @return {boolean}
      */
     hasSubtypeDescription() {
-        return false;
-    },
-    /**
-     * State whether this message contains some tracking values
-     * By default, messages do not have any tracking values.
-     *
-     * @return {boolean}
-     */
-    hasTrackingValues() {
         return false;
     },
     /**
