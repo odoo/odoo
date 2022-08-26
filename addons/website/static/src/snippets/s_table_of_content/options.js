@@ -23,6 +23,14 @@ options.registry.TableOfContent = options.Class.extend({
     /**
      * @override
      */
+    onRemove() {
+        this._disposeScrollSpy();
+        const exception = (tocEl) => tocEl === this.$target[0];
+        this._activateScrollSpy(exception);
+    },
+    /**
+     * @override
+     */
     onClone: function () {
         this._generateNav();
     },
@@ -32,10 +40,37 @@ options.registry.TableOfContent = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @param  {Function} exception
+     */
+    _activateScrollSpy(exception) {
+        for (const tocEl of this.ownerDocument.querySelectorAll('#wrapwrap .s_table_of_content')) {
+            if (exception(tocEl)) {
+                continue;
+            }
+            this.trigger_up('widgets_start_request', {
+                $target: $(tocEl),
+                editableMode: true,
+            });
+        }
+    },
+    /**
+     * @private
+     */
+    _disposeScrollSpy() {
+        const scrollingEl = $().getScrollingElement(this.ownerDocument)[0];
+        const scrollSpyInstance =
+            this.$target[0].ownerDocument.defaultView.ScrollSpy.getInstance(scrollingEl);
+        if (scrollSpyInstance) {
+            scrollSpyInstance.dispose();
+        }
+    },
+    /**
      * @private
      */
     _generateNav: function (ev) {
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
+        // We dispose the scrollSpy because the navbar will be updated.
+        this._disposeScrollSpy();
         const $nav = this.$target.find('.s_table_of_content_navbar');
         const $headings = this.$target.find(this.targetedElements);
         $nav.empty();
@@ -49,7 +84,8 @@ options.registry.TableOfContent = options.Class.extend({
             $el.attr('id', id);
             $el[0].dataset.anchor = 'true';
         });
-        $nav.find('a:first').addClass('active');
+        const exception = (tocEl) => !tocEl.querySelector('.s_table_of_content_navbar a');
+        this._activateScrollSpy(exception);
     },
 });
 
