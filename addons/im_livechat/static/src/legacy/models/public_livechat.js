@@ -44,8 +44,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
          *
          * Also listens on some internal events of the thread:
          *
-         * - 'message_added': when a message is added, remove the author in the
-         *     typing partners.
          * - 'message_posted': when a message is posted, let the user have the
          *     possibility to immediately notify if he types something right away,
          *     instead of waiting for a throttle behaviour.
@@ -104,7 +102,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         // something, in order to display the oldest typing partners.
         this._typingPartnerIDs = [];
 
-        this.on('message_added', this, this._onTypingMessageAdded);
         this.on('message_posted', this, this._onTypingMessagePosted);
 
         if (params.data.message_unread_counter !== undefined) {
@@ -125,12 +122,23 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
     //--------------------------------------------------------------------------
 
     /**
-     * Add a message to this thread.
+     * Called when a new message is added to the thread
+     * On receiving a message from a typing partner, unregister this partner
+     * from typing partners (otherwise, it will still display it until timeout).
+     *
+     * Note that it only unregister typing operators.
+     *
+     * Note that in the frontend, there is no way to identify a message that is
+     * from the current user, because there is no partner ID in the session and
+     * a message with an author sets the partner ID of the author.
      *
      * @param {@im_livechat/legacy/models/public_livechat_message} message
      */
     addMessage(message) {
-        this.trigger('message_added', message);
+        const operatorID = this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
+        if (message.hasAuthor() && message.getAuthorID() === operatorID) {
+            this.unregisterTyping({ partnerID: operatorID });
+        }
     },
     /**
      * @override
@@ -403,26 +411,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     _onOthersTypingTimeout(partnerID) {
         this.unregisterTyping({ partnerID });
-    },
-    /**
-     * Called when a new message is added to the thread
-     * On receiving a message from a typing partner, unregister this partner
-     * from typing partners (otherwise, it will still display it until timeout).
-     *
-     * Note that it only unregister typing operators.
-     *
-     * Note that in the frontend, there is no way to identify a message that is
-     * from the current user, because there is no partner ID in the session and
-     * a message with an author sets the partner ID of the author.
-     *
-     * @private
-     * @param {mail.model.AbstractMessage} message
-     */
-    _onTypingMessageAdded(message) {
-        const operatorID = this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
-        if (message.hasAuthor() && message.getAuthorID() === operatorID) {
-            this.unregisterTyping({ partnerID: operatorID });
-        }
     },
     /**
      * Called when current user has posted a message on this thread.
