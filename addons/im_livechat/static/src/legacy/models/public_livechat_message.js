@@ -208,15 +208,6 @@ const PublicLivechatMessage = Class.extend({
         return !!(this._serverAuthorID && this._serverAuthorID[0]);
     },
     /**
-     * State whether this message has an email of its sender.
-     * By default, messages do not have any email of its sender.
-     *
-     * @return {string}
-     */
-    hasEmailFrom() {
-        return false;
-    },
-    /**
      * States whether this message has some notifications.
      *
      * @returns {boolean}
