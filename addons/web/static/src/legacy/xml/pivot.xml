@@ -40,7 +40,7 @@
                                          o_null: cell.value === 0,
                                     }" t-esc="_getFormattedVariation(cell)"/>
                                 <div t-elif="props.fields and props.fields[cell.measure].type === 'boolean'" class="o_value">
-                                    <div class="custom-control form-check">
+                                    <div class="form-check">
                                         <input type="checkbox" t-attf-id="checkbox_{{cell_index}}_{{row_index}}" disabled="disabled" t-att-checked="cell.value" class="form-check-input"/>
                                         <label t-attf-for="checkbox_{{cell_index}}_{{row_index}}" class="form-check-label"/>
                                     </div>

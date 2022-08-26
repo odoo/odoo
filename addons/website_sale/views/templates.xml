@@ -438,7 +438,7 @@
     </template>
 
     <template id="categorie_link" name="Category Link">
-        <div t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)" class="custom-control form-check mb-1 d-inline-block">
+        <div t-att-data-link-href="keep('/shop/category/' + slug(c), category=0)" class="form-check mb-1 d-inline-block">
             <input type="radio" style="pointer-events:none;" class="form-check-input" t-att-id="c.id" t-att-value="c.id" t-att-checked="'true' if c.id == category.id else None"/>
             <label class="form-check-label fw-normal" t-att-for="c.id" t-field="c.name"/>
         </div>
@@ -461,7 +461,7 @@
                 <ul class="nav flex-column my-2">
                     <form>
                         <li class="nav-item">
-                            <div t-att-data-link-href="keep('/shop', category=0)" class="custom-control form-check mb-1 d-inline-block">
+                            <div t-att-data-link-href="keep('/shop', category=0)" class="form-check mb-1 d-inline-block">
                                 <input type="radio" style="pointer-events:none;" class="form-check-input o_not_editable" t-att-id="all_products" t-att-value="all_products" t-att-checked="'true' if not category else None"/>
                                 <label class="form-check-label fw-normal" t-att-for="all_products">All Products</label>
                             </div>
@@ -535,7 +535,7 @@
                                 <t t-if="a.display_type == 'radio' or a.display_type == 'pills'">
                                     <div class="flex-column">
                                         <t t-foreach="a.value_ids" t-as="v">
-                                            <div class="custom-control form-check mb-1">
+                                            <div class="form-check mb-1">
                                                 <input type="checkbox" name="attrib" class="form-check-input" t-att-id="'%s-%s' % (a.id,v.id)" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None"/>
                                                 <label class="form-check-label fw-normal" t-att-for="'%s-%s' % (a.id,v.id)" t-field="v.name"/>
                                             </div>
@@ -905,7 +905,7 @@
                 <input type="hidden" t-if="len(filtered_sorted_variants) == 1" class="product_id" name="product_id" t-att-value="filtered_sorted_variants[0].id"/>
                 <t t-if="len(filtered_sorted_variants) &gt; 1">
                     <div class="mb-4">
-                        <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="custom-control form-check mb-1">
+                        <div t-foreach="filtered_sorted_variants" t-as="variant_id" class="form-check mb-1">
                             <t t-set="template_combination_info" t-value="product._get_combination_info(only_template=True, add_qty=add_qty, pricelist=pricelist)"/>
                             <t t-set="combination_info" t-value="variant_id._get_combination_info_variant(add_qty=add_qty, pricelist=pricelist)"/>
                             <input type="radio" name="product_id" class="form-check-input product_id js_product_change" t-att-checked="'checked' if variant_id_index == 0 else None" t-attf-id="radio_variant_#{variant_id.id}" t-att-value="variant_id.id" t-att-data-price="combination_info['price']" t-att-data-combination="variant_id.product_template_attribute_value_ids.ids"/>
@@ -1697,7 +1697,7 @@
 
     <template id="payment_footer" name="Payment">
         <div name="o_checkbox_container"
-             class="custom-control form-check mt-2 o_accept_tc_button"/>
+             class="form-check mt-2 o_accept_tc_button"/>
         <div class="float-start mt-2">
             <a role="button" href="/shop/cart" class="btn btn-secondary">
                 <i class="fa fa-chevron-left"/> Return to Cart

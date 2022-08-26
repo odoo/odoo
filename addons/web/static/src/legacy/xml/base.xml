@@ -1016,7 +1016,7 @@
         t-att-id="widget.idForLabel"/>
 </t>
 <t t-name="FieldRadio.button">
-    <div class="custom-control form-check o_radio_item" aria-atomic="true">
+    <div class="form-check o_radio_item" aria-atomic="true">
         <input type="radio" class="form-check-input o_radio_input" t-att-checked="checked ? true : undefined" t-att-disabled="disabled ? true : undefined"
             t-att-name="name" t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
         <label class="form-check-label o_form_label" t-att-for="id"><t t-esc="value[1]"/></label>
@@ -1154,7 +1154,7 @@
                 <div role="menuitem" class="o_hide_in_kanban"
                      t-att-data-id="tag_id"
                      t-att-data-color="0">
-                    <div class="custom-control form-check">
+                    <div class="form-check">
                         <input type="checkbox" id="o_hide_in_kanban_checkbox" class="form-check-input"/>
                         <label for="o_hide_in_kanban_checkbox" class="form-check-label">Hide in Kanban</label>
                     </div>
@@ -1495,7 +1495,7 @@
     <div aria-atomic="true">
         <div t-foreach="widget.m2mValues" t-as="m2m_value" t-key="m2m_value_index">
             <t t-set="id_for_label" t-value="'o_many2many_checkbox_' + _.uniqueId()"/>
-            <div class="custom-control form-check">
+            <div class="form-check">
                 <input type="checkbox" t-att-id="id_for_label" class="form-check-input" t-att-data-record-id="JSON.stringify(m2m_value[0])"/>
                 <label t-att-for="id_for_label" class="form-check-label o_form_label"><t t-esc="m2m_value[1]"/></label>
             </div>
