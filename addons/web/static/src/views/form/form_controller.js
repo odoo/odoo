@@ -3,7 +3,6 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
-import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -171,7 +170,7 @@ export class FormController extends Component {
                 // TODO: export the whole model?
                 return {
                     resId: this.model.root.resId,
-                    ...this.exportTranslateAlertState(),
+                    fieldsToTranslate: toRaw(this.fieldsToTranslate),
                 };
             },
         });
@@ -232,7 +231,8 @@ export class FormController extends Component {
             );
         }
 
-        this.setupTranslateAlert();
+        const { fieldsToTranslate } = this.props.state || {};
+        this.fieldsToTranslate = useState(fieldsToTranslate || {});
     }
 
     displayName() {
@@ -332,17 +332,32 @@ export class FormController extends Component {
 
     async save(params = {}) {
         const disabledButtons = this.disableButtons();
+        const record = this.model.root;
 
-        this.computeTranslateAlert();
+        // Before we save, we gather dirty translate fields data. It needs to be done before the
+        // save as nothing will be dirty after. It is why there is a compute part and a show part.
+        if (record.dirtyTranslatableFields.length) {
+            const { resId } = record;
+            this.fieldsToTranslate[resId] = new Set([
+                ...toRaw(this.fieldsToTranslate[resId] || []),
+                ...record.dirtyTranslatableFields,
+            ]);
+        }
 
         if (this.props.saveRecord) {
-            await this.props.saveRecord(this.model.root, params);
+            await this.props.saveRecord(record, params);
         } else {
-            await this.model.root.save();
+            await record.save();
         }
         this.enableButtons(disabledButtons);
 
-        this.showTranslateAlert();
+        // After we saved, we show the previously computed data in the alert (if there is any).
+        // It needs to be done after the save because if we were in record creation, the resId
+        // changed from false to a number. So it first needs to update the computed data to the new id.
+        if (this.fieldsToTranslate.false) {
+            this.fieldsToTranslate[record.resId] = this.fieldsToTranslate.false;
+            delete this.fieldsToTranslate.false;
+        }
     }
 
     async discard() {
@@ -356,69 +371,17 @@ export class FormController extends Component {
         }
     }
 
-    get shouldShowTranslateAlert() {
-        return localization.multiLang && this.model.root.dirtyTranslatableFields.length;
-    }
-
-    /**
-     * Before we save, we gather dirty translate fields data.
-     * It needs to be done before the save as nothing will be dirty after.
-     * It is why there is a compute part and a show part.
-     */
-    computeTranslateAlert() {
-        if (this.shouldShowTranslateAlert) {
-            this.translateAlertData[this.model.root.resId] = new Set([
-                ...(this.translateAlertData[this.model.root.resId]
-                    ? toRaw(this.translateAlertData[this.model.root.resId])
-                    : []),
-                ...this.model.root.dirtyTranslatableFields,
-            ]);
+    get translateAlert() {
+        const { resId } = this.model.root;
+        if (!this.fieldsToTranslate[resId]) {
+            return null;
         }
-    }
 
-    /**
-     * After we saved, we show the previously computed data in the alert (if there is any).
-     * It needs to be done after the save because if we were in record creation, the resId
-     * changed from false to a number. So it first needs to update the computed data to the new id.
-     */
-    showTranslateAlert() {
-        if (this.translateAlertData[false]) {
-            this.translateAlertData[this.model.root.resId] = this.translateAlertData[false];
-            delete this.translateAlertData[false];
-        }
-        if (this.translateAlertData[this.model.root.resId]) {
-            this.showingTranslateAlert[this.model.root.resId] = true;
-        }
-    }
-
-    closeTranslateAlert() {
-        this.showingTranslateAlert[this.model.root.resId] = false;
-        this.translateAlertData[this.model.root.resId] = [];
-    }
-
-    /**
-     * The translation alert needs to live in the scope of the action.
-     * So some state may have been exported.
-     * Either get the state exported data, or define new empty values.
-     */
-    setupTranslateAlert() {
-        if (this.props.state) {
-            this.showingTranslateAlert = useState(this.props.state.showingTranslateAlert || {});
-            this.translateAlertData = useState(this.props.state.translateAlertData || {});
-        } else {
-            this.showingTranslateAlert = useState({});
-            this.translateAlertData = useState({});
-        }
-    }
-
-    /**
-     * The translation alert needs to live in the scope of the action.
-     * So some state has to be exported.
-     */
-    exportTranslateAlertState() {
         return {
-            showingTranslateAlert: toRaw(this.showingTranslateAlert),
-            translateAlertData: toRaw(this.translateAlertData),
+            fields: this.fieldsToTranslate[resId],
+            close: () => {
+                delete this.fieldsToTranslate[resId];
+            },
         };
     }
 
