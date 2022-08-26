@@ -14,6 +14,7 @@ import { escape } from "@web/core/utils/strings";
 import { mapDoActionOptionAPI } from "@web/legacy/backend_utils";
 import { Model } from "@web/views/model";
 import { evalDomain } from "@web/views/utils";
+import { localization } from "@web/core/l10n/localization";
 import BasicModel from "web.BasicModel";
 import Context from "web.Context";
 import fieldRegistry from "web.field_registry";
@@ -300,6 +301,9 @@ export class Record extends DataPoint {
     }
 
     get translatableFields() {
+        if (!localization.multiLang) {
+            return [];
+        }
         return Object.values(this.fields)
             .filter((f) => f.translate)
             .map((f) => this.activeFields[f.name]);

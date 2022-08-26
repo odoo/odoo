@@ -5,6 +5,7 @@ import { FormCompiler } from "@web/views/form/form_compiler";
 import { registry } from "@web/core/registry";
 import { click, getFixture, patchWithCleanup } from "../../helpers/utils";
 import { createElement } from "@web/core/utils/xml";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 
 function compileTemplate(arch) {
     const parser = new DOMParser();
@@ -28,7 +29,11 @@ QUnit.assert.areContentEquivalent = function (template, content) {
     QUnit.assert.areEquivalent(templateContent, content);
 };
 
-QUnit.module("Form Compiler", () => {
+QUnit.module("Form Compiler", (hooks) => {
+    hooks.beforeEach(() => {
+        // compiler generates a piece of template for the translate alert in multilang
+        registry.category("services").add("localization", makeFakeLocalizationService());
+    });
     QUnit.test("properly compile simple div", async (assert) => {
         const arch = /*xml*/ `<form><div>lol</div></form>`;
         const expected = /*xml*/ `

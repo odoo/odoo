@@ -8129,6 +8129,9 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: `
                 <form>
+                    <header>
+                        <button string="Additionnal button" class="btn btn-primary"/>
+                    </header>
                     <sheet>
                         <group>
                             <field name="foo"/>
@@ -8158,6 +8161,13 @@ QUnit.module("Views", (hooks) => {
             2,
             "should have two translate fields in translation alert"
         );
+        const statusBarY = target.querySelector(".o_form_statusbar").getBoundingClientRect().top;
+        const translateAlertY = target
+            .querySelector(".alert .o_field_translate")
+            .getBoundingClientRect().top;
+        assert.ok(translateAlertY > statusBarY, "translation alert should be below status bar");
+        await click(target, ".alert .btn-close");
+        assert.containsNone(target, ".alert", "should have closed the translate alert");
     });
 
     QUnit.test("can save without any dirty translatable fields", async function (assert) {
