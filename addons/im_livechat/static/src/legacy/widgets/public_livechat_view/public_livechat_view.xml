@@ -174,7 +174,7 @@
                             <t t-esc="message.getDisplayedAuthor()"/>
                         </strong>
                         <strong t-elif="message.hasEmailFrom()">
-                            <a class="text-muted" t-attf-href="mailto:#{message.getEmailFrom()}?subject=Re: #{message.hasSubject() ? message.getSubject() : ''}">
+                            <a class="text-muted" t-attf-href="mailto:#{message.getEmailFrom()}?subject=Re: ">
                                 <t t-esc="message.getEmailFrom()"/>
                             </a>
                         </strong>

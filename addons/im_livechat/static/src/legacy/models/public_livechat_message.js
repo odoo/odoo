@@ -236,15 +236,6 @@ const PublicLivechatMessage = Class.extend({
         );
     },
     /**
-     * State whether this message has a subject
-     * By default, messages do not have any subject.
-     *
-     * @return {boolean}
-     */
-    hasSubject() {
-        return false;
-    },
-    /**
      * State whether this message is empty
      *
      * @return {boolean}
