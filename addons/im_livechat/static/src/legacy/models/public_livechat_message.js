@@ -67,14 +67,6 @@ const PublicLivechatMessage = Class.extend({
         return this._serverAuthorID[0];
     },
     /**
-     * Threads do not have an im status by default
-     *
-     * @return {undefined}
-     */
-    getAuthorImStatus() {
-        return undefined;
-    },
-    /**
      * Get the relative url of the avatar to display next to the message
      *
      * @return {string}

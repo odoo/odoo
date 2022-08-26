@@ -147,7 +147,6 @@
                             t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
                             t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
                         <t t-call="im_livechat.legacy.mail.UserStatus">
-                            <t t-set="status" t-value="message.getAuthorImStatus()"/>
                             <t t-set="partnerID" t-value="message.getAuthorID()"/>
                         </t>
                     </div>
@@ -255,11 +254,7 @@
         @param {integer|undefined} [partnerID]
     -->
     <t t-name="im_livechat.legacy.mail.UserStatus">
-        <span t-att-class="partnerID ? 'o_updatable_im_status' : ''" t-att-data-partner-id="partnerID">
-            <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
-            <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
-            <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline" role="img" aria-label="User is offline"/>
-        </span>
+        <span t-att-class="partnerID ? 'o_updatable_im_status' : ''" t-att-data-partner-id="partnerID"/>
     </t>
     
     <t t-name="im_livechat.legacy.mail.MessagesSeparator">
