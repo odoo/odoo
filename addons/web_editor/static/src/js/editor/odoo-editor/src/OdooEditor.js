@@ -37,6 +37,8 @@ import {
     isFontAwesome,
     getInSelection,
     getDeepRange,
+    getRowIndex,
+    getColumnIndex,
     ancestors,
     firstLeaf,
     previousLeaf,
@@ -56,6 +58,13 @@ import {
     getAdjacentNextSiblings,
     rightLeafOnlyNotBlockPath,
     isBlock,
+    getTraversedNodes,
+    getSelectedNodes,
+    isVisibleTextNode,
+    descendants,
+    hasValidSelection,
+    hasTableSelection,
+    pxToFloat,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -157,6 +166,9 @@ export const CLIPBOARD_WHITELISTS = {
         'font-size': { defaultValues: ['', '16px'] },
     }
 };
+
+// Commands that don't require a DOM selection but take an argument instead.
+const SELECTIONLESS_COMMANDS = ['addRow', 'addColumn', 'removeRow', 'removeColumn'];
 
 function defaultOptions(defaultObject, object) {
     const newObject = Object.assign({}, defaultObject, object);
@@ -307,7 +319,11 @@ export class OdooEditor extends EventTarget {
 
         this._pluginCall('sanitizeElement', [editable]);
 
-        // Create the Powerbox's table picker.
+        // ------
+        // Tables
+        // ------
+
+        // Create the table picker for the Powerbox.
         this.powerboxTablePicker = new TablePicker({
             document: this.document,
             floating: true,
@@ -319,7 +335,78 @@ export class OdooEditor extends EventTarget {
                 colNumber: ev.detail.colNumber,
             });
         });
-        // Initialize the Powerbox.
+        // Create the table picker for the toolbar.
+        this.toolbarTablePicker = new TablePicker({ document: this.document });
+        this.toolbarTablePicker.addEventListener('cell-selected', ev => {
+            this.execCommand('insertTable', {
+                rowNumber: ev.detail.rowNumber,
+                colNumber: ev.detail.colNumber,
+            });
+        });
+        // Create the table UI.
+        const parser = new DOMParser();
+        for (const direction of ['row', 'column']) {
+            // Create the containers and the menu toggler.
+            const ui = parser.parseFromString(`<div class="o_table_ui o_${direction}_ui">
+                <div>
+                    <span class="o_table_ui_menu_toggler fa fa-bars"></span>
+                    <div class="o_table_ui_menu"></div>
+                </div>
+            </div>`, 'text/html').body.firstElementChild;
+            const uiMenu = ui.querySelector('.o_table_ui_menu');
+
+            // Create the move buttons.
+            if (direction === 'column') {
+                uiMenu.append(...parser.parseFromString(`
+                    <div class="o_move_left"><span class="fa fa-chevron-left"></span>Move left</div>
+                    <div class="o_move_right"><span class="fa fa-chevron-right"></span>Move right</div>
+                `, 'text/html').body.children);
+                this.addDomListener(uiMenu.querySelector('.o_move_left'), 'click', this._onTableMoveLeftClick);
+                this.addDomListener(uiMenu.querySelector('.o_move_right'), 'click', this._onTableMoveRightClick);
+            } else {
+                uiMenu.append(...parser.parseFromString(`
+                    <div class="o_move_up"><span class="fa fa-chevron-left" style="transform: rotate(90deg);"></span>Move up</div>
+                    <div class="o_move_down"><span class="fa fa-chevron-right" style="transform: rotate(90deg);"></span>Move down</div>
+                `, 'text/html').body.children);
+                this.addDomListener(uiMenu.querySelector('.o_move_up'), 'click', this._onTableMoveUpClick);
+                this.addDomListener(uiMenu.querySelector('.o_move_down'), 'click', this._onTableMoveDownClick);
+            }
+
+            // Create the add buttons.
+            if (direction === 'column') {
+                uiMenu.append(...parser.parseFromString(`
+                    <div class="o_insert_left"><span class="fa fa-plus"></span>Insert left</div>
+                    <div class="o_insert_right"><span class="fa fa-plus"></span>Insert right</div>
+                `, 'text/html').body.children);
+                this.addDomListener(uiMenu.querySelector('.o_insert_left'), 'click', () => this.execCommand('addColumn', 'before', this._columnUiTarget));
+                this.addDomListener(uiMenu.querySelector('.o_insert_right'), 'click', () => this.execCommand('addColumn', 'after', this._columnUiTarget));
+            } else {
+                uiMenu.append(...parser.parseFromString(`
+                    <div class="o_insert_above"><span class="fa fa-plus"></span>Insert above</div>
+                    <div class="o_insert_below"><span class="fa fa-plus"></span>Insert below</div>
+                `, 'text/html').body.children);
+                this.addDomListener(uiMenu.querySelector('.o_insert_above'), 'click', () => this.execCommand('addRow', 'before', this._rowUiTarget));
+                this.addDomListener(uiMenu.querySelector('.o_insert_below'), 'click', () => this.execCommand('addRow', 'after', this._rowUiTarget));
+            }
+
+            // Add the delete button.
+            if (direction === 'column') {
+                uiMenu.append(parser.parseFromString(`<div class="o_delete_column"><span class="fa fa-trash"></span>Delete</div>`, 'text/html').body.firstChild)
+                this.addDomListener(uiMenu.querySelector('.o_delete_column'), 'click', this._onTableDeleteColumnClick);
+            } else {
+                uiMenu.append(parser.parseFromString(`<div class="o_delete_row"><span class="fa fa-trash"></span>Delete</div>`, 'text/html').body.firstChild)
+                this.addDomListener(uiMenu.querySelector('.o_delete_row'), 'click', this._onTableDeleteRowClick);
+            }
+
+            this[`_${direction}Ui`] = ui;
+            this.document.body.append(ui);
+            this.addDomListener(ui.querySelector('.o_table_ui_menu_toggler'), 'click', this._onTableMenuTogglerClick);
+        }
+
+        // --------
+        // Powerbox
+        // --------
+
         let beforeStepIndex;
         this.powerbox = new Powerbox({
             editable: this.editable,
@@ -484,14 +571,6 @@ export class OdooEditor extends EventTarget {
             ],
         });
 
-        this.toolbarTablePicker = new TablePicker({ document: this.document });
-        this.toolbarTablePicker.addEventListener('cell-selected', ev => {
-            this.execCommand('insertTable', {
-                rowNumber: ev.detail.rowNumber,
-                colNumber: ev.detail.colNumber,
-            });
-        });
-
         // -----------
         // Bind events
         // -----------
@@ -510,8 +589,10 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
         this.addDomListener(this.document, 'keyup', this._onDocumentKeyup);
-        this.addDomListener(this.document, 'mousedown', this._onDoumentMousedown);
-        this.addDomListener(this.document, 'mouseup', this._onDoumentMouseup);
+        this.addDomListener(this.document, 'mousedown', this._onDocumentMousedown);
+        this.addDomListener(this.document, 'mouseup', this._onDocumentMouseup);
+        this.addDomListener(this.document, 'mousemove', this._onDocumentMousemove);
+        this.addDomListener(this.document, 'click', this._onDocumentClick);
 
         this.multiselectionRefresh = this.multiselectionRefresh.bind(this);
         this._resizeObserver = new ResizeObserver(this.multiselectionRefresh);
@@ -583,6 +664,9 @@ export class OdooEditor extends EventTarget {
         clearInterval(this._snapshotInterval);
         this._pluginCall('destroy', []);
         this.isDestroyed = true;
+        // Remove table UI
+        this._rowUi.remove();
+        this._columnUi.remove();
     }
 
     sanitize() {
@@ -1145,6 +1229,7 @@ export class OdooEditor extends EventTarget {
         }
     }
     historySetSelection(step) {
+        this.deselectTable();
         if (step.selection && step.selection.anchorNodeOid) {
             const anchorNode = this.idFind(step.selection.anchorNodeOid);
             const focusNode = this.idFind(step.selection.focusNodeOid) || anchorNode;
@@ -1158,6 +1243,8 @@ export class OdooEditor extends EventTarget {
                         : step.selection.anchorOffset,
                     false,
                 );
+                // If a table must be selected, ensure it's in the same tick.
+                this._handleSelectionInTable();
             }
         }
     }
@@ -1508,6 +1595,23 @@ export class OdooEditor extends EventTarget {
         }
     }
 
+    /**
+     * Remove any custom table selection from the editor.
+     *
+     * @returns {boolean} true if a table was deselected
+     */
+    deselectTable() {
+        let didDeselectTable = false;
+        for (const td of this.editable.querySelectorAll('.o_selected_table, .o_selected_td')) {
+            td.classList.remove('o_selected_td', 'o_selected_table');
+            if (!td.classList.length) {
+                td.removeAttribute('class');
+            }
+            didDeselectTable = true;
+        }
+        return didDeselectTable;
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -1559,7 +1663,6 @@ export class OdooEditor extends EventTarget {
             closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
             closestBlock(end) !== closestBlock(range.commonAncestorContainer) ;
         let next = nextLeaf(end, this.editable);
-        const splitEndTd = closestElement(end, 'td') && end.nextSibling;
         const contents = range.extractContents();
         setSelection(start, nodeSize(start));
         range = getDeepRange(this.editable, { sel });
@@ -1568,26 +1671,6 @@ export class OdooEditor extends EventTarget {
             closestBlock(range.endContainer).after(n);
             n.textContent = '';
         });
-        // Restore table contents removed by extractContents.
-        const tds = [...contents.querySelectorAll('td')].filter(n => !closestElement(n, 'table'));
-        let currentFragmentTr, currentTr;
-        const currentTd = closestElement(range.endContainer, 'td');
-        tds.forEach((td, i) => {
-            const parentFragmentTr = closestElement(td, 'tr');
-            // Skip the first and the last partially selected TD.
-            if (i && !(splitEndTd && i === tds.length - 1)) {
-                if (parentFragmentTr !== currentFragmentTr) {
-                    currentTr = currentTr
-                        ? currentTr.nextElementSibling
-                        : closestElement(range.endContainer, 'tr').nextElementSibling;
-                }
-                currentTr ? currentTr.prepend(td) : currentTd.after(td);
-            }
-            currentFragmentTr = parentFragmentTr;
-            td.textContent = '';
-        });
-        this.observerFlush();
-        this._toRollback = false; // Errors caught with observerFlush were already handled.
         // If the end container was fully selected, extractContents may have
         // emptied it without removing it. Ensure it's gone.
         const isRemovableInvisible = (node, noBlocks = true) =>
@@ -1755,8 +1838,10 @@ export class OdooEditor extends EventTarget {
     _applyRawCommand(method, ...args) {
         const sel = this.document.getSelection();
         if (
-            !this.editable.contains(sel.anchorNode) ||
-            (sel.anchorNode !== sel.focusNode && !this.editable.contains(sel.focusNode))
+            !(SELECTIONLESS_COMMANDS.includes(method) && args.length) && (
+                !this.editable.contains(sel.anchorNode) ||
+                (sel.anchorNode !== sel.focusNode && !this.editable.contains(sel.focusNode))
+            )
         ) {
             // Do not apply commands out of the editable area.
             return false;
@@ -1870,6 +1955,332 @@ export class OdooEditor extends EventTarget {
             }
         }
         this.observerActive('_stopContenteditable');
+    }
+
+    // TABLE MANAGEMENT
+    // ================
+
+    /**
+     * Handle the selection of table cells rectangularly (as opposed to line by
+     * line from left to right then top to bottom). If such a special selection
+     * was indeed applied, return true (and false otherwise).
+     *
+     * @private
+     * @param {MouseEvent|undefined} [ev]
+     * @returns {boolean}
+     */
+    _handleSelectionInTable(ev=undefined) {
+        this.deselectTable();
+        const traversedNodes = getTraversedNodes(this.editable);
+        if (this._isResizingTable || !traversedNodes.some(node => !!closestElement(node, 'td'))) {
+            return false;
+        }
+        const selection = this.document.getSelection();
+        let range;
+        if (selection.rangeCount > 1) {
+            // Firefox selection in table works with multiple ranges.
+            const startRange = getDeepRange(this.editable, {range: selection.getRangeAt(0)});
+            const endRange = getDeepRange(this.editable, {range: selection.getRangeAt(selection.rangeCount - 1)});
+            range = this.document.createRange();
+            range.setStart(startRange.startContainer, 0);
+            range.setEnd(endRange.startContainer, 0);
+        } else {
+            range = getDeepRange(this.editable);
+        }
+        const startTd = closestElement(range.startContainer, 'td');
+        const endTd = closestElement(range.endContainer, 'td');
+        let appliedCustomSelection = false;
+        const startTable = closestElement(range.startContainer, 'table');
+        const endTable = closestElement(range.endContainer, 'table');
+        if (startTd !== endTd && startTable === endTable) {
+            // The selection goes through at least two different cells -> select
+            // cells.
+            this._selectTableCells(range);
+            appliedCustomSelection = true;
+        } else if (!traversedNodes.every(node => !!closestElement(node, 'td'))) {
+            // The selection goes through a table but also outside of it ->
+            // select the whole table.
+            this.historyPauseSteps('handleSelectionInTable');
+            for (const table of new Set(traversedNodes.map(node => closestElement(node, 'table')))) {
+                if (table) {
+                    table.classList.toggle('o_selected_table', true);
+                    for (const td of table.querySelectorAll('td')) {
+                        td.classList.toggle('o_selected_td', true);
+                    }
+                    appliedCustomSelection = true;
+                }
+            }
+        } else if (ev) {
+            // We're redirected from a mousemove event.
+            const selectedNodes = getSelectedNodes(this.editable);
+            const areCellContentsFullySelected = !!startTd && descendants(startTd).filter(d => !isBlock(d)).every(child => selectedNodes.includes(child));
+            if (areCellContentsFullySelected) {
+                const SENSITIVITY = 5;
+                const rangeRect = range.getBoundingClientRect();
+                const isMovingAwayFromSelection = ev.clientX > rangeRect.x + rangeRect.width + SENSITIVITY // moving right
+                    || ev.clientX < rangeRect.x - SENSITIVITY; // moving left
+                if (isMovingAwayFromSelection) {
+                    // A cell is fully selected and the mouse is moving away
+                    // from the selection, within said cell -> select the cell.
+                    this._selectTableCells(range);
+                    appliedCustomSelection = true;
+                }
+            } else if (!descendants(startTd).some(child => isVisibleTextNode(child) && child.textContent !== '\u200B') &&
+                ev.clientX - (this._lastMouseClickPosition ? this._lastMouseClickPosition[0] : ev.clientX) >= 15
+            ) {
+                // Handle selecting an empty cell.
+                this._selectTableCells(range);
+                appliedCustomSelection = true;
+            }
+        }
+        return appliedCustomSelection;
+    }
+    /**
+     * Helper function to `_handleSelectionInTable`. Do the actual selection of
+     * cells in a table based on the current range.
+     *
+     * @private
+     * @see _handleSelectionInTable
+     * @param {Range} range
+     */
+    _selectTableCells(range) {
+        this.historyPauseSteps('handleSelectionInTable');
+        const table = closestElement(range.startContainer, 'table');
+        const alreadyHadSelection = table.classList.contains('o_selected_table');
+        this.deselectTable(); // Undo previous selection.
+        table.classList.toggle('o_selected_table', true);
+        const columns = table.querySelectorAll('td');
+        const startCol = closestElement(range.startContainer, 'td') || columns[0];
+        const endCol = closestElement(range.endContainer, 'td') || columns[columns.length - 1];
+        const [startRow, endRow] = [closestElement(startCol, 'tr'), closestElement(range.endContainer, 'tr')];
+        const [startColIndex, endColIndex] = [getColumnIndex(startCol), getColumnIndex(endCol)];
+        const [startRowIndex, endRowIndex] = [getRowIndex(startRow), getRowIndex(endRow)];
+        const [minRowIndex, maxRowIndex] = [Math.min(startRowIndex, endRowIndex), Math.max(startRowIndex, endRowIndex)];
+        const [minColIndex, maxColIndex]  = [Math.min(startColIndex, endColIndex), Math.max(startColIndex, endColIndex)];
+        // Create an array of arrays of tds (each of which is a row).
+        const grid = [...table.querySelectorAll('tr')].map(tr => [...tr.children].filter(child => child.nodeName === 'TD'));
+        for (const tds of grid.filter((_, index) => index >= minRowIndex && index <= maxRowIndex)) {
+            for (const td of tds.filter((_, index) => index >= minColIndex && index <= maxColIndex)) {
+                td.classList.toggle('o_selected_td', true);
+            }
+        }
+        if (!alreadyHadSelection) {
+            this.toolbarShow();
+        }
+    }
+    /**
+     * If the mouse is hovering over one of the borders of a table cell element,
+     * return the side of that border ('left'|'top'|'right'|'bottom').
+     * Otherwise, return false.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     * @returns {boolean}
+     */
+    _isHoveringTdBorder(ev) {
+        if (ev.target && ev.target.nodeName === 'TD') {
+            const SENSITIVITY = 5;
+            const targetRect = ev.target.getBoundingClientRect();
+            if (ev.clientX <= targetRect.x + SENSITIVITY) {
+                return 'left';
+            } else if (ev.clientY <= targetRect.y + SENSITIVITY) {
+                return 'top';
+            } else if (ev.clientX >= targetRect.x + ev.target.clientWidth - SENSITIVITY) {
+                return 'right';
+            } else if (ev.clientY >= targetRect.y + ev.target.clientHeight - SENSITIVITY) {
+                return 'bottom';
+            }
+        }
+        return false;
+    }
+    /**
+     * Change the cursor to a resizing cursor, in the direction specified. If no
+     * direction is specified, return the cursor to its default.
+     *
+     * @private
+     * @param {'col'|'row'|false} direction 'col'/'row' to hint column/row,
+     *                                      false to remove the hints
+     */
+    _toggleTableResizeCursor(direction) {
+        this.editable.classList.remove('o_col_resize', 'o_row_resize');
+        if (direction === 'col') {
+            this.editable.classList.add('o_col_resize');
+        } else if (direction === 'row') {
+            this.editable.classList.add('o_row_resize');
+        }
+    }
+    /**
+     * Resizes a table in the given direction, by "pulling" the border between
+     * the given targets (ordered left to right or top to bottom).
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _resizeTable(ev, direction, target1, target2) {
+        ev.preventDefault();
+        const position = target1 ? (target2 ? 'middle' : 'last') : 'first';
+        let [item, neighbor] = [target1 || target2, target2];
+        const table = closestElement(item, 'table');
+        const [sizeProp, positionProp, clientPositionProp] = direction === 'col' ? ['width', 'x', 'clientX'] : ['height', 'y', 'clientY'];
+
+        // Preserve current sizes.
+        const tableRect = table.getBoundingClientRect();
+        table.style[sizeProp] = tableRect[sizeProp] + 'px';
+        const unsizedItemsSelector = `${direction === 'col' ? 'td' : 'tr'}:not([style*=${sizeProp}])`;
+        for (const unsizedItem of table.querySelectorAll(unsizedItemsSelector)) {
+            unsizedItem.style[sizeProp] = unsizedItem.getBoundingClientRect()[sizeProp] + 'px';
+        }
+
+        // TD widths should only be applied in the first row. Change targets and
+        // clean the rest.
+        if (direction === 'col') {
+            let hostCell = closestElement(table, 'td');
+            const hostCells = [];
+            while (hostCell) {
+                hostCells.push(hostCell);
+                hostCell = closestElement(hostCell.parentElement, 'td');
+            }
+            const nthColumn = getColumnIndex(item);
+            const firstRow = [...table.querySelector('tr').children];
+            [item, neighbor] = [firstRow[nthColumn], firstRow[nthColumn + 1]];
+            for (const td of hostCells) {
+                if (td !== item && td !== neighbor && closestElement(td, 'table') === table && getColumnIndex(td) !== 0) {
+                    td.style.removeProperty(sizeProp);
+                }
+            }
+        }
+
+        const MIN_SIZE = 33; // TODO: ideally, find this value programmatically.
+        switch (position) {
+            case 'first': {
+                const marginProp = direction === 'col' ? 'marginLeft' : 'marginTop';
+                const itemRect = item.getBoundingClientRect();
+                const tableStyle = getComputedStyle(table);
+                const currentMargin = pxToFloat(tableStyle[marginProp]);
+                const sizeDelta = itemRect[positionProp] - ev[clientPositionProp];
+                const newMargin = currentMargin - sizeDelta;
+                const currentSize = itemRect[sizeProp];
+                const newSize = currentSize + sizeDelta;
+                if (newMargin >= 0 && newSize > MIN_SIZE) {
+                    const tableRect = table.getBoundingClientRect();
+                    // Check if a nested table would overflow its parent cell.
+                    const hostCell = closestElement(table.parentElement, 'td');
+                    const childTable = item.querySelector('table');
+                    if (direction === 'col' &&
+                        (hostCell && tableRect.right + sizeDelta > hostCell.getBoundingClientRect().right - 5 ||
+                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5)) {
+                        break;
+                    }
+                    table.style[marginProp] = newMargin + 'px';
+                    item.style[sizeProp] = newSize + 'px';
+                    table.style[sizeProp] = tableRect[sizeProp] + sizeDelta + 'px';
+                }
+                break;
+            }
+            case 'middle': {
+                const [itemRect, neighborRect] = [item.getBoundingClientRect(), neighbor.getBoundingClientRect()];
+                const [currentSize, newSize] = [itemRect[sizeProp], ev[clientPositionProp] - itemRect[positionProp]];
+                const editableStyle = getComputedStyle(this.editable);
+                const sizeDelta = newSize - currentSize;
+                const currentNeighborSize = neighborRect[sizeProp];
+                const newNeighborSize = currentNeighborSize - sizeDelta;
+                const maxWidth = this.editable.clientWidth - pxToFloat(editableStyle.paddingLeft) - pxToFloat(editableStyle.paddingRight);
+                const tableRect = table.getBoundingClientRect();
+                if (newSize > MIN_SIZE &&
+                        // prevent resizing horizontally beyond the bounds of
+                        // the editable:
+                        (direction === 'row' ||
+                        newNeighborSize > MIN_SIZE ||
+                        tableRect[sizeProp] + sizeDelta < maxWidth)) {
+
+                    // Check if a nested table would overflow its parent cell.
+                    const childTable = item.querySelector('table');
+                    if (direction === 'col' &&
+                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5) {
+                        break
+                    }
+                    item.style[sizeProp] = newSize + 'px';
+                    if (direction === 'col') {
+                        neighbor.style[sizeProp] = (newNeighborSize > MIN_SIZE ? newNeighborSize : currentNeighborSize) + 'px';
+                    } else {
+                        table.style[sizeProp] = tableRect[sizeProp] + sizeDelta + 'px';
+                    }
+                }
+                break;
+            }
+            case 'last': {
+                const itemRect = item.getBoundingClientRect();
+                const sizeDelta = ev[clientPositionProp] - (itemRect[positionProp] + itemRect[sizeProp]); // todo: rephrase
+                const currentSize = itemRect[sizeProp];
+                const newSize = currentSize + sizeDelta;
+                if ((newSize >= 0 || direction === 'row') && newSize > MIN_SIZE) {
+                    const tableRect = table.getBoundingClientRect();
+                    // Check if a nested table would overflow its parent cell.
+                    const hostCell = closestElement(table.parentElement, 'td');
+                    const childTable = item.querySelector('table');
+                    if (direction === 'col' &&
+                        (hostCell && tableRect.right + sizeDelta > hostCell.getBoundingClientRect().right - 5 ||
+                        childTable && childTable.getBoundingClientRect().right > itemRect.right + sizeDelta - 5)) {
+                        break
+                    }
+                    table.style[sizeProp] = tableRect[sizeProp] + sizeDelta + 'px';
+                    item.style[sizeProp] = newSize + 'px';
+                }
+                break;
+            }
+        }
+    }
+    /**
+     * Show/hide and position the table row/column manipulation UI.
+     *
+     * @private
+     * @param {HTMLTableRowElement} [row=false]
+     * @param {HTMLTableCellElement} [column=false]
+     */
+    _toggleTableUi(row=false, column=false) {
+        if (row) {
+            this._rowUi.style.visibility = 'visible';
+            this._rowUiTarget = row;
+            this._positionTableUi(row);
+        } else {
+            this._rowUi.style.visibility = 'hidden';
+        }
+        if (column) {
+            this._columnUi.style.visibility = 'visible';
+            this._columnUiTarget = column;
+            this._positionTableUi(column);
+        } else {
+            this._columnUi.style.visibility = 'hidden';
+        }
+    }
+    /**
+     * Position the table row/column tools (depending on whether a row or a cell
+     * is passed as argument).
+     *
+     * @private
+     * @param {HTMLTableRowElement|HTMLTableCellElement} element
+     */
+    _positionTableUi(element) {
+        const isRow = element.nodeName === 'TR';
+        const ui = isRow ? this._rowUi : this._columnUi;
+        const elementRect = element.getBoundingClientRect();
+        const tableRect = closestElement(element, 'table').getBoundingClientRect();
+        const wrappedUi = ui.firstElementChild;
+        const togglerRect = ui.querySelector('.o_table_ui_menu_toggler').getBoundingClientRect();
+        const props = {
+            xy: {left: 'x', top: 'y'},
+            size: {left: 'width', top: 'height'}
+        };
+
+        const side1 = isRow ? 'left' : 'top';
+        ui.style[side1] = (isRow ? elementRect : tableRect)[props.xy[side1]] - togglerRect[props.size[side1]] + 'px';
+        wrappedUi.style[side1] = (togglerRect[props.size[side1]] / 2) + 'px';
+        ui.style[props.size[side1]] = togglerRect[props.size[side1]] + 'px';
+
+        const side2 = isRow ? 'top' : 'left';
+        ui.style[side2] = elementRect[props.xy[side2]] + 'px';
+        wrappedUi.style[side2] = (elementRect[props.size[side2]] / 2) - (togglerRect[props.size[side2]] / 2) + 'px';
+        ui.style[props.size[side2]] = elementRect[props.size[side2]] + 'px';
     }
 
     // HISTORY
@@ -2007,13 +2418,18 @@ export class OdooEditor extends EventTarget {
         }
 
         const sel = this.document.getSelection();
-        if (!sel.anchorNode) {
-            show = false;
-        } else {
-            const selAncestors = [sel.anchorNode, ...ancestors(sel.anchorNode, this.editable)];
-            const isInStars = selAncestors.some(node => node.classList && node.classList.contains('o_stars'));
-            if (isInStars) {
+        if (!hasTableSelection(this.editable)) {
+            if (this.editable.classList.contains('o_col_resize') || this.editable.classList.contains('o_row_resize')) {
                 show = false;
+            }
+            if (!sel.anchorNode) {
+                show = false;
+            } else {
+                const selAncestors = [sel.anchorNode, ...ancestors(sel.anchorNode, this.editable)];
+                const isInStars = selAncestors.some(node => node.classList && node.classList.contains('o_stars'));
+                if (isInStars) {
+                    show = false;
+                }
             }
         }
         if (this.options.autohideToolbar) {
@@ -2162,7 +2578,14 @@ export class OdooEditor extends EventTarget {
         // height to be 0. In that case, use the rect of the startContainer if
         // possible.
         const isSelectionPotentiallyBugged = [selRect.x, selRect.y, selRect.width, selRect.height].every( x => x === 0 );
-        const correctedSelectionRect = isSelectionPotentiallyBugged && startRect ? startRect : selRect;
+        let correctedSelectionRect = isSelectionPotentiallyBugged && startRect ? startRect : selRect;
+        const selAncestors = [sel.anchorNode, ...ancestors(sel.anchorNode, this.editable)];
+        // If a table is selected, we want to position the toolbar in function
+        // of the table, rather than follow the DOM selection.
+        const selectedTable = selAncestors.find(node => node.classList && node.classList.contains('o_selected_table'));
+        if (selectedTable) {
+            correctedSelectionRect = selectedTable.getBoundingClientRect();
+        }
         const toolbarWidth = this.toolbar.offsetWidth;
         const toolbarHeight = this.toolbar.offsetHeight;
         const editorRect = this.editable.getBoundingClientRect();
@@ -2224,7 +2647,7 @@ export class OdooEditor extends EventTarget {
         container.innerHTML = clipboardData;
 
         for (const tableElement of container.querySelectorAll('table')) {
-            tableElement.classList.add('table', 'table-bordered');
+            tableElement.classList.add('table', 'table-bordered', 'o_table');
         }
 
         for (const child of [...container.childNodes]) {
@@ -2524,11 +2947,52 @@ export class OdooEditor extends EventTarget {
                 this.deleteRange(selection);
             }
         }
-        if (ev.key === 'Backspace') {
+        const selectedTds = this.editable.querySelectorAll('.o_selected_td');
+        if ((ev.key === 'Backspace' || ev.key === 'Delete') && selectedTds.length) {
+            // backspace/delete with custom selected cells
+            ev.preventDefault();
+            this.historyPauseSteps();
+            const rows = [...closestElement(selectedTds[0], 'tr').parentElement.children].filter(child => child.nodeName === 'TR');
+            const firstRowCells = [...rows[0].children].filter(child => child.nodeName === 'TD' || child.nodeName === 'TH');
+            const areFullColumnsSelected = getRowIndex(selectedTds[0]) === 0 && getRowIndex(selectedTds[selectedTds.length - 1]) === rows.length - 1;
+            const areFullRowsSelected = getColumnIndex(selectedTds[0]) === 0 && getColumnIndex(selectedTds[selectedTds.length - 1]) === firstRowCells.length - 1;
+            if (areFullColumnsSelected || areFullRowsSelected) {
+                // If some full columns are selected, remove them.
+                if (areFullColumnsSelected) {
+                    const startIndex = getColumnIndex(selectedTds[0]);
+                    let endIndex = getColumnIndex(selectedTds[selectedTds.length - 1]);
+                    let currentIndex = startIndex;
+                    while (currentIndex <= endIndex) {
+                        this.execCommand('removeColumn', firstRowCells[currentIndex]);
+                        currentIndex++;
+                    }
+                }
+                // If some full rows are selected, remove them.
+                if (areFullRowsSelected) {
+                    const startIndex = getRowIndex(selectedTds[0]);
+                    let endIndex = getRowIndex(selectedTds[selectedTds.length - 1]);
+                    let currentIndex = startIndex;
+                    while (currentIndex <= endIndex) {
+                        this.execCommand('removeRow', rows[currentIndex]);
+                        currentIndex++;
+                    }
+                }
+                // If all rows, remove the table.
+                if (rows.every(row => !row.parentElement)) {
+                    this.execCommand('deleteTable', this.editable.querySelector('.o_selected_table'));
+                }
+            }
+            this.deleteRange();
+            if (this.deselectTable() && hasValidSelection(this.editable)) {
+                this.document.getSelection().collapseToStart();
+            }
+            this.historyUnpauseSteps();
+            this.historyStep();
+        } else if (ev.key === 'Backspace') {
             // backspace
             const selection = this.document.getSelection();
             if (!ev.ctrlKey && !ev.metaKey) {
-                if (selection.isCollapsed) {                    
+                if (selection.isCollapsed) {
                     // We need to hijack it because firefox doesn't trigger a
                     // deleteBackward input event with a collapsed selection in
                     // front of a contentEditable="false" (eg: font awesome).
@@ -2656,17 +3120,19 @@ export class OdooEditor extends EventTarget {
         this._computeHistorySelection();
 
         const selection = this.document.getSelection();
-        this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
 
         if (this._currentMouseState === 'mouseup') {
             this._fixFontAwesomeSelection();
         }
-        if (
-            selection.rangeCount &&
-            selection.getRangeAt(0) &&
-            this.options.onCollaborativeSelectionChange
-        ) {
-            this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
+        let appliedCustomSelection = false;
+        if (selection.rangeCount && selection.getRangeAt(0)) {
+            appliedCustomSelection = this._handleSelectionInTable();
+            if (this.options.onCollaborativeSelectionChange) {
+                this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
+            }
+        }
+        if (!appliedCustomSelection) {
+            this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
         }
     }
 
@@ -2814,12 +3280,16 @@ export class OdooEditor extends EventTarget {
             el.removeAttribute('data-oe-keep-contenteditable');
         }
 
-        // Remove Zero Width Spzces on Font awesome elements
+        // Remove Zero Width Spaces on Font awesome elements
         const faSelector = 'i.fa,span.fa,i.fab,span.fab,i.fad,span.fad,i.far,span.far';
         for (const el of element.querySelectorAll(faSelector)) {
             el.textContent = el.textContent.replace('\u200B', '');
         }
 
+        // Clean custom selections
+        if (this.deselectTable() && hasValidSelection(this.editable)) {
+            this.document.getSelection().collapseToStart();
+        }
     }
     /**
      * Handle the hint preview for the Powerbox.
@@ -3003,6 +3473,7 @@ export class OdooEditor extends EventTarget {
 
     _onMouseDown(ev) {
         this._currentMouseState = ev.type;
+        this._lastMouseClickPosition = [ev.x, ev.y];
 
         // When selecting all the text within a link then triggering delete or
         // inserting a character, the cursor and insertion is outside the link.
@@ -3108,16 +3579,90 @@ export class OdooEditor extends EventTarget {
         this._fixSelectionOnContenteditableFalse();
     }
 
-    _onDoumentMousedown(event) {
+    _onDocumentMousedown(event) {
         if (this.toolbar && !ancestors(event.target, this.editable).includes(this.toolbar)) {
             this.toolbar.style.pointerEvents = 'none';
+            if (this.deselectTable() && hasValidSelection(this.editable)) {
+                this.document.getSelection().collapseToStart();
+            }
+        }
+        // Handle table resizing.
+        const isHoveringTdBorder = this._isHoveringTdBorder(event);
+        if (isHoveringTdBorder) {
+            event.preventDefault();
+            const direction = {top: 'row', right: 'col', bottom: 'row', left: 'col'}[isHoveringTdBorder] || false;
+            let target1, target2;
+            switch (isHoveringTdBorder) {
+                case 'top': {
+                    target1 = getAdjacentPreviousSiblings(closestElement(event.target, 'tr')).find(node => node.nodeName === 'TR');
+                    target2 = closestElement(event.target, 'tr');
+                    break;
+                }
+                case 'right': {
+                    target1 = event.target;
+                    target2 = getAdjacentNextSiblings(event.target).find(node => node.nodeName === 'TD');
+                    break;
+                }
+                case 'bottom': {
+                    target1 = closestElement(event.target, 'tr');
+                    target2 = getAdjacentNextSiblings(closestElement(event.target, 'tr')).find(node => node.nodeName === 'TR');
+                    break;
+                }
+                case 'left': {
+                    target1 = getAdjacentPreviousSiblings(event.target).find(node => node.nodeName === 'TD');
+                    target2 = event.target;
+                    break;
+                }
+            }
+            this._isResizingTable = true;
+            this._toggleTableResizeCursor(direction);
+            const resizeTable = ev => this._resizeTable(ev, direction, target1, target2);
+            const stopResizing = ev => {
+                ev.preventDefault();
+                this._isResizingTable = false;
+                this._toggleTableResizeCursor(false);
+                this.document.removeEventListener('mousemove', resizeTable);
+                this.document.removeEventListener('mouseup', stopResizing);
+                this.document.removeEventListener('mouseleave', stopResizing);
+            };
+            this.document.addEventListener('mousemove', resizeTable);
+            this.document.addEventListener('mouseup', stopResizing);
+            this.document.addEventListener('mouseleave', stopResizing);
         }
     }
 
-    _onDoumentMouseup() {
+    _onDocumentMouseup() {
+        this.historyUnpauseSteps('handleSelectionInTable');
         if (this.toolbar) {
             this.toolbar.style.pointerEvents = 'auto';
         }
+    }
+
+    _onDocumentMousemove(ev) {
+        if (this._currentMouseState === 'mousedown' && !this._isResizingTable) {
+            this._handleSelectionInTable(ev);
+        }
+        if (!this._rowUi.classList.contains('o_open') && !this._columnUi.classList.contains('o_open')) {
+            const column = closestElement(ev.target, 'td');
+            if (this._isResizingTable || !column || !ev.target || ev.target.nodeType !== Node.ELEMENT_NODE) {
+                this._toggleTableUi(false, false);
+            } else {
+                const row = closestElement(column, 'tr');
+                const isFirstColumn = column === row.querySelector('td');
+                const isFirstRow = row === closestElement(column, 'table').querySelector('tr');
+                this._toggleTableUi(isFirstColumn && row, isFirstRow && column);
+            }
+        }
+        const direction = {top: 'row', right: 'col', bottom: 'row', left: 'col'}[this._isHoveringTdBorder(ev)] || false;
+        if (direction || !this._isResizingTable) {
+            this._toggleTableResizeCursor(direction);
+        }
+    }
+
+    _onDocumentClick(ev) {
+        // Close Table UI.
+        this._rowUi.classList.remove('o_open');
+        this._columnUi.classList.remove('o_open');
     }
 
     /**
@@ -3392,9 +3937,73 @@ export class OdooEditor extends EventTarget {
         if (cursorDestination) {
             setSelection(...startPos(cursorDestination), ...endPos(cursorDestination), true);
         } else if (direction === DIRECTIONS.RIGHT) {
-            this.execCommand('addRowBelow');
+            this.execCommand('addRow', 'after');
             this._onTabulationInTable(ev);
         }
+    }
+    _onTableMenuTogglerClick(ev) {
+        const uiWrapper = closestElement(ev.target, '.o_table_ui');
+        uiWrapper.classList.toggle('o_open');
+        if (uiWrapper.classList.contains('o_column_ui')) {
+            const columnIndex = getColumnIndex(this._columnUiTarget);
+            uiWrapper.querySelector('.o_move_left').classList.toggle('o_hide', columnIndex === 0);
+            const shouldHideRight = columnIndex === [...this._columnUiTarget.parentElement.children].filter(child => child.nodeName === 'TD').length - 1;
+            uiWrapper.querySelector('.o_move_right').classList.toggle('o_hide', shouldHideRight);
+        } else {
+            const rowIndex = getRowIndex(this._rowUiTarget);
+            uiWrapper.querySelector('.o_move_up').classList.toggle('o_hide', rowIndex === 0);
+            const shouldHideDown = rowIndex === [...this._rowUiTarget.parentElement.children].filter(child => child.nodeName === 'TR').length - 1;
+            uiWrapper.querySelector('.o_move_down').classList.toggle('o_hide', shouldHideDown);
+        }
+        ev.stopPropagation();
+    }
+    _onTableMoveUpClick() {
+        if (this._rowUiTarget.previousSibling) {
+            this._rowUiTarget.previousSibling.before(this._rowUiTarget);
+        }
+    }
+    _onTableMoveDownClick() {
+        if (this._rowUiTarget.nextSibling) {
+            this._rowUiTarget.nextSibling.after(this._rowUiTarget);
+        }
+    }
+    _onTableMoveRightClick() {
+        const trs = [...this._columnUiTarget.parentElement.parentElement.children].filter(child => child.nodeName === 'TR');
+        const columnIndex = getColumnIndex(this._columnUiTarget);
+        const tdsToMove = trs.map(tr => [...tr.children].filter(child => child.nodeName === 'TD')[columnIndex]);
+        for (const tdToMove of tdsToMove) {
+            const target = [...tdToMove.parentElement.children].filter(child => child.nodeName === 'TD')[columnIndex + 1];
+            target.after(tdToMove);
+        }
+    }
+    _onTableMoveLeftClick() {
+        const trs = [...this._columnUiTarget.parentElement.parentElement.children].filter(child => child.nodeName === 'TR');
+        const columnIndex = getColumnIndex(this._columnUiTarget);
+        const tdsToMove = trs.map(tr => [...tr.children].filter(child => child.nodeName === 'TD')[columnIndex]);
+        for (const tdToMove of tdsToMove) {
+            const target = [...tdToMove.parentElement.children].filter(child => child.nodeName === 'TD')[columnIndex - 1];
+            target.before(tdToMove);
+        }
+    }
+    _onTableDeleteColumnClick() {
+        this.historyPauseSteps();
+        const rows = [...closestElement(this._columnUiTarget, 'tr').parentElement.children].filter(child => child.nodeName === 'TR');
+        this.execCommand('removeColumn', this._columnUiTarget);
+        if (rows.every(row => !row.parentElement)) {
+            this.execCommand('deleteTable', this.editable.querySelector('.o_selected_table'));
+        }
+        this.historyUnpauseSteps();
+        this.historyStep();
+    }
+    _onTableDeleteRowClick() {
+        this.historyPauseSteps();
+        const rows = [...this._rowUiTarget.parentElement.children].filter(child => child.nodeName === 'TR');
+        this.execCommand('removeRow', this._rowUiTarget);
+        if (rows.every(row => !row.parentElement)) {
+            this.execCommand('deleteTable', this.editable.querySelector('.o_selected_table'));
+        }
+        this.historyUnpauseSteps();
+        this.historyStep();
     }
 
     /**

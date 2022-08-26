@@ -40,8 +40,12 @@ HTMLElement.prototype.oToggleList = function (offset, mode = 'UL') {
 HTMLParagraphElement.prototype.oToggleList = function (offset, mode = 'UL') {
     const restoreCursor = preserveCursor(this.ownerDocument);
     const list = insertListAfter(this, mode, [[...this.childNodes]]);
+    const classList = [...list.classList];
     for (const attribute of this.attributes) {
         list.setAttribute(attribute.name, attribute.value);
+    }
+    for (const className of classList) {
+        list.classList.toggle(className, true); // restore list classes
     }
     this.remove();
 

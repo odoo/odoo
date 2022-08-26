@@ -145,10 +145,10 @@
                         <i class="fa fa-columns fa-fw"></i>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#" id="table-add-column-left" data-call="addColumnLeft">Add a column left</a></li>
-                        <li><a class="dropdown-item" href="#" id="table-add-column-right" data-call="addColumnRight">Add a column right</a></li>
-                        <li><a class="dropdown-item" href="#" id="table-add-row-above" data-call="addRowAbove">Add a row above</a></li>
-                        <li><a class="dropdown-item" href="#" id="table-add-row-below" data-call="addRowBelow">Add a row below</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-add-column-left" data-call="addColumn" data-arg1="before">Add a column left</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-add-column-right" data-call="addColumn" data-arg1="after">Add a column right</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-add-row-above" data-call="addRow" data-arg1="before">Add a row above</a></li>
+                        <li><a class="dropdown-item" href="#" id="table-add-row-below" data-call="addRow" data-arg1="after">Add a row below</a></li>
                         <li><a class="dropdown-item" href="#" id="table-remove-column" data-call="removeColumn">Remove current column</a></li>
                         <li><a class="dropdown-item" href="#" id="table-remove-row" data-call="removeRow">Remove current row</a></li>
                         <li><a class="dropdown-item" href="#" id="table-delete-table" data-call="deleteTable">Delete current table</a></li>
@@ -229,10 +229,10 @@
                     <span class="oe-table-label">Add Column</span>
                     <div class="w-100">
                         <div class="oe-table-selection btn-group w-100">
-                            <button class="btn w-50" data-call="addColumnLeft">
+                            <button class="btn w-50" data-call="addColumn" data-arg1="before">
                                 <i class="small fa fa-fw fa-step-backward"/> Left
                             </button>
-                            <button class="btn w-50" data-call="addColumnRight">
+                            <button class="btn w-50" data-call="addColumn" data-arg1="after">
                                 Right <i class="small fa fa-fw fa-step-forward"/>
                             </button>
                         </div>
@@ -242,10 +242,10 @@
                     <span class="oe-table-label">Add Row</span>
                     <div class="w-100">
                         <div class="oe-table-selection btn-group w-100">
-                            <button class="btn w-50" data-call="addRowAbove">
+                            <button class="btn w-50" data-call="addRow" data-arg1="before">
                                 <i class="small fa fa-fw fa-step-backward fa-rotate-90"/> Above
                             </button>
-                            <button class="btn w-50" data-call="addRowBelow">
+                            <button class="btn w-50" data-call="addRow" data-arg1="after">
                                 Below <i class="small fa fa-fw fa-step-forward fa-rotate-90"/>
                             </button>
                         </div>

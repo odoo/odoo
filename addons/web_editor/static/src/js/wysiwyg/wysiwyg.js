@@ -36,6 +36,7 @@ const preserveCursor = OdooEditorLib.preserveCursor;
 const closestElement = OdooEditorLib.closestElement;
 const setSelection = OdooEditorLib.setSelection;
 const endPos = OdooEditorLib.endPos;
+const hasValidSelection = OdooEditorLib.hasValidSelection;
 
 var id = 0;
 const basicMediaSelector = 'img, .fa, .o_image, .media_iframe_video';
@@ -1576,7 +1577,14 @@ const Wysiwyg = Widget.extend({
                         // Unstash the mutations now that the color is picked.
                         this.odooEditor.historyUnstash();
                         this._processAndApplyColor(eventName, ev.data.color);
+                        // Deselect tables so the applied color can be seen
+                        // without using `!important` (otherwise the selection
+                        // hides it).
+                        if (this.odooEditor.deselectTable() && hasValidSelection(this.odooEditor.editable)) {
+                            this.odooEditor.document.getSelection().collapseToStart();
+                        }
                         this._updateEditorUI();
+                        colorpicker.off('color_leave');
                     });
                     colorpicker.on('color_hover', null, ev => {
                         if (hadNonCollapsedSelection) {
@@ -1584,7 +1592,7 @@ const Wysiwyg = Widget.extend({
                         }
                         this.odooEditor.historyPauseSteps();
                         try {
-                            this._processAndApplyColor(eventName, ev.data.color);
+                            this._processAndApplyColor(eventName, ev.data.color, true);
                         } finally {
                             this.odooEditor.historyUnpauseSteps();
                         }
@@ -1615,25 +1623,34 @@ const Wysiwyg = Widget.extend({
             });
         }
     },
-    _processAndApplyColor: function (eventName, color) {
+    _processAndApplyColor: function (eventName, color, previewMode) {
         if (!color) {
             color = 'inherit';
         } else if (!ColorpickerWidget.isCSSColor(color) && !weUtils.isColorGradient(color)) {
             color = (eventName === "foreColor" ? 'text-' : 'bg-') + color;
         }
-        const fonts = this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
+        const coloredElements = this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
 
-        // Ensure the selection in the fonts tags, otherwise an undetermined
-        // race condition could generate a wrong selection later.
-        const first = fonts[0];
-        const last = fonts[fonts.length - 1];
+        const coloredTds = coloredElements.filter(coloredElement => coloredElement.classList.contains('o_selected_td'));
+        if (coloredTds.length) {
+            const propName = eventName === 'foreColor' ? 'color' : 'background-color';
+            for (const td of coloredTds) {
+                // Make it important so it has priority over selection color.
+                td.style.setProperty(propName, td.style[propName], previewMode ? 'important' : '');
+            }
+        } else {
+            // Ensure the selection in the fonts tags, otherwise an undetermined
+            // race condition could generate a wrong selection later.
+            const first = coloredElements[0];
+            const last = coloredElements[coloredElements.length - 1];
 
-        const sel = this.odooEditor.document.getSelection();
-        sel.removeAllRanges();
-        const range = new Range();
-        range.setStart(first, 0);
-        range.setEnd(...endPos(last));
-        sel.addRange(range);
+            const sel = this.odooEditor.document.getSelection();
+            sel.removeAllRanges();
+            const range = new Range();
+            range.setStart(first, 0);
+            range.setEnd(...endPos(last));
+            sel.addRange(range);
+        }
 
         const hexColor = this._colorToHex(color);
         this.odooEditor.updateColorpickerLabels({
