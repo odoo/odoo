@@ -7,7 +7,6 @@ import Widget from 'web.Widget';
 const LivechatButton = Widget.extend({
     className: 'openerp o_livechat_button d-print-none',
     custom_events: {
-        'close_chat_window': '_onCloseChatWindow',
         'post_message_chat_window': '_onPostMessageChatWindow',
         'save_chat_window': '_onSaveChatWindow',
         'updated_typing_partners': '_onUpdatedTypingPartners',
@@ -95,24 +94,6 @@ const LivechatButton = Widget.extend({
      */
     _onClick() {
         this.messaging.publicLivechatGlobal.livechatButtonView.openChat();
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onCloseChatWindow(ev) {
-        ev.stopPropagation();
-        const isComposerDisabled = this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_thread_composer input').prop('disabled');
-        const shouldAskFeedback = !isComposerDisabled && this.messaging.publicLivechatGlobal.messages.find(function (message) {
-            return message.id !== '_welcome';
-        });
-        if (shouldAskFeedback) {
-            this.messaging.publicLivechatGlobal.chatWindow.widget.toggleFold(false);
-            this.messaging.publicLivechatGlobal.livechatButtonView.askFeedback();
-        } else {
-            this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
-        }
-        this.messaging.publicLivechatGlobal.livechatButtonView.leaveSession();
     },
     /**
      * @private

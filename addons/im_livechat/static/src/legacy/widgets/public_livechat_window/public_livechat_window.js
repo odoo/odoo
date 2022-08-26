@@ -74,7 +74,17 @@ const PublicLivechatWindow = Widget.extend({
      * @override
      */
     close() {
-        this.trigger_up('close_chat_window');
+        const isComposerDisabled = this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_thread_composer input').prop('disabled');
+        const shouldAskFeedback = !isComposerDisabled && this.messaging.publicLivechatGlobal.messages.find(function (message) {
+            return message.id !== '_welcome';
+        });
+        if (shouldAskFeedback) {
+            this.messaging.publicLivechatGlobal.chatWindow.widget.toggleFold(false);
+            this.messaging.publicLivechatGlobal.livechatButtonView.askFeedback();
+        } else {
+            this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
+        }
+        this.messaging.publicLivechatGlobal.livechatButtonView.leaveSession();
     },
     /**
      * States whether the current environment is in mobile or not. This is
