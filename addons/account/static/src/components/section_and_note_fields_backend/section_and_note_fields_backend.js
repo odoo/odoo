@@ -58,6 +58,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
     }
 }
 SectionAndNoteListRenderer.template = "account.sectionAndNoteListRenderer";
+SectionAndNoteListRenderer.recordRowTemplate = "account.SectionAndNoteListRenderer.RecordRow";
 
 export class SectionAndNoteFieldOne2Many extends X2ManyField {
     setup() {
