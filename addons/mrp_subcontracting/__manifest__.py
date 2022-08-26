@@ -42,6 +42,7 @@
         'mrp_subcontracting.assets_qweb': [
             ('include', 'web.assets_qweb'),
             'mrp_subcontracting/static/src/subcontracting_portal/subcontracting_portal.xml',
+            'mrp_subcontracting/static/src/subcontracting_portal/picking_form_controller.xml',
         ],
         'mrp_subcontracting.webclient': [
             ('include', 'web.assets_backend'),
