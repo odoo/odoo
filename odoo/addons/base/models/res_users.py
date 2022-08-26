@@ -215,6 +215,26 @@ class Groups(models.Model):
             self.env['ir.model.access'].call_cache_clearing_methods()
         return super(Groups, self).write(vals)
 
+    def _ensure_xml_id(self):
+        """Return the groups external identifiers, creating the external identifier for groups missing one"""
+        result = self.get_external_id()
+        missings = {group_id: f'__custom__.group_{group_id}' for group_id, ext_id in result.items() if not ext_id}
+        if missings:
+            self.env['ir.model.data'].create(
+                [
+                    {
+                        'name': name.split('.')[1],
+                        'model': 'res.groups',
+                        'res_id': group_id,
+                        'module': name.split('.')[0],
+                    }
+                    for group_id, name in missings.items()
+                ]
+            )
+            result.update(missings)
+
+        return result
+
 
 class ResUsersLog(models.Model):
     _name = 'res.users.log'

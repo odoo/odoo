@@ -1639,6 +1639,24 @@ class BaseModel(metaclass=MetaModel):
 
         result['models'] = {model: self.env[model].fields_get() for model in models}
 
+        # Add related action information if asked
+        if options.get('toolbar'):
+            for view in result['views'].values():
+                view['toolbar'] = {}
+
+            bindings = self.env['ir.actions.actions'].get_bindings(self._name)
+            for action_type, key in (('report', 'print'), ('action', 'action')):
+                for action in bindings.get(action_type, []):
+                    view_types = (
+                        action['binding_view_types'].split(',')
+                        if action.get('binding_view_types')
+                        else result['views'].keys()
+                    )
+                    for view_type in view_types:
+                        view_type = view_type if view_type != 'tree' else 'list'
+                        if view_type in result['views']:
+                            result['views'][view_type]['toolbar'].setdefault(key, []).append(action)
+
         return result
 
     @api.model
@@ -1653,7 +1671,6 @@ class BaseModel(metaclass=MetaModel):
             - bool load_filters: returns the model's filters (for search views)
             - bool mobile: true if the web client is currently using the responsive mobile view
               (to use kanban views instead of list views for x2many fields)
-            - bool toolbar: true to include contextual actions
         :return: architecture of the view as an etree node, and the browse record of the view used
         :rtype: tuple
         :raise AttributeError:
@@ -1711,7 +1728,6 @@ class BaseModel(metaclass=MetaModel):
             - load_filters: returns the model's filters (for search views)
             - mobile: true if the web client is currently using the responsive mobile view
               (to use kanban views instead of list views for x2many fields)
-            - toolbar: true to include contextual actions
         :return: composition of the requested view (including inherited views and extensions)
         :rtype: dict
         :raise AttributeError:
@@ -1741,22 +1757,6 @@ class BaseModel(metaclass=MetaModel):
             'model': self._name,
             'models': models,
         }
-
-        # Add related action information if asked
-        if options.get('toolbar') and view_type != 'search':
-            vt = 'list' if view_type == 'tree' else view_type
-            bindings = self.env['ir.actions.actions'].get_bindings(self._name)
-            resreport = [action
-                         for action in bindings['report']
-                         if vt in (action.get('binding_view_types') or vt).split(',')]
-            resaction = [action
-                         for action in bindings['action']
-                         if vt in (action.get('binding_view_types') or vt).split(',')]
-
-            result['toolbar'] = {
-                'print': resreport,
-                'action': resaction,
-            }
 
         if options.get('load_filters') and view_type == 'search':
             result['filters'] = self.env['ir.filters'].get_filters(self._name, options.get('action_id'))
@@ -1805,7 +1805,7 @@ class BaseModel(metaclass=MetaModel):
             'Method `fields_view_get` is deprecated, use `get_view` instead',
             DeprecationWarning, stacklevel=2,
         )
-        result = self.get_view(view_id, view_type, toolbar=toolbar, submenu=submenu)
+        result = self.get_views([(view_id, view_type)], {'toolbar': toolbar, 'submenu': submenu})['views'][view_type]
         node = etree.fromstring(result['arch'])
         view_fields = set(el.get('name') for el in node.xpath('.//field[not(ancestor::field)]'))
         result['fields'] = self.fields_get(view_fields)
