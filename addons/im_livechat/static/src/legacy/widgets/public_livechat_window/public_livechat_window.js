@@ -179,8 +179,13 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      * @param {Object} messageData
      */
-    _postMessage(messageData) {
-        this.trigger_up('post_message_chat_window', { messageData });
+    async _postMessage(messageData) {
+        try {
+            await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData);
+        } catch (reason) {
+            reason.event.preventDefault();
+            return this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData); // try again just in case
+        }
         this.messaging.publicLivechatGlobal.publicLivechat.widget.postMessage(messageData)
             .then(() => {
                 this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
