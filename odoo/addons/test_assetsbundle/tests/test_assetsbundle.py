@@ -1745,15 +1745,10 @@ class TestAssetsManifest(AddonManifestPatched):
 
     @mute_logger('odoo.addons.base.models.ir_asset')
     def test_31(self):
-        path_to_dummy = '../../tests/dummy.js'
-        me = pathlib.Path(__file__).parent.absolute()
-        file_path = me.joinpath("..", path_to_dummy)  # assuming me = test_assetsbundle/tests
-        self.assertTrue(os.path.isfile(file_path))
-
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'path': '/test_assetsbundle/%s' % path_to_dummy,
+            'path': '/test_assetsbundle/tests/dummy.js',
         })
         view = self.make_asset_view('test_assetsbundle.irassetsec')
         self.env['ir.qweb']._render(view.id)
@@ -1762,15 +1757,10 @@ class TestAssetsManifest(AddonManifestPatched):
 
     @mute_logger('odoo.addons.base.models.ir_asset')
     def test_32(self):
-        path_to_dummy = '../../tests/dummy.xml'
-        me = pathlib.Path(__file__).parent.absolute()
-        file_path = me.joinpath("..", path_to_dummy)  # assuming me = test_assetsbundle/tests
-        self.assertTrue(os.path.isfile(file_path))
-
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'path': '/test_assetsbundle/%s' % path_to_dummy,
+            'path': '/test_assetsbundle/tests/dummy.xml',
         })
 
         files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules), xml=False)

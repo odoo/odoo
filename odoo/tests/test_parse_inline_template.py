@@ -16,3 +16,4 @@ class TestParseInlineTemplate(BaseCase):
     def test_expression2(self):
         text = 'a {{b}} c'
         self.assertEqual(parse_inline_template(text), [('a ', 'b'), (' c', '')])
+        assert 0
