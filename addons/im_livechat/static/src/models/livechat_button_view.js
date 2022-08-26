@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
-
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
@@ -24,10 +22,8 @@ registerModel({
          * @param {Object} [options={}]
          */
         addMessage(data, options) {
-            const messageWidget = new PublicLivechatMessage(this, this.messaging, data);
-
             const hasAlreadyMessage = _.some(this.messaging.publicLivechatGlobal.messages, function (msg) {
-                return messageWidget.getID() === msg.id;
+                return data.id === msg.id;
             });
             if (hasAlreadyMessage) {
                 return;
@@ -35,11 +31,10 @@ registerModel({
             const message = this.messaging.models['PublicLivechatMessage'].insert({
                 data,
                 id: data.id,
-                widget: messageWidget,
             });
 
             if (this.messaging.publicLivechatGlobal.publicLivechat && this.messaging.publicLivechatGlobal.publicLivechat.widget) {
-                this.messaging.publicLivechatGlobal.publicLivechat.widget.addMessage(messageWidget);
+                this.messaging.publicLivechatGlobal.publicLivechat.widget.addMessage(message.widget);
             }
 
             if (options && options.prepend) {
@@ -244,7 +239,7 @@ registerModel({
          * @returns {string|FieldCommand}
          */
         _computeInputPlaceholder() {
-            if (this.isChatbot) {
+            if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
                 // void the default livechat placeholder in the user input
                 // as we use it for specific things (e.g: showing "please select an option above")
                 return clear();
@@ -253,28 +248,6 @@ registerModel({
                 return this.messaging.publicLivechatGlobal.options.input_placeholder;
             }
             return this.env._t("Ask something ...");
-        },
-        /**
-         * @private
-         * @returns {boolean}
-         */
-        _computeIsChatbot() {
-            if (this.messaging.publicLivechatGlobal.isTestChatbot) {
-                return true;
-            }
-            if (this.messaging.publicLivechatGlobal.rule && this.messaging.publicLivechatGlobal.rule.chatbot) {
-                return true;
-            }
-            if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
-                return true;
-            }
-            if (this.messaging.publicLivechatGlobal.chatbot.state === 'welcome') {
-                return true;
-            }
-            if (this.messaging.publicLivechatGlobal.chatbot.localStorageState) {
-                return true;
-            }
-            return clear();
         },
         /**
          * @private
@@ -295,7 +268,7 @@ registerModel({
          * @returns {string}
          */
         _computeServerUrl() {
-            if (this.isChatbot) {
+            if (this.messaging.publicLivechatGlobal.chatbot.isActive) {
                 return this.messaging.publicLivechatGlobal.chatbot.serverUrl;
             }
             return this.messaging.publicLivechatGlobal.serverUrl;
@@ -353,7 +326,7 @@ registerModel({
                         if (!this.messaging.publicLivechatGlobal.history) {
                             this.widget._sendWelcomeMessage();
                         }
-                        this.widget._renderMessages();
+                        this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                         this.messaging.publicLivechatGlobal.update({ notificationHandler: {} });
 
                         set_cookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60);
@@ -437,7 +410,7 @@ registerModel({
                 return;
             }
             if (
-                this.isChatbot &&
+                this.messaging.publicLivechatGlobal.chatbot.isActive &&
                 this.messaging.publicLivechatGlobal.chatbot.currentStep &&
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
@@ -482,7 +455,7 @@ registerModel({
          */
         async _sendMessageChatbotBefore() {
             if (
-                this.isChatbot &&
+                this.messaging.publicLivechatGlobal.chatbot.isActive &&
                 this.messaging.publicLivechatGlobal.chatbot.currentStep &&
                 this.messaging.publicLivechatGlobal.chatbot.currentStep.data
             ) {
@@ -518,10 +491,6 @@ registerModel({
         inputPlaceholder: attr({
             compute: '_computeInputPlaceholder',
             default: '',
-        }),
-        isChatbot: attr({
-            compute: '_computeIsChatbot',
-            default: false,
         }),
         isOpenChatDebounced: attr({
             compute: '_computeIsOpenChatDebounced',

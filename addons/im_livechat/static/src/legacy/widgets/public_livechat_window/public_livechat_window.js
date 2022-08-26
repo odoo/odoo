@@ -4,6 +4,8 @@ import config from 'web.config';
 import { _t, qweb } from 'web.core';
 import Widget from 'web.Widget';
 
+import { set_cookie, unaccent } from 'web.utils';
+
 /**
  * This is the widget that represent windows of livechat in the frontend.
  *
@@ -74,7 +76,17 @@ const PublicLivechatWindow = Widget.extend({
      * @override
      */
     close() {
-        this.trigger_up('close_chat_window');
+        const isComposerDisabled = this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_thread_composer input').prop('disabled');
+        const shouldAskFeedback = !isComposerDisabled && this.messaging.publicLivechatGlobal.messages.find(function (message) {
+            return message.id !== '_welcome';
+        });
+        if (shouldAskFeedback) {
+            this.messaging.publicLivechatGlobal.chatWindow.widget.toggleFold(false);
+            this.messaging.publicLivechatGlobal.livechatButtonView.askFeedback();
+        } else {
+            this.messaging.publicLivechatGlobal.livechatButtonView.closeChat();
+        }
+        this.messaging.publicLivechatGlobal.livechatButtonView.leaveSession();
     },
     /**
      * States whether the current environment is in mobile or not. This is
@@ -125,7 +137,7 @@ const PublicLivechatWindow = Widget.extend({
             folded = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded;
         }
         this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: folded });
-        this.trigger_up('save_chat_window');
+        set_cookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60);
         this.updateVisualFoldState();
     },
     /**
@@ -179,8 +191,12 @@ const PublicLivechatWindow = Widget.extend({
      * @private
      * @param {Object} messageData
      */
-    _postMessage(messageData) {
-        this.trigger_up('post_message_chat_window', { messageData });
+    async _postMessage(messageData) {
+        try {
+            await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData);
+        } catch (_err) {
+            await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage(messageData); // try again just in case
+        }
         this.messaging.publicLivechatGlobal.publicLivechat.widget.postMessage(messageData)
             .then(() => {
                 this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();

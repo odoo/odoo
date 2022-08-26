@@ -25,7 +25,7 @@ registerModel({
             }
 
             if (!options || !options.skipRenderMessages) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+                this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
             }
         },
         /**
@@ -99,7 +99,7 @@ registerModel({
                 });
             });
 
-            this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+            this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
         },
         /**
          * Processes the step, depending on the current state of the script and the author of the last
@@ -259,7 +259,7 @@ registerModel({
                 this.currentStep.data &&
                 this.currentStep.data.chatbot_step_type === 'question_email'
             ) {
-                triggerNextStep = await this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotValidateEmail();
+                triggerNextStep = await this.validateEmail();
             }
 
             if (!triggerNextStep) {
@@ -285,13 +285,43 @@ registerModel({
             } else {
                 // did not find next step -> end the script
                 this.currentStep.data.chatbot_step_is_last = true;
-                this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+                this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                 this.endScript();
             }
 
             this.saveSession();
 
             return nextStep;
+        },
+        /**
+         * A special case is handled for email steps, where we first validate the email (server side)
+         * and we allow the user to try again in case the format is incorrect.
+         *
+         * The validation is made server-side to have the same test when we validate here and when we
+         * register the answer, but also to easily post a message as the bot ("Sorry, try again...").
+         *
+         * Returns a boolean stating whether the email was valid or not.
+         */
+        async validateEmail() {
+            let emailValidResult = await this.messaging.rpc({
+                route: '/chatbot/step/validate_email',
+                params: { channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid },
+            });
+
+            if (emailValidResult.success) {
+                this.currentStep.data.is_email_valid = true;
+                this.saveSession();
+
+                return true;
+            } else {
+                // email is not valid, let the user try again
+                this.messaging.publicLivechatGlobal.chatWindow.enableInput();
+                if (emailValidResult.posted_message) {
+                    this.addMessage(emailValidResult.posted_message);
+                }
+
+                return false;
+            }
         },
         /**
          * This method will be transformed into a 'debounced' version (see init).
@@ -360,6 +390,28 @@ registerModel({
                 this.awaitUserInput,
                 this.awaitUserInputDebounceTime,
             );
+        },
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsActive() {
+            if (this.messaging.publicLivechatGlobal.isTestChatbot) {
+                return true;
+            }
+            if (this.messaging.publicLivechatGlobal.rule && this.messaging.publicLivechatGlobal.rule.chatbot) {
+                return true;
+            }
+            if (this.messaging.publicLivechatGlobal.livechatInit && this.messaging.publicLivechatGlobal.livechatInit.rule.chatbot) {
+                return true;
+            }
+            if (this.state === 'welcome') {
+                return true;
+            }
+            if (this.localStorageState) {
+                return true;
+            }
+            return clear();
         },
         /**
          * @private
@@ -553,6 +605,10 @@ registerModel({
         }),
         hasRestartButton: attr({
             compute: '_computeHasRestartButton',
+            default: false,
+        }),
+        isActive: attr({
+            compute: '_computeIsActive',
             default: false,
         }),
         isExpectingUserInput: attr({

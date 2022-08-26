@@ -37,8 +37,6 @@ const PublicLivechatView = Widget.extend({
         'click .o_thread_message': '_onClickMessage',
         'click': '_onClick',
         'click .o_thread_message_notification_error': '_onClickMessageNotificationError',
-        'click .o_thread_message_moderation': '_onClickMessageModeration',
-        'change .moderation_checkbox': '_onChangeModerationCheckbox',
     },
 
     /**
@@ -55,25 +53,13 @@ const PublicLivechatView = Widget.extend({
         this._enabledOptions = _.defaults(options || {}, {
             displayOrder: ORDER.ASC,
             displayMarkAsRead: true,
-            displayModerationCommands: false,
             displayDocumentLinks: true,
             displayAvatars: true,
             squashCloseMessages: true,
             loadMoreOnScroll: false,
         });
-        // options when the thread is disabled
-        this._disabledOptions = {
-            displayOrder: this._enabledOptions.displayOrder,
-            displayMarkAsRead: false,
-            displayModerationCommands: false,
-            displayDocumentLinks: false,
-            displayAvatars: this._enabledOptions.displayAvatars,
-            squashCloseMessages: false,
-            loadMoreOnScroll: this._enabledOptions.loadMoreOnScroll,
-        };
         this._selectedMessageID = null;
         this._currentThreadID = null;
-        this._messageMailPopover = null;
     },
     /**
      * The message mail popover may still be shown at this moment. If we do not
@@ -83,9 +69,6 @@ const PublicLivechatView = Widget.extend({
      */
     destroy() {
         clearInterval(this._updateTimestampsInterval);
-        if (this._messageMailPopover) {
-            this._messageMailPopover.popover('hide');
-        }
         this._super();
     },
     /**
@@ -97,7 +80,6 @@ const PublicLivechatView = Widget.extend({
      * @param {boolean} [options.displayLoadMore]
      * @param {Array} [options.domain=[]] the domain for the messages in the
      *    thread.
-     * @param {boolean} [options.isCreateMode]
      * @param {boolean} [options.scrollToBottom=false]
      * @param {boolean} [options.squashCloseMessages]
      */
@@ -111,8 +93,7 @@ const PublicLivechatView = Widget.extend({
         // copy so that reverse do not alter order in the thread object
         const messages = _.clone(this.messaging.publicLivechatGlobal.publicLivechat.widget.getMessages());
 
-        const modeOptions = options.isCreateMode ? this._disabledOptions :
-                                                    this._enabledOptions;
+        const modeOptions = this._enabledOptions;
 
         options = Object.assign({}, modeOptions, options, {
             selectedMessageID: this._selectedMessageID,
@@ -136,19 +117,7 @@ const PublicLivechatView = Widget.extend({
                 prevMessage.getType() !== 'comment' ||
                 message.getType() !== 'comment' ||
                 // from a different author
-                (prevMessage.getAuthorID() !== message.getAuthorID()) ||
-                (
-                    // messages are linked to a document thread
-                    (
-                        prevMessage.isLinkedToDocumentThread() &&
-                        message.isLinkedToDocumentThread()
-                    ) &&
-                    (
-                        // are from different documents
-                        prevMessage.getDocumentModel() !== message.getDocumentModel() ||
-                        prevMessage.getDocumentID() !== message.getDocumentID()
-                    )
-                )
+                prevMessage.getAuthorID() !== message.getAuthorID()
             ) {
                 displayAuthorMessages[message.getID()] = true;
             } else {
@@ -162,11 +131,11 @@ const PublicLivechatView = Widget.extend({
         }
 
         this.$el.html(QWeb.render('im_livechat.legacy.mail.widget.Thread', {
-            thread: this.messaging.publicLivechatGlobal.publicLivechat,
             displayAuthorMessages,
             options,
             ORDER,
             dateFormat: time.getLangDatetimeFormat(),
+            widget: this,
         }));
 
         for (let message of messages) {
@@ -185,8 +154,6 @@ const PublicLivechatView = Widget.extend({
                 this._updateTimestamps();
             }, 1000 * 60);
         }
-
-        this._renderMessageNotificationPopover(messages);
     },
 
     /**
@@ -257,15 +224,6 @@ const PublicLivechatView = Widget.extend({
         } else {
             this.scrollToBottom();
         }
-    },
-    /**
-     * Toggle all the moderation checkboxes in the thread
-     *
-     * @param {boolean} checked if true, check the boxes,
-     *      otherwise uncheck them.
-     */
-    toggleModerationCheckboxes(checked) {
-        this.$('.moderation_checkbox').prop('checked', checked);
     },
     /**
      * Unselect the selected message
@@ -375,38 +333,6 @@ const PublicLivechatView = Widget.extend({
         }
     }, 500, true),
     /**
-     * Render the popover when mouse-hovering on the notification icon of a
-     * message in the thread.
-     * There is at most one such popover at any given time.
-     *
-     * @private
-     * @param {@im_livechat/legacy/models/public_livechat_message[]} messages list of messages in the
-     *   rendered thread, for which popover on mouseover interaction is
-     *   permitted.
-     */
-    _renderMessageNotificationPopover(messages) {
-        if (this._messageMailPopover) {
-            this._messageMailPopover.popover('hide');
-        }
-        if (!this.$('.o_thread_tooltip').length) {
-            return;
-        }
-        this._messageMailPopover = this.$('.o_thread_tooltip').popover({
-            html: true,
-            boundary: 'viewport',
-            placement: 'auto',
-            trigger: 'hover',
-            offset: '0, 1',
-            content() {
-                const messageID = $(this).data('message-id');
-                const message = messages.find(message => message.getID() === messageID);
-                return QWeb.render('im_livechat.legacy.mail.widget.Thread.Message.MailTooltip', {
-                    notifications: message.getNotifications(),
-                });
-            },
-        });
-    },
-    /**
      * @private
      */
      _updateTimestamps() {
@@ -424,13 +350,6 @@ const PublicLivechatView = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onChangeModerationCheckbox(ev) {
-        this.trigger_up('update_moderation_buttons');
-    },
     /**
      * @private
      */
@@ -493,19 +412,6 @@ const PublicLivechatView = Widget.extend({
      _onClickMessageStar(ev) {
         const messageID = $(ev.currentTarget).data('message-id');
         this.trigger('toggle_star_status', messageID);
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-     _onClickMessageModeration(ev) {
-        const $button = $(ev.currentTarget);
-        const messageID = $button.data('message-id');
-        const decision = $button.data('decision');
-        this.trigger_up('message_moderation', {
-            messageID,
-            decision,
-        });
     },
     /**
      * @private

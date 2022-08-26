@@ -67,7 +67,7 @@ registerModel({
                     if (this.messaging.publicLivechatGlobal.publicLivechat.isFolded || !this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom()) {
                         this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: increment() });
                     }
-                    this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+                    this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                     return;
                 }
                 case 'mail.message/insert': {
@@ -76,7 +76,7 @@ registerModel({
                         return;
                     }
                     message.widget._body = utils.Markup(payload.body);
-                    this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+                    this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                     return;
                 }
             }

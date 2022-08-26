@@ -32,7 +32,7 @@
             <a href="#" class="o_thread_window_close fa fa-1x fa-arrow-left" aria-label="Close chat window" title="Close chat window"/>
         </span>
         <span class="o_thread_window_title">
-            <t t-esc="widget.messaging.publicLivechatGlobal.publicLivechat.title"/>
+            <t t-esc="widget.messaging.publicLivechatGlobal.publicLivechat.name"/>
             <span t-if="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"> (<t t-esc="widget.messaging.publicLivechatGlobal.publicLivechat.unreadCounter"/>)</span>
             <t t-if="widget.messaging.publicLivechatGlobal.publicLivechat.widget.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
         </span>

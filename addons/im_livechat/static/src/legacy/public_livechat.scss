@@ -223,11 +223,6 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
         height: 15px;
     }
 
-    .o_thread_tooltip_container {
-        display: inline;
-        position: relative;
-    }
-
     .o_thread_date_separator {
         margin-top: 15px;
         margin-bottom: 30px;
@@ -419,21 +414,12 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                     margin-bottom: $grid-gutter-width;
                 }
             }
-
-            .o_thread_tooltip_container {
-                display: inline;
-                position: relative;
-            }
         }
     }
 
     .o_thread_message .o_thread_message_core .o_mail_read_more {
         display: block;
     }
-}
-
-.o_web_client .popover .o_thread_tooltip_icon {
-    min-width: 1rem;
 }
 
 .o_web_client.o_touch_device {

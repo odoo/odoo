@@ -41,14 +41,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
 
         /**
          * Initialize the internal data for typing feature on threads.
-         *
-         * Also listens on some internal events of the thread:
-         *
-         * - 'message_added': when a message is added, remove the author in the
-         *     typing partners.
-         * - 'message_posted': when a message is posted, let the user have the
-         *     possibility to immediately notify if he types something right away,
-         *     instead of waiting for a throttle behaviour.
          */
 
         // Store the last "myself typing" status that has been sent to the
@@ -104,9 +96,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         // something, in order to display the oldest typing partners.
         this._typingPartnerIDs = [];
 
-        this.on('message_added', this, this._onTypingMessageAdded);
-        this.on('message_posted', this, this._onTypingMessagePosted);
-
         if (params.data.message_unread_counter !== undefined) {
             this.messaging.publicLivechatGlobal.publicLivechat.update({
                 unreadCounter: params.data.message_unread_counter
@@ -125,12 +114,23 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
     //--------------------------------------------------------------------------
 
     /**
-     * Add a message to this thread.
+     * Called when a new message is added to the thread
+     * On receiving a message from a typing partner, unregister this partner
+     * from typing partners (otherwise, it will still display it until timeout).
+     *
+     * Note that it only unregister typing operators.
+     *
+     * Note that in the frontend, there is no way to identify a message that is
+     * from the current user, because there is no partner ID in the session and
+     * a message with an author sets the partner ID of the author.
      *
      * @param {@im_livechat/legacy/models/public_livechat_message} message
      */
     addMessage(message) {
-        this.trigger('message_added', message);
+        const operatorID = this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
+        if (message.hasAuthor() && message.getAuthorID() === operatorID) {
+            this.unregisterTyping({ partnerID: operatorID });
+        }
     },
     /**
      * @override
@@ -215,19 +215,27 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
     markAsRead() {
         if (this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter > 0) {
             this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: 0 });
-            this.trigger_up('updated_unread_counter');
+            this.messaging.publicLivechatGlobal.chatWindow.widget.renderHeader();
             return Promise.resolve();
         }
         return Promise.resolve();
     },
     /**
-     * Post a message on this thread
+     * Called when current user has posted a message on this thread.
      *
-     * @returns {Promise} resolved with the message object to be sent to the
-     *   server
+     * The current user receives the possibility to immediately notify the
+     * other users if he is typing something else.
+     *
+     * Refresh the context for the current user to notify that he starts or
+     * stops typing something. In other words, when this function is called and
+     * then the current user types something, it immediately notifies the
+     * server as if it is the first time he is typing something.
      */
     async postMessage() {
-        this.trigger('message_posted');
+        this._lastNotifiedMyselfTyping = false;
+        this._throttleNotifyMyselfTyping.clear();
+        this._myselfLongTypingTimer.clear();
+        this._myselfTypingInactivityTimer.clear();
     },
     /**
      * Register someone that is currently typing something in this thread.
@@ -342,7 +350,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @private
      */
     _warnUpdatedTypingPartners() {
-        this.trigger_up('updated_typing_partners');
+        this.messaging.publicLivechatGlobal.chatWindow.widget.renderHeader();
     },
 
     //--------------------------------------------------------------------------
@@ -403,45 +411,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      */
     _onOthersTypingTimeout(partnerID) {
         this.unregisterTyping({ partnerID });
-    },
-    /**
-     * Called when a new message is added to the thread
-     * On receiving a message from a typing partner, unregister this partner
-     * from typing partners (otherwise, it will still display it until timeout).
-     *
-     * Note that it only unregister typing operators.
-     *
-     * Note that in the frontend, there is no way to identify a message that is
-     * from the current user, because there is no partner ID in the session and
-     * a message with an author sets the partner ID of the author.
-     *
-     * @private
-     * @param {mail.model.AbstractMessage} message
-     */
-    _onTypingMessageAdded(message) {
-        const operatorID = this.messaging.publicLivechatGlobal.publicLivechat.operator.id;
-        if (message.hasAuthor() && message.getAuthorID() === operatorID) {
-            this.unregisterTyping({ partnerID: operatorID });
-        }
-    },
-    /**
-     * Called when current user has posted a message on this thread.
-     *
-     * The current user receives the possibility to immediately notify the
-     * other users if he is typing something else.
-     *
-     * Refresh the context for the current user to notify that he starts or
-     * stops typing something. In other words, when this function is called and
-     * then the current user types something, it immediately notifies the
-     * server as if it is the first time he is typing something.
-     *
-     * @private
-     */
-    _onTypingMessagePosted() {
-        this._lastNotifiedMyselfTyping = false;
-        this._throttleNotifyMyselfTyping.clear();
-        this._myselfLongTypingTimer.clear();
-        this._myselfTypingInactivityTimer.clear();
     },
 });
 

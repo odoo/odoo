@@ -5,12 +5,11 @@
         @param {mail.model.AbstractThread} thread
         @param {Object} options
         @param {boolean} [options.displayEmptyThread]
-        @param {boolean} [options.displayModerationCommands]
         @param {boolean} [options.displayNoMatchFound]
         @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
     -->
     <t t-name="im_livechat.legacy.mail.widget.Thread">
-        <t t-if="thread.widget.hasMessages()">
+        <t t-if="widget.messaging.publicLivechatGlobal.publicLivechat.widget.hasMessages()">
             <t t-call="im_livechat.legacy.mail.widget.Thread.Content"/>
         </t>
     </t>
@@ -43,7 +42,7 @@
 
     -->
     <t t-name="im_livechat.legacy.mail.widget.Thread.Content">
-        <t t-set="messages" t-value="thread.widget.getMessages({ 'domain': options.domain || [] })"/>
+        <t t-set="messages" t-value="widget.messaging.publicLivechatGlobal.publicLivechat.widget.getMessages({ 'domain': options.domain || [] })"/>
         <t t-if="options.displayOrder === ORDER.ASC" t-call="im_livechat.legacy.mail.widget.Thread.Content.ASC"/>
         <t t-else="" t-call="im_livechat.legacy.mail.widget.Thread.Content.DESC"/>
     </t>
@@ -128,8 +127,6 @@
         @param {boolean} [options.displayAvatars]
         @param {boolean} [options.displayDocumentLinks]
         @param {boolean} [options.displayMarkAsRead]
-        @param {boolean} [options.displayModerationCommands] when set, display the moderation commands on
-          the message. This includes the moderation checkboxes (needs a control panel such as in Discuss app).
         @param {boolean} [options.displaySubjectsOnMessages]
         @param {string|integer} [options.messagesSeparatorPosition] 'top' or
             message ID, the separator is placed just after this message.
@@ -147,7 +144,6 @@
                             t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
                             t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
                         <t t-call="im_livechat.legacy.mail.UserStatus">
-                            <t t-set="status" t-value="message.getAuthorImStatus()"/>
                             <t t-set="partnerID" t-value="message.getAuthorID()"/>
                         </t>
                     </div>
@@ -173,24 +169,13 @@
                                 t-attf-class="o_thread_author o_PublicLivechatMessage_headerAuthor #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}">
                             <t t-esc="message.getDisplayedAuthor()"/>
                         </strong>
-                        <strong t-elif="message.hasEmailFrom()">
-                            <a class="text-muted" t-attf-href="mailto:#{message.getEmailFrom()}?subject=Re: #{message.hasSubject() ? message.getSubject() : ''}">
-                                <t t-esc="message.getEmailFrom()"/>
-                            </a>
-                        </strong>
                         <strong t-else="" class="o_thread_author o_PublicLivechatMessage_headerAuthor">
                             <t t-esc="message.getDisplayedAuthor()"/>
                         </strong>
                     </t>
 
                     <span t-if="!message.isVisitorTheAuthor()" class="o_PublicLivechatMessage_headerDatePrefix">-</span> <small class="o_mail_timestamp o_PublicLivechatMessage_headerDate" t-att-title="message.getDate().format(dateFormat)"><t t-esc="message.getTimeElapsed()"/></small>
-                    <t t-if="message.isLinkedToDocumentThread() and options.displayDocumentLinks">
-                        <small>on</small> <a t-att-href="message.getURL()" t-att-data-oe-model="message.getDocumentModel()" t-att-data-oe-id="message.getDocumentID()" class="o_document_link"><t t-esc="message.getDocumentName()"/></a>
-                    </t>
                     <span t-attf-class="o_thread_icons">
-                        <i t-if="message.isNeedaction() and options.displayMarkAsRead"
-                           class="fa fa-check o_thread_icon o_thread_message_needaction"
-                           t-att-data-message-id="message.getID()" title="Mark as Read" role="img" aria-label="Mark as Read"/>
                     </span>
                 </p>
                 <div t-att-data-message-id="message.getID()" t-attf-class="o_PublicLivechatMessage_bubbleWrap {{ message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '' }} {{ message.isOperatorTheAuthor() ? 'o-isOperatorTheAuthor' : '' }}">
@@ -198,12 +183,6 @@
                         <div t-attf-class="o_PublicLivechatMessage_background {{ message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '' }} {{ message.isOperatorTheAuthor() ? 'o-isOperatorTheAuthor' : '' }}"/>
                         <div class="o_thread_message_content o_PublicLivechatMessage_content">
                             <t t-out="message.getBody()"/>
-                            <t t-if="message.hasTrackingValues()">
-                                <t t-if="message.hasSubtypeDescription()">
-                                    <p><t t-esc="message.getSubtypeDescription()"/></p>
-                                </t>
-                                <t t-call="im_livechat.legacy.mail.widget.Thread.MessageTracking"/>
-                            </t>
                         </div>
                     </div>
                 </div>
@@ -212,44 +191,6 @@
         <t t-if="options.messagesSeparatorPosition == message.getID()">
             <t t-call="im_livechat.legacy.mail.MessagesSeparator"/>
         </t>
-    </t>
-
-    <!--
-        @param {Object[]} notifications: list of notifications
-           A notification is an object with at least the following keys:
-           {notification_status, partner_name}
-    -->
-    <t t-name="im_livechat.legacy.mail.widget.Thread.Message.MailTooltip">
-        <div t-foreach="notifications" t-as="notification">
-            <span name="notification_status" class="d-inline-block text-center o_thread_tooltip_icon">
-                <i t-if="notification.notification_status === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
-                <i t-if="notification.notification_status === 'bounce'" class='fa fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
-                <i t-if="notification.notification_status === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
-                <i t-if="notification.notification_status === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
-                <i t-if="notification.notification_status === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
-            </span>
-            <span name="partner_name" t-esc="notification.partner_name"/>
-        </div>
-    </t>
-    
-    <!--
-        @param {mail.model.Message} message
-    -->
-    <t t-name="im_livechat.legacy.mail.widget.Thread.MessageTracking">
-        <ul class="o_mail_thread_message_tracking">
-            <t t-foreach='message.getTrackingValues()' t-as='value'>
-                <li>
-                    <t t-esc="value.changed_field"/>:
-                    <t t-if="value.old_value">
-                        <span> <t t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/> </span>
-                        <span t-if="value.old_value !== value.new_value" class="fa fa-long-arrow-right" role="img" aria-label="Changed" title="Changed"/>
-                    </t>
-                    <span t-if="value.old_value !== value.new_value">
-                        <t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>
-                    </span>
-                </li>
-            </t>
-        </ul>
     </t>
     
     <!--
@@ -272,11 +213,7 @@
         @param {integer|undefined} [partnerID]
     -->
     <t t-name="im_livechat.legacy.mail.UserStatus">
-        <span t-att-class="partnerID ? 'o_updatable_im_status' : ''" t-att-data-partner-id="partnerID">
-            <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
-            <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
-            <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline" role="img" aria-label="User is offline"/>
-        </span>
+        <span t-att-class="partnerID ? 'o_updatable_im_status' : ''" t-att-data-partner-id="partnerID"/>
     </t>
     
     <t t-name="im_livechat.legacy.mail.MessagesSeparator">
