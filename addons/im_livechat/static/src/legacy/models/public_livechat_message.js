@@ -188,14 +188,6 @@ const PublicLivechatMessage = Class.extend({
         return !this.getBody();
     },
     /**
-     * By default, messages do not have any subtype description
-     *
-     * @return {boolean}
-     */
-    hasSubtypeDescription() {
-        return false;
-    },
-    /**
      * State whether this message is a discussion
      *
      * @return {boolean}
