@@ -75,7 +75,9 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
             self._popoverRPC = $.get("/shop/cart", {
                 type: 'popover',
             }).then(function (data) {
-                self.$el.data("bs.popover").config.content = data;
+                const popover = Popover.getInstance(self.$el[0]);
+                popover._config.content = data;
+                popover.setContent(popover.getTipElement());
                 self.$el.popover("show");
                 $('.popover').on('mouseleave', function () {
                     self.$el.trigger('mouseleave');
