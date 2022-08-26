@@ -398,10 +398,8 @@ const PublicLivechatView = Widget.extend({
             trigger: 'hover',
             offset: '0, 1',
             content() {
-                const messageID = $(this).data('message-id');
-                const message = messages.find(message => message.getID() === messageID);
                 return QWeb.render('im_livechat.legacy.mail.widget.Thread.Message.MailTooltip', {
-                    notifications: message.getNotifications(),
+                    notifications: [],
                 });
             },
         });
