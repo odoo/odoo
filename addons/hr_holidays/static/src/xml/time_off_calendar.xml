@@ -48,7 +48,7 @@
     </t>
 
     <t t-name="FieldRadioIcon.button">
-        <div t-if="mode === 'edit'" class="custom-control form-check o_radio_item" aria-atomic="true">
+        <div t-if="mode === 'edit'" class="form-check o_radio_item" aria-atomic="true">
             <input type="radio" class="form-check-input o_radio_input" t-att-checked="checked ? true : undefined" t-att-disabled="disabled ? true : undefined"
                 t-att-name="name" t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
             <label class="form-check-label o_form_label" t-att-for="id"><img t-attf-src="/hr_holidays/static/src/img/icons/{{value[1]}}" width="48" height="48" /></label>

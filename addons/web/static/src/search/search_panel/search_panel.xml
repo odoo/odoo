@@ -131,7 +131,7 @@
         t-att-class="{ 'ps-2' : isChildList }"
         >
         <t t-set="value" t-value="values.get(valueId)"/>
-        <div class="custom-control form-check w-100">
+        <div class="form-check w-100">
             <input type="checkbox"
                 t-attf-id="{{ section.id }}_input_{{ valueId }}"
                 t-att-checked="state.active[section.id][valueId]"

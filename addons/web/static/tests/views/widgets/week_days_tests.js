@@ -98,7 +98,7 @@ QUnit.module("Widgets", ({ beforeEach }) => {
         await clickEdit(fixture);
         assert.containsNone(
             fixture,
-            ".custom-control input:disabled",
+            ".form-check input:disabled",
             "all inputs should be enabled in readonly mode"
         );
 

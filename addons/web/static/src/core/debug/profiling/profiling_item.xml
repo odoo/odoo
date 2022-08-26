@@ -7,18 +7,18 @@
                 <div class="align-self-center">
                     <div t-if="profiling.state.isEnabled" class="alert alert-info py-2 me-3">Recording...</div>
                     <span class="o_profiling_switch">
-                        <span class="custom-control form-switch" t-on-click.stop.prevent="() => this.profiling.toggleProfiling()">
+                        <span class="form-check form-switch" t-on-click.stop.prevent="() => this.profiling.toggleProfiling()">
                             <input type="checkbox" class="form-check-input" id="enable_profiling" t-att-checked="profiling.state.isEnabled"/>
                             <label class="form-check-label">Enable profiling</label>
                         </span>
                     </span>
                     <t t-if="profiling.state.isEnabled">
-                        <span class="o_profiling_switch custom-control form-switch mt-2" t-on-click.stop.prevent="() => this.profiling.toggleCollector('sql')">
+                        <span class="o_profiling_switch form-check form-switch mt-2" t-on-click.stop.prevent="() => this.profiling.toggleCollector('sql')">
                             <input type="checkbox" class="form-check-input" id="profile_sql"
                                 t-att-checked="profiling.isCollectorEnabled('sql')"/>
                             <label class="form-check-label" for="profile_sql">Record sql</label>
                         </span>
-                        <span class="o_profiling_switch custom-control form-switch mt-2" t-on-click.stop.prevent="() => this.profiling.toggleCollector('traces_async')">
+                        <span class="o_profiling_switch form-check form-switch mt-2" t-on-click.stop.prevent="() => this.profiling.toggleCollector('traces_async')">
                             <input type="checkbox" class="form-check-input" id="profile_traces_async"
                                 t-att-checked="profiling.isCollectorEnabled('traces_async')"/>
                             <label class="form-check-label" for="profile_traces_async">Record traces</label>
@@ -34,12 +34,12 @@
                                 <option value="1" t-att-selected="interval === '1'">1</option>
                             </select>
                         </div>
-                        <span t-if="profiling.isCollectorEnabled('sql') || profiling.isCollectorEnabled('traces_async')" class="o_profiling_switch custom-control form-switch mt-2" t-on-click.stop.prevent="(ev) => this.toggleParam('execution_context_qweb', ev)">
+                        <span t-if="profiling.isCollectorEnabled('sql') || profiling.isCollectorEnabled('traces_async')" class="o_profiling_switch form-check form-switch mt-2" t-on-click.stop.prevent="(ev) => this.toggleParam('execution_context_qweb', ev)">
                             <input type="checkbox" class="form-check-input" id="profile_execution_context_qweb"
                                 t-att-checked="!!profiling.state.params.execution_context_qweb"/>
                             <label class="form-check-label" for="profile_execution_context_qweb">Add qweb directive context</label>
                         </span>
-                        <span class="o_profiling_switch custom-control form-switch mt-2" t-on-click.stop.prevent="() => this.profiling.toggleCollector('qweb')">
+                        <span class="o_profiling_switch form-check form-switch mt-2" t-on-click.stop.prevent="() => this.profiling.toggleCollector('qweb')">
                             <input type="checkbox" class="form-check-input" id="profile_qweb"
                                 t-att-checked="profiling.isCollectorEnabled('qweb')"/>
                             <label class="form-check-label" for="profile_qweb">Record qweb</label>
