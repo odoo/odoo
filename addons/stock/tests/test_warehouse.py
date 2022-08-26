@@ -187,9 +187,6 @@ class TestWarehouse(TestStockCommon):
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.action_assign()
         return_pick.move_ids.quantity_done = 1
-        self.env['stock.move.line'].create(dict(
-            return_pick.move_ids._prepare_move_line_vals(),
-            qty_done=1))
         return_pick._action_done()
 
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])

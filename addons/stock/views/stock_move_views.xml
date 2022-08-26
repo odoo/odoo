@@ -156,40 +156,45 @@
                     <field name="product_uom_category_id" invisible="1"/>
                     <field name="display_clear_serial" invisible="1"/>
                     <group>
-                        <group>
+                        <h2>
                             <field name="product_id" readonly="1"/>
-                            <label for="product_uom_qty" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}"/>
-                            <div class="o_row" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}">
-                                <span><field name="product_uom_qty" readonly="1" nolabel="1"/></span>
-                                <span><field name="product_uom" readonly="1" nolabel="1"/></span>
-                            </div>
-                            <label for="quantity_done"/>
-                            <div class="o_row">
-                                <span><field name="quantity_done" readonly="1" nolabel="1"/></span>
-                                <span attrs="{'invisible': ['|', ('state', '=', 'done'), ('from_immediate_transfer', '=', True)]}"> / </span>
-                                <span><field name="reserved_availability" nolabel="1" attrs="{'invisible': ['|', ('state', '=', 'done'), ('from_immediate_transfer', '=', True)]}" /></span>
-                                <span><field name="product_uom" readonly="1" nolabel="1" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}"/></span>
-                            </div>
-                            <field name="next_serial"
-                                attrs="{'invisible': [('display_assign_serial', '=', False)]}"/>
-                            <label for="next_serial_count" attrs="{'invisible': [('display_assign_serial', '=', False)]}"/>
-                            <div class="o_row" attrs="{'invisible': [('display_assign_serial', '=', False)]}">
-                                <span><field name="next_serial_count"/></span>
-                                <button name="action_assign_serial_show_details" type="object"
-                                        class="btn-link" data-hotkey="k"
-                                        title="Assign Serial Numbers">
-                                    <span>Assign Serial Numbers</span>
-                                </button>
-                                <button name="action_clear_lines_show_details" type="object"
-                                        class="btn-link" data-hotkey="y"
-                                        title="Clear Lines"
-                                        attrs="{'invisible': [('display_clear_serial', '=', False)]}">
-                                    <span>Clear All</span>
-                                </button>
-                            </div>
-                        </group>
+                        </h2>
                     </group>
-                    <field name="move_line_ids" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
+                    <group>
+                        <label for="product_uom_qty" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}"/>
+                        <div class="o_row" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}">
+                            <span><field name="product_uom_qty" readonly="1" nolabel="1"/></span>
+                            <span><field name="product_uom" readonly="1" nolabel="1"/></span>
+                        </div>
+                        <label for="quantity_done"/>
+                        <div class="o_row">
+                            <span><field name="quantity_done" readonly="1" nolabel="1"/></span>
+                            <span attrs="{'invisible': ['|', ('state', '=', 'done'), ('from_immediate_transfer', '=', True)]}"> / </span>
+                            <span><field name="reserved_availability" nolabel="1" attrs="{'invisible': ['|', ('state', '=', 'done'), ('from_immediate_transfer', '=', True)]}" /></span>
+                            <span><field name="product_uom" readonly="1" nolabel="1" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}"/></span>
+                        </div>
+                    </group>
+                    <notebook>
+                        <page string="Product">    
+                            <field name="move_line_ids" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>
+                        </page>
+                        <page string="Generate Series" attrs="{'invisible': [('display_assign_serial', '=', False)]}">
+                            <group>
+                                <field name="next_serial"/>
+                                <field name="next_serial_count"/>
+                            </group>
+                            <group>
+                                <div class="d-flex justify-content-center">
+                                    <button name="action_assign_serial_show_details" type="object"
+                                                class="btn-primary" data-hotkey="k"
+                                                title="Assign Serial Numbers">
+                                            Generate
+                                    </button>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+                    
                     <footer class="oe_edit_only" attrs="{'invisible': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
                         <button string="Confirm" special="save" data-hotkey="v" class="oe_highlight"/>
                         <button string="Discard" special="cancel" data-hotkey="z"/>
@@ -220,6 +225,10 @@
             <field name="priority">1000</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" decoration-muted="state == 'done' and is_locked == True" decoration-success="reserved_uom_qty==qty_done" decoration-danger="qty_done &gt; reserved_uom_qty and state != 'done' and picking_code != 'incoming'">
+                    <control>
+                        <create string="Add a line"/>
+                        <button name="action_clear_lines_show_details" type="object" class="btn-link" string="Clear" context="{'move_id': parent.id}"/>
+                    </control>
                     <field name="company_id" invisible="1" force_save="1"/>
                     <field name="picking_id" invisible="1" force_save="1"/>
                     <field name="move_id" invisible="1" force_save="1" />
@@ -252,8 +261,9 @@
                     <field name="state" invisible="1"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="picking_code" invisible="1"/>
-                    <field name="qty_done" attrs="{'readonly': ['|', '&amp;', ('state', '=', 'done'), ('is_locked', '=', True), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"/>
-                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"
+                    <field name="qty_done" string="Quantity" invisible="context.get('show_reserved_quantity')" attrs="{'readonly': ['|', '&amp;', ('state', '=', 'done'), ('is_locked', '=', True), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"/>
+                    <field name="qty_done" string="Done" invisible="not context.get('show_reserved_quantity')" attrs="{'readonly': ['|', '&amp;', ('state', '=', 'done'), ('is_locked', '=', True), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"/>
+                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit" groups="uom.group_uom"
                         attrs="{'readonly': ['|', '|', ('reserved_uom_qty', '!=', 0.0),
                                                 '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True),
                                                 '&amp;', ('state', '=', 'done'), ('id', '!=', False)]}"/>

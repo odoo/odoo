@@ -838,6 +838,9 @@ class StockMoveLine(models.Model):
         # To Override
         pass
 
+    def action_clear_lines_show_details(self):
+        return self.env['stock.move'].browse(self.env.context['move_id']).action_clear_lines_show_details()
+
     @api.model
     def _prepare_stock_move_vals(self):
         self.ensure_one()

@@ -5,6 +5,7 @@
 from collections import defaultdict
 from datetime import timedelta
 from operator import itemgetter
+from itertools import chain
 
 from odoo import _, api, Command, fields, models
 from odoo.exceptions import UserError
@@ -177,7 +178,7 @@ class StockMove(models.Model):
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
     display_clear_serial = fields.Boolean(compute='_compute_display_clear_serial')
     next_serial = fields.Char('First SN')
-    next_serial_count = fields.Integer('Number of SN')
+    next_serial_count = fields.Integer('Number of SN', default=1)
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', check_company=True, index=True)
     forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit of Measure', compute_sudo=True)
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
@@ -196,7 +197,6 @@ class StockMove(models.Model):
         for move in self:
             if not move.product_uom:
                 move.product_uom = move.product_id.uom_id.id
-
 
     @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
     def _compute_display_assign_serial(self):
@@ -372,23 +372,82 @@ class StockMove(models.Model):
     def _get_qty_done_mls(self):
         return sum([ml.product_uom_id._compute_quantity(ml.qty_done, self.product_uom, round=False) for ml in self._get_move_lines()])
 
+    def _get_qty_no_reserve_done_mls(self):
+        return sum([ml.product_uom_id._compute_quantity(ml.qty_done, self.product_uom, round=False) for ml in self._get_move_lines().filtered(lambda ml: float_is_zero(ml.reserved_uom_qty, precision_rounding=ml.product_uom_id.rounding))])
+
+    def _get_qty_reserve_done_mls(self):
+        return sum([ml.product_uom_id._compute_quantity(ml.qty_done, self.product_uom, round=False) for ml in self._get_move_lines().filtered(lambda ml: not float_is_zero(ml.reserved_uom_qty, precision_rounding=ml.product_uom_id.rounding))])
+
+    def _get_reserve_qty_mls(self):
+        return sum([ml.reserved_uom_qty for ml in self._get_move_lines()])
+
     def _quantity_done_set(self):
+        def _process_move_decrease(move, qty_dec):
+            '''Want to decrease the current qty done. Traverse the mls bottom-up and decrease the ml.qty_done
+            Prioritize decrease the ml without reserved qty'''
+            res_mls = move._get_move_lines().filtered(lambda ml: not float_is_zero(ml.reserved_uom_qty, precision_rounding=ml.product_uom_id.rounding))
+            no_res_mls = move._get_move_lines() - res_mls
+            for ml in chain(reversed(no_res_mls), reversed(res_mls)):
+                if float_is_zero(qty_dec, precision_rounding=move.product_uom.rounding):
+                    break
+                qty_ml_dec = min(ml.qty_done, ml.product_uom_id._compute_quantity(qty_dec, ml.product_uom_id, round=False))
+                if not float_is_zero(qty_ml_dec, precision_rounding=ml.product_uom_id.rounding):
+                    ml.qty_done -= qty_ml_dec
+                    qty_dec -= move.product_uom._compute_quantity(qty_ml_dec, move.product_uom, round=False)
+                    if ml.exists() and float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding) and float_is_zero(ml.reserved_uom_qty, precision_rounding=ml.product_uom_id.rounding):
+                        ml.unlink()
+
+        def _process_move_increase(move, qty_inc):
+            '''Total quanitity need to increase. Traverse the mls top-down and increase the ml.qty_done
+            Prioritize increase the ml with reserved qty'''
+            res_mls = move._get_move_lines().filtered(lambda ml: not float_is_zero(ml.reserved_uom_qty, precision_rounding=ml.product_uom_id.rounding))
+            no_res_mls = move._get_move_lines() - res_mls
+            for ml in chain(res_mls, no_res_mls):
+                if float_is_zero(qty_inc, precision_rounding=move.product_uom.rounding):
+                    break
+                avail_qty = ml.reserved_uom_qty - ml.qty_done
+                if avail_qty > 0:
+                    qty_ml_inc = min(avail_qty, ml.product_uom_id._compute_quantity(qty_inc, ml.product_uom_id, round=False))
+                    if not float_is_zero(qty_ml_inc, precision_rounding=ml.product_uom_id.rounding):
+                        ml.qty_done += qty_ml_inc
+                        qty_inc -= move.product_uom._compute_quantity(qty_ml_inc, move.product_uom, round=False)
+            return qty_inc
+
+        def _process_single_move(move, quantity_done):
+            '''This was the behavior before this commit'''
+            move_lines = move._get_move_lines()
+            if not move_lines:
+                if quantity_done:
+                    # do not impact reservation here
+                    move_line = self.env['stock.move.line'].create(dict(move._prepare_move_line_vals(), qty_done=quantity_done))
+                    move.write({'move_line_ids': [(4, move_line.id)]})
+                    move_line._apply_putaway_strategy()
+            elif len(move_lines) == 1:
+                move_lines[0].qty_done = quantity_done
+            else:
+                move._multi_line_quantity_done_set(quantity_done)
+
         quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`
         for move in self:
             quantity_done = move.quantity_done
+            # NTR change context from from_mrp -> single_process
             from_mrp = self.env.context.get('from_mrp')
-            if not move.picking_id or from_mrp or not ((move.has_tracking != 'none' or move.is_multi_location()) and not move.scrapped):
-                move_lines = move._get_move_lines()
-                if not move_lines:
-                    if quantity_done:
-                        # do not impact reservation here
-                        move_line = self.env['stock.move.line'].create(dict(move._prepare_move_line_vals(), qty_done=quantity_done))
-                        move.write({'move_line_ids': [(4, move_line.id)]})
-                        move_line._apply_putaway_strategy()
-                elif len(move_lines) == 1:
-                    move_lines[0].qty_done = quantity_done
-                else:
-                    move._multi_line_quantity_done_set(quantity_done)
+            # No picking case but process this as before this commit
+            if not move.picking_id or from_mrp:
+                _process_single_move(move, quantity_done)
+            elif (move.has_tracking != 'none' or move.is_multi_location()) and not move.scrapped:
+                mls_qty_done = move._get_qty_done_mls()
+                # Want to increase the current qty done
+                if mls_qty_done < quantity_done:
+                    qty_inc = quantity_done - mls_qty_done
+                    qty_inc = _process_move_increase(move, qty_inc)
+                # Want to decrease the current qty done
+                elif mls_qty_done > quantity_done:
+                    qty_dec = mls_qty_done - quantity_done
+                    _process_move_decrease(move, qty_dec)
+            # 1 Location without tracking -> just edit the move_line since there should be only 1
+            else:
+                _process_single_move(move, quantity_done)
             move.is_quantity_done_computed = move._get_qty_done_mls() == move.quantity_done
 
     def _multi_line_quantity_done_set(self, quantity_done):
@@ -518,12 +577,14 @@ class StockMove(models.Model):
                 else:
                     move_update.date_deadline = new_deadline
 
-    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done', 'picking_type_id.show_reserved', 'quantity_done', 'product_uom')
+    @api.depends('move_line_nosuggest_ids', 'move_line_ids', 'quantity_done', 'product_uom')
     def _compute_is_action_show_details_danger(self):
         self.is_action_show_details_danger = False
         for move in self:
             if move.product_uom:
                 move.is_action_show_details_danger = float_compare(move.quantity_done, move._get_qty_done_mls(), precision_rounding=move.product_uom.rounding) != 0
+                if move.is_action_show_details_danger and (move.has_tracking == 'none' or float_compare(move.quantity_done, move._get_reserve_qty_mls(), precision_rounding=move.product_uom.rounding) <= 0):
+                    move.is_action_show_details_danger = False
 
     @api.depends('move_line_ids', 'move_line_ids.lot_id', 'move_line_ids.qty_done')
     def _compute_lot_ids(self):
@@ -696,7 +757,6 @@ class StockMove(models.Model):
 
         if self.product_id.tracking == "serial" and self.state == "assigned":
             self.next_serial = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
-
         return {
             'name': _('Detailed Operations'),
             'type': 'ir.actions.act_window',

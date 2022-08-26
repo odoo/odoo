@@ -5140,7 +5140,6 @@ class StockMove(TransactionCase):
         move_out._action_confirm()
         move_out._action_assign()
         move_out.quantity_done = self.product.qty_available
-        self.env['stock.move.line'].create(dict(move_out._prepare_move_line_vals(), qty_done=move_out.quantity_done))
         move_out._action_done()
         self.product.detailed_type = 'consu'
 

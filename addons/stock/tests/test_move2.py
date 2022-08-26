@@ -3567,3 +3567,355 @@ class TestAutoAssign(TestStockCommon):
 
         self.assertEqual(len(picking.move_ids), 1)
         self.assertEqual(picking.move_ids.product_uom_qty, 25)
+
+class TestQtyDoneAutoDistribution(TestStockCommon):
+    """ In multi-location context, editing stock_move qty_done in picking will
+    automatically distribute the quanitity to the move-lines (if possible)."""
+
+    def setup(self):
+        # Enable Multi-location setting
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+
+        # Create 2 shelf in stock warehouse
+        stock_location = self.env['stock.warehouse'].search([], limit=1).lot_stock_id
+
+        shelf1 = self.env['stock.location'].create({
+            'location_id': stock_location.id,
+            'usage': 'internal',
+            'name': 'shelf1'
+        })
+
+        shelf2 = self.env['stock.location'].create({
+            'location_id': stock_location.id,
+            'usage': 'internal',
+            'name': 'shelf2'
+        })
+
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        product = self.env['product.product'].create({
+            'name': 'PNormal',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        serial_product = self.env['product.product'].create({
+            'name': 'PSerial',
+            'type': 'product',
+            'tracking': 'serial',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        lot_product = self.env['product.product'].create({
+            'name': 'Plot',
+            'type': 'product',
+            'tracking': 'lot',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        lot_1 = self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': lot_product.id,
+            'company_id': self.env.company.id,
+        })
+
+        lot_2 = self.env['stock.lot'].create({
+            'name': 'lot2',
+            'product_id': lot_product.id,
+            'company_id': self.env.company.id,
+        })
+
+        lot_3 = self.env['stock.lot'].create({
+            'name': 'lot3',
+            'product_id': lot_product.id,
+            'company_id': self.env.company.id,
+        })
+
+        # Create Stock Quanitity
+        self.env['stock.quant']._update_available_quantity(product, stock_location, 5)
+        self.env['stock.quant']._update_available_quantity(product, shelf1, 5)
+        self.env['stock.quant']._update_available_quantity(product, shelf2, 5)
+
+        self.env['stock.quant']._update_available_quantity(serial_product, stock_location, 5)
+        self.env['stock.quant']._update_available_quantity(serial_product, shelf1, 5)
+        self.env['stock.quant']._update_available_quantity(serial_product, shelf2, 5)
+
+        self.env['stock.quant']._update_available_quantity(lot_product, stock_location, 5, lot_id=lot_1)
+        self.env['stock.quant']._update_available_quantity(lot_product, shelf1, 5, lot_id=lot_3)
+        self.env['stock.quant']._update_available_quantity(lot_product, shelf2, 5, lot_id=lot_2)
+
+        return stock_location, shelf1, shelf2, customer_location, product, serial_product, lot_product
+
+    def test_auto_distribute_done_qty_multi_location(self):
+        """ In multi-location context, test whether filling in stock_move qty done in picking
+        will distribute to the lines."""
+
+        stock_location, _, _, customer_location, product, _, _ = self.setup()
+
+        picking_type_out = self.env['stock.picking.type'].browse(self.picking_type_out).copy()
+        customer_picking = self.env['stock.picking'].create({
+            'name': "Delivery Test",
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': picking_type_out.id,
+        })
+
+        # create their associated moves (needs to be in form view so compute functions properly trigger)
+        customer_picking = Form(customer_picking)
+        with customer_picking.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 10
+        customer_picking = customer_picking.save()
+        customer_picking.action_confirm()
+        customer_picking.action_assign()
+
+        pick_move = customer_picking.move_ids_without_package
+
+        self.assertEqual(pick_move._get_reserve_qty_mls(), 10, "Reserve qty in move lines should be 10")
+        self.assertEqual(pick_move.reserved_availability, 10, "Should reserved 10 from stock")
+        self.assertEqual(pick_move._get_qty_done_mls(), 0, "Should not have done quanitity > 0")
+
+        pick_move.quantity_done = 5
+        self.assertEqual(pick_move._get_qty_done_mls(), 5)
+        self.assertEqual(len(pick_move._get_move_lines()), 2)
+
+        pick_move.quantity_done = 3
+        self.assertEqual(pick_move._get_qty_done_mls(), 3)
+        self.assertEqual(len(pick_move._get_move_lines()), 2)
+
+        pick_move.quantity_done = 9
+        self.assertEqual(pick_move._get_qty_done_mls(), 9)
+        self.assertEqual(len(pick_move._get_move_lines()), 2)
+        self.assertEqual(pick_move._get_qty_no_reserve_done_mls(), 0)
+        self.assertEqual(pick_move._get_qty_reserve_done_mls(), 9)
+
+        # Update stock_move_lines -> activate compute stock_move
+        self.assertEqual(pick_move._get_move_lines()[0].qty_done, 5)
+        pick_move._get_move_lines()[0].qty_done = 2
+        self.assertEqual(pick_move.quantity_done, 6)
+
+
+class TestAssignImmdiateTransfer(TestStockCommon):
+    """ In multi-location context, editing stock_move qty_done in picking will
+    automatically distribute the quanitity to the move-lines (if possible)."""
+
+    def setup(self):
+        # Enable Multi-location setting
+        self.env.user.groups_id += self.env.ref('stock.group_stock_multi_locations')
+        supplier_location = self.env['stock.location'].browse(self.supplier_location)
+
+        # Create 2 shelf in stock warehouse
+        stock_location = self.env['stock.warehouse'].search([], limit=1).lot_stock_id
+        shelf1 = self.env['stock.location'].create({
+            'location_id': stock_location.id,
+            'usage': 'internal',
+            'name': 'shelf1'
+        })
+
+        shelf2 = self.env['stock.location'].create({
+            'location_id': stock_location.id,
+            'usage': 'internal',
+            'name': 'shelf2'
+        })
+
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        product = self.env['product.product'].create({
+            'name': 'PNormal',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        serial_product = self.env['product.product'].create({
+            'name': 'PSerial',
+            'type': 'product',
+            'tracking': 'serial',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        lot_product = self.env['product.product'].create({
+            'name': 'Plot',
+            'type': 'product',
+            'tracking': 'lot',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+        lot_2 = self.env['stock.lot'].create({
+            'name': 'lot2',
+            'product_id': lot_product.id,
+            'company_id': self.env.company.id,
+        })
+
+        lot_3 = self.env['stock.lot'].create({
+            'name': 'lot3',
+            'product_id': lot_product.id,
+            'company_id': self.env.company.id,
+        })
+
+        # Create Stock Quanitity
+        self.env['stock.quant']._update_available_quantity(product, shelf1, 10)
+        self.env['stock.quant']._update_available_quantity(product, shelf2, 10)
+
+        self.env['stock.quant']._update_available_quantity(lot_product, shelf1, 10, lot_id=lot_3)
+        self.env['stock.quant']._update_available_quantity(lot_product, shelf2, 10, lot_id=lot_2)
+
+        move1 = self.env['stock.move'].create({
+            'name': 'test_in_1',
+            'location_id': supplier_location.id,
+            'location_dest_id': shelf1.id,
+            'product_id': serial_product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1._action_confirm()
+        for i, move_line in enumerate(move1.move_line_ids):
+            move_line.lot_name = 'sn%s' % i
+            move_line.qty_done = 1
+        move1._action_done()
+
+        return stock_location, shelf1, shelf2, customer_location, product, serial_product, lot_product
+
+    def test_assign_at_save(self):
+        "Create an immediate delivery adding 3 types of product. Expect to have all 3 in reserved and with done value"
+        stock_location, _, _, customer_location, product, serial_product, lot_product = self.setup()
+
+        picking_type_out = self.env['stock.picking.type'].browse(self.picking_type_out).copy()
+        customer_picking = self.env['stock.picking'].create({
+            'name': "Delivery Test",
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': picking_type_out.id,
+            'immediate_transfer': True
+        })
+
+        # create their associated moves (needs to be in form view so compute functions properly trigger)
+        customer_picking = Form(customer_picking)
+        with customer_picking.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.quantity_done = 2
+        with customer_picking.move_ids_without_package.new() as move:
+            move.product_id = serial_product
+            move.quantity_done = 2
+        with customer_picking.move_ids_without_package.new() as move:
+            move.product_id = lot_product
+            move.quantity_done = 2
+
+        customer_picking = customer_picking.save()
+
+        pick_moves = customer_picking.move_ids_without_package
+        pick_move_lines = customer_picking.move_line_ids
+
+        self.assertEqual(len(pick_moves), 3, "There should be 3 moves")
+        self.assertEqual(len(pick_move_lines), 4, "There should be 4 move lines")
+
+        self.assertEqual(pick_moves.filtered(lambda m: m.product_id.id == product.id)._get_reserve_qty_mls(), 2)
+        self.assertEqual(pick_moves.filtered(lambda m: m.product_id.id == serial_product.id)._get_reserve_qty_mls(), 2)
+        self.assertEqual(pick_moves.filtered(lambda m: m.product_id.id == lot_product.id)._get_reserve_qty_mls(), 2)
+
+        self.assertEqual(pick_moves.filtered(lambda m: m.product_id.id == product.id)._get_qty_done_mls(), 2)
+        self.assertEqual(pick_moves.filtered(lambda m: m.product_id.id == serial_product.id)._get_qty_done_mls(), 2)
+        self.assertEqual(pick_moves.filtered(lambda m: m.product_id.id == lot_product.id)._get_qty_done_mls(), 2)
+
+    def test_assign_after_save(self):
+        "Create an immediate delivery adding a lot product, save, and then add a non-tracked product."
+        stock_location, _, _, customer_location, product, _, lot_product = self.setup()
+
+        picking_type_out = self.env['stock.picking.type'].browse(self.picking_type_out).copy()
+        customer_picking = self.env['stock.picking'].create({
+            'name': "Delivery Test",
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': picking_type_out.id,
+            'immediate_transfer': True
+        })
+
+        # create their associated moves (needs to be in form view so compute functions properly trigger)
+        customer_picking = Form(customer_picking)
+        with customer_picking.move_ids_without_package.new() as move:
+            move.product_id = lot_product
+            move.quantity_done = 2
+
+        customer_picking = customer_picking.save()
+
+        self.assertEqual(len(customer_picking.move_ids_without_package), 1, "There should be 1 moves")
+        self.assertEqual(len(customer_picking.move_line_ids), 1, "There should be 1 move lines")
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == lot_product.id)._get_reserve_qty_mls(), 2)
+
+        customer_picking = Form(customer_picking)
+        with customer_picking.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.quantity_done = 2
+
+        customer_picking = customer_picking.save()
+
+        self.assertEqual(len(customer_picking.move_ids_without_package), 2, "There should be 2 moves")
+        self.assertEqual(len(customer_picking.move_line_ids), 2, "There should be 2 move lines")
+
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == product.id)._get_reserve_qty_mls(), 2)
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == lot_product.id)._get_reserve_qty_mls(), 2)
+
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == product.id)._get_qty_done_mls(), 2)
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == lot_product.id)._get_qty_done_mls(), 2)
+
+    def test_assign_after_save_tracked(self):
+        "Create an immediate delivery adding a non-track product, save, and then add a lot product."
+        stock_location, _, _, customer_location, product, serial_product, lot_product = self.setup()
+
+        picking_type_out = self.env['stock.picking.type'].browse(self.picking_type_out).copy()
+        customer_picking = self.env['stock.picking'].create({
+            'name': "Delivery Test",
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': picking_type_out.id,
+            'immediate_transfer': True
+        })
+
+        # create their associated moves (needs to be in form view so compute functions properly trigger)
+        customer_picking = Form(customer_picking)
+        with customer_picking.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.quantity_done = 2
+
+        customer_picking = customer_picking.save()
+
+        self.assertEqual(len(customer_picking.move_ids_without_package), 1, "There should be 1 moves")
+        self.assertEqual(len(customer_picking.move_line_ids), 1, "There should be 1 move lines")
+
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == product.id)._get_reserve_qty_mls(), 2)
+
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == product.id)._get_qty_done_mls(), 2)
+
+        customer_picking = Form(customer_picking)
+        with customer_picking.move_ids_without_package.new() as move:
+            move.product_id = lot_product
+            move.quantity_done = 2
+
+        customer_picking = customer_picking.save()
+
+        self.assertEqual(len(customer_picking.move_ids_without_package), 2, "There should be 2 moves")
+        self.assertEqual(len(customer_picking.move_line_ids), 2, "There should be 2 move lines")
+
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == product.id)._get_reserve_qty_mls(), 2)
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == lot_product.id)._get_reserve_qty_mls(), 2)
+
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == product.id)._get_qty_done_mls(), 2)
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == lot_product.id)._get_qty_done_mls(), 2)
+
+        customer_picking = Form(customer_picking)
+        with customer_picking.move_ids_without_package.new() as move:
+            move.product_id = serial_product
+            move.quantity_done = 2
+
+        customer_picking = customer_picking.save()
+
+        self.assertEqual(len(customer_picking.move_ids_without_package), 3, "There should be 3 moves")
+        self.assertEqual(len(customer_picking.move_line_ids), 4, "There should be 4 move lines")
+
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == product.id)._get_reserve_qty_mls(), 2)
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == serial_product.id)._get_reserve_qty_mls(), 2)
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == lot_product.id)._get_reserve_qty_mls(), 2)
+
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == product.id)._get_qty_done_mls(), 2)
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == serial_product.id)._get_qty_done_mls(), 2)
+        self.assertEqual(customer_picking.move_ids_without_package.filtered(lambda m: m.product_id.id == lot_product.id)._get_qty_done_mls(), 2)
