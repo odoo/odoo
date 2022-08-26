@@ -23,7 +23,7 @@
     </t>
 
     <t t-name="hr_skills.ResumeListRenderer.RecordRow" owl="1" t-inherit-mode="primary" t-inherit="web.ListRenderer.RecordRow">
-        <xpath expr="//t[@t-foreach='state.columns']" position="replace">
+        <xpath expr="//t[@t-foreach='getColumns(record)']" position="replace">
             <t t-set="data" t-value="record.data"/>
             <td class="o_resume_timeline_cell position-relative pe-lg-2">
                 <div class="rounded-circle bg-info position-relative"/>

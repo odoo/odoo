@@ -587,6 +587,10 @@ export class ListRenderer extends Component {
         return classNames.join(" ");
     }
 
+    getColumns(record) {
+        return this.state.columns;
+    }
+
     /**
      * Returns the classnames to apply to the row representing the given record.
      * @param {Record} record
