@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Long Bui long.bui@novobi.com https://github.com/longbui-novobi
+Long Bui 74339503+longbui-novobi@users.noreply.github.com https://github.com/longbui-novobi
