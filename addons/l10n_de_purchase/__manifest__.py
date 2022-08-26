@@ -8,6 +8,9 @@
         'l10n_de',
         'purchase',
     ],
+    'data': [
+        'report/l10n_de_purchase_reports.xml',
+    ],
     'auto_install': True,
     'license': 'LGPL-3',
 }

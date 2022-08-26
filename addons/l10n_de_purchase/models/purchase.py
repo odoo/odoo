@@ -35,7 +35,7 @@ class PurchaseOrder(models.Model):
             if record.state == 'draft':
                 record.l10n_de_document_title = _("Request for Quotation")
             elif record.state in ['sent', 'to approve', 'purchase', 'done']:
-                record.l10n_de_document_title = _("Purchase Order")
+                record.l10n_de_document_title = _("Purchase Orders")
             elif record.state == 'cancel':
                 record.l10n_de_document_title = _("Cancelled Purchase Order")
 
