@@ -4,6 +4,7 @@
 import odoo
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import MissingError, ValidationError, AccessError
+from odoo.tools import frozendict
 from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools.float_utils import float_compare
 from odoo.http import request
@@ -87,24 +88,40 @@ class IrActions(models.Model):
 
     @api.model
     def get_bindings(self, model_name):
-        return self._get_bindings(model_name, bool(request) and request.session.debug)
-
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'model_name', 'debug')
-    def _get_bindings(self, model_name, debug=False):
         """ Retrieve the list of actions bound to the given model.
 
            :return: a dict mapping binding types to a list of dict describing
                     actions, where the latter is given by calling the method
                     ``read`` on the action record.
         """
+        result = {}
+        for action_type, all_actions in self._get_bindings(model_name).items():
+            actions = []
+            for action in all_actions:
+                action = dict(action)
+                groups = action.pop('groups_id', None)
+                if groups and not self.user_has_groups(groups):
+                    # the user may not perform this action
+                    continue
+                res_model = action.pop('res_model', None)
+                if res_model and not self.env['ir.model.access'].check(
+                    res_model,
+                    mode='read',
+                    raise_exception=False
+                ):
+                    # the user won't be able to read records
+                    continue
+                actions.append(action)
+            if actions:
+                result[action_type] = actions
+        return result
+
+    @tools.ormcache('model_name', 'self.env.lang')
+    def _get_bindings(self, model_name):
         cr = self.env.cr
-        IrModelAccess = self.env['ir.model.access']
 
         # discard unauthorized actions, and read action definitions
         result = defaultdict(list)
-        user_groups = self.env.user.groups_id
-        if not debug:
-            user_groups -= self.env.ref('base.group_no_one')
 
         self.env.flush_all()
         cr.execute("""
@@ -117,25 +134,22 @@ class IrActions(models.Model):
         for action_id, action_model, binding_type in cr.fetchall():
             try:
                 action = self.env[action_model].sudo().browse(action_id)
-                action_groups = getattr(action, 'groups_id', ())
-                action_model = getattr(action, 'res_model', False)
-                if action_groups and not action_groups & user_groups:
-                    # the user may not perform this action
-                    continue
-                if action_model and not IrModelAccess.check(action_model, mode='read', raise_exception=False):
-                    # the user won't be able to read records
-                    continue
                 fields = ['name', 'binding_view_types']
-                if 'sequence' in action._fields:
-                    fields.append('sequence')
-                result[binding_type].append(action.read(fields)[0])
-            except (AccessError, MissingError):
+                for field in ('groups_id', 'res_model', 'sequence'):
+                    if field in action._fields:
+                        fields.append(field)
+                action = action.read(fields)[0]
+                if action.get('groups_id'):
+                    groups = self.env['res.groups'].browse(action['groups_id'])
+                    action['groups_id'] = ','.join(ext_id for ext_id in groups._ensure_xml_id().values())
+                result[binding_type].append(frozendict(action))
+            except (MissingError):
                 continue
 
         # sort actions by their sequence if sequence available
         if result.get('action'):
-            result['action'] = sorted(result['action'], key=lambda vals: vals.get('sequence', 0))
-        return result
+            result['action'] = tuple(sorted(result['action'], key=lambda vals: vals.get('sequence', 0)))
+        return frozendict(result)
 
     @api.model
     def _for_xml_id(self, full_xml_id):

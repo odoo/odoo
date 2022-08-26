@@ -32,10 +32,14 @@ class Board(models.AbstractModel):
         if custom_view:
             res.update({'custom_view_id': custom_view.id,
                         'arch': custom_view.arch})
-        res.update({
-            'arch': self._arch_preprocessing(res['arch']),
-            'toolbar': {'print': [], 'action': [], 'relate': []}
-        })
+        res['arch'] = self._arch_preprocessing(res['arch'])
+        return res
+
+    @api.model
+    def get_views(self, views, options=None):
+        res = super().get_views(views, options)
+        for view in res['views'].values():
+            view['toolbar'] = {'print': [], 'action': [], 'relate': []}
         return res
 
     @api.model
