@@ -18,7 +18,7 @@ patchRecordMethods('LivechatButtonView', {
     async onChatbotRestartScript(ev) {
         if (this.messaging.publicLivechatGlobal.chatbot.isWebsiteLivechatTourFlow) {
             this.messaging.publicLivechatGlobal.update({ messages: clear() });
-            this.widget._renderMessages();
+            this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
         }
         return this._super(ev);
     },
@@ -49,7 +49,7 @@ patchRecordMethods('LivechatButtonView', {
         });
         await this.openChatWindow();
         this.widget._sendWelcomeMessage();
-        this.widget._renderMessages();
+        this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
         this.env.services.bus_service.addChannel(this.messaging.publicLivechatGlobal.publicLivechat.uuid);
         set_cookie('im_livechat_session', unaccent(JSON.stringify(this.messaging.publicLivechatGlobal.publicLivechat.widget.toData()), true), 60 * 60);
         this.update({ isOpeningChat: false });
