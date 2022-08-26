@@ -213,15 +213,6 @@ const PublicLivechatMessage = Class.extend({
         return false;
     },
     /**
-     * State whether this message is needaction
-     * By default, messages are not needaction.
-     *
-     * @return {boolean}
-     */
-    isNeedaction() {
-        return false;
-    },
-    /**
      * State whether this message is a note (i.e. a message from "Log note")
      *
      * @return {boolean}

@@ -183,9 +183,6 @@
                         <small>on</small> <a t-att-href="message.getURL()" t-att-data-oe-model="message.getDocumentModel()" t-att-data-oe-id="message.getDocumentID()" class="o_document_link"><t t-esc="message.getDocumentName()"/></a>
                     </t>
                     <span t-attf-class="o_thread_icons">
-                        <i t-if="message.isNeedaction() and options.displayMarkAsRead"
-                           class="fa fa-check o_thread_icon o_thread_message_needaction"
-                           t-att-data-message-id="message.getID()" title="Mark as Read" role="img" aria-label="Mark as Read"/>
                     </span>
                 </p>
                 <div t-att-data-message-id="message.getID()" t-attf-class="o_PublicLivechatMessage_bubbleWrap {{ message.isVisitorTheAuthor() ? 'o-isVisitorTheAuthor' : '' }} {{ message.isOperatorTheAuthor() ? 'o-isOperatorTheAuthor' : '' }}">
