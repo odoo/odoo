@@ -37,8 +37,6 @@ const PublicLivechatView = Widget.extend({
         'click .o_thread_message': '_onClickMessage',
         'click': '_onClick',
         'click .o_thread_message_notification_error': '_onClickMessageNotificationError',
-        'click .o_thread_message_moderation': '_onClickMessageModeration',
-        'change .moderation_checkbox': '_onChangeModerationCheckbox',
     },
 
     /**
@@ -55,7 +53,6 @@ const PublicLivechatView = Widget.extend({
         this._enabledOptions = _.defaults(options || {}, {
             displayOrder: ORDER.ASC,
             displayMarkAsRead: true,
-            displayModerationCommands: false,
             displayDocumentLinks: true,
             displayAvatars: true,
             squashCloseMessages: true,
@@ -65,7 +62,6 @@ const PublicLivechatView = Widget.extend({
         this._disabledOptions = {
             displayOrder: this._enabledOptions.displayOrder,
             displayMarkAsRead: false,
-            displayModerationCommands: false,
             displayDocumentLinks: false,
             displayAvatars: this._enabledOptions.displayAvatars,
             squashCloseMessages: false,
@@ -241,15 +237,6 @@ const PublicLivechatView = Widget.extend({
         }
     },
     /**
-     * Toggle all the moderation checkboxes in the thread
-     *
-     * @param {boolean} checked if true, check the boxes,
-     *      otherwise uncheck them.
-     */
-    toggleModerationCheckboxes(checked) {
-        this.$('.moderation_checkbox').prop('checked', checked);
-    },
-    /**
      * Unselect the selected message
      */
     unselectMessage() {
@@ -376,13 +363,6 @@ const PublicLivechatView = Widget.extend({
 
     /**
      * @private
-     * @param {MouseEvent} ev
-     */
-    _onChangeModerationCheckbox(ev) {
-        this.trigger_up('update_moderation_buttons');
-    },
-    /**
-     * @private
      */
     _onClick() {
         if (this._selectedMessageID) {
@@ -443,19 +423,6 @@ const PublicLivechatView = Widget.extend({
      _onClickMessageStar(ev) {
         const messageID = $(ev.currentTarget).data('message-id');
         this.trigger('toggle_star_status', messageID);
-    },
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-     _onClickMessageModeration(ev) {
-        const $button = $(ev.currentTarget);
-        const messageID = $button.data('message-id');
-        const decision = $button.data('decision');
-        this.trigger_up('message_moderation', {
-            messageID,
-            decision,
-        });
     },
     /**
      * @private
