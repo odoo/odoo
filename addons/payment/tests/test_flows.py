@@ -283,6 +283,7 @@ class TestFlows(PaymentHttpCommon):
         # Pay for this invoice (no impact even if amounts do not match)
         route_values = self._prepare_pay_values()
         route_values['invoice_id'] = self.invoice.id
+        route_values['company_id'] = self.company.id
         tx_context = self._get_tx_checkout_context(**route_values)
         self.assertEqual(tx_context['invoice_id'], self.invoice.id)
 
