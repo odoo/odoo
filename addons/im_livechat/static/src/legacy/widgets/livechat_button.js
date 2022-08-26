@@ -11,7 +11,6 @@ const LivechatButton = Widget.extend({
         'post_message_chat_window': '_onPostMessageChatWindow',
         'save_chat_window': '_onSaveChatWindow',
         'updated_typing_partners': '_onUpdatedTypingPartners',
-        'updated_unread_counter': '_onUpdatedUnreadCounter',
     },
     events: {
         'click': '_onClick'
@@ -142,14 +141,6 @@ const LivechatButton = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onUpdatedTypingPartners(ev) {
-        ev.stopPropagation();
-        this.messaging.publicLivechatGlobal.chatWindow.widget.renderHeader();
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onUpdatedUnreadCounter(ev) {
         ev.stopPropagation();
         this.messaging.publicLivechatGlobal.chatWindow.widget.renderHeader();
     },

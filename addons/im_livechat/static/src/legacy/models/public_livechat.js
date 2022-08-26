@@ -215,7 +215,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
     markAsRead() {
         if (this.messaging.publicLivechatGlobal.publicLivechat.unreadCounter > 0) {
             this.messaging.publicLivechatGlobal.publicLivechat.update({ unreadCounter: 0 });
-            this.trigger_up('updated_unread_counter');
+            this.messaging.publicLivechatGlobal.chatWindow.widget.renderHeader();
             return Promise.resolve();
         }
         return Promise.resolve();
