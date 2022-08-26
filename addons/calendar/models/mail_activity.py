@@ -24,17 +24,15 @@ class MailActivity(models.Model):
         return action
 
     def _action_done(self, feedback=False, attachment_ids=False):
-        events = self.mapped('calendar_event_id')
-        messages, activities = super(MailActivity, self)._action_done(feedback=feedback, attachment_ids=attachment_ids)
         if feedback:
-            for event in events:
+            for event in self.calendar_event_id:
                 description = event.description
                 description = '%s<br />%s' % (
                     description if not tools.is_html_empty(description) else '',
                     _('Feedback: %(feedback)s', feedback=tools.plaintext2html(feedback)) if feedback else '',
                 )
                 event.write({'description': description})
-        return messages, activities
+        return super(MailActivity, self)._action_done(feedback=feedback, attachment_ids=attachment_ids)
 
     def unlink_w_meeting(self):
         events = self.mapped('calendar_event_id')
