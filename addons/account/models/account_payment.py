@@ -692,8 +692,7 @@ class AccountPayment(models.Model):
     # -------------------------------------------------------------------------
 
     def new(self, values=None, origin=None, ref=None):
-        self = self.with_context(is_payment=True)
-        payment = super().new(values, origin, ref)
+        payment = super(AccountPayment, self.with_context(is_payment=True)).new(values, origin, ref)
         if not payment.journal_id:  # might not be computed because declared by inheritance
             payment.move_id._compute_journal_id()
         return payment
@@ -701,7 +700,6 @@ class AccountPayment(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         # OVERRIDE
-        self = self.with_context(is_payment=True)
         write_off_line_vals_list = []
 
         for vals in vals_list:
@@ -712,7 +710,9 @@ class AccountPayment(models.Model):
             # Force the move_type to avoid inconsistency with residual 'default_move_type' inside the context.
             vals['move_type'] = 'entry'
 
-        payments = super().create(vals_list)
+        payments = super(AccountPayment, self.with_context(is_payment=True))\
+            .create(vals_list)\
+            .with_context(is_payment=False)
 
         for i, pay in enumerate(payments):
             write_off_line_vals = write_off_line_vals_list[i]
