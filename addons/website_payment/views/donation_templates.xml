@@ -44,7 +44,7 @@
                             <t t-set="prefilled_options" t-value="donation_options.get('prefilledOptions')"/>
                             <t t-if="prefilled_options">
                                 <t t-foreach="donation_amounts" t-as="donation_amount">
-                                    <div class="custom-control form-check my-2">
+                                    <div class="form-check my-2">
                                         <t t-set="is_checked" t-value="float(amount) == float(donation_amount)"/>
                                         <t t-set="has_checked" t-value="has_checked or is_checked"/>
                                         <input class="o_wpayment_fee_impact form-check-input" type="radio" name="amount"
@@ -58,7 +58,7 @@
                                         </label>
                                     </div>
                                 </t>
-                                <div t-attf-class="custom-control form-check my-2 #{not donation_layout and 'd-none' or ''}">
+                                <div t-attf-class="form-check my-2 #{not donation_layout and 'd-none' or ''}">
                                     <input class="o_wpayment_fee_impact form-check-input" type="radio" id="other_amount" name="amount"
                                         t-att-value="amount" t-att-checked="not has_checked or None"/>
                                     <label class="form-check-label mt-0 d-block" for="other_amount">
@@ -73,7 +73,7 @@
                             </t>
                         </div>
                         <div class="col-lg-12 px-0">
-                            <div class="custom-control form-check mt-3">
+                            <div class="form-check mt-3">
                                 <input class="form-check-input" type="checkbox" value="" id="donation_comment_checkbox"/>
                                 <label class="form-check-label" for="donation_comment_checkbox">Write us a comment</label>
                             </div>

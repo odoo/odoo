@@ -41,7 +41,7 @@
                             <t t-foreach="ptal.product_template_value_ids._only_active()" t-as="ptav">
                                 <li class="list-inline-item form-group js_attribute_value" style="margin: 0;">
                                     <label class="col-form-label">
-                                        <div class="custom-control form-check">
+                                        <div class="form-check">
                                             <input type="radio"
                                                 t-attf-class="form-check-input js_variant_change #{ptal.attribute_id.create_variant}"
                                                 t-att-checked="ptav in combination"
