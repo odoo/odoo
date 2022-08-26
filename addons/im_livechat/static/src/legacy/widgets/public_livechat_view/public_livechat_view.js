@@ -162,11 +162,11 @@ const PublicLivechatView = Widget.extend({
         }
 
         this.$el.html(QWeb.render('im_livechat.legacy.mail.widget.Thread', {
-            thread: this.messaging.publicLivechatGlobal.publicLivechat,
             displayAuthorMessages,
             options,
             ORDER,
             dateFormat: time.getLangDatetimeFormat(),
+            widget: this,
         }));
 
         for (let message of messages) {
