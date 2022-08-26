@@ -246,15 +246,6 @@ const PublicLivechatMessage = Class.extend({
         return this._isNotification;
     },
     /**
-     * State whether this message is a system notification
-     * By default, messages are not system notifications
-     *
-     * @return {boolean}
-     */
-    isSystemNotification() {
-        return false;
-    },
-    /**
      * States whether the current message needs moderation in general.
      * By default, messages do not require any moderation.
      *
