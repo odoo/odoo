@@ -61,16 +61,6 @@ const PublicLivechatView = Widget.extend({
             squashCloseMessages: true,
             loadMoreOnScroll: false,
         });
-        // options when the thread is disabled
-        this._disabledOptions = {
-            displayOrder: this._enabledOptions.displayOrder,
-            displayMarkAsRead: false,
-            displayModerationCommands: false,
-            displayDocumentLinks: false,
-            displayAvatars: this._enabledOptions.displayAvatars,
-            squashCloseMessages: false,
-            loadMoreOnScroll: this._enabledOptions.loadMoreOnScroll,
-        };
         this._selectedMessageID = null;
         this._currentThreadID = null;
         this._messageMailPopover = null;
@@ -97,7 +87,6 @@ const PublicLivechatView = Widget.extend({
      * @param {boolean} [options.displayLoadMore]
      * @param {Array} [options.domain=[]] the domain for the messages in the
      *    thread.
-     * @param {boolean} [options.isCreateMode]
      * @param {boolean} [options.scrollToBottom=false]
      * @param {boolean} [options.squashCloseMessages]
      */
@@ -111,8 +100,7 @@ const PublicLivechatView = Widget.extend({
         // copy so that reverse do not alter order in the thread object
         const messages = _.clone(this.messaging.publicLivechatGlobal.publicLivechat.widget.getMessages());
 
-        const modeOptions = options.isCreateMode ? this._disabledOptions :
-                                                    this._enabledOptions;
+        const modeOptions = this._enabledOptions;
 
         options = Object.assign({}, modeOptions, options, {
             selectedMessageID: this._selectedMessageID,
