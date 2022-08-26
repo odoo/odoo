@@ -174,6 +174,20 @@ export class ListRenderer extends Component {
             this.columnWidths = null;
             this.freezeColumnWidths();
         });
+
+        useExternalListener(window, "keydown", (ev) => {
+            this.shiftKeyMode = ev.shiftKey;
+        });
+        useExternalListener(window, "keyup", (ev) => {
+            this.shiftKeyMode = ev.shiftKey;
+            const hotkey = getActiveHotkey(ev);
+            if (hotkey === "shift") {
+                this.shiftKeyedRecord = undefined;
+            }
+        });
+        useExternalListener(window, "blur", (ev) => {
+            this.shiftKeyMode = false;
+        });
     }
 
     getActiveColumns(list) {
@@ -1059,6 +1073,38 @@ export class ListRenderer extends Component {
         return null;
     }
 
+    expandCheckboxes(record, direction) {
+        const { records } = this.props.list;
+        const recordIndex = records.indexOf(record);
+        const shiftKeyedRecordIndex = records.indexOf(this.shiftKeyedRecord);
+        let nextRecord;
+        let isExpanding;
+        switch (direction) {
+            case "up":
+                if (recordIndex <= 0) {
+                    return false;
+                }
+                nextRecord = records[recordIndex - 1];
+                isExpanding = shiftKeyedRecordIndex > recordIndex - 1;
+                break;
+            case "down":
+                if (recordIndex === records.length - 1) {
+                    return false;
+                }
+                nextRecord = records[recordIndex + 1];
+                isExpanding = shiftKeyedRecordIndex < recordIndex + 1;
+                break;
+        }
+
+        if (isExpanding) {
+            nextRecord.toggleSelection(this.shiftKeyedRecord.selected);
+        } else {
+            record.toggleSelection(false);
+        }
+
+        return true;
+    }
+
     applyCellKeydownMultiEditMode(hotkey, cell, group, record) {
         const { list } = this.props;
         const row = cell.parentElement;
@@ -1387,6 +1433,25 @@ export class ListRenderer extends Component {
                     toFocus = buttons[index - 1] || currentButton;
                 }
                 break;
+            case "shift+arrowdown": {
+                if (this.expandCheckboxes(record, "down")) {
+                    toFocus = this.findFocusFutureCell(cell, cellIsInGroupRow, "down");
+                }
+                break;
+            }
+            case "shift+arrowup": {
+                if (this.expandCheckboxes(record, "up")) {
+                    toFocus = this.findFocusFutureCell(cell, cellIsInGroupRow, "up");
+                }
+                break;
+            }
+            case "shift+space":
+                this.toggleRecordSelection(record);
+                toFocus = getElementToFocus(cell);
+                break;
+            case "shift":
+                this.shiftKeyedRecord = record;
+                break;
             case "enter":
                 if (!group && !record) {
                     return false;
@@ -1518,8 +1583,26 @@ export class ListRenderer extends Component {
     }
 
     toggleRecordSelection(record) {
-        record.toggleSelection();
+        if (this.shiftKeyMode && this.lastCheckedRecord) {
+            this.toggleRecordShiftSelection(record);
+        } else {
+            record.toggleSelection();
+        }
+        this.lastCheckedRecord = record;
         this.props.list.selectDomain(false);
+    }
+
+    toggleRecordShiftSelection(record) {
+        const { records } = this.props.list;
+        const recordIndex = records.indexOf(record);
+        const lastCheckedRecordIndex = records.indexOf(this.lastCheckedRecord);
+        const start = Math.min(recordIndex, lastCheckedRecordIndex);
+        const end = Math.max(recordIndex, lastCheckedRecordIndex);
+        const { selected } = record;
+
+        for (let i = start; i <= end; i++) {
+            records[i].toggleSelection(!selected);
+        }
     }
 
     async toggleOptionalField(fieldName) {

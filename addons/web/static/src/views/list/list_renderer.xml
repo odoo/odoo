@@ -217,7 +217,7 @@
             t-on-touchend="() => this.onRowTouchEnd(record)"
             t-on-touchmove="() => this.onRowTouchMove(record)"
         >
-            <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" t-if="hasSelectors" class="o_list_record_selector" t-on-click.stop="() => this.toggleRecordSelection(record)" tabindex="-1">
+            <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" t-if="hasSelectors" class="o_list_record_selector user-select-none" t-on-click.stop="() => this.toggleRecordSelection(record)" tabindex="-1">
                 <CheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="record.selected" onChange.bind="() => this.toggleRecordSelection(record)" />
             </td>
             <t t-foreach="getColumns(record)" t-as="column" t-key="column.id">
