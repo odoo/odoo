@@ -246,15 +246,6 @@ const PublicLivechatMessage = Class.extend({
         return this._isNotification;
     },
     /**
-     * State whether this message is starred
-     * By default, messages are not starred.
-     *
-     * @return {boolean}
-     */
-    isStarred() {
-        return false;
-    },
-    /**
      * State whether this message is a system notification
      * By default, messages are not system notifications
      *
