@@ -155,14 +155,6 @@ const PublicLivechatMessage = Class.extend({
         return this._id;
     },
     /**
-     * Gets the text to display next to the notification icon.
-     *
-     * @returns {string}
-     */
-    getNotificationText() {
-        return '';
-    },
-    /**
      * Get the time elapsed between sent message and now
      *
      * @return {string}
