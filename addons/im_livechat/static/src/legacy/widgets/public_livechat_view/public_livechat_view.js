@@ -73,7 +73,6 @@ const PublicLivechatView = Widget.extend({
         };
         this._selectedMessageID = null;
         this._currentThreadID = null;
-        this._messageMailPopover = null;
     },
     /**
      * The message mail popover may still be shown at this moment. If we do not
@@ -83,9 +82,6 @@ const PublicLivechatView = Widget.extend({
      */
     destroy() {
         clearInterval(this._updateTimestampsInterval);
-        if (this._messageMailPopover) {
-            this._messageMailPopover.popover('hide');
-        }
         this._super();
     },
     /**
@@ -136,19 +132,7 @@ const PublicLivechatView = Widget.extend({
                 prevMessage.getType() !== 'comment' ||
                 message.getType() !== 'comment' ||
                 // from a different author
-                (prevMessage.getAuthorID() !== message.getAuthorID()) ||
-                (
-                    // messages are linked to a document thread
-                    (
-                        prevMessage.isLinkedToDocumentThread() &&
-                        message.isLinkedToDocumentThread()
-                    ) &&
-                    (
-                        // are from different documents
-                        prevMessage.getDocumentModel() !== message.getDocumentModel() ||
-                        prevMessage.getDocumentID() !== message.getDocumentID()
-                    )
-                )
+                (prevMessage.getAuthorID() !== message.getAuthorID())
             ) {
                 displayAuthorMessages[message.getID()] = true;
             } else {
@@ -185,8 +169,6 @@ const PublicLivechatView = Widget.extend({
                 this._updateTimestamps();
             }, 1000 * 60);
         }
-
-        this._renderMessageNotificationPopover(messages);
     },
 
     /**
@@ -374,38 +356,6 @@ const PublicLivechatView = Widget.extend({
             this.trigger('redirect', options.model, options.id);
         }
     }, 500, true),
-    /**
-     * Render the popover when mouse-hovering on the notification icon of a
-     * message in the thread.
-     * There is at most one such popover at any given time.
-     *
-     * @private
-     * @param {@im_livechat/legacy/models/public_livechat_message[]} messages list of messages in the
-     *   rendered thread, for which popover on mouseover interaction is
-     *   permitted.
-     */
-    _renderMessageNotificationPopover(messages) {
-        if (this._messageMailPopover) {
-            this._messageMailPopover.popover('hide');
-        }
-        if (!this.$('.o_thread_tooltip').length) {
-            return;
-        }
-        this._messageMailPopover = this.$('.o_thread_tooltip').popover({
-            html: true,
-            boundary: 'viewport',
-            placement: 'auto',
-            trigger: 'hover',
-            offset: '0, 1',
-            content() {
-                const messageID = $(this).data('message-id');
-                const message = messages.find(message => message.getID() === messageID);
-                return QWeb.render('im_livechat.legacy.mail.widget.Thread.Message.MailTooltip', {
-                    notifications: message.getNotifications(),
-                });
-            },
-        });
-    },
     /**
      * @private
      */
