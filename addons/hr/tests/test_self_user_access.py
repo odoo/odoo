@@ -86,7 +86,7 @@ class TestSelfAccessProfile(TestHrCommon):
             'user_id': james.id,
         })
         view = self.env.ref('hr.res_users_view_form_profile')
-        available_actions = james.get_view(view.id, toolbar=True)['toolbar']['action']
+        available_actions = james.get_views([(view.id, 'form')], {'toolbar': True})['views']['form']['toolbar']['action']
         change_password_action = self.env.ref("base.change_password_wizard_action")
 
         self.assertFalse(any(x['id'] == change_password_action.id for x in available_actions))
@@ -99,7 +99,7 @@ class TestSelfAccessProfile(TestHrCommon):
             'user_id': john.id,
         })
         view = self.env.ref('hr.res_users_view_form_profile')
-        available_actions = john.get_view(view.id, toolbar=True)['toolbar']['action']
+        available_actions = john.get_views([(view.id, 'form')], {'toolbar': True})['views']['form']['toolbar']['action']
         self.assertTrue(any(x['id'] == change_password_action.id for x in available_actions))
 
 
