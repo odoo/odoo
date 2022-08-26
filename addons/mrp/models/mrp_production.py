@@ -402,13 +402,12 @@ class MrpProduction(models.Model):
         production_no_alert.json_popover = False
         for production in (self - production_no_alert):
             production.json_popover = json.dumps({
-                'popoverTemplate': 'stock.PopoverStockRescheduling',
                 'delay_alert_date': format_datetime(self.env, production.delay_alert_date, dt_format=False),
                 'late_elements': [{
-                        'id': late_document.id,
-                        'name': late_document.display_name,
-                        'model': late_document._name,
-                    } for late_document in production.move_raw_ids.filtered(lambda m: m.delay_alert_date).move_orig_ids._delay_alert_get_documents()
+                    'id': late_document.id,
+                    'name': late_document.display_name,
+                    'model': late_document._name,
+                } for late_document in production.move_raw_ids.filtered(lambda m: m.delay_alert_date).move_orig_ids._delay_alert_get_documents()
                 ]
             })
 
