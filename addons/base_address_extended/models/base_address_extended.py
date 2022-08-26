@@ -33,6 +33,10 @@ class Partner(models.Model):
     street_number2 = fields.Char('Door', compute='_split_street', help="Door Number",
                                  inverse='_set_street', store=True)
 
+    @api.onchange("street_name", "street_number", "street_number2")
+    def _onchange_street(self):
+        self._set_street()
+
     def _formatting_address_fields(self):
         """Returns the list of address fields usable to format addresses."""
         return super(Partner, self)._formatting_address_fields() + self.get_street_fields()
