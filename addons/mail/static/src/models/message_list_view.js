@@ -7,6 +7,15 @@ import { clear } from '@mail/model/model_field_command';
 registerModel({
     name: 'MessageListView',
     recordMethods: {
+        doPendingHighlight() {
+            if (this.thread.pendingHighlightMessage) {
+                const messageListViewItem = this.messageListViewItems.filter(item => item.message === this.thread.pendingHighlightMessage)[0];
+                if (messageListViewItem) {
+                    messageListViewItem.messageView.update({ doHighlight: true });
+                }
+                this.thread.update({ pendingHighlightMessage: clear() });
+            }
+        },
         /**
          * @returns {Element|undefined}
          */

@@ -11,11 +11,23 @@ registerModel({
          * @private
          * @param {MouseEvent} ev
          */
-        onClickReply(ev) {
+        async onClickReply(ev) {
             markEventHandled(ev, 'MessageInReplyToView.ClickMessageInReplyTo');
             const messageListViewItem = this.messageView && this.messageView.messageListViewItemOwner;
             const parentMessage = this.messageView.message.parentMessage;
             if (!messageListViewItem || !parentMessage) {
+                return;
+            }
+            if (parentMessage.originThread !== messageListViewItem.messageListViewOwner.thread) {
+                if (!parentMessage.originThread.isPinned) {
+                    this.messaging.notify({
+                        message: this.env._t("You have already left the channel. Please rejoin."),
+                        type: 'warning',
+                    });
+                } else {
+                    parentMessage.originThread.update({ pendingHighlightMessage: parentMessage });
+                    await parentMessage.originThread.open();
+                }
                 return;
             }
             const parentMessageListViewItem = this.messaging.models['MessageListViewItem'].findFromIdentifyingData({

@@ -1752,6 +1752,10 @@ registerModel({
             inverse: 'thread',
         }),
         /**
+         * Useful to highlight starred ReplyTo message in originthread.
+         */
+        pendingHighlightMessage: attr(),
+        /**
          * Determine if there is a pending seen message change, which is a change
          * of seen message requested by the client but not yet confirmed by the
          * server.

@@ -7,7 +7,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 import { Transition } from "@web/core/transition";
 
-const { Component, onWillPatch, useRef } = owl;
+const { Component, onPatched, onWillPatch, useRef } = owl;
 
 export class MessageList extends Component {
 
@@ -52,6 +52,7 @@ export class MessageList extends Component {
         // use onMounted/onPatched, and the calls from useRenderedValues must
         // happen first to save the values before useUpdate accesses them.
         useUpdate({ func: () => this._update() });
+        onPatched(() => this.messageListView.doPendingHighlight());
         onWillPatch(() => this._willPatch());
     }
 
@@ -168,7 +169,7 @@ export class MessageList extends Component {
             messageListView,
             order,
         } = this._lastRenderedValues();
-        if (!messageListView.getScrollableElement() || !messageListView.hasScrollAdjust) {
+        if (!messageListView.getScrollableElement() || !messageListView.hasScrollAdjust || messageListView.thread.pendingHighlightMessage) {
             return;
         }
         if (!hasAutoScrollOnMessageReceived) {
