@@ -87,3 +87,13 @@ class WebsiteSale(main.WebsiteSale):
             order._apply_program_reward(reward, coupon)
         except UserError as e:
             request.session['error_promo_code'] = str(e)
+
+    @http.route()
+    def cart_update_json(self, *args, set_qty=None, **kwargs):
+        # When a reward line is deleted we remove it from the auto claimable rewards
+        if set_qty == 0:
+            request.update_context(website_sale_loyalty_delete=True)
+            # We need to update the website since `get_sale_order` is called on the website
+            # and does not follow the request's context
+            request.website = request.website.with_context(website_sale_loyalty_delete=True)
+        return super().cart_update_json(*args, set_qty=set_qty, **kwargs)

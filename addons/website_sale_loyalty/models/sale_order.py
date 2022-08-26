@@ -11,6 +11,9 @@ from odoo.http import request
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    # List of disabled rewards for automatic claim
+    disabled_auto_rewards = fields.Many2many("loyalty.reward", relation="sale_order_disabled_auto_rewards_rel")
+
     def _get_program_domain(self):
         res = super()._get_program_domain()
         # Replace `sale_ok` leaf with `ecommerce_ok` if order is linked to a website
@@ -72,7 +75,8 @@ class SaleOrder(models.Model):
         for coupon, rewards in claimable_rewards.items():
             if len(coupon.program_id.reward_ids) != 1 or\
                 coupon.program_id.is_nominative or\
-                (rewards.reward_type == 'product' and rewards.multi_product):
+                (rewards.reward_type == 'product' and rewards.multi_product) or\
+                rewards in self.disabled_auto_rewards:
                 continue
             try:
                 res = self._apply_program_reward(rewards, coupon)
