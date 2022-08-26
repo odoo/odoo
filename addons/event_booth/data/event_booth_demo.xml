@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo><data>
+    <!-- EVENT BOOTH CATEGORY -->
+    <record id="event_booth_category_sport" model="event.booth.category">
+        <field name="description" type="html">
+            <div class="card text-center shadow-sm mt32">
+                <div class="card-header p-4 bg-600">
+                    <h4 class="text-white m-0">Sport Booth</h4>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <span>1 Branded Booth</span>
+                    </li>
+                    <li class="list-group-item bg-600">
+                        <span class="text-white">4m²</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>46" display screen</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>1 desk</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Logo &amp; link on website</span>
+                    </li>
+                </ul>
+            </div>
+        </field>
+        <field name="image_1920" type="base64" file="event_booth/static/src/img/standard-booth.jpeg"/>
+        <field name="name">Sport Booth</field>
+        <field name="sequence">1</field>
+    </record>
 
     <!-- EVENT BOOTH FOR "Design Fair Los Angeles" EVENT -->
     <record id="event_booth_0_event_0" model="event.booth">
@@ -26,6 +56,23 @@
         <field name="name">VIP Booth A5</field>
         <field name="event_id" ref="event.event_0"/>
         <field name="booth_category_id" ref="event_booth_category_vip"/>
+    </record>
+
+    <!-- EVENT BOOTH FOR "Great Reno Ballon Race" -->
+    <record id="event_booth_0_event_1" model="event.booth">
+        <field name="booth_category_id" ref="event_booth_category_sport"/>
+        <field name="event_id" ref="event.event_1"/>
+        <field name="name">Booth A1</field>
+    </record>
+    <record id="event_booth_1_event_1" model="event.booth">
+        <field name="booth_category_id" ref="event_booth_category_sport"/>
+        <field name="event_id" ref="event.event_1"/>
+        <field name="name">Booth A2</field>
+    </record>
+    <record id="event_booth_3_event_1" model="event.booth">
+        <field name="booth_category_id" ref="event_booth_category_sport"/>
+        <field name="event_id" ref="event.event_1"/>
+        <field name="name">Booth A3</field>
     </record>
 
     <!-- EVENT BOOTH FOR "Conference for Architects" EVENT -->

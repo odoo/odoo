@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <!-- Event Booth Products -->
+    <record id="product_product_sport_event_booth" model="product.product">
+        <field name="categ_id" ref="event_sale.product_category_events"/>
+        <field name="description_sale" eval="False"/>
+        <field name="detailed_type">event_booth</field>
+        <field name="invoice_policy">order</field>
+        <field name="list_price">100.0</field>
+        <field name="name">Event Booth - Sport Events</field>
+        <field name="purchase_ok" eval="False"/>
+    </record>
+
+    <!-- Event Booth Category -->
+    <record id="event_booth.event_booth_category_sport" model="event.booth.category">
+        <field name="price">150.0</field>
+        <field name="product_id" ref="event_booth_sale.product_product_sport_event_booth"/>
+    </record>
+
+    <!-- Price List -->
+    <record id="item_event_vip_event_booth" model="product.pricelist.item">
+        <field name="applied_on">0_product_variant</field>
+        <field name="base">list_price</field>
+        <field name="compute_price">formula</field>
+        <field name="min_quantity">1</field>
+        <field name="price_discount">20</field>
+        <field name="pricelist_id" ref="event_sale.list_event_deals"/>
+        <field name="product_id" ref="event_booth_sale.product_product_sport_event_booth"/>
+    </record>
+
+    <!-- Event Booth Registrations -->
+    <record id="event_1_sale_order_0_line_1" model="sale.order.line">
+        <field name="event_booth_ids" eval="[(4, ref('event_booth.event_booth_0_event_1'))]"/>
+        <field name="event_id" ref="event.event_1"/>
+        <field name="name">Event Booth - Sport Events
+Great Reno Ballon Race :
+- Booth A1</field>
+        <field name="order_id" ref="event_sale.event_1_sale_order_0"/>
+        <field name="price_unit">150</field>  <!-- force it because not auto-computed -->
+        <field name="discount">20</field>     <!-- force it because not auto-computed -->
+        <field name="product_id" ref="event_booth_sale.product_product_sport_event_booth"/>
+        <field name="product_uom_qty">1</field>
+    </record>
+
+</data></odoo>
