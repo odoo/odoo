@@ -46,9 +46,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
          *
          * - 'message_added': when a message is added, remove the author in the
          *     typing partners.
-         * - 'message_posted': when a message is posted, let the user have the
-         *     possibility to immediately notify if he types something right away,
-         *     instead of waiting for a throttle behaviour.
          */
 
         // Store the last "myself typing" status that has been sent to the
@@ -105,7 +102,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         this._typingPartnerIDs = [];
 
         this.on('message_added', this, this._onTypingMessageAdded);
-        this.on('message_posted', this, this._onTypingMessagePosted);
 
         if (params.data.message_unread_counter !== undefined) {
             this.messaging.publicLivechatGlobal.publicLivechat.update({
@@ -221,13 +217,21 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         return Promise.resolve();
     },
     /**
-     * Post a message on this thread
+     * Called when current user has posted a message on this thread.
      *
-     * @returns {Promise} resolved with the message object to be sent to the
-     *   server
+     * The current user receives the possibility to immediately notify the
+     * other users if he is typing something else.
+     *
+     * Refresh the context for the current user to notify that he starts or
+     * stops typing something. In other words, when this function is called and
+     * then the current user types something, it immediately notifies the
+     * server as if it is the first time he is typing something.
      */
     async postMessage() {
-        this.trigger('message_posted');
+        this._lastNotifiedMyselfTyping = false;
+        this._throttleNotifyMyselfTyping.clear();
+        this._myselfLongTypingTimer.clear();
+        this._myselfTypingInactivityTimer.clear();
     },
     /**
      * Register someone that is currently typing something in this thread.
@@ -423,25 +427,6 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         if (message.hasAuthor() && message.getAuthorID() === operatorID) {
             this.unregisterTyping({ partnerID: operatorID });
         }
-    },
-    /**
-     * Called when current user has posted a message on this thread.
-     *
-     * The current user receives the possibility to immediately notify the
-     * other users if he is typing something else.
-     *
-     * Refresh the context for the current user to notify that he starts or
-     * stops typing something. In other words, when this function is called and
-     * then the current user types something, it immediately notifies the
-     * server as if it is the first time he is typing something.
-     *
-     * @private
-     */
-    _onTypingMessagePosted() {
-        this._lastNotifiedMyselfTyping = false;
-        this._throttleNotifyMyselfTyping.clear();
-        this._myselfLongTypingTimer.clear();
-        this._myselfTypingInactivityTimer.clear();
     },
 });
 
