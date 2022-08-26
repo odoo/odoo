@@ -41,6 +41,7 @@ class MrpWorkcenter(models.Model):
     time_start = fields.Float('Setup Time')
     time_stop = fields.Float('Cleanup Time')
     routing_line_ids = fields.One2many('mrp.routing.workcenter', 'workcenter_id', "Routing Lines")
+    has_routing_lines = fields.Boolean(compute='_compute_has_routing_lines', help='Technical field for workcenter views')
     order_ids = fields.One2many('mrp.workorder', 'workcenter_id', "Orders")
     workorder_count = fields.Integer('# Work Orders', compute='_compute_workorder_count')
     workorder_ready_count = fields.Integer('# Read Work Orders', compute='_compute_workorder_count')
@@ -173,6 +174,11 @@ class MrpWorkcenter(models.Model):
                 workcenter.performance = 100 * duration_expected.get(workcenter.id, 0.0) / duration[workcenter.id]
             else:
                 workcenter.performance = 0.0
+
+    @api.depends('routing_line_ids')
+    def _compute_has_routing_lines(self):
+        for workcenter in self:
+            workcenter.has_routing_lines = self.env['mrp.routing.workcenter'].search_count([('workcenter_id', '=', workcenter.id)], limit=1)
 
     @api.constrains('default_capacity')
     def _check_capacity(self):
