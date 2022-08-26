@@ -160,10 +160,7 @@ const PublicLivechatMessage = Class.extend({
      * @returns {string}
      */
     getNotificationIcon() {
-        if (!this.hasNotificationsError()) {
-            return 'fa fa-envelope-o';
-        }
-        return 'fa fa-envelope';
+        return 'fa fa-envelope-o';
     },
     /**
      * Gets the text to display next to the notification icon.
@@ -197,14 +194,6 @@ const PublicLivechatMessage = Class.extend({
      */
     hasAuthor() {
         return !!(this._serverAuthorID && this._serverAuthorID[0]);
-    },
-    /**
-     * States whether this message has notifications that are in error.
-     *
-     * @returns {boolean}
-     */
-    hasNotificationsError() {
-        return false;
     },
     /**
      * State whether this message is empty
