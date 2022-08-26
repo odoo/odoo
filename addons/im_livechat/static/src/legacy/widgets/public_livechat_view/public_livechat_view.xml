@@ -173,11 +173,6 @@
                                 t-attf-class="o_thread_author o_PublicLivechatMessage_headerAuthor #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}">
                             <t t-esc="message.getDisplayedAuthor()"/>
                         </strong>
-                        <strong t-elif="message.hasEmailFrom()">
-                            <a class="text-muted" t-attf-href="mailto:#{message.getEmailFrom()}?subject=Re: ">
-                                <t t-esc="message.getEmailFrom()"/>
-                            </a>
-                        </strong>
                         <strong t-else="" class="o_thread_author o_PublicLivechatMessage_headerAuthor">
                             <t t-esc="message.getDisplayedAuthor()"/>
                         </strong>
