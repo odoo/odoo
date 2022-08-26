@@ -199,14 +199,6 @@ const PublicLivechatMessage = Class.extend({
         return !!(this._serverAuthorID && this._serverAuthorID[0]);
     },
     /**
-     * States whether this message has some notifications.
-     *
-     * @returns {boolean}
-     */
-    hasNotifications() {
-        return false;
-    },
-    /**
      * States whether this message has notifications that are in error.
      *
      * @returns {boolean}
