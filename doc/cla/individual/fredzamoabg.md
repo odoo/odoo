@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Alfredo Zamora alfredo.zamora@agilebg.com https://github.com/fredzamoabg
+Alfredo Zamora alfredo.zamora@agilebg.com (up to 2022-08-26) https://github.com/fredzamoabg

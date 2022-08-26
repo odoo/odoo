@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Simone Rubino simone.rubino@agilebg.com https://github.com/SimoRubi
+Simone Rubino simone.rubino@agilebg.com (up to 2022-08-26) https://github.com/SimoRubi
