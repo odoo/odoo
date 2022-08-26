@@ -8,4 +8,4 @@ I declare that I am authorized and able to make this agreement and sign this dec
 
 Signed,
 
-Simone Vanin simone.vanin@agilebg.com https://github.com/SimoneVagile
+Simone Vanin simone.vanin@agilebg.com (up to 2022-08-26) https://github.com/SimoneVagile
