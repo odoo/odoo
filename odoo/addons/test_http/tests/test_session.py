@@ -4,7 +4,7 @@ from unittest.mock import patch
 import odoo
 from odoo.tests import tagged, HttpCase, WsgiCase
 from odoo.tools import mute_logger
-from .test_common import HttpTestMixin
+from .test_common import HttpTestMixin, nodb
 
 GEOIP_ODOO_FARM_2 = {
     'city': 'Ramillies',
@@ -42,6 +42,7 @@ class SessionMixin(HttpTestMixin):
             f'save() was called with args: {mock_save.call_args}',
         )
 
+    @nodb()
     def test_session2_geoip(self):
         with patch.object(odoo.http.root.geoip_resolver, 'resolve', return_value=GEOIP_ODOO_FARM_2) as mock_resolve, \
              patch.object(
