@@ -25,7 +25,7 @@ registerModel({
             }
 
             if (!options || !options.skipRenderMessages) {
-                this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+                this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
             }
         },
         /**
@@ -99,7 +99,7 @@ registerModel({
                 });
             });
 
-            this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+            this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
         },
         /**
          * Processes the step, depending on the current state of the script and the author of the last
@@ -285,7 +285,7 @@ registerModel({
             } else {
                 // did not find next step -> end the script
                 this.currentStep.data.chatbot_step_is_last = true;
-                this.messaging.publicLivechatGlobal.livechatButtonView.widget._renderMessages();
+                this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                 this.endScript();
             }
 

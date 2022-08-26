@@ -1,13 +1,10 @@
 /** @odoo-module **/
 
-import core from 'web.core';
 import session from 'web.session';
 import time from 'web.time';
 import utils from 'web.utils';
 
 import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
-
-const _t = core._t;
 
 /**
  * Override of the LivechatButton to include chatbot capabilities.
@@ -71,30 +68,6 @@ const _t = core._t;
         }
 
         return parameters;
-    },
-    /**
-     * @private
-     */
-    _renderMessages() {
-        this._super(...arguments);
-
-        const self = this;
-
-        this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_thread_message:last .o_livechat_chatbot_options li').each(function () {
-            $(this).on('click', self._onChatbotOptionClicked.bind(self));
-        });
-
-        this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_livechat_chatbot_main_restart').on('click',
-            this.messaging.publicLivechatGlobal.livechatButtonView.onChatbotRestartScript
-        );
-
-        if (this.messaging.publicLivechatGlobal.messages.length !== 0) {
-            const lastMessage = this.messaging.publicLivechatGlobal.lastMessage;
-            const stepAnswers = lastMessage.widget.getChatbotStepAnswers();
-            if (stepAnswers && stepAnswers.length !== 0 && !lastMessage.widget.getChatbotStepAnswerId()) {
-                this.messaging.publicLivechatGlobal.chatWindow.disableInput(_t('Select an option above'));
-            }
-        }
     },
     /**
      * Small override to handle chatbot welcome message(s).
@@ -165,7 +138,7 @@ const _t = core._t;
             this.messaging.publicLivechatGlobal.chatbot.update({
                 welcomeMessageTimeout: setTimeout(() => {
                     this._sendWelcomeChatbotMessage(stepIndex + 1, welcomeMessageDelay);
-                    this._renderMessages();
+                    this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
                 }, welcomeMessageDelay),
             });
         } else {
@@ -227,7 +200,7 @@ const _t = core._t;
         const messageId = stepMessage.id;
         stepMessage.widget.setChatbotStepAnswerId(selectedAnswer);
         this.messaging.publicLivechatGlobal.chatbot.currentStep.data.chatbot_selected_answer_id = selectedAnswer;
-        this._renderMessages();
+        this.messaging.publicLivechatGlobal.chatWindow.renderMessages();
         this.messaging.publicLivechatGlobal.chatbot.saveSession();
 
         const saveAnswerPromise = session.rpc('/chatbot/answer/save', {

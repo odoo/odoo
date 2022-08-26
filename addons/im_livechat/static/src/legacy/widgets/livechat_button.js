@@ -60,16 +60,6 @@ const LivechatButton = Widget.extend({
     /**
      * @private
      */
-     _renderMessages() {
-        const shouldScroll = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded && this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.isAtBottom();
-        this.messaging.publicLivechatGlobal.chatWindow.widget.render();
-        if (shouldScroll) {
-            this.messaging.publicLivechatGlobal.chatWindow.publicLivechatView.widget.scrollToBottom();
-        }
-    },
-    /**
-     * @private
-     */
     _sendWelcomeMessage() {
         if (this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage) {
             this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
