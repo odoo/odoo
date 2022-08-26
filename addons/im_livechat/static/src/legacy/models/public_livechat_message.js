@@ -41,7 +41,7 @@ const PublicLivechatMessage = Class.extend({
         this._type = data.message_type || undefined;
 
         this._defaultUsername = this.messaging.publicLivechatGlobal.options.default_username;
-        this._serverURL = this.messaging.publicLivechatGlobal.livechatButtonView.serverUrl;
+        this._serverURL = this.messaging.publicLivechatGlobal.serverUrl;
 
         if (parent.messaging.publicLivechatGlobal.livechatButtonView.isChatbot) {
             this._chatbotStepId = data.chatbot_script_step_id;
