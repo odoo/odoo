@@ -245,15 +245,6 @@ const PublicLivechatMessage = Class.extend({
     isNotification() {
         return this._isNotification;
     },
-    /**
-     * States whether the current message needs moderation in general.
-     * By default, messages do not require any moderation.
-     *
-     * @returns {boolean}
-     */
-    needsModeration() {
-        return false;
-    },
     setChatbotStepAnswerId(chatbotStepAnswerId) {
         this._chatbotStepAnswerId = chatbotStepAnswerId;
     },
