@@ -155,14 +155,6 @@ const PublicLivechatMessage = Class.extend({
         return this._id;
     },
     /**
-     * Gets the class to use as the notification icon.
-     *
-     * @returns {string}
-     */
-    getNotificationIcon() {
-        return 'fa fa-envelope-o';
-    },
-    /**
      * Gets the text to display next to the notification icon.
      *
      * @returns {string}
