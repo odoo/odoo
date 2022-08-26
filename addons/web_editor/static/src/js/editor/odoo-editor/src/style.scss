@@ -1,3 +1,92 @@
+.odoo-editor-editable {
+    ::selection {
+        /* For color conversion over white background, use X = (Y-(1-P)*255)/P where
+            X = converted color component (R, G, B) (0 <= X <= 255)
+            Y = desired apparent color component (R, G, B) (0 <= Y <= 255)
+            P = opacity (0 <= P <=1)
+            (limitation: Y + 255P >= 255)
+        */
+        background-color: rgba(117, 167, 249, 0.5) !important; /* #bad3fc equivalent when over white*/
+    }
+    &.o_col_resize {
+        cursor: col-resize;
+
+        ::selection {
+            background-color: transparent;
+        }
+    }
+    &.o_row_resize {
+        cursor: row-resize;
+
+        ::selection {
+            background-color: transparent;
+        }
+    }
+}
+.o_selected_table {
+    caret-color: transparent;
+
+    ::selection {
+        background-color: transparent !important;
+    }
+    .o_selected_td {
+        background-color: rgba(117, 167, 249, 0.5) !important; /* #bad3fc equivalent when over white*/
+        cursor: pointer !important;
+    }
+}
+.o_table_ui {
+    background-color: transparent;
+    position: absolute;
+    z-index: 10;
+    padding: 0;
+
+    &:hover {
+        visibility: visible !important;
+    }
+    > div {
+        position: absolute;
+    }
+    .o_table_ui_menu_toggler {
+        cursor: pointer;
+        background-color: white;
+        color: #6e727a;
+        border: 1px solid #C9CCD2;
+        border-radius: 5px;
+        padding: 2px 3px;
+    }
+    .o_table_ui_menu {
+        display: none;
+        cursor: pointer;
+        background-color: white;
+        width: fit-content;
+        border: 1px solid #C9CCD2;
+        padding: 5px 0;
+        white-space: nowrap;
+
+        > div:hover {
+            background-color: #ebebeb;
+        }
+        span {
+            margin-right: 8px;
+            color: #6e727a;
+        }
+        div {
+            padding: 0 8px;
+        }
+    }
+    &.o_open {
+        visibility: visible !important;
+
+        .o_table_ui_menu {
+            display: block;
+
+            > div.o_hide {
+                display: none;
+            }
+        }
+    }
+}
+
 .oe-floating {
     box-shadow: 0px 3px 18px rgba(0, 0, 0, .23);
     border-radius: 4px;

@@ -42,6 +42,9 @@ import {
     isUnbreakable,
     makeContentsInline,
     unwrapContents,
+    getColumnIndex,
+    pxToFloat,
+    getRowIndex,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -310,26 +313,35 @@ function hasColor(element, mode) {
  * @returns {Element[]} the elements on which the style was changed.
  */
 export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
-    getDeepRange(editor.editable, { splitText: true, select: true });
-    const sel = editor.document.getSelection();
-    const { startContainer, startOffset, endContainer, endOffset } = sel.getRangeAt(0);
-    const { anchorNode, anchorOffset, focusNode, focusOffset } = sel;
-    const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
-    const [
-        normalizedStartContainer,
-        normalizedStartOffset
-    ] = getNormalizedCursorPosition(startContainer, startOffset);
-    const [
-        normalizedEndContainer,
-        normalizedEndOffset
-    ] = getNormalizedCursorPosition(endContainer, endOffset);
-    const selectedTextNodes = getSelectedNodes(editor.editable).filter(node => {
-        const atLeastOneCharFromNodeInSelection = !(
-            (node === normalizedEndContainer && normalizedEndOffset === 0) ||
-            (node === normalizedStartContainer && normalizedStartOffset === node.textContent.length)
-        );
-        return isContentTextNode(node) && atLeastOneCharFromNodeInSelection;
-    });
+    let selectedTextNodes, direction, startContainer, startOffset, endContainer, endOffset;
+    if (editor.editable.querySelector('.o_selected_td')) {
+        const selectedNodes = getSelectedNodes(editor.editable);
+        selectedTextNodes = selectedNodes.filter(node => node.nodeType === Node.TEXT_NODE);
+        direction = DIRECTIONS.RIGHT;
+        [startContainer, startOffset] = [selectedNodes[0], 0];
+        [endContainer, endOffset] = [selectedNodes[selectedNodes.length - 1], selectedNodes[selectedNodes.length - 1].childNodes.length];
+    } else {
+        getDeepRange(editor.editable, { splitText: true, select: true });
+        const sel = editor.document.getSelection();
+        const { startContainer, startOffset, endContainer, endOffset } = sel.getRangeAt(0);
+        const { anchorNode, anchorOffset, focusNode, focusOffset } = sel;
+        direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
+        const [
+            normalizedStartContainer,
+            normalizedStartOffset
+        ] = getNormalizedCursorPosition(startContainer, startOffset);
+        const [
+            normalizedEndContainer,
+            normalizedEndOffset
+        ] = getNormalizedCursorPosition(endContainer, endOffset);
+        selectedTextNodes = getSelectedNodes(editor.editable).filter(node => {
+            const atLeastOneCharFromNodeInSelection = !(
+                (node === normalizedEndContainer && normalizedEndOffset === 0) ||
+                (node === normalizedStartContainer && normalizedStartOffset === node.textContent.length)
+            );
+            return isContentTextNode(node) && atLeastOneCharFromNodeInSelection;
+        });
+    }
     const textNodesToFormat = selectedTextNodes.filter(node => {
         let isApplied;
         if (Array.isArray(style) && style[style[0]]) {
@@ -376,8 +388,16 @@ export function applyInlineStyle(editor, applyStyle, style, shouldApply=true) {
             textNode.parentElement.tagName === 'A'
         ) {
             const newParent = document.createElement('span');
-            textNode.after(newParent);
-            newParent.appendChild(textNode);
+            textNode.before(newParent);
+            // Group selected text node siblings:
+            const newChildren = [textNode];
+            let currentTextNode = textNode.nextSibling;
+            while (currentTextNode && textNodesToFormat.includes(currentTextNode)) {
+                newChildren.push(currentTextNode);
+                textNodesToFormat.splice(textNodesToFormat.indexOf(currentTextNode), 1);
+                currentTextNode = currentTextNode.nextSibling;
+            }
+            newParent.append(...newChildren);
         }
         applyStyle(textNode.parentElement);
         changedElements.push(textNode.parentElement);
@@ -422,9 +442,10 @@ const styles = {
 };
 
 export function toggleFormat(editor, format) {
+    const selectedTableCells = editor.editable.querySelectorAll('.o_selected_td');
     const selection = editor.document.getSelection();
-    if (!selection.rangeCount) return;
-    const wasCollapsed = selection.getRangeAt(0).collapsed;
+    if (!selection.rangeCount && !selectedTableCells.length) return;
+    const wasCollapsed = selection.getRangeAt(0).collapsed && !selectedTableCells.length;
     let zws;
     if (wasCollapsed) {
         if (selection.anchorNode.nodeType === Node.TEXT_NODE && selection.anchorNode.textContent === '\u200b') {
@@ -521,32 +542,6 @@ export function toggleFormat(editor, format) {
         }, format, !isAlreadyFormatted);
     }
     return changedElements;
-}
-function addColumn(editor, beforeOrAfter) {
-    getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
-    const c = getInSelection(editor.document, 'td');
-    if (!c) return;
-    const i = [...closestElement(c, 'tr').querySelectorAll('th, td')].findIndex(td => td === c);
-    const column = closestElement(c, 'table').querySelectorAll(`tr td:nth-of-type(${i + 1})`);
-    column.forEach(row => row[beforeOrAfter](document.createElement('td')));
-}
-function addRow(editor, beforeOrAfter) {
-    getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding tr.
-    const row = getInSelection(editor.document, 'tr');
-    if (!row) return;
-    const newRow = document.createElement('tr');
-    const cells = row.querySelectorAll('td');
-    newRow.append(...Array.from(Array(cells.length)).map(() => document.createElement('td')));
-    row[beforeOrAfter](newRow);
-}
-function deleteTable(editor, table) {
-    table = table || getInSelection(editor.document, 'table');
-    if (!table) return;
-    const p = document.createElement('p');
-    p.appendChild(document.createElement('br'));
-    table.before(p);
-    table.remove();
-    setSelection(p, 0);
 }
 
 // This is a whitelist of the commands that are implemented by the
@@ -756,13 +751,20 @@ export const editorCommands = {
      * @param {Element} [element]
      */
     applyColor: (editor, color, mode, element) => {
-        if (element) {
+        const selectedTds = editor.editable.querySelectorAll('td.o_selected_td');
+        let coloredTds = [];
+        if (selectedTds.length) {
+            for (const td of selectedTds) {
+                colorElement(td, color, mode);
+            }
+            coloredTds = [...selectedTds];
+        } else if (element) {
             colorElement(element, color, mode);
             return [element];
         }
         const selection = editor.document.getSelection();
         let wasCollapsed = false;
-        if (selection.getRangeAt(0).collapsed) {
+        if (selection.getRangeAt(0).collapsed && !selectedTds.length) {
             insertAndSelectZws(selection);
             wasCollapsed = true;
         }
@@ -770,7 +772,7 @@ export const editorCommands = {
         if (!range) return;
         const restoreCursor = preserveCursor(editor.document);
         // Get the <font> nodes to color
-        const selectedNodes = getSelectedNodes(editor.editable);
+        const selectedNodes = getSelectedNodes(editor.editable).filter(node => !closestElement(node, 'table.o_selected_table'));
         const fonts = selectedNodes.flatMap(node => {
             let font = closestElement(node, 'font');
             const children = font && descendants(font);
@@ -828,13 +830,13 @@ export const editorCommands = {
             newSelection.removeAllRanges();
             newSelection.addRange(range);
         }
-        return fonts;
+        return [...fonts, ...coloredTds];
     },
     // Table
     insertTable: (editor, { rowNumber = 2, colNumber = 2 } = {}) => {
         const tdsHtml = new Array(colNumber).fill('<td><p><br></p></td>').join('');
         const trsHtml = new Array(rowNumber).fill(`<tr>${tdsHtml}</tr>`).join('');
-        const tableHtml = `<table class="table table-bordered"><tbody>${trsHtml}</tbody></table>`;
+        const tableHtml = `<table class="table table-bordered o_table"><tbody>${trsHtml}</tbody></table>`;
         const sel = editor.document.getSelection();
         if (!sel.isCollapsed) {
             editor.deleteRange(sel);
@@ -851,41 +853,108 @@ export const editorCommands = {
         const [table] = editorCommands.insertHTML(editor, tableHtml);
         setCursorStart(table.querySelector('td'));
     },
-    addColumnLeft: editor => {
-        addColumn(editor, 'before');
+    addColumn: (editor, beforeOrAfter, referenceCell) => {
+        if (!referenceCell) {
+            getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
+            referenceCell = getInSelection(editor.document, 'td');
+            if (!referenceCell) return;
+        }
+        const columnIndex = getColumnIndex(referenceCell);
+        const table = closestElement(referenceCell, 'table');
+        const tableWidth = table.style.width ? pxToFloat(table.style.width) : table.clientWidth;
+        const referenceColumn = table.querySelectorAll(`tr td:nth-of-type(${columnIndex + 1})`);
+        const referenceCellWidth = referenceCell.style.width ? pxToFloat(referenceCell.style.width) : referenceCell.clientWidth;
+        // Temporarily set widths so proportions are respected.
+        const firstRow = table.querySelector('tr');
+        const firstRowCells = [...firstRow.children].filter(child => child.nodeName === 'TD' || child.nodeName === 'TH');
+        let totalWidth = 0;
+        for (const cell of firstRowCells) {
+            const width = cell.style.width ? pxToFloat(cell.style.width) : cell.clientWidth;
+            cell.style.width = width + 'px';
+            // Spread the widths to preserve proportions.
+            // -1 for the width of the border of the new column.
+            const newWidth = Math.max(Math.round((width * tableWidth) / (tableWidth + referenceCellWidth - 1)), 13);
+            cell.style.width = newWidth + 'px';
+            totalWidth += newWidth;
+        }
+        referenceColumn.forEach((cell, rowIndex) => {
+            const newCell = document.createElement('td');
+            newCell.append(document.createElement('br'));
+            cell[beforeOrAfter](newCell);
+            if (rowIndex === 0) {
+                newCell.style.width = cell.style.width;
+                totalWidth += pxToFloat(cell.style.width);
+            }
+        });
+        if (totalWidth !== tableWidth - 1) { // -1 for the width of the border of the new column.
+            firstRowCells[firstRowCells.length - 1].style.width = pxToFloat(firstRowCells[firstRowCells.length - 1].style.width) + (tableWidth - totalWidth - 1) + 'px';
+        }
+        // Fix the table and row's width so it doesn't change.
+        table.style.width = tableWidth + 'px';
     },
-    addColumnRight: editor => {
-        addColumn(editor, 'after');
+    addRow: (editor, beforeOrAfter, referenceRow) => {
+        if (!referenceRow) {
+            getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding tr.
+            referenceRow = getInSelection(editor.document, 'tr');
+            if (!referenceRow) return;
+        }
+        const referenceRowHeight = referenceRow.style.height ? pxToFloat(referenceRow.style.height) : referenceRow.clientHeight;
+        const newRow = document.createElement('tr');
+        newRow.style.height = referenceRowHeight + 'px';
+        const cells = referenceRow.querySelectorAll('td');
+        const referenceRowWidths = [...cells].map(cell => cell.style.width || cell.clientWidth + 'px');
+        newRow.append(...Array.from(Array(cells.length)).map(() => {
+            const td = document.createElement('td');
+            td.append(document.createElement('br'));
+            return td;
+        }));
+        referenceRow[beforeOrAfter](newRow);
+        newRow.style.height = referenceRowHeight + 'px';
+        // Preserve the width of the columns (applied only on the first row).
+        if (getRowIndex(newRow) === 0) {
+            let columnIndex = 0;
+            for (const column of newRow.children) {
+                column.style.width = referenceRowWidths[columnIndex];
+                cells[columnIndex].style.width = '';
+                columnIndex++;
+            }
+        }
     },
-    addRowAbove: editor => {
-        addRow(editor, 'before');
-    },
-    addRowBelow: editor => {
-        addRow(editor, 'after');
-    },
-    removeColumn: editor => {
-        getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
-        const cell = getInSelection(editor.document, 'td');
-        if (!cell) return;
+    removeColumn: (editor, cell) => {
+        if (!cell) {
+            getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
+            cell = getInSelection(editor.document, 'td');
+            if (!cell) return;
+        }
         const table = closestElement(cell, 'table');
         const cells = [...closestElement(cell, 'tr').querySelectorAll('th, td')];
         const index = cells.findIndex(td => td === cell);
         const siblingCell = cells[index - 1] || cells[index + 1];
         table.querySelectorAll(`tr td:nth-of-type(${index + 1})`).forEach(td => td.remove());
-        siblingCell ? setSelection(...startPos(siblingCell)) : deleteTable(editor, table);
+        siblingCell ? setSelection(...startPos(siblingCell)) : editorCommands.deleteTable(editor, table);
     },
-    removeRow: editor => {
-        getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding tr.
-        const row = getInSelection(editor.document, 'tr');
-        if (!row) return;
+    removeRow: (editor, row) => {
+        if (!row) {
+            getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding tr.
+            row = getInSelection(editor.document, 'tr');
+            if (!row) return;
+        }
         const table = closestElement(row, 'table');
         const rows = [...table.querySelectorAll('tr')];
         const rowIndex = rows.findIndex(tr => tr === row);
         const siblingRow = rows[rowIndex - 1] || rows[rowIndex + 1];
         row.remove();
-        siblingRow ? setSelection(...startPos(siblingRow)) : deleteTable(editor, table);
+        siblingRow ? setSelection(...startPos(siblingRow)) : editorCommands.deleteTable(editor, table);
     },
-    deleteTable: (editor, table) => deleteTable(editor, table),
+    deleteTable: (editor, table) => {
+        table = table || getInSelection(editor.document, 'table');
+        if (!table) return;
+        const p = document.createElement('p');
+        p.appendChild(document.createElement('br'));
+        table.before(p);
+        table.remove();
+        setSelection(p, 0);
+    },
     // Structure
     columnize: (editor, numberOfColumns, addParagraphAfter=true) => {
         const sel = editor.document.getSelection();
