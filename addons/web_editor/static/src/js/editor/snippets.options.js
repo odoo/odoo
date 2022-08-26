@@ -4837,6 +4837,13 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
             const wrapperEl = document.createElement('a');
             this.$target[0].after(wrapperEl);
             wrapperEl.appendChild(this.$target[0]);
+            // TODO Remove when bug fixed in Chrome.
+            if (this.$target[0].getBoundingClientRect().width === 0) {
+                // Chrome lost lazy-loaded image => Force Chrome to display image.
+                const src = this.$target[0].src;
+                this.$target[0].src = '';
+                this.$target[0].src = src;
+            }
         } else {
             parentEl.replaceWith(this.$target[0]);
         }
