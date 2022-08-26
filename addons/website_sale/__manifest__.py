@@ -16,6 +16,7 @@
         'data/mail_template_data.xml',
         'data/product_snippet_template_data.xml',
         'data/digest_data.xml',
+        'data/ir_cron_data.xml',
         'views/product_attribute_views.xml',
         'views/product_tag_views.xml',
         'views/product_views.xml',
