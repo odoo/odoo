@@ -259,6 +259,158 @@ QUnit.module("Views", (hooks) => {
         assert.isNotVisible(target.querySelector(".o_list_button_discard"));
     });
 
+    QUnit.test("select record range with shift click", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/><field name="int_field"/></tree>',
+        });
+        await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[0]);
+        assert.containsOnce(target.querySelector(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsNone(target.querySelector(".o_list_selection_box"), ".o_list_select_domain");
+        assert.strictEqual(
+            target.querySelector(".o_list_selection_box").textContent.trim(),
+            "1 selected"
+        );
+        assert.strictEqual(
+            document.querySelectorAll(".o_data_row .o_list_record_selector input:checked").length,
+            1
+        );
+
+        // shift click the 4th record to have 0-1-2-3 toggled
+        await triggerEvents(
+            target.querySelectorAll(".o_data_row .o_list_record_selector input")[3],
+            null,
+            [["keydown", { key: "Shift", shiftKey: true }], "click"]
+        );
+
+        assert.strictEqual(
+            target.querySelector(".o_list_selection_box").textContent.trim(),
+            "4 selected"
+        );
+        assert.strictEqual(
+            document.querySelectorAll(".o_data_row .o_list_record_selector input:checked").length,
+            4
+        );
+
+        // shift click the 3rd record to untoggle 2-3
+        await triggerEvents(
+            target.querySelectorAll(".o_data_row .o_list_record_selector input")[2],
+            null,
+            [["keydown", { key: "Shift", shiftKey: true }], "click"]
+        );
+        assert.strictEqual(
+            target.querySelector(".o_list_selection_box").textContent.trim(),
+            "2 selected"
+        );
+        assert.strictEqual(
+            document.querySelectorAll(".o_data_row .o_list_record_selector input:checked").length,
+            2
+        );
+
+        // shift click the 1st record to untoggle 0-1
+        await triggerEvents(
+            target.querySelectorAll(".o_data_row .o_list_record_selector input")[0],
+            null,
+            [["keydown", { key: "Shift", shiftKey: true }], "click"]
+        );
+        assert.strictEqual(
+            document.querySelectorAll(".o_data_row .o_list_record_selector input:checked").length,
+            0
+        );
+    });
+
+    QUnit.test("select record range with shift+space", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/><field name="int_field"/></tree>',
+        });
+
+        // Go to the first checkbox and check it
+        triggerHotkey("ArrowDown");
+        triggerHotkey("ArrowDown");
+        await nextTick();
+        let checkbox = target.querySelector(
+            ".o_data_row:nth-child(1) .o_list_record_selector input"
+        );
+        assert.strictEqual(document.activeElement, checkbox);
+        await click(checkbox);
+        assert.ok(checkbox.checked);
+
+        // Go to the fourth checkbox and shift+space
+        triggerHotkey("ArrowDown");
+        triggerHotkey("ArrowDown");
+        triggerHotkey("ArrowDown");
+        await nextTick();
+        checkbox = target.querySelector(".o_data_row:nth-child(4) .o_list_record_selector input");
+        assert.strictEqual(document.activeElement, checkbox);
+        assert.ok(!checkbox.checked);
+        await triggerEvents(document.activeElement, null, [
+            ["keydown", { key: "Shift", shiftKey: true }],
+            ["keydown", { key: " ", shiftKey: true }],
+        ]);
+        // focus is on the input and not in the td cell
+        assert.strictEqual(document.activeElement.tagName, "INPUT");
+
+        // Check that all checkbox is checked
+        for (let i = 1; i < 5; i++) {
+            checkbox = target.querySelector(
+                `.o_data_row:nth-child(${i}) .o_list_record_selector input`
+            );
+            assert.ok(checkbox.checked);
+        }
+    });
+
+    QUnit.test("expand range of checkbox with shift+arrow", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/><field name="int_field"/></tree>',
+        });
+
+        // Go to the first checkbox and check it
+        triggerHotkey("ArrowDown");
+        triggerHotkey("ArrowDown");
+        await nextTick();
+        let checkbox = target.querySelector(
+            ".o_data_row:nth-child(1) .o_list_record_selector input"
+        );
+        assert.strictEqual(document.activeElement, checkbox);
+        await click(checkbox);
+        assert.ok(checkbox.checked);
+
+        // expand the checkbox with arrowdown
+        await triggerEvent(document.activeElement, null, "keydown", {
+            key: "Shift",
+            shiftKey: true,
+        });
+        triggerHotkey("shift+ArrowDown");
+        triggerHotkey("shift+ArrowDown");
+        triggerHotkey("shift+ArrowDown");
+        triggerHotkey("shift+ArrowUp");
+        await nextTick();
+        await triggerEvent(document.activeElement, null, "keyup", {
+            key: "Shift",
+            shiftKey: false,
+        });
+
+        checkbox = target.querySelector(".o_data_row:nth-child(3) .o_list_record_selector input");
+        assert.strictEqual(document.activeElement, checkbox);
+        assert.ok(checkbox.checked);
+
+        // Check that the three checkbox are checked
+        for (let i = 1; i < 4; i++) {
+            checkbox = target.querySelector(
+                `.o_data_row:nth-child(${i}) .o_list_record_selector input`
+            );
+            assert.ok(checkbox.checked);
+        }
+    });
+
     QUnit.test("list with class", async function (assert) {
         await makeView({
             type: "list",
@@ -1993,8 +2145,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch:
-                    '<tree js_class="custom_list" editable="top"><field name="foo" required="1"/></tree>',
+                arch: '<tree js_class="custom_list" editable="top"><field name="foo" required="1"/></tree>',
                 mockRPC: async (route, args) => {
                     if (args.method === "write") {
                         assert.step(`write ${args.args[0]}`);
@@ -2035,8 +2186,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                arch:
-                    '<tree js_class="custom_list" editable="top" expand="1"><field name="foo" required="1"/></tree>',
+                arch: '<tree js_class="custom_list" editable="top" expand="1"><field name="foo" required="1"/></tree>',
                 groupBy: ["bar"],
                 mockRPC: async (route, args) => {
                     if (args.method === "write") {
@@ -3048,8 +3198,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             groupBy: ["m2o"],
-            arch:
-                '<tree editable="bottom"><field name="foo" /><field name="int_field" sum="Sum"/></tree>',
+            arch: '<tree editable="bottom"><field name="foo" /><field name="int_field" sum="Sum"/></tree>',
         });
         const groupHeaders = target.querySelectorAll(".o_group_header");
         assert.strictEqual(
