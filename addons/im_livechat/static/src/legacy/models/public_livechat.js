@@ -342,7 +342,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @private
      */
     _warnUpdatedTypingPartners() {
-        this.trigger_up('updated_typing_partners');
+        this.messaging.publicLivechatGlobal.chatWindow.widget.renderHeader();
     },
 
     //--------------------------------------------------------------------------
