@@ -31,7 +31,7 @@
                     </tr>
                 </thead>
                 <tbody class="ui-sortable">
-                    <t t-call="web.ListRenderer.Rows">
+                    <t t-call="{{ constructor.rowsTemplate }}">
                         <t t-set="list" t-value="props.list"/>
                     </t>
                 </tbody>
@@ -71,7 +71,7 @@
     <t t-name="web.ListRenderer.Rows" owl="1">
         <t t-if="!list.isGrouped">
             <t t-foreach="list.records" t-as="record" t-key="record.id">
-                <t t-call="web.ListRenderer.RecordRow"/>
+                <t t-call="{{ constructor.recordRowTemplate }}"/>
             </t>
             <tr t-if="displayRowCreates">
                 <td t-if="withHandleColumn"/>
@@ -111,9 +111,9 @@
         </t>
         <t t-else="">
             <t t-foreach="list.groups" t-as="group" t-key="group.id">
-                <t t-call="web.ListRenderer.GroupRow"/>
+                <t t-call="{{ constructor.groupRowTemplate }}"/>
                 <t t-if="!group.isFolded">
-                    <t t-call="web.ListRenderer.Rows">
+                    <t t-call="{{ constructor.rowsTemplate }}">
                         <t t-set="list" t-value="group.list"/>
                     </t>
                     <tr t-if="!group.list.isGrouped and props.editable and props.activeActions['create']">

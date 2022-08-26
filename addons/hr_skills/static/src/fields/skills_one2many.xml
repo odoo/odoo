@@ -7,11 +7,6 @@
         <xpath expr="//thead" position="attributes">
             <attribute name="style">visibility: collapse;</attribute>
         </xpath>
-        <xpath expr="//tbody[hasclass('ui-sortable')]/t" position="replace">
-            <t t-call="{{RowsTemplate}}">
-                <t t-set="list" t-value="props.list"/>
-            </t>
-        </xpath>
         <xpath expr="//table" position="after">
             <t t-if="!showTable">
                 <button t-on-click="props.onAdd" class="btn btn-secondary" role="button" t-if="isEditable">
@@ -36,7 +31,7 @@
             </tr>
             <t t-foreach="skill_group[1].list.records" t-as="record" t-key="record.id">
                 <t t-set="group" t-value="skill_group[1]"/>
-                <t t-call="{{RecordRowTemplate}}"/>
+                <t t-call="{{ constructor.recordRowTemplate }}"/>
             </t>
         </t>
     </t>

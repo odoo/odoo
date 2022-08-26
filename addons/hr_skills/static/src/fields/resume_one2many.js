@@ -24,16 +24,11 @@ export class ResumeListRenderer extends CommonSkillsListRenderer {
     }
 
     setDefaultColumnWidths() {}
-
-    get RowsTemplate() {
-        return 'hr_skills.ResumeListRenderer.Rows';
-    }
-
-    get RecordRowTemplate() {
-        return 'hr_skills.ResumeListRenderer.RecordRow';
-    }
 }
 ResumeListRenderer.template = 'hr_skills.ResumeListRenderer';
+ResumeListRenderer.rowsTemplate = "hr_skills.ResumeListRenderer.Rows";
+ResumeListRenderer.recordRowTemplate = "hr_skills.ResumeListRenderer.RecordRow";
+
 
 export class ResumeX2ManyField extends SkillsX2ManyField {}
 ResumeX2ManyField.components = {
