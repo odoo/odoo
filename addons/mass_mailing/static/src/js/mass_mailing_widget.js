@@ -171,7 +171,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (_t.database.multi_lang && this.record.fields[fieldName].translate && this.res_id) {
             return $('<button>', {
                     type: 'button',
-                    'class': 'o_field_translate fa fa-globe btn btn-link',
+                    'class': 'o_field_translate fa fa-globe btn btn-primary',
                 })
                 .on('click', this._onTranslate.bind(this));
         }
