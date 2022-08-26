@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import PublicLivechatMessage from '@im_livechat/legacy/models/public_livechat_message';
-
 import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
@@ -30,15 +28,13 @@ registerModel({
             if (hasAlreadyMessage) {
                 return;
             }
-            const messageWidget = new PublicLivechatMessage(this, this.messaging, data);
             const message = this.messaging.models['PublicLivechatMessage'].insert({
                 data,
                 id: data.id,
-                widget: messageWidget,
             });
 
             if (this.messaging.publicLivechatGlobal.publicLivechat && this.messaging.publicLivechatGlobal.publicLivechat.widget) {
-                this.messaging.publicLivechatGlobal.publicLivechat.widget.addMessage(messageWidget);
+                this.messaging.publicLivechatGlobal.publicLivechat.widget.addMessage(message.widget);
             }
 
             if (options && options.prepend) {
