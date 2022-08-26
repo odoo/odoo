@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "car_pooling",
+    'name': "carpooling",
 
     'summary': """
         An app to share the vehicles by Odoo users for free commuting.""",
 
     'description': """
-        The goal of this app, as agreed in the OpenWeek at UCLouvain, is to build a Carpooling app that allows the Odoo users to share their trips for free. 
+        The goal of this app, as agreed in the OpenWeek at UCLouvain, is to build a Carpooling app that allows the Odoo users to share their trips for free.
     """,
 
     'author': "Nima Farnoodian: UCLouvain",
