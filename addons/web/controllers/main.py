@@ -35,10 +35,10 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property
+from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
-from odoo.tools.misc import str2bool, xlsxwriter, file_open, get_lang
+from odoo.tools.misc import str2bool, xlsxwriter, file_open
 from odoo.tools.safe_eval import safe_eval
 from odoo import http, tools
 from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception, Response
@@ -738,10 +738,6 @@ class ExportXlsxWriter:
         self.datetime_style = self.workbook.add_format({'text_wrap': True, 'num_format': 'yyyy-mm-dd hh:mm:ss'})
         self.worksheet = self.workbook.add_worksheet()
         self.value = False
-        decimal_separator = get_lang(request.env).decimal_point
-        self.float_format = f'0{decimal_separator}00'
-        decimal_places = [res['decimal_places'] for res in request.env['res.currency'].search_read([], ['decimal_places'])]
-        self.monetary_format = f'0{decimal_separator}{max(decimal_places or [2]) * "0"}'
 
         if row_count > self.worksheet.xls_rowmax:
             raise UserError(_('There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.') % (row_count, self.worksheet.xls_rowmax))
@@ -789,8 +785,6 @@ class ExportXlsxWriter:
             cell_style = self.datetime_style
         elif isinstance(cell_value, datetime.date):
             cell_style = self.date_style
-        elif isinstance(cell_value, float):
-            cell_style.set_num_format(self.float_format)
         self.write(row, column, cell_value, cell_style)
 
 class GroupExportXlsxWriter(ExportXlsxWriter):
@@ -824,16 +818,26 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
 
         label = '%s%s (%s)' % ('    ' * group_depth, label, group.count)
         self.write(row, column, label, self.header_bold_style)
+        if any(f.get('type') == 'monetary' for f in self.fields[1:]):
+
+            decimal_places = [res['decimal_places'] for res in group._model.env['res.currency'].search_read([], ['decimal_places'])]
+            decimal_places = max(decimal_places) if decimal_places else 2
         for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
             column += 1
             aggregated_value = aggregates.get(field['name'])
-            if field.get('type') == 'monetary':
-                self.header_bold_style.set_num_format(self.monetary_format)
-            elif field.get('type') == 'float':
-                self.header_bold_style.set_num_format(self.float_format)
-            else:
-                aggregated_value = str(aggregated_value if aggregated_value is not None else '')
-            self.write(row, column, aggregated_value, self.header_bold_style)
+            # Float fields may not be displayed properly because of float
+            # representation issue with non stored fields or with values
+            # that, even stored, cannot be rounded properly and it is not
+            # acceptable to display useless digits (i.e. monetary)
+            #
+            # non stored field ->  we force 2 digits
+            # stored monetary -> we force max digits of installed currencies
+            if isinstance(aggregated_value, float):
+                if field.get('type') == 'monetary':
+                    aggregated_value = float_repr(aggregated_value, decimal_places)
+                elif not field.get('store'):
+                    aggregated_value = float_repr(aggregated_value, 2)
+            self.write(row, column, str(aggregated_value if aggregated_value is not None else ''), self.header_bold_style)
         return row + 1, 0
 
 
