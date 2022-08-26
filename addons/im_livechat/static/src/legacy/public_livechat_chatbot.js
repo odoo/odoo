@@ -19,42 +19,6 @@ const _t = core._t;
  */
  LivechatButton.include({
 
-    //--------------------------------------------------------------------------
-    // Private - Chatbot specifics
-    //--------------------------------------------------------------------------
-
-    /**
-     * A special case is handled for email steps, where we first validate the email (server side)
-     * and we allow the user to try again in case the format is incorrect.
-     *
-     * The validation is made server-side to have the same test when we validate here and when we
-     * register the answer, but also to easily post a message as the bot ("Sorry, try again...").
-     *
-     * Returns a boolean stating whether the email was valid or not.
-     *
-     * @private
-     */
-    async _chatbotValidateEmail() {
-        let emailValidResult = await session.rpc('/chatbot/step/validate_email', {
-            channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
-        });
-
-        if (emailValidResult.success) {
-            this.messaging.publicLivechatGlobal.chatbot.currentStep.data.is_email_valid = true;
-            this.messaging.publicLivechatGlobal.chatbot.saveSession();
-
-            return true;
-        } else {
-            // email is not valid, let the user try again
-            this.messaging.publicLivechatGlobal.chatWindow.enableInput();
-            if (emailValidResult.posted_message) {
-                this.messaging.publicLivechatGlobal.chatbot.addMessage(emailValidResult.posted_message);
-            }
-
-            return false;
-        }
-    },
-
      //--------------------------------------------------------------------------
      // Private - LiveChat Overrides
      //--------------------------------------------------------------------------

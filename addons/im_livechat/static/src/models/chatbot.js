@@ -259,7 +259,7 @@ registerModel({
                 this.currentStep.data &&
                 this.currentStep.data.chatbot_step_type === 'question_email'
             ) {
-                triggerNextStep = await this.messaging.publicLivechatGlobal.livechatButtonView.widget._chatbotValidateEmail();
+                triggerNextStep = await this.validateEmail();
             }
 
             if (!triggerNextStep) {
@@ -292,6 +292,36 @@ registerModel({
             this.saveSession();
 
             return nextStep;
+        },
+        /**
+         * A special case is handled for email steps, where we first validate the email (server side)
+         * and we allow the user to try again in case the format is incorrect.
+         *
+         * The validation is made server-side to have the same test when we validate here and when we
+         * register the answer, but also to easily post a message as the bot ("Sorry, try again...").
+         *
+         * Returns a boolean stating whether the email was valid or not.
+         */
+        async validateEmail() {
+            let emailValidResult = await this.messaging.rpc({
+                route: '/chatbot/step/validate_email',
+                params: { channel_uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid },
+            });
+
+            if (emailValidResult.success) {
+                this.currentStep.data.is_email_valid = true;
+                this.saveSession();
+
+                return true;
+            } else {
+                // email is not valid, let the user try again
+                this.messaging.publicLivechatGlobal.chatWindow.enableInput();
+                if (emailValidResult.posted_message) {
+                    this.addMessage(emailValidResult.posted_message);
+                }
+
+                return false;
+            }
         },
         /**
          * This method will be transformed into a 'debounced' version (see init).
