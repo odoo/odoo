@@ -20,7 +20,7 @@
                 onUploaded.bind="onFileUploaded"
                 onUploadComplete.bind="onUploadComplete">
                 <t t-set-slot="toggler">
-                    <t t-slot="toggleButton"/>
+                    <t t-slot="default"/>
                 </t>
             </FileUploader>
         </div>
@@ -50,26 +50,22 @@
 
     <t t-name="account.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary" owl="1">
         <xpath expr="//*[@class='btn btn-primary o_list_button_add']" position="after">
-            <AccountFileUploader extraContext="props.context">
-                <t t-set-slot="toggleButton">
-                    <button type="button" class="btn btn-secondary o_button_upload_bill">
-                        Upload
-                    </button>
-                </t>
-            </AccountFileUploader>
+            <t t-call="account.AccountViewUploadButton"/>
         </xpath>
     </t>
 
     <t t-name="account.KanbanView.Buttons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary" owl="1">
         <xpath expr="//*[@class='btn btn-primary o-kanban-button-new']" position="after">
-            <AccountFileUploader extraContext="props.context">
-                <t t-set-slot="toggleButton">
-                    <button type="button" class="btn btn-secondary o_button_upload_bill">
-                        Upload
-                    </button>
-                </t>
-            </AccountFileUploader>
+            <t t-call="account.AccountViewUploadButton"/>
         </xpath>
+    </t>
+
+    <t t-name="account.AccountViewUploadButton" owl="1">
+        <AccountFileUploader extraContext="props.context">
+            <button type="button" class="btn btn-secondary o_button_upload_bill">
+                Upload
+            </button>
+        </AccountFileUploader>
     </t>
 
     <t t-name="account.DashboardKanbanRecord" owl="1">
