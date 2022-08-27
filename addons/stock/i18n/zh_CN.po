@@ -13,8 +13,9 @@
 # xu aaron, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1345,7 +1346,7 @@ msgid ""
 "(Chicago) in its entirety and does not include any costs relating to the "
 "legislation of the country in which the client is located."
 msgstr ""
-"某些国家根据其国内立法，对发票金额实行源头预扣。任何来源的预扣款将由客户支付给税务机关。在任何情况下，我公司（芝加哥）都不能涉及与一个国家的立法有关的费用。因此，发票金额将全部由我公司（芝加哥）承担，不包括与客户所在国家的立法有关的任何费用。"
+"某些国家根据其国内立法，对结算单金额实行源头预扣。任何来源的预扣款将由客户支付给税务机关。在任何情况下，我公司（芝加哥）都不能涉及与一个国家的立法有关的费用。因此，结算单金额将全部由我公司（芝加哥）承担，不包括与客户所在国家的立法有关的任何费用。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__move_dest_exists
@@ -3420,13 +3421,13 @@ msgstr "非法的域左作业符 %s"
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
-msgstr "非法的域作业符 %s"
+msgstr "非法的域操作符 %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain right operand %s"
-msgstr "非法的域右作业符 %s"
+msgstr "非法的域右操作符 %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -4918,7 +4919,7 @@ msgid ""
 "My Company (Chicago) will be authorized to suspend any provision of services"
 " without prior warning in the event of late payment."
 msgstr ""
-"我们的发票应在21个工作日内支付，除非发票或订单上注明了其他付款时限。如果在到期日没有付款，我公司（芝加哥）保留要求支付固定利息的权利，金额为剩余款项的10%"
+"我们的结算单应在21个工作日内支付，除非结算单或订单上注明了其他付款时限。如果在到期日没有付款，我公司（芝加哥）保留要求支付固定利息的权利，金额为剩余款项的10%"
 " o%。如果逾期付款，我公司（芝加哥）将被授权暂停提供任何服务，而无需事先警告。"
 
 #. module: stock
@@ -7553,7 +7554,7 @@ msgstr "每个公司的仓库名称必须唯一!"
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "The number of Serial Numbers to generate must be greater than zero."
-msgstr ""
+msgstr "要生成的序列号的数量必须大于零。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8379,12 +8380,12 @@ msgstr "供应商位置"
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "View"
-msgstr "视图"
+msgstr "查看"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "View Diagram"
-msgstr "视图简明线路示意图"
+msgstr "查看图表"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
@@ -8394,7 +8395,7 @@ msgstr "查看位置"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "View and allocate received quantities."
-msgstr "视图和分配收到的数量。"
+msgstr "查看和分配收到的数量。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__confirmed

@@ -9,8 +9,8 @@
 # 黎伟杰 <674416404@qq.com>, 2021
 # Martin Trigaux, 2021
 # xu aaron, 2021
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -59,7 +59,7 @@ msgstr "%s的总金额为%s，你确定要删除这个订单吗？"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #, python-format
 msgid "& invoice"
-msgstr "发票凭证"
+msgstr "结算单凭证"
 
 #. module: point_of_sale
 #. openerp-web
@@ -200,7 +200,7 @@ msgstr "<span>报告</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>View</span>"
-msgstr "<span>视图</span>"
+msgstr "<span>查看</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -350,7 +350,7 @@ msgstr "创建结算单所用的会计日记账."
 msgid ""
 "Accounting journal used to post POS session journal entries and POS invoice "
 "payments."
-msgstr "会计凭证用于 POS 凭证录入和 POS发票付款。"
+msgstr "会计凭证用于 POS 凭证录入和 POS结算单付款。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction
@@ -425,7 +425,7 @@ msgstr "新增一个付款方式"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Add notes on order lines to be printed on receipt and invoice"
-msgstr "在将打印于收据和发票单上的订单明细行上添加备注"
+msgstr "在将打印于收据和结算单单上的订单明细行上添加备注"
 
 #. module: point_of_sale
 #. openerp-web
@@ -855,7 +855,7 @@ msgstr "已取消"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Cannot Invoice"
-msgstr "不能开发票"
+msgstr "不能开结算单"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2665,7 +2665,7 @@ msgstr "凭证 %s (%s) 使用 %s 付款方式"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Invoiced"
-msgstr "已开票"
+msgstr "已结算"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_account
@@ -2691,7 +2691,7 @@ msgstr "关注者"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_invoiced
 msgid "Is Invoiced"
-msgstr "已开票"
+msgstr "已结算"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_refunded
@@ -3351,7 +3351,7 @@ msgstr "无"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Not Invoiced"
-msgstr "未开票"
+msgstr "未结算"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4869,7 +4869,7 @@ msgstr "报告"
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Reprint Invoice"
-msgstr "重印发票"
+msgstr "重印结算单"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5807,7 +5807,7 @@ msgstr "结算单日记账所使用币种在未设置的情况下必须与销售
 #, python-format
 msgid ""
 "The invoice journal of the point of sale %s must belong to the same company."
-msgstr "门店 %s 的发票凭证必须属于同一家公司。"
+msgstr "门店 %s 的结算单凭证必须属于同一家公司。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6075,7 +6075,7 @@ msgstr "本门店未设收银机。"
 msgid ""
 "There must be at least one product in your order before it can be validated "
 "and invoiced."
-msgstr "订单中必须有至少一个产品，才能被确认和开票。"
+msgstr "订单中必须有至少一个产品，才能被确认和结算。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6694,7 +6694,7 @@ msgid ""
 "Whenever you close a session, one entry is generated in the following "
 "accounting journal for all the orders not invoiced. Invoices are recorded in"
 " accounting separately."
-msgstr "无论何时关闭会话，都会在所有未开票订单的以下会计日记账中生成一个分录。结算单在会计中单独记录。"
+msgstr "无论何时关闭会话，都会在所有未结算订单的以下会计日记账中生成一个分录。结算单在会计中单独记录。"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.whiteboard
@@ -6773,8 +6773,8 @@ msgid ""
 "You cannot close the POS when invoices are not posted.\n"
 "Invoices: %s"
 msgstr ""
-"当发票没有入账时，你不能关闭POS机。\n"
-"发票。%s"
+"当结算单没有入账时，你不能关闭POS机。\n"
+"结算单。%s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

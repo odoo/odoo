@@ -614,6 +614,14 @@ msgstr ""
 "کرد. لطفاً موارد تکراری را حذف کنید و دوباره امتحان کنید"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
 msgstr "یک کار فقط می تواند یک مرحله شخصی برای هر کاربر داشته باشد."
@@ -2853,7 +2861,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks"
-msgstr ""
+msgstr "نام فعالیت‌ها"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10

@@ -13,11 +13,11 @@
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Tony Peng <umingpeng@gmail.com>, 2022
 # 智能科技奇客罗方 <alanljj@gmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # 宇洛 李, 2022
 # Melvin Liu <betien@msn.cn>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,7 +143,7 @@ msgstr "%s - %s; %s 账单已出， %s 收到在每个 %s"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Invoiced, %s Delivered at %s each"
-msgstr "%s - %s; %s 已开票， %s 运货在每个 %s"
+msgstr "%s - %s; %s 已结算， %s 运货在每个 %s"
 
 #. module: account
 #: code:addons/account/models/product.py:0
@@ -445,7 +445,7 @@ msgstr "<em>草稿结算单</em>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to settings"
-msgstr "<i class=\"fa fa-arrow-right mr-1\"/>返回设置"
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>返回到设置"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -643,7 +643,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "<span class=\"o_form_label o_td_label\">Match Invoice/bill with</span>"
-msgstr "<span class=\"o_form_label o_td_label\">匹配发票/账单与</span>"
+msgstr "<span class=\"o_form_label o_td_label\">匹配结算单/账单与</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_line_form
@@ -868,7 +868,7 @@ msgstr "<span role=\"separator\">对账</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">View</span>"
-msgstr "<span role=\"separator\">视图</span>"
+msgstr "<span role=\"separator\">查看</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1087,7 +1087,7 @@ msgstr "<strong>国际贸易术语解释通则:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date:</strong>"
-msgstr "<strong>发票日期:</strong>"
+msgstr "<strong>结算单日期:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -1161,7 +1161,7 @@ msgid ""
 "                goes out of the cash box."
 msgstr ""
 "现金收银机使您可以管理您现金日记账中的现金账目\n"
-"               此特性可以帮您实现每日轻松跟进现金支付情况\n"
+"               此特性可以帮您实现每日轻松跟进现收现付制情况\n"
 "                您可以键入在您现金盒子中的硬币数量\n"
 "                然后在现金从现金盒子中收入或者支出时候，\n"
 "                生成账目进行记录."
@@ -1620,7 +1620,7 @@ msgstr "科目标签"
 msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
-msgstr "在收付实现制日记账分录中的分录设置的科目，用于跟踪税基金额。"
+msgstr "在现收现付制日记账分录中的分录设置的科目，用于跟踪税基金额。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -1660,7 +1660,7 @@ msgid ""
 "contain the tax amount as long as the original invoice has not been "
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
-msgstr "用于转换现金收付税的税额的科目. 只要原始应收凭单未经调节，它将包含税额; 在调节时，此金额已在此科目中取消并存入常规税务科目."
+msgstr "用于转换现收现付制税的税额的科目. 只要原始应收凭单未经调节，它将包含税额; 在调节时，此金额已在此科目中取消并存入常规税务科目."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -2117,7 +2117,7 @@ msgstr "别名"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_domain
 msgid "Alias domain"
-msgstr "域名别名"
+msgstr "别名域"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -2204,7 +2204,7 @@ msgstr "允许现金取整管理"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow to configure taxes using cash basis"
-msgstr "允许使用收付实现制配置税"
+msgstr "允许使用现收现付制配置税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
@@ -3391,7 +3391,7 @@ msgstr "现金账户"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
 msgid "Cash Basis"
-msgstr "收付实现制"
+msgstr "现收现付制"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3401,31 +3401,31 @@ msgstr "收付实现制"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Cash Basis Entries"
-msgstr "现金收付制分录"
+msgstr "现收现付制制分录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_cash_basis_journal_id
 msgid "Cash Basis Journal"
-msgstr "收付实现制日记账"
+msgstr "现收现付制日记账"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_cash_basis_origin_move_id
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_origin_move_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_cash_basis_origin_move_id
 msgid "Cash Basis Origin"
-msgstr "现金收付制来源"
+msgstr "现收现付制制来源"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Basis Taxes"
-msgstr "收付实现制税"
+msgstr "现收现付制税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 #: model:ir.model.fields,field_description:account.field_account_tax_template__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
-msgstr "收付实现制转移账户"
+msgstr "现收现付制转移账户"
 
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
@@ -3495,7 +3495,7 @@ msgstr "现金对账单"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash basis transition account"
-msgstr "现金收付制过渡账户"
+msgstr "现收现付制制转账科目"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -3552,7 +3552,7 @@ msgid ""
 "Certain countries apply withholding at source on the amount of invoices, in "
 "accordance with their internal legislation. Any withholding at source will "
 "be paid by the client to the tax authorities. Under no circumstances can"
-msgstr "某些国家根据其国内立法对发票金额实行源头预扣。客户将向税务机关支付任何来源预扣税。在任何情况下都不能"
+msgstr "某些国家根据其国内立法对结算单金额实行源头预扣。客户将向税务机关支付任何来源预扣税。在任何情况下都不能"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__action__change_account
@@ -6386,7 +6386,7 @@ msgstr "隐藏付款方式行"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__hide_tax_exigibility
 msgid "Hide Use Cash Basis Option"
-msgstr "隐藏收付实现制选项"
+msgstr "隐藏现收现付制选项"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -7184,7 +7184,7 @@ msgstr "结算单和退款通知分配应分别包含一行基数。"
 msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
-msgstr "发票及贷方票据分摊需至少一个分摊明细行."
+msgstr "结算单及贷方票据分摊需至少一个分摊明细行."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -7247,7 +7247,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Invoiced"
-msgstr "已开票"
+msgstr "已结算"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -11451,7 +11451,7 @@ msgstr ""
 msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
-msgstr "如果税务应使用收付实现制，选择此项，这将在对账期间在给定账户中创建此税项的分录。"
+msgstr "如果税务应使用现收现付制，选择此项，这将在对账期间在给定账户中创建此税项的分录。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
@@ -12258,12 +12258,12 @@ msgstr "税计算的舍入方法"
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_rec_id
 #: model:ir.model.fields,field_description:account.field_account_payment__tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr "税收付实现制分录"
+msgstr "税现收现付制分录"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr "税收付实现制日记账"
+msgstr "税现收现付制日记账"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
@@ -12725,7 +12725,7 @@ msgid ""
 "Technical field used by cash basis taxes, telling the lines of the move are "
 "always exigible. This happens if the move contains no payable or receivable "
 "line."
-msgstr "现金收付制税所使用的技术领域，告诉人们转移的路线总是可行的。如果移动不包含应付或应收行，则会发生这种情况。"
+msgstr "现收现付制制税所使用的技术领域，告诉人们转移的路线总是可行的。如果移动不包含应付或应收行，则会发生这种情况。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -12854,7 +12854,7 @@ msgid ""
 "Technical field used to keep track of the tax cash basis reconciliation. "
 "This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
-msgstr "技术字段用于追踪税收付实现制对账。当取消源单据时需要它：它会发布反向日记账分录来取消那部分。"
+msgstr "技术字段用于追踪税现收现付制对账。当取消源单据时需要它：它会发布反向日记账分录来取消那部分。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__recompute_tax_line
@@ -13668,8 +13668,8 @@ msgid ""
 "The recipient bank account link to this invoice is archived.\n"
 "So you cannot confirm the invoice."
 msgstr ""
-"此发票的收款人银行帐户链接已存档。 \n"
-"因此您无法确认发票。"
+"此结算单的收款人银行帐户链接已存档。 \n"
+"因此您无法确认结算单。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -14756,7 +14756,7 @@ msgstr "使用盎格鲁撒克逊 Anglo-Saxon 会计"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
 msgid "Use Cash Basis"
-msgstr "使用收付实现制"
+msgstr "使用现收现付制"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa_direct_debit
@@ -14771,7 +14771,7 @@ msgstr "用特定的日记账"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__use_active_domain
 msgid "Use active domain"
-msgstr "使用启用域名"
+msgstr "使用活动域名"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__anglo_saxon_accounting
