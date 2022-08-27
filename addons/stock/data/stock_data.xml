@@ -111,6 +111,10 @@
                 'xml_id': 'stock.picking_type_out',
                 'record': obj().env.ref('stock.warehouse0').out_type_id,
                 'noupdate': True,
+            },{
+                'xml_id': 'stock.picking_type_return',
+                'record': obj().env.ref('stock.warehouse0').return_type_id,
+                'noupdate': True,
             }]"/>
         </function>
 
