@@ -34,7 +34,7 @@ class StockMoveLine(models.Model):
         analytic_move_to_recompute = set()
         if 'qty_done' in vals or 'move_id' in vals:
             for move_line in self:
-                move_id = vals.get('move_id') if vals.get('move_id') else move_line.move_id.id
+                move_id = vals.get('move_id', move_line.move_id.id)
                 analytic_move_to_recompute.add(move_id)
         if 'qty_done' in vals:
             for move_line in self:
