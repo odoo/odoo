@@ -63,6 +63,11 @@
                 }
             }
         }
+        @include media-breakpoint-up(sm) {
+            #o_wevent_index_main_col article div.col {
+                min-width: 0;
+            }
+        }
         &.opt_event_list_cards_bg {
             @if (color('body') == $o-portal-default-body-bg) {
                 @extend .bg-200;
