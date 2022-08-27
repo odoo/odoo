@@ -8,6 +8,7 @@ import { ListController } from "@web/views/list/list_controller";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
+import { KanbanDropdownMenuWrapper } from "@web/views/kanban/kanban_dropdown_menu_wrapper";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { FileUploader } from "@web/views/fields/file_handler";
 
@@ -126,6 +127,14 @@ export const AccountMoveUploadKanbanView = {
 };
 
 // Accounting Dashboard
+export class DashboardKanbanDropdownMenuWrapper extends KanbanDropdownMenuWrapper {
+    onClick(ev) {
+        // Keep the dropdown open as we need the fileuploader to remain in the dom
+        if (!ev.target.tagName === "INPUT" && !ev.target.closest('.file_upload_kanban_action_a')) {
+            super.onClick(ev);
+        }
+    }
+}
 export class DashboardKanbanRecord extends KanbanRecord {
     setup() {
         super.setup();
@@ -138,6 +147,7 @@ DashboardKanbanRecord.components = {
     ...DashboardKanbanRecord.components,
     AccountDropZone,
     AccountFileUploader,
+    KanbanDropdownMenuWrapper: DashboardKanbanDropdownMenuWrapper,
 };
 DashboardKanbanRecord.template = "account.DashboardKanbanRecord";
 
