@@ -92,8 +92,14 @@ class TestSparse(models.TransientModel):
 
     data = fields.Serialized()
     boolean = fields.Boolean(sparse='data')
-    integer = fields.Integer(sparse='data')
-    float = fields.Float(sparse='data')
     char = fields.Char(sparse='data')
-    selection = fields.Selection([('one', 'One'), ('two', 'Two')], sparse='data')
+    date = fields.Date(sparse='data')
+    datetime = fields.Datetime(sparse='data')
+    float = fields.Float(sparse='data')
+    integer = fields.Integer(sparse='data')
     partner = fields.Many2one('res.partner', sparse='data')
+    reference = fields.Reference(
+        sparse='data',
+        selection=lambda self: [(model.model, model.name) for model in self.env['ir.model'].search([])],
+    )
+    selection = fields.Selection([('one', 'One'), ('two', 'Two')], sparse='data')

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from datetime import date, datetime
+
 from odoo.tests import common
 
 
@@ -13,23 +15,32 @@ class TestSparseFields(common.TransactionCase):
         partner = self.env.ref('base.main_partner')
         values = [
             ('boolean', True),
-            ('integer', 42),
-            ('float', 3.14),
             ('char', 'John'),
+            ('date', date.today()),
+            ('datetime', datetime.now().replace(microsecond=0)),
+            ('float', 3.14),
+            ('integer', 42),
+            ('partner', partner),
+            ('reference', partner),
             ('selection', 'two'),
-            ('partner', partner.id),
         ]
-        for n, (key, val) in enumerate(values):
+        data = []
+        for key, val in values:
+            val = record._fields[key].convert_to_read(val, record, use_name_get=False)
+            if key in ('date', 'datetime'):
+                val = val.strftime('%Y-%m-%d %H:%M:%S')
+            data.append((key, val))
+
+        for n, (key, val) in enumerate(data):
             record.write({key: val})
-            self.assertEqual(record.data, dict(values[:n+1]))
+            self.assertEqual(record.data, dict(data[:n+1]))
 
-        for key, val in values[:-1]:
+        for key, val in values:
             self.assertEqual(record[key], val)
-        self.assertEqual(record.partner, partner)
 
-        for n, (key, val) in enumerate(values):
+        for n, (key, val) in enumerate(data):
             record.write({key: False})
-            self.assertEqual(record.data, dict(values[n+1:]))
+            self.assertEqual(record.data, dict(data[n+1:]))
 
         # check reflection of sparse fields in 'ir.model.fields'
         names = [name for name, _ in values]
