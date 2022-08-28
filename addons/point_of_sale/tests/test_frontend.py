@@ -466,7 +466,6 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'use_pricelist': True,
             'pricelist_id': public_pricelist.id,
             'available_pricelist_ids': [(4, pricelist.id) for pricelist in all_pricelists],
-            'module_pos_loyalty': False,
         })
 
         # Change the default sale pricelist of customers,

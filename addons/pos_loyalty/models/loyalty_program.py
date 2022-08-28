@@ -1,15 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.tools import unique
 
 class LoyaltyProgram(models.Model):
     _inherit = 'loyalty.program'
 
-    pos_config_ids = fields.Many2many('pos.config', string="Point of Sales", readonly=True)
+    # NOTE: `pos_config_ids` satisfies an excpeptional use case: when no PoS is specified, the loyalty program is
+    # applied to every PoS. You can access the loyalty programs of a PoS using _get_program_ids() of pos.config
+    pos_config_ids = fields.Many2many('pos.config', compute="_compute_pos_config_ids", store=True, readonly=False)
     pos_order_count = fields.Integer("PoS Order Count", compute='_compute_pos_order_count')
     pos_ok = fields.Boolean("Point of Sale", default=True)
+
+    @api.depends('pos_ok')
+    def _compute_pos_config_ids(self):
+        for program in self:
+            if not program.pos_ok:
+                program.pos_config_ids = False
 
     def _compute_pos_order_count(self):
         read_group_res = self.env['pos.order.line']._read_group(

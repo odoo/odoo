@@ -72,6 +72,9 @@ class TestUi(TestPointOfSaleHttpCommon):
             })]
         })
         cls.promo_programs |= cls.auto_promo_program_next
+        cls.promo_programs.write({
+            'pos_config_ids': [Command.link(cls.main_pos_config.id)],
+        })
 
         # coupon program -> free product
         cls.coupon_program = cls.env['loyalty.program'].create({
@@ -90,6 +93,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'reward_product_qty': 1,
                 'required_points': 1.5,
             })],
+            'pos_config_ids': [Command.link(cls.main_pos_config.id)],
         })
 
         # Create coupons for the coupon program and change the code
@@ -110,9 +114,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'tax_regime_selection': False,
             'use_pricelist': False,
-            'use_coupon_programs': True,
-            'coupon_program_ids': [Command.link(self.coupon_program.id)],
-            'promo_program_ids': [Command.link(prog.id) for prog in self.promo_programs],
         })
         self.main_pos_config.open_ui()
 
@@ -262,9 +263,8 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'required_points': 2,
             })],
         })
-        self.main_pos_config.write({
-            'promo_program_ids': [Command.set([free_product.id, free_other_product.id, free_multi_product.id])]
-        })
+
+        (self.promo_programs | self.coupon_program).write({'active': False})
 
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
@@ -307,15 +307,11 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
         })
 
+        (self.promo_programs | self.coupon_program).write({'active': False})
+
         partner_aaa = self.env['res.partner'].create({'name': 'Test Partner AAA'})
         partner_bbb = self.env['res.partner'].create({'name': 'Test Partner BBB'})
         partner_ccc = self.env['res.partner'].create({'name': 'Test Partner CCC'})
-
-        self.main_pos_config.write({
-            'promo_program_ids': [Command.clear()],
-            'module_pos_loyalty': True,
-            'loyalty_program_id': loyalty_program.id,
-        })
 
         # Part 1
         self.start_tour(

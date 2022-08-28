@@ -306,19 +306,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="pos-loyalty">
+                            <div class="col-12 col-lg-6 o_setting_box" id="pos-loyalty"
+                                title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products.">
                                 <div class="o_setting_left_pane">
-                                    <field name="pos_module_pos_loyalty" nolabel="1"/>
+                                    <field name="module_loyalty" nolabel="1"/>
                                 </div>
-                                <div class="o_setting_right_pane" title="Loyalty program to use for this point of sale. ">
-                                    <label for="pos_module_pos_loyalty"/>
-                                    <div class="text-muted" id="loyalty_program">
-                                        Give customer rewards, free samples, etc.
-                                    </div>
-                                    <div class="content-group" attrs="{'invisible': [('pos_module_pos_loyalty', '=', False)]}">
-                                        <div class="text-warning mt16 mb4" id="warning_text_pos_loyalty">
-                                            Save this page and come back here to set up the feature.
-                                        </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_loyalty" string="Promotions, Coupons, Gift Card &amp; Loyalty Program"/>
+                                    <div class="text-muted" id="loyalty_program_text" >
+                                        Manage promotion that will grant customers discounts or gifts
                                     </div>
                                 </div>
                             </div>
