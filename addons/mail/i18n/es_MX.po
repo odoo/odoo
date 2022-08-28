@@ -2631,7 +2631,7 @@ msgstr "Solo para empleados"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model_fields__tracking
 msgid "Enable Ordered Tracking"
-msgstr "Activar el seguimiento de pedidos"
+msgstr "Activar el seguimiento de órdenes"
 
 #. module: mail
 #. openerp-web
@@ -2674,8 +2674,7 @@ msgid ""
 "notification records. Please see with an administrator."
 msgstr ""
 "Error sin excepción. Probablemente se deba a la actualización de acceso "
-"concurrente de los registros de notificación. Por favor, póngase en contacto"
-" con un administrador."
+"simultánea de los registros de notificación. Consulte con un administrador."
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:0
@@ -2685,7 +2684,7 @@ msgid ""
 "recipients."
 msgstr ""
 "Error sin excepción. Probablemente se deba al envío de un correo electrónico"
-" sin destinatarios determinados."
+" sin destinatarios definidos."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_followers_mail_followers_res_partner_res_model_id_uniq
@@ -2707,7 +2706,7 @@ msgstr "Excepción"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__member_count
 msgid "Excluding guests from count."
-msgstr "Excluir a los invitados del recuento."
+msgstr "Excluir a los invitados del conteo."
 
 #. module: mail
 #. openerp-web
@@ -2719,7 +2718,7 @@ msgstr "Salir de pantalla completa"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
-msgstr "Filtros extendidos..."
+msgstr "Filtros avanzados..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
@@ -2824,7 +2823,7 @@ msgstr "Descripción del campo"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_groups
 msgid "Field Groups"
-msgstr "Grupos de campo"
+msgstr "Grupos del campo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_type
@@ -2921,7 +2920,7 @@ msgstr "Seguidores (Partners)"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_subscription_form
 msgid "Followers Form"
-msgstr "Solicitud de seguidores"
+msgstr "Formulario de seguidores"
 
 #. module: mail
 #. openerp-web
@@ -2964,7 +2963,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
 msgid "Formatted Email"
-msgstr "Email con formato"
+msgstr "Correo electrónico con formato"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -3021,12 +3020,12 @@ msgstr "Usuario genérico del registro"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Get Gmail API credentials"
-msgstr ""
+msgstr "Obtener las credenciales API de Gmail"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Gmail Credentials"
-msgstr ""
+msgstr "Credenciales de Gmail"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:0
@@ -3057,6 +3056,7 @@ msgid ""
 "Group authorization and group auto-subscription are only supported on "
 "channels."
 msgstr ""
+"La autorización y autosuscripción de grupos solo es posible en los canales."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
@@ -3104,7 +3104,7 @@ msgstr "El nombre del invitado es demasiado largo."
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_guest_menu
 msgid "Guests"
-msgstr "Comensales"
+msgstr "Invitados"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_http
@@ -3154,7 +3154,7 @@ msgstr "Tiene un error"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Headers"
-msgstr "Cabeceras"
+msgstr "Encabezados"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -3191,8 +3191,8 @@ msgstr "Ocultar el subtipo en las opciones del seguidor"
 msgid ""
 "Hide to public / portal users, independently from subtype configuration."
 msgstr ""
-"Ocultar a los usuarios públicos / del portal, independientemente de la "
-"configuración del subtipo."
+"Ocultar a los usuarios públicos/del portal, sin importar la configuración "
+"del subtipo."
 
 #. module: mail
 #. openerp-web
@@ -3255,7 +3255,7 @@ msgstr "Servidor ICE"
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__id
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__id
 msgid "ID"
-msgstr "Identificación"
+msgstr "ID"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_thread_id
@@ -3331,8 +3331,9 @@ msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
 msgstr ""
-"Si está marcado, los partners recibirán un aviso por correo electrónico en "
-"el que se menciona que han sido añadidos como seguidores del documento."
+"Si se encuentra seleccionado, los partners recibirán un aviso por correo "
+"electrónico en el que se menciona que se han añadido como seguidores del "
+"documento."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_model_fields__tracking
@@ -3351,10 +3352,10 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
-"Si está opción está activada, el administrador de espera enviará el correo "
-"electrónico después de la fecha. Si no se activada, el correo electrónico se"
-" enviará lo antes posible. A menos que se especifique una zona horaria, se "
-"considerará que está en la zona horaria UTC."
+"Si está opción está activada, el administrador de tareas enviará el correo "
+"electrónico después de la fecha. Si no está activada, el correo electrónico "
+"se enviará lo antes posible. A menos que se especifique una zona horaria, se"
+" considerará que está en la zona horaria UTC."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -3363,9 +3364,9 @@ msgid ""
 "the email will be send as soon as possible. You can use dynamic expressions "
 "expression."
 msgstr ""
-"Si está opción está activada, el administrador de espera enviará el correo "
-"electrónico después de la fecha. Si no se activada, el correo electrónico se"
-" enviará lo antes posible. Puede utilizar la expresión de expresiones "
+"Si está opción está activada, el administrador de tareas enviará el correo "
+"electrónico después de la fecha. Si no está activada, el correo electrónico "
+"se enviará lo antes posible. Puede utilizar la expresión de expresiones "
 "dinámicas."
 
 #. module: mail
@@ -3375,8 +3376,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"Si se establece, este contenido se enviará automáticamente a usuarios no "
-"autorizados en lugar del mensaje predeterminado."
+"Si está opción está activada, este contenido se enviará automáticamente a "
+"usuarios no autorizados en lugar del mensaje predeterminado."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__is_blacklisted
@@ -3398,9 +3399,9 @@ msgid ""
 "redirected accordingly. This has an impact on the generated message-id."
 msgstr ""
 "Si está marcado como verdadero, las respuestas no se mostrarán en el hilo de"
-" conversación del documento original. En su lugar, se comprobará el reply_to"
-" en el seguimiento del message-id y se redireccionará como corresponde. Esto"
-" tiene un impacto en el message-id generado."
+" conversación del documento original. En su lugar, se revisará el reply_to "
+"en el seguimiento del message-id y se redireccionará como corresponde. Esto "
+"tiene un impacto en el message-id generado."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
@@ -3408,7 +3409,7 @@ msgid ""
 "If you have setup a catch-all email domain redirected to the Odoo server, "
 "enter the domain name here."
 msgstr ""
-"Si estableció un dominio de correo electrónico catch-all redireccionado al "
+"Si estableció un dominio de correo electrónico catchall redireccionado al "
 "servidor de Odoo, ingrese el nombre del dominio aquí."
 
 #. module: mail
@@ -3534,7 +3535,7 @@ msgstr "Dirección de correo electrónico no válida"
 #: code:addons/mail/models/mail_blacklist.py:0
 #, python-format
 msgid "Invalid email address %r"
-msgstr "Dirección de correo electrónico inválida %r"
+msgstr "Dirección de correo electrónico no válida %r"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -3578,7 +3579,7 @@ msgstr "Enlace de invitación"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__invitation_url
 msgid "Invitation URL"
-msgstr ""
+msgstr "URL de invitación"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -3901,7 +3902,7 @@ msgstr "Abandonar este canal"
 #: code:addons/mail/static/src/models/channel_invitation_form.js:0
 #, python-format
 msgid "Link copied!"
-msgstr ""
+msgstr "Enlace copiado"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__email_cc
@@ -3938,7 +3939,7 @@ msgstr "Cargar más"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Load template"
-msgstr ""
+msgstr "Cargar plantilla"
 
 #. module: mail
 #. openerp-web
@@ -4431,7 +4432,7 @@ msgstr "Buscar mensajes"
 #, python-format
 msgid "Messages can be <b>starred</b> to remind you to check back later."
 msgstr ""
-"Se pueden <b>destacar</b> los mensajes para que no se le olvide volver a "
+"Puede <b>destacar</b> los mensajes para que no se le olvide volver a "
 "revisarlos más tarde."
 
 #. module: mail
@@ -4447,8 +4448,8 @@ msgid ""
 "Messages with internal subtypes will be visible only by employees, aka "
 "members of base_user group"
 msgstr ""
-"Los mensajes con subtipos internos solo serán visibles para los empleados, "
-"es decir, los miembros del grupo base_user"
+"Solo los empleados, es decir, los miembros del grupo base_user, podrán ver "
+"los mensajes con subtipos internos."
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -4468,7 +4469,7 @@ msgstr "Actividad mínima para la detección de voz"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
 msgid "Missing email"
-msgstr "Correo faltante"
+msgstr "Correo electrónico faltante"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_email_missing
@@ -4569,8 +4570,8 @@ msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
 msgstr ""
-"Nombre a usar para el archivo del informe generado (se pueden utilizar marcadores de posición)\n"
-"Si se omite la extensión, se obtendrá del tipo de informe."
+"Nombre a utilizar para el archivo de reporte generado (puede contener marcadores de posición).\n"
+"Es posible omitir la extensión, por lo que ésta provendrá del tipo de reporte."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__needaction
@@ -4719,7 +4720,7 @@ msgstr "Sin error"
 #: code:addons/mail/static/src/components/follower_list_menu/follower_list_menu.xml:0
 #, python-format
 msgid "No Followers"
-msgstr ""
+msgstr "No hay seguidores"
 
 #. module: mail
 #. openerp-web
@@ -4909,7 +4910,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error_counter
 msgid "Number of errors"
-msgstr "Numero de errores"
+msgstr "Número de errores"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_needaction_counter
@@ -5068,7 +5069,7 @@ msgstr "Solo se pueden modificar los modelos personalizados."
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_notification_type
 msgid "Only internal user can receive notifications in Odoo"
-msgstr ""
+msgstr "Solo los usuarios internos pueden recibir notificaciones en Odoo"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -5424,12 +5425,12 @@ msgstr "Planeado en"
 #: code:addons/mail/static/src/models/suggested_recipient_info.js:0
 #, python-format
 msgid "Please complete customer's information"
-msgstr "Por favor complete la información del cliente"
+msgstr "Complete la información del cliente"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
-msgstr "Por favor póngase en contacto con nosotros a través de"
+msgstr "Póngase en contacto con nosotros a través de"
 
 #. module: mail
 #. openerp-web
@@ -5447,7 +5448,7 @@ msgstr "Espere mientras se carga el archivo."
 #: code:addons/mail/static/src/components/messaging_menu_container/messaging_menu_container.xml:0
 #, python-format
 msgid "Please wait..."
-msgstr "Por favor, espere..."
+msgstr "Espere un momento..."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__notification_type
@@ -5718,7 +5719,7 @@ msgstr "Fecha de lectura"
 #: code:addons/mail/static/src/components/message/message.js:0
 #, python-format
 msgid "Read Less"
-msgstr ""
+msgstr "Leer menos"
 
 #. module: mail
 #. openerp-web
@@ -5789,7 +5790,7 @@ msgstr "Destinatario"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__name
 msgid "Recipient Name"
-msgstr ""
+msgstr "Nombre del destinatario"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
@@ -5989,7 +5990,7 @@ msgstr "Responder a"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Reply-to Address"
-msgstr ""
+msgstr "Dirección de correo electrónico de respuesta"
 
 #. module: mail
 #. openerp-web
@@ -6145,7 +6146,7 @@ msgstr "Planifica una actividad"
 #: code:addons/mail/static/src/xml/web_kanban_activity.xml:0
 #, python-format
 msgid "Schedule activities to help you get things done."
-msgstr "Agendar actividades que te ayuden a terminar tus pendientes."
+msgstr "Agendar actividades que le ayuden a terminar sus pendientes."
 
 #. module: mail
 #. openerp-web
@@ -6286,7 +6287,7 @@ msgstr "Enviar"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Send & close"
-msgstr ""
+msgstr "Enviar y cerrar"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__send_mail
@@ -6327,7 +6328,7 @@ msgstr "Enviar mensaje a los seguidores..."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Send and receive emails with your Gmail account."
-msgstr ""
+msgstr "Envíe y reciba correos electrónicos con su cuenta de Gmail."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -6654,6 +6655,8 @@ msgstr "Dejar de compartir pantalla"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
 msgid "Store email and replies in the chatter of each record"
 msgstr ""
+"Guardar los correos electrónicos y las respuestas en el chatter de cada "
+"registro"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings__push_to_talk_key
@@ -6748,7 +6751,7 @@ msgstr "Resumen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__module_google_gmail
 msgid "Support Gmail Authentication"
-msgstr ""
+msgstr "Soporte para la autenticación de Gmail"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
@@ -6894,7 +6897,7 @@ msgstr "El UUID del canal debe ser único"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_channel_type_not_null
 msgid "The channel type cannot be empty"
-msgstr ""
+msgstr "El tipo de canal no puede estar vacío"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
@@ -7005,7 +7008,7 @@ msgid ""
 "\n"
 "(Document type: %s, Operation: %s)"
 msgstr ""
-"No se ha podido completar la operación por restricciones de seguridad. Por favor, póngase en contacto con el administrador del sistema.\n"
+"No se ha podido completar la operación por restricciones de seguridad. Póngase en contacto con el administrador del sistema.\n"
 "\n"
 "(Tipo de documento: %s, Operación: %s)"
 
@@ -7044,7 +7047,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
-msgstr "Este/a"
+msgstr "Este"
 
 #. module: mail
 #. openerp-web
@@ -7272,7 +7275,7 @@ msgstr "Activar la siguiente actividad"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
 msgid "Try Again"
-msgstr ""
+msgstr "Vuelva a intentarlo"
 
 #. module: mail
 #. openerp-web
@@ -7319,13 +7322,13 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
 "Tipo de acción de servidor. Los valores que están disponibles son:\n"
-"- 'Ejecutar código Python': el bloque de código Python se ejecutará\n"
-"- 'Crear o duplicar un nuevo registro': se creará un nuevo registro con nuevos valores, o se duplicará uno existente en la base de datos\n"
-"- 'Actualizar un registro': se actualizarán los valores de un registro\n"
-"- 'Ejecutar varias acciones': se definirá una acción que activará otras acciones de servidor\n"
-"- 'Enviar un correo electrónico': se enviará automáticamente un correo electrónico (Conversaciones)\n"
-"- 'Añadir seguidores': se añadirá seguidores a un registro (Conversaciones)\n"
-"- 'Crear próxima actividad': se creará una actividad (Conversaciones)"
+"- 'Ejecutar código Python': el bloque de código Python se ejecutará,\n"
+"- 'Crear': se creará un nuevo registro con nuevos valores,\n"
+"- 'Actualizar un registro': se actualizarán los valores de un registro,\n"
+"- 'Ejecutar varias acciones': se definirá una acción que activará otras acciones de servidor,\n"
+"- 'Enviar correo electrónico': se enviará automáticamente un correo electrónico (Conversaciones),\n"
+"- 'Añadir seguidores': se añadirán seguidores a un registro (Conversaciones),\n"
+"- 'Crear próxima actividad': se creará una actividad (Conversaciones)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -7362,8 +7365,8 @@ msgstr "Imposible conectar con el servidor SMTP"
 #, python-format
 msgid "Unable to log message, please configure the sender's email address."
 msgstr ""
-"No se puede registrar el mensaje, por favor modifique la dirección de correo"
-" electrónico del remitente."
+"No se puede registrar el mensaje, modifique la dirección de correo "
+"electrónico del remitente."
 
 #. module: mail
 #: code:addons/mail/wizard/mail_wizard_invite.py:0
@@ -7753,7 +7756,7 @@ msgstr "Semanas"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Welcome to MyCompany!"
-msgstr ""
+msgstr "¡Bienvenido a MyCompany!"
 
 #. module: mail
 #. openerp-web
@@ -8203,7 +8206,7 @@ msgstr "canal"
 #: code:addons/mail/static/src/webclient/commands/mail_providers.js:0
 #, python-format
 msgid "channels"
-msgstr ""
+msgstr "canales"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_unit__days
@@ -8234,12 +8237,12 @@ msgstr "hecho"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. \"Welcome email\""
-msgstr ""
+msgstr "p. ej. \"Correo de bienvenida\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. \"Welcome to MyCompany\" or \"Nice to meet you, ${object.name}\""
-msgstr ""
+msgstr "p. ej. \"Bienvenido a MyCompany\" o \"Gusto en conocerlo, ${object.name}\""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -8285,7 +8288,7 @@ msgstr "ej. true.true..f"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "e.g: \"info@mycompany.odoo.com\""
-msgstr ""
+msgstr "p. ej.: \"info@mycompany.odoo.com\""
 
 #. module: mail
 #. openerp-web
@@ -8557,7 +8560,7 @@ msgstr "modelo de destino desconocido %s"
 #: code:addons/mail/static/src/webclient/commands/mail_providers.js:0
 #, python-format
 msgid "users"
-msgstr ""
+msgstr "usuarios"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -8581,7 +8584,7 @@ msgstr "semanas"
 #: code:addons/mail/static/src/xml/many2one_avatar_user.xml:0
 #, python-format
 msgid "widget.mode === 'readonly' && widget.displayAvatarName"
-msgstr ""
+msgstr "widget.mode === 'readonly' && widget.displayAvatarName"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form

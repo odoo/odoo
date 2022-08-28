@@ -3,18 +3,20 @@
 # 	* sale_expense
 # 
 # Translators:
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
 # Martin Trigaux, 2019
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2019
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2020
+# Jacek Michalski <michalski.jck@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Jacek Michalski <michalski.jck@gmail.com>, 2022\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,19 +30,19 @@ msgid "# of Expenses"
 msgstr ""
 
 #. module: sale_expense
-#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
-msgid "<strong style=\"font-size: 16px;\">Submit expenses by email</strong>"
-msgstr ""
-
-#. module: sale_expense
-#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
-msgid "Activate Expense Emails"
-msgstr ""
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__analytic_account_id
+msgid "Analytic Account"
+msgstr "Konto analityczne"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
 msgid "Can be reinvoiced"
 msgstr ""
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
+msgid "Customer to Reinvoice"
+msgstr "Klient Do Refakturowania"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_hr_expense
@@ -57,7 +59,7 @@ msgstr "Wydatki"
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
 msgid ""
-"If the product has an expense policy, it will be reinvoiced on this sales "
+"If the category has an expense policy, it will be reinvoiced on this sales "
 "order"
 msgstr ""
 
@@ -77,17 +79,6 @@ msgid "Product Template"
 msgstr "Szablon produktu"
 
 #. module: sale_expense
-#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
-msgid "Reinvoice Customer"
-msgstr ""
-
-#. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
 msgid "Sales Order"
 msgstr "Zamówienie sprzedaży"
-
-#. module: sale_expense
-#: model_terms:digest.tip,tip_description:sale_expense.digest_tip_sale_expense_0
-msgid ""
-"Take a snapshot of your expenses and submit your expenses by email.<br>"
-msgstr ""

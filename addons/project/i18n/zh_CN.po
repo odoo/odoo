@@ -671,6 +671,14 @@ msgid "A tag with the same name already exists."
 msgstr ""
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr "个人阶段无法链接到项目，因为它只对其相应的用户可见。"
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
 msgstr "一个任务在每个用户身上只能有一个个人阶段。"
