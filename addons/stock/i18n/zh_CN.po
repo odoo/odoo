@@ -3,63 +3,16 @@
 # 	* stock
 # 
 # Translators:
-# Rona Lin <ssauapw@qq.com>, 2016
-# 卓忆科技 <zhanghao@jointd.com>, 2016
-# Wei "oldrev" Li <liwei@sandwych.com>, 2016
-# Michael Chong <michaelchong2005@gmail.com>, 2016
-# liulixia <liu.lixia@elico-corp.com>, 2017
-# xiaobin wu <bd5dml@gmail.com>, 2017
-# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
-# v2exerer <9010446@qq.com>, 2017
-# 苏州远鼎 <tiexinliu@126.com>, 2017
-# waveyeung <waveyeung@qq.com>, 2018
-# Gary Wei <Gary.wei@elico-corp.com>, 2018
-# JZH-Odoo <jzh@odoo.com>, 2019
-# Shane Tsoi <sso@odoo.com>, 2019
-# roye w <159820@qq.com>, 2019
-# Liping Wang <lynn.config@gmail.com>, 2019
-# niulin lnc. <admin@niulin.net>, 2019
-# keecome <7017511@qq.com>, 2019
-# rsh <263737@qq.com>, 2019
-# bf2549c5415a9287249cba2b8a5823c7, 2019
-# Jeanphy <hzh0292@qq.com>, 2019
-# Jerry Pan <panjianyu@inspur.com>, 2019
-# Manga Tsang <mts@odoo.com>, 2019
-# fausthuang, 2020
-# Maie <m@maie.name>, 2020
-# GritLuo <dooms21day@163.com>, 2020
-# ljsrzc007 <ljsrzc007@gmail.com>, 2020
-# mino <minoscc@gmail.com>, 2020
-# as co02 <asco02@163.com>, 2020
-# Melvin Liu <betien@msn.cn>, 2020
-# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
-# wangting <39181819@qq.com>, 2021
-# liAnGjiA <liangjia@qq.com>, 2021
-# 稀饭~~ <wangwhai@qq.com>, 2021
-# 黎伟杰 <674416404@qq.com>, 2021
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
-# ChinaMaker <liuct@chinamaker.net>, 2021
-# Felix Yuen <fyu@odoo.com>, 2021
-# bower Guo <124358678@qq.com>, 2021
-# guohuadeng <guohuadeng@hotmail.com>, 2021
-# John An <johnxan@163.com>, 2021
-# Benson <Benson.Dr@Gmail.com>, 2021
-# Chris H, 2021
-# xu aaron, 2021
-# Ted Wang <feiyuwang2012@gmail.com>, 2021
-# inspur qiuguodong <qiuguodong@inspur.com>, 2021
-# 老窦 北京 <2662059195@qq.com>, 2022
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-11 14:33+0000\n"
-"PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"PO-Revision-Date: 2022-06-17 09:55+0000\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1063,7 +1016,10 @@ msgid "As soon as possible"
 msgstr "尽快"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "分配"
 
@@ -3238,6 +3194,13 @@ msgstr "如果勾选此项，在取消本移动时也取消关联的移动。"
 #: model:ir.model.fields,help:stock.field_stock_move_line__result_package_id
 msgid "If set, the operations are packed into this package"
 msgstr "如果设置，将对动作进行组合。"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_lot_label_layout__label_quantity
+msgid ""
+"If the UoM of a lot is not 'units', the lot will be considered as a unit and"
+" only one label will be printed for this lot."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
@@ -7688,7 +7651,7 @@ msgstr "每个公司的仓库名称必须唯一!"
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "The number of Serial Numbers to generate must be greater than zero."
-msgstr ""
+msgstr "要生成的序列号的数量必须大于零。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -8293,7 +8256,10 @@ msgid "USPS Connector"
 msgstr "USPS 连接器"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr "取消分配"
 
@@ -9173,15 +9139,6 @@ msgstr ""
 #, python-format
 msgid "You need to supply a Lot/Serial number for products %s."
 msgstr "您需要提供产品%s的批号/序列号。"
-
-#. module: stock
-#: code:addons/stock/models/stock_picking.py:0
-#, python-format
-msgid ""
-"You should not use a planned internal transfer to move some products between"
-" two warehouses. Instead, use an immediate internal transfer or the resupply"
-" route."
-msgstr "您不应使用计划的内部转移在两个仓库之间移动某些产品。相反，使用立即内部转移或补给路线。"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
