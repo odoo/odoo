@@ -57,12 +57,12 @@
 # Christophe Ricevuto <cri@nalios.be>, 2021
 # Benjamin Stienon <tsb@odoo.com>, 2021
 # Pierre Delacroix <pde@odoo.com>, 2021
-# Alexandra Jubert <aju@odoo.com>, 2021
+# Alexandra Jubert, 2021
 # Alexis de Lattre <alexis@via.ecp.fr>, 2021
 # Jérôme JEK <jek@odoo.com>, 2021
 # Rémi CAZENAVE, 2021
-# Camille Dantinne <cmd@odoo.com>, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
+# Camille Dantinne <cmd@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -70,13 +70,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
+"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
@@ -678,7 +678,7 @@ msgstr "<span class=\"o_form_label\">Email de confirmation</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Down Payments</span>"
-msgstr "Acomptes"
+msgstr "<span class=\"o_form_label\">Acomptes</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4677,6 +4677,15 @@ msgstr ""
 "Vous pouvez définir le type de communication qui apparaitra sur les bons de "
 "commande. La communication sera donnée au client quand il choisira la "
 "méthode de paiement."
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
