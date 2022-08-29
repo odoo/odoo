@@ -189,7 +189,7 @@ function factory(dependencies) {
                     continue;
                 }
                 if (
-                    (partner.nameOrDisplayName && cleanSearchTerm(partner.nameOrDisplayName).includes(cleanedSearchTerm)) ||
+                    (partner.name && cleanSearchTerm(partner.name).includes(cleanedSearchTerm)) ||
                     (partner.email && cleanSearchTerm(partner.email).includes(cleanedSearchTerm))
                 ) {
                     if (partner.user) {
@@ -302,8 +302,8 @@ function factory(dependencies) {
                         return 1;
                     }
                 }
-                const cleanedAName = cleanSearchTerm(a.nameOrDisplayName || '');
-                const cleanedBName = cleanSearchTerm(b.nameOrDisplayName || '');
+                const cleanedAName = cleanSearchTerm(a.name || '');
+                const cleanedBName = cleanSearchTerm(b.name || '');
                 if (cleanedAName.startsWith(cleanedSearchTerm) && !cleanedBName.startsWith(cleanedSearchTerm)) {
                     return -1;
                 }
