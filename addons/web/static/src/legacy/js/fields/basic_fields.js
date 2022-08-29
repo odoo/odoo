@@ -637,6 +637,9 @@ var NumericField = InputField.extend({
         const kbdEvt = ev.originalEvent;
         if (kbdEvt && utils.isNumpadDecimalSeparatorKey(kbdEvt)) {
             const inputField = this.$input[0];
+            if (inputField.type === 'number') {
+                return this._super(...arguments);
+            }
             const curVal = inputField.value;
             const from = inputField.selectionStart;
             const to = inputField.selectionEnd;
