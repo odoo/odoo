@@ -127,6 +127,7 @@ registerModel({
          */
         mentionText: attr({
             compute: '_computeMentionText',
+            default: '',
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
