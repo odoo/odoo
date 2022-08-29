@@ -40,17 +40,17 @@ publicWidget.registry.websiteEventTrackProposalForm = publicWidget.Widget.extend
         var formErrors = [];
 
         // 1) Valid Form Inputs
-        this.$('.form-group').each(function (index, field) {
-            var $field = $(field);
+        this.$('.form-control').each(function () {
+            var $formControl = $(this);
             // Validate current input, if not select2 field.
-            var inputs = $field.find('.form-control').not('.o_wetrack_select2_tags');
+            var inputs = $formControl.not('.o_wetrack_select2_tags');
             var invalidInputs = inputs.toArray().filter(function (input) {
                 return !input.checkValidity();
             });
 
-            $field.find('.form-control').removeClass('o_wetrack_input_error is-invalid');
+            $formControl.removeClass('o_wetrack_input_error is-invalid');
             if (invalidInputs.length) {
-                $field.find('.form-control').addClass('o_wetrack_input_error is-invalid');
+                $formControl.addClass('o_wetrack_input_error is-invalid');
                 formErrors.push('invalidFormInputs');
             }
         });

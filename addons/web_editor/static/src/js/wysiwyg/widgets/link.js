@@ -479,7 +479,7 @@ const Link = Widget.extend({
         var $linkUrlInput = this.$('#o_link_dialog_url_input');
         let value = $linkUrlInput.val();
         let isLink = value.indexOf('@') < 0;
-        this.$('input[name="is_new_window"]').closest('.form-group').toggleClass('d-none', !isLink);
+        this.$('input[name="is_new_window"]').closest('.row').toggleClass('d-none', !isLink);
         this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
         this._adaptPreview();

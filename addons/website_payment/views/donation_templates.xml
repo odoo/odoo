@@ -9,21 +9,21 @@
                 <t t-set="donation_confirm_button_label">Donate Now</t>
                 <h3 class="o_page_header mt16 mb4">Donation</h3>
                 <div class="row">
-                    <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
+                    <div t-attf-class="mb-3 #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
                         <label class="col-form-label fw-bold" for="name">Name
                             <span class="s_website_form_mark"> *</span>
                         </label>
                         <input t-att-readonly="'1' if 'name' in partner_details and partner_id else None" type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="partner_details.get('name')" />
                     </div>
                     <div class="w-100"/>
-                    <div t-attf-class="form-group #{error.get('email') and 'o_has_error' or ''} col-lg-6" id="div_email">
+                    <div t-attf-class="mb-3 #{error.get('email') and 'o_has_error' or ''} col-lg-6" id="div_email">
                         <label class="col-form-label fw-bold" for="email">Email
                             <span class="s_website_form_mark"> *</span>
                         </label>
                         <input t-att-readonly="'1' if 'email' in partner_details and partner_id else None" type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="partner_details.get('email')" />
                     </div>
                     <t t-set="country_id" t-value="partner_details.get('country_id')"/>
-                    <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
+                    <div t-attf-class="mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
                         <label class="col-form-label fw-bold" for="country_id">Country
                             <span class="s_website_form_mark"> *</span>
                         </label>
@@ -37,7 +37,7 @@
                         </select>
                     </div>
                     <div class="w-100"/>
-                    <div class="form-group col-lg-12 o_donation_payment_form">
+                    <div class="mb-3 col-lg-12 o_donation_payment_form">
                         <div class="col-lg-6 px-0">
                             <label class="col-form-label fw-bold">Amount (<t t-out="currency.symbol"/>)</label>
                             <t t-set="donation_layout" t-value="donation_options.get('customAmount')"/>

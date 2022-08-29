@@ -143,7 +143,7 @@ export class DuplicatePageDialog extends Component {
 DuplicatePageDialog.components = {WebsiteDialog};
 DuplicatePageDialog.template = xml`
 <WebsiteDialog close="props.close" primaryClick="() => this.duplicate()">
-    <div class="form-group row">
+    <div class="mb-3 row">
         <label class="col-form-label col-md-3">
             Page Name
         </label>

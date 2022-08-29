@@ -38,7 +38,7 @@ LinkDialog.include({
                 };
                 $el.remove();
 
-                this.$('.form-group .o_btn_preview.btn-' + type)
+                this.$('label > .o_btn_preview.btn-' + type)
                     .css(_.pick(this.__realMMColors[type], 'background-color', 'color'));
             });
             $previewArea.remove();

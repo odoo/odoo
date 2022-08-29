@@ -4,11 +4,11 @@
     <template id="inline_form">
         <div t-attf-id="demo-container-{{provider_id}}">
             <div class="row">
-                <div class="form-group">
+                <div class="mb-3">
                     <input name="provider_id" type="hidden" id="provider_id" t-att-value="id"/>
                     <input name="partner_id" type="hidden" t-att-value="partner_id"/>
                 </div>
-                <div class="form-group col mt-0 mb-0">
+                <div class="col mt-0 mb-0">
                     <label for="customer_input" class="mt-0">
                         <small><b>Payment Details (test data)</b></small>
                     </label>
@@ -18,7 +18,7 @@
                            class="form-control"
                            placeholder="XXXX XXXX XXXX XXXX"/>
                 </div>
-                <div class="form-group col mb-0">
+                <div class="col mb-0">
                     <label for="simulated_payment_state" class="mt-0">
                         <small><b>Payment Status</b></small>
                     </label>

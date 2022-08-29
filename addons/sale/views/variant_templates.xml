@@ -39,7 +39,7 @@
                     <t t-if="ptal.attribute_id.display_type == 'radio'">
                         <ul t-att-data-attribute_id="ptal.attribute_id.id" t-attf-class="list-inline list-unstyled o_wsale_product_attribute #{'d-none' if single_and_custom else ''}">
                             <t t-foreach="ptal.product_template_value_ids._only_active()" t-as="ptav">
-                                <li class="list-inline-item form-group js_attribute_value" style="margin: 0;">
+                                <li class="list-inline-item mb-3 js_attribute_value" style="margin: 0;">
                                     <label class="col-form-label">
                                         <div class="form-check">
                                             <input type="radio"
