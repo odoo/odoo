@@ -150,3 +150,26 @@ kbd {
 [type="toggle"] {
   cursor: pointer !important;
 }
+
+.o_web_client.o_touch_device {
+  .btn {
+      &, .btn-sm {
+          font-size: $font-size-base;
+          padding: $o-touch-btn-padding;
+      }
+
+      &.fa {
+          font-size: 1.3em;
+          padding: 2px 10px;
+      }
+  }
+
+  .o_cp_action_menus .btn {
+      font-size: $font-size-lg;
+      padding: 13px 14px!important;
+
+      > .fa {
+          margin: 0!important;
+      }
+  }
+}
