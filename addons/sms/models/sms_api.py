@@ -74,3 +74,7 @@ class SmsApi(models.AbstractModel):
             'insufficient_credit': ' '.join([_('You don\'t have enough credits on your IAP account.'), buy_credits]),
             'wrong_number_format': _("The number you're trying to reach is not correctly formatted."),
         }
+
+    @api.model
+    def get_sms_credits(self):
+        return self.sudo().env['iap.account'].get_credits('sms')
