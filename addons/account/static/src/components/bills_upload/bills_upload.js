@@ -26,7 +26,7 @@ export class AccountFileUploader extends Component {
             mimetype: file.type,
             datas: file.data,
         };
-        const att_id = await this.orm.create("ir.attachment", att_data, {
+        const att_id = await this.orm.create("ir.attachment", [att_data], {
             ...this.props.extraContext, ...this.env.searchModel.context,
         });
         this.attachmentIdsToProcess.push(att_id);
