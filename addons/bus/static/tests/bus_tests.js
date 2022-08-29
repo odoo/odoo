@@ -11,7 +11,7 @@ const { patchWebsocketWorkerWithCleanup } = require("@bus/../tests/helpers/mock_
 var testUtils = require('web.test_utils');
 const { browser } = require("@web/core/browser/browser");
 const { registry } = require("@web/core/registry");
-const { patchWithCleanup, nextTick } = require("@web/../tests/helpers/utils");
+const { makeDeferred, nextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { makeTestEnv } = require('@web/../tests/helpers/mock_env');
 const { createWebClient } = require("@web/../tests/webclient/helpers");
 
@@ -308,8 +308,19 @@ QUnit.module('Bus', {
     QUnit.test('displays reconnect notification', async (assert) => {
         assert.expect(3);
 
+        let startPromise = Promise.resolve();
+        patchWebsocketWorkerWithCleanup({
+            async _start() {
+                const originalStart = this._super;
+                await startPromise;
+                return originalStart(...arguments);
+            },
+        });
         const pyEnv = await startServer();
         await createWebClient({});
+        // prevent websocket to connect and notification to disappear
+        // before the assertion.
+        startPromise = makeDeferred();
         pyEnv.simulateConnectionLost(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
         await nextTick();
 
@@ -321,6 +332,7 @@ QUnit.module('Bus', {
         // Wait for the worker to reconnect, post a message and the
         // bus_service to receive it and remove the notification.
         const { afterNextRender } = owl.App;
+        startPromise.resolve();
         await afterNextRender(() => {});
         assert.containsNone(document.body, '.o_notification');
     });
