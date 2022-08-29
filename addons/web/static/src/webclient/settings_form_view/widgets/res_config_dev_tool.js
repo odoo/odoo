@@ -2,6 +2,8 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { SettingsContainer } from "../settings/settings_container";
+import { Setting } from "../settings/setting";
 
 const { Component, onWillStart } = owl;
 
@@ -33,5 +35,9 @@ class ResConfigDevTool extends Component {
 }
 
 ResConfigDevTool.template = "res_config_dev_tool";
+ResConfigDevTool.components = {
+    SettingsContainer,
+    Setting,
+};
 
 registry.category("view_widgets").add("res_config_dev_tool", ResConfigDevTool);
