@@ -8278,7 +8278,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             `translate args ["partner",1,"foo"]`,
             `translate context {"lang":"en","uid":7,"tz":"taht"}`,
-            `search_read translations args: [] ; kwargs: {"context":{"lang":"en","uid":7,"tz":"taht"},"domain":[["res_id","=",1],["name","=","partner_type,foo"],["lang","in",["CUST","CUST2"]]],"fields":["lang","src","value"]}`,
+            `search_read translations args: [] ; kwargs: {"domain":[["res_id","=",1],["name","=","partner_type,foo"],["lang","in",["CUST","CUST2"]]],"fields":["lang","src","value"],"context":{"lang":"en","uid":7,"tz":"taht"}}`,
         ]);
 
         assert.containsOnce(target, ".modal");

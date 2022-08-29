@@ -413,8 +413,10 @@ export class GraphModel extends Model {
                         domain.arrayRepr,
                         measures,
                         groupBy.map((gb) => gb.spec),
-                        { lazy: false }, // what is this thing???
-                        { fill_temporal: true, ...this.searchParams.context }
+                        {
+                            lazy: false, // what is this thing???
+                            context: { fill_temporal: true, ...this.searchParams.context },
+                        }
                     )
                     .then((data) => {
                         const dataPoints = [];
