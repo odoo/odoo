@@ -1548,7 +1548,7 @@
 <t t-name="FieldBinaryFileUploader.attachment_preview">
     <t t-set="url" t-value="widget.metadata[file.id] ? widget.metadata[file.id].url : false"/>
     <t t-if="file.data" t-set="file" t-value="file.data"/>
-    <t t-set="editable" t-value="widget.mode === 'edit'"/>
+    <t t-set="editable" t-value="widget.mode === 'edit' and !(file.res_id === 0 and file.access_token)"/>
     <t t-if="file.mimetype" t-set="mimetype" t-value="file.mimetype"/>
     <div t-attf-class="o_attachment o_attachment_many2many #{ editable ? 'o_attachment_editable' : '' } #{upload ? 'o_attachment_uploading' : ''}" t-att-title="file.name">
         <div class="o_attachment_wrap">
