@@ -251,7 +251,7 @@ class Website(models.Model):
 
     @api.model
     def _handle_favicon(self, vals):
-        if 'favicon' in vals:
+        if vals.get('favicon'):
             vals['favicon'] = base64.b64encode(tools.image_process(base64.b64decode(vals['favicon']), size=(256, 256), crop='center', output_format='ICO'))
 
     @api.model
