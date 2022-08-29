@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sh_customer_pricelist_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-if="product_dic">
+                    <t t-foreach="product_dic.keys()" t-as="partner">
+                        <div class="page">
+                            <table width="100%">
+                                <tr>
+                                    <th width="10%" style="text-align: center;"><span>Partner :</span></th>
+                                    <th width="25%" style="text-align: center;"><span t-esc="partner.name" /></th>
+                                    <th width="30%"></th>
+                                    <th width="10%" style="text-align: center;"><span>Pricelist :</span></th>
+                                    <th width="25%" style="text-align: center;"><span t-esc="partner.property_product_pricelist.name" /></th>
+                                </tr>
+                            </table>
+                            <table width="100%" class="table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Internal Reference</th>
+                                        <th>Sale Price</th>
+                                        <th>Pricelist Price</th>
+                                        <th>Discount(%)</th>
+                                        <th>Discount Amount</th>
+                                    </tr>
+                                    <tr t-foreach="product_dic[partner]" t-as="p">
+                                        <td>
+                                            <span t-esc="p.get('name','')" />
+                                        </td>
+                                        <td>
+                                            <span t-esc="p.get('default_code','')" />
+                                        </td>
+
+                                        <td>
+                                            <span t-esc="'{0:,.2f}'.format(p.get('list_price',''))" />
+                                        </td>
+                                        <td>
+                                            <span t-esc="'{0:,.2f}'.format(p.get('price',''))" />
+                                        </td>
+                                        <td>
+                                            <span t-esc="'{0:,.2f}'.format(p.get('discount',''))" />
+                                        </td>
+                                        <td>
+                                            <span t-esc="'{0:,.2f}'.format(p.get('discount_amount',''))" />
+                                        </td>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <p style="page-break-before: always;"></p>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="sh_customer_pricelist_report_action" model="ir.actions.report">
+        <field name="name">Export Pricelist</field>
+        <field name="model">report.sh_pricelist_export.sh_customer_pricelist_report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sh_pricelist_export.sh_customer_pricelist_report</field>
+        <field name="print_report_name">'Export Pricelist by Customer'</field>
+    </record>
+</odoo>

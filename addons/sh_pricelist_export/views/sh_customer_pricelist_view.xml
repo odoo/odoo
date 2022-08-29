@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sh_customer_pricelist_wizard_view" model="ir.ui.view">
+        <field name="name">sh.customer.pricelist.wizard.form</field>
+        <field name="model">sh.customer.pricelist.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export Customer pricelist">
+                <group>
+                    <group>
+                        <field name="import_type" widget="radio" />
+                    </group>
+                </group>
+                <footer>
+                    <button attrs="{'invisible':[('import_type','=','excel')]}" name="print_report" string="Export Customer Pricelist PDF" class="oe_highlight" type="object" />
+                    <button attrs="{'invisible':[('import_type','=','pdf')]}" class="btn-primary" name="action_export_customer_pricelist" type="object" string="Export Customer Pricelist Xls" />
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sh_customer_pricelist_action" model="ir.actions.act_window">
+        <field name="name">Export Customer pricelist</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sh.customer.pricelist.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="base.model_res_partner" />
+    </record>
+</odoo>

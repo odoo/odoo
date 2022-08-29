@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="xls_report_view" model="ir.ui.view">
+        <field name="name">Xls Report</field>
+        <field name="model">excel.extended</field>
+        <field name="arch" type="xml">
+            <form string="Xls Report">
+                <group>
+                    <field name="excel_file" invisible="1" />
+                    <field name="file_name" readonly="1" filename="excel_file" invisible="1" />
+                    <button name="download_report" string="Customer Pricelist Xlsx" type="object" class="oe_highlight" />
+                </group>
+                <footer>
+                    <button string="Close" class="oe_highlight" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_excel_form" model="ir.actions.act_window">
+        <field name="name">Customer Pricelist</field>
+        <field name="view_id" ref="xls_report_view" />
+        <field name="view_mode">form</field>
+        <field name="res_model">excel.extended</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
