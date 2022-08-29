@@ -1332,9 +1332,15 @@ const Wysiwyg = Widget.extend({
     },
     _configureToolbar: function (options) {
         const $toolbar = this.toolbar.$el;
+        // Prevent selection loss when interacting with the toolbar buttons.
         $toolbar.find('.btn-group').on('mousedown', e => {
-            // Do not prevent events on popovers.
-            if (!e.target.closest('.dropdown-menu')) {
+            if (
+                // Prevent when clicking on btn-group but not on dropdown items.
+                !e.target.closest('.dropdown-menu') ||
+                // Unless they have a data-call in which case there is an editor
+                // command that is bound to it so we need to preventDefault.
+                e.target.closest('.btn') && e.target.closest('.btn').getAttribute('data-call')
+            ) {
                 e.preventDefault();
             }
         });
