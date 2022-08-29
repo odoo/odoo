@@ -586,6 +586,10 @@ class PricelistItem(models.Model):
         convert_to_price_uom = (lambda price: product.uom_id._compute_price(price, price_uom))
         if self.compute_price == 'fixed':
             price = convert_to_price_uom(self.fixed_price)
+            if self._context.get('no_variant_attributes_price_extra'):
+                price_extra = sum(self._context.get('no_variant_attributes_price_extra'))
+                price_extra = product.currency_id._convert(price_extra, self.currency_id, self.env.company, date)
+                price += price_extra
         elif self.compute_price == 'percentage':
             price = (price - (price * (self.percent_price / 100))) or 0.0
         else:
