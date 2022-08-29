@@ -96,7 +96,7 @@ QUnit.module("Fields", (hooks) => {
                     assert.step(route);
                 }
                 if (route === "/web/dataset/call_kw/ir.attachment/read") {
-                    assert.deepEqual(args.args[1], ["name", "mimetype"]);
+                    assert.deepEqual(args.args[1], ["name", "mimetype", "res_id", "access_token"]);
                 }
             },
         });
