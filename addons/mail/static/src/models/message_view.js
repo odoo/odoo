@@ -97,7 +97,7 @@ registerModel({
             this.message.openResendAction();
         },
         onClickNotificationIcon() {
-            this.update({ notificationPopoverView: {} });
+            this.update({ notificationPopoverView: this.notificationPopoverView ? clear() : {} });
         },
         /**
          * @param {MouseEvent} ev
