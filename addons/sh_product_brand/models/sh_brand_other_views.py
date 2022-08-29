@@ -13,7 +13,7 @@ class ShProductTemplate(models.Model):
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    sh_brand_id = fields.Many2many("sh.product.brand",'rel_product_branch', string="Brand")
+    sh_brand_id = fields.Many2many("sh.product.brand", 'rel_product_branch', string="Brand")
 
 class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
