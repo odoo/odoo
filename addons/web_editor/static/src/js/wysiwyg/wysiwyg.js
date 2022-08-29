@@ -1303,6 +1303,7 @@ const Wysiwyg = Widget.extend({
                 node: params.node,
                 restoreSelection: restoreSelection,
             }),
+            onAttachmentChange: this._onAttachmentChange.bind(this),
             close: () => restoreSelection(),
             ...this.options.mediaModalParams,
             ...params,
@@ -2309,6 +2310,13 @@ const Wysiwyg = Widget.extend({
             window.location.reload(true);
         }
         return new Promise(function () {});
+    },
+    _onAttachmentChange(attachment) {
+        // todo: to remove when removing the legacy field_html
+        this.trigger_up('attachment_changed', attachment);
+        if (this.options.onAttachmentChange) {
+            this.options.onAttachmentChange(attachment);
+        }
     },
     _onSelectionChange() {
         if (this.options.autohideToolbar) {

@@ -2977,11 +2977,14 @@ QUnit.module('Legacy relational_fields', {
             fields: {
                 name: {string:"Name", type: "char"},
                 mimetype: {string: "Mimetype", type: "char"},
+                res_id: {type: "number"},
+                access_token: {type: "char"}
             },
             records: [{
                 id: 17,
                 name: 'Marley&Me.jpg',
                 mimetype: 'jpg',
+                res_id: 1, //non-zero to avoid transiant model editor attachment protection
             }],
         };
         this.data.turtle.fields.picture_ids = {
@@ -3005,7 +3008,7 @@ QUnit.module('Legacy relational_fields', {
             mockRPC: function (route, args) {
                 assert.step(route);
                 if (route === '/web/dataset/call_kw/ir.attachment/read') {
-                    assert.deepEqual(args.args[1], ['name', 'mimetype']);
+                    assert.deepEqual(args.args[1], ['name', 'mimetype', 'res_id', 'access_token']);
                 }
                 return this._super.apply(this, arguments);
             },

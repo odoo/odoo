@@ -145,6 +145,7 @@ export class HtmlField extends Component {
         return {
             value: this.props.value,
             autostart: false,
+            onAttachmentChange: this._onAttachmentChange.bind(this),
             onWysiwygBlur: this._onWysiwygBlur.bind(this),
             ...this.props.wysiwygOptions,
             recordInfo: {
@@ -396,6 +397,15 @@ export class HtmlField extends Component {
     }
     async _getWysiwygClass() {
         return getWysiwygClass();
+    }
+    _onAttachmentChange(attachment) {
+        if (!this.props.record.fieldNames.includes('attachment_ids')) {
+            return;
+        }
+        this.props.record.update(_.object(['attachment_ids'], [{
+            operation: 'ADD_M2M',
+            ids: attachment
+        }]));
     }
     _onWysiwygBlur() {
         this.commitChanges({ urgent: true });
