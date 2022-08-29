@@ -581,8 +581,10 @@ var FileWidget = SearchableMediaWidget.extend({
                             'res_model': self.options.res_model,
                             'width': 0,
                             'quality': 0,
+                            'generate_access_token': true,
                         },
                     }).then(function (attachment) {
+                        self.trigger_up('wysiwyg_attachment', attachment);
                         self._handleNewAttachment(attachment);
                     });
                 });
