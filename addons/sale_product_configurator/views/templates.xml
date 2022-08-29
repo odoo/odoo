@@ -147,9 +147,11 @@
                         }'/>
                 </td>
             </tr>
-            <tr t-if="product.optional_product_ids" class="o_select_options"><td colspan="4"><h4>Available Options:</h4></td></tr>
-            <t t-call="sale_product_configurator.optional_product_items">
-                <t t-set="parent_combination" t-value="combination"/>
+            <t t-if="product.optional_product_ids and mode != 'edit'">
+                <tr class="o_select_options"><td colspan="4"><h4>Available Options:</h4></td></tr>
+                <t t-call="sale_product_configurator.optional_product_items">
+                    <t t-set="parent_combination" t-value="combination"/>
+                </t>
             </t>
         </tbody>
         </table>

@@ -206,10 +206,9 @@ var VariantMixin = {
      * @param {$.Element} $container
      */
     triggerVariantChange: function ($container) {
-        var self = this;
         $container.find('ul[data-attribute_exclusions]').trigger('change');
         $container.find('input.js_variant_change:checked, select.js_variant_change').each(function () {
-            self.handleCustomValues($(this));
+            VariantMixin.handleCustomValues($(this));
         });
     },
 
@@ -312,7 +311,6 @@ var VariantMixin = {
      * @returns {Promise} the promise that will be resolved with a {integer} productId
      */
     selectOrCreateProduct: function ($container, productId, productTemplateId, useAjax) {
-        var self = this;
         productId = parseInt(productId);
         productTemplateId = parseInt(productTemplateId);
         var productReady = Promise.resolve();
@@ -322,7 +320,7 @@ var VariantMixin = {
             var params = {
                 product_template_id: productTemplateId,
                 product_template_attribute_value_ids:
-                    JSON.stringify(self.getSelectedVariantValues($container)),
+                    JSON.stringify(VariantMixin.getSelectedVariantValues($container)),
             };
 
             var route = '/sale/create_product_variant';

@@ -1,7 +1,7 @@
 odoo.define('website_sale_product_configurator.OptionalProductsModal', function (require) {
     "use strict";
 
-var OptionalProductsModal = require('sale_product_configurator.OptionalProductsModal');
+const { OptionalProductsModal } = require('@sale_product_configurator/js/product_configurator_modal');
 
 OptionalProductsModal.include({
     /**
