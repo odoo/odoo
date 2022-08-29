@@ -1,6 +1,25 @@
 {% extends "layout.html" %}
+{% from "loading.html" import loading_block_ui %}
 {% block head %}
 <style>
+    .btn-sm-restart {
+        display: flex;
+        min-width: 100%;
+        justify-content: center;
+    }
+    .item-restart {
+        display: flex;
+        flex-direction: column;
+        margin-left: auto;
+        max-width: 100%;
+    }
+    .text-green-primary {
+        display: flex;
+        width: 100%;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        justify-content: center;
+    }
     table {
         width: 100%;
         border-collapse: collapse;
@@ -81,9 +100,67 @@
             content.css('max-height', maxHeight);
         });
     });
+
+    function display_error_and_clear_interval(interval, xhrStatus, thrownError) {
+        /// Displays the error message and stops sending requests to the server
+        if (interval) {
+            clearInterval(interval);
+        }
+        $('.loading-block').addClass('o_hide');
+        $('.error-message').text(xhrStatus + ": " + thrownError);
+    }
+
+    function restart_odoo_or_reboot(action) {
+        /// Call restart method on server, then ping it until restarting is finished
+        /// If an error is encountered, display it and stop
+        $('.loading-block').removeClass('o_hide');
+        $('.message-title').text('Restarting');
+        $('.message-status').text('Please wait');
+        $.ajax({
+            url: '/iot_restart_odoo_or_reboot/',
+            type: 'post',
+            contentType: 'application/json',
+            data: JSON.stringify({ params: {action: action} }),
+            timeout: 15000,
+        }).done(function(data) {
+            if (data.result == 'success') {
+                const interval = setInterval(function() {
+                    $.ajax({
+                        url:'/',
+                        timeout: 4000
+                    }).done(function() {
+                        location.reload();
+                    }).fail(function(xhr, textStatus, thrownError) {
+                        if (xhr.status) {
+                            display_error_and_clear_interval(interval, xhr.status, thrownError);
+                        }
+                    })
+                }, 4000)
+                setTimeout(function(){
+                    display_error_and_clear_interval(interval, '0', 'timeout');
+                }, 600000);
+            }
+            else {
+                display_error_and_clear_interval(interval, 'Error', data.result);
+            }
+        }).fail(function(xhr, textStatus, thrownError) {
+            display_error_and_clear_interval(null, xhr.status, thrownError);
+        })
+    }
 </script>
 {% endblock %}
 {% block content %}
+    <div class="collapse item-restart">
+        <div class="collapsible item-restart">
+            <div class="title arrow-down">Restart</div>
+            <div class="content">
+                <div class="device-status">
+                    <button class="btn btn-sm btn-sm-restart" onclick="restart_odoo_or_reboot('reboot_iot_box')">Reboot the IoT Box</button>
+                    <button class="btn btn-sm btn-sm-restart" onclick="restart_odoo_or_reboot('restart_odoo')">Restart Odoo service</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <h2 class="text-center text-green">Your IoT Box is up and running</h2>
     <table align="center" cellpadding="3">
         <tr>
@@ -149,4 +226,5 @@
         <a class="btn" style="margin-left: 10px;" href='/list_credential'>Credential</a>
         {% endif %}
     </div>
+    {{ loading_block_ui(loading_message) }}
 {% endblock %}
