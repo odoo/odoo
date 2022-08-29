@@ -356,3 +356,39 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         self.assertEqual(main_product_cost, 50.0)
         self.assertEqual(main_product_cost_per_unit, 50)
         self.assertEqual(component_cost, -50.0)
+
+    def test_change_byproduct_qty_in_done_mo_avco(self):
+        """Change in byproduct quantity then check done mo's valuation layers"""
+        byproduct = self.env['product.product'].create({
+            'name': 'By Product',
+            'type': 'product',
+            'categ_id': self.component_category.id
+        })
+        self.bom.write({
+            'byproduct_ids': [(0, 0, {
+                'product_id': byproduct.id,
+                'product_qty': 1.0,
+                'cost_share': 10,
+            })]
+        })
+        byproduct.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self._make_in_move(self.component, 1, 10)
+        mo = self._make_mo(self.bom, 1)
+        self._produce(mo)
+        mo.button_mark_done()
+        mo.action_toggle_is_locked()
+        mo.move_raw_ids.write({'quantity_done': 5.0})
+        mo.move_byproduct_ids.write({'quantity_done': 5.0})
+        valuation_domain = mo.action_view_stock_valuation_layers().get('domain')
+        layers = self.env['stock.valuation.layer'].search(valuation_domain)
+        main_product_cost = sum(layers.filtered(lambda l: l.product_id.id == self.product1.id).mapped('value'))
+        byproduct_cost = sum(layers.filtered(lambda l: l.product_id.id == byproduct.id).mapped('value'))
+        by_product_quantity = sum(layers.filtered(lambda l: l.product_id.id == byproduct.id).mapped('quantity'))
+        by_product_cost_per_unit = byproduct_cost / by_product_quantity
+        component_cost = sum(layers.filtered(lambda l: l.product_id.id == self.component.id).mapped('value'))
+        self.assertEqual(main_product_cost, 45.0)
+        self.assertEqual(byproduct_cost, 5.0)
+        self.assertEqual(by_product_quantity, 5.0)
+        self.assertEqual(by_product_cost_per_unit, 1.0)
+        self.assertEqual(component_cost, -50.0)
