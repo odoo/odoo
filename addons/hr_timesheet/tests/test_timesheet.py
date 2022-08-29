@@ -393,3 +393,68 @@ class TestTimesheet(TestCommonTimesheet):
             timesheet1.unit_amount + timesheet2.unit_amount,
             'The total timesheet time of this project should be equal to 4.'
         )
+
+    def test_create_timesheet_employee_not_in_company(self):
+        ''' ts.employee_id only if the user has an employee in the company or one employee for all companies.
+        '''
+        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        company_3 = self.env['res.company'].create({'name': 'Company 3'})
+
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Aa Aa',
+            'company_id': company_3.id,
+        })
+        project = self.env['project.project'].create({
+            'name': 'Aa Project',
+            'company_id': company_3.id,
+            'analytic_account_id': analytic_account.id,
+        })
+        task = self.env['project.task'].create({
+            'name': 'Aa Task',
+            'project_id': project.id,
+        })
+
+        Timesheet = self.env['account.analytic.line'].with_context(allowed_company_ids=[company_3.id, company_2.id, self.env.company.id])
+        timesheet = Timesheet.create({
+            'name': 'Timesheet',
+            'project_id': project.id,
+            'task_id': task.id,
+            'unit_amount': 2,
+            'user_id': self.user_manager.id,
+            'company_id': company_3.id,
+        })
+        self.assertEqual(timesheet.employee_id, self.user_manager.employee_id, 'As there is a unique employee for this user, it must be found')
+
+        self.env['hr.employee'].with_company(company_2).create({
+            'name': 'Employee 2',
+            'user_id': self.user_manager.id,
+        })
+        timesheet = Timesheet.create({
+            'name': 'Timesheet',
+            'project_id': project.id,
+            'task_id': task.id,
+            'unit_amount': 2,
+            'user_id': self.user_manager.id,
+            'company_id': company_3.id,
+        })
+        self.assertFalse(timesheet.employee_id, 'As there are several employees for this user, but none of them in this company, none must be found')
+
+    def test_create_timesheet_with_archived_employee(self):
+        ''' the timesheet can be created or edited only with an active employee
+        '''
+        self.empl_employee2.active = False
+        batch_vals = {
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'archived employee timesheet',
+            'unit_amount': 3,
+            'employee_id': self.empl_employee2.id
+        }
+
+        self.assertRaises(UserError, self.env['account.analytic.line'].create, batch_vals)
+
+        batch_vals["employee_id"] = self.empl_employee.id
+        timesheet = self.env['account.analytic.line'].create(batch_vals)
+
+        with self.assertRaises(UserError):
+            timesheet.employee_id = self.empl_employee2
