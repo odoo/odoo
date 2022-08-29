@@ -14,7 +14,7 @@
 
     "version": "15.0.4",
     "depends": [
-        "sale_management",'purchase'
+        "sale_management", 'purchase'
     ],
     "application": True,
     "data": [
