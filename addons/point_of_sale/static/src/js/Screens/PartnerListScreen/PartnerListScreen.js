@@ -181,7 +181,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             let domain = [];
             if(this.state.query) {
                 domain = [
-                    '|','|',
+                    '|',
                     ["display_name", "ilike", this.state.query],
                     ["email", "ilike", this.state.query],
                     ];
