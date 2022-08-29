@@ -15,6 +15,7 @@ _logger = getLogger(__name__)
 SCRIPT_EXTENSIONS = ('js',)
 STYLE_EXTENSIONS = ('css', 'scss', 'sass', 'less')
 TEMPLATE_EXTENSIONS = ('xml',)
+ASSET_EXTENSIONS = {*SCRIPT_EXTENSIONS, *STYLE_EXTENSIONS, *TEMPLATE_EXTENSIONS}
 DEFAULT_SEQUENCE = 16
 
 # Directives are stored in variables for ease of use and syntax checks.
@@ -304,69 +305,47 @@ class IrAsset(models.Model):
         path_parts = [part for part in path_url.split('/') if part]
         addon = path_parts[0]
         addon_manifest = odoo.modules.module.get_manifest(addon)
+        # can't immediately filter on `extensions` because some codepaths will
+        # resolve all assets trying to find e.g. just template (xml) files,
+        # which triggers a warning if the current entry is not and does not
+        # expand to at least one such => first collect all possible assets,
+        # and only filter on requested extensions at the end
+        assets_extensions = {'.' + ext for ext in ASSET_EXTENSIONS}
 
-        safe_path = True
+        fallback = True
         if addon_manifest:
             if addon not in installed:
                 # Assert that the path is in the installed addons
-                raise Exception("Unallowed to fetch files from addon %s" % addon)
+                raise Exception("Not allowed to fetch files from addon %r" % addon)
+
             addons_path = os.path.join(addon_manifest['addons_path'], '')[:-1]
             full_path = os.path.normpath(os.path.join(addons_path, *path_parts))
 
-            # first security layer: forbid escape from the current addon
-            # "/mymodule/../myothermodule" is forbidden
-            # the condition after the or is to further guarantee that we won't access
-            # a directory that happens to be named like an addon (web....)
-            if addon not in full_path or addons_path not in full_path:
-                addon = None
-                safe_path = False
-            else:
+            if full_path.startswith(os.path.join(addons_path, addon, 'static')):
                 paths = [
-                    path for path in sorted(glob(full_path, recursive=True))
+                    p if p.split('.')[-1] in TEMPLATE_EXTENSIONS else fs2web(p[len(addons_path):])
+                    for p in sorted(glob(full_path, recursive=True))
+                    if os.path.splitext(p)[1] in assets_extensions
                 ]
-
-            # second security layer: do we have the right to access the files
-            # that are grabbed by the glob ?
-            # In particular we don't want to expose data in xmls of the module
-            def is_safe_path(path):
-                try:
-                    misc.file_path(path, SCRIPT_EXTENSIONS + STYLE_EXTENSIONS + TEMPLATE_EXTENSIONS)
-                except (ValueError, FileNotFoundError):
-                    return False
-                if path.rpartition('.')[2] in TEMPLATE_EXTENSIONS:
-                    # normpath will strip the trailing /, which is why it has to be added afterwards
-                    static_path = os.path.normpath("%s/static" % addon) + os.path.sep
-                    # Forbid xml to leak
-                    return static_path in path
-                return True
-
-            len_paths = len(paths)
-            paths = list(filter(is_safe_path, paths))
-            safe_path = safe_path and len_paths == len(paths)
-
-            # When fetching template file paths, we need the full paths since xml
-            # files are read from the file system. But web assets (scripts and
-            # stylesheets) must be loaded using relative paths, hence the trimming
-            # for non-xml file paths.
-            paths = [path if path.split('.')[-1] in TEMPLATE_EXTENSIONS else fs2web(path[len(addons_path):]) for path in paths]
-
+            else:
+                fallback = False
+                addon = None
         else:
             addon = None
 
-        if not paths and (not can_aggregate(path_url) or (safe_path and not is_wildcard_glob(path_url))):
+        if not paths and os.path.splitext(path_url)[1] in assets_extensions\
+                and (not can_aggregate(path_url) or (fallback and not is_wildcard_glob(path_url))):
             # No file matching the path; the path_def could be a url.
             paths = [path_url]
 
         if not paths:
-            msg = f'IrAsset: the path "{path_def}" did not resolve to anything.'
-            if not safe_path:
-                msg += " It may be due to security reasons."
-            _logger.warning(msg)
+            _logger.warning('IrAsset: the path %r did not resolve to anything in %r. It may be due to security reasons.', path_def, addon)
         # Paths are filtered on the extensions (if any).
+        extensions = {'.' + ext for ext in ASSET_EXTENSIONS.intersection(extensions or ASSET_EXTENSIONS)}
         return addon, [
             path
             for path in paths
-            if not extensions or path.split('.')[-1] in extensions
+            if os.path.splitext(path)[1] in extensions
         ]
 
     def _process_command(self, command):

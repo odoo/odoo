@@ -706,11 +706,10 @@ class TestAssetsBundleInBrowser(HttpCase):
         """ Checks the feature of test_02 is still produceable, but in another way
         '/web/content/<int:id>/<string: filename.js>',
         """
-        code = b'const d = 4;'
         attach = self.env['ir.attachment'].create({
             'name': 'CustomJscode.js',
             'mimetype': 'text/javascript',
-            'datas': base64.b64encode(code),
+            'raw': b'const d = 4;',
         })
         # Use this route (filename is necessary)
         custom_url = '/web/content/%s/%s' % (attach.id, attach.name)
@@ -1055,8 +1054,9 @@ class TestAssetsManifest(AddonManifestPatched):
         })
         with self.assertRaises(Exception) as cm:
             self.env['ir.qweb']._render(view.id)
-        self.assertTrue(
-            "['test_assetsbundle/static/src/js/test_doesntexist.js'] not found" in str(cm.exception)
+        self.assertIn(
+            "['test_assetsbundle/static/src/js/test_doesntexist.js'] not found",
+            str(cm.exception)
         )
 
     def test_09_remove_wholeglob(self):
@@ -1145,9 +1145,10 @@ class TestAssetsManifest(AddonManifestPatched):
             self.env['ir.qweb']._render(view.id)
         error = str(cm.exception.__cause__)
         self.assertTrue(error)
-        self.assertFalse(isinstance(error, RecursionError))
-        self.assertTrue(
-            'Circular assets bundle declaration:' in error
+        self.assertNotIsInstance(error, RecursionError)
+        self.assertIn(
+            'Circular assets bundle declaration:',
+            error
         )
 
     def test_13_2_include_recursive_sibling(self):
@@ -1681,8 +1682,9 @@ class TestAssetsManifest(AddonManifestPatched):
         view = self.make_asset_view('test_assetsbundle.wrong_path')
         with self.assertRaises(Exception) as cm:
             self.env['ir.qweb']._render(view.id)
-        self.assertTrue(
-            "test_assetsbundle/static/src/js/doesnt_exist.js not found" in str(cm.exception)
+        self.assertIn(
+            "test_assetsbundle/static/src/js/doesnt_exist.js not found",
+            str(cm.exception)
         )
 
     def test_29_js_after_js_in_irasset_glob(self):
@@ -1753,7 +1755,7 @@ class TestAssetsManifest(AddonManifestPatched):
         view = self.make_asset_view('test_assetsbundle.irassetsec')
         self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irassetsec')], order='create_date DESC', limit=1)
-        self.assertFalse(attach.exists())
+        self.assertFalse(attach)
 
     @mute_logger('odoo.addons.base.models.ir_asset')
     def test_32(self):
@@ -1781,7 +1783,10 @@ class TestAssetsManifest(AddonManifestPatched):
         with self.assertRaises(QWebException) as cm:
             self.env['ir.qweb']._render(view.id)
 
-        self.assertTrue('Unallowed to fetch files from addon notinstalled_module' in str(cm.exception))
+        self.assertIn(
+            "Not allowed to fetch files from addon 'notinstalled_module'",
+            str(cm.exception)
+        )
 
     def test_33bis_notinstalled_not_in_manifests(self):
         self.env['ir.asset'].create({
@@ -1791,7 +1796,7 @@ class TestAssetsManifest(AddonManifestPatched):
         })
         self.make_asset_view('test_assetsbundle.irassetsec')
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irassetsec')], order='create_date DESC', limit=1)
-        self.assertFalse(attach.exists())
+        self.assertFalse(attach)
 
     @mute_logger('odoo.addons.base.models.ir_asset')
     def test_34(self):
@@ -1803,7 +1808,7 @@ class TestAssetsManifest(AddonManifestPatched):
         view = self.make_asset_view('test_assetsbundle.irassetsec')
         self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irassetsec')], order='create_date DESC', limit=1)
-        self.assertFalse(attach.exists())
+        self.assertFalse(attach)
 
     @mute_logger('odoo.addons.base.models.ir_asset')
     def test_35(self):
@@ -1823,28 +1828,23 @@ class TestAssetsManifest(AddonManifestPatched):
         })
         files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules), xml=False)
         self.assertEqual(len(files), 1)
-        self.assertTrue('test_assetsbundle/static/accessible.xml' in files[0][0])
+        self.assertIn('test_assetsbundle/static/accessible.xml', files[0][0])
 
     def test_37_path_can_be_an_attachment(self):
-        scss_code = base64.b64encode(b"""
-            .my_div {
-                &.subdiv {
-                    color: blue;
-                }
-            }
-        """)
+        scss_code = b""".my_div { &.subdiv { color: blue; } }
+        """
         self.env['ir.attachment'].create({
             'name': 'my custom scss',
             'mimetype': 'text/scss',
             'type': 'binary',
-            'url': 'test_assetsbundle/my_style_attach.scss',
-            'datas': scss_code
+            'url': 'test_assetsbundle/static/my_style_attach.scss',
+            'raw': scss_code
         })
 
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irasset_custom_attach',
-            'path': 'test_assetsbundle/my_style_attach.scss',
+            'path': 'test_assetsbundle/static/my_style_attach.scss',
         })
         view = self.make_asset_view('test_assetsbundle.irasset_custom_attach', {'t-css': True})
         self.env['ir.qweb']._render(view.id)
@@ -1854,7 +1854,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             """
-            /* test_assetsbundle/my_style_attach.scss defined in bundle 'test_assetsbundle.irasset_custom_attach' */
+            /* test_assetsbundle/static/my_style_attach.scss defined in bundle 'test_assetsbundle.irasset_custom_attach' */
              .my_div.subdiv{color: blue;}
             """
         )
