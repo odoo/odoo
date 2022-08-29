@@ -492,7 +492,7 @@ class AccountBankStatementLine(models.Model):
 
         # Integrating the journal in the queries will make the query more complex, because we have different anchor
         # points per journal, and it should be rare to have a read on multi journal in this model
-        self.flush_model(['journal_id', 'is_anchor', 'anchor_value', 'amount', 'internal_index', 'move_id'])
+        running_balances= {}
         for journal in self.journal_id:
             journal_lines = self.filtered(lambda line: line.journal_id == journal)
             anchor_line_domain = [
@@ -504,37 +504,32 @@ class AccountBankStatementLine(models.Model):
             max_index = max(journal_lines.mapped('internal_index'))
             if min_index:
                 anchor_line_domain.append(('internal_index', '<=', min_index))
-            # if max_index:
-            #     anchor_line_domain.append(('internal_index', '<=', min_index))
 
             anchor_index = self.search(
                 domain=anchor_line_domain,
                 order='internal_index desc',
                 limit=1
             ).internal_index or ''
-            self._cr.execute(
-                """
-                WITH running_balances AS (
-                    SELECT st_line.id as id,
-                           anchor_sum(amount, is_anchor, anchor_value)
-                               OVER (
-                                   ORDER BY internal_index
-                                   ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
-                               ) as running_balance
-                      FROM account_bank_statement_line st_line
-                      JOIN account_move ON account_move.id = st_line.move_id
-                     WHERE journal_id = %s AND internal_index BETWEEN %s AND %s
-                )
-                SELECT id,
-                       running_balance
-                  FROM running_balances
-                 WHERE id IN %s
-                """,
-                [journal.id, anchor_index, max_index, tuple(journal_lines.ids)]
+            st_lines = self.search(
+                domain=[
+                    ('journal_id', '=', journal.id),
+                    ('internal_index', '>=', anchor_index),
+                    ('internal_index', '<=', max_index),
+                ],
+                order='internal_index',
             )
-            line_map.update({r[0]: r[1] for r in self.env.cr.fetchall()})
+
+            last_sum = 0
+            for line in st_lines:
+                if line.is_anchor:
+                    running_balances[line.id] = line.anchor_value
+                    last_sum = line.anchor_value
+                else:
+                    running_balances[line.id] = last_sum + line.amount
+                    last_sum += line.amount
+
         for record in self:
-            record.running_balance = line_map[record.id]
+            record.running_balance = running_balances[record.id]
 
     def _onchange_journal_id(self):
         for line in self:
