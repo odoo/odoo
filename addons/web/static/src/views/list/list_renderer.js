@@ -208,7 +208,7 @@ export class ListRenderer extends Component {
         }
 
         const table = this.tableRef.el;
-        const headers = [...table.querySelectorAll("thead th:not(.o_list_record_remove_header)")];
+        const headers = [...table.querySelectorAll("thead th:not(.o_list_actions_header)")];
 
         if (!this.columnWidths || !this.columnWidths.length) {
             // no column widths to restore
@@ -229,7 +229,7 @@ export class ListRenderer extends Component {
         }
         headers.forEach((th, index) => {
             if (!th.style.width) {
-                th.style.width = `${this.columnWidths[index]}px`;
+                th.style.width = `${Math.floor(this.columnWidths[index])}px`;
             }
         });
     }
@@ -266,7 +266,7 @@ export class ListRenderer extends Component {
         table.classList.add("o_list_computing_widths");
 
         const headers = [...table.querySelectorAll("thead th")];
-        const columnWidths = headers.map((th) => Math.floor(th.getBoundingClientRect().width));
+        const columnWidths = headers.map((th) => th.getBoundingClientRect().width);
         const getWidth = (th) => columnWidths[headers.indexOf(th)] || 0;
         const getTotalWidth = () => columnWidths.reduce((tot, width) => tot + width, 0);
         const shrinkColumns = (thsToShrink, shrinkAmount) => {
@@ -279,7 +279,7 @@ export class ListRenderer extends Component {
                     maxWidth = 92;
                     canKeepShrinking = false;
                 }
-                th.style.maxWidth = `${maxWidth}px`;
+                th.style.maxWidth = `${Math.floor(maxWidth)}px`;
                 columnWidths[index] = maxWidth;
             }
             return canKeepShrinking;
@@ -288,7 +288,7 @@ export class ListRenderer extends Component {
         const sortedThs = [...table.querySelectorAll("thead th:not(.o_list_button)")].sort(
             (a, b) => getWidth(b) - getWidth(a)
         );
-        const allowedWidth = table.parentNode.offsetWidth;
+        const allowedWidth = table.parentNode.getBoundingClientRect().width;
 
         let totalWidth = getTotalWidth();
         for (let index = 1; totalWidth > allowedWidth; index++) {
@@ -560,7 +560,7 @@ export class ListRenderer extends Component {
 
     getColumnClass(column) {
         const field = this.fields[column.name];
-        const classNames = [];
+        const classNames = ["align-middle"];
         if (field.sortable && column.hasLabel) {
             classNames.push("o_column_sortable");
         }
@@ -1601,21 +1601,21 @@ export class ListRenderer extends Component {
     onStartResize(ev) {
         const table = this.tableRef.el;
         const th = ev.target.closest("th");
-        table.style.width = `${table.offsetWidth}px`;
+        table.style.width = `${Math.floor(table.getBoundingClientRect().width)}px`;
         const thPosition = [...th.parentNode.children].indexOf(th);
         const resizingColumnElements = [...table.getElementsByTagName("tr")]
             .filter((tr) => tr.children.length === th.parentNode.children.length)
             .map((tr) => tr.children[thPosition]);
-        const optionalDropdown = table.querySelector("o_optional_columns");
         const initialX = ev.clientX;
-        const initialWidth = th.offsetWidth;
-        const initialTableWidth = table.offsetWidth;
-        const initialDropdownX = optionalDropdown ? optionalDropdown.offsetLeft : null;
+        const initialWidth = th.getBoundingClientRect().width;
+        const initialTableWidth = table.getBoundingClientRect().width;
         const resizeStoppingEvents = ["keydown", "mousedown", "mouseup"];
 
         // fix the width so that if the resize overflows, it doesn't affect the layout of the parent
         if (!this.rootRef.el.style.width) {
-            this.rootRef.el.style.width = `${this.rootRef.el.offsetWidth}px`;
+            this.rootRef.el.style.width = `${Math.floor(
+                this.rootRef.el.getBoundingClientRect().width
+            )}px`;
         }
 
         // Apply classes to table and selected column
@@ -1630,12 +1630,9 @@ export class ListRenderer extends Component {
             const delta = ev.clientX - initialX;
             const newWidth = Math.max(10, initialWidth + delta);
             const tableDelta = newWidth - initialWidth;
-            th.style.width = `${newWidth}px`;
-            th.style.maxWidth = `${newWidth}px`;
-            table.style.width = `${initialTableWidth + tableDelta}px`;
-            if (optionalDropdown) {
-                optionalDropdown.style.left = `${initialDropdownX + tableDelta}px`;
-            }
+            th.style.width = `${Math.floor(newWidth)}px`;
+            th.style.maxWidth = `${Math.floor(newWidth)}px`;
+            table.style.width = `${Math.floor(initialTableWidth + tableDelta)}px`;
         };
         window.addEventListener("mousemove", resizeHeader);
 

@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="resource.SectionListRenderer.RecordRow" t-inherit="web.ListRenderer.RecordRow" owl="1">
-        <xpath expr="//t[@t-if='activeActions']" position="attributes">
-            <attribute name="t-if">activeActions and !isSection(record)</attribute>
+        <xpath expr="//t[@t-if='displayOptionalFields or activeActions']" position="attributes">
+            <attribute name="t-if">(displayOptionalFields or activeActions) and !isSection(record)</attribute>
         </xpath>
     </t>
 
