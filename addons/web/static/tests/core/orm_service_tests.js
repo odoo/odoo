@@ -94,7 +94,7 @@ QUnit.test("create method", async (assert) => {
     const [query, rpc] = makeFakeRPC();
     serviceRegistry.add("rpc", rpc);
     const env = await makeTestEnv();
-    await env.services.orm.create("partner", { color: "red" });
+    await env.services.orm.create("partner", [{ color: "red" }]);
     assert.strictEqual(query.route, "/web/dataset/call_kw/partner/create");
     assert.deepEqual(query.params, {
         args: [
