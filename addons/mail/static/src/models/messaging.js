@@ -178,7 +178,7 @@ registerModel({
                     case 'create':
                         return ormService.create(model, args[0], context);
                     case 'read':
-                        return ormService.read(model, args[0], args.length > 1 ? args[1] : undefined, context);
+                        return ormService.read(model, args[0], args.length > 1 ? args[1] : undefined, {}, context);
                     case 'read_group':
                         return ormService.readGroup(model, domain, fields, groupBy, ormOptions, context);
                     case 'search':
