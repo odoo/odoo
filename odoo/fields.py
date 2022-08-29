@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=abstract-method
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """ High-level objects for fields. """
