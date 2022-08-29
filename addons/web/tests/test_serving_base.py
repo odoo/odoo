@@ -999,4 +999,4 @@ class TestStaticInheritancePerformance(TestStaticInheritanceCommon):
         time_ratio = delta25000.total_seconds() / delta2500.total_seconds()
         _logger.runbot('Static Templates Inheritance: 25000 templates treated in %s seconds' % delta25000.total_seconds())
         _logger.runbot('Static Templates Inheritance: Computed linearity ratio: %s' % time_ratio)
-        self.assertLessEqual(time_ratio, 12)
+        self.assertLessEqual(time_ratio, 14)
