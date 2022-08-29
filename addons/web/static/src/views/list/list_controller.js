@@ -54,7 +54,6 @@ export class ListController extends Component {
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
-        this.editable = this.props.editable ? this.archInfo.editable : false;
         this.multiEdit = this.archInfo.multiEdit;
         this.activeActions = this.archInfo.activeActions;
         const fields = this.props.fields;
@@ -146,6 +145,16 @@ export class ListController extends Component {
             },
             () => [this.model.root.selection.length]
         );
+    }
+
+    get editable() {
+        if (this.props.readonly) {
+            return false;
+        }
+        if ("editable" in this.props) {
+            return this.props.editable;
+        }
+        return this.archInfo.editable || false;
     }
 
     async createRecord({ group } = {}) {
@@ -443,8 +452,9 @@ ListController.template = `web.ListView`;
 ListController.components = { ActionMenus, ListViewHeaderButton, Layout, ViewButton };
 ListController.props = {
     ...standardViewProps,
+    editable: { type: Boolean, optional: true }, // no default, it's retrieved from the arch.
+    readonly: { type: Boolean, optional: true },
     allowSelectors: { type: Boolean, optional: true },
-    editable: { type: Boolean, optional: true },
     onSelectionChanged: { type: Function, optional: true },
     showButtons: { type: Boolean, optional: true },
     Model: Function,
@@ -455,7 +465,7 @@ ListController.props = {
 ListController.defaultProps = {
     allowSelectors: true,
     createRecord: () => {},
-    editable: true,
+    readonly: false,
     selectRecord: () => {},
     showButtons: true,
 };

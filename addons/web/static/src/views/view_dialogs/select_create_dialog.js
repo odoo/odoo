@@ -13,8 +13,8 @@ export class SelectCreateDialog extends Component {
         this.state = useState({ resIds: [] });
         this.baseViewProps = {
             display: { searchPanel: false },
-            editable: false, // readonly
             noBreadcrumbs: true,
+            readonly: true,
             noContentHelp: markup(`<p>${escape(this.env._t("No records found!"))}</p>`),
             showButtons: false,
             selectRecord: (resId) => this.select([resId]),

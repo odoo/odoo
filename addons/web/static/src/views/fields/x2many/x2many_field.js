@@ -141,13 +141,17 @@ export class X2ManyField extends Component {
             archInfo,
             list: this.list,
             openRecord: this.openRecord.bind(this),
+            readonly: this.props.readonly,
         };
 
         if (this.viewMode === "kanban") {
             const recordsDraggable = !this.props.readonly && archInfo.recordsDraggable;
             props.archInfo = { ...archInfo, recordsDraggable };
-            props.readonly = this.props.readonly;
             return props;
+        }
+
+        if (this.viewMode === "list") {
+            props.editable = this.editable;
         }
 
         const mode = this.props.record.mode;
@@ -191,17 +195,11 @@ export class X2ManyField extends Component {
                 }
             });
 
-        const editable = archInfo.editable || this.props.editable;
         props.activeActions = this.activeActions;
         props.archInfo = { ...archInfo, columns };
         props.cycleOnTab = false;
-        props.editable = !this.props.readonly && editable;
         props.nestedKeyOptionalFieldsData = this.nestedKeyOptionalFieldsData;
-        props.onAdd = (params) => {
-            params.editable =
-                !this.props.readonly && ("editable" in params ? params.editable : editable);
-            this.onAdd(params);
-        };
+        props.onAdd = this.onAdd.bind(this);
         return props;
     }
 
@@ -212,7 +210,17 @@ export class X2ManyField extends Component {
         return false;
     }
 
-    async onAdd({ context, editable } = {}) {
+    get editable() {
+        if (this.props.readonly) {
+            return false;
+        }
+        if ("editable" in this.props) {
+            return this.props.editable;
+        }
+        return this.activeField.views[this.viewMode].editable;
+    }
+
+    async onAdd({ context } = {}) {
         const record = this.props.record;
         const domain = record.getFieldDomain(this.props.name).toList();
         if (context) {
@@ -221,7 +229,7 @@ export class X2ManyField extends Component {
         if (this.isMany2Many) {
             return this.selectCreate({ domain, context });
         }
-        if (editable) {
+        if (this.editable) {
             if (this.list.editedRecord) {
                 const proms = [];
                 this.list.model.env.bus.trigger("RELATIONAL_MODEL:NEED_LOCAL_CHANGES", { proms });
@@ -229,7 +237,7 @@ export class X2ManyField extends Component {
                 await this.list.editedRecord.switchMode("readonly");
             }
             if (!this.list.editedRecord) {
-                return this.addInLine({ context, editable });
+                return this.addInLine({ context, editable: this.editable });
             }
             return;
         }

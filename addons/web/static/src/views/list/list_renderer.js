@@ -321,6 +321,9 @@ export class ListRenderer extends Component {
         if (!this.props.list.canResequence()) {
             return false;
         }
+        if (this.props.readonly) {
+            return false;
+        }
         const orderBy = this.props.list.orderBy;
         const handleField = this.props.archInfo.handleField;
         return !orderBy.length || (orderBy.length && orderBy[0].name === handleField);
@@ -1073,7 +1076,6 @@ export class ListRenderer extends Component {
     }
 
     applyCellKeydownEditModeGroup(hotkey, cell, group, record) {
-        const { activeActions, editable } = this.props;
         const groupIndex = group.list.records.indexOf(record);
         const isLastOfGroup = groupIndex === group.list.records.length - 1;
         const isDirty = record.isDirty || this.lastIsDirty;
@@ -1084,8 +1086,8 @@ export class ListRenderer extends Component {
         }
         if (
             isLastOfGroup &&
-            activeActions.create &&
-            editable === "bottom" &&
+            this.props.activeActions.create &&
+            this.props.editable === "bottom" &&
             record.checkValidity() &&
             (isEnterBehavior || isTabBehavior)
         ) {
@@ -1722,10 +1724,16 @@ ListRenderer.props = [
     "onAdd?",
     "cycleOnTab?",
     "allowSelectors?",
+    "readonly?",
     "editable?",
     "noContentHelp?",
     "nestedKeyOptionalFieldsData?",
 ];
-ListRenderer.defaultProps = { hasSelectors: false, cycleOnTab: true };
+ListRenderer.defaultProps = {
+    hasSelectors: false,
+    cycleOnTab: true,
+    readonly: false,
+    editable: true,
+};
 
 ListRenderer.LONG_TOUCH_THRESHOLD = 400;

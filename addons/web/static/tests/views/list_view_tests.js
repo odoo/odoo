@@ -14855,4 +14855,81 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row:first-child td.o_list_button", 1);
         await click(target, ".o_data_row:first-child td.o_list_button");
     });
+
+    QUnit.test("resequenceable list view, readonly parent view", async function (assert) {
+        serverData.models.bar = {
+            fields: {
+                titi: { string: "Char", type: "char" },
+                int_field: { string: "Integer", type: "integer" },
+            },
+            records: [
+                { id: 1, titi: "one", int_field: 1 },
+                { id: 2, titi: "two", int_field: 2 },
+            ],
+        };
+        serverData.models.foo.records[0].o2m = [1, 2];
+
+        await makeView({
+            type: "form",
+            resModel: "foo",
+            serverData,
+            resId: 1,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="o2m">
+                            <tree>
+                                <field name="int_field" widget="handle"/>
+                                <field name="titi" readonly="1"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
+        });
+        assert.doesNotHaveClass(target.querySelector(".o_data_row"), "o_row_draggable");
+        await clickEdit(target);
+        assert.hasClass(target.querySelector(".o_data_row"), "o_row_draggable");
+        await clickSave(target);
+        assert.doesNotHaveClass(target.querySelector(".o_data_row"), "o_row_draggable");
+    });
+
+    QUnit.test(
+        "resequenceable list view, readonly parent view, readonly field x2m",
+        async function (assert) {
+            serverData.models.bar = {
+                fields: {
+                    titi: { string: "Char", type: "char" },
+                    int_field: { string: "Integer", type: "integer" },
+                },
+                records: [
+                    { id: 1, titi: "one", int_field: 1 },
+                    { id: 2, titi: "two", int_field: 2 },
+                ],
+            };
+            serverData.models.foo.records[0].o2m = [1, 2];
+
+            await makeView({
+                type: "form",
+                resModel: "foo",
+                serverData,
+                resId: 1,
+                arch: `
+                <form>
+                    <sheet>
+                        <field name="o2m" readonly="1">
+                            <tree>
+                                <field name="int_field" widget="handle"/>
+                                <field name="titi" readonly="1"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
+            });
+            assert.doesNotHaveClass(target.querySelector(".o_data_row"), "o_row_draggable");
+            await clickEdit(target);
+            assert.doesNotHaveClass(target.querySelector(".o_data_row"), "o_row_draggable");
+            await clickSave(target);
+            assert.doesNotHaveClass(target.querySelector(".o_data_row"), "o_row_draggable");
+        }
+    );
 });
