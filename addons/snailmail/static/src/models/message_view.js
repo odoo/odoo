@@ -2,6 +2,7 @@
 
 import { addFields, patchRecordMethods } from '@mail/model/model_core';
 import { one } from '@mail/model/model_field';
+import { clear } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/message_view';
 
@@ -58,7 +59,7 @@ patchRecordMethods('MessageView', {
     },
     onClickNotificationIcon() {
         if (this.message && this.message.message_type === 'snailmail') {
-            this.update({ snailmailNotificationPopoverView: {} });
+            this.update({ snailmailNotificationPopoverView: this.snailmailNotificationPopoverView ? clear() : {} });
             return;
         }
         return this._super();
