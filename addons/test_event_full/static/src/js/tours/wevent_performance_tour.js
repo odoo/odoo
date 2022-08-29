@@ -58,7 +58,7 @@ var registerSteps = [{
     trigger: '.oe_cart .btn:contains("Next")',
 }, {
     content: 'Select Test payment acquirer',
-    trigger: '.o_payment_option_card:contains("Test")'
+    trigger: '.o_payment_option_card:contains("Demo")'
 }, {
     content: 'Add card number',
     trigger: 'input[name="customer_input"]',

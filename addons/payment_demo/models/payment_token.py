@@ -6,7 +6,7 @@ from odoo import fields, models
 class PaymentToken(models.Model):
     _inherit = 'payment.token'
 
-    test_simulated_state = fields.Selection(
+    demo_simulated_state = fields.Selection(
         string="Simulated State",
         help="The state in which transactions created from this token should be set.",
         selection=[
@@ -25,9 +25,9 @@ class PaymentToken(models.Model):
         :param list args: The arguments passed by QWeb when calling this method.
         :param bool should_pad: Whether the token should be padded or not.
         :param dict kwargs: Optional data.
-        :return: The test token name.
+        :return: The demo token name.
         :rtype: str
         """
-        if self.provider != 'test':
+        if self.provider != 'demo':
             return super()._build_display_name(*args, should_pad=should_pad, **kwargs)
         return super()._build_display_name(*args, should_pad=False, **kwargs)
