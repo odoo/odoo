@@ -160,9 +160,9 @@ class RequestBatcherORM extends ORM {
      * @param {object} context
      * @returns {Promise<[number, string][]>}
      */
-    async nameGet(resModel, resIds, context) {
-        const pairs = await this.batch(resIds, ["name_get", resModel, context], (resIds) =>
-            super.nameGet(resModel, resIds, context)
+    async nameGet(resModel, resIds, kwargs) {
+        const pairs = await this.batch(resIds, ["name_get", resModel, kwargs], (resIds) =>
+            super.nameGet(resModel, resIds, kwargs)
         );
         return pairs.filter(([id]) => resIds.includes(id));
     }
@@ -179,9 +179,9 @@ class RequestBatcherORM extends ORM {
      * @param {string[]} fields
      * @returns {Promise<Object[]>}
      */
-    async read(resModel, resIds, fields, kwargs, context) {
-        const records = await this.batch(resIds, ["read", resModel, fields, context], (resIds) =>
-            super.read(resModel, resIds, fields, {}, context)
+    async read(resModel, resIds, fields, kwargs) {
+        const records = await this.batch(resIds, ["read", resModel, fields, kwargs], (resIds) =>
+            super.read(resModel, resIds, fields, kwargs)
         );
         return records.filter((r) => resIds.includes(r.id));
     }
@@ -195,9 +195,9 @@ class RequestBatcherORM extends ORM {
      * @param {number[]} resIds
      * @returns {Promise<boolean>}
      */
-    async unlink(resModel, resIds, context) {
-        return this.batch(resIds, ["unlink", resModel, context], (resIds) =>
-            super.unlink(resModel, resIds, context)
+    async unlink(resModel, resIds, kwargs) {
+        return this.batch(resIds, ["unlink", resModel, kwargs], (resIds) =>
+            super.unlink(resModel, resIds, kwargs)
         );
     }
 
@@ -1202,16 +1202,12 @@ export class Record extends DataPoint {
         if (!fieldNames.length) {
             return {};
         }
-        const [serverValues] = await this.model.orm.read(
-            this.resModel,
-            [this.resId],
-            fieldNames,
-            {},
-            {
+        const [serverValues] = await this.model.orm.read(this.resModel, [this.resId], fieldNames, {
+            context: {
                 bin_size: true,
                 ...this.context,
-            }
-        );
+            },
+        });
         return this._parseServerValues(serverValues);
     }
 
@@ -1259,6 +1255,7 @@ export class Record extends DataPoint {
         const keys = Object.keys(changes);
         const hasChanges = this.isVirtual || keys.length;
         const shouldReload = hasChanges ? !options.noReload : false;
+        const context = this.context;
 
         if (this.isVirtual) {
             if (keys.length === 1 && keys[0] === "display_name") {
@@ -1270,7 +1267,7 @@ export class Record extends DataPoint {
                 );
                 this.resId = resId;
             } else {
-                this.resId = await this.model.orm.create(this.resModel, [changes], this.context);
+                this.resId = await this.model.orm.create(this.resModel, [changes], { context });
             }
             delete this.virtualId;
             this.data.id = this.resId;
@@ -1278,7 +1275,7 @@ export class Record extends DataPoint {
             this.invalidateCache();
         } else if (keys.length > 0) {
             try {
-                await this.model.orm.write(this.resModel, [this.resId], changes, this.context);
+                await this.model.orm.write(this.resModel, [this.resId], changes, { context });
             } catch (e) {
                 if (!this.isInEdition) {
                     await Promise.all([this.model.reloadRecords(this.resId), this.load()]);
@@ -1481,14 +1478,10 @@ class DynamicList extends DataPoint {
         let resIds;
         if (isSelected) {
             if (this.isDomainSelected) {
-                resIds = await this.model.orm.search(
-                    this.resModel,
-                    this.domain,
-                    {
-                        limit: session.active_ids_limit,
-                    },
-                    this.context
-                );
+                resIds = await this.model.orm.search(this.resModel, this.domain, {
+                    limit: session.active_ids_limit,
+                    context: this.context,
+                });
             } else {
                 resIds = this.selection.map((r) => r.resId);
             }
@@ -1574,7 +1567,8 @@ class DynamicList extends DataPoint {
                 confirm: async () => {
                     const resIds = validSelection.map((r) => r.resId);
                     try {
-                        await this.model.orm.write(this.resModel, resIds, changes, this.context);
+                        const context = this.context;
+                        await this.model.orm.write(this.resModel, resIds, changes, { context });
                         this.invalidateCache();
                         validSelection.forEach((record) => {
                             record.selected = false;
@@ -1706,7 +1700,7 @@ class DynamicList extends DataPoint {
 
         // Read the actual values set by the server and update the records
         const result = await this.model.keepLast.add(
-            this.model.orm.read(resModel, ids, [handleField], {}, this.context)
+            this.model.orm.read(resModel, ids, [handleField], { context: this.context })
         );
         for (const recordData of result) {
             const record = records.find((r) => r.resId === recordData.id);
@@ -1924,18 +1918,22 @@ export class DynamicRecordList extends DynamicList {
      * @returns {Promise<Record[]>}
      */
     async _loadRecords() {
-        const options = {
+        const kwargs = {
             limit: this.limit,
             offset: this.offset,
             order: orderByToString(this.orderBy),
             count_limit: this.countLimit + 1,
+            context: {
+                bin_size: true,
+                ...this.context,
+            },
         };
         if (this.loadedCount > this.limit) {
             // This condition means that we are reloading a list of records
             // that has been manually extended: we need to load exactly the
             // same amount of records.
-            options.limit = this.loadedCount;
-            options.offset = 0;
+            kwargs.limit = this.loadedCount;
+            kwargs.offset = 0;
         }
         const { records: rawRecords, length } =
             this.data ||
@@ -1943,11 +1941,7 @@ export class DynamicRecordList extends DynamicList {
                 this.resModel,
                 this.domain,
                 this.fieldNames,
-                options,
-                {
-                    bin_size: true,
-                    ...this.context,
-                }
+                kwargs
             ));
 
         const records = await Promise.all(
@@ -2243,8 +2237,8 @@ export class DynamicGroupList extends DynamicList {
                 expand: this.expand,
                 offset: this.offset,
                 limit: this.limit,
-            },
-            this.context
+                context: this.context,
+            }
         );
         this.count = length;
 
@@ -2788,12 +2782,9 @@ export class StaticList extends DataPoint {
             }
             // 2) fetch values for non loaded records
             if (resIds.length) {
-                const result = await this.model.orm.read(
-                    this.resModel,
-                    resIds,
-                    orderFieldNames,
-                    this.context
-                );
+                const result = await this.model.orm.read(this.resModel, resIds, orderFieldNames, {
+                    context: this.context,
+                });
                 for (const values of result) {
                     const resId = values.id;
                     recordValues[resId] = {};
