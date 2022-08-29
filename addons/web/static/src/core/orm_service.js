@@ -122,7 +122,7 @@ export class ORM {
         return this.call(model, "name_get", [ids], { context });
     }
 
-    read(model, ids, fields, context = {}) {
+    read(model, ids, fields, kwargs = {}, context = {}) {
         validatePrimitiveList("ids", "number", ids);
         if (fields) {
             validatePrimitiveList("fields", "string", fields);
@@ -130,7 +130,7 @@ export class ORM {
         if (!ids.length) {
             return Promise.resolve([]);
         }
-        return this.call(model, "read", [ids, fields], { context });
+        return this.call(model, "read", [ids, fields], { ...kwargs, context });
     }
 
     readGroup(model, domain, fields, groupby, kwargs = {}, context = {}) {

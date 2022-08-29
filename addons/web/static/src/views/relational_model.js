@@ -179,9 +179,9 @@ class RequestBatcherORM extends ORM {
      * @param {string[]} fields
      * @returns {Promise<Object[]>}
      */
-    async read(resModel, resIds, fields, context) {
+    async read(resModel, resIds, fields, kwargs, context) {
         const records = await this.batch(resIds, ["read", resModel, fields, context], (resIds) =>
-            super.read(resModel, resIds, fields, context)
+            super.read(resModel, resIds, fields, {}, context)
         );
         return records.filter((r) => resIds.includes(r.id));
     }
@@ -1202,10 +1202,16 @@ export class Record extends DataPoint {
         if (!fieldNames.length) {
             return {};
         }
-        const [serverValues] = await this.model.orm.read(this.resModel, [this.resId], fieldNames, {
-            bin_size: true,
-            ...this.context,
-        });
+        const [serverValues] = await this.model.orm.read(
+            this.resModel,
+            [this.resId],
+            fieldNames,
+            {},
+            {
+                bin_size: true,
+                ...this.context,
+            }
+        );
         return this._parseServerValues(serverValues);
     }
 
@@ -1700,7 +1706,7 @@ class DynamicList extends DataPoint {
 
         // Read the actual values set by the server and update the records
         const result = await this.model.keepLast.add(
-            this.model.orm.read(resModel, ids, [handleField], this.context)
+            this.model.orm.read(resModel, ids, [handleField], {}, this.context)
         );
         for (const recordData of result) {
             const record = records.find((r) => r.resId === recordData.id);
