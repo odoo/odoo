@@ -25,16 +25,20 @@ export class SelectCreateDialog extends Component {
     }
 
     get viewProps() {
-        return {
+        const type = this.env.isSmall ? "kanban" : "list";
+        const props = {
             ...this.baseViewProps,
-            allowSelectors: this.props.multiSelect,
             context: this.props.context,
             domain: this.props.domain,
             dynamicFilters: this.props.dynamicFilters,
             resModel: this.props.resModel,
             searchViewId: this.props.searchViewId,
-            type: this.env.isSmall ? "kanban" : "list",
+            type,
         };
+        if (type === "list") {
+            props.allowSelectors = this.props.multiSelect;
+        }
+        return props;
     }
 
     async select(resIds) {
