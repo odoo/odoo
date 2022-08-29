@@ -1,10 +1,10 @@
-odoo.define('payment_test.payment_form', require => {
+odoo.define('payment_demo.payment_form', require => {
     'use strict';
 
     const checkoutForm = require('payment.checkout_form');
     const manageForm = require('payment.manage_form');
 
-    const paymentTestMixin = {
+    const paymentDemoMixin = {
 
         //--------------------------------------------------------------------------
         // Private
@@ -21,14 +21,14 @@ odoo.define('payment_test.payment_form', require => {
          * @return {Promise}
          */
         _processDirectPayment: function (provider, acquirerId, processingValues) {
-            if (provider !== 'test') {
+            if (provider !== 'demo') {
                 return this._super(...arguments);
             }
 
             const customerInput = document.getElementById('customer_input').value;
             const simulatedPaymentState = document.getElementById('simulated_payment_state').value;
             return this._rpc({
-                route: '/payment/test/simulate_payment',
+                route: '/payment/demo/simulate_payment',
                 params: {
                     'reference': processingValues.reference,
                     'payment_details': customerInput,
@@ -40,7 +40,7 @@ odoo.define('payment_test.payment_form', require => {
         },
 
         /**
-         * Prepare the inline form of Test for direct payment.
+         * Prepare the inline form of Demo for direct payment.
          *
          * @override method from payment.payment_form_mixin
          * @private
@@ -50,7 +50,7 @@ odoo.define('payment_test.payment_form', require => {
          * @return {Promise}
          */
         _prepareInlineForm: function (provider, paymentOptionId, flow) {
-            if (provider !== 'test') {
+            if (provider !== 'demo') {
                 return this._super(...arguments);
             } else if (flow === 'token') {
                 return Promise.resolve();
@@ -59,6 +59,6 @@ odoo.define('payment_test.payment_form', require => {
             return Promise.resolve()
         },
     };
-    checkoutForm.include(paymentTestMixin);
-    manageForm.include(paymentTestMixin);
+    checkoutForm.include(paymentDemoMixin);
+    manageForm.include(paymentDemoMixin);
 });

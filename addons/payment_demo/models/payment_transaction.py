@@ -17,47 +17,47 @@ class PaymentTransaction(models.Model):
 
     #=== ACTION METHODS ===#
 
-    def action_test_set_done(self):
-        """ Set the state of the test transaction to 'done'.
+    def action_demo_set_done(self):
+        """ Set the state of the demo transaction to 'done'.
 
         Note: self.ensure_one()
 
         :return: None
         """
         self.ensure_one()
-        if self.provider != 'test':
+        if self.provider != 'demo':
             return
 
         notification_data = {'reference': self.reference, 'simulated_state': 'done'}
-        self._handle_notification_data('test', notification_data)
+        self._handle_notification_data('demo', notification_data)
 
-    def action_test_set_canceled(self):
-        """ Set the state of the test transaction to 'cancel'.
+    def action_demo_set_canceled(self):
+        """ Set the state of the demo transaction to 'cancel'.
 
         Note: self.ensure_one()
 
         :return: None
         """
         self.ensure_one()
-        if self.provider != 'test':
+        if self.provider != 'demo':
             return
 
         notification_data = {'reference': self.reference, 'simulated_state': 'cancel'}
-        self._handle_notification_data('test', notification_data)
+        self._handle_notification_data('demo', notification_data)
 
-    def action_test_set_error(self):
-        """ Set the state of the test transaction to 'error'.
+    def action_demo_set_error(self):
+        """ Set the state of the demo transaction to 'error'.
 
         Note: self.ensure_one()
 
         :return: None
         """
         self.ensure_one()
-        if self.provider != 'test':
+        if self.provider != 'demo':
             return
 
         notification_data = {'reference': self.reference, 'simulated_state': 'error'}
-        self._handle_notification_data('test', notification_data)
+        self._handle_notification_data('demo', notification_data)
 
     #=== BUSINESS METHODS ===#
 
@@ -69,15 +69,15 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._send_payment_request()
-        if self.provider != 'test':
+        if self.provider != 'demo':
             return
 
         if not self.token_id:
-            raise UserError("Test: " + _("The transaction is not linked to a token."))
+            raise UserError("Demo: " + _("The transaction is not linked to a token."))
 
-        simulated_state = self.token_id.test_simulated_state
+        simulated_state = self.token_id.demo_simulated_state
         notification_data = {'reference': self.reference, 'simulated_state': simulated_state}
-        self._handle_notification_data('test', notification_data)
+        self._handle_notification_data('demo', notification_data)
 
     def _send_refund_request(self, create_refund_transaction=True, **kwargs):
         """ Override of payment to simulate a refund.
@@ -89,14 +89,14 @@ class PaymentTransaction(models.Model):
         :return: The refund transaction if any
         :rtype: recordset of `payment.transaction`
         """
-        if self.provider != 'test':
+        if self.provider != 'demo':
             return super()._send_refund_request(
                 create_refund_transaction=create_refund_transaction, **kwargs
             )
         refund_tx = super()._send_refund_request(create_refund_transaction=True, **kwargs)
 
         notification_data = {'reference': refund_tx.reference, 'simulated_state': 'done'}
-        refund_tx._handle_notification_data('test', notification_data)
+        refund_tx._handle_notification_data('demo', notification_data)
 
         return refund_tx
 
@@ -108,7 +108,7 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._send_capture_request()
-        if self.provider != 'test':
+        if self.provider != 'demo':
             return
 
         notification_data = {
@@ -116,7 +116,7 @@ class PaymentTransaction(models.Model):
             'simulated_state': 'done',
             'manual_capture': True,  # Distinguish manual captures from regular one-step captures.
         }
-        self._handle_notification_data('test', notification_data)
+        self._handle_notification_data('demo', notification_data)
 
     def _send_void_request(self):
         """ Override of payment to simulate a void request.
@@ -126,11 +126,11 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         super()._send_void_request()
-        if self.provider != 'test':
+        if self.provider != 'demo':
             return
 
         notification_data = {'reference': self.reference, 'simulated_state': 'cancel'}
-        self._handle_notification_data('test', notification_data)
+        self._handle_notification_data('demo', notification_data)
 
     def _get_tx_from_notification_data(self, provider, notification_data):
         """ Override of payment to find the transaction based on dummy data.
@@ -142,14 +142,14 @@ class PaymentTransaction(models.Model):
         :raise: ValidationError if the data match no transaction
         """
         tx = super()._get_tx_from_notification_data(provider, notification_data)
-        if provider != 'test' or len(tx) == 1:
+        if provider != 'demo' or len(tx) == 1:
             return tx
 
         reference = notification_data.get('reference')
-        tx = self.search([('reference', '=', reference), ('provider', '=', 'test')])
+        tx = self.search([('reference', '=', reference), ('provider', '=', 'demo')])
         if not tx:
             raise ValidationError(
-                "Test: " + _("No transaction found matching reference %s.", reference)
+                "Demo: " + _("No transaction found matching reference %s.", reference)
             )
         return tx
 
@@ -163,7 +163,7 @@ class PaymentTransaction(models.Model):
         :raise: ValidationError if inconsistent data were received
         """
         super()._process_notification_data(notification_data)
-        if self.provider != "test":
+        if self.provider != 'demo':
             return
 
         if self.tokenize:
@@ -173,7 +173,7 @@ class PaymentTransaction(models.Model):
             # - To save the simulated state and payment details on the token while we have them.
             # - To allow customers to create tokens whose transactions will always end up in the
             #   said simulated state.
-            self._test_tokenize_from_notification_data(notification_data)
+            self._demo_tokenize_from_notification_data(notification_data)
 
         state = notification_data['simulated_state']
         if state == 'pending':
@@ -190,9 +190,9 @@ class PaymentTransaction(models.Model):
         elif state == 'cancel':
             self._set_canceled()
         else:  # Simulate an error state.
-            self._set_error(_("You selected the following test payment status: %s", state))
+            self._set_error(_("You selected the following demo payment status: %s", state))
 
-    def _test_tokenize_from_notification_data(self, notification_data):
+    def _demo_tokenize_from_notification_data(self, notification_data):
         """ Create a new token based on the notification data.
 
         Note: self.ensure_one()
@@ -209,7 +209,7 @@ class PaymentTransaction(models.Model):
             'partner_id': self.partner_id.id,
             'acquirer_ref': 'fake acquirer reference',
             'verified': True,
-            'test_simulated_state': state,
+            'demo_simulated_state': state,
         })
         self.write({
             'token_id': token,
