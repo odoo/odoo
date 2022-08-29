@@ -732,8 +732,8 @@ class IrActionsReport(models.Model):
                     # the top level heading in /Outlines.
                     reader = PdfFileReader(pdf_content_stream)
                     root = reader.trailer['/Root']
+                    outlines_pages = []
                     if '/Outlines' in root and '/First' in root['/Outlines']:
-                        outlines_pages = []
                         node = root['/Outlines']['/First']
                         while True:
                             outlines_pages.append(root['/Dests'][node['/Dest']][0])
@@ -741,10 +741,9 @@ class IrActionsReport(models.Model):
                                 break
                             node = node['/Next']
                         outlines_pages = sorted(set(outlines_pages))
-                        # There should be only one top-level heading by document
-                        assert len(outlines_pages) == len(res_ids)
-                        # There should be a top-level heading on first page
-                        assert outlines_pages[0] == 0
+                    # There should be only one top-level heading by document
+                    # There should be a top-level heading on first page
+                    if len(outlines_pages) == len(res_ids) and outlines_pages[0] == 0:
                         for i, num in enumerate(outlines_pages):
                             to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else reader.numPages
                             attachment_writer = PdfFileWriter()
@@ -761,7 +760,9 @@ class IrActionsReport(models.Model):
                             streams.append(stream)
                         close_streams([pdf_content_stream])
                     else:
-                        # If no outlines available, do not save each record
+                        # We can not generate separate attachments because the outlines
+                        # do not reveal where the splitting points should be in the pdf.
+                        _logger.info('The PDF report can not be saved as attachment.')
                         streams.append(pdf_content_stream)
 
         # If attachment_use is checked, the records already having an existing attachment
