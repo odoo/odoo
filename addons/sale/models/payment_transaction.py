@@ -110,6 +110,7 @@ class PaymentTransaction(models.Model):
         if self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'):
             # Invoice the sale orders in self instead of in confirmed_orders to create the invoice
             # even if only a partial payment was made.
+            self.create_uid.tz = self.create_uid.tz or confirmed_orders.user_id.tz
             self._invoice_sale_orders()
             self._send_invoice()
         return super()._reconcile_after_done()
