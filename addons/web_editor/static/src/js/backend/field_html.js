@@ -331,9 +331,10 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
      * when closing the wizard.
      *
      * @private
-     * @param {Object} attachments
+     * @param {Object} event the event containing attachment data
      */
-    _onAttachmentChange: function (attachments) {
+    _onAttachmentChange: function (event) {
+        const attachments = event.data;
         if (!this.fieldNameAttachment) {
             return;
         }
