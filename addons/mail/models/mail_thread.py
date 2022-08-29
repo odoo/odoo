@@ -2357,7 +2357,7 @@ class MailThread(models.AbstractModel):
                     db_registry = registry(dbname)
                     with api.Environment.manage(), db_registry.cursor() as cr:
                         env = api.Environment(cr, SUPERUSER_ID, _context)
-                        env['mail.mail'].browse(email_ids).send()
+                        env['mail.mail'].browse(email_ids).send(auto_commit=True)
             else:
                 emails.send()
 
