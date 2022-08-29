@@ -357,3 +357,15 @@ class IoTboxHomepage(web.Home):
             self.clean_partition()
             _logger.error('A error encountered : %s ' % e)
             return Response(str(e), status=500)
+
+    @http.route('/iot_restart_odoo_or_reboot', type='json', auth='none', cors='*', csrf=False)
+    def restart_odoo_or_reboot(self, action):
+        try:
+            if action == 'restart_odoo':
+                helpers.odoo_restart(3)
+            else:
+                subprocess.call(['sudo', 'reboot'])
+            return Response('success', status=200)
+        except Exception as e:
+            _logger.error('An error encountered : %s ', e)
+            return Response(str(e), status=500)
