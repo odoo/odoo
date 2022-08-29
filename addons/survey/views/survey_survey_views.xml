@@ -224,7 +224,7 @@
                                         <field name="user_id" widget="many2one_avatar_user"
                                             options="{'display_avatar_name': True}"/>
                                         -
-                                        <t t-esc="moment(record.create_date.raw_value).format('MMM YYYY')"/>
+                                        <t t-esc="luxon.DateTime.fromJSDate(record.create_date.raw_value).toFormat('MMM yyyy')"/>
                                     </span>
                                 </div>
                             </div>
