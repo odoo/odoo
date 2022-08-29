@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sh_product_brand_form_view" model="ir.ui.view">
+        <field name="name">sh.product.brand.form.view</field>
+        <field name="model">sh.product.brand</field>
+        <field name="arch" type="xml">
+            <form string="Brand">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}" />
+                        <button type="object" name="action_view_products" class="oe_stat_button" icon="fa-list">
+                            <field name="sh_product_count" widget="statinfo" string="Products" />
+                        </button>
+                    </div>
+                    <field name="sh_brand_image" widget="image" class="oe_avatar" />
+                    <div class="oe_title">
+                        <label class="oe_edit_only" for="name" string="Brand Name" />
+                        <h1><field name="name" placeholder="Brand Name" /></h1>
+                    </div>
+                    <!--                     <field name="company_id" invisible="1" /> -->
+                    <group>
+                        <group>
+                            <field name="sh_sequence" />
+                            <field name="active" invisible="1" />
+                            <field name="sh_cover_image" widget="image" class="oe_avatar" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="product_ids" widget="many2many" domain="[('sh_brand_id','=',False)]"> </field>
+                        </page>
+                        <page string="Description">
+                            <field name="sh_description" />
+                        </page>
+                        <page string="Vendors">
+                            <field name="sh_partner_ids" widget="many2many" mode="tree">
+                                <tree string="Vendors" editable="bottom">
+                                    <field name="name" />
+                                    <field name="email" />
+                                    <field name="website" />
+                                    <field name="phone" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="sh_brand_search_view" model="ir.ui.view">
+        <field name="name">sh.brand.search.view</field>
+        <field name="model">sh.product.brand</field>
+        <field name="arch" type="xml">
+            <search string="Brand">
+                <field name="name" />
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]" />
+            </search>
+        </field>
+    </record>
+    <record id="sh_brand_kanban_view" model="ir.ui.view">
+        <field name="name">sh.brand.kanban.view</field>
+        <field name="model">sh.product.brand</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="id" />
+                <field name="name" />
+                <field name="sh_brand_image" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <img t-att-src="kanban_image('sh.product.brand', 'sh_brand_image', record.id.raw_value)" alt="Brand" />
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title"><field name="name" /></strong>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="sh_brand_tree_view" model="ir.ui.view">
+        <field name="name">sh.brand.tree.view</field>
+        <field name="model">sh.product.brand</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sh_sequence" widget="handle" />
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    <record id="sh_brand_action" model="ir.actions.act_window">
+        <field name="name">Product Brands</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sh.product.brand</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="sh_brand_tree_view" />
+        <field name="search_view_id" ref="sh_brand_search_view" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product brand
+            </p>
+        </field>
+    </record>
+    
+    <record id="sh_product_brand_form_view2" model="ir.ui.view">
+        <field name="name">sh.product.brand.form.view</field>
+        <field name="model">sh.product.brand</field>
+        <field name="arch" type="xml">
+        <form string="Brand">
+	        <sheet>
+	            <div class="oe_button_box" name="button_box">
+	                <button type="object" name="action_view_products" class="oe_stat_button" icon="fa-list" readonly="True">
+	                    <field name="sh_product_count" widget="statinfo" string="Products" readonly="True"/>
+	                </button>
+	            </div>
+	            <field name="sh_brand_image" widget="image" class="oe_avatar" readonly="True"/>
+	            <div class="oe_title">
+	                <label class="oe_edit_only" for="name" string="Brand Name" readonly="True"/>
+	                <h1><field name="name" placeholder="Brand Name" readonly="True"/></h1>
+	            </div>
+	            <notebook>
+	                <page string="Vendors">
+	                    <field name="sh_partner_ids" widget="many2many" mode="tree" domain="[('sh_brand_id','=',False)]" readonly="True">
+	                        <tree string="Vendors" editable="bottom">
+	                            <field name="name" />
+<!-- 	                            <field name="email" /> -->
+	                            <field name="website" />
+	                            <field name="phone" />
+	                        </tree>
+	                    </field>
+	                </page>
+	            </notebook>
+	        </sheet>
+	    </form>
+        </field>
+	</record>
+	
+	<record id="sh_brand_action2" model="ir.actions.act_window">
+        <field name="name">Product Brands</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sh.product.brand</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sh_product_brand_form_view2" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product brand
+            </p>
+        </field>
+    </record>
+	
+    <menuitem id="sh_brand_menu" name="Product Brands" action="sh_brand_action" parent="sale.product_menu_catalog" groups="base.group_user" />
+</odoo>
