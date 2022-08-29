@@ -579,6 +579,15 @@ export class Record extends DataPoint {
                 this._removeInvalidFields([fieldName]);
                 continue;
             }
+
+            const isSet =
+                activeField && activeField.FieldComponent && activeField.FieldComponent.isSet;
+
+            if (this.isRequired(fieldName) && isSet && !isSet(this.data[fieldName])) {
+                this.setInvalidField(fieldName);
+                continue;
+            }
+
             switch (fieldType) {
                 case "boolean":
                 case "float":
@@ -592,7 +601,7 @@ export class Record extends DataPoint {
                     }
                     break;
                 default:
-                    if (this.isRequired(fieldName) && !this.data[fieldName]) {
+                    if (!isSet && this.isRequired(fieldName) && !this.data[fieldName]) {
                         this.setInvalidField(fieldName);
                     }
             }

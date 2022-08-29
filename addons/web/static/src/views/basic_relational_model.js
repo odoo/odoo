@@ -355,8 +355,8 @@ export class Record extends DataPoint {
         }
         for (const fieldName in this.activeFields) {
             const fieldType = this.fields[fieldName].type;
+            const activeField = this.activeFields[fieldName];
             if (fieldName in this._requiredFields) {
-                const activeField = this.activeFields[fieldName];
                 if (
                     !evalDomain(this._requiredFields[fieldName], this.evalContext) ||
                     (activeField && activeField.alwaysInvisible)
@@ -365,6 +365,15 @@ export class Record extends DataPoint {
                     continue;
                 }
             }
+
+            const isSet =
+                activeField && activeField.FieldComponent && activeField.FieldComponent.isSet;
+
+            if (this.isRequired(fieldName) && isSet && !isSet(this.data[fieldName])) {
+                this.setInvalidField(fieldName);
+                continue;
+            }
+
             switch (fieldType) {
                 case "boolean":
                 case "float":
@@ -383,7 +392,7 @@ export class Record extends DataPoint {
                     }
                     break;
                 default:
-                    if (this.isRequired(fieldName) && !this.data[fieldName]) {
+                    if (!isSet && this.isRequired(fieldName) && !this.data[fieldName]) {
                         this.setInvalidField(fieldName);
                     }
             }
