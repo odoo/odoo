@@ -46,7 +46,7 @@ CharField.supportedTypes = ["char"];
 
 CharField.extractProps = ({ attrs, field }) => {
     return {
-        shouldTrim: field.trim,
+        shouldTrim: field.trim && !archParseBoolean(attrs.password), // passwords shouldn't be trimmed
         maxLength: field.size,
         isTranslatable: field.translate,
         autocomplete: attrs.autocomplete,
