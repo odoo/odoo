@@ -1559,4 +1559,25 @@ QUnit.module("Fields", (hooks) => {
             "goldsilver"
         );
     });
+
+    QUnit.test("save a record with an empty many2many_tags required", async function (assert) {
+        assert.expect(3);
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="timmy" widget="many2many_tags" required="1"/></form>',
+        });
+
+        patchWithCleanup(form.env.services.notification, {
+            add: (message, params) => {
+                assert.strictEqual(message.toString(), "<ul><li>pokemon</li></ul>");
+                assert.deepEqual(params, { title: "Invalid fields: ", type: "danger" });
+            },
+        });
+
+        await clickSave(target);
+        assert.containsOnce(target, "[name='timmy'].o_field_invalid");
+    });
 });

@@ -304,6 +304,7 @@ Many2ManyTagsField.supportedTypes = ["many2many"];
 Many2ManyTagsField.fieldsToFetch = {
     display_name: { name: "display_name", type: "char" },
 };
+Many2ManyTagsField.isSet = (value) => value.count > 0;
 
 Many2ManyTagsField.extractProps = ({ attrs, field }) => {
     return {
