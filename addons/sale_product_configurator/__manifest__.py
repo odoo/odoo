@@ -15,13 +15,9 @@ It also enables the "optional products" feature.
 
     'depends': ['sale'],
     'data': [
-        'security/ir.model.access.csv',
-
         'views/product_template_views.xml',
         'views/sale_order_views.xml',
         'views/templates.xml',
-
-        'wizard/sale_product_configurator_views.xml',
     ],
     'demo': [
         'data/sale_demo.xml',
@@ -29,9 +25,6 @@ It also enables the "optional products" feature.
     'assets': {
         'web.assets_backend': [
             'sale/static/src/js/variant_mixin.js',
-            'sale_product_configurator/static/src/js/product_configurator_renderer.js',
-            'sale_product_configurator/static/src/js/product_configurator_controller.js',
-            'sale_product_configurator/static/src/js/product_configurator_view.js',
             'sale_product_configurator/static/src/js/product_configurator_widget.js',
             'sale_product_configurator/static/src/js/product_configurator_modal.js',
         ],
