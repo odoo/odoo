@@ -753,19 +753,46 @@ QUnit.module("Fields", (hooks) => {
         // Select two records
         await click(target.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
         await click(target.querySelectorAll(".o_data_row")[1], ".o_list_record_selector input");
-
         await click(target.querySelector(".o_data_row .o_data_cell"));
-
-        await editInput(target, ".o_field_widget[name=trululu] input", "");
-        await triggerEvent(target, ".o_field_widget[name=trululu] input", "blur");
-
+        const input = target.querySelector(".o_field_widget[name=trululu] input");
+        input.value = "";
+        await triggerEvent(input, null, "input");
         assert.containsNone(target, ".modal", "No save should be triggered when removing value");
 
-        await click(target.querySelector(".o_field_widget[name=trululu] input"));
         await click(target.querySelector(".o_field_widget[name=trululu] .ui-menu-item"));
-
         assert.containsOnce(target, ".modal", "Saving should be triggered when selecting a value");
+
         await click(target, ".modal .btn-primary");
+    });
+
+    QUnit.test("empty a many2one field in list view", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="trululu"/>
+                </tree>`,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.step(method);
+                    assert.deepEqual(args[1], { trululu: false });
+                }
+            },
+        });
+
+        await click(target.querySelector(".o_data_row .o_data_cell"));
+        await editInput(target, ".o_field_widget[name=trululu] input", "");
+        assert.strictEqual(
+            target.querySelector(".o_data_row .o_field_widget[name=trululu] input").textContent,
+            ""
+        );
+
+        await click(target, ".o_list_view");
+        assert.strictEqual(target.querySelector(".o_data_row").textContent, "");
+
+        assert.verifySteps(["write"]);
     });
 
     QUnit.test("focus tracking on a many2one in a list", async function (assert) {
