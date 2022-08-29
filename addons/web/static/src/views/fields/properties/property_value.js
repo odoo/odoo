@@ -5,13 +5,20 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { DateTimePicker, DatePicker } from "@web/core/datepicker/datepicker";
 import { Domain } from "@web/core/domain";
-import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
+import {
+    Many2XAutocomplete,
+    useOpenMany2XRecord,
+} from "@web/views/fields/relational_utils";
 import { useService } from "@web/core/utils/hooks";
 import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
 import { m2oTupleFromData } from "@web/views/fields/many2one/many2one_field";
 import { PropertyTags } from "./property_tags";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { formatFloat, formatInteger, formatMany2one } from "@web/views/fields/formatters";
+import {
+    formatFloat,
+    formatInteger,
+    formatMany2one,
+} from "@web/views/fields/formatters";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 
 const { Component } = owl;
@@ -20,8 +27,8 @@ const { DateTime } = luxon;
 // Formats to stringify the date / datetime in the JSON.
 // It's important to have the year first, then the day,
 // etc... in UTC, to be able to search on them.
-const DEFAULT_SERVER_DATETIME_FORMAT = 'yyyy-LL-dd HH:mm:ss';
-const DEFAULT_SERVER_DATE_FORMAT = 'yyyy-LL-dd';
+const DEFAULT_SERVER_DATETIME_FORMAT = "yyyy-LL-dd HH:mm:ss";
+const DEFAULT_SERVER_DATE_FORMAT = "yyyy-LL-dd";
 
 /**
  * Represent one property value.
@@ -37,10 +44,9 @@ const DEFAULT_SERVER_DATE_FORMAT = 'yyyy-LL-dd';
  * - ...
  */
 export class PropertyValue extends Component {
-
     setup() {
-        this.orm = useService('orm');
-        this.action = useService('action');
+        this.orm = useService("orm");
+        this.action = useService("action");
 
         this.openMany2X = useOpenMany2XRecord({
             resModel: this.props.model,
@@ -57,7 +63,9 @@ export class PropertyValue extends Component {
                 // maybe the record display name has changed
                 await record.load();
                 const recordData = m2oTupleFromData(record.data);
-                await this.onValueChange([{id: recordData[0], name: recordData[1]}]);
+                await this.onValueChange([
+                    { id: recordData[0], name: recordData[1] },
+                ]);
             },
             fieldString: this.props.string,
         });
@@ -76,39 +84,37 @@ export class PropertyValue extends Component {
     get propertyValue() {
         const value = this.props.value;
 
-        if (this.props.type === 'float') {
+        if (this.props.type === "float") {
             // force to show at least 1 digit, even for integers
             return value;
-        } else if (this.props.type === 'datetime') {
-            if (typeof value === 'string') {
+        } else if (this.props.type === "datetime") {
+            if (typeof value === "string") {
                 // convert the datetime from the UTC format to the current timezone
                 const datetimeValue = DateTime.fromFormat(
-                    value + ' +00:00',
-                    DEFAULT_SERVER_DATETIME_FORMAT + ' Z',
+                    value + " +00:00",
+                    DEFAULT_SERVER_DATETIME_FORMAT + " Z"
                 );
                 return datetimeValue.invalid ? false : datetimeValue;
             }
-            return (value instanceof DateTime) ? value : false;
-        } else if (this.props.type === 'date') {
-            if (typeof value === 'string') {
+            return value instanceof DateTime ? value : false;
+        } else if (this.props.type === "date") {
+            if (typeof value === "string") {
                 const datetimeValue = DateTime.fromFormat(
-                    value + ' +00:00',
-                    DEFAULT_SERVER_DATE_FORMAT + ' Z',
+                    value + " +00:00",
+                    DEFAULT_SERVER_DATE_FORMAT + " Z"
                 );
                 return datetimeValue.invalid ? false : datetimeValue;
             }
-            return (value instanceof DateTime) ? value : false;
-        } else if (this.props.type === 'boolean') {
+            return value instanceof DateTime ? value : false;
+        } else if (this.props.type === "boolean") {
             return !!value;
-        } else if (this.props.type === 'selection') {
+        } else if (this.props.type === "selection") {
             const options = this.props.selection || [];
-            const option = options.find(option => option[0] === value);
-            return option && option.length === 2 && option[0] ? option[0] : '';
-        } else if (this.props.type === 'many2one') {
-            return (!value || value.length !== 2 || !value[0])
-                ? false
-                : value;
-        } else if (this.props.type === 'many2many') {
+            const option = options.find((option) => option[0] === value);
+            return option && option.length === 2 && option[0] ? option[0] : "";
+        } else if (this.props.type === "many2one") {
+            return !value || value.length !== 2 || !value[0] ? false : value;
+        } else if (this.props.type === "many2many") {
             if (!value || !value.length) {
                 return [];
             }
@@ -118,12 +124,18 @@ export class PropertyValue extends Component {
                 return {
                     id: many2manyValue[0],
                     text: many2manyValue[1],
-                    onClick: async () => await this._openRecord(this.props.comodel, many2manyValue[0]),
-                    onDelete: !this.props.readonly && (() => this.onMany2manyDelete(many2manyValue[0])),
+                    onClick: async () =>
+                        await this._openRecord(
+                            this.props.comodel,
+                            many2manyValue[0]
+                        ),
+                    onDelete:
+                        !this.props.readonly &&
+                        (() => this.onMany2manyDelete(many2manyValue[0])),
                     colorIndex: 0,
                 };
             });
-        } else if (this.props.type === 'tags') {
+        } else if (this.props.type === "tags") {
             return value || [];
         }
 
@@ -150,19 +162,21 @@ export class PropertyValue extends Component {
     get displayValue() {
         const value = this.propertyValue;
 
-        if (this.props.type === 'many2one' && value && value.length === 2) {
+        if (this.props.type === "many2one" && value && value.length === 2) {
             return formatMany2one(value);
         } else if (!value) {
             return false;
-        } else if (this.props.type === 'datetime' && value) {
+        } else if (this.props.type === "datetime" && value) {
             return formatDateTime(value);
-        } else if (this.props.type === 'date' && value) {
+        } else if (this.props.type === "date" && value) {
             return formatDate(value);
-        } else if (this.props.type === 'selection') {
-            return this.props.selection.find(option => option[0] === value)[1];
-        } else if (this.props.type === 'float') {
+        } else if (this.props.type === "selection") {
+            return this.props.selection.find(
+                (option) => option[0] === value
+            )[1];
+        } else if (this.props.type === "float") {
             return formatFloat(value);
-        } else if (this.props.type === 'integer') {
+        } else if (this.props.type === "integer") {
             return formatInteger(value);
         }
         return value.toString();
@@ -178,25 +192,28 @@ export class PropertyValue extends Component {
      * @param {object} newValue
      */
     async onValueChange(newValue) {
-        if (this.props.type === 'datetime') {
-            if (typeof newValue === 'string') {
+        if (this.props.type === "datetime") {
+            if (typeof newValue === "string") {
                 newValue = DateTime.fromISO(newValue);
             }
-            newValue = newValue.toUTC().toFormat(DEFAULT_SERVER_DATETIME_FORMAT);
-        } else if (this.props.type === 'date') {
-            if (typeof newValue === 'string') {
+            newValue = newValue
+                .toUTC()
+                .toFormat(DEFAULT_SERVER_DATETIME_FORMAT);
+        } else if (this.props.type === "date") {
+            if (typeof newValue === "string") {
                 newValue = DateTime.fromISO(newValue);
             }
             newValue = newValue.toFormat(DEFAULT_SERVER_DATE_FORMAT);
-        } else if (this.props.type === 'integer') {
+        } else if (this.props.type === "integer") {
             newValue = parseInt(newValue) || 0;
-        } else if (this.props.type === 'float') {
+        } else if (this.props.type === "float") {
             newValue = parseFloat(newValue) || 0;
-        } else if (['many2one', 'many2many'].includes(this.props.type)) {
+        } else if (["many2one", "many2many"].includes(this.props.type)) {
             // {id: 5, name: 'Demo'} => [5, 'Demo']
-            newValue = (newValue && newValue.length && newValue[0].id)
-                ? [newValue[0].id, newValue[0].name]
-                : false;
+            newValue =
+                newValue && newValue.length && newValue[0].id
+                    ? [newValue[0].id, newValue[0].name]
+                    : false;
 
             if (newValue && newValue[0] && newValue[1] === undefined) {
                 // The "Search More" option in the Many2XAutocomplete component
@@ -206,11 +223,11 @@ export class PropertyValue extends Component {
                 newValue = await this._nameGet(newValue[0]);
             }
 
-            if (this.props.type === 'many2many' && newValue) {
+            if (this.props.type === "many2many" && newValue) {
                 // add the record in the current many2many list
                 const currentValue = this.props.value || [];
                 const recordId = newValue[0];
-                const exists = currentValue.find(rec => rec[0] === recordId);
+                const exists = currentValue.find((rec) => rec[0] === recordId);
                 if (exists) {
                     return;
                 }
@@ -253,7 +270,9 @@ export class PropertyValue extends Component {
     onMany2manyDelete(many2manyId) {
         // deep copy
         const currentValue = JSON.parse(JSON.stringify(this.props.value || []));
-        const newValue = currentValue.filter((value) => value[0] !== many2manyId);
+        const newValue = currentValue.filter(
+            (value) => value[0] !== many2manyId
+        );
         this.props.onChange(newValue);
     }
 
@@ -270,11 +289,11 @@ export class PropertyValue extends Component {
         }
         const result = await this.orm.call(
             this.props.comodel,
-            'name_create',
+            "name_create",
             [name],
-            { context: this.props.context },
+            { context: this.props.context }
         );
-        this.onValueChange([{id: result[0], name: result[1]}]);
+        this.onValueChange([{ id: result[0], name: result[1] }]);
     }
 
     /* --------------------------------------------------------
@@ -290,9 +309,9 @@ export class PropertyValue extends Component {
     async _openRecord(recordModel, recordId) {
         const action = await this.orm.call(
             recordModel,
-            'get_formview_action',
+            "get_formview_action",
             [[recordId]],
-            { context: this.props.context },
+            { context: this.props.context }
         );
 
         this.action.doAction(action);
@@ -308,15 +327,15 @@ export class PropertyValue extends Component {
     async _nameGet(recordId) {
         const result = await this.orm.call(
             this.props.comodel,
-            'name_get',
+            "name_get",
             [[recordId]],
-            { context: this.props.context },
+            { context: this.props.context }
         );
         return result[0];
     }
 }
 
-PropertyValue.template = 'web.PropertyValue';
+PropertyValue.template = "web.PropertyValue";
 
 PropertyValue.components = {
     Dropdown,

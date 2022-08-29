@@ -6,28 +6,29 @@ import { uuid } from "../../utils";
 const { Component, useState, useRef, useEffect } = owl;
 
 export class PropertyDefinitionSelection extends Component {
-
     setup() {
-        this.notification = useService('notification');
+        this.notification = useService("notification");
 
         // when we create a new option, it's added in the state
         // when we have finished to edit it (blur / enter) we propagate
         // the new value in the props
         this.state = useState({ newOption: null });
 
-        this.propertyDefinitionSelectionRef = useRef('propertyDefinitionSelection');
-        this.addButtonRef = useRef('addButton');
-
-        useEffect(
-            () => {
-                // automatically give the focus to the new option if it is empty
-                const inputs = this.propertyDefinitionSelectionRef
-                    .el.querySelectorAll('.o_field_property_selection_option input');
-                if (inputs && inputs.length && !inputs[inputs.length - 1].value) {
-                    inputs[inputs.length - 1].focus();
-                }
-            },
+        this.propertyDefinitionSelectionRef = useRef(
+            "propertyDefinitionSelection"
         );
+        this.addButtonRef = useRef("addButton");
+
+        useEffect(() => {
+            // automatically give the focus to the new option if it is empty
+            const inputs =
+                this.propertyDefinitionSelectionRef.el.querySelectorAll(
+                    ".o_field_property_selection_option input"
+                );
+            if (inputs && inputs.length && !inputs[inputs.length - 1].value) {
+                inputs[inputs.length - 1].focus();
+            }
+        });
     }
 
     /* --------------------------------------------------------
@@ -53,7 +54,9 @@ export class PropertyDefinitionSelection extends Component {
      */
     get optionsVisible() {
         const options = this.options || [];
-        return this.state.newOption ? [...options, this.state.newOption] : options;
+        return this.state.newOption
+            ? [...options, this.state.newOption]
+            : options;
     }
 
     /* --------------------------------------------------------
@@ -64,7 +67,7 @@ export class PropertyDefinitionSelection extends Component {
      * Add a new empty selection option.
      */
     onOptionCreate() {
-        this.state.newOption = [uuid(), ''];
+        this.state.newOption = [uuid(), ""];
     }
 
     /**
@@ -77,7 +80,10 @@ export class PropertyDefinitionSelection extends Component {
         const target = event.target;
         const newLabel = target.value;
 
-        if (this.options[optionIndex] && this.options[optionIndex][1] === newLabel) {
+        if (
+            this.options[optionIndex] &&
+            this.options[optionIndex][1] === newLabel
+        ) {
             // do not update the props if we are already up to date
             // e.g. we pressed enter already and lost focus
             return;
@@ -92,11 +98,16 @@ export class PropertyDefinitionSelection extends Component {
             options[optionIndex][1] = newLabel;
         }
 
-        const nonEmptyOptions = options.filter(option => option[1] && option[1].length);
+        const nonEmptyOptions = options.filter(
+            (option) => option[1] && option[1].length
+        );
         this.props.onOptionsChange(nonEmptyOptions);
 
-        if (this.state.newOption && this.state.newOption[1]
-            && this.state.newOption[1].length) {
+        if (
+            this.state.newOption &&
+            this.state.newOption[1] &&
+            this.state.newOption[1].length
+        ) {
             // the new option has been propagated in the props
             this.state.newOption = null;
         }
@@ -136,7 +147,7 @@ export class PropertyDefinitionSelection extends Component {
      * @param {integer} optionIndex
      */
     onOptionKeyDown(event, optionIndex) {
-        if (event.key === 'Enter') {
+        if (event.key === "Enter") {
             const newLabel = event.target.value;
 
             if (!newLabel || !newLabel.length) {
@@ -148,21 +159,22 @@ export class PropertyDefinitionSelection extends Component {
 
             this.onOptionChange(event, optionIndex);
             this.onOptionCreate();
-        } else if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
+        } else if (["ArrowUp", "ArrowDown"].includes(event.key)) {
             event.stopPropagation();
             event.preventDefault();
 
-            if (event.key === 'ArrowUp' && optionIndex > 0) {
+            if (event.key === "ArrowUp" && optionIndex > 0) {
                 const previousInput = event.target
-                    .closest('.o_field_property_selection_option')
-                    .previousElementSibling
-                    .querySelector('input');
+                    .closest(".o_field_property_selection_option")
+                    .previousElementSibling.querySelector("input");
                 previousInput.focus();
-            } else if (event.key === 'ArrowDown' && optionIndex < this.optionsVisible.length - 1) {
+            } else if (
+                event.key === "ArrowDown" &&
+                optionIndex < this.optionsVisible.length - 1
+            ) {
                 const nextInput = event.target
-                    .closest('.o_field_property_selection_option')
-                    .nextElementSibling
-                    .querySelector('input');
+                    .closest(".o_field_property_selection_option")
+                    .nextElementSibling.querySelector("input");
                 nextInput.focus();
             }
         }
@@ -178,7 +190,9 @@ export class PropertyDefinitionSelection extends Component {
             return;
         }
         const newValue = this.optionsVisible[optionIndex][0];
-        this.props.onDefaultOptionChange(newValue !== this.props.default ? newValue : false);
+        this.props.onDefaultOptionChange(
+            newValue !== this.props.default ? newValue : false
+        );
     }
 
     /**
@@ -193,7 +207,7 @@ export class PropertyDefinitionSelection extends Component {
     }
 }
 
-PropertyDefinitionSelection.template = 'web.PropertyDefinitionSelection';
+PropertyDefinitionSelection.template = "web.PropertyDefinitionSelection";
 
 PropertyDefinitionSelection.props = {
     default: { type: String, optional: true },

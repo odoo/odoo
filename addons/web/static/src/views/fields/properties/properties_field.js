@@ -13,15 +13,22 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { sprintf } from "@web/core/utils/strings";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-const { Component, useRef, useState, useEffect, onWillStart, onWillUpdateProps } = owl;
+const {
+    Component,
+    useRef,
+    useState,
+    useEffect,
+    onWillStart,
+    onWillUpdateProps,
+} = owl;
 
 export class PropertiesField extends Component {
     setup() {
-        this.notification = useService('notification');
-        this.orm = useService('orm');
-        this.dialogService = useService('dialog');
+        this.notification = useService("notification");
+        this.orm = useService("orm");
+        this.dialogService = useService("dialog");
         this.popover = usePopover();
-        this.propertiesRef = useRef('properties');
+        this.propertiesRef = useRef("properties");
 
         this.state = useState({
             canChangeDefinition: true,
@@ -39,26 +46,26 @@ export class PropertiesField extends Component {
 
         onWillUpdateProps(async () => {
             // reset the initials properties values if we saved the record
-            if (this.props.record.mode === 'readonly') {
+            if (this.props.record.mode === "readonly") {
                 this._saveInitialPropertiesValues();
             }
         });
 
-        useEffect(
-            () => {
-                this._movePopoverIfNeeded();
+        useEffect(() => {
+            this._movePopoverIfNeeded();
 
-                if (this.openLastPropertyDefinition) {
-                    this.openLastPropertyDefinition = null;
-                    const propertiesList = this.propertiesList;
-                    const lastPropertyName = propertiesList[propertiesList.length - 1].name;
-                    const labels = this.propertiesRef.el.querySelectorAll(
-                        `.o_property_field[property-name="${lastPropertyName}"] .o_field_property_open_popover`);
-                    const lastLabel = labels[labels.length - 1];
-                    lastLabel.click();
-                }
-            },
-        );
+            if (this.openLastPropertyDefinition) {
+                this.openLastPropertyDefinition = null;
+                const propertiesList = this.propertiesList;
+                const lastPropertyName =
+                    propertiesList[propertiesList.length - 1].name;
+                const labels = this.propertiesRef.el.querySelectorAll(
+                    `.o_property_field[property-name="${lastPropertyName}"] .o_field_property_open_popover`
+                );
+                const lastLabel = labels[labels.length - 1];
+                lastLabel.click();
+            }
+        });
     }
 
     /* --------------------------------------------------------
@@ -84,8 +91,12 @@ export class PropertiesField extends Component {
      * @returns {array}
      */
     get propertiesList() {
-        const propertiesValues = JSON.parse(JSON.stringify(this.props.value || []));
-        return propertiesValues.filter(definition => !definition.definition_deleted);
+        const propertiesValues = JSON.parse(
+            JSON.stringify(this.props.value || [])
+        );
+        return propertiesValues.filter(
+            (definition) => !definition.definition_deleted
+        );
     }
 
     /**
@@ -101,17 +112,17 @@ export class PropertiesField extends Component {
      * @returns {boolean}
      */
     checkPopoverClose(event) {
-        if (document.activeElement.closest('.o_field_property_definition')) {
+        if (document.activeElement.closest(".o_field_property_definition")) {
             // the focus is still on an element of the definition
             return true;
         }
 
-        if (event.target.closest('.bootstrap-datetimepicker-widget')) {
+        if (event.target.closest(".bootstrap-datetimepicker-widget")) {
             // selected a datetime, do not close the definition popover
             return true;
         }
 
-        if (event.target.closest('.modal')) {
+        if (event.target.closest(".modal")) {
             // close a many2one modal
             return true;
         }
@@ -132,15 +143,16 @@ export class PropertiesField extends Component {
     onPropertyMove(propertyName, direction) {
         const propertiesValues = this.propertiesList || [];
         const propertyIndex = propertiesValues.findIndex(
-            property => property.name === propertyName);
+            (property) => property.name === propertyName
+        );
 
-        const targetIndex = propertyIndex + (direction === 'down' ? 1 : -1);
+        const targetIndex = propertyIndex + (direction === "down" ? 1 : -1);
         if (targetIndex < 0 || targetIndex >= propertiesValues.length) {
             this.notification.add(
-                direction === 'down'
-                ? _lt('This field is already last')
-                : _lt('This field is already first'),
-                { type: 'warning' },
+                direction === "down"
+                    ? _lt("This field is already last")
+                    : _lt("This field is already first"),
+                { type: "warning" }
             );
             return;
         }
@@ -164,7 +176,9 @@ export class PropertiesField extends Component {
      */
     onPropertyValueChange(propertyName, propertyValue) {
         const propertiesValues = this.propertiesList;
-        propertiesValues.find(property => property.name === propertyName).value = propertyValue;
+        propertiesValues.find(
+            (property) => property.name === propertyName
+        ).value = propertyValue;
         this.props.update(propertiesValues);
     }
 
@@ -177,7 +191,9 @@ export class PropertiesField extends Component {
      * @param {array | null} newValue
      */
     onTagsChange(propertyName, newTags, newValue = null) {
-        const propertyDefinition = this.propertiesList.find(property => property.name === propertyName);
+        const propertyDefinition = this.propertiesList.find(
+            (property) => property.name === propertyName
+        );
         propertyDefinition.tags = newTags;
         if (newValue !== null) {
             propertyDefinition.value = newValue;
@@ -193,7 +209,7 @@ export class PropertiesField extends Component {
      * @param {string} propertyName
      */
     onPropertyEdit(event, propertyName) {
-        if (event.target.classList.contains('disabled')) {
+        if (event.target.classList.contains("disabled")) {
             event.stopPropagation();
             event.preventDefault();
             // remove the glitch if we click on the edit button
@@ -201,29 +217,33 @@ export class PropertiesField extends Component {
             return;
         }
 
-        event.target.classList.add('disabled');
+        event.target.classList.add("disabled");
 
         this.popoverCloseFn = this.popover.add(
             event.currentTarget,
             PropertyDefinition,
             {
-                readonly: this.props.readonly || !this.state.canChangeDefinition,
+                readonly:
+                    this.props.readonly || !this.state.canChangeDefinition,
                 canChangeDefinition: this.state.canChangeDefinition,
-                propertyDefinition: this.propertiesList.find(property => property.name === propertyName),
+                propertyDefinition: this.propertiesList.find(
+                    (property) => property.name === propertyName
+                ),
                 context: this.context,
                 onChange: this.onPropertyDefinitionChange.bind(this),
                 onDelete: () => this.onPropertyDelete(propertyName),
-                onPropertyMove: (direction) => this.onPropertyMove(propertyName, direction),
+                onPropertyMove: (direction) =>
+                    this.onPropertyMove(propertyName, direction),
             },
             {
                 preventClose: this.checkPopoverClose,
-                popoverClass: 'o_property_field_popover',
-                position: 'top',
+                popoverClass: "o_property_field_popover",
+                position: "top",
                 onClose: () => {
                     this.state.movedPropertyName = null;
-                    event.target.classList.remove('disabled');
+                    event.target.classList.remove("disabled");
                 },
-            },
+            }
         );
     }
 
@@ -233,20 +253,26 @@ export class PropertiesField extends Component {
      * @param {object} propertyDefinition
      */
     onPropertyDefinitionChange(propertyDefinition) {
-        propertyDefinition['definition_changed'] = true;
+        propertyDefinition["definition_changed"] = true;
         const propertiesValues = this.propertiesList;
         const propertyIndex = propertiesValues.findIndex(
-            property => property.name === propertyDefinition.name);
+            (property) => property.name === propertyDefinition.name
+        );
 
         // if the type / model are the same, restore the original name to not reset the children
         // otherwise, generate a new value so all value of the record are reset
         const initialValues = this.initialValues[propertyDefinition.name];
-        if (initialValues
-            && propertyDefinition.type === initialValues.type
-            && propertyDefinition.comodel === initialValues.comodel) {
+        if (
+            initialValues &&
+            propertyDefinition.type === initialValues.type &&
+            propertyDefinition.comodel === initialValues.comodel
+        ) {
             // restore the original name
             propertyDefinition.name = initialValues.name;
-        } else if (initialValues && initialValues.name === propertyDefinition.name) {
+        } else if (
+            initialValues &&
+            initialValues.name === propertyDefinition.name
+        ) {
             // generate a new new to reset all values on other records
             // store the new generated name to be able to restore it
             // if needed
@@ -266,19 +292,23 @@ export class PropertiesField extends Component {
      */
     onPropertyDelete(propertyName) {
         const dialogProps = {
-            title: _lt('Delete Property Field'),
-            body: sprintf(_lt(
-                'Are you sure you want to delete this property field? It will be removed for everyone using the "%s" %s.'),
-                this.parentName, this.parentString),
+            title: _lt("Delete Property Field"),
+            body: sprintf(
+                _lt(
+                    'Are you sure you want to delete this property field? It will be removed for everyone using the "%s" %s.'
+                ),
+                this.parentName,
+                this.parentString
+            ),
             confirm: () => {
                 if (this.popoverCloseFn) {
                     this.popoverCloseFn();
                     this.popoverCloseFn = null;
                 }
                 const propertiesDefinitions = this.propertiesList;
-                propertiesDefinitions
-                    .find(property => property.name === propertyName)
-                    .definition_deleted = true;
+                propertiesDefinitions.find(
+                    (property) => property.name === propertyName
+                ).definition_deleted = true;
                 this.props.update(propertiesDefinitions);
             },
             cancel: () => {},
@@ -289,28 +319,35 @@ export class PropertiesField extends Component {
     onPropertyCreate() {
         const propertiesDefinitions = this.propertiesList || [];
 
-        if (propertiesDefinitions.length
-            && propertiesDefinitions.some(prop => !prop.string || !prop.string.length)) {
+        if (
+            propertiesDefinitions.length &&
+            propertiesDefinitions.some(
+                (prop) => !prop.string || !prop.string.length
+            )
+        ) {
             // do not allow to add new field until we set a label on the previous one
             this.propertiesRef.el
-                .closest('.o_field_properties')
-                .classList.add('o_field_invalid');
+                .closest(".o_field_properties")
+                .classList.add("o_field_invalid");
 
             this.notification.add(
-                _lt('Please complete your properties before adding a new one'),
-                { type: 'warning' },
+                _lt("Please complete your properties before adding a new one"),
+                { type: "warning" }
             );
             return;
         }
 
         this.propertiesRef.el
-            .closest('.o_field_properties')
-            .classList.remove('o_field_invalid');
+            .closest(".o_field_properties")
+            .classList.remove("o_field_invalid");
 
         propertiesDefinitions.push({
             name: uuid(),
-            string: sprintf(_lt('Property %s'), propertiesDefinitions.length + 1),
-            type: 'char',
+            string: sprintf(
+                _lt("Property %s"),
+                propertiesDefinitions.length + 1
+            ),
+            type: "char",
             definition_changed: true,
         });
         this.openLastPropertyDefinition = true;
@@ -335,14 +372,19 @@ export class PropertiesField extends Component {
         this.shouldUpdatePopoverPosition = false;
 
         const propertyName = this.state.movedPropertyName;
-        const popover = document.querySelector('.o_field_property_definition').closest('.o_popover');
-        const targetElement = document.querySelector(`.o_property_field[property-name="${propertyName}"]`);
+        const popover = document
+            .querySelector(".o_field_property_definition")
+            .closest(".o_popover");
+        const targetElement = document.querySelector(
+            `.o_property_field[property-name="${propertyName}"]`
+        );
         const targetPosition = targetElement.getBoundingClientRect();
         const popoverPosition = popover.getBoundingClientRect();
 
-        popover.style.top = (targetPosition.top - popoverPosition.height - 10) + 'px';
-        popover.style.left = targetPosition.left + 'px';
-        popover.style.position = 'absolute';
+        popover.style.top =
+            targetPosition.top - popoverPosition.height - 10 + "px";
+        popover.style.left = targetPosition.left + "px";
+        popover.style.position = "absolute";
     }
 
     /**
@@ -350,10 +392,13 @@ export class PropertiesField extends Component {
      * and therefor update the properties definition.
      */
     async _checkDefinitionAccess() {
-        const definitionRecordId = this.props.record.data[this.definitionRecordField][0];
+        const definitionRecordId =
+            this.props.record.data[this.definitionRecordField][0];
         this.parentName = this.props.record.data[this.definitionRecordField][1];
-        const definitionRecordModel = this.props.record.fields[this.definitionRecordField].relation;
-        this.parentString = this.props.record.fields[this.definitionRecordField].string;
+        const definitionRecordModel =
+            this.props.record.fields[this.definitionRecordField].relation;
+        this.parentString =
+            this.props.record.fields[this.definitionRecordField].string;
 
         if (!definitionRecordId || !definitionRecordModel) {
             return;
@@ -362,8 +407,8 @@ export class PropertiesField extends Component {
         // check if we can write on the definition record
         this.state.canChangeDefinition = await this.orm.call(
             definitionRecordModel,
-            'check_access_rights',
-            ['write', false],
+            "check_access_rights",
+            ["write", false]
         );
     }
 
@@ -390,7 +435,7 @@ export class PropertiesField extends Component {
     }
 }
 
-PropertiesField.template = 'web.PropertiesField';
+PropertiesField.template = "web.PropertiesField";
 PropertiesField.components = {
     Dropdown,
     DropdownItem,
@@ -402,11 +447,11 @@ PropertiesField.props = {
     columns: { type: Number, optional: true },
 };
 PropertiesField.extractProps = ({ attrs, field }) => {
-    const columns = parseInt(attrs.columns || '1');
+    const columns = parseInt(attrs.columns || "1");
     return { columns };
 };
 
-PropertiesField.displayName = _lt('Properties');
-PropertiesField.supportedTypes = ['properties'];
+PropertiesField.displayName = _lt("Properties");
+PropertiesField.supportedTypes = ["properties"];
 
-registry.category('fields').add('properties', PropertiesField);
+registry.category("fields").add("properties", PropertiesField);

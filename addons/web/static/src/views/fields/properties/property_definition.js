@@ -11,24 +11,23 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { useService, useOwnedDialogs } from "@web/core/utils/hooks";
 import { PropertyDefinitionSelection } from "./property_definition_selection";
 import { PropertyTags } from "./property_tags";
-import { sprintf } from '@web/core/utils/strings';
+import { sprintf } from "@web/core/utils/strings";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
 const { Component, useState, onWillUpdateProps, useEffect, useRef } = owl;
 
 export class PropertyDefinition extends Component {
-
     setup() {
-        this.orm = useService('orm');
+        this.orm = useService("orm");
 
-        this.propertyDefinitionRef = useRef('propertyDefinition');
+        this.propertyDefinitionRef = useRef("propertyDefinition");
         this.addDialog = useOwnedDialogs();
 
         const defaultDefinition = {
             name: false,
-            string: '',
-            type: 'char',
-            default: '',
+            string: "",
+            type: "char",
+            default: "",
         };
         const propertyDefinition = {
             ...defaultDefinition,
@@ -38,23 +37,27 @@ export class PropertyDefinition extends Component {
         this.state = useState({
             propertyDefinition: propertyDefinition,
             typeLabel: this._typeLabel(propertyDefinition.type),
-            resModel: '',
-            resModelDescription: '',
+            resModel: "",
+            resModelDescription: "",
             matchingRecordsCount: undefined,
         });
 
         this._syncStateWithProps(propertyDefinition);
 
         // update the state and fetch needed information
-        onWillUpdateProps((newProps) => this._syncStateWithProps(newProps.value));
+        onWillUpdateProps((newProps) =>
+            this._syncStateWithProps(newProps.value)
+        );
 
         useEffect((event) => {
             // focus the property label, when we open the property definition
-            if (this.labelFocused) { // focus it only once
+            if (this.labelFocused) {
+                // focus it only once
                 return;
             }
             this.labelFocused = true;
-            const labelInput = this.propertyDefinitionRef.el.querySelectorAll('input')[0];
+            const labelInput =
+                this.propertyDefinitionRef.el.querySelectorAll("input")[0];
             if (labelInput) {
                 labelInput.focus();
             }
@@ -65,23 +68,23 @@ export class PropertyDefinition extends Component {
      * Public methods / Getters
      * -------------------------------------------------------- */
 
-     /**
-      * Return the list of property types with their labels.
-      *
-      * @returns {array}
-      */
+    /**
+     * Return the list of property types with their labels.
+     *
+     * @returns {array}
+     */
     get availablePropertyTypes() {
         return [
-            ['char', _lt('Text')],
-            ['boolean', _lt('Checkbox')],
-            ['integer', _lt('Integer')],
-            ['float', _lt('Decimal')],
-            ['date', _lt('Date')],
-            ['datetime', _lt('Date & Time')],
-            ['selection', _lt('Selection')],
-            ['tags', _lt('Tags')],
-            ['many2one', _lt('Many2one')],
-            ['many2many', _lt('Many2many')],
+            ["char", _lt("Text")],
+            ["boolean", _lt("Checkbox")],
+            ["integer", _lt("Integer")],
+            ["float", _lt("Decimal")],
+            ["date", _lt("Date")],
+            ["datetime", _lt("Date & Time")],
+            ["selection", _lt("Selection")],
+            ["tags", _lt("Tags")],
+            ["many2one", _lt("Many2one")],
+            ["many2many", _lt("Many2many")],
         ];
     }
 
@@ -92,7 +95,7 @@ export class PropertyDefinition extends Component {
      * @returns {array}
      */
     get propertyTagValues() {
-        return (this.state.propertyDefinition.tags || []).map(tag => tag[0]);
+        return (this.state.propertyDefinition.tags || []).map((tag) => tag[0]);
     }
 
     /* --------------------------------------------------------
@@ -163,7 +166,9 @@ export class PropertyDefinition extends Component {
         const propertyDefinition = {
             ...this.state.propertyDefinition,
             comodel: technical,
-            default: modelChanged ? false : this.state.propertyDefinition.default,
+            default: modelChanged
+                ? false
+                : this.state.propertyDefinition.default,
             value: modelChanged ? false : this.state.propertyDefinition.value,
             domain: modelChanged ? false : this.state.propertyDefinition.domain,
         };
@@ -197,7 +202,9 @@ export class PropertyDefinition extends Component {
             noCreate: true,
             multiSelect: false,
             resModel: this.state.propertyDefinition.comodel,
-            domain: (new Domain(this.state.propertyDefinition.domain || '[]')).toList(),
+            domain: new Domain(
+                this.state.propertyDefinition.domain || "[]"
+            ).toList(),
             context: this.props.context || {},
         });
     }
@@ -254,9 +261,9 @@ export class PropertyDefinition extends Component {
             // "res.partner" => (5, "Contact")
             try {
                 const result = await this.orm.call(
-                    'ir.model',
-                    'display_name_for',
-                    [[newModel]],
+                    "ir.model",
+                    "display_name_for",
+                    [[newModel]]
                 );
                 if (!result || !result.length) {
                     return;
@@ -265,13 +272,14 @@ export class PropertyDefinition extends Component {
             } catch (_) {
                 // can not read the ir.model
                 this.state.resModelDescription = sprintf(
-                    _lt('You do not have access to the model "%s".'), newModel);
+                    _lt('You do not have access to the model "%s".'),
+                    newModel
+                );
             }
 
             await this._updateMatchingRecordsCount();
-
         } else if (!newModel) {
-            this.state.resModelDescription = '';
+            this.state.resModelDescription = "";
         }
     }
 
@@ -280,12 +288,14 @@ export class PropertyDefinition extends Component {
      */
     async _updateMatchingRecordsCount() {
         if (this.state.resModel && this.state.resModel.length) {
-            const domainList = new Domain(this.state.propertyDefinition.domain || '[]').toList();
+            const domainList = new Domain(
+                this.state.propertyDefinition.domain || "[]"
+            ).toList();
 
             const result = await this.orm.call(
                 this.state.propertyDefinition.comodel,
-                'search_count',
-                [domainList],
+                "search_count",
+                [domainList]
             );
 
             this.state.matchingRecordsCount = result;
@@ -300,13 +310,13 @@ export class PropertyDefinition extends Component {
      * @param {string} propertyType
      * @returns {string}
      */
-     _typeLabel(propertyType) {
+    _typeLabel(propertyType) {
         const allTypes = this.availablePropertyTypes;
-        return allTypes.find(type => type[0] === propertyType)[1];
-     }
+        return allTypes.find((type) => type[0] === propertyType)[1];
+    }
 }
 
-PropertyDefinition.template = 'web.PropertyDefinition';
+PropertyDefinition.template = "web.PropertyDefinition";
 PropertyDefinition.components = {
     DomainSelector,
     Dropdown,

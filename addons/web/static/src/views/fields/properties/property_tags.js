@@ -11,14 +11,14 @@ import { sprintf } from "@web/core/utils/strings";
 const { Component } = owl;
 
 class PropertyTagsColorListPopover extends Component {}
-PropertyTagsColorListPopover.template = 'web.PropertyTagsColorListPopover';
+PropertyTagsColorListPopover.template = "web.PropertyTagsColorListPopover";
 PropertyTagsColorListPopover.components = {
     ColorList,
 };
 
 export class PropertyTags extends Component {
     setup() {
-        this.notification = useService('notification');
+        this.notification = useService("notification");
         this.popover = usePopover();
     }
 
@@ -38,17 +38,20 @@ export class PropertyTags extends Component {
 
         // Retrieve the tags label and color
         // ['a', 'b'] =>  [['a', 'A', 5], ['b', 'B', 6]]
-        const value = this.props.tags.filter(tag => this.props.selectedTags.indexOf(tag[0]) >= 0);
+        const value = this.props.tags.filter(
+            (tag) => this.props.selectedTags.indexOf(tag[0]) >= 0
+        );
 
         const canDeleteTag = !this.props.readonly && this.props.canChangeTags;
 
-        return value.map(tag => {
+        return value.map((tag) => {
             const [tagId, tagLabel, tagColorIndex] = tag;
             return {
                 id: tagId,
                 text: tagLabel,
                 colorIndex: tagColorIndex || 0,
-                onClick: (event) => this.onTagClick(event, tagId, tagColorIndex),
+                onClick: (event) =>
+                    this.onTagClick(event, tagId, tagColorIndex),
                 onDelete: canDeleteTag && (() => this.onTagDelete(tagId)),
             };
         });
@@ -82,45 +85,56 @@ export class PropertyTags extends Component {
      * @returns {array}
      */
     get autocompleteSources() {
-        return [{
-            options: (request) => {
-                const tagsFiltered = this.props.tags.filter(tag =>
-                    (!this.props.selectedTags || this.props.selectedTags.indexOf(tag[0]) < 0)
-                    && (
-                        !request || !request.length
-                        || tag[1].toLocaleLowerCase().indexOf(request.toLocaleLowerCase()) >= 0
-                    )
-                );
-                if (!tagsFiltered || !tagsFiltered.length) {
-                    // no result, ask the user if he want to create a new tag
-                    if (!request || !request.length) {
-                        return [{
-                            value: null,
-                            label: _lt('Start typing...'),
-                            classList: 'fst-italic',
-                        }];
-                    } else if (!this.props.canChangeTags) {
-                        return [{
-                            value: null,
-                            label: _lt('No result'),
-                            classList: 'fst-italic',
-                        }];
-                    }
+        return [
+            {
+                options: (request) => {
+                    const tagsFiltered = this.props.tags.filter(
+                        (tag) =>
+                            (!this.props.selectedTags ||
+                                this.props.selectedTags.indexOf(tag[0]) < 0) &&
+                            (!request ||
+                                !request.length ||
+                                tag[1]
+                                    .toLocaleLowerCase()
+                                    .indexOf(request.toLocaleLowerCase()) >= 0)
+                    );
+                    if (!tagsFiltered || !tagsFiltered.length) {
+                        // no result, ask the user if he want to create a new tag
+                        if (!request || !request.length) {
+                            return [
+                                {
+                                    value: null,
+                                    label: _lt("Start typing..."),
+                                    classList: "fst-italic",
+                                },
+                            ];
+                        } else if (!this.props.canChangeTags) {
+                            return [
+                                {
+                                    value: null,
+                                    label: _lt("No result"),
+                                    classList: "fst-italic",
+                                },
+                            ];
+                        }
 
-                    return [{
-                        value: {toCreate: true, value: request},
-                        label: sprintf(_lt('Create "%s"'), request),
-                        classList: 'o_field_property_dropdown_add',
-                    }];
-                }
-                return tagsFiltered.map((tag) => {
-                    return {
-                        value: tag[0],
-                        label: tag[1],
-                    };
-                });
+                        return [
+                            {
+                                value: { toCreate: true, value: request },
+                                label: sprintf(_lt('Create "%s"'), request),
+                                classList: "o_field_property_dropdown_add",
+                            },
+                        ];
+                    }
+                    return tagsFiltered.map((tag) => {
+                        return {
+                            value: tag[0],
+                            label: tag[1],
+                        };
+                    });
+                },
             },
-        }];
+        ];
     }
 
     /* --------------------------------------------------------
@@ -161,21 +175,24 @@ export class PropertyTags extends Component {
             return;
         }
 
-        const newValue = newLabel ? newLabel.toLowerCase().replace(' ', '_') : '';
+        const newValue = newLabel
+            ? newLabel.toLowerCase().replace(" ", "_")
+            : "";
 
-        const existingTag = this.props.tags.find(tag => tag[0] === newValue);
+        const existingTag = this.props.tags.find((tag) => tag[0] === newValue);
         if (existingTag) {
-            this.notification.add(
-                _lt('This tag is already available'),
-                { type: 'warning' },
-            );
+            this.notification.add(_lt("This tag is already available"), {
+                type: "warning",
+            });
             return;
         }
 
         // cycle trough colors
-        const tagColor = (this.props.tags && this.props.tags.length)
-            ? (this.props.tags[this.props.tags.length - 1][2] + 1) % ColorList.COLORS.length
-            : parseInt(Math.random() * ColorList.COLORS.length);
+        const tagColor =
+            this.props.tags && this.props.tags.length
+                ? (this.props.tags[this.props.tags.length - 1][2] + 1) %
+                  ColorList.COLORS.length
+                : parseInt(Math.random() * ColorList.COLORS.length);
 
         const newTag = [newValue, newLabel, tagColor];
         const updatedTags = [...this.availableTags, newTag];
@@ -195,15 +212,17 @@ export class PropertyTags extends Component {
      * @param {string} deleteTag, ID of the tag to delete
      */
     onTagDelete(deleteTag) {
-        if (this.props.deleteAction === 'value') {
+        if (this.props.deleteAction === "value") {
             // remove the tag from the value (but keep it in the options list)
             const selectedTags = this.selectedTags;
-            const newValue = selectedTags.filter(tag => tag !== deleteTag);
+            const newValue = selectedTags.filter((tag) => tag !== deleteTag);
             this.props.onValueChange(newValue);
         } else {
             // remove the tag from the options
             const availableTags = this.availableTags;
-            this.props.onTagsChange(availableTags.filter(tag => tag[0] !== deleteTag));
+            this.props.onTagsChange(
+                availableTags.filter((tag) => tag[0] !== deleteTag)
+            );
         }
     }
 
@@ -241,7 +260,7 @@ export class PropertyTags extends Component {
      */
     onTagColorSwitch(colorIndex, currentTag) {
         const availableTags = this.availableTags;
-        availableTags.find(tag => tag[0] === currentTag.id)[2] = colorIndex;
+        availableTags.find((tag) => tag[0] === currentTag.id)[2] = colorIndex;
         this.props.onTagsChange(availableTags);
 
         // close the color popover
@@ -250,7 +269,7 @@ export class PropertyTags extends Component {
     }
 }
 
-PropertyTags.template = 'web.PropertyTags';
+PropertyTags.template = "web.PropertyTags";
 PropertyTags.components = {
     AutoComplete,
     TagsList,
