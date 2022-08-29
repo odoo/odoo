@@ -60,7 +60,7 @@
 
     <!-- Alt Dialog (allows to change alt and title of page images) -->
     <form t-name="wysiwyg.widgets.alt" action="#">
-        <div class="form-group row">
+        <div class="mb-3 row">
             <label class="col-md-3 col-form-label" for="alt"
                    title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
                Description <small>(ALT Tag)</small>
@@ -69,7 +69,7 @@
                 <input class="form-control" id="alt" required="required" t-att-value="widget.alt" type="text"/>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="mb-3 row">
             <label class="col-md-3 col-form-label" for="title"
                    title="'Title tag' is shown as a tooltip when you hover the picture.">
                Tooltip  <small>(TITLE Tag)</small>
@@ -84,13 +84,13 @@
     <div t-name="wysiwyg.widgets.link" class="o_link_dialog">
         <div class="row">
             <form class="col-lg-8">
-                <div t-attf-class="form-group row#{widget.needLabel ? '' : ' d-none'}">
+                <div t-attf-class="mb-3 row#{widget.needLabel ? '' : ' d-none'}">
                     <label class="col-form-label col-md-3" for="o_link_dialog_label_input">Link Label</label>
                     <div class="col-md-9">
                         <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.data.content"/>
                     </div>
                 </div>
-                <div t-attf-class="form-group row o_url_input#{widget.isButton ? ' d-none' : ''}">
+                <div t-attf-class="mb-3 row o_url_input#{widget.isButton ? ' d-none' : ''}">
                     <label class="col-form-label col-md-3" for="o_link_dialog_url_input">URL or Email</label>
                     <div class="col-md-9">
                         <input type="text" name="url" class="form-control" id="o_link_dialog_url_input" required="required"/>
@@ -102,7 +102,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group row">
+                <div class="mb-3 row">
                     <label class="col-form-label col-md-3">Type</label>
                     <div class="col-md-9 d-flex align-items-center">
                         <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}">
@@ -117,7 +117,7 @@
                     </div>
                 </div>
                 <div id="o_link_dialog_button_opts_collapse" class="collapse">
-                    <div class="form-group row">
+                    <div class="mb-3 row">
                         <label class="col-form-label col-md-3">Size</label>
                         <div class="col-md-9">
                             <select name="link_style_size" class="form-select link-style">
@@ -127,7 +127,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="mb-3 row">
                         <label class="col-form-label col-md-3">Style</label>
                         <div class="col-md-9">
                             <select name="link_style_shape" class="form-select link-style">
@@ -142,7 +142,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group row" t-if="!widget.isButton &amp;&amp; !widget.options.forceNewWindow">
+                <div class="mb-3 row" t-if="!widget.isButton &amp;&amp; !widget.options.forceNewWindow">
                     <div class="offset-md-3 col-md-9">
                         <label class="o_switch">
                             <input type="checkbox" name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
@@ -153,7 +153,7 @@
                 </div>
             </form>
             <div class="col-lg-4 o_link_dialog_preview">
-                <div class="form-group text-center">
+                <div class="mb-3 text-center">
                     <label>Preview</label>
                     <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}"
                          style="overflow-x: auto; max-width: 100%; max-height: 200px;">

@@ -18,7 +18,7 @@
             <form action="/slides/category/add" method="POST" id="slide_category_add_form">
                 <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
                 <input type="hidden" name="channel_id" t-att-value="widget.channelId"/>
-                <div class="form-group row">
+                <div class="mb-3 row">
                     <label for="section_name" class="col-sm-3 col-form-label">Section name</label>
                     <div class="col-sm-9">
                         <input type="text" autocomplete="off" class="form-control" name="name" id="section_name" required="required" placeholder='e.g. "Introduction"'/>

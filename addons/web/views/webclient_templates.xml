@@ -132,7 +132,7 @@
             <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = '/web/login' + location.hash">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
-                <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
+                <div class="mb-3" t-if="databases and len(databases) &gt; 1">
                     <label for="db" class="col-form-label">Database</label>
                     <div t-attf-class="input-group {{'input-group-sm' if form_small else ''}}">
                         <input type="text" name="db" t-att-value="request.db" id="db" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" readonly="readonly"/>
@@ -145,7 +145,7 @@
                     <input type="text" placeholder="Email" name="login" t-att-value="login" id="login" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autofocus="autofocus" autocapitalize="off"/>
                 </div>
 
-                <div class="mb-3 form-group">
+                <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" placeholder="Password" name="password" id="password" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
                 </div>

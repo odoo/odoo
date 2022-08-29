@@ -16,8 +16,7 @@ export class AttributeTranslateDialog extends Component {
 
         useEffect(() => {
             this.translation = $(this.props.node).data('translation');
-
-            const $group = $('<div/>', {class: 'form-group'}).appendTo(this.formEl.el);
+            const $group = $('<div/>', {class: 'mb-3'}).appendTo(this.formEl.el);
             _.each(this.translation, function (node, attr) {
                 const $node = $(node);
                 const $label = $('<label class="col-form-label"></label>').text(attr);

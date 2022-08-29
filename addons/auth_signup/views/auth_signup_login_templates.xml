@@ -11,26 +11,26 @@
 
         <template id="auth_signup.fields" name="Auth Signup/ResetPassword form fields">
 
-            <div class="form-group field-login">
+            <div class="mb-3 field-login">
                 <label for="login">Your Email</label>
                 <input type="text" name="login" t-att-value="login" id="login" class="form-control form-control-sm" autofocus="autofocus"
                     autocapitalize="off" required="required" t-att-readonly="'readonly' if only_passwords else None"/>
             </div>
 
-            <div class="form-group field-name">
+            <div class="mb-3 field-name">
                 <label for="name">Your Name</label>
                 <input type="text" name="name" t-att-value="name" id="name" class="form-control form-control-sm" placeholder="e.g. John Doe"
                     required="required" t-att-readonly="'readonly' if only_passwords else None"
                     t-att-autofocus="'autofocus' if login and not only_passwords else None" />
             </div>
 
-            <div class="form-group field-password pt-2">
+            <div class="mb-3 field-password pt-2">
                 <label for="password">Password</label>
                 <input type="password" name="password" id="password" class="form-control form-control-sm"
                     required="required" t-att-autofocus="'autofocus' if only_passwords else None"/>
             </div>
 
-            <div class="form-group field-confirm_password">
+            <div class="mb-3 field-confirm_password">
                 <label for="confirm_password">Confirm Password</label>
                 <input type="password" name="confirm_password" id="confirm_password" class="form-control form-control-sm" required="required"/>
             </div>
@@ -78,7 +78,7 @@
                     </t>
 
                     <t t-if="not token">
-                        <div class="form-group field-login">
+                        <div class="mb-3 field-login">
                             <label for="login" class="col-form-label">Your Email</label>
                             <input type="text" name="login" t-att-value="login" id="login" class="form-control"
                                 autofocus="autofocus" required="required" autocapitalize="off"/>

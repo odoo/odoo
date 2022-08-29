@@ -1237,7 +1237,7 @@
                                 <div class="container">
                                     <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required s_website_form_no_recaptcha" data-mark="*" data-force_action="shop.sale.order" data-model_name="sale.order" data-success-mode="redirect" data-success-page="/shop/payment" hide-change-model="true">
                                         <div class="s_website_form_rows row s_col_no_bgcolor">
-                                            <div class="form-group col-12 s_website_form_field" data-type="char" data-name="Field">
+                                            <div class="mb-0 py-2 col-12 s_website_form_field" data-type="char" data-name="Field">
                                                 <div class="row s_col_no_resize s_col_no_bgcolor">
                                                     <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale1">
                                                         <span class="s_website_form_label_content">Your Reference</span>
@@ -1247,7 +1247,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="text" data-name="Field">
+                                            <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom" data-type="text" data-name="Field">
                                                 <div class="row s_col_no_resize s_col_no_bgcolor">
                                                     <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale2">
                                                         <span class="s_website_form_label_content">Give us your feedback</span>
@@ -1257,7 +1257,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="binary" data-name="Field">
+                                            <div class="mb-0 py-2 col-12 s_website_form_field s_website_form_custom" data-type="binary" data-name="Field">
                                                 <div class="row s_col_no_resize s_col_no_bgcolor">
                                                     <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="sale3">
                                                         <span class="s_website_form_label_content">Upload a document</span>
@@ -1267,7 +1267,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-12 s_website_form_submit s_website_form_no_submit_options">
+                                            <div class="mb-0 py-2 col-12 s_website_form_submit s_website_form_no_submit_options">
                                                 <div style="width: 200px;" class="s_website_form_label"/>
                                                 <a role="button" href="/shop/checkout" class="btn btn-secondary float-start"><span class="fa fa-chevron-left"/> Previous</a>
                                                 <a role="button" class="btn btn-primary float-end s_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
@@ -1741,48 +1741,48 @@
                                 </t>
                                 <form t-if="account_on_checkout != 'mandatory' or not is_public_user" action="/shop/address" method="post" class="checkout_autoformat">
                                     <div class="row">
-                                        <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
+                                        <div t-attf-class="mb-3 #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
                                             <label class="col-form-label" for="name">Name</label>
                                             <input type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="'name' in checkout and checkout['name']" />
                                         </div>
                                         <div class="w-100"/>
-                                        <div t-attf-class="form-group #{error.get('email') and 'o_has_error' or ''} col-lg-6" id="div_email">
+                                        <div t-attf-class="mb-3 #{error.get('email') and 'o_has_error' or ''} col-lg-6" id="div_email">
                                             <label t-attf-class="col-form-label #{mode[1] == 'shipping' and 'label-optional' or ''}" for="email">Email</label>
                                             <input type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="'email' in checkout and checkout['email']" />
                                         </div>
-                                        <div t-attf-class="form-group #{error.get('phone') and 'o_has_error' or ''} col-lg-6" id="div_phone">
+                                        <div t-attf-class="mb-3 #{error.get('phone') and 'o_has_error' or ''} col-lg-6" id="div_phone">
                                             <label class="col-form-label" for="phone">Phone</label>
                                             <input type="tel" name="phone" t-attf-class="form-control #{error.get('phone') and 'is-invalid' or ''}" t-att-value="'phone' in checkout and checkout['phone']" />
                                         </div>
                                         <div class="w-100"/>
-                                        <div t-attf-class="form-group #{error.get('street') and 'o_has_error' or ''} col-lg-12 div_street">
+                                        <div t-attf-class="mb-3 #{error.get('street') and 'o_has_error' or ''} col-lg-12 div_street">
                                             <label class="col-form-label" for="street">Street <span class="d-none d-md-inline"> and Number</span></label>
                                             <input type="text" name="street" t-attf-class="form-control #{error.get('street') and 'is-invalid' or ''}" t-att-value="'street' in checkout and checkout['street']" />
                                         </div>
-                                        <div t-attf-class="form-group #{error.get('street2') and 'o_has_error' or ''} col-lg-12 div_street2">
+                                        <div t-attf-class="mb-3 #{error.get('street2') and 'o_has_error' or ''} col-lg-12 div_street2">
                                             <label class="col-form-label label-optional" for="street2">Street 2</label>
                                             <input type="text" name="street2" t-attf-class="form-control #{error.get('street2') and 'is-invalid' or ''}" t-att-value="'street2' in checkout and checkout['street2']" />
                                         </div>
                                         <div class="w-100"/>
                                         <t t-set='zip_city' t-value='country and [x for x in country.get_address_fields() if x in ["zip", "city"]] or ["city", "zip"]'/>
                                         <t t-if="'zip' in zip_city and zip_city.index('zip') &lt; zip_city.index('city')">
-                                            <div t-attf-class="form-group #{error.get('zip') and 'o_has_error' or ''} col-md-4 div_zip">
+                                            <div t-attf-class="mb-3 #{error.get('zip') and 'o_has_error' or ''} col-md-4 div_zip">
                                                 <label class="col-form-label label-optional" for="zip">Zip Code</label>
                                                 <input type="text" name="zip" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" t-att-value="'zip' in checkout and checkout['zip']" />
                                             </div>
                                         </t>
-                                        <div t-attf-class="form-group #{error.get('city') and 'o_has_error' or ''} col-md-8 div_city">
+                                        <div t-attf-class="mb-3 #{error.get('city') and 'o_has_error' or ''} col-md-8 div_city">
                                             <label class="col-form-label" for="city">City</label>
                                             <input type="text" name="city" t-attf-class="form-control #{error.get('city') and 'is-invalid' or ''}" t-att-value="'city' in checkout and checkout['city']" />
                                         </div>
                                         <t t-if="'zip' in zip_city and zip_city.index('zip') &gt; zip_city.index('city')">
-                                            <div t-attf-class="form-group #{error.get('zip') and 'o_has_error' or ''} col-md-4 div_zip">
+                                            <div t-attf-class="mb-3 #{error.get('zip') and 'o_has_error' or ''} col-md-4 div_zip">
                                                 <label class="col-form-label label-optional" for="zip">Zip Code</label>
                                                 <input type="text" name="zip" t-attf-class="form-control #{error.get('zip') and 'is-invalid' or ''}" t-att-value="'zip' in checkout and checkout['zip']" />
                                             </div>
                                         </t>
                                         <div class="w-100"/>
-                                        <div t-attf-class="form-group #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
+                                        <div t-attf-class="mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
                                             <label class="col-form-label" for="country_id">Country</label>
                                             <select id="country_id" name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}" t-att-mode="mode[1]">
                                                 <option value="">Country...</option>
@@ -1793,7 +1793,7 @@
                                                 </t>
                                             </select>
                                         </div>
-                                        <div t-attf-class="form-group #{error.get('state_id') and 'o_has_error' or ''} col-lg-6 div_state" t-att-style="(not country or not country.state_ids) and 'display: none'">
+                                        <div t-attf-class="mb-3 #{error.get('state_id') and 'o_has_error' or ''} col-lg-6 div_state" t-att-style="(not country or not country.state_ids) and 'display: none'">
                                             <label class="col-form-label" for="state_id">State / Province</label>
                                             <select name="state_id" t-attf-class="form-select #{error.get('state_id') and 'is-invalid' or ''}" data-init="1">
                                                 <option value="">State / Province...</option>
@@ -1848,12 +1848,12 @@
             <div class="w-100"/>
             <t t-set='vat_warning' t-value="'vat' in checkout and checkout['vat'] and not can_edit_vat" />
             <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
-                <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-lg-6 mb-0">
+                <div t-attf-class="mb-3 #{error.get('company_name') and 'o_has_error' or ''} col-lg-6 mb-0">
                     <label class="col-form-label fw-normal label-optional" for="company_name">Company Name</label>
                     <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if vat_warning else None" />
                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                 </div>
-                <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat mb-0">
+                <div t-attf-class="mb-3 #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat mb-0">
                     <label class="col-form-label fw-normal label-optional" for="vat">TIN / VAT </label>
                     <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if vat_warning else None"/>
                     <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>

@@ -36,7 +36,7 @@ const _DialogLinkWidget = Link.extend({
         var data = this._getData();
         if (data === null) {
             var $url = this.$('input[name="url"]');
-            $url.closest('.form-group').addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
+            $url.closest('.o_url_input').addClass('o_has_error').find('.form-control, .form-select').addClass('is-invalid');
             $url.focus();
             return Promise.reject();
         }
@@ -174,7 +174,7 @@ const _DialogLinkWidget = Link.extend({
      */
     _onURLInput: function () {
         this._super(...arguments);
-        this.$('#o_link_dialog_url_input').closest('.form-group').removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
+        this.$('#o_link_dialog_url_input').closest('.o_url_input').removeClass('o_has_error').find('.form-control, .form-select').removeClass('is-invalid');
     },
 });
 

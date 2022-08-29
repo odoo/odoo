@@ -61,7 +61,7 @@
             <div class="d-flex p-2">
                 <t t-call="website.pager"/>
                 <form action="" method="get" class="ms-auto">
-                    <div class="form-group">
+                    <div class="mb-3">
                         <input t-if="country_all" type="hidden" name="country_all" value="True" />
                         <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
                     </div>
@@ -268,15 +268,15 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </header>
                         <main class="modal-body" id="new-opp-dialog">
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label class="col-form-label hdd4" for="contact_name">Contact name</label>
                                 <input type='text' name="contact_name" class="form-control contact_name"/>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label class="col-form-label h4dd" for="title">Opportunity</label>
                                 <input type='text' name="title" class="form-control title"/>
                             </div>
-                            <div class="form-group">
+                            <div class="mb-3">
                                 <label class="col-form-label hdd4" for="description">Description</label>
                                 <textarea rows="3" name="description" class="form-control description"></textarea>
                             </div>
@@ -427,11 +427,11 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </header>
                             <main class="modal-body" id="sign-dialog">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label class="col-form-label" for="comment">What is the next action? When? What is the expected revenue?</label>
                                     <input type="text" name="comment" id="comment" class="form-control comment_interested"/>
                                 </div>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label class="col-form-label" for="customer_contacted">I have contacted the customer</label>
                                     <input type="checkbox" name="customer_contacted" id="customer_contacted" class="contacted_interested"/>
                                 </div>
@@ -456,15 +456,15 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </header>
                             <main class="modal-body" id="sign-dialog">
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label class="col-form-label" for="comment">Why aren't you interested in this lead?</label>
                                     <input type="text" name="comment" id="comment" class="form-control comment_desinterested"/>
                                 </div>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label class="col-form-label" for="contacted_desinterested">I have contacted the customer</label>
                                     <input type="checkbox" name="contacted_desinterested" id="contacted_desinterested" class="contacted_desinterested"/>
                                 </div>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <label class="col-form-label" for="customer_mark_spam">This lead is a spam</label>
                                     <input type="checkbox" name="customer_mark_spam" id="customer_mark_spam" class="customer_mark_spam"/>
                                 </div>
@@ -620,7 +620,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </header>
                                         <main class="modal-body" id="sign-dialog">
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <div class="row align-items-center">
                                                     <div class="col-auto flex-grow-1">
                                                         <div class="input-group">
@@ -637,7 +637,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <div class="row">
                                                     <div class="col-md-5">
                                                         <label>Priority:</label>
@@ -675,7 +675,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <div class="row">
                                                     <div class="col-md-5">
                                                         <label class="col-form-label" for="next_activity">Next Activity</label>
@@ -700,7 +700,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <label class="col-form-label" for="activity_summary">Details Next Activity</label>
                                                 <textarea rows="6" name="activity_summary" class="form-control activity_summary"><t t-esc="user_activity.summary"/></textarea>
                                             </div>
@@ -724,37 +724,37 @@
                                         </header>
                                         <main class="modal-body" id="sign-dialog">
                                             <t t-if="opportunity.partner_name">
-                                                <div class="form-group">
+                                                <div class="mb-3">
                                                     <label class="col-form-label" for="partner_name">Customer Name</label>
                                                     <input type="text" name="partner_name" class="form-control partner_name" t-att-value="opportunity.partner_name"/>
                                                 </div>
                                             </t>
                                             <t t-if="not opportunity.partner_name">
-                                                <div class="form-group">
+                                                <div class="mb-3">
                                                     <label class="col-form-label" for="partner_name">Customer Name</label>
                                                     <input type="text" name="partner_name" class="form-control partner_name" t-att-value="opportunity.contact_name"/>
                                                 </div>
                                             </t>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <label class="col-form-label" for="phone">Phone</label>
                                                 <input type="text" name="phone" class="form-control phone" t-att-value="opportunity.phone"/>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <label class="col-form-label" for="mobile">Mobile</label>
                                                 <input type="text" name="mobile" class="form-control mobile" t-att-value="opportunity.mobile"/>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <label class="col-form-label" for="email_from">Email</label>
                                                 <input type="text" name="email_from" class="form-control email_from" t-att-value="opportunity.email_from"/>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <label class="col-form-label" for="street">Address</label>
                                                 <input type="text" name="street" class="form-control street" t-att-value="opportunity.street" placeholder="Street"/>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <input type="text" name="street2" class="form-control street2" t-att-value="opportunity.street2" placeholder="Street2"/>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <div class="row">
                                                     <div class="col-md-5">
                                                         <input type="text" name="city" class="form-control city" t-att-value="opportunity.city" placeholder="City"/>
@@ -774,7 +774,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <select name="country_id" class="form-select country_id">
                                                     <option>Countries...</option>
                                                     <t t-foreach="countries or []" t-as="country">

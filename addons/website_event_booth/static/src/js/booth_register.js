@@ -79,10 +79,8 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     _isConfirmationFormValid($form) {
         const formErrors = [];
 
-        $form.find('.form-group').each(function (index, field) {
-            let $field = $(field);
-            let input = $field.find('.form-control');
-
+        $form.find('.form-control').each(function () {
+            let input = $(this);
             input.removeClass('is-invalid');
             if (input.length && !input[0].checkValidity()) {
                 input.addClass('is-invalid');

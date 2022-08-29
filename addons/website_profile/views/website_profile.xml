@@ -97,7 +97,7 @@
                                     <i class="fa fa-trash-o float-sm-none float-md-end"></i>
                                 </a>
                             </div>
-                            <div class="form-group mt-3 mb-0 pt-2 border-top">
+                            <div class="my-3 mb-0 pt-2 border-top">
                                 <label class="text-primary" for="user_website_published" t-if="user.id == uid"><span class="fw-bold">Public profile</span></label>
                                 <div class=" mb-0 float-end" t-if="user.id == uid">
                                     <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
@@ -112,20 +112,20 @@
                         <div class="card-body">
                             <div class="row">
                                 <input name="user_id" t-att-value="user.id" type="hidden"/>
-                                <div class="form-group col-12">
+                                <div class="mb-3 col-12">
                                     <label class="text-primary mb-1 d-block" for="user_name"><span class="fw-bold">Name</span></label>
                                     <div>
                                         <input type="text" class="form-control" name="name" id="user_name" required="True" t-attf-value="#{user.name}"/>
                                     </div>
                                 </div>
 
-                                <div class="form-group col-6">
+                                <div class="mb-3 col-6">
                                     <label class="mb-1 text-primary" for="user_website"><span class="fw-bold">Website</span></label>
                                     <div>
                                         <input type="text" class="form-control" name="website" id="user_website" t-attf-value="#{user.partner_id.website or ''}"/>
                                     </div>
                                 </div>
-                                <div class="form-group col-6">
+                                <div class="mb-3 col-6">
                                     <div t-if="email_required" class="alert alert-danger alert-dismissable oe_email_required" role="alert">
                                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                                         <p>Please enter a valid email address in order to receive notifications from answers or comments.</p>
@@ -135,13 +135,13 @@
                                         <input type="text" class="form-control" name="email" id="user_email" required="True" t-attf-value="#{user.partner_id.email}"/>
                                     </div>
                                 </div>
-                                <div class="form-group col-6">
+                                <div class="mb-3 col-6">
                                     <label class="mb-1 text-primary" for="user_city"><span class="fw-bold">City</span></label>
                                     <div>
                                         <input type="text" class="form-control" name="city" id="user_city" t-attf-value="#{user.partner_id.city or ''}"/>
                                     </div>
                                 </div>
-                                <div class="form-group col-6">
+                                <div class="mb-3 col-6">
                                     <label class="mb-1 text-primary"><span class="fw-bold">Country</span></label>
                                     <div>
                                         <select class="form-select" name="country">
@@ -152,7 +152,7 @@
                                          </select>
                                     </div>
                                 </div>
-                                <div class="form-group col-12">
+                                <div class="mb-3 col-12">
                                     <label class="mb-1 text-primary" for="description"><span class="fw-bold">Biography</span></label>
                                     <textarea name="description" id="description" style="min-height: 120px"
                                         class="form-control o_wysiwyg_loader"><t t-esc="user.partner_id.website_description"/></textarea>
@@ -509,8 +509,8 @@
             <div class="container">
                 <h1 class="py-4 text-white d-inline-block">All Users</h1>
                 <div class="py-4 float-end">
-                    <strong class="form-group text-white me-2">Rank by :</strong>
-                    <div class="form-group btn-group">
+                    <strong class="mb-3 text-white me-2">Rank by :</strong>
+                    <div class="mb-3 btn-group">
                         <a t-attf-class="btn btn-secondary #{ 'active' if group_by == 'week' else ''}"
                             t-att-href="'/profile/users?' + keep_query('search', group_by='week')">This week</a>
                         <a t-attf-class="btn btn-secondary #{ 'active' if group_by == 'month' else ''}"

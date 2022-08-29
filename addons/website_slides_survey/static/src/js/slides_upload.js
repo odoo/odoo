@@ -24,7 +24,7 @@ SlidesUpload.SlideUploadDialog.include({
         const $inputElement = this.$("input#name");
         if (ev.added) {
             this.$('.o_error_no_certification').addClass('d-none');
-            this.$('#certification_id').closest('.form-group').find('.select2-container').removeClass('is-invalid');
+            this.$('#certification_id').parent().find('.select2-container').removeClass('is-invalid');
             if (ev.added.text && !$inputElement.val().trim()) {
                 $inputElement.val(ev.added.text);
             }
@@ -84,7 +84,7 @@ SlidesUpload.SlideUploadDialog.include({
         var $certificationInput = this.$('#certification_id');
         if ($certificationInput.length !== 0) {
             var $select2Container = $certificationInput
-                .closest('.form-group')
+                .parent()
                 .find('.select2-container');
             var $errorContainer = $('.o_error_no_certification');
             $select2Container.removeClass('is-invalid is-valid');

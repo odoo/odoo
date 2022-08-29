@@ -13,7 +13,7 @@
                 <div class="form-text text-muted mb16">
                     This booth type allows you to have visibility on the event website. Please fill in this form
                 </div>
-                <div class="row form-group">
+                <div class="row mb-3">
                     <label class="col-form-label col-sm-auto" for="sponsor_name">
                         <span>Name</span>
                         <span class="mandatory_mark"> *</span>
@@ -22,7 +22,7 @@
                         <input class="form-control" type="text" name="sponsor_name" id="sponsor_name" required="True"/>
                     </div>
                 </div>
-                <div class="row form-group">
+                <div class="row mb-3">
                     <label class="col-form-label col-sm-auto" for="sponsor_email">
                         <span>Email</span>
                         <span class="mandatory_mark"> *</span>
@@ -31,25 +31,25 @@
                         <input class="form-control" type="email" name="sponsor_email" id="sponsor_email" required="True"/>
                     </div>
                 </div>
-                <div class="row form-group">
+                <div class="row mb-3">
                     <label class="col-form-label col-sm-auto" for="sponsor_phone">Phone</label>
                     <div class="col-sm">
                         <input class="form-control" type="text" name="sponsor_phone" id="sponsor_phone"/>
                     </div>
                 </div>
-                <div class="row form-group">
+                <div class="row mb-3">
                     <label class="col-form-label col-sm-auto" for="sponsor_slogan">Slogan</label>
                     <div class="col-sm">
                         <input class="form-control" type="text" name="sponsor_slogan" id="sponsor_slogan"/>
                     </div>
                 </div>
-                <div class="row form-group" t-if="booth_category.exhibitor_type != 'sponsor'">
+                <div class="row mb-3" t-if="booth_category.exhibitor_type != 'sponsor'">
                     <label class="col-form-label col-sm-auto" for="sponsor_description">Description</label>
                     <div class="col-sm">
                         <textarea class="form-control" name="sponsor_description" id="sponsor_description"/>
                     </div>
                 </div>
-                <div class="row form-group">
+                <div class="row mb-3">
                     <label class="col-form-label col-sm-auto" for="sponsor_image">Picture</label>
                     <div class="col-sm">
                         <input name="sponsor_image" type="file" accept="image/*"/>

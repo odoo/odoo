@@ -39,7 +39,7 @@
     <!-- Template for the widget webSignNameAndDraw. -->
     <t t-name="web.sign_name_and_signature">
         <div class="o_web_sign_name_and_signature">
-            <div class="o_web_sign_name_group form-group">
+            <div class="o_web_sign_name_group">
                 <label class="col-form-label" t-att-for="'o_web_sign_name_input_' + widget.htmlId">Full Name</label>
                 <input type="text" name="signer" t-att-id="'o_web_sign_name_input_' + widget.htmlId" class="o_web_sign_name_input form-control" t-att-value="widget.defaultName" placeholder="Type your name to sign" required=""/>
             </div>
