@@ -3569,7 +3569,7 @@ class PropertiesDefinition(Field):
     column_type = ('jsonb', 'jsonb')
     copy = True                         # containers may act like templates, keep definitions to ease usage
     readonly = False
-    prefetch = True                     # read by subrecords Properties
+    prefetch = False
 
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
