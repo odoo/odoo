@@ -15,7 +15,7 @@
             <table t-if="showTable" t-attf-class="o_list_table table table-sm table-hover table-striped {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped'}}" t-ref="table">
                 <thead>
                     <tr>
-                        <th t-if="hasSelectors" class="o_list_record_selector" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
+                        <th t-if="hasSelectors" class="o_list_record_selector align-middle pe-1" t-att-class="{o_sample_data_disabled: props.list.model.useSampleModel}" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
                             <CheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="selectAll" onChange.bind="toggleSelection"/>
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">
@@ -27,7 +27,28 @@
                             </th>
                             <th t-else="" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
                         </t>
-                        <th t-if="props.activeActions and props.activeActions.onDelete" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" class="o_list_record_remove_header" style="width: 32px; min-width: 32px"/>
+                        <th t-if="displayOptionalFields or (props.activeActions and props.activeActions.onDelete)" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" class="o_list_actions_header" style="width: 32px; min-width: 32px">
+                            <Dropdown t-if="displayOptionalFields"
+                                class="'o_optional_columns_dropdown text-center border-top-0'"
+                                togglerClass="'btn p-0'"
+                                position="'bottom-end'">
+                                <t t-set-slot="toggler">
+                                    <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
+                                </t>
+
+                                <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
+                                    <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
+                                        <CheckBox
+                                            onChange="() => this.toggleOptionalField(field.name)"
+                                            value="field.value"
+                                            name="field.name"
+                                        >
+                                            <t t-esc="field.label"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
+                                        </CheckBox>
+                                    </DropdownItem>
+                                </t>
+                            </Dropdown>
+                        </th>
                     </tr>
                 </thead>
                 <tbody class="ui-sortable">
@@ -48,22 +69,6 @@
                         <td t-if="props.activeActions and props.activeActions.onDelete"/>
                     </tr>
                 </tfoot>
-                <Dropdown t-if="displayOptionalFields" class="'o_optional_columns_dropdown border-top-0'" position="'bottom-end'">
-                    <t t-set-slot="toggler">
-                        <i class="oi oi-fw oi-settings-adjust o_optional_columns_dropdown_toggle"/>
-                    </t>
-                    <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
-                        <DropdownItem parentClosingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
-                            <CheckBox
-                                onChange="() => this.toggleOptionalField(field.name)"
-                                value="field.value"
-                                name="field.name"
-                            >
-                                <t t-esc="field.label"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
-                            </CheckBox>
-                        </DropdownItem>
-                    </t>
-                </Dropdown>
             </table>
         </div>
     </t>
@@ -105,7 +110,7 @@
             </tr>
             <t t-if="!props.list.isGrouped">
                 <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
-                    <td t-att-colspan="nbCols">&#8203;</td>
+                    <td t-att-colspan="props.list.editedRecord ? nbCols : nbCols + 1">&#8203;</td>
                 </tr>
             </t>
         </t>
@@ -191,7 +196,14 @@
             </td>
             <t t-foreach="getColumns(record)" t-as="column" t-key="column.id">
                 <t t-if="column.type === 'field'">
-                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell" t-att-name="column.name" t-att-colspan="column.colspan"  t-att-class="getCellClass(column, record)" t-att-data-tooltip="getCellTitle(column, record)" data-tooltip-delay="1000" t-on-click="(ev) => this.onCellClicked(record, column, ev)" tabindex="-1">
+                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
+                        class="o_data_cell"
+                        t-att-class="getCellClass(column, record)"
+                        t-att-name="column.name"
+                        t-att-colspan="column.colspan"
+                        t-att-data-tooltip="getCellTitle(column, record)"
+                        data-tooltip-delay="1000"
+                        t-on-click="(ev) => this.onCellClicked(record, column, ev)" tabindex="-1">
                         <t t-if="!evalModifier(column.modifiers.invisible, record)">
                             <t t-if="canUseFormatter(column, record)" t-esc="getFormattedValue(column, record)"/>
                             <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="props.archInfo.fieldNodes[column.name]" setDirty="(isDirty) => this.setDirty(isDirty)"/>
@@ -218,7 +230,7 @@
             </t>
 
             <t t-set="activeActions" t-value="props.activeActions" />
-            <t t-if="activeActions">
+            <t t-if="displayOptionalFields or activeActions">
                 <t t-set="canDelete" t-value="activeActions.canDelete" />
                 <t t-set="canUnlink" t-value="activeActions.canUnlink" />
                 <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" t-if="'canUnlink' in activeActions ? canUnlink : canDelete" class="o_list_record_remove" t-on-click.stop="() => this.onDeleteRecord(record)" tabindex="-1">
@@ -229,6 +241,7 @@
                         tabindex="-1"
                     />
                 </td>
+                <td t-elif="displayOptionalFields" tabindex="-1"/>
             </t>
         </tr>
     </t>

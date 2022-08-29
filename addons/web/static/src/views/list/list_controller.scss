@@ -132,6 +132,10 @@
             width: 1px;  // to prevent the column to expand
         }
 
+        .o_list_record_selector, .o_handle_cell {
+            max-width: 35px !important;
+        }
+
         .o_list_record_remove button {
             padding: 0px;
             background: none;
@@ -225,7 +229,7 @@
             z-index: 1; // must be over the sort caret (::after pseudo-element)
         }
 
-        .o_list_record_remove_header {
+        .o_list_actions_header {
             width: 32px;
         }
 
@@ -341,39 +345,6 @@
                 font-weight: 400;
                 padding: 0;
                 vertical-align: baseline;
-            }
-        }
-    }
-
-    // Optional fields
-    &.o_list_optional_columns {
-        th:last-child {
-            padding-right: calc(#{$oi-fw-ratio} * var(--oi-font-size, #{$oi-default-size})); // matches the .oi-fw width calculation
-        }
-    }
-
-    .o_optional_columns_dropdown,.o_optional_columns {
-        @include o-position-absolute($top: 0, $right: 0);
-    }
-
-    .o_optional_columns_dropdown {
-        .dropdown-toggle {
-            padding: calc(#{$table-cell-padding-y-sm} + #{$table-border-width}) 0 calc(#{$table-cell-padding-y-sm} + #{2 * $table-border-width}) 0; // matches the .table header-cell top/bottom box-size
-            z-index: 1; // must be over the resize handle
-            background: none;
-            color: inherit;
-            border: none;
-        }
-    }
-
-    .o_optional_columns {
-        .o_optional_columns_dropdown {
-            margin-top: 30px;
-            user-select: none;
-            .dropdown-item {
-                label {
-                    padding-left: 10px;
-                }
             }
         }
     }
