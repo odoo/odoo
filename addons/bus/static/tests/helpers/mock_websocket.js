@@ -77,8 +77,10 @@ export function patchWebsocketWorkerWithCleanup(params = {}) {
         },
     }, { pure: true });
     registerCleanup(() => {
-        clearTimeout(websocketWorker.connectTimeout);
-        websocketWorker = null;
+        if (websocketWorker) {
+            clearTimeout(websocketWorker.connectTimeout);
+            websocketWorker = null;
+        }
     });
     return websocketWorker;
 }
