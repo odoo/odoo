@@ -781,7 +781,7 @@ class IrActionsReport(models.Model):
 
                     return collected_streams
 
-            collected_streams[False] = {'stream': pdf_content_stream}
+            collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
 
         return collected_streams
 
