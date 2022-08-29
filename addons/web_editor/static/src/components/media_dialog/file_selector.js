@@ -239,6 +239,9 @@ export class FileSelector extends Component {
         if (!this.props.multiSelect) {
             await this.props.save();
         }
+        if (this.props.onAttachmentChange) {
+            this.props.onAttachmentChange(attachment);
+        }
     }
 
     onRemoved(attachmentId) {

@@ -82,6 +82,7 @@ export class MediaDialog extends Component {
                 selectedMedia: this.selectedMedia,
                 selectMedia: (...args) => this.selectMedia(...args, tab.id, additionalProps.multiSelect),
                 save: this.save.bind(this),
+                onAttachmentChange: this.props.onAttachmentChange,
             },
         });
     }
