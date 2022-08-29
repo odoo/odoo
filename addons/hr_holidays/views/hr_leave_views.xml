@@ -246,7 +246,7 @@
                             <field name="employee_ids" invisible="1"/>
                         </div>
                         <group name="col_left">
-                            <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from}" options="{'no_create': True, 'no_open': True, 'request_type':'leave'}" class="w-100"/>
+                            <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from, 'default_date_to':date_to}" options="{'no_create': True, 'no_open': True, 'request_type':'leave'}" class="w-100"/>
                             <label for="request_date_from" string="Dates" id="label_dates"/>
                             <div>
                                 <field name="date_from" invisible="1" widget="daterange"/>
@@ -443,7 +443,7 @@
             <field name="holiday_status_id" position="replace"/>
             <div name="title" position="inside">
                 <h1 class="d-flex flex-row align-items-end justify-content-between o_hr_leave_title">
-                    <field name="holiday_status_id" options="{'no_open': True}" context="{'request_type':'leave', 'from_manager_leave_form': True ,'employee_id': employee_id}"/>
+                    <field name="holiday_status_id" options="{'no_open': True}" context="{'request_type':'leave', 'from_manager_leave_form': True ,'employee_id': employee_id, 'default_date_from':date_from, 'default_date_to':date_to}"/>
                 </h1>
             </div>
             <field name="employee_id" position="replace"/>
