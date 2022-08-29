@@ -109,9 +109,12 @@ export class ORM {
         return this.rpc(url, params, { silent: this._silent });
     }
 
-    create(model, state, context) {
-        validateObject("state", state);
-        return this.call(model, "create", [state], { context });
+    create(model, records, context) {
+        validateArray("records", records);
+        for (const record of records) {
+            validateObject("record", record);
+        }
+        return this.call(model, "create", records, { context });
     }
 
     nameGet(model, ids, context) {

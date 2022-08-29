@@ -266,17 +266,19 @@ export class ExportDataDialog extends Component {
         }
         const id = await this.orm.create(
             "ir.exports",
-            {
-                name,
-                export_fields: this.state.exportList.map((field) => [
-                    0,
-                    0,
-                    {
-                        name: field.name,
-                    },
-                ]),
-                resource: this.props.root.resModel,
-            },
+            [
+                {
+                    name,
+                    export_fields: this.state.exportList.map((field) => [
+                        0,
+                        0,
+                        {
+                            name: field.name,
+                        },
+                    ]),
+                    resource: this.props.root.resModel,
+                },
+            ],
             this.props.context
         );
         this.state.isEditingTemplate = false;
