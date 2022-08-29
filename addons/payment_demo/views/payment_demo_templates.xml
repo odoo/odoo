@@ -2,7 +2,7 @@
 <odoo>
 
     <template id="inline_form">
-        <div t-attf-id="test-container-{{acquirer_id}}">
+        <div t-attf-id="demo-container-{{acquirer_id}}">
             <div class="row">
                 <div class="form-group">
                     <input name="acquirer_id" type="hidden" id="acquirer_id" t-att-value="id"/>
@@ -42,15 +42,15 @@
     </template>
 
     <template id="token_inline_form">
-        <div t-attf-id="test-token-container-{{token.id}}">
+        <div t-attf-id="demo-token-container-{{token.id}}">
             <div class="alert alert-warning m-2">
-                <span t-if="token.test_simulated_state=='pending'">
+                <span t-if="token.demo_simulated_state=='pending'">
                     Payments made with this payment method will remain <b>pending</b>.
                 </span>
-                <span t-elif="token.test_simulated_state=='done'">
+                <span t-elif="token.demo_simulated_state=='done'">
                     Payments made with this payment method will be <b>successful</b>.
                 </span>
-                <span t-elif="token.test_simulated_state=='cancel'">
+                <span t-elif="token.demo_simulated_state=='cancel'">
                     Payments made with this payment method will be automatically <b>canceled</b>.
                 </span>
                 <span t-else="">

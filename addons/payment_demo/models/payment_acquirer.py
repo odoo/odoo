@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 class PaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('test', 'Test')], ondelete={'test': 'set default'})
+    provider = fields.Selection(selection_add=[('demo', 'Demo')], ondelete={'demo': 'set default'})
 
     #=== COMPUTE METHODS ===#
 
@@ -18,12 +18,12 @@ class PaymentAcquirer(models.Model):
         :return: None
         """
         super()._compute_view_configuration_fields()
-        self.filtered(lambda acq: acq.provider == 'test').show_credentials_page = False
+        self.filtered(lambda acq: acq.provider == 'demo').show_credentials_page = False
 
     def _compute_feature_support_fields(self):
         """ Override of `payment` to enable additional features. """
         super()._compute_feature_support_fields()
-        self.filtered(lambda acq: acq.provider == 'test').update({
+        self.filtered(lambda acq: acq.provider == 'demo').update({
             'support_fees': True,
             'support_manual_capture': True,
             'support_refund': 'partial',
@@ -34,11 +34,11 @@ class PaymentAcquirer(models.Model):
 
     @api.constrains('state', 'provider')
     def _check_acquirer_state(self):
-        if self.filtered(lambda a: a.provider == 'test' and a.state not in ('test', 'disabled')):
-            raise UserError(_("Test acquirers should never be enabled."))
+        if self.filtered(lambda a: a.provider == 'demo' and a.state not in ('test', 'disabled')):
+            raise UserError(_("Demo acquirers should never be enabled."))
 
     def _get_default_payment_method_id(self):
         self.ensure_one()
-        if self.provider != 'test':
+        if self.provider != 'demo':
             return super()._get_default_payment_method_id()
-        return self.env.ref('payment_test.payment_method_test').id
+        return self.env.ref('payment_demo.payment_method_demo').id

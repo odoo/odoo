@@ -18,7 +18,7 @@ _logger = logging.getLogger('odoo.tests.test_module_operations')
 
 BLACKLIST = {
     'auth_ldap', 'document_ftp', 'website_instantclick', 'pad',
-    'pad_project', 'note_pad', 'pos_cache', 'pos_blackbox_be', 'payment_test',
+    'pad_project', 'note_pad', 'pos_cache', 'pos_blackbox_be',
 }
 IGNORE = ('hw_', 'theme_', 'l10n_', 'test_', 'payment_')
 

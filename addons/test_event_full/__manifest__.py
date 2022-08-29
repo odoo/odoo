@@ -17,7 +17,7 @@ automatic lead generation, full Online support, ...
         'event_crm_sale',
         'event_sale',
         'event_sms',
-        'payment_test',
+        'payment_demo',
         'website_event_booth_sale_exhibitor',
         'website_event_crm_questions',
         'website_event_exhibitor',

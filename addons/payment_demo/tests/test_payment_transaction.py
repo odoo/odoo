@@ -5,12 +5,12 @@ from unittest.mock import patch
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.payment_test.tests.common import PaymentTestCommon
+from odoo.addons.payment_demo.tests.common import PaymentDemoCommon
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
 @tagged('-at_install', 'post_install')
-class TestPaymentTransaction(PaymentTestCommon, PaymentHttpCommon):
+class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
 
     def test_processing_notification_data_sets_transaction_pending(self):
         """ Test that the transaction state is set to 'pending' when the notification data indicate
@@ -53,13 +53,13 @@ class TestPaymentTransaction(PaymentTestCommon, PaymentHttpCommon):
         include token data. """
         tx = self._create_transaction('direct', tokenize=True)
         with patch(
-            'odoo.addons.payment_test.models.payment_transaction.PaymentTransaction'
-            '._test_tokenize_from_notification_data'
+            'odoo.addons.payment_demo.models.payment_transaction.PaymentTransaction'
+            '._demo_tokenize_from_notification_data'
         ) as tokenize_mock:
             tx._process_notification_data(self.notification_data)
         self.assertEqual(tokenize_mock.call_count, 1)
 
-    @mute_logger('odoo.addons.payment_test.models.payment_transaction')
+    @mute_logger('odoo.addons.payment_demo.models.payment_transaction')
     def test_processing_notification_data_propagates_simulated_state_to_token(self):
         """ Test that the simulated state of the notification data is set on the token when
         processing notification data. """
@@ -68,7 +68,7 @@ class TestPaymentTransaction(PaymentTestCommon, PaymentHttpCommon):
                 'direct', reference=f'{self.reference}-{counter}', tokenize=True
             )
             tx._process_notification_data(dict(self.notification_data, simulated_state=state))
-            self.assertEqual(tx.token_id.test_simulated_state, state)
+            self.assertEqual(tx.token_id.demo_simulated_state, state)
 
     def test_making_a_payment_request_propagates_token_simulated_state_to_transaction(self):
         """ Test that the simulated state of the token is set on the transaction when making a
@@ -77,6 +77,6 @@ class TestPaymentTransaction(PaymentTestCommon, PaymentHttpCommon):
             tx = self._create_transaction(
                 'direct', reference=f'{self.reference}-{counter}'
             )
-            tx.token_id = self._create_token(test_simulated_state=state)
+            tx.token_id = self._create_token(demo_simulated_state=state)
             tx._send_payment_request()
-            self.assertEqual(tx.state, tx.token_id.test_simulated_state)
+            self.assertEqual(tx.state, tx.token_id.demo_simulated_state)
