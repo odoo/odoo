@@ -171,24 +171,24 @@ registerModel({
                 return this.env.services.rpc(route, rpcParameters, { silent, ...rpcSettings });
             } else {
                 const { args, method, model, kwargs = {} } = params;
-                const { context, domain, fields, groupBy, ...ormOptions } = kwargs;
+                const { domain, fields, groupBy } = kwargs;
 
                 const ormService = 'shadow' in options ? this.env.services.orm.silent : this.env.services.orm;
                 switch (method) {
                     case 'create':
-                        return ormService.create(model, args[0], context);
+                        return ormService.create(model, args[0], kwargs);
                     case 'read':
-                        return ormService.read(model, args[0], args.length > 1 ? args[1] : undefined, {}, context);
+                        return ormService.read(model, args[0], args.length > 1 ? args[1] : undefined, kwargs);
                     case 'read_group':
-                        return ormService.readGroup(model, domain, fields, groupBy, ormOptions, context);
+                        return ormService.readGroup(model, domain, fields, groupBy, kwargs);
                     case 'search':
-                        return ormService.search(model, args[0], ormOptions, context);
+                        return ormService.search(model, args[0], kwargs);
                     case 'search_read':
-                        return ormService.searchRead(model, domain, fields, ormOptions, context);
+                        return ormService.searchRead(model, domain, fields, kwargs);
                     case 'unlink':
-                        return ormService.unlink(model, args[0], context);
+                        return ormService.unlink(model, args[0], kwargs);
                     case 'write':
-                        return ormService.write(model, args[0], args[1], context);
+                        return ormService.write(model, args[0], args[1], kwargs);
                     default:
                         return ormService.call(model, method, args, kwargs);
                 }
