@@ -3078,21 +3078,21 @@ class Many2oneReference(Integer):
 
 class Properties(Field):
     """ Field that contains a list of properties (aka "sub-field") based on
-    a definition defined on a "parent". Properties are pseudo-fields, acting
+    a definition defined on a container. Properties are pseudo-fields, acting
     like Odoo fields but without being independently stored in database.
 
-    This field allows a light customization based on a parent record. Typically
-    used for relationships such as <project.project> / <project.task>,... New
+    This field allows a light customization based on a container record. Used
+    for relationships such as <project.project> / <project.task>,... New
     properties can be created on the fly without changing the structure of the
     database.
 
-    The "definition_record" define the field used to find the parent of the
-    current record. The parent must have a :class:`~odoo.fields.PropertiesDefinition`
+    The "definition_record" define the field used to find the container of the
+    current record. The container must have a :class:`~odoo.fields.PropertiesDefinition`
     field "definition_record_field" that contains the properties definition
     (type of each property, default value)...
 
     Only the value of each property is stored on the child. When we read the
-    properties field, we read the definition of the parent and merge it with
+    properties field, we read the definition on the container and merge it with
     the value of the child. That way the web client has access to the full
     field definition (property type, ...).
     """
@@ -3266,7 +3266,7 @@ class Properties(Field):
             value = json.loads(value)
 
         if isinstance(value, dict):
-            # don't need to write on the parent definition
+            # don't need to write on the container definition
             return super().write(records, value)
 
         definition_changed = any(
@@ -3282,18 +3282,18 @@ class Properties(Field):
             for definition in value:
                 definition.pop('definition_changed', None)
 
-            # update the properties definition on the parent
-            parent = records[self.definition_record]
-            if parent:
+            # update the properties definition on the container
+            container = records[self.definition_record]
+            if container:
                 properties_definition = copy.deepcopy(value)
                 for property_definition in properties_definition:
                     property_definition.pop('value', None)
-                parent[self.definition_record_field] = properties_definition
+                container[self.definition_record_field] = properties_definition
 
         return super().write(records, value)
 
     def _compute(self, records):
-        """Add the default properties value when the parent is changed."""
+        """Add the default properties value when the container is changed."""
         for record in records:
             record[self.name] = self._add_default_values(
                 record.env,
@@ -3303,7 +3303,8 @@ class Properties(Field):
     def _add_default_values(self, env, values):
         """Read the properties definition to add default values.
 
-        Default values are defined on the parent, in the 'default' key.
+        Default values are defined on the container in the 'default' key of
+        the definition.
 
         :param env: environment
         :param values: All values that will be written on the record
@@ -3312,21 +3313,21 @@ class Properties(Field):
         properties_values = values.get(self.name) or {}
 
         if not values.get(self.definition_record):
-            # parent is not given in the value, can not find properties definition
+            # container is not given in the value, can not find properties definition
             return properties_values
 
-        parent_id = values[self.definition_record]
-        if not isinstance(parent_id, (int, BaseModel)):
-            raise ValueError(f"Wrong parent value {parent_id!r}")
+        container_id = values[self.definition_record]
+        if not isinstance(container_id, (int, BaseModel)):
+            raise ValueError(f"Wrong container value {container_id!r}")
 
-        if isinstance(parent_id, int):
-            # retrieve the parent record
+        if isinstance(container_id, int):
+            # retrieve the container record
             current_model = env[self.model_name]
             definition_record_field = current_model._fields[self.definition_record]
-            parent_model_name = definition_record_field.comodel_name
-            parent_id = env[parent_model_name].browse(parent_id)
+            container_model_name = definition_record_field.comodel_name
+            container_id = env[container_model_name].browse(container_id)
 
-        properties_definition = parent_id[self.definition_record_field]
+        properties_definition = container_id[self.definition_record_field]
         if not properties_definition:
             return properties_values
 
@@ -3347,9 +3348,9 @@ class Properties(Field):
 
     def _get_properties_definition(self, record):
         """Return the properties definition of the given record."""
-        parent = record[self.definition_record]
-        if parent:
-            return parent.sudo()[self.definition_record_field]
+        container = record[self.definition_record]
+        if container:
+            return container.sudo()[self.definition_record_field]
 
     @classmethod
     def _add_display_name(cls, values_list, env, value_keys=('value', 'default')):
@@ -3458,11 +3459,11 @@ class Properties(Field):
                 options = property_definition.get('selection') or []
                 options = {option[0] for option in options if option or ()}  # always length 2
                 if property_value not in options:
-                    # maybe the option has been removed on the parent
+                    # maybe the option has been removed on the container
                     property_value = False
 
             elif property_value and property_type == 'tags':
-                # remove all tags that are not defined on the parent
+                # remove all tags that are not defined on the container
                 all_tags = {tag[0] for tag in property_definition.get('tags') or ()}
                 property_value = [tag for tag in property_value if tag in all_tags]
 
@@ -3493,7 +3494,7 @@ class Properties(Field):
         """Convert a list of properties with definition into a dict {name: value}.
 
         To not repeat data in database, we only store the value of each property on
-        the child. The properties definition is stored on the parent.
+        the child. The properties definition is stored on the container.
 
         E.G.
             Input list:
@@ -3534,7 +3535,7 @@ class Properties(Field):
                 if property_type == 'many2many' and property_value and not is_list_of(property_value, int):
                     raise ValueError(f"Wrong many2many value {property_value!r}")
 
-                elif property_type == 'many2one' and not isinstance(property_value, int):
+                if property_type == 'many2one' and not isinstance(property_value, int):
                     raise ValueError(f"Wrong many2one value {property_value!r}")
 
             dict_value[property_definition['name']] = property_value
@@ -3546,9 +3547,9 @@ class Properties(Field):
         """Convert a dict of {property: value} into a list of property definition with values.
 
         :param values_dict: JSON value coming from the child table
-        :param properties_definition: Properties definition coming from the parent table
+        :param properties_definition: Properties definition coming from the container table
         :return: Merge both value into a list of properties with value
-            Ignore every values in the child that is not defined on the parent.
+            Ignore every values in the child that is not defined on the container.
         """
         if not is_list_of(properties_definition, dict):
             raise ValueError(f'Wrong properties value {properties_definition!r}')
@@ -3561,8 +3562,8 @@ class Properties(Field):
 
 class PropertiesDefinition(Field):
     """ Field used to define the properties definition (see :class:`~odoo.fields.Properties`
-    field). This field is used on a "parent" to define the structure of
-    expected properties on "children". It is used to verify the properties
+    field). This field is used on the container record to define the structure
+    of expected properties on subrecords. It is used to check the properties
     definition. """
     type = 'properties_definition'
     column_type = ('jsonb', 'jsonb')
