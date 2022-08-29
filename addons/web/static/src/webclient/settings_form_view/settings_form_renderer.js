@@ -1,10 +1,11 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { escapeRegExp } from "@web/core/utils/strings";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { FormLabelHighlightText } from "./highlight_text/form_label_highlight_text";
 import { HighlightText } from "./highlight_text/highlight_text";
+import { Setting } from "./settings/setting";
+import { SettingsContainer } from "./settings/settings_container";
 import { SettingsApp } from "./settings/settings_app";
 import { SettingsPage } from "./settings/settings_page";
 
@@ -27,17 +28,7 @@ export class SettingsFormRenderer extends FormRenderer {
         super.setup();
         this.searchState = useState(this.env.searchState);
     }
-    search(kind, value) {
-        const regexp = new RegExp(escapeRegExp(this.searchState.value), "i");
-        for (const x of labels[this.props.archInfo.arch]) {
-            if (x[kind] === value) {
-                if (regexp.test([x.label, x.groupTitle, x.groupTip].join())) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+
     getFieldExpr(fieldName, fieldWidget) {
         const name = `base_settings.${fieldWidget}`;
         let fieldClass;
@@ -53,6 +44,8 @@ export class SettingsFormRenderer extends FormRenderer {
 }
 SettingsFormRenderer.components = {
     ...FormRenderer.components,
+    Setting,
+    SettingsContainer,
     SettingsPage,
     SettingsApp,
     HighlightText,
