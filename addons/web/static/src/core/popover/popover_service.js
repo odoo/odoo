@@ -41,6 +41,7 @@ export const popoverService = {
                 position: options.position,
                 popoverClass: options.popoverClass,
                 closeOnClickAway: options.closeOnClickAway,
+                preventClose: options.preventClose,
             };
             popovers[id] = popover;
             bus.trigger("UPDATE");

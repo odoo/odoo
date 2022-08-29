@@ -25,6 +25,7 @@ export function usePopover() {
          * @param {Object}                  [options]
          * @param {boolean}                 [options.closeOnClickAway=true]
          * @param {function()}              [options.onClose]
+         * @param {function()}              [options.preventClose]
          * @param {string}                  [options.popoverClass]
          * @param {string}                  [options.position]
          * @returns {function()}
