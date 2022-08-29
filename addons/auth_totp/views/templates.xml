@@ -14,7 +14,7 @@
                     </div>
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label class="fw-bold" for="totp_token">Authentication Code</label>
                         <input id="totp_token" name="totp_token" class="form-control mb-2"
                                 autocomplete="off" inputmode="numeric" autofocus="autofocus" required="required" placeholder="e.g. 123456"/>

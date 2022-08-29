@@ -14,7 +14,7 @@
                     <h4 class="mt32">
                         <strong>Contact Details</strong>
                     </h4>
-                    <div class="row form-group">
+                    <div class="row mb-3">
                         <label class="col-form-label col-sm-auto">
                             <span>Name</span>
                             <span> *</span>
@@ -24,7 +24,7 @@
                                    t-att-value="default_contact.get('name', '')"/>
                         </div>
                     </div>
-                    <div class="row form-group">
+                    <div class="row mb-3">
                         <label class="col-form-label col-sm-auto">
                             <span>Email</span>
                             <span> *</span>
@@ -34,14 +34,14 @@
                                    t-att-value="default_contact.get('email', '')"/>
                         </div>
                     </div>
-                    <div class="row form-group">
+                    <div class="row mb-3">
                         <label class="col-form-label col-sm-auto">Phone</label>
                         <div class="col-sm">
                             <input type="tel" class="form-control" name="contact_phone"
                                    t-att-value="default_contact.get('phone', '')"/>
                         </div>
                     </div>
-                    <div class="row form-group">
+                    <div class="row mb-3">
                         <label class="col-form-label col-sm-auto">Mobile</label>
                         <div class="col-sm">
                             <input type="tel" class="form-control" name="contact_mobile"
@@ -53,7 +53,7 @@
                     <i class="fa fa-exclamation-triangle me-2" role="img" aria-label="Error" title="Error"/>
                     <span class="o_wbooth_registration_error_message"/>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <div class="d-grid col-sm-6 offset-sm-3 mt-5">
                         <button type="submit" class="btn btn-primary fw-bold o_wbooth_registration_confirm">
                             Book my Booths

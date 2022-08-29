@@ -201,7 +201,7 @@ var TagCourseDialog = Dialog.extend({
         var $tagInput = this.$('#tag_id');
         if ($tagInput.length !== 0){
             var $tagSelect2Container = $tagInput
-                .closest('.form-group')
+                .parent()
                 .find('.select2-container');
             $tagSelect2Container.removeClass('is-invalid is-valid');
             if ($tagInput.is(':invalid')) {
@@ -211,7 +211,7 @@ var TagCourseDialog = Dialog.extend({
                 var $tagGroupInput = this.$('#tag_group_id');
                 if ($tagGroupInput.length !== 0){
                     var $tagGroupSelect2Container = $tagGroupInput
-                        .closest('.form-group')
+                        .parent()
                         .find('.select2-container');
                     if ($tagGroupInput.is(':invalid')) {
                         $tagGroupSelect2Container.addClass('is-invalid');
@@ -244,7 +244,7 @@ var TagCourseDialog = Dialog.extend({
      */
     _hideTagGroup: function () {
         var $tag_group_id = this.$('#tag_group_id');
-        var $tagGroupSelect2Container = $tag_group_id.closest('.form-group');
+        var $tagGroupSelect2Container = $tag_group_id.parent();
         $tagGroupSelect2Container.hide();
         $tag_group_id.removeAttr("required");
         $tag_group_id.select2("val", "");
@@ -259,7 +259,7 @@ var TagCourseDialog = Dialog.extend({
      */
     _showTagGroup: function () {
         var $tag_group_id = this.$('#tag_group_id');
-        var $tagGroupSelect2Container = $tag_group_id.closest('.form-group');
+        var $tagGroupSelect2Container = $tag_group_id.parent();
         $tagGroupSelect2Container.show();
         $tag_group_id.attr("required", "required");
     },

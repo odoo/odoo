@@ -494,7 +494,7 @@
                 <form action="/my/security" method="post" class="oe_reset_password_form">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="op" value="password"/>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="current">Password:</label>
                         <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
                                id="current" name="old"
@@ -503,7 +503,7 @@
                             <t t-esc="get_error(errors, 'password.old')"/>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="new">New Password:</label>
                         <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new1') else '' }}"
                                id="new" name="new1"
@@ -512,7 +512,7 @@
                             <t t-esc="get_error(errors, 'password.new1')"/>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="mb-3">
                         <label for="new2">Verify New Password:</label>
                         <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new2') else '' }}"
                                id="new2" name="new2"

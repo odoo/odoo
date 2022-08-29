@@ -120,13 +120,13 @@
     <section>
         <div class="row">
             <div class="col-lg-6">
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="website_meta_title">
                         Title <i class="fa fa-question-circle-o" title="The title will take a default value unless you specify one."/>
                     </label>
                     <input type="text" t-model="seoContext.title" t-att-disabled="!props.canEditTitle" class="form-control" placeholder="Keep empty to use default value" maxlength="70" size="70" t-ref="autofocus"/>
                 </div>
-                <div class="form-group">
+                <div class="mb-3">
                     <label for="website_meta_description">
                         Description <i class="fa fa-question-circle-o" t-att-title="props.previewDescription"/>
                     </label>
@@ -135,7 +135,7 @@
                         <span t-esc="descriptionWarning"/>
                     </div>
                 </div>
-                <div class="form-group" t-if='props.canEditUrl'>
+                <div class="mb-3" t-if='props.canEditUrl'>
                     <label for="website_seo_name">
                         Custom Url <i class="fa fa-question-circle-o" t-att-title="props.seoNameHelp" />
                     </label>
