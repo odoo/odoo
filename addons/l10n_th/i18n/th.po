@@ -222,6 +222,7 @@ msgstr ""
 
 #. module: l10n_th
 #: model:ir.model.fields.selection,name:l10n_th.selection__account_move__l10n_th_custom_header_title__debit_note
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_invoice_document
 msgid "Debit Note"
 msgstr "ใบเพิ่มหนี้"
 
@@ -247,7 +248,42 @@ msgstr ""
 #. module: l10n_th
 #: model:ir.model.fields.selection,name:l10n_th.selection__res_partner__l10n_th_company_info__headquarter
 msgid "Headquarter"
-msgstr ""
+msgstr "สำนักงานใหญ่"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_invoice_document
+msgid "Invoice Date"
+msgstr "วันที่เอกสาร"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_invoice_document
+msgid "Due Date"
+msgstr "วัันครบกำหนดชำระ"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.document_tax_totals
+msgid "<span class=\"text-nowrap\">VAT 7% (4)</span>"
+msgstr "<span class=\"text-nowrap\">ภาษีมูลค่าเพิ่ม 7 (4)</span>"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.document_tax_totals
+msgid "<span class=\"text-nowrap\">Invoice Amount (2)</span>"
+msgstr "<span class=\"text-nowrap\">มูลค่าที่ถูกต้อง (2)</span>"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.document_tax_totals
+msgid "<span class=\"text-nowrap\">Difference (2)-(1) = (3)</span>"
+msgstr "<span class=\"text-nowrap\">ผลต่าง (2)-(1) = (3)</span>"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.document_tax_totals
+msgid "<strong>Total (3)+(4) = (5)</strong>"
+msgstr "<strong>รวม (3)+(4) = (5)</strong>"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.document_tax_totals
+msgid "<strong>Original Invoiced Amount (1)</strong>"
+msgstr "<strong>รวมมูลค่าสินค้าตามใบกำกับภาษีเดิม (1)</strong>"
 
 #. module: l10n_th
 #: model:account.account,name:l10n_th.1_a_sales
@@ -477,11 +513,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_th.field_account_bank_statement_line__vat
 #: model:ir.model.fields,field_description:l10n_th.field_account_move__vat
 #: model:ir.model.fields,field_description:l10n_th.field_account_payment__vat
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_invoice_document
 msgid "Tax ID"
-msgstr ""
+msgstr "เลขที่ผู้เสียภาษี"
 
 #. module: l10n_th
 #: model:ir.model.fields.selection,name:l10n_th.selection__account_move__l10n_th_custom_header_title__tax_invoice
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_invoice_document
 msgid "Tax Invoice"
 msgstr "ใบกำกับภาษี"
 
@@ -579,3 +617,97 @@ msgstr ""
 #: model:account.account.template,name:l10n_th.a_wht
 msgid "Withholding Tax"
 msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<span>Description</span>"
+msgstr "<span>รายการ</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<span>Quantity</span>"
+msgstr "<span>จำนวน</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<span>Unit Price</span>"
+msgstr "<span>ราคาต่อหน่วย</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<span>Taxes</span>"
+msgstr "<span>ภาษี</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
+"                                        <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">ยอดเงิน</span>\n"
+"                                        <span groups=\"account.group_show_line_subtotals_tax_included\">ยอดเงินไม่รวมภาษี</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<span>Amount</span>"
+msgstr "<span>ยอดเงิน</span>"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_cash_voucher_document
+msgid "Receipt Voucher"
+msgstr "ใบสำคัญรับ"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_cash_voucher_document
+msgid "Payment Voucher"
+msgstr "ใบสำคัญจ่าย"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "Payment Date:"
+msgstr "วันที่เอกสาร:"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "Customer:"
+msgstr "ผู้รับเงิน / ผู้จ่ายเงิน:"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "Payment Amount:"
+msgstr "จำนวนเงิน:"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "Memo:"
+msgstr "รายละเอียด:"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_cash_voucher_document
+msgid "<span>Account</span>"
+msgstr "<span>บัญชี</span>"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_cash_voucher_document
+msgid "<span>Label</span>"
+msgstr "<span>รายละเอียด</span>"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_cash_voucher_document
+msgid "<span>Debit</span>"
+msgstr "<span>เดบิต</span>"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_cash_voucher_document
+msgid "<span>Credit</span>"
+msgstr "<span>เครดิต</span>"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_cash_voucher_document
+msgid "<span>Analytic Account</span>"
+msgstr "<span>บัญชีวิเคราะห์</span>"
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_cash_voucher_document
+msgid "<span class=\"font-weight-bold\">Total </span>"
+msgstr "<span class=\"font-weight-bold\">รวมยอด</span>"
