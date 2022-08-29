@@ -3456,14 +3456,14 @@ class Properties(Field):
             elif property_value and property_type == 'selection':
                 # check if the selection option still exists
                 options = property_definition.get('selection') or []
-                options = [option[0] for option in options if option and len(option) == 2]
+                options = {option[0] for option in options if option or ()}  # always length 2
                 if property_value not in options:
                     # maybe the option has been removed on the parent
                     property_value = False
 
             elif property_value and property_type == 'tags':
                 # remove all tags that are not defined on the parent
-                all_tags = [tag[0] for tag in property_definition.get('tags') or []]
+                all_tags = {tag[0] for tag in property_definition.get('tags') or ()}
                 property_value = [tag for tag in property_value if tag in all_tags]
 
             elif property_type == 'many2one' and property_value:
@@ -3566,11 +3566,11 @@ class PropertiesDefinition(Field):
     definition. """
     type = 'properties_definition'
     column_type = ('jsonb', 'jsonb')
-    copy = False
+    copy = True                         # containers may act like templates, keep definitions to ease usage
     readonly = False
-    prefetch = False
+    prefetch = True                     # read by subrecords Properties
 
-    REQUIRED_KEYS = 'name', 'type'
+    REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
         'name', 'string', 'type', 'comodel', 'default',
         'selection', 'tags', 'domain',
