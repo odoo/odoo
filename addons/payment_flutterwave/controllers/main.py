@@ -24,6 +24,8 @@ class FlutterwaveController(http.Controller):
 
         :param dict data: The notification data.
         """
+        _logger.info("Handling redirection from Flutterwave with data:\n%s", pprint.pformat(data))
+
         # Handle the notification data.
         if data.get('status') != 'cancelled':
             request.env['payment.transaction'].sudo()._handle_notification_data('flutterwave', data)
