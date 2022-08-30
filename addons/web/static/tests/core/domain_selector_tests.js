@@ -185,7 +185,7 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("building a domain with a datetime", async (assert) => {
-        assert.expect(2);
+        assert.expect(4);
 
         // Create the domain selector and its mock environment
         await mountComponent(DomainSelector, {
@@ -205,8 +205,11 @@ QUnit.module("Components", (hooks) => {
 
         // Check that there is a datepicker to choose the date
         assert.containsOnce(target, ".o_datepicker", "there should be a datepicker");
-        await click(target, ".o_datepicker_input");
+        // The input field should display the date and time in the user's timezone
+        assert.equal(target.querySelector(".o_datepicker_input").value, "03/27/2017 16:42:00");
 
+        // Change the date in the datepicker
+        await click(target, ".o_datepicker_input");
         await click(
             document.body.querySelector(
                 `.bootstrap-datetimepicker-widget :not(.today)[data-action="selectDay"]`
@@ -215,6 +218,38 @@ QUnit.module("Components", (hooks) => {
         await click(
             document.body.querySelector(`.bootstrap-datetimepicker-widget a[data-action="close"]`)
         );
+
+        // The input field should display the date and time in the user's timezone
+        assert.equal(target.querySelector(".o_datepicker_input").value, "02/26/2017 16:42:00");
+    });
+
+    QUnit.test("building a domain with a datetime: context_today()", async (assert) => {
+        // Create the domain selector and its mock environment
+        await mountComponent(DomainSelector, {
+            props: {
+                resModel: "partner",
+                value: `[("datetime", "=", context_today())]`,
+                readonly: false,
+                update: () => {
+                    assert.step("SHOULD NEVER BE CALLED");
+                },
+            },
+        });
+
+        // Check that there is a datepicker to choose the date
+        assert.containsOnce(target, ".o_datepicker", "there should be a datepicker");
+        // The input field should display that the date is invalid
+        assert.equal(target.querySelector(".o_datepicker_input").value, "Invalid DateTime");
+
+        // Open and close the datepicker
+        await click(target, ".o_datepicker_input");
+        await click(
+            document.body.querySelector(`.bootstrap-datetimepicker-widget [data-action=close]`)
+        );
+
+        // The input field should display an empty value. NB: this could be improved, but OK for now
+        assert.equal(target.querySelector(".o_datepicker_input").value, "");
+        assert.verifySteps([]);
     });
 
     QUnit.test("building a domain with a m2o without following the relation", async (assert) => {

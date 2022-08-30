@@ -46,7 +46,7 @@ registerModel({
                     return format.date(this.value);
                 case 'datetime': {
                     const value = this.value ? deserializeDateTime(this.value) : this.value;
-                    return formatters.get("datetime")(value, { timezone: true });
+                    return formatters.get("datetime")(value);
                 }
                 case 'float':
                     return format.float(this.value);
