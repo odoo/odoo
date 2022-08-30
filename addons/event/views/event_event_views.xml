@@ -50,7 +50,7 @@
                             <field name="event_type_id" string="Template" options="{'no_create':True}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
                         </group>
-                        <group>
+                        <group name="right_event_details">
                             <field name="organizer_id"/>
                             <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company"/>
