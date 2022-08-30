@@ -126,10 +126,17 @@ class TestWebsocketCaryall(WebsocketCase):
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     def test_user_logout_outgoing_message(self):
+        subscribe_done_event = Event()
+        original_subscribe = dispatch.subscribe
+
+        def patched_subscribe(*args):
+            original_subscribe(*args)
+            subscribe_done_event.set()
+
         new_test_user(self.env, login='test_user', password='Password!1')
         user_session = self.authenticate('test_user', 'Password!1')
         websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
-        with patch.object(dispatch, '_ws_to_subscription', {}):
+        with patch.object(dispatch, 'subscribe', patched_subscribe):
             websocket.send(json.dumps({
                 'event_name': 'subscribe',
                 'data': {'channels': ['channel1'], 'last': 0}
@@ -138,6 +145,7 @@ class TestWebsocketCaryall(WebsocketCase):
             # Simulate postgres notify. The session with whom the websocket
             # connected has been deleted. WebSocket should be closed without
             # receiving the message.
+            subscribe_done_event.wait(timeout=5)
             self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
             dispatch._dispatch_notifications(next(iter(dispatch._ws_to_subscription.keys())))
             self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
