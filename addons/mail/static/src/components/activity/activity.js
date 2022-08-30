@@ -4,7 +4,6 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
-import Popover from "web.Popover";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
 export class Activity extends LegacyComponent {
@@ -30,7 +29,6 @@ export class Activity extends LegacyComponent {
 Object.assign(Activity, {
     props: { record: Object },
     template: 'mail.Activity',
-    components: { Popover },
 });
 
 registerMessagingComponent(Activity);
