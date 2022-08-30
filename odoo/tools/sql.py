@@ -125,7 +125,7 @@ def convert_column(cr, tablename, columnname, columntype):
         with cr.savepoint(flush=False):
             cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" TYPE {}'.format(tablename, columnname, columntype),
                        log_exceptions=False)
-    except psycopg2.NotSupportedError:
+    except (psycopg2.NotSupportedError, psycopg2.errors.DatatypeMismatch):
         # can't do inplace change -> use a casted temp column
         query = '''
             ALTER TABLE "{0}" RENAME COLUMN "{1}" TO __temp_type_cast;
