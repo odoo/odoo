@@ -22,7 +22,6 @@
         'data/account_tax_template_data.xml',
         "data/account_fiscal_position_template.xml",
         'data/account_chart_template_configure_data.xml',
-        'data/menuitem.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

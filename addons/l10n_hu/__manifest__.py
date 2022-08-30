@@ -34,7 +34,6 @@ This module consists of:
         'data/res.bank.csv',
         'data/account_chart_template_data.xml',
         'data/account_chart_template_configure_data.xml',
-        'data/menuitem_data.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
