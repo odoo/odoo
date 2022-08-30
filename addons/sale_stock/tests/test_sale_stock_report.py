@@ -56,10 +56,10 @@ class TestSaleStockReports(TestReportsCommon):
         line_2 = lines[1]
         self.assertEqual(line_1['quantity'], 5)
         self.assertTrue(line_1['replenishment_filled'])
-        self.assertEqual(line_1['document_out'].id, so_2.id)
+        self.assertEqual(line_1['document_out']['id'], so_2.id)
         self.assertEqual(line_2['quantity'], 5)
         self.assertEqual(line_2['replenishment_filled'], False)
-        self.assertEqual(line_2['document_out'].id, so_1.id)
+        self.assertEqual(line_2['document_out']['id'], so_1.id)
 
     def test_report_forecast_2_report_line_corresponding_to_so_line_highlighted(self):
         """ When accessing the report from a SO line, checks if the correct SO line is highlighted in the report
@@ -80,7 +80,7 @@ class TestSaleStockReports(TestReportsCommon):
             context = {"move_to_match_ids": so.order_line.move_ids.ids}
             _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids, context=context)
             for line in lines:
-                if line['document_out'] == so:
+                if line['document_out']['id'] == so.id:
                     self.assertTrue(line['is_matched'], "The corresponding SO line should be matched in the forecast report.")
                 else:
                     self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the SO shoud not be matched.")

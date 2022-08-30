@@ -21,7 +21,6 @@
         'views/stock_lot_views.xml',
         'report/purchase_report_views.xml',
         'report/purchase_report_templates.xml',
-        'report/report_stock_forecasted.xml',
         'report/report_stock_rule.xml',
         'wizard/stock_replenishment_info.xml'
     ],

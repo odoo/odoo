@@ -7,17 +7,27 @@ from odoo import api, models
 from odoo.tools import float_is_zero, format_date, float_round
 
 
-class ReplenishmentReport(models.AbstractModel):
-    _name = 'report.stock.report_product_product_replenishment'
+class StockForecasted(models.AbstractModel):
+    _name = 'stock.forecasted_product_product'
     _description = "Stock Replenishment Report"
 
-    def _product_domain(self, product_template_ids, product_variant_ids):
+    @api.model
+    def get_report_values(self, docids, data=None):
+        return {
+            'data': data,
+            'doc_ids': docids,
+            'doc_model': 'product.product',
+            'docs': self._get_report_data(product_ids=docids),
+            'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
+        }
+
+    def _product_domain(self, product_template_ids, product_ids):
         if product_template_ids:
             return [('product_tmpl_id', 'in', product_template_ids)]
-        return [('product_id', 'in', product_variant_ids)]
+        return [('product_id', 'in', product_ids)]
 
-    def _move_domain(self, product_template_ids, product_variant_ids, wh_location_ids):
-        move_domain = self._product_domain(product_template_ids, product_variant_ids)
+    def _move_domain(self, product_template_ids, product_ids, wh_location_ids):
+        move_domain = self._product_domain(product_template_ids, product_ids)
         move_domain += [('product_uom_qty', '!=', 0)]
         out_domain = move_domain + [
             '&',
@@ -31,25 +41,55 @@ class ReplenishmentReport(models.AbstractModel):
         ]
         return in_domain, out_domain
 
-    def _move_draft_domain(self, product_template_ids, product_variant_ids, wh_location_ids):
-        in_domain, out_domain = self._move_domain(product_template_ids, product_variant_ids, wh_location_ids)
+    def _move_draft_domain(self, product_template_ids, product_ids, wh_location_ids):
+        in_domain, out_domain = self._move_domain(product_template_ids, product_ids, wh_location_ids)
         in_domain += [('state', '=', 'draft')]
         out_domain += [('state', '=', 'draft')]
         return in_domain, out_domain
 
-    def _move_confirmed_domain(self, product_template_ids, product_variant_ids, wh_location_ids):
-        in_domain, out_domain = self._move_domain(product_template_ids, product_variant_ids, wh_location_ids)
-        out_domain += [('state', 'in', ['waiting', 'assigned', 'confirmed', 'partially_available'])]
-        in_domain += [('state', 'in', ['waiting', 'assigned', 'confirmed', 'partially_available'])]
+    def _move_confirmed_domain(self, product_template_ids, product_ids, wh_location_ids):
+        in_domain, out_domain = self._move_domain(product_template_ids, product_ids, wh_location_ids)
+        out_domain += [('state', 'not in', ['draft', 'cancel', 'done'])]
+        in_domain += [('state', 'not in', ['draft', 'cancel', 'done'])]
         return in_domain, out_domain
 
-    def _compute_draft_quantity_count(self, product_template_ids, product_variant_ids, wh_location_ids):
-        in_domain, out_domain = self._move_draft_domain(product_template_ids, product_variant_ids, wh_location_ids)
+    def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
+        # Get the products we're working, fill the rendering context with some of their attributes.
+        res = {}
+        if product_template_ids:
+            products = self.env['product.template'].browse(product_template_ids)
+            res.update({
+                'product_templates' : products.read(fields=['id', 'display_name']),
+                'product_templates_ids' : products.ids,
+                'product_variants' : [{
+                        'id' : pv.id,
+                        'combination_name' : pv.product_template_attribute_value_ids._get_combination_name(),
+                    } for pv in products.product_variant_ids],
+                'product_variants_ids' : products.product_variant_ids.ids,
+                'multiple_product' : len(products.product_variant_ids) > 1,
+            })
+        elif product_ids:
+            products = self.env['product.product'].browse(product_ids)
+            res.update({
+                'product_templates' : False,
+                'product_variants' : products.read(fields=['id', 'display_name']),
+                'product_variants_ids' : products.ids,
+                'multiple_product' : len(products) > 1,
+            })
+
+        res['uom'] = products[:1].uom_id.display_name
+        res['quantity_on_hand'] = sum(products.mapped('qty_available'))
+        res['virtual_available'] = sum(products.mapped('virtual_available'))
+        res['incoming_qty'] = sum(products.mapped('incoming_qty'))
+        res['outgoing_qty'] = sum(products.mapped('outgoing_qty'))
+
+        in_domain, out_domain = self._move_draft_domain(product_template_ids, product_ids, wh_location_ids)
         incoming_moves = self.env['stock.move']._read_group(in_domain, ['product_qty:sum'], 'product_id')
         outgoing_moves = self.env['stock.move']._read_group(out_domain, ['product_qty:sum'], 'product_id')
         in_sum = sum(move['product_qty'] for move in incoming_moves)
         out_sum = sum(move['product_qty'] for move in outgoing_moves)
-        return {
+
+        res.update({
             'draft_picking_qty': {
                 'in': in_sum,
                 'out': out_sum
@@ -58,55 +98,27 @@ class ReplenishmentReport(models.AbstractModel):
                 'in': in_sum,
                 'out': out_sum
             }
-        }
+        })
 
-    @api.model
-    def _get_report_values(self, docids, data=None):
-        return {
-            'data': data,
-            'doc_ids': docids,
-            'doc_model': 'product.product',
-            'docs': self._get_report_data(product_variant_ids=docids),
-            'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
-        }
+        return res
 
-    def _get_report_data(self, product_template_ids=False, product_variant_ids=False):
-        assert product_template_ids or product_variant_ids
+    def _get_report_data(self, product_template_ids=False, product_ids=False):
+        assert product_template_ids or product_ids
         res = {}
 
         if self.env.context.get('warehouse'):
             warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))
         else:
-            warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
+            warehouse = self.env['stock.warehouse'].search([['active', '=', True]])[0]
 
-        wh_location_ids = self.env['stock.location'].search(
+        wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
             [('id', 'child_of', warehouse.view_location_id.id)],
-        ).ids
+            ['id'],
+        )]
 
-        # Get the products we're working, fill the rendering context with some of their attributes.
-        if product_template_ids:
-            product_templates = self.env['product.template'].browse(product_template_ids)
-            res['product_templates'] = product_templates
-            res['product_variants'] = product_templates.product_variant_ids
-            res['multiple_product'] = len(product_templates.product_variant_ids) > 1
-            res['uom'] = product_templates[:1].uom_id.display_name
-            res['quantity_on_hand'] = sum(product_templates.mapped('qty_available'))
-            res['virtual_available'] = sum(product_templates.mapped('virtual_available'))
-            res['incoming_qty'] = sum(product_templates.mapped('incoming_qty'))
-            res['outgoing_qty'] = sum(product_templates.mapped('outgoing_qty'))
-        elif product_variant_ids:
-            product_variants = self.env['product.product'].browse(product_variant_ids)
-            res['product_templates'] = False
-            res['product_variants'] = product_variants
-            res['multiple_product'] = len(product_variants) > 1
-            res['uom'] = product_variants[:1].uom_id.display_name
-            res['quantity_on_hand'] = sum(product_variants.mapped('qty_available'))
-            res['virtual_available'] = sum(product_variants.mapped('virtual_available'))
-            res['incoming_qty'] = sum(product_variants.mapped('incoming_qty'))
-            res['outgoing_qty'] = sum(product_variants.mapped('outgoing_qty'))
-        res.update(self._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids))
+        res.update(self._get_report_header(product_template_ids, product_ids, wh_location_ids))
 
-        res['lines'] = self._get_report_lines(product_template_ids, product_variant_ids, wh_location_ids)
+        res['lines'] = self._get_report_lines(product_template_ids, product_ids, wh_location_ids)
         return res
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reservation=False):
@@ -117,26 +129,54 @@ class ReplenishmentReport(models.AbstractModel):
         move_in_id = move_in.id if move_in else None
         move_out_id = move_out.id if move_out else None
 
-        return {
-            'document_in': move_in._get_source_document() if move_in else False,
-            'document_out': move_out._get_source_document() if move_out else False,
+        line = {
+            'move_in' : False,
+            'move_out' : False,
+            'document_in' : False,
+            'document_out' : False,
+            'receipt_date': False,
+            'delivery_date': False,
             'product': {
                 'id': product.id,
-                'display_name': product.display_name
+                'display_name': product.display_name,
             },
             'replenishment_filled': replenishment_filled,
-            'uom_id': product.uom_id,
-            'receipt_date': format_date(self.env, move_in.date) if move_in else False,
-            'delivery_date': format_date(self.env, move_out.date) if move_out else False,
             'is_late': is_late,
             'quantity': float_round(quantity, precision_rounding=product.uom_id.rounding),
-            'move_out': move_out,
-            'move_in': move_in,
             'reservation': reservation,
             'is_matched': any(move_id in [move_in_id, move_out_id] for move_id in move_to_match_ids),
+            'uom_id' : product.uom_id.read()[0],
         }
+        if move_in:
+            document_in = move_in._get_source_document()
+            line.update({
+                'move_in' : move_in.read()[0],
+                'document_in' : {
+                    '_name' : document_in._name,
+                    'id' : document_in.id,
+                    'name' : document_in.display_name,
+                } if document_in else False,
+                'receipt_date': format_date(self.env, move_in.date),
+            })
 
-    def _get_report_lines(self, product_template_ids, product_variant_ids, wh_location_ids):
+        if move_out:
+            document_out = move_out._get_source_document()
+            line.update({
+                'move_out' : move_out.read()[0],
+                'document_out' : {
+                    '_name' : document_out._name,
+                    'id' : document_out.id,
+                    'name' : document_out.display_name,
+                } if document_out else False,
+                'delivery_date': format_date(self.env, move_out.date),
+            })
+            if move_out.picking_id:
+                line['move_out'].update({
+                    'picking_id' : move_out.picking_id.read(fields=['id', 'priority'])[0],
+                })
+        return line
+
+    def _get_report_lines(self, product_template_ids, product_ids, wh_location_ids):
 
         def _reconcile_out_with_ins(lines, out, ins, demand, product_rounding, only_matching_move_dest=True):
             index_to_remove = []
@@ -159,7 +199,7 @@ class ReplenishmentReport(models.AbstractModel):
             return demand
 
         in_domain, out_domain = self._move_confirmed_domain(
-            product_template_ids, product_variant_ids, wh_location_ids
+            product_template_ids, product_ids, wh_location_ids
         )
         outs = self.env['stock.move'].search(out_domain, order='reservation_date, priority desc, date, id')
         reserved_outs = self.env['stock.move'].search(
@@ -225,22 +265,17 @@ class ReplenishmentReport(models.AbstractModel):
                 lines.append(self._prepare_report_line(in_['qty'], move_in=in_['move']))
         return lines
 
-    @api.model
-    def get_warehouses(self):
-        return self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'])
-
-
-class ReplenishmentTemplateReport(models.AbstractModel):
-    _name = 'report.stock.report_product_template_replenishment'
+class StockForecastedTemplate(models.AbstractModel):
+    _name = 'stock.forecasted_product_template'
     _description = "Stock Replenishment Report"
-    _inherit = 'report.stock.report_product_product_replenishment'
+    _inherit = 'stock.forecasted_product_product'
 
     @api.model
-    def _get_report_values(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         return {
             'data': data,
             'doc_ids': docids,
-            'doc_model': 'product.product',
+            'doc_model': 'product.template',
             'docs': self._get_report_data(product_template_ids=docids),
             'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
         }
