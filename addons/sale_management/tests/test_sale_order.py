@@ -315,4 +315,5 @@ class TestSaleOrder(SaleManagementCommon):
         order_form = Form(self.sale_order)
         with order_form.sale_order_option_ids.new() as option:
             option.product_id = self.product_1
-            self.assertTrue(bool(option.uom_id))
+        order = order_form.save()
+        self.assertTrue(bool(order.sale_order_option_ids.uom_id))
