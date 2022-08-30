@@ -394,6 +394,7 @@ registerModel({
         fetchImStatusTimerDuration: attr({
             default: 50 * 1000,
         }),
+        hasLinkPreviewFeature: attr(),
         history: one('Mailbox', {
             default: {},
             inverse: 'messagingAsHistory',

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.LinkPreviewDeleteConfirmView" owl="1">
+        <div class="o_LinkPreviewDeleteConfirmView card bg-white" t-attf-class="{{ className }}" t-ref="root">
+            <h4 class="m-3">Confirmation</h4>
+            <hr class="mt-0 mb-3"/>
+            <p class="o_LinkPreviewDeleteConfirmView_mainText mx-3 mb-3">Do you really want to delete this preview?</p>
+            <hr class="mt-0 mb-3"/>
+            <div class="o_LinkPreviewDeleteConfirmView_buttons mx-3 mb-3">
+                <button class="o_LinkPreviewDeleteConfirmView_confirmButton btn btn-primary me-2" t-on-click="linkPreviewDeleteConfirmView.onClickOk">Ok</button>
+                <button class="o_LinkPreviewDeleteConfirmView_cancelButton btn btn-secondary me-2" t-on-click="linkPreviewDeleteConfirmView.onClickCancel">Cancel</button>
+            </div>
+        </div>
+    </t>
+</templates>

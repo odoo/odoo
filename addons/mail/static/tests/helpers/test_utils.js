@@ -107,6 +107,14 @@ function getClick({ afterNextRender }) {
     };
 }
 
+function getMouseenter({ afterNextRender }) {
+    return async function mouseenter(selector) {
+        await afterNextRender(() =>
+            document.querySelector(selector).dispatchEvent(new window.MouseEvent('mouseenter'))
+        );
+    };
+}
+
 function getOpenDiscuss(afterEvent, webClient, { context = {}, params, ...props } = {}) {
     return async function openDiscuss({ waitUntilMessagesLoaded = true } = {}) {
         const actionOpenDiscuss = {
@@ -280,6 +288,7 @@ async function start(param0 = {}) {
         env: webClient.env,
         insertText,
         messaging: webClient.env.services.messaging.modelManager.messaging,
+        mouseenter: getMouseenter({ afterNextRender }),
         openDiscuss: getOpenDiscuss(afterEvent, webClient, discuss),
         openView,
         openFormView: getOpenFormView(afterEvent, openView),
