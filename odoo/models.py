@@ -3375,16 +3375,23 @@ Fields:
         # possibly raise exception for the records that could not be read
         missing = self - fetched
         if missing:
+            def match_ids(a, b):
+                for _id in a.ids:
+                    if not _id in b.ids:
+                        return False
+                return True
+            
             extras = fetched - self
-            if extras:
-                raise AccessError(
-                    _("Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request").format(
-                        missing._ids, extras._ids,
-                    ))
-            # mark non-existing records in missing
-            forbidden = missing.exists()
-            if forbidden:
-                raise self.env['ir.rule']._make_access_error('read', forbidden)
+            if not match_ids(missing, extras):
+                if extras:
+                    raise AccessError(
+                        _("Database fetch misses ids ({}) and has extra ids ({}), may be caused by a type incoherence in a previous request").format(
+                            missing._ids, extras._ids,
+                        ))
+                # mark non-existing records in missing
+                forbidden = missing.exists()
+                if forbidden:
+                    raise self.env['ir.rule']._make_access_error('read', forbidden)
 
     def get_metadata(self):
         """Return some metadata about the given records.
