@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-extend="StockInventoryReport.Buttons">
+<t t-extend="InventoryReport.Buttons" owl="1">
     <t t-jquery="button.o_button_at_date" t-operation="append">
-        <t t-if="widget.modelName == 'stock.valuation.layer'">
+        <t t-if="props.resModel == 'stock.valuation.layer'">
             Valuation at Date
         </t>
     </t>

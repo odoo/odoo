@@ -104,15 +104,16 @@
         ],
         'web.assets_backend': [
             'stock/static/src/**/*.js',
-            'stock/static/src/views/**/*.js',
             'stock/static/src/scss/forecast_widget.scss',
             'stock/static/src/scss/stock_empty_screen.scss',
+            'stock/static/src/views/**/*.js',
+            'stock/static/src/views/**/**.scss',
         ],
         'web.assets_tests': [
             'stock/static/tests/tours/stock_report_tests.js',
         ],
         'web.qunit_suite_tests': [
-            'stock/static/tests/singleton_list_tests.js',
+            'stock/static/tests/inventory_report_list_tests.js',
             'stock/static/tests/popover_widget_tests.js',
             'stock/static/tests/lazy_column_list_tests.js',
             'stock/static/tests/stock_traceability_report_backend_tests.js',
