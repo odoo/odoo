@@ -14,8 +14,10 @@
                         <field name="partner_ids" widget="many2many_tags_email"
                                 placeholder="Add contacts to notify..."
                                 context="{'force_email':True, 'show_email':True}"/>
-                        <field name="send_mail"/>
-                        <field name="message" attrs="{'invisible': [('send_mail','!=',True)]}" options="{'style-inline': true, 'no-attachment': true}" class="test_message"/>
+                        <field name="notify"/>
+                        <field name="message" attrs="{'invisible': [('notify','!=',True)]}"
+                               options="{'style-inline': true, 'no-attachment': true}"
+                               class="oe-bordered-editor"/>
                     </group>
                     <footer>
                         <button string="Add Followers"
