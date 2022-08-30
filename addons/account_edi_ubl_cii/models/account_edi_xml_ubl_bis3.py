@@ -122,9 +122,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                     'endpoint_id': partner.company_registry,
                     'endpoint_id_attrs': {'schemeID': '0106'},
                 })
-        if partner.country_id.code == 'SG' and 'l10n_sg_unique_entity_number' in partner._fields:
+        if partner.country_id.code == 'SG':
             vals.update({
-                'endpoint_id': partner.l10n_sg_unique_entity_number,
+                'endpoint_id': partner.company_registry,
                 'endpoint_id_attrs': {'schemeID': '0195'},
             })
 
