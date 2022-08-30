@@ -478,7 +478,7 @@ Model({
         /**
          * Determines the `Thread` that should be displayed by `this`.
          */
-        thread: one("Thread"),
+        thread: one("Thread", { inverse: "chatter" }),
         /**
          * Determines the id of the thread that will be displayed by `this`.
          */

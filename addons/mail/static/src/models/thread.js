@@ -1205,6 +1205,10 @@ Model({
          */
         chatWindow: one("ChatWindow", { inverse: "thread" }),
         /**
+         * States the chatter related to this thread (if any).
+         */
+        chatter: one("Chatter", { inverse: "thread" }),
+        /**
          * Determines the composer state of this thread.
          */
         composer: one("Composer", {
