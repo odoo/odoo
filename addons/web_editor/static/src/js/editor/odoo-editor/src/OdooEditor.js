@@ -348,7 +348,7 @@ export class OdooEditor extends EventTarget {
         const parser = new DOMParser();
         for (const direction of ['row', 'column']) {
             // Create the containers and the menu toggler.
-            const ui = parser.parseFromString(`<div class="o_table_ui o_${direction}_ui">
+            const ui = parser.parseFromString(`<div class="o_table_ui o_${direction}_ui" style="visibility: hidden;">
                 <div>
                     <span class="o_table_ui_menu_toggler fa fa-bars"></span>
                     <div class="o_table_ui_menu"></div>
@@ -583,6 +583,7 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.editable, 'beforeinput', this._onBeforeInput);
         this.addDomListener(this.editable, 'mousedown', this._onMouseDown);
         this.addDomListener(this.editable, 'mouseup', this._onMouseup);
+        this.addDomListener(this.editable, 'mousemove', this._onMousemove);
         this.addDomListener(this.editable, 'paste', this._onPaste);
         this.addDomListener(this.editable, 'drop', this._onDrop);
 
@@ -592,7 +593,6 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.document, 'keyup', this._onDocumentKeyup);
         this.addDomListener(this.document, 'mousedown', this._onDocumentMousedown);
         this.addDomListener(this.document, 'mouseup', this._onDocumentMouseup);
-        this.addDomListener(this.document, 'mousemove', this._onDocumentMousemove);
         this.addDomListener(this.document, 'click', this._onDocumentClick);
 
         this.multiselectionRefresh = this.multiselectionRefresh.bind(this);
@@ -3639,18 +3639,19 @@ export class OdooEditor extends EventTarget {
         }
     }
 
-    _onDocumentMousemove(ev) {
+    _onMousemove(ev) {
         if (this._currentMouseState === 'mousedown' && !this._isResizingTable) {
             this._handleSelectionInTable(ev);
         }
         if (!this._rowUi.classList.contains('o_open') && !this._columnUi.classList.contains('o_open')) {
-            const column = closestElement(ev.target, 'td');
+            const column = closestElement(ev.target, 'td', true);
             if (this._isResizingTable || !column || !ev.target || ev.target.nodeType !== Node.ELEMENT_NODE) {
                 this._toggleTableUi(false, false);
             } else {
-                const row = closestElement(column, 'tr');
+                const row = closestElement(column, 'tr', true);
                 const isFirstColumn = column === row.querySelector('td');
-                const isFirstRow = row === closestElement(column, 'table').querySelector('tr');
+                const table = column && closestElement(column, 'table');
+                const isFirstRow = table && row === table.querySelector('tr');
                 this._toggleTableUi(isFirstColumn && row, isFirstRow && column);
             }
         }
