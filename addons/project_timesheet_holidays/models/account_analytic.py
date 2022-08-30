@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    holiday_id = fields.Many2one("hr.leave", string='Leave Request')
+    holiday_id = fields.Many2one("hr.leave", string='Leave Request', copy=False)
     global_leave_id = fields.Many2one("resource.calendar.leaves", string="Global Time Off", ondelete='cascade')
     task_id = fields.Many2one(domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True),"
         "('project_id', '=?', project_id), ('is_timeoff_task', '=', False)]")
