@@ -1185,9 +1185,13 @@ const Wysiwyg = Widget.extend({
                         startNode: options.link || this.lastMediaClicked,
                     });
                     if (!link) {
-                        return
+                        return;
                     }
-                    const linkToolsData = Object.assign({}, this.options.defaultDataForLinkTools);
+                    const linkToolsData = Object.assign({}, this.options.defaultDataForLinkTools, {
+                        // If the link contains an image or an icon do not
+                        // display the label input (e.g. some mega menu links).
+                        needLabel: !link.querySelector('.fa, img'),
+                    });
                     this.linkTools = new weWidgets.LinkTools(this, {
                         wysiwyg: this,
                         noFocusUrl: options.noFocusUrl,

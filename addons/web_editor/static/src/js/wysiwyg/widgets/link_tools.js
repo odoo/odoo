@@ -23,6 +23,7 @@ const LinkTools = Link.extend({
         'change .link-custom-color-border input': '_onChangeCustomBorderWidth',
         'keypress .link-custom-color-border input': '_onKeyPressCustomBorderWidth',
         'click we-select [name="link_border_style"] we-button': '_onBorderStyleSelectOption',
+        'input input[name="label"]': '_onLabelInput',
     }),
 
     /**
@@ -31,8 +32,7 @@ const LinkTools = Link.extend({
     init: function (parent, options, editable, data, $button, link) {
         this._link = link;
         this._observer = new MutationObserver(() =>{
-            this._setLinkContent = false;
-            this._observer.disconnect();
+            this._updateLabelInput();
         });
         this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
         this._super(parent, options, editable, data, $button, this._link);
@@ -358,6 +358,14 @@ const LinkTools = Link.extend({
         this.$button.removeClass('active');
         this.options.wysiwyg.odooEditor.observerActive("hint_classes");
     },
+    /**
+     * Updates the label input with the DOM content of the link.
+     *
+     * @private
+     */
+    _updateLabelInput() {
+        this.el.querySelector('#o_link_dialog_label_input').value = this.linkEl.innerText;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -439,6 +447,23 @@ const LinkTools = Link.extend({
         this.options.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
         this._adaptPreview();
         this.options.wysiwyg.odooEditor.historyUnpauseSteps('_onURLInput');
+    },
+    /**
+     * Updates the DOM content of the link with the input value.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onLabelInput(ev) {
+        const data = this._getData();
+        if (!data) {
+            return;
+        }
+        this._observer.disconnect();
+        // Force update of link's content with new data using 'force: true'.
+        // Without this, no update if input is same as original text.
+        this._updateLinkContent(this.$link, data, {force: true});
+        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
     },
 });
 

@@ -31,8 +31,6 @@ const Link = Widget.extend({
             title: _t("Link to"),
         }, this.options));
 
-        this._setLinkContent = true;
-
         this.data = data || {};
         this.isButton = this.data.isButton;
         this.$button = $button;
@@ -86,7 +84,7 @@ const Link = Widget.extend({
                 $node = $node.parent();
             }
             const linkNode = this.$link[0] || this.data.range.cloneContents();
-            const linkText = linkNode.textContent;
+            const linkText = linkNode.innerText;
             this.data.content = linkText.replace(/[ \t\r\n]+/g, ' ');
             this.data.originalText = this.data.content;
             if (linkNode instanceof DocumentFragment) {
@@ -488,11 +486,19 @@ const Link = Widget.extend({
      * @param {boolean} force
      */
     _updateLinkContent($link, linkInfos, { force = false } = {}) {
-        if (force || (this._setLinkContent && (linkInfos.content !== this.data.originalText || linkInfos.url !== this.data.url))) {
+        if (force || (linkInfos.content !== this.data.originalText || linkInfos.url !== this.data.url)) {
             if (linkInfos.content === this.data.originalText) {
                 $link.html(this.data.originalHTML);
             } else if (linkInfos.content && linkInfos.content.length) {
-                $link.text(linkInfos.content);
+                let contentWrapperEl = $link[0];
+                // Update the first child element that has the same inner text
+                // as the link with the new content while preserving child
+                // elements within the link. (e.g. the link is bold and italic)
+                while (contentWrapperEl.firstElementChild
+                    && (contentWrapperEl.firstElementChild.innerText === $link[0].innerText)) {
+                    contentWrapperEl = contentWrapperEl.firstElementChild;
+                }
+                contentWrapperEl.innerText = linkInfos.content;
             } else {
                 $link.text(linkInfos.url);
             }
