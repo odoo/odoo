@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.rule" id="sh_product_brand_comp_rule">
+        <field name="name">Product Brand Multi-Company</field>
+        <field name="model_id" ref="model_sh_product_brand" />
+        <field name="global" eval="True" />
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>
