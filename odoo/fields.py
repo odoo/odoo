@@ -247,7 +247,6 @@ class Field(MetaField('DummyField', (object,), {})):
     translate = False                   # whether the field is translated
 
     column_type = None                  # database column type (ident, spec)
-    column_cast_from = ()               # column types that may be cast to this
     write_sequence = 0                  # field ordering for write()
 
     args = None                         # the parameters given to __init__()
@@ -1009,17 +1008,9 @@ class Field(MetaField('DummyField', (object,), {})):
             return
         if column['udt_name'] == self.column_type[0]:
             return
-        if column['udt_name'] in self.column_cast_from:
-            sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
-        else:
-            newname = (self.name + '_moved{}').format
-            i = 0
-            while sql.column_exists(model._cr, model._table, newname(i)):
-                i += 1
-            if column['is_nullable'] == 'NO':
-                sql.drop_not_null(model._cr, model._table, self.name)
-            sql.rename_column(model._cr, model._table, self.name, newname(i))
-            sql.create_column(model._cr, model._table, self.name, self.column_type[1], self.string)
+        if column['is_nullable'] == 'NO':
+            sql.drop_not_null(model._cr, model._table, self.name)
+        sql.convert_column(model._cr, model._table, self.name, self.column_type[1])
 
     def update_db_notnull(self, model, column):
         """ Add or remove the NOT NULL constraint on ``self``.
@@ -1462,8 +1453,6 @@ class Float(Field):
     """
 
     type = 'float'
-    column_cast_from = ('int4', 'numeric', 'float8')
-
     _digits = None                      # digits argument passed to class initializer
     group_operator = 'sum'
 
@@ -1533,9 +1522,7 @@ class Monetary(Field):
     """
     type = 'monetary'
     write_sequence = 10
-
     column_type = ('numeric', 'numeric')
-    column_cast_from = ('float8',)
 
     currency_field = None
     group_operator = 'sum'
@@ -1767,8 +1754,6 @@ class Char(_String):
     :type translate: bool or callable
     """
     type = 'char'
-    column_cast_from = ('text',)
-
     size = None                         # maximum size of values (deprecated)
     trim = True                         # whether value is trimmed (only by web client)
 
@@ -1821,7 +1806,6 @@ class Text(_String):
     """
     type = 'text'
     column_type = ('text', 'text')
-    column_cast_from = ('varchar',)
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
@@ -1846,7 +1830,6 @@ class Html(_String):
     """
     type = 'html'
     column_type = ('text', 'text')
-    column_cast_from = ('varchar',)
 
     sanitize = True                     # whether value must be sanitized
     sanitize_overridable = False        # whether the sanitation can be bypassed by the users part of the `base.group_sanitize_override` group
@@ -1947,7 +1930,6 @@ class Date(Field):
     """ Encapsulates a python :class:`date <datetime.date>` object. """
     type = 'date'
     column_type = ('date', 'date')
-    column_cast_from = ('timestamp',)
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)
@@ -2046,7 +2028,6 @@ class Datetime(Field):
     """ Encapsulates a python :class:`datetime <datetime.datetime>` object. """
     type = 'datetime'
     column_type = ('timestamp', 'timestamp')
-    column_cast_from = ('date',)
 
     start_of = staticmethod(date_utils.start_of)
     end_of = staticmethod(date_utils.end_of)
