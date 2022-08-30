@@ -48,7 +48,6 @@ If you want to save your employees' time and avoid them to always have coins in 
             'lunch/static/src/views/*.js',
             'lunch/static/src/scss/lunch_view.scss',
             'lunch/static/src/scss/lunch_kanban.scss',
-            'lunch/static/src/scss/lunch_list.scss',
         ],
         'web.assets_tests': [
             'lunch/static/tests/tours/*.js',

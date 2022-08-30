@@ -29,7 +29,7 @@ export class LunchOrderLine extends Component {
     }
 
     get badgeClass() {
-        const mapping = {'new': 'bg-warning', 'confirmed': 'bg-success', 'sent': 'bg-info', 'ordered': 'bg-danger'};
+        const mapping = {'new': 'warning', 'confirmed': 'success', 'sent': 'info', 'ordered': 'danger'};
         return mapping[this.line.raw_state];
     }
 
