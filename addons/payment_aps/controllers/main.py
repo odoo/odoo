@@ -34,6 +34,8 @@ class APSController(http.Controller):
 
         :param dict data: The notification data.
         """
+        _logger.info("Handling redirection from APS with data:\n%s", pprint.pformat(data))
+
         # Check the integrity of the notification.
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'aps', data

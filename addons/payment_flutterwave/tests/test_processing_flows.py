@@ -15,6 +15,7 @@ from odoo.addons.payment_flutterwave.tests.common import FlutterwaveCommon
 @tagged('post_install', '-at_install')
 class TestProcessingFlows(FlutterwaveCommon, PaymentHttpCommon):
 
+    @mute_logger('odoo.addons.payment_flutterwave.controllers.main')
     def test_redirect_notification_triggers_processing(self):
         """ Test that receiving a redirect notification triggers the processing of the notification
         data. """
