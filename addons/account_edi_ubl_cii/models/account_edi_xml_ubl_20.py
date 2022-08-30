@@ -629,10 +629,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice':
             amount_node = tree.find('.//{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')
             if amount_node is not None and float(amount_node.text) < 0:
-                return 'in_refund', -1
-            return 'in_invoice', 1
+                return ('in_refund', 'out_refund'), -1
+            return ('in_invoice', 'out_invoice'), 1
         if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2}CreditNote':
-            return 'in_refund', 1
+            return ('in_refund', 'out_refund'), 1
         return None, None
 
     def _import_retrieve_partner_map(self, company):
