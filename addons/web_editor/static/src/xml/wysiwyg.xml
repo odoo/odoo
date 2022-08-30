@@ -184,14 +184,6 @@
         </div>
     </div>
     <we-customizeblock-option t-name="wysiwyg.widgets.linkTools">
-        <we-row t-attf-class="o_we_sublevel_1 {{widget.needLabel ? '' : 'd-none'}}">
-            <we-title>Link Label</we-title>
-            <we-input class="o_we_user_value_widget">
-                <div>
-                    <input name="label" id="o_link_dialog_label_input" t-att-value="widget.data.content" type="text"/>
-                </div>
-            </we-input>
-        </we-row>
         <we-row id="url_row" t-attf-class="#{widget.isButton ? ' d-none' : ''}">
             <we-input class="o_we_user_value_widget o_we_sublevel_1">
                 <we-title class="o_short_title"></we-title>
@@ -207,6 +199,14 @@
                         <we-checkbox name="do_strip_domain" t-att-checked="widget.data.doStripDomain ? 'checked' : undefined"/>
                     </div>
             </we-button>
+        </we-row>
+        <we-row t-attf-class="o_we_sublevel_1 {{widget.needLabel ? '' : 'd-none'}}">
+            <we-title>Label</we-title>
+            <we-input class="o_we_user_value_widget">
+                <div>
+                    <input name="label" id="o_link_dialog_label_input" t-att-value="widget.data.content" type="text"/>
+                </div>
+            </we-input>
         </we-row>
         <we-row>
             <we-select class="o_we_user_value_widget o_we_sublevel_1">
