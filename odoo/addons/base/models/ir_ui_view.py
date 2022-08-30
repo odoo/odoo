@@ -970,7 +970,20 @@ actual arch.
         be removed from the view to people who are not members.
         """
         if node.get('groups'):
-            if not self.user_has_groups(groups=node.get('groups')):
+            if not self.user_has_groups(groups=node.attrib.pop('groups')):
+                node.getparent().remove(node)
+            elif node.tag == 't' and not node.attrib:
+                # Move content of <t> blocks with no other instructions than just "groups=" to the parent
+                # and remove the <t> node.
+                # This is to keep the structure
+                # <group>
+                #   <field name="foo"/>
+                #   <field name="bar"/>
+                # <group>
+                # so the web client adds the label as expected.
+                node_info['children'] = list(node)
+                for child in reversed(node):
+                    node.addnext(child)
                 node.getparent().remove(node)
 
     def _get_view_refs(self, node):
