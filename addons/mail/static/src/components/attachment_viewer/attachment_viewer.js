@@ -3,6 +3,7 @@
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model';
 import { useRefs } from '@mail/component_hooks/use_refs';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
 const { Component, onMounted, onPatched, onWillUnmount, useRef } = owl;
@@ -107,7 +108,7 @@ export class AttachmentViewer extends Component {
     }
 
     /**
-     * @see 'hidePDFJSButtons'
+     * @see hidePDFJSButtons
      *
      * @private
      */
