@@ -12,4 +12,4 @@ Installation
 4) click on update app list.
 5) search module name and hit install button.
 
-JUAN PABLO YAÑEZ CHAPITAL
+JUAN PABLO YAnEZ CHAPITAL
