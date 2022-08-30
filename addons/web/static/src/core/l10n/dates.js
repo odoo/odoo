@@ -171,18 +171,16 @@ export const luxonToMomentFormat = memoize(function luxonToMomentFormat(format) 
 /**
  * Formats a DateTime object to a date string
  *
- * `options.timezone` is defaulted to false on dates since we assume they
- * shouldn't be affected by timezones like datetimes.
- *
  * @see formatDateTime
  * @returns {string}
  */
 export function formatDate(value, options = {}) {
-    return formatDateTime(value, {
-        timezone: false, // Timezone should never alter a 'date' value.
-        ...options,
-        format: options.format || localization.dateFormat,
-    });
+    if (value === false) {
+        return "";
+    }
+    const format = options.format || localization.dateFormat;
+    const numberingSystem = options.numberingSystem || Settings.defaultNumberingSystem || "latn";
+    return value.toFormat(format, { numberingSystem });
 }
 
 /**
@@ -194,12 +192,6 @@ export function formatDate(value, options = {}) {
  *  Provided format used to format the input DateTime object.
  *
  *  Default=the session localization format.
- *
- * @param {boolean} [options.timezone=true]
- *  - True = input will be set in local time before being formatted.
- *  - False = input will be set in UTC time before being formatted.
- *
- *  Default=true.
  *
  * @param {string} [options.numberingSystem]
  *  Provided numbering system used to parse the input value.
@@ -215,9 +207,7 @@ export function formatDateTime(value, options = {}) {
     }
     const format = options.format || localization.dateTimeFormat;
     const numberingSystem = options.numberingSystem || Settings.defaultNumberingSystem || "latn";
-    const zone = !("timezone" in options) || options.timezone ? "default" : "utc";
-    value = value.setZone(zone, { keepLocaltime: options.timezone });
-    return value.toFormat(format, { numberingSystem });
+    return value.setZone("default").toFormat(format, { numberingSystem });
 }
 
 // -----------------------------------------------------------------------------
@@ -227,18 +217,15 @@ export function formatDateTime(value, options = {}) {
 /**
  * Parses a string value to a Luxon DateTime object.
  *
- * `options.timezone` is defaulted to false on dates since we assume they
- * shouldn't be affected by timezones like datetimes.
- *
  * @see parseDateTime (Note: since we're only interested by the date itself, the
  *  returned value will always be set at the start of the day)
- * @returns {DateTime | false} Luxon DateTime object
+ * @returns {DateTime | false} Luxon DateTime object in user's timezone
  */
 export function parseDate(value, options = {}) {
     if (!value) {
         return false;
     }
-    return parseDateTime(value, { timezone: false, ...options }).startOf("day");
+    return parseDateTime(value, options).startOf("day");
 }
 
 /**
@@ -247,26 +234,20 @@ export function parseDate(value, options = {}) {
  * @param {string} value value to parse.
  *  - Value can take the form of a smart date:
  *    e.g. "+3w" for three weeks from now.
- *    (`options.format` and `options.timezone` are ignored in this case)
+ *    (`options.format` is ignored in this case)
  *
  *  - If value cannot be parsed within the provided format,
- *    ISO8601 and SQL formats are then tried.
+ *    ISO8601 and SQL formats are then tried. If these formats
+ *    include a timezone information, the returned value will
+ *    still be set to the user's timezone.
+ *    e.g. "2020-01-01T12:00:00+06:00" with the user's timezone being UTC+1,
+ *         the returned value will express the same timestamp but in UTC+1 (here time will be 7:00).
  *
  * @param {object} options
  * @param {string} [options.format]
  *  Provided format used to parse the input value.
  *
  *  Default=the session localization format
- *
- * @param {boolean} [options.timezone=false]
- *  - True = input value is considered being in localtime.
- *  - False = input value is considered being in utc time, and the returned
- *            value will have the UTC zone.
- *
- *  NB: ISO strings containing timezone information
- *      will have priority over this option.
- *
- *  Default=false.
  *
  * @param {string} [options.locale]
  *  Provided locale used to parse the input value.
@@ -279,7 +260,7 @@ export function parseDate(value, options = {}) {
  * Default=the default numbering system assigned to luxon
  * @see localization_service.js
  *
- * @returns {DateTime | false} Luxon DateTime object
+ * @returns {DateTime | false} Luxon DateTime object in user's timezone
  */
 export function parseDateTime(value, options = {}) {
     if (!value) {
@@ -289,7 +270,7 @@ export function parseDateTime(value, options = {}) {
     const fmt = options.format || localization.dateTimeFormat;
     const parseOpts = {
         setZone: true,
-        zone: options.timezone ? "default" : "utc",
+        zone: "default",
         locale: options.locale,
         numberingSystem: options.numberingSystem || Settings.defaultNumberingSystem || "latn",
     };
@@ -358,31 +339,31 @@ export function parseDateTime(value, options = {}) {
         throw new Error(sprintf(_t("'%s' is not a correct date or datetime"), value));
     }
 
-    return options.timezone ? result : result.toUTC();
+    return result.setZone("default");
 }
 
 /**
  * Returns a date object parsed from the given serialized string.
- * @param {string} value
- * @returns {DateTime | false}
+ * @param {string} value serialized date string, e.g. "2018-01-01"
+ * @returns {DateTime} parsed date object in user's timezone
  */
 export function deserializeDate(value) {
-    return DateTime.fromSQL(value, { zone: "utc", numberingSystem: "latn" });
+    return DateTime.fromSQL(value, { zone: "default", numberingSystem: "latn" });
 }
 
 /**
  * Returns a datetime object parsed from the given serialized string.
- * @param {string} value
- * @returns {DateTime | false}
+ * @param {string} value serialized datetime string, e.g. "2018-01-01 00:00:00", expressed in UTC
+ * @returns {DateTime} parsed datetime object in user's timezone
  */
 export function deserializeDateTime(value) {
-    return DateTime.fromSQL(value, { zone: "utc", numberingSystem: "latn" });
+    return DateTime.fromSQL(value, { zone: "utc", numberingSystem: "latn" }).setZone("default");
 }
 
 /**
  * Returns a serialized string representing the given date.
- * @param {DateTime} value
- * @returns {string}
+ * @param {DateTime} value DateTime object, its timezone does not matter
+ * @returns {string} serialized date, ready to be sent to the server
  */
 export function serializeDate(value) {
     return value.toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" });
@@ -390,8 +371,8 @@ export function serializeDate(value) {
 
 /**
  * Returns a serialized string representing the given datetime.
- * @param {DateTime} value
- * @returns {string}
+ * @param {DateTime} value DateTime object, its timezone does not matter
+ * @returns {string} serialized datetime, ready to be sent to the server
  */
 export function serializeDateTime(value) {
     return value.setZone("utc").toFormat(SERVER_DATETIME_FORMAT, { numberingSystem: "latn" });

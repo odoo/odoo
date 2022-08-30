@@ -435,9 +435,9 @@ export class Record extends DataPoint {
                 evalContext[fieldName] = list.getContext();
                 // ---> implied to initialize (resIds, commands) currentIds before loading static list
             } else if (value && this.fields[fieldName].type === "date") {
-                evalContext[fieldName] = value.toFormat("yyyy-LL-dd");
+                evalContext[fieldName] = serializeDate(value);
             } else if (value && this.fields[fieldName].type === "datetime") {
-                evalContext[fieldName] = value.toFormat("yyyy-LL-dd HH:mm:ss");
+                evalContext[fieldName] = serializeDateTime(value);
             } else if (value && this.fields[fieldName].type === "many2one") {
                 evalContext[fieldName] = value[0];
             } else if (value && this.fields[fieldName].type === "reference") {
