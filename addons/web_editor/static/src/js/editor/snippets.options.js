@@ -3292,8 +3292,9 @@ const SnippetOptionWidget = Widget.extend({
         hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
 
         function applyCSS(cssProp, cssValue, styles) {
+            const propertyValue = styles.getPropertyValue(cssProp);
             // This condition requires extraClass to NOT be set.
-            if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, this.$target[0])) {
+            if (!weUtils.areCssValuesEqual(propertyValue, cssValue, cssProp, this.$target[0])) {
                 // Property must be set => extraClass will be enabled.
                 if (params.extraClass) {
                     // The extraClass is temporarily removed during selectStyle
@@ -3306,7 +3307,7 @@ const SnippetOptionWidget = Widget.extend({
                     this.$target[0].classList.add(params.extraClass);
                     // Set inline style only if different from value defined
                     // with extraClass.
-                    if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, this.$target[0])) {
+                    if (!weUtils.areCssValuesEqual(propertyValue, cssValue, cssProp, this.$target[0])) {
                         this.$target[0].style.setProperty(cssProp, cssValue);
                     }
                 } else {
@@ -3315,7 +3316,7 @@ const SnippetOptionWidget = Widget.extend({
                 }
                 // If change had no effect then make it important.
                 // This condition requires extraClass to be set.
-                if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, this.$target[0])) {
+                if (!weUtils.areCssValuesEqual(propertyValue, cssValue, cssProp, this.$target[0])) {
                     this.$target[0].style.setProperty(cssProp, cssValue, 'important');
                 }
                 if (params.extraClass) {
@@ -3660,7 +3661,7 @@ const SnippetOptionWidget = Widget.extend({
 
                 const cssProps = weUtils.CSS_SHORTHANDS[params.cssProperty] || [params.cssProperty];
                 const cssValues = cssProps.map(cssProp => {
-                    let value = styles[cssProp].trim();
+                    let value = styles.getPropertyValue(cssProp).trim();
                     if (cssProp === 'box-shadow') {
                         const inset = value.includes('inset');
                         let values = value.replace(/,\s/g, ',').replace('inset', '').trim().split(/\s+/g);
