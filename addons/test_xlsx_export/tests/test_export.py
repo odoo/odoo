@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from odoo import http
 from odoo.tests import common, tagged
+from odoo.tools.misc import get_lang
 from odoo.addons.web.controllers.main import ExportXlsxWriter
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -380,6 +381,23 @@ class TestGroupedExport(XlsxCreatorCase):
             ['3 (1)','1000.000'],
             ['    1000.0 (1)','1000.000'],
             ['3','1000.00'],
+        ])
+
+    def test_decimal_separator(self):
+        """ The decimal separator of the language used shouldn't impact the float representation in the exported xlsx """
+        get_lang(self.env).decimal_point = ','
+        get_lang(self.env).thousands_sep = '.'
+
+        values = [
+                {'int_sum': 1, 'float_min': 86420.864},
+        ]
+        export = self.export(values, fields=['int_sum', 'float_min'], params={'groupby': ['int_sum', 'float_min']})
+
+        self.assertExportEqual(export, [
+            ['Int Sum'          ,'Float Min'],
+            ['1 (1)'            ,'86420.86'],
+            ['    86420.864 (1)','86420.86'],
+            ['1'                ,'86420.86'],
         ])
 
 @tagged('-at_install', 'post_install')
