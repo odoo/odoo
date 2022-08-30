@@ -312,10 +312,10 @@ class TestFields(TransactionCaseWithUserDemo):
         check_stored(discussion1)
 
         # switch message from discussion, and check again
-        
+
         # See YTI FIXME
         discussion1.invalidate_cache()
-        
+
         discussion2 = discussion1.copy({'name': 'Another discussion'})
         message2 = discussion1.messages[0]
         message2.discussion = discussion2
@@ -3639,3 +3639,135 @@ class test_shared_cache(TransactionCaseWithUserDemo):
                 line.amount = 2
             # The new value for total_amount, should be 3, not 2.
             self.assertEqual(task_form.total_amount, 2)
+
+
+class TestAAModifiedPerformance(common.SavepointCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Modified = cls.env['test_new_api.modified']
+        cls.ModifiedLine = cls.env['test_new_api.modified.line']
+        cls.modified_a = cls.Modified.create({
+            'name': 'Test',
+        })
+        cls.modified_line_a = cls.ModifiedLine.create({
+            'modified_id': cls.modified_a.id,
+            'quantity': 5,
+            'price': 1,
+        })
+        cls.modified_line_a_child = cls.ModifiedLine.create({
+            'modified_id': cls.modified_a.id,
+            'quantity': 5,
+            'price': 2,
+            'parent_id': cls.modified_line_a.id,
+        })
+        cls.modified_line_a_child_child = cls.ModifiedLine.create({
+            'modified_id': cls.modified_a.id,
+            'quantity': 5,
+            'price': 3,
+            'parent_id': cls.modified_line_a_child.id,
+        })
+        cls.Modified.flush()
+        cls.ModifiedLine.flush()
+        cls.env.cache.invalidate()  # Clean the cache
+
+    def test_modified_trigger_related(self):
+        self.env["res.lang"].search([]).mapped("name")
+        with self.assertQueries(["""
+            SELECT "res_lang".id
+            FROM "res_lang"
+            WHERE ("res_lang"."active" = %s)
+            ORDER BY  COALESCE("res_lang"."active", false) DESC,"res_lang"."name"
+        """,
+        """
+            SELECT "test_new_api_modified_line".id
+            FROM "test_new_api_modified_line"
+            WHERE ("test_new_api_modified_line"."modified_id" IN (%s))
+            ORDER BY "test_new_api_modified_line"."id"
+        """,
+        """
+            SELECT "test_new_api_modified_line"."id" AS "id", "test_new_api_modified_line"."modified_id" AS "modified_id"
+            FROM "test_new_api_modified_line"
+            WHERE "test_new_api_modified_line".id IN %s
+        """], flush=False):
+            # Two queries to fetch the `line_ids` in order to invalidate the cache for `modified_name`
+            # (even if the cache is empty for this field)
+            self.modified_a.name = "Other"
+
+        self.assertEqual(self.modified_line_a.modified_name, 'Other')  # check
+
+    def test_modified_trigger_no_store_compute(self):
+        with self.assertQueries(["""
+        UPDATE "test_new_api_modified_line" SET "quantity"=%s,"write_uid"=%s,"write_date"=%s WHERE id IN %s
+        """, """
+            SELECT "test_new_api_modified_line"."id" AS "id", "test_new_api_modified_line"."modified_id" AS "modified_id",
+                   "test_new_api_modified_line"."quantity" AS "quantity", "test_new_api_modified_line"."price" AS "price",
+                   "test_new_api_modified_line"."parent_id" AS "parent_id", "test_new_api_modified_line"."create_uid" AS "create_uid",
+                   "test_new_api_modified_line"."create_date" AS "create_date", "test_new_api_modified_line"."write_uid" AS "write_uid",
+                   "test_new_api_modified_line"."write_date" AS "write_date"
+            FROM "test_new_api_modified_line"
+            WHERE "test_new_api_modified_line".id IN %s
+        """], flush=False):
+            # One query to fetch `modified_id` in order to invalidate `total_quantity`
+            self.modified_line_a.quantity = 8
+
+        self.assertEqual(self.modified_a.total_quantity, 18)
+
+    def test_modified_trigger_recursive_empty_cache(self):
+        with self.assertQueries(["""
+        UPDATE "test_new_api_modified_line" SET "price"=%s,"write_uid"=%s,"write_date"=%s WHERE id IN %s
+        """, """
+        SELECT "test_new_api_modified_line"."id" AS "id", "test_new_api_modified_line"."modified_id" AS "modified_id",
+               "test_new_api_modified_line"."quantity" AS "quantity", "test_new_api_modified_line"."price" AS "price",
+               "test_new_api_modified_line"."parent_id" AS "parent_id", "test_new_api_modified_line"."create_uid" AS "create_uid",
+               "test_new_api_modified_line"."create_date" AS "create_date", "test_new_api_modified_line"."write_uid" AS "write_uid",
+               "test_new_api_modified_line"."write_date" AS "write_date"
+         FROM "test_new_api_modified_line"
+        WHERE "test_new_api_modified_line".id IN %s
+        """], flush=False):
+            # One query to fetch `parent_id` in order to invalidate `total_price` recursively
+            # but because no record has already recompute `total_price` no need to invalidate recursivly
+            self.modified_line_a_child_child.price = 4
+
+        self.assertEqual(self.modified_line_a.total_price, 7)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 35)
+        self.assertEqual(self.modified_line_a_child.total_price, 6)
+        self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)
+
+    def test_modified_trigger_recursive_fill_cache(self):
+        self.assertEqual(self.modified_line_a.total_price, 6)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 30)
+        with self.assertQueryCount(0, flush=False):
+            # No query because the `modified_line_a.total_price` has fetch every data needed
+            self.modified_line_a_child_child.price = 4
+
+        self.assertEqual(self.modified_line_a.total_price_quantity, 35)
+        self.assertEqual(self.modified_line_a.total_price, 7)
+
+    def test_modified_trigger_recursive_partial_invalidate(self):
+        self.assertEqual(self.modified_line_a_child.total_price_quantity, 25)
+        self.modified_line_a_child_child.flush()
+        self.modified_line_a_child_child.invalidate_cache(ids=self.modified_line_a_child_child.ids)
+
+        self.modified_line_a_child.price
+        with self.assertQueries(["""
+            UPDATE "test_new_api_modified_line" SET "price"=%s,"write_uid"=%s,"write_date"=%s WHERE id IN %s"""
+        ] + ["""
+        SELECT "test_new_api_modified_line"."id" AS "id", "test_new_api_modified_line"."modified_id" AS "modified_id",
+               "test_new_api_modified_line"."quantity" AS "quantity", "test_new_api_modified_line"."price" AS "price",
+               "test_new_api_modified_line"."parent_id" AS "parent_id", "test_new_api_modified_line"."create_uid" AS "create_uid",
+               "test_new_api_modified_line"."create_date" AS "create_date", "test_new_api_modified_line"."write_uid" AS "write_uid",
+               "test_new_api_modified_line"."write_date" AS "write_date"
+         FROM "test_new_api_modified_line"
+        WHERE "test_new_api_modified_line".id IN %s
+        """] * 2, flush=False):
+            # Two requests:
+            # - one for fetch modified_line_a_child_child data (invalidate just before)
+            # - one because modified_line_a_child.parent_id (invalidate just before because we invalidate inverse in `_invalidate_cache`,
+            # see TODO) -> We should change that
+            self.modified_line_a_child_child.price = 4
+        self.assertEqual(self.modified_line_a_child_child.total_price_quantity, 20)
+        self.assertEqual(self.modified_line_a_child.total_price_quantity, 30)
+        self.assertEqual(self.modified_line_a.total_price_quantity, 35)
+        self.assertEqual(self.modified_line_a.total_price, 7)
