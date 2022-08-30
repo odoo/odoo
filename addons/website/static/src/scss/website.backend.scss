@@ -166,7 +166,7 @@
     display: contents;
 }
 
-.o_legacy_kanban_view.o_theme_kanban {
+.o_kanban_renderer.o_theme_kanban {
     $o-theme-kanban-gray: #fcfcfc;
     background-color: $o-theme-kanban-gray;
 
@@ -187,10 +187,18 @@
 
     .o_kanban_record {
         margin-left: $grid-gutter-width * 2;
-        padding: 0;
-        box-shadow: none;
-        background: none;
-        border: none;
+        margin-top: 16px;
+        margin-bottom: 16px;
+
+        .o_theme_preview {
+            box-shadow: none;
+            background: none;
+            border: none;
+            padding: 0;
+            &.o_theme_installed .o_theme_preview_top {
+                @include o-we-active-wrapper($top: 7px, $right: 7px);
+            }
+        }
 
         .o_theme_preview_top {
             position: relative;
@@ -267,10 +275,6 @@
                 transition: opacity 0.2s ease 0.1s;
             }
         }
-
-        &.o_theme_installed .o_theme_preview_top {
-            @include o-we-active-wrapper($top: 7px, $right: 7px);
-        }
     }
 
     /// Grouped Layout
@@ -327,40 +331,33 @@
 }
 
 .o_view_form_theme_preview_controller {
-    .o_control_panel > div:first-of-type {
-        display: none;
-    }
     div.o_form_nosheet {
         padding: 0px;
         height:100%;
         width:100%;
     }
 
-    .is_mobile {
-        @include media-breakpoint-up(md) {
-            iframe {
+    .o_field_iframe{
+        width: 100%;
+        height: 100%;
+        div.is_mobile {
+            @include media-breakpoint-up(md) {
                 // mobile frame is rounded
-                border-radius: 15px;
-                height: 735px;
-            }
-            .img_mobile {
-                pointer-events: none;
-                display: block !important;
-                position: absolute;
-                top: 16px;
-                left: calc(50% - 200px)
-            }
-            .o_field_iframe_preview {
                 margin: auto !important;
                 padding: 53px 11px 58px 28px;
                 width: 416px;
+                iframe {
+                    height: 735px;
+                    border-radius: 15px;
+                }
+                .img_mobile {
+                    pointer-events: none;
+                    display: block;
+                    position: absolute;
+                    top: 16px;
+                    left: calc(50% - 200px)
+                }
             }
         }
-    }
-
-}
-.o_view_kanban_theme_preview_controller {
-    .o_control_panel > div:nth-child(2) {
-        display: none;
     }
 }
