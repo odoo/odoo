@@ -102,8 +102,10 @@
         <field eval="5" name="priority"/>
         <field name="arch" type="xml">
             <tree editable="bottom"
-                  create="1" edit="1" js_class="singleton_list"
+                  create="1" edit="1" js_class="inventory_report_list"
                   sample="1">
+                <field name="create_date" invisible="1"/>
+                <field name="write_date" invisible="1"/>
                 <field name="id" invisible="1"/>
                 <field name="tracking" invisible="1"/>
                 <field name="company_id" invisible="1"/>
@@ -343,12 +345,14 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" decoration-warning='is_outdated' editable="bottom" create="1" edit="1" import="1" js_class="singleton_list" sample="1">
+            <tree default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" decoration-warning='is_outdated' editable="bottom" create="1" edit="1" import="1" js_class="inventory_report_list" class="o_inventory_adjustments" sample="1">
                 <header>
                     <button name="stock.action_stock_inventory_adjustement_name" groups="stock.group_stock_manager" type="action" string="Apply"/>
                     <button name="action_reset" type="object" string="Clear"/>
                     <button name="stock.action_stock_request_count" groups="stock.group_stock_manager" type="action" string="Request a Count"/>
                 </header>
+                <field name="create_date" invisible="1"/>
+                <field name="write_date" invisible="1"/>
                 <field name="id" invisible="1"/>
                 <field name="is_outdated" invisible="1"/>
                 <field name="sn_duplicated" invisible="1"/>
