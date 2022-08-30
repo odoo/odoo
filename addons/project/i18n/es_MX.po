@@ -687,6 +687,16 @@ msgstr ""
 "compartido del proyecto. Elimine los duplicados e inténtelo de nuevo."
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+"No se puede vincular una etapa personal a un proyecto porque solo es visible"
+" para su usuario correspondiente."
+
+#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
 msgid "A task can only have a single personal stage per user."
 msgstr "Una tarea solo puede tener una etapa personal por usuario."
@@ -992,12 +1002,12 @@ msgstr "Asignar a mí"
 #. module: project
 #: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
 msgid " assignee"
-msgstr ""
+msgstr "persona asignada"
 
 #. module: project
 #: model_terms:ir.ui.view,help:project.project_sharing_project_task_view_kanban
 msgid " assignees"
-msgstr ""
+msgstr "personas asignadas"
 
 #. module: project
 #. openerp-web
@@ -1902,7 +1912,7 @@ msgstr "Editar"
 #: code:addons/project/static/src/js/project_kanban.js:0
 #, python-format
 msgid "Edit Personal Stage"
-msgstr ""
+msgstr "Editar etapa personal"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -5470,6 +5480,8 @@ msgid ""
 "You should at least have one personal stage. Create a new stage to which the"
 " tasks can be transferred after this one is deleted."
 msgstr ""
+"Debería tener al menos una etapa personal. Cree una nueva etapa a la que se "
+"puedan transferir las tareas después de eliminar esta."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form

@@ -9,8 +9,8 @@
 # 黎伟杰 <674416404@qq.com>, 2021
 # Martin Trigaux, 2021
 # xu aaron, 2021
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # 
 msgid ""
@@ -604,7 +604,7 @@ msgstr "<span>报告</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>View</span>"
-msgstr "<span>视图</span>"
+msgstr "<span>查看</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -676,6 +676,14 @@ msgid ""
 "A collaborator cannot be selected more than once in the project sharing "
 "access. Please remove duplicate(s) and try again."
 msgstr "在项目共享访问中，一个合作者不能被选择多次。请删除重复的内容并重试。"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr "个人阶段无法链接到项目，因为它只对其相应的用户可见。"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -1991,7 +1999,7 @@ msgid ""
 "review the %s column to move important tasks %s. Every Monday, you review "
 "the %s column. %s"
 msgstr ""
-"通过电子邮件网关轻松填充你的收件箱。定期视图你的收件箱，通过将任务移到其他列来安排任务。每天，你审查%s列，将重要的任务%s移动。每周一，你审查%s栏。%s"
+"通过电子邮件网关轻松填充你的收件箱。定期查看你的收件箱，通过将任务移到其他列来安排任务。每天，你审查%s列，将重要的任务%s移动。每周一，你审查%s栏。%s"
 
 #. module: project
 #. openerp-web

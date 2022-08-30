@@ -4,11 +4,10 @@
 # 
 # Translators:
 # e2f <projects@e2f.com>, 2021
-# Jeffery CHEN <jeffery9@gmail.com>, 2021
-# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
 # Martin Trigaux, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +43,7 @@ msgstr ""
 "工时表记录\n"
 "</p><p>\n"
 "你可以登记和跟踪每天在项目上花费的时间。\n"
-"每一次花在一个项目上都会成为成本，并且如果有需要的话可以重新开票给客户。</p>\n"
+"每一次花在一个项目上都会成为成本，并且如果有需要的话可以重新结算给客户。</p>\n"
 "            "
 
 #. module: sale_timesheet
@@ -78,7 +77,7 @@ msgstr "，导致了"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for Invoice:</em>"
-msgstr "<em class=\"font-weight-normal text-muted\">工时表发票: </em>"
+msgstr "<em class=\"font-weight-normal text-muted\">工时表结算单: </em>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -125,12 +124,12 @@ msgstr "<span class=\"o_stat_text\">记录</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoiced:</strong>"
-msgstr "<strong>发票:</strong>"
+msgstr "<strong>结算单:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoices:</strong>"
-msgstr "<strong>发票:</strong>"
+msgstr "<strong>结算单:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
@@ -140,7 +139,7 @@ msgstr "<strong>销售订单:</strong>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>To invoice:</strong>"
-msgstr "<strong>待开发票</strong>"
+msgstr "<strong>待开结算单</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -182,12 +181,12 @@ msgstr "所有不是来自工时表的收入，并与项目的分析账户相联
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Amount Invoiced"
-msgstr "发票金额"
+msgstr "结算单金额"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_invoiced
 msgid "Amount Re-invoiced"
-msgstr "重新开具发票的金额"
+msgstr "重新开具结算单的金额"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_to_invoice
@@ -197,7 +196,7 @@ msgstr "未含税待开票金额"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_to_invoice
 msgid "Amount to Re-invoice"
-msgstr "重新开具发票的金额"
+msgstr "重新开具结算单的金额"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -585,7 +584,7 @@ msgstr "进行中"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
 msgid "Info Invoice"
-msgstr "发票信息"
+msgstr "结算单信息"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
@@ -598,7 +597,7 @@ msgstr "结算单"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Invoice Policy"
-msgstr "发票政策"
+msgstr "结算单政策"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -606,7 +605,7 @@ msgstr "发票政策"
 msgid ""
 "Invoice based on timesheets (delivered quantity) on projects or tasks you'll"
 " create later on."
-msgstr "根据你以后创建的项目或任务的时间表（交付数量）来开具发票。"
+msgstr "根据你以后创建的项目或任务的时间表（交付数量）来开具结算单。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -614,7 +613,7 @@ msgstr "根据你以后创建的项目或任务的时间表（交付数量）来
 msgid ""
 "Invoice based on timesheets (delivered quantity), and create a project for "
 "the order with a task for each sales order line to track the time spent."
-msgstr "根据工时表（交付数量）开具发票，并为订单创建一个项目，为每个销售订单行设置任务，以跟踪所花费的时间。"
+msgstr "根据工时表（交付数量）开具结算单，并为订单创建一个项目，为每个销售订单行设置任务，以跟踪所花费的时间。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -622,7 +621,7 @@ msgstr "根据工时表（交付数量）开具发票，并为订单创建一个
 msgid ""
 "Invoice based on timesheets (delivered quantity), and create a task in an "
 "existing project to track the time spent."
-msgstr "根据工时表（交付数量）开具发票，并在现有项目中创建一个任务来跟踪所花费的时间。"
+msgstr "根据工时表（交付数量）开具结算单，并在现有项目中创建一个任务来跟踪所花费的时间。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -630,7 +629,7 @@ msgstr "根据工时表（交付数量）开具发票，并在现有项目中创
 msgid ""
 "Invoice based on timesheets (delivered quantity), and create an empty "
 "project for the order to track the time spent."
-msgstr "根据工时表（交付数量）开具发票，并为订单创建一个空项目，以跟踪所花费的时间。"
+msgstr "根据工时表（交付数量）开具结算单，并为订单创建一个空项目，以跟踪所花费的时间。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -641,12 +640,12 @@ msgstr "根据工时表创建的结算单"
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__allow_billable
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__allow_billable
 msgid "Invoice your time and material from tasks."
-msgstr "从任务中开出你的时间和材料的发票。"
+msgstr "从任务中开出你的时间和材料的结算单。"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Invoice your time and material to customers"
-msgstr "向客户开具你的时间和材料的发票"
+msgstr "向客户开具你的时间和材料的结算单"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -812,7 +811,7 @@ msgid ""
 "yet invoiced (and validated, if applicable) will be invoiced without "
 "distinction."
 msgstr ""
-"只有这个时期尚未开具发票（和验证，如果适用）的工时表将被开具发票。如果没有指明时期，所有尚未开具发票（和验证，如果适用）的工时表将不加区分地开具发票。"
+"只有这个时期尚未开具结算单（和验证，如果适用）的工时表将被开具结算单。如果没有指明时期，所有尚未开具结算单（和验证，如果适用）的工时表将不加区分地开具结算单。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1101,7 +1100,7 @@ msgstr "销售订单行"
 msgid ""
 "Sales order lines define milestones of the project to invoice by setting the"
 " delivered quantity."
-msgstr "销售订单行通过设置交付数量来定义项目的里程碑，以开具发票。"
+msgstr "销售订单行通过设置交付数量来定义项目的里程碑，以开具结算单。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1110,7 +1109,7 @@ msgid ""
 "Sales order lines define milestones of the project to invoice by setting the"
 " delivered quantity. Create a project for the order with a task for each "
 "sales order line to track the time spent."
-msgstr "销售订单行通过设置交付数量来定义项目的里程碑，以开具发票。为订单创建一个项目，每个销售订单行都有一个任务，以跟踪所花费的时间。"
+msgstr "销售订单行通过设置交付数量来定义项目的里程碑，以开具结算单。为订单创建一个项目，每个销售订单行都有一个任务，以跟踪所花费的时间。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1119,7 +1118,7 @@ msgid ""
 "Sales order lines define milestones of the project to invoice by setting the"
 " delivered quantity. Create a task in an existing project to track the time "
 "spent."
-msgstr "销售订单行通过设置交付数量来定义项目的里程碑，以开具发票。在现有项目中创建一个任务，以跟踪所花费的时间。"
+msgstr "销售订单行通过设置交付数量来定义项目的里程碑，以开具结算单。在现有项目中创建一个任务，以跟踪所花费的时间。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1128,7 +1127,7 @@ msgid ""
 "Sales order lines define milestones of the project to invoice by setting the"
 " delivered quantity. Create an empty project for the order to track the time"
 " spent."
-msgstr "销售订单行通过设置交付数量来定义项目的里程碑，以开具发票。为订单创建一个空项目，以跟踪所花费的时间。"
+msgstr "销售订单行通过设置交付数量来定义项目的里程碑，以开具结算单。为订单创建一个空项目，以跟踪所花费的时间。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
@@ -1139,7 +1138,7 @@ msgstr "任务所关联的销售订单。"
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr "在发票中搜索"
+msgstr "在结算单中搜索"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
@@ -1243,7 +1242,7 @@ msgstr "开始日期"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_tree
 msgid "Sum of Amount Invoiced"
-msgstr "已交票金额"
+msgstr "已结算金额"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_tree
@@ -1531,7 +1530,7 @@ msgstr "跟踪服务"
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
-msgstr "每天按项目跟踪您的工作时间，这次会向您的客户开具发票。"
+msgstr "每天按项目跟踪您的工作时间，这次会向您的客户开具结算单。"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit
@@ -1604,13 +1603,13 @@ msgstr "你不能把一个应收账款项目与一个不是服务的销售订单
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot modify timesheets that are already invoiced."
-msgstr "你不能修改已经开具发票的考勤表。"
+msgstr "你不能修改已经开具结算单的考勤表。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot remove a timesheet that has already been invoiced."
-msgstr "你不能删除已经开过发票的考勤表。"
+msgstr "你不能删除已经开过结算单的考勤表。"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/sale_order.py:0

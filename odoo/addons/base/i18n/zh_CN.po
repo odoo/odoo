@@ -7,11 +7,11 @@
 # 黎伟杰 <674416404@qq.com>, 2021
 # 深圳市耀影科技有限公司_QQ1006399173, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Kevin Wang, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
 # Chill Liao <chill421@qq.com>, 2022
 # Emily Jia <eji@odoo.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1460,9 +1460,9 @@ msgstr ""
 "\n"
 "        如果任何这些要求不满足，Odoo 会通知您.\n"
 "\n"
-"        为具有授权的客户验证的任何发票都将是\n"
+"        为具有授权的客户验证的任何结算单都将是\n"
 "        自动设置为\"已付款\"状态，并会产生付款. 一个\n"
-"        仪表板中的选项将允许您视图产生的所有付款\n"
+"        仪表板中的选项将允许您查看产生的所有付款\n"
 "        通过 SDD 并为它们产生一个 XML 整合文件，将它们分组为\n"
 "        你觉得合适.\n"
 "\n"
@@ -1535,11 +1535,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        该模块将供应商账单和客户发票的税务信息（主要是增值税）发送给SII。\n"
-"        该模块将供应商账单和客户发票的税务信息（主要是增值税）发送到SII。  它被称为\n"
+"        该模块将供应商账单和客户结算单的税务信息（主要是增值税）发送给SII。\n"
+"        该模块将供应商账单和客户结算单的税务信息（主要是增值税）发送到SII。  它被称为\n"
 "        程序 G417 - IVA.登记簿的传送。  它是\n"
 "        每个营业额在600万欧元以上的公司都必须使用，其他公司也可以使用。\n"
-"        已经在使用它了。  发票会在验证后自动\n"
+"        已经在使用它了。  结算单会在验证后自动\n"
 "        在验证后发送。  \n"
 "        \n"
 "        信息如何被发送到SII取决于\n"
@@ -1956,7 +1956,7 @@ msgstr ""
 "    或产品本身。  \n"
 "    \n"
 "    只有当送货单被确认后，你才能创建送货指南。\n"
-"    指南。  然后，它将遵循与发票相同的流程，将其发送到\n"
+"    指南。  然后，它将遵循与结算单相同的流程，将其发送到\n"
 "    SII。  \n"
 "    "
 
@@ -3638,7 +3638,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"现金收付会计报表\n"
+"现收现付制会计报表\n"
 "=================================\n"
 "    "
 
@@ -4292,9 +4292,9 @@ msgstr ""
 "我们还为DDT使用了一个单独的序列，因为这个号码不应该有任何空隙，而且只应该在货物发送时使用。\n"
 "因为号码不应该有任何空隙，而且只应该在货物发送的时候使用。\n"
 "\n"
-"当发票与他们的销售订单和销售订单与交货相关联时，系统将自动计算出每个订单的DDT。\n"
-"当发票与他们的销售订单和带有交货的销售订单相关时，系统将自动计算出每一个链接的DDTs\n"
-"发票行在FatturaPA XML中导出。   \n"
+"当结算单与他们的销售订单和销售订单与交货相关联时，系统将自动计算出每个订单的DDT。\n"
+"当结算单与他们的销售订单和带有交货的销售订单相关时，系统将自动计算出每一个链接的DDTs\n"
+"结算单行在FatturaPA XML中导出。   \n"
 "    "
 
 #. module: base
@@ -4409,7 +4409,7 @@ msgstr ""
 "\n"
 "秘鲁EDI本地化\n"
 "======================\n"
-"允许用户为秘鲁的发票生成EDI文件。\n"
+"允许用户为秘鲁的结算单生成EDI文件。\n"
 "\n"
 "默认情况下，系统使用IAP代理。  这样做的好处是\n"
 "这样做的好处是，当你在SUNAT门户中选择Digiflow作为你的OSE时，就可以立即使用该系统。\n"
@@ -4418,7 +4418,7 @@ msgstr ""
 "如果你从Digiflow购买了一个账户，你也可以直接把它发送给Digiflow。\n"
 "甚至是SUNAT，以备不时之需。\n"
 "\n"
-"我们支持发送和取消客户的发票。\n"
+"我们支持发送和取消客户的结算单。\n"
 "    "
 
 #. module: base
@@ -4789,23 +4789,23 @@ msgstr ""
 "能够在 Odoo 中创建日记帐以创建电子客户凭单，然后向 AFIP(通过 Web 服务)报告.\n"
 "可用的选项有:\n"
 "\n"
-"    * 电子发票 - 网络服务\n"
+"    * 电子结算单 - 网络服务\n"
 "    * 出口凭证 - 网络服务\n"
 "    * 电子财政债券 - 网络服务\n"
 "\n"
-"在电子日记帐中，如果您验证发票，则该发票将在 Odoo 和 AFIP 中进行验证. 这个验证是\n"
-"即时制作，我们收到来自 AFIP 的\"已批准/已通过观察/已拒绝\"状态. 如果发票有\n"
+"在电子日记帐中，如果您验证结算单，则该结算单将在 Odoo 和 AFIP 中进行验证. 这个验证是\n"
+"即时制作，我们收到来自 AFIP 的\"已批准/已通过观察/已拒绝\"状态. 如果结算单有\n"
 "被 AFIP 拒绝将不会在系统中过帐，并且会显示一条带有错误详细信息的弹出消息(拒绝原因)\n"
 "我们收到并提示问题可能是什么.\n"
 "\n"
-"出于审计和故障排除的目的，我们还增加了一个菜单\"在 AFIP 中谘询发票\"，让我们可以以前查阅发票\n"
+"出于审计和故障排除的目的，我们还增加了一个菜单\"在 AFIP 中谘询结算单\"，让我们可以以前查阅结算单\n"
 "发送到 AFIP，最后一个号码用作支持 Odoo 和 AFIP 之间序列同步的任何可能问题.\n"
 "\n"
 "    注意：从 日记帐 的表单视图中，我们能够强制 odoo 序列与\n"
 "    在 AFIP 中注册的最后一个号码.\n"
 "\n"
 "从供应商账单中，我们增加了一个可以在会计设置中设置的功能，以便能够验证\n"
-"AFIP 中的供应商账单以检查供应商账单是否真实(更多信息请视图设置说明).\n"
+"AFIP 中的供应商账单以检查供应商账单是否真实(更多信息请查看设置说明).\n"
 "\n"
 "设置:\n"
 "\n"
@@ -4814,9 +4814,9 @@ msgstr ""
 "    1.1.设置 AFIP Web 服务模式:\n"
 "\n"
 "    * 测试环境，以便使用将用于测试实例的样例证书并进行 NOT\n"
-"      给 AFIP 的真实发票. 只是为了测试. 对于示范实例已经预定义，您无需设置\n"
+"      给 AFIP 的真实结算单. 只是为了测试. 对于示范实例已经预定义，您无需设置\n"
 "      它(在 AFIP 中通常称为 Homologation 环境).\n"
-"    * 生产环境，以便为 AFIP 生成真实的证书和合法发票，\n"
+"    * 生产环境，以便为 AFIP 生成真实的证书和合法结算单，\n"
 "\n"
 "    1.2.设置您的 AFIP 证书: 如果您在示范实例中，则缺省情况下已设置此证书. 如果你\n"
 "         在生产实例中只需要上传您的 AFIP 证书\n"
@@ -4828,7 +4828,7 @@ msgstr ""
 "    2.1. 使用文件字段缺省设置请不要更改\n"
 "    2.2.为其中一个电子系统设置 AFIP POS 系统.\n"
 "\n"
-"        * 电子发票 - 网络服务'\n"
+"        * 电子结算单 - 网络服务'\n"
 "        * 电子财政债券 - 网络服务'\n"
 "        * 出口凭证 - 网络服务'\n"
 "\n"
@@ -4836,17 +4836,17 @@ msgstr ""
 "\n"
 "    注意：您可以使用日记帐表单中的\"检查可用 AFIP POS\"按钮来确认用于创建日记帐.\n"
 "\n"
-"有关阿根廷电子发票的更多信息，请访问 http://www.afip.gob.ar/fe/ayuda.asp\n"
+"有关阿根廷电子结算单的更多信息，请访问 http://www.afip.gob.ar/fe/ayuda.asp\n"
 "\n"
 "技术的\n"
 "---------\n"
 "\n"
 "实现的 Web 服务是最常见的：\n"
 "\n"
-"* wsfev1 - \"Factura Electrónica\"(电子发票)\n"
+"* wsfev1 - \"Factura Electrónica\"(电子结算单)\n"
 "* wsbfev1 - \"Bono Fiscal Electrónico\"(电子财政债券)\n"
-"* wsfexv1 - \"Factura de Exportación Electrónica\"(电子出口发票 - 与出口凭证相同)\n"
-"* wscdc - \"Constatación de Comprobantes\"(发票验证)\n"
+"* wsfexv1 - \"Factura de Exportación Electrónica\"(电子出口结算单 - 与出口凭证相同)\n"
+"* wscdc - \"Constatación de Comprobantes\"(结算单验证)\n"
 "\n"
 "有关开发信息，请访问 http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 
@@ -4976,8 +4976,8 @@ msgstr ""
 "  * (AR) Exento\n"
 "  * (AR) Monotributo\n"
 "\n"
-"* 日志销售配置为所有公司的预打印和世博发票\n"
-"* 发票和其他文件的例子已经在\"(AR)Responsable Inscripto \"公司得到验证\n"
+"* 日志销售配置为所有公司的预打印和世博结算单\n"
+"* 结算单和其他文件的例子已经在\"(AR)Responsable Inscripto \"公司得到验证\n"
 "* 不同责任类型的合作伙伴实例。\n"
 "\n"
 "  * ADHOC (IVA Responsable Inscripto)\n"
@@ -4991,14 +4991,14 @@ msgstr ""
 "\n"
 "* 账户表不会自动安装，每个CoA模板都取决于公司的AFIP责任，你需要根据你的需要安装CoA。\n"
 "* 安装CoA时不会产生销售日记账，你需要手动配置你的日记账。\n"
-"* 在创建发票时，文件类型将被正确地预先选择，这取决于文件的签发人和接收人的财政责任以及相关的日记。\n"
+"* 在创建结算单时，文件类型将被正确地预先选择，这取决于文件的签发人和接收人的财政责任以及相关的日记。\n"
 "* 增加了一个CBU账户类型和CBU验证。\n"
 "\n"
 "\n"
 "技术\n"
 "---------\n"
 "\n"
-"该模块增加了最终用于电子发票模块的模型和字段。以下是主要功能的摘要。\n"
+"该模块增加了最终用于电子结算单模块的模型和字段。以下是主要功能的摘要。\n"
 "\n"
 "主数据。\n"
 "\n"
@@ -5205,7 +5205,7 @@ msgid ""
 msgstr ""
 "\n"
 "创建用于声明的内部统计器 XML 报表\n"
-"基于发票.\n"
+"基于结算单.\n"
 "增加在 Intrastat XML 报表中指定货物来源国和合作伙伴加值税的可能性.\n"
 " "
 
@@ -5879,7 +5879,7 @@ msgstr ""
 "管理员工的费用\n"
 "============================\n"
 "\n"
-"此应用程序允许您管理员工的日常开支. 它允许您访问员工的收费说明，并让您有权完成和验证或拒绝该笔记. 验证后，它为雇员创建发票.\n"
+"此应用程序允许您管理员工的日常开支. 它允许您访问员工的收费说明，并让您有权完成和验证或拒绝该笔记. 验证后，它为雇员创建结算单.\n"
 "员工可以对自己的费用进行编码，验证流程在管理人员验证后自动将其记入会计核算.\n"
 "\n"
 "\n"
@@ -5890,7 +5890,7 @@ msgstr ""
 "*经他的经理批准\n"
 "*会计核算和会计分录创建\n"
 "\n"
-"该模块还使用分析会计，并与时间表模块上的发票兼容，以便您可以自动重新开发客户的费用，如果您的项目工作.\n"
+"该模块还使用分析会计，并与时间表模块上的结算单兼容，以便您可以自动重新开发客户的费用，如果您的项目工作.\n"
 "    "
 
 #. module: base
@@ -7043,8 +7043,8 @@ msgstr ""
 "======================\n"
 "\n"
 "作为SII要求的一部分（智利的法律要求）。\n"
-"从2021年3月开始，boletas交易必须按照电子工作流程发送到SII，使用与电子发票不同的网络服务。\n"
-"电子工作流程，使用不同于电子发票的网络服务。\n"
+"从2021年3月开始，boletas交易必须按照电子工作流程发送到SII，使用与电子结算单不同的网络服务。\n"
+"电子工作流程，使用不同于电子结算单的网络服务。\n"
 "以前，不需要向SII发送boletas，只需要发送一份每日报告。\n"
 "\n"
 "此外，单独发送Boleta（使用EDI工作流程）。\n"
@@ -7053,18 +7053,18 @@ msgstr ""
 "这被称为 \"Libro de ventas diarias\"（以前的 \"reporte de consumo de folios \"或RCOF）。\n"
 "\n"
 "\n"
-"电子帐单与电子发票工作流程之间的区别。\n"
+"电子帐单与电子结算单工作流程之间的区别。\n"
 "=========================================================================\n"
 "\n"
 "这些工作流程有一些重要的区别，导致我们做这个PR的具体变化。\n"
 "以下是这些差异。\n"
 "\n"
-"* 发送电子发票信息的机制需要专门的服务器，与接收电子发票时使用的服务器不同（\"Palena \"用于生产环境 - palena.si.cl和 \"Maullin \"用于测试环境 - maullin.si.cl）。\n"
+"* 发送电子结算单信息的机制需要专门的服务器，与接收电子结算单时使用的服务器不同（\"Palena \"用于生产环境 - palena.si.cl和 \"Maullin \"用于测试环境 - maullin.si.cl）。\n"
 "* 认证服务、查询交付状态和文件状态将是不同的。\n"
 "* 获得的认证令牌\n"
 "* 发送电子公文的XML模式已经更新，加入了新的标签。\n"
-"* 电子发票的验证诊断将通过一个 \"REST \"网络服务来进行，该服务的输入是交付的轨迹ID。电子发票将继续通过电子邮件接收其诊断结果。\n"
-"* 与电子病历相关的追踪号码（\"identificador de envío\"）将是15位数。(电子发票是10位)\n"
+"* 电子结算单的验证诊断将通过一个 \"REST \"网络服务来进行，该服务的输入是交付的轨迹ID。电子结算单将继续通过电子邮件接收其诊断结果。\n"
+"* 与电子病历相关的追踪号码（\"identificador de envío\"）将是15位数。(电子结算单是10位)\n"
 "\n"
 "该SII指南的亮点。\n"
 "    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
@@ -9557,7 +9557,7 @@ msgid ""
 msgstr ""
 "\n"
 "一般业务语言 (UBL [HTTP://ubl.xml.org/'] 是标准电子 XML 业务文件库，例如\n"
-"发票. UBL 标准成为ISO/IEC 19845\n"
+"结算单. UBL 标准成为ISO/IEC 19845\n"
 "[HTTP://www.iso.org/iso/目录_细节.htm? csnumber_66370]标准于2016年1月\n"
 "(参见 官方公告 [HTTP://www.prweb.com/发布/2016/01/prweb13186919.htm_]).\n"
 "比利时电子开票使用 UBL 2.0 使用 e-fff 协议.\n"
@@ -11214,7 +11214,7 @@ msgstr "科目持有人名称"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_intrastat_expiry
 msgid "Account Invoice Expiry"
-msgstr "帐户发票到期"
+msgstr "帐户结算单到期"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -11463,7 +11463,7 @@ msgstr "动作用途"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
 msgid "Action Window"
-msgstr "窗体动作"
+msgstr "动作窗口"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_close
@@ -11600,7 +11600,7 @@ msgstr "将条码扫瞄功能增加到活动管理中."
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_cash_basis
 msgid "Add cash basis functionality for reports"
-msgstr "为报表增加现金支付功能"
+msgstr "为报表增加现收现付制功能"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_survey
@@ -12138,17 +12138,17 @@ msgstr "允许与邮件外挂整合."
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp_subcontracting
 msgid "Allows the subcontracting process with the barcode views"
-msgstr "允许使用条码视图进行分包过程"
+msgstr "允许外包过程使用条码视图"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_quality_control
 msgid "Allows the usage of quality checks within the barcode views"
-msgstr "允许在条码视图中使用品检"
+msgstr "允许在条码视图中使用质量检查"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_map
 msgid "Allows the viewing of records on a map"
-msgstr "允许视图地图上的记录"
+msgstr "允许地图上的查看这些记录"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_profile
@@ -12792,7 +12792,7 @@ msgstr "合约签署时自动创建额外的休假时间"
 msgid ""
 "Automatically finds the purchase order linked to a vendor bill when using "
 "invoice extraction"
-msgstr "使用发票捕获时自动查找连结到供应商帐单的采购订单"
+msgstr "使用结算单捕获时自动查找连结到供应商帐单的采购订单"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation__state
@@ -13150,7 +13150,7 @@ msgstr "基本的2D矩阵视图"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_cohort
 msgid "Basic Cohort view for odoo"
-msgstr "Odoo的基本同类视图"
+msgstr "Odoo的基本群组视图"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality
@@ -13426,7 +13426,7 @@ msgstr "博茨瓦纳"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__margin_bottom
 msgid "Bottom Margin (mm)"
-msgstr "下边距(公厘)"
+msgstr "下边距(毫米)"
 
 #. module: base
 #: model:res.country,name:base.bv
@@ -13501,7 +13501,7 @@ msgstr "创建桥梁以将连结到 AA 的费用数量增加到项目表单中"
 msgid ""
 "Bridge created to add the number of invoices linked to an AA to a project "
 "form"
-msgstr "创建桥以将连结到 AA 的发票数量增加到项目表单"
+msgstr "创建桥以将连结到 AA 的结算单数量增加到项目表单"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_sale_subscription
@@ -13888,7 +13888,7 @@ msgstr "级联"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_cash_basis
 msgid "Cash Basis Accounting Reports"
-msgstr "收付实现制会计报表"
+msgstr "现收现付制会计报表"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
@@ -13932,8 +13932,8 @@ msgid ""
 "(San Francisco) in its entirety and does not include any costs relating to "
 "the legislation of the country in which the client is located."
 msgstr ""
-"某些国家根据其国内立法对发票金额实行源头预扣. 任何源泉扣缴将由客户支付给税务机关. 在任何情况下，我司(旧金山)都不得参与与国家立法相关的费用. "
-"因此，发票金额将全部归我司(旧金山)所有，不包括与客户所在国家/地区的法律相关的任何费用."
+"某些国家根据其国内立法对结算单金额实行源头预扣. 任何源泉扣缴将由客户支付给税务机关. 在任何情况下，我司(旧金山)都不得参与与国家立法相关的费用. "
+"因此，结算单金额将全部归我司(旧金山)所有，不包括与客户所在国家/地区的法律相关的任何费用."
 
 #. module: base
 #: model:res.country,name:base.td
@@ -14234,7 +14234,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_cohort
 msgid "Cohort View"
-msgstr "列表视图"
+msgstr "群组视图"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad
@@ -14998,7 +14998,7 @@ msgstr "创建访问权限"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Create Contextual Action"
-msgstr "创建上下文操作"
+msgstr "创建上下文动作"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__create_date
@@ -15928,7 +15928,7 @@ msgstr "样例失败引导"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failure_ids
 msgid "Demo Installation Failures"
-msgstr "样例安装失败"
+msgstr "演示安装失败"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -16454,7 +16454,7 @@ msgstr "域值"
 msgid ""
 "Domain on non-relational field \"%(name)s\" makes no sense "
 "(domain:%(domain)s)"
-msgstr "非关系字段\"%(name)s\"上的domain没有意义(domain: %(domain)s)"
+msgstr "非关系字段\"%(name)s\"上的域没有意义(域: %(domain)s)"
 
 #. module: base
 #: model:res.country,name:base.dm
@@ -18127,7 +18127,7 @@ msgstr "格式"
 #: model:ir.model.fields,help:base.field_res_partner__email_formatted
 #: model:ir.model.fields,help:base.field_res_users__email_formatted
 msgid "Format email address \"Name <email@domain>\""
-msgstr "信箱格式「名称<email@domain>」"
+msgstr "邮件地址格式\"名称<email@domain>\""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__email_formatted
@@ -18293,7 +18293,7 @@ msgstr "G 批发和零售业；汽车和摩托车修理"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gcc_invoice
 msgid "G.C.C. - Arabic/English Invoice"
-msgstr "G.C.C. - 阿拉伯文/英文发票"
+msgstr "G.C.C. - 阿拉伯文/英文结算单"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__gpl-2
@@ -19781,22 +19781,22 @@ msgstr "从网络获取汇率.\n"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi
 msgid "Import/Export Invoices From XML/PDF"
-msgstr "从 XML/PDF 导入/导出发票"
+msgstr "从 XML/PDF 导入/导出结算单"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_facturx
 msgid "Import/Export invoices with Factur-X"
-msgstr "使用 Factur-X 的进出口发票"
+msgstr "使用 Factur-X 的进出口结算单"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_bis3
 msgid "Import/Export invoices with UBL (BIS3)"
-msgstr "带有 UBL (BIS3) 的进出口发票"
+msgstr "带有 UBL (BIS3) 的进出口结算单"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl
 msgid "Import/Export invoices with generic UBL"
-msgstr "具有一般 UBL 的进出口发票"
+msgstr "具有一般 UBL 的进出口结算单"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__modules
@@ -20275,7 +20275,7 @@ msgstr "日期、时间格式不正确. 请引用您的语言设置中的日期/
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid domain format %(expr)s in %(use)s"
-msgstr "%(use)s 中的域名格式 %(expr)s 无效"
+msgstr "%(use)s 中的域格式 %(expr)s 无效"
 
 #. module: base
 #: code:addons/base/models/ir_default.py:0
@@ -20407,7 +20407,7 @@ msgstr "倒置利率"
 msgid ""
 "Invoice & Delivery addresses are used in sales orders. Private addresses are"
 " only visible by authorized users."
-msgstr "发票和交货地址用于销售订单. 专有地址只对授权用户可见."
+msgstr "结算单和交货地址用于销售订单. 专有地址只对授权用户可见."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
@@ -20582,7 +20582,7 @@ msgstr "泽西岛"
 #: model:ir.model.fields,field_description:base.field_res_partner__function
 #: model:ir.model.fields,field_description:base.field_res_users__function
 msgid "Job Position"
-msgstr "工作职称"
+msgstr "工作岗位"
 
 #. module: base
 #: model:res.country,name:base.jo
@@ -21169,7 +21169,7 @@ msgstr "Ledger 28431.8 x 279.4 公厘"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__margin_left
 msgid "Left Margin (mm)"
-msgstr "左边距(公厘)"
+msgstr "左边距(毫米)"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__direction__ltr
@@ -23951,9 +23951,9 @@ msgstr ""
 "管理您的员工\n"
 "---------\n"
 "\n"
-"监督您公司通讯录中的所有重要消息. 一些\n"
-"消息仅限人力资源经理视图，其它人公开视图\n"
-"同事.\n"
+"监督您公司通讯录中的所有重要信息. 一些\n"
+"消息仅限人力资源经理查看，其它人查看\n"
+"同事公开信息.\n"
 "\n"
 "记录员工合约并在必须续签时收到提醒.\n"
 "\n"
@@ -24696,10 +24696,10 @@ msgstr ""
 "服务. 处理赔偿、跟踪保修、遵循客户索赔、计划\n"
 "送货单等\n"
 "\n"
-"发票和会计整合\n"
+"结算单和会计整合\n"
 "----------------------\n"
 "\n"
-"只需点击几下即可生成客户发票. 控制销售和现金\n"
+"只需点击几下即可生成客户结算单. 控制销售和现金\n"
 "时间并使用 Odoo 的强大报告做出更明智的决策以改进\n"
 "你商店的效率. \n"
 "\n"
@@ -24802,12 +24802,12 @@ msgstr ""
 "Odoo供应链\n"
 "-----------------\n"
 "\n"
-"利用Odoo开源供应链，实现从请购到付款的自动化，控制发票开具。\n"
+"利用Odoo开源供应链，实现从请购到付款的自动化，控制结算单开具。\n"
 "<a href=\"https://www.odoo.com/app/purchase\">开源供应链</a>。\n"
 "\n"
 "自动化采购建议，启动询价，跟踪\n"
 "采购订单，管理供应商的信息，控制产品接收和\n"
-"检查供应商的发票。\n"
+"检查供应商的结算单。\n"
 "\n"
 "自动化采购建议\n"
 "----------------------------------\n"
@@ -24818,7 +24818,7 @@ msgstr ""
 "级别、物流规则、销售订单、预测的生产订单等，利用采购规则提高您的采购和库存绩效。\n"
 "\n"
 "一键发送报价请求或采购订单给你的供应商。\n"
-"从你的采购订单中获取产品接收和发票。\n"
+"从你的采购订单中获取产品接收和结算单。\n"
 "\n"
 "采购招标\n"
 "----------------\n"
@@ -24850,7 +24850,7 @@ msgstr ""
 "根据数量和特殊的合同条件。你甚至可以基于你的\n"
 "销售价格取决于你的供应商的价格。\n"
 "\n"
-"控制产品和发票\n"
+"控制产品和结算单\n"
 "-----------------------------\n"
 "\n"
 "没有任何产品或订单被遗漏，库存控制使您能够管理\n"
@@ -24858,8 +24858,8 @@ msgstr ""
 "控制方法，以满足您的需要。\n"
 "\n"
 "不费吹灰之力就能控制供应商的账单。根据你的需要选择正确的方法\n"
-"根据您的需要选择合适的方法：根据采购订单、产品、收据预先生成发票草稿。\n"
-"接收，手动创建发票并从采购订单导入行。\n"
+"根据您的需要选择合适的方法：根据采购订单、产品、收据预先生成结算单草稿。\n"
+"接收，手动创建结算单并从采购订单导入行。\n"
 "等。\n"
 "\n"
 
@@ -25981,7 +25981,7 @@ msgstr ""
 "\n"
 "### 自动化注册和支付过程\n"
 "\n"
-"使用多票功能向您的活动销售注册. 活动可以是免费的，也可以是收费的. 与会者可以根据您的设置使用信用卡或发票联机支付.\n"
+"使用多票功能向您的活动销售注册. 活动可以是免费的，也可以是收费的. 与会者可以根据您的设置使用信用卡或结算单联机支付.\n"
 "\n"
 "通过早鸟价、会员特殊条件或多张门票的额外服务来提高您的销售额.\n"
 "\n"
@@ -26286,12 +26286,12 @@ msgstr "于页面直接上层必须是notebook"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__page_height
 msgid "Page height (mm)"
-msgstr "页高 (公厘)"
+msgstr "页高 (毫米)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__page_width
 msgid "Page width (mm)"
-msgstr "页宽 (公厘)"
+msgstr "页宽 (毫米)"
 
 #. module: base
 #: model:res.country,name:base.pk
@@ -26985,12 +26985,12 @@ msgstr "打印美国支票"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_height
 msgid "Print page height (mm)"
-msgstr "打印纸页高 (公厘)"
+msgstr "打印纸页高 (毫米)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__print_page_width
 msgid "Print page width (mm)"
-msgstr "打印页面宽(公厘)"
+msgstr "打印页面宽(毫米)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__print_report_name
@@ -27426,11 +27426,11 @@ msgstr ""
 "即时绿色/红色视觉指示器，用于扫描已完成的内容和内容\n"
 "需要你的注意.\n"
 "\n"
-"时间表、合约和发票\n"
+"时间表、合约和结算单\n"
 "---------------------\n"
 "\n"
 "项目会自动与客户合约整合，让您\n"
-"根据时间和材料开具发票并轻松记录时间表.\n"
+"根据时间和材料开具结算单并轻松记录时间表.\n"
 "\n"
 "跟踪问题\n"
 "------------\n"
@@ -28284,7 +28284,7 @@ msgstr "修复毁坏的产品"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_repair
 msgid "Repairs"
-msgstr "维修"
+msgstr "修理"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__doall
@@ -28482,7 +28482,7 @@ msgstr "限制"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__margin_right
 msgid "Right Margin (mm)"
-msgstr "右边距(公厘)"
+msgstr "右边距(毫米)"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__direction__rtl
@@ -28529,7 +28529,7 @@ msgstr "规则"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "Rule Definition (Domain Filter)"
-msgstr "规则定义( 域名筛选)"
+msgstr "规则定义( 域筛选)"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_rule_no_access_rights
@@ -29080,7 +29080,7 @@ msgstr "搜索合作伙伴行业"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view
 msgid "Search View"
-msgstr "寻找视图"
+msgstr "搜索视图"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view_id
@@ -30188,7 +30188,7 @@ msgstr "子菜单"
 #: model:ir.module.module,summary:base.module_hr_expense
 #: model:ir.module.module,summary:base.module_hr_payroll_expense
 msgid "Submit, validate and reinvoice employee expenses"
-msgstr "提交，验证，支付员工报销"
+msgstr "提交，验证，结算员工报销"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_subscription
@@ -31591,7 +31591,7 @@ msgstr ""
 "该模块有助于分析事件注册.\n"
 "为此目的，它增加了\n"
 "\n"
-"  * 对与会者的队列分析；\n"
+"  * 对与会者的群组分析；\n"
 "  * 对事件的甘特视图；\n"
 " "
 
@@ -31836,7 +31836,7 @@ msgstr "工具"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__margin_top
 msgid "Top Margin (mm)"
-msgstr "上边距(公厘)"
+msgstr "上边距(毫米)"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__count

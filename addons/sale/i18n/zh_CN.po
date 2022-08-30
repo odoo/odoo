@@ -10,11 +10,9 @@
 # xu aaron, 2021
 # Benson <Benson.Dr@Gmail.com>, 2022
 # Martin Trigaux, 2022
-# yong liu, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Jinjiu Liu, 2022
-# Desausoi Laurent, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -481,7 +479,7 @@ msgstr ""
 "        <br/><br/>\n"
 "        你的\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"             形式发票来自于 <t t-out=\"doc_name or ''\">报价单</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"             形式结算单来自于 <t t-out=\"doc_name or ''\">报价单</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (参考号: <t t-out=\"object.origin or ''\"/> )\n"
 "            </t>\n"
@@ -926,7 +924,7 @@ msgstr "允许你发送形式结算单给客户"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "允许你发送形式发票。"
+msgstr "允许你发送形式结算单。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
@@ -1565,7 +1563,7 @@ msgstr "交货方式"
 #: model:ir.model.fields,help:sale.field_account_move__partner_shipping_id
 #: model:ir.model.fields,help:sale.field_account_payment__partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr "当前发票的交货地址。"
+msgstr "当前结算单的交货地址。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1725,7 +1723,7 @@ msgstr "草稿报价单"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Draft invoices for this order will be cancelled."
-msgstr "此订单的草稿发票将被取消."
+msgstr "此订单的草稿结算单将被取消."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -2079,7 +2077,7 @@ msgstr "结算单状态"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
 msgid "Invoice after delivery, based on quantities delivered, not ordered."
-msgstr "交货后基于交货数量开具发票，而不是基于订购数量。"
+msgstr "交货后基于交货数量开具结算单，而不是基于订购数量。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -2102,7 +2100,7 @@ msgstr "订单结算单"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced"
-msgstr "已开票"
+msgstr "已结算"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
@@ -2113,7 +2111,7 @@ msgstr "已开结算单数量"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Invoiced Quantity: %s"
-msgstr "已开票数量: %s"
+msgstr "已结算数量: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
@@ -2144,7 +2142,7 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
-"发票将在草稿中创建，以便您评价\n"
+"结算单将在草稿中创建，以便您评价\n"
 "                        他们在验证之前。"
 
 #. module: sale
@@ -3065,7 +3063,7 @@ msgstr "已送货数量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_invoiced
 msgid "Qty Invoiced"
-msgstr "已开票数量"
+msgstr "已结算数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
@@ -3446,7 +3444,7 @@ msgstr "销售订单行"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr "销售订单行已经被开票"
+msgstr "销售订单行已经被结算"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -4009,7 +4007,7 @@ msgstr "交货日期早于预期日期。您可能无法兑现交货日期。"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "The fixed amount to be invoiced in advance, taxes excluded."
-msgstr "固定金额需提前开票，税额另计。"
+msgstr "固定金额需提前结算，税额另计。"
 
 #. module: sale
 #: code:addons/sale/models/product_template.py:0
@@ -4077,7 +4075,7 @@ msgstr "此销售订单的付款通信。"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
 msgid "The percentage of amount to be invoiced in advance, taxes excluded."
-msgstr "预先开票金额的百分比，不含税。"
+msgstr "预先结算金额的百分比，不含税。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -4136,11 +4134,11 @@ msgid ""
 "- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
-"没有发票！\n"
+"没有结算单！\n"
 "\n"
 "产生的原因可能是：\n"
-"- 您应该在开具发票之前交付您的产品：点击“卡车”图标（屏幕右上角）并按照说明进行操作。\n"
-"- 您应该修改产品的发票政策：打开产品，进入“销售”选项卡，将发票政策从“交货数量”修改为“订购数量”。对于服务，您应该将服务发票政策修改为“预付”。"
+"- 您应该在开具结算单之前交付您的产品：点击“卡车”图标（屏幕右上角）并按照说明进行操作。\n"
+"- 您应该修改产品的结算单政策：打开产品，进入“销售”选项卡，将结算单政策从“交货数量”修改为“订购数量”。对于服务，您应该将服务结算单政策修改为“预付”。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4195,7 +4193,7 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"这个报表会对你的报价单和销售订单进行分析。分析检查你的销售收入，并且按照不同的标准分组（业务员，合作伙伴，产品等）。用这个报表对还没有开票的销售订单进行分析。"
+"这个报表会对你的报价单和销售订单进行分析。分析检查你的销售收入，并且按照不同的标准分组（业务员，合作伙伴，产品等）。用这个报表对还没有结算的销售订单进行分析。"
 " 如果你想分析你的营业额，你应该用会计模块里的结算单分析报表。"
 
 #. module: sale
@@ -4207,7 +4205,7 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"这个报表会对你的报价单和销售订单进行分析。检查你的销售收入，并且按照不同的标准排序（业务员，业务伙伴，产品等）。用这个报表对还没有开票的销售订单进行分析。"
+"这个报表会对你的报价单和销售订单进行分析。检查你的销售收入，并且按照不同的标准排序（业务员，业务伙伴，产品等）。用这个报表对还没有结算的销售订单进行分析。"
 " 如果你想分析你的营业额，你应该用会计模块里的结算单分析报表功能。"
 
 #. module: sale
@@ -4219,7 +4217,7 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"这个报表会对你的销售订单进行分析。分析检查你的销售收入，并且按照不同的标准分组（业务员，业务伙伴，产品等）进行排序。用这个报表对还没有开票的销售订单进行分析。"
+"这个报表会对你的销售订单进行分析。分析检查你的销售收入，并且按照不同的标准分组（业务员，业务伙伴，产品等）进行排序。用这个报表对还没有结算的销售订单进行分析。"
 " 如果你想分析你的营业额，你应该用会计模块里的结算单分析报表。"
 
 #. module: sale
@@ -4399,7 +4397,7 @@ msgstr "未税金额"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__untaxed_amount_invoiced
 msgid "Untaxed Amount Invoiced"
-msgstr "未含税已开票金额"
+msgstr "未含税已结算金额"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_to_invoice
@@ -4523,7 +4521,7 @@ msgstr "写一个公司名称来创建一个，或查看建议."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_form_view
 msgid "You can invoice them before they are delivered."
-msgstr "您可以在发货前为其开具发票。"
+msgstr "您可以在发货前为其开具结算单。"
 
 #. module: sale
 #: code:addons/sale/models/sale_order.py:0
@@ -4626,7 +4624,7 @@ msgstr ""
 #: model:ir.cron,cron_name:sale.send_invoice_cron
 #: model:ir.cron,name:sale.send_invoice_cron
 msgid "automatic invoicing: send ready invoice"
-msgstr "自动开票：发送就绪的发票"
+msgstr "自动开票：发送就绪的结算单"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
