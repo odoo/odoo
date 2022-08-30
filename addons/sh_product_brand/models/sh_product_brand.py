@@ -17,7 +17,7 @@ class ShProductBrand(models.Model):
     product_ids = fields.One2many(
         "product.template", "sh_brand_id", string="Products ")
     sh_partner_ids = fields.Many2many(
-        "res.partner",'rel_product_branch',  string="Vendors")
+        "res.partner", 'rel_product_branch', string="Vendors")
     sh_description = fields.Html("Description", translate=html_translate)
     active = fields.Boolean(
         "Active", default=True,
