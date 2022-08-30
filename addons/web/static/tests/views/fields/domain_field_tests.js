@@ -666,7 +666,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("domain field: edit domain with dynamic content", async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         patchWithCleanup(odoo, { debug: true });
 
@@ -709,9 +709,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await doAction(webClient, 1);
-
         await click(target, ".o_form_button_edit");
-
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
 
         rawDomain = `
@@ -720,6 +718,8 @@ QUnit.module("Fields", (hooks) => {
             ]
         `;
         await editInput(target, ".o_domain_debug_input", rawDomain);
+        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
+
         await click(target, ".o_form_button_save");
     });
 

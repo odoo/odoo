@@ -193,6 +193,7 @@ Object.assign(DomainSelector, {
         className: { type: String, optional: true },
         resModel: String,
         value: String,
+        debugValue: { type: String, optional: true },
         readonly: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
         isDebugMode: { type: Boolean, optional: true },
