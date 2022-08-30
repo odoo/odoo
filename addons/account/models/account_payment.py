@@ -404,12 +404,12 @@ class account_payment(models.Model):
         active_ids = self.env.context.get('active_ids')
         if not active_ids:
             return ''
-
+        partners = self.env["account.move"].browse(active_ids).partner_id
         return {
             'name': _('Register Payment'),
-            'res_model': len(active_ids) == 1 and 'account.payment' or 'account.payment.register',
+            'res_model': len(partners) == 1 and 'account.payment' or 'account.payment.register',
             'view_mode': 'form',
-            'view_id': len(active_ids) != 1 and self.env.ref('account.view_account_payment_form_multi').id or self.env.ref('account.view_account_payment_invoice_form').id,
+            'view_id': len(partners) != 1 and self.env.ref('account.view_account_payment_form_multi').id or self.env.ref('account.view_account_payment_invoice_form').id,
             'context': self.env.context,
             'target': 'new',
             'type': 'ir.actions.act_window',
