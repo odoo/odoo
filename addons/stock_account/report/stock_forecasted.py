@@ -5,15 +5,15 @@ from odoo import models
 from odoo.tools.float_utils import float_is_zero, float_repr
 
 
-class ReplenishmentReport(models.AbstractModel):
-    _inherit = 'report.stock.report_product_product_replenishment'
+class StockForecasted(models.AbstractModel):
+    _inherit = 'stock.forecasted_product_product'
 
-    def _compute_draft_quantity_count(self, product_template_ids, product_variant_ids, wh_location_ids):
+    def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         """ Overrides to computes the valuations of the stock. """
-        res = super()._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids)
+        res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
         if not self.user_has_groups('stock.group_stock_manager'):
             return res
-        domain = self._product_domain(product_template_ids, product_variant_ids)
+        domain = self._product_domain(product_template_ids, product_ids)
         company = self.env['stock.location'].browse(wh_location_ids[0]).company_id
         svl = self.env['stock.valuation.layer'].search(domain + [('company_id', '=', company.id)])
         domain_quants = [
@@ -23,7 +23,7 @@ class ReplenishmentReport(models.AbstractModel):
         if product_template_ids:
             domain_quants += [('product_id.product_tmpl_id', 'in', product_template_ids)]
         else:
-            domain_quants += [('product_id', 'in', product_variant_ids)]
+            domain_quants += [('product_id', 'in', product_ids)]
         quants = self.env['stock.quant'].search(domain_quants)
         currency = svl.currency_id or self.env.company.currency_id
         total_quantity = sum(svl.mapped('quantity'))

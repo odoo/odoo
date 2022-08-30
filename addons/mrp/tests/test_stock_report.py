@@ -76,10 +76,10 @@ class TestMrpStockReports(TestReportsCommon):
         self.assertEqual(len(lines), 2, "Must have two line.")
         line_1 = lines[0]
         line_2 = lines[1]
-        self.assertEqual(line_1['document_in'].id, mo_1.id)
+        self.assertEqual(line_1['document_in']['id'], mo_1.id)
         self.assertEqual(line_1['quantity'], 4)
-        self.assertEqual(line_1['document_out'].id, mo_2.id)
-        self.assertEqual(line_2['document_in'].id, mo_1.id)
+        self.assertEqual(line_1['document_out']['id'], mo_2.id)
+        self.assertEqual(line_2['document_in']['id'], mo_1.id)
         self.assertEqual(line_2['quantity'], 6)
         self.assertEqual(line_2['document_out'], False)
         self.assertEqual(draft_picking_qty['in'], 0)
@@ -139,7 +139,7 @@ class TestMrpStockReports(TestReportsCommon):
         # Checks the forecast report.
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_apple_pie.product_tmpl_id.ids)
         self.assertEqual(len(lines), 1, "Must have only one line about the backorder")
-        self.assertEqual(lines[0]['document_in'].id, mo_2.id)
+        self.assertEqual(lines[0]['document_in']['id'], mo_2.id)
         self.assertEqual(lines[0]['quantity'], 1)
         self.assertEqual(lines[0]['document_out'], False)
 
@@ -180,7 +180,7 @@ class TestMrpStockReports(TestReportsCommon):
             context = mo.action_product_forecast_report()['context']
             _, _, lines = self.get_report_forecast(product_template_ids=product_banana.product_tmpl_id.ids, context=context)
             for line in lines:
-                if line['document_in'] == mo:
+                if line['document_in']['id'] == mo.id:
                     self.assertTrue(line['is_matched'], "The corresponding MO line should be matched in the forecast report.")
                 else:
                     self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the MO shoud not be matched.")

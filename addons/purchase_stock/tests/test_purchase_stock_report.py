@@ -34,7 +34,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         draft_purchase_qty = docs['draft_purchase_qty']
         pending_qty_in = docs['qty']['in']
         self.assertEqual(len(lines), 1)
-        self.assertEqual(lines[0]['document_in'].id, po.id)
+        self.assertEqual(lines[0]['document_in']['id'], po.id)
         self.assertEqual(lines[0]['quantity'], 5)
         self.assertEqual(lines[0]['document_out'], False)
         self.assertEqual(draft_picking_qty_in, 0)
@@ -66,7 +66,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         draft_purchase_qty = docs['draft_purchase_qty']
         pending_qty_in = docs['qty']['in']
         self.assertEqual(len(lines), 1, "Must have 1 line for now.")
-        self.assertEqual(lines[0]['document_in'].id, po.id)
+        self.assertEqual(lines[0]['document_in']['id'], po.id)
         self.assertEqual(lines[0]['quantity'], 5)
         self.assertEqual(draft_picking_qty_in, 0)
         self.assertEqual(draft_purchase_qty, 0)
@@ -108,7 +108,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         draft_purchase_qty = docs['draft_purchase_qty']
         pending_qty_in = docs['qty']['in']
         self.assertEqual(len(lines), 1)
-        self.assertEqual(lines[0]['document_in'].id, po.id)
+        self.assertEqual(lines[0]['document_in']['id'], po.id)
         self.assertEqual(lines[0]['quantity'], 4)
         self.assertEqual(lines[0]['document_out'], False)
         self.assertEqual(draft_picking_qty_in, 0)
@@ -141,7 +141,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         draft_purchase_qty = docs['draft_purchase_qty']
         pending_qty_in = docs['qty']['in']
         self.assertEqual(len(lines), 1)
-        self.assertEqual(lines[0]['document_in'].id, po.id)
+        self.assertEqual(lines[0]['document_in']['id'], po.id)
         self.assertEqual(lines[0]['quantity'], 6)
         self.assertEqual(draft_picking_qty_in, 0)
         self.assertEqual(draft_purchase_qty, 0)
@@ -166,7 +166,7 @@ class TestPurchaseStockReports(TestReportsCommon):
             context = po.order_line[0].action_product_forecast_report()['context']
             _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids, context=context)
             for line in lines:
-                if line['document_in'] == po:
+                if line['document_in']['id'] == po.id:
                     self.assertTrue(line['is_matched'], "The corresponding PO line should be matched in the forecast report.")
                 else:
                     self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the PO shoud not be matched.")

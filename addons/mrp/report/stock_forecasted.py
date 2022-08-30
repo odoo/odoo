@@ -4,19 +4,28 @@
 from odoo import models
 
 
-class ReplenishmentReport(models.AbstractModel):
-    _inherit = 'report.stock.report_product_product_replenishment'
+class StockForecasted(models.AbstractModel):
+    _inherit = 'stock.forecasted_product_product'
 
-    def _move_draft_domain(self, product_template_ids, product_variant_ids, wh_location_ids):
-        in_domain, out_domain = super()._move_draft_domain(product_template_ids, product_variant_ids, wh_location_ids)
+    def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reservation=False):
+        line = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reservation)
+
+        if not move_out or not move_out.raw_material_production_id:
+            return line
+
+        line['move_out']['raw_material_production_id'] = move_out.raw_material_production_id.read(fields=['id', 'unreserve_visible', 'reserve_visible', 'priority'])[0]
+        return line
+
+    def _move_draft_domain(self, product_template_ids, product_ids, wh_location_ids):
+        in_domain, out_domain = super()._move_draft_domain(product_template_ids, product_ids, wh_location_ids)
         in_domain += [('production_id', '=', False)]
         out_domain += [('raw_material_production_id', '=', False)]
         return in_domain, out_domain
 
-    def _compute_draft_quantity_count(self, product_template_ids, product_variant_ids, wh_location_ids):
-        res = super()._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids)
+    def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
+        res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
         res['draft_production_qty'] = {}
-        domain = self._product_domain(product_template_ids, product_variant_ids)
+        domain = self._product_domain(product_template_ids, product_ids)
         domain += [('state', '=', 'draft')]
 
         # Pending incoming quantity.
