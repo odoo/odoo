@@ -348,8 +348,10 @@ class Website(models.Model):
 
     @api.model
     def configurator_recommended_themes(self, industry_id, palette):
-        domain = [('name', '=like', 'theme%'), ('name', 'not in', ['theme_default', 'theme_common']), ('state', '!=', 'uninstallable')]
-        client_themes = request.env['ir.module.module'].search(domain).mapped('name')
+        Module = request.env['ir.module.module']
+        domain = Module.get_themes_domain()
+        domain = AND([[('name', '!=', 'theme_default')], domain])
+        client_themes = Module.search(domain).mapped('name')
         client_themes_img = {t: get_manifest(t).get('images_preview_theme', {}) for t in client_themes if get_manifest(t)}
         themes_suggested = self._website_api_rpc(
             '/api/website/2/configurator/recommended_themes/%s' % industry_id,
