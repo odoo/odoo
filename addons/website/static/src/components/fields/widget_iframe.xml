@@ -2,16 +2,20 @@
 
 <templates xml:space="preserve">
 
-    <t t-name="website.iframeWidget">
+<t t-name="website.iframeWidget" owl="1">
+    <div t-if="props.value" class="h-100" t-att-class="this.state.isMobile and 'is_mobile'">
         <iframe
-            t-if="url"
+            frameBorder="0"
+            class="d-block"
             height="100%"
             width="100%"
-            frameBorder="0"
-            t-att-src="url"
-            class='d-block'
-        ></iframe>
-        <div t-else="">No Url</div>
-    </t>
+            t-att-src="props.value"/>
+        <img t-if="this.state.isMobile"
+             alt="phone"
+             class="img_mobile"
+             src="/website/static/src/img/phone.png"/>
+    </div>
+    <div t-else="">No Url</div>
+</t>
 
 </templates>

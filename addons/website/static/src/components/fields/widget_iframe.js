@@ -1,28 +1,19 @@
-odoo.define('website.iframe_widget', function (require) {
-"use strict";
+/** @odoo-module **/
 
+import { registry } from '@web/core/registry';
+import { useBus } from "@web/core/utils/hooks";
 
-var AbstractField = require('web.AbstractField');
-var core = require('web.core');
-var fieldRegistry = require('web.field_registry');
+const { Component, useState } = owl;
 
-var QWeb = core.qweb;
+class FieldIframePreview extends Component {
+    setup() {
+        this.state = useState({isMobile: false});
 
-/**
- * Display iframe
- */
-var FieldIframePreview = AbstractField.extend({
-    className: 'd-block o_field_iframe_preview m-0 h-100',
+        useBus(this.env.bus, 'THEME_PREVIEW:SWITCH_MODE', (ev) => {
+            this.state.isMobile = ev.detail.mode === 'mobile';
+        });
+    }
+}
+FieldIframePreview.template = 'website.iframeWidget';
 
-    _render: function () {
-        this.$el.html(QWeb.render('website.iframeWidget', {
-            url: this.value,
-        }));
-    },
-});
-
-fieldRegistry.add('iframe', FieldIframePreview);
-
-return FieldIframePreview;
-
-});
+registry.category('fields').add('iframe', FieldIframePreview);
