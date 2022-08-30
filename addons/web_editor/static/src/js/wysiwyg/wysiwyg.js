@@ -389,7 +389,7 @@ const Wysiwyg = Widget.extend({
         this._collaborationChannelName = channelName;
         Wysiwyg.activeCollaborationChannelNames.add(channelName);
 
-        this.call('bus_service', 'addEventListener', 'notification', ({ detail: notifications}) => {
+        const collaborationBusListener = ({ detail: notifications}) => {
             for (const { payload, type } of notifications) {
                 if (
                     type === 'editor_collaboration' &&
@@ -400,8 +400,14 @@ const Wysiwyg = Widget.extend({
                     this._peerToPeerLoading.then(() => this.ptp.handleNotification(payload));
                 }
             }
-        });
+        }
+        this.call('bus_service', 'addEventListener', 'notification', collaborationBusListener);
         this.call('bus_service', 'addChannel', this._collaborationChannelName);
+        this._collaborationStopBus = () => {
+            Wysiwyg.activeCollaborationChannelNames.delete(this._collaborationChannelName);
+            this.call('bus_service', 'removeEventListener', 'notification', collaborationBusListener);
+            this.call('bus_service', 'deleteChannel', this._collaborationChannelName);
+        }
 
         // const syncHistory = async (fromClientId) => {
         // }
@@ -679,7 +685,7 @@ const Wysiwyg = Widget.extend({
         // If peer to peer is initializing, wait for properly closing it.
         if (this._peerToPeerLoading) {
             this._peerToPeerLoading.then(()=> {
-                this.call('bus_service', 'deleteChannel', this._collaborationChannelName);
+                this._collaborationStopBus();
                 this.ptp.closeAllConnections();
             });
         }
@@ -2348,11 +2354,15 @@ const Wysiwyg = Widget.extend({
         // No need for secure random number.
         return Math.floor(Math.random() * Math.pow(2, 52)).toString();
     },
-    _resetEditor: function (value) {
+    resetEditor: function (value, { collaborationChannel } = {}) {
         if (!this.ptp) {
             return;
         }
         this.ptp.stop();
+        if (collaborationChannel) {
+            this._collaborationStopBus();
+            this.setupCollaboration(collaborationChannel);
+        }
         this._currentClientId = this._generateClientId();
         this._startCollaborationTime = new Date().getTime();
         this.ptp = this._getNewPtp();
