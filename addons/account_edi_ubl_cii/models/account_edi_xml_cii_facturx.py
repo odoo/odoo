@@ -75,7 +75,8 @@ class AccountEdiXmlCII(models.AbstractModel):
             # invoiced item VAT rate (BT-152) shall be greater than 0 (zero).
             'igic_tax_rate': self._check_non_0_rate_tax(vals)
                 if vals['record']['commercial_partner_id']['country_id']['code'] == 'ES'
-                   and vals['record']['commercial_partner_id']['zip'][:2] in ['35', '38'] else None,
+                    and vals['record']['commercial_partner_id']['zip']
+                    and vals['record']['commercial_partner_id']['zip'][:2] in ['35', '38'] else None,
         })
         return constraints
 
