@@ -17,7 +17,7 @@ class TestProjectSharingCommon(TestProjectCommon):
 
         project_sharing_stages_vals_list = [
             (0, 0, {'name': 'To Do', 'sequence': 1}),
-            (0, 0, {'name': 'Done', 'sequence': 10}),
+            (0, 0, {'name': 'Done', 'sequence': 10, 'fold': True, 'rating_template_id': cls.env.ref('project.rating_project_request_email_template').id}),
         ]
 
         cls.partner_portal = cls.env['res.partner'].create({
@@ -231,3 +231,18 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertFalse(self.task_cow.with_user(self.user_portal).user_ids, 'the portal user should see no assigness in the task.')
         task_portal_read = self.task_cow.with_user(self.user_portal).read(['portal_user_names'])
         self.assertEqual(self.task_cow.portal_user_names, task_portal_read[0]['portal_user_names'], 'the portal user should see assignees name in the task via the `portal_user_names` field.')
+
+    def test_portal_user_can_change_stage_with_rating(self):
+        """ Test portal user can change the stage of task to a stage with rating template email
+
+            The user should be able to change the stage and the email should be sent as expected
+            if a email template is set in `rating_template_id` field in the new stage.
+        """
+        self.project_portal.write({
+            'rating_active': True,
+            'rating_status': 'stage',
+            'collaborator_ids': [
+                Command.create({'partner_id': self.user_portal.partner_id.id}),
+            ],
+        })
+        self.task_portal.with_user(self.user_portal).write({'stage_id': self.project_portal.type_ids[-1].id})
