@@ -89,10 +89,10 @@ registerModel({
             await this.messaging.rtc.updateLocalAudioTrack(true);
         },
         /**
-         * @param {String} value
+         * @param {string} value
          */
         setDelayValue(value) {
-            this.update({ voiceActiveDuration: parseInt(value, 10) });
+            this.update({ localVoiceActiveDuration: parseInt(value, 10) });
             if (this.messaging.currentUser) {
                 this._saveSettings();
             }
@@ -102,7 +102,7 @@ registerModel({
          */
         async setPushToTalkKey(ev) {
             const pushToTalkKey = `${ev.shiftKey || ''}.${ev.ctrlKey || ev.metaKey || ''}.${ev.altKey || ''}.${ev.key}`;
-            this.update({ pushToTalkKey });
+            this.update({ localPushToTalkKey: pushToTalkKey });
             if (this.messaging.currentUser) {
                 this._saveSettings();
             }
@@ -136,7 +136,7 @@ registerModel({
             await this.messaging.rtc.updateVoiceActivation();
         },
         async togglePushToTalk() {
-            this.update({ usePushToTalk: !this.usePushToTalk });
+            this.update({ localUsePushToTalk: !this.usePushToTalk });
             await this.messaging.rtc.updateVoiceActivation();
             if (this.messaging.currentUser) {
                 this._saveSettings();
@@ -150,9 +150,12 @@ registerModel({
         },
         /**
          * @private
-         * @returns {boolean|FieldCommand}
+         * @returns {string|FieldCommand}
          */
         _computePushToTalkKey() {
+            if (this.localPushToTalkKey !== undefined) {
+                return this.localPushToTalkKey;
+            }
             if (!this.messaging.currentUser) {
                 return clear();
             }
@@ -166,6 +169,9 @@ registerModel({
          * @returns {boolean|FieldCommand}
          */
         _computeUsePushToTalk() {
+            if (this.localUsePushToTalk !== undefined) {
+                return this.localUsePushToTalk;
+            }
             if (!this.messaging.currentUser) {
                 return clear();
             }
@@ -179,6 +185,9 @@ registerModel({
          * @returns {boolean|FieldCommand}
          */
         _computeVoiceActiveDuration() {
+            if (this.localVoiceActiveDuration !== undefined) {
+                return this.localVoiceActiveDuration;
+            }
             if (!this.messaging.currentUser) {
                 return clear();
             }
@@ -289,6 +298,9 @@ registerModel({
         isRegisteringKey: attr({
             default: false,
         }),
+        localPushToTalkKey: attr(),
+        localUsePushToTalk: attr(),
+        localVoiceActiveDuration: attr(),
         /**
          * String that encodes the push-to-talk key with its modifiers.
          */
