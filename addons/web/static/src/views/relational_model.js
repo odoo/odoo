@@ -1395,10 +1395,6 @@ class DynamicList extends DataPoint {
     // Getters
     // -------------------------------------------------------------------------
 
-    get isInEdition() {
-        return !!this.editedRecord;
-    }
-
     get currentParams() {
         return JSON.stringify([this.domain, this.groupBy]);
     }
@@ -1790,7 +1786,8 @@ export class DynamicRecordList extends DynamicList {
         }
         await this.model.keepLast.add(this.model.mutex.exec(() => newRecord.load()));
         this.editedRecord = newRecord;
-        this.onCreateRecord(newRecord);
+        this.onRemoveNewRecord = await this.onCreateRecord(newRecord);
+
         return this.addRecord(newRecord, atFirstPosition ? 0 : this.count);
     }
 
@@ -1889,7 +1886,12 @@ export class DynamicRecordList extends DynamicList {
         this.count--;
         if (this.editedRecord === record) {
             this.editedRecord = null;
+            if (this.onRemoveNewRecord) {
+                this.onRemoveNewRecord(record);
+                this.onRemoveNewRecord = null;
+            }
         }
+
         this.model.notify();
         return record;
     }
@@ -2001,6 +2003,12 @@ export class DynamicGroupList extends DynamicList {
                     }
                 }
                 this.editedRecord = record;
+                const onRemoveRecord = (record) => {
+                    if (this.editedRecord === record) {
+                        this.editedRecord = null;
+                    }
+                };
+                return onRemoveRecord;
             });
     }
 
