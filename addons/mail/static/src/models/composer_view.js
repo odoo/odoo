@@ -2,7 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, many, one } from '@mail/model/model_field';
-import { clear, link } from '@mail/model/model_field_command';
+import { clear, increment, link } from '@mail/model/model_field_command';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
@@ -245,7 +245,7 @@ registerModel({
         /**
          * Called when clicking on "send" button.
          */
-        onClickSend() {
+        onClickSend(ev) {
             this.sendMessage();
             this.update({ doFocus: true });
         },
@@ -535,38 +535,18 @@ registerModel({
          */
         async postMessage() {
             const composer = this.composer;
-            const postData = this._getMessageData();
-            const params = {
-                'post_data': postData,
-                'thread_id': composer.thread.id,
-                'thread_model': composer.thread.model,
-            };
+            const composition = this.compositions[0];
             try {
                 composer.update({ isPostingMessage: true });
-                if (composer.thread.model === 'mail.channel') {
-                    Object.assign(postData, {
-                        subtype_xmlid: 'mail.mt_comment',
-                    });
-                } else {
-                    Object.assign(postData, {
-                        subtype_xmlid: composer.isLog ? 'mail.mt_note' : 'mail.mt_comment',
-                    });
-                    if (!composer.isLog) {
-                        params.context = { mail_post_autofollow: this.composer.activeThread.hasWriteAccess };
-                    }
-                }
-                if (this.threadView && this.threadView.replyingToMessageView && this.threadView.thread !== this.messaging.inbox.thread) {
-                    postData.parent_id = this.threadView.replyingToMessageView.message.id;
-                }
-                const { threadView = {} } = this;
-                const chatter = this.chatter;
-                const { thread: chatterThread } = this.chatter || {};
+                const threadView = composition.threadView || {};
+                const chatter = composition.chatter;
+                const { thread: chatterThread } = composition.chatter || {};
                 const { thread: threadViewThread } = threadView;
                 // Keep a reference to messaging: composer could be
                 // unmounted while awaiting the prc promise. In this
                 // case, this would be undefined.
                 const messaging = this.messaging;
-                const messageData = await this.messaging.rpc({ route: `/mail/message/post`, params });
+                const messageData = await this.messaging.rpc({ route: `/mail/message/post`, params: composition.params });
                 if (!messaging.exists()) {
                     return;
                 }
@@ -616,6 +596,7 @@ registerModel({
                     composer._reset();
                 }
             } finally {
+                composition.delete();
                 if (composer.exists()) {
                     composer.update({ isPostingMessage: false });
                 }
@@ -663,6 +644,19 @@ registerModel({
                 }
                 this.composer.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
             }
+            this.messaging.update({ compositionsIndex: increment() });
+            this.update({
+                compositions: {
+                    attachments: this.composer.attachments,
+                    id: this.messaging.compositionsIndex,
+                    isLog: this.composer.isLog,
+                    body: this._generateMessageBody(),
+                    partners: this.composer.recipients,
+                    thread: this.composer.activeThread,
+                    threadView: this.threadView,
+                    chatter: this.chatter,
+                }
+            });
             this.postMessage();
         },
         /**
@@ -676,14 +670,13 @@ registerModel({
          * Update a posted message when the message is ready.
          */
         async updateMessage() {
-            const composer = this.composer;
-            if (!composer.textInputContent) {
+            if (!this.composer.textInputContent) {
                 this.messageViewInEditing.messageActionList.update({ deleteConfirmDialog: {} });
                 return;
             }
             let data = {
                 body: this._generateMessageBody(),
-                attachment_ids: composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
+                attachment_ids: this.composer.attachments.concat(this.messageViewInEditing.message.attachments).map(attachment => attachment.id),
             };
             const messageViewInEditing = this.messageViewInEditing;
             await messageViewInEditing.message.updateContent(data);
@@ -1156,20 +1149,6 @@ registerModel({
             return undefined;
         },
         /**
-         * Gather data for message post.
-         *
-         * @private
-         * @returns {Object}
-         */
-        _getMessageData() {
-            return {
-                attachment_ids: this.composer.attachments.map(attachment => attachment.id),
-                body: this._generateMessageBody(),
-                message_type: 'comment',
-                partner_ids: this.composer.recipients.map(partner => partner.id),
-            };
-        },
-        /**
          * Handles change of this composer. Useful to reset the state of the
          * composer text input.
          */
@@ -1364,6 +1343,7 @@ registerModel({
             compute: '_computeComposerSuggestionListView',
             inverse: 'composerViewOwner',
         }),
+        compositions: many('MessageComposition'),
         /**
          * Current partner image URL.
          */

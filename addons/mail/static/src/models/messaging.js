@@ -375,6 +375,9 @@ registerModel({
         }),
         commands: many('ChannelCommand'),
         companyName: attr(),
+        compositionsIndex: attr({
+            default: 0,
+        }),
         currentGuest: one('Guest'),
         currentPartner: one('Partner'),
         currentUser: one('User'),
