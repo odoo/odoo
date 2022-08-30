@@ -37,8 +37,8 @@ class WebsiteVisitor(models.Model):
         if not request:
             raise ValueError("Visitors can only be created through the frontend.")
 
-        if not self.env.user._is_public():
-            return self.env.user.partner_id.id
+        if not request.env.user._is_public():
+            return request.env.user.partner_id.id
 
         msg = repr((
             request.httprequest.remote_addr,
