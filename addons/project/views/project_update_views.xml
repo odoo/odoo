@@ -36,7 +36,7 @@
                             <field name="project_id" invisible="1"/>
                             <field name="color" invisible="1"/>
                             <field name="status" widget="status_with_color" options="{'color_field': 'color'}"/>
-                            <field name="progress" widget="progressbar" options="{'current_value': 'progress', 'max_value': '100', 'editable': true}"/>
+                            <field name="progress" widget="progressbar" options="{'editable': true}"/>
                         </group>
                         <group>
                             <field name="user_id" widget="many2one_avatar_user" readonly="1"/>
@@ -70,25 +70,24 @@
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + record.color.raw_value : ''}} oe_kanban_global_click o_pupdate_kanban_card">
                             <!-- Project Update Kanban View is always ungrouped - see js_class -->
                             <div class="o_kanban_detail_ungrouped row">
-                                <div class="col-lg-4 o_pupdate_name">
+                                <div class="col-sm-4 col-6 o_pupdate_name">
                                     <b><field name="name_cropped"/></b>
-                                    <field name="color" invisible="1"/>
-                                    <field name="status" widget="status_with_color" options="{'color_field': 'color'}"/>
-                                </div>
-                                <div class="col-lg-2">
                                     <div>
                                         <field name="user_id" widget="many2one_avatar_user"/>
-                                        <strong><t t-esc="record.user_id.value"/></strong>
-                                        <div>Author</div>
+                                        <t t-esc="record.user_id.value"/>
                                     </div>
                                 </div>
-                                <div class="col-lg-2">
-                                    <b><field name="date"/></b>
-                                    <div>Date</div>
+                                <div class="col-sm-2 text-sm-start col-6 text-end align-end">
+                                    <field name="color" invisible="1"/>
+                                    <b><field name="status" widget="status_with_color" options="{'color_field': 'color'}"/></b>
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-sm-2 col-6">
                                     <b><field name="progress_percentage" widget="percentage"/></b>
                                     <div>Progress</div>
+                                </div>
+                                <div class="col-sm-2 col-6">
+                                    <b><field name="date"/></b>
+                                    <div>Date</div>
                                 </div>
                             </div>
                         </div>

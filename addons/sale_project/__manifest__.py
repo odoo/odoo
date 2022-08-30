@@ -23,11 +23,10 @@ This module allows to generate a project/task from sales orders.
     ],
     'assets': {
         'web.assets_backend': [
-            'sale_project/static/src/right_panel/*.js',
+            'sale_project/static/src/components/project_right_side_panel/**/*',
         ],
         'web.assets_qweb': [
-            'sale_project/static/src/right_panel/*.xml',
-            'sale_project/static/src/xml/**/*',
+            'sale_project/static/src/components/project_right_side_panel/**/*.xml',
         ],
     },
     'auto_install': True,

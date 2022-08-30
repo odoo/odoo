@@ -1,0 +1,21 @@
+<templates>
+
+    <t t-name="project.ProjectPrivateTaskMany2OneField" t-inherit="web.Many2OneField" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t[@t-if='!props.canOpen']/span" position="attributes">
+            <attribute name="t-if">props.value</attribute>
+        </xpath>
+        <xpath expr="//t[@t-if='!props.canOpen']/span" position="after">
+            <span t-else="" class="text-danger fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
+        </xpath>
+        <xpath expr="//t[@t-else='']/a" position="attributes">
+            <attribute name="t-if">displayName</attribute>
+        </xpath>
+        <xpath expr="//t[@t-else='']/a" position="after">
+            <span t-else="" class="text-danger fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
+        </xpath>
+        <xpath expr="//div[hasclass('o_field_many2one_selection')]" position="attributes">
+            <attribute name="class" separator=" " add="project_private_task_many2one_field"></attribute>
+        </xpath>
+    </t>
+
+</templates>

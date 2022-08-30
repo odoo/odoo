@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project.ProjectRightSidePanelSection" owl="1">
+        <div class="o_rightpanel_section" t-att-name="props.name" t-if="props.show">
+            <div class="o_rightpanel_header" t-if="props.header">
+                <div class="o_rightpanel_title cursor-default" t-if="props.slots.title">
+                    <t t-slot="title"/>
+                </div>
+                <t t-slot="header"/>
+            </div>
+            <div class="o_rightpanel_data" t-if="props.showData">
+                <t t-slot="default"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

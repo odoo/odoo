@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project.ProjectMilestone" owl="1">
+        <div class="o_rightpanel_milestone" t-att-class="state.colorClass">
+            <span class="o_milestone_checkbox" t-on-click="toggleIsReached">
+                <i class="fa" t-att-class="state.checkboxIcon"></i>
+            </span>
+            <div class="o_milestone_detail" t-on-click="onOpenMilestone">
+                <div class="o_milestone_info">
+                    <t t-esc="milestone.name"/>
+                </div>
+                <span class="o_rightpanel_center_col">
+                    <t t-esc="deadline"/>
+                </span>
+            </div>
+            <span class="o_rightpanel_right_col">
+                <a class="o_delete_icon" t-on-click="onDeleteMilestone" title="Delete Milestone"><i class="fa fa-trash"></i></a>
+            </span>
+        </div>
+    </t>
+
+</templates>

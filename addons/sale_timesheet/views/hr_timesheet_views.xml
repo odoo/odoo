@@ -44,7 +44,7 @@
             <xpath expr="//tree/field[@name='name']" position="after">
                 <field name="commercial_partner_id" invisible="1" groups="sales_team.group_sale_salesman"/>
                 <field name="is_so_line_edited" invisible="1" groups="sales_team.group_sale_salesman"/>
-                <field name="so_line" widget="so_line_many2one" optional="hide" options="{'no_create': True}" context="{'create': False, 'edit': False, 'delete': False}" groups="sales_team.group_sale_salesman"/>
+                <field name="so_line" widget="so_line_field" optional="hide" options="{'no_create': True}" context="{'create': False, 'edit': False, 'delete': False}" groups="sales_team.group_sale_salesman"/>
             </xpath>
         </field>
     </record>
@@ -57,7 +57,7 @@
             <xpath expr="//field[@name='task_id']" position="after">
                 <field name="commercial_partner_id" invisible="1" groups="sales_team.group_sale_salesman"/>
                 <field name="is_so_line_edited" invisible="1" groups="sales_team.group_sale_salesman"/>
-                <field name="so_line" widget="so_line_many2one" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False}" groups="sales_team.group_sale_salesman"/>
+                <field name="so_line" widget="so_line_field" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False}" groups="sales_team.group_sale_salesman"/>
             </xpath>
         </field>
     </record>

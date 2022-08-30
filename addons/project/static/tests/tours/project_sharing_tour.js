@@ -3,13 +3,7 @@
 import tour from 'web_tour.tour';
 
 const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project App.'), {
-    // an invisible element cannot be used as a trigger so this small hack is mandatory for the next step
-    trigger: '.o_kanban_record:contains("Project Sharing")',
-    run: function () {
-        this.$anchor.find('.o_dropdown_kanban').css('visibility', 'visible');
-    },
-}, {
-    trigger: '.oe_kanban_global_click :contains("Project Sharing") .o_dropdown_kanban',
+    trigger: '.oe_kanban_global_click :contains("Project Sharing") button.o_dropdown_kanban',
     content: 'Open the project dropdown.'
 }, {
     trigger: '.o_kanban_record:contains("Project Sharing") .dropdown-menu a:contains("Share")',
@@ -24,7 +18,7 @@ const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_p
         actions.text('Georges', this.$anchor.find('input'));
     },
 }, {
-    trigger: '.ui-autocomplete a:contains("Georges")',
+    trigger: '.ui-autocomplete a.dropdown-item:contains("Georges")',
     in_modal: false,
 }, {
     trigger: 'footer > button[name="action_send_mail"]',

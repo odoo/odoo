@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="project.ProjectStopRecurrenceConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="primary" owl="1">
+        <xpath expr="//button[@t-on-click='_confirm']" position="replace">
+            <button class="btn btn-primary" t-on-click="_confirm">
+                Stop Recurrence
+            </button>
+        </xpath>
+        <xpath expr="//button[@t-on-click='_confirm']" position="after">
+            <button t-if="props.continueRecurrence" class="btn btn-secondary" t-on-click="_continueRecurrence">
+                Continue Recurrence
+            </button>
+        </xpath>
+    </t>
+
+</templates>

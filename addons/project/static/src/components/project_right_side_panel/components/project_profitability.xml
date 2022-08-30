@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="project.ProjectProfitability" owl="1">
+        <div class="o_rightpanel_subsection" t-if="revenues.data.length">
+            <table class="w-100 table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 40%">Revenues</th>
+                        <th style="width: 20%; text-align: right;">Invoiced</th>
+                        <th style="width: 20%; text-align: right;">To Invoice</th>
+                        <th style="width: 20%; text-align: right;">Expected</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="revenues.data" t-as="revenue" t-key="revenue.id" t-if="revenue.invoiced !== 0 || revenue.to_invoice !== 0">
+                        <t t-set="revenue_label" t-value="props.labels[revenue.id] or revenue.id"/>
+                        <td>
+                            <a t-if="revenue.action" class="o_rightpanel_button"
+                                t-on-click="() => this.props.onClick(revenue.action)"
+                            >
+                                <t t-esc="revenue_label"/>
+                            </a>
+                            <t t-esc="revenue_label" t-else=""/>
+                        </td>
+                        <td align="right" t-attf-class="{{ revenue.invoiced === 0 ? 'text-muted' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced)"/></td>
+                        <td align="right" t-attf-class="{{ revenue.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="props.formatMonetary(revenue.to_invoice)"/></td>
+                        <td align="right" t-attf-class="{{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Total</td>
+                        <td align="right" t-attf-class="{{ revenues.total.invoiced === 0 ? 'text-muted' : ''}}"><t t-esc="props.formatMonetary(revenues.total.invoiced)"/></td>
+                        <td align="right" t-attf-class="{{ revenues.total.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="props.formatMonetary(revenues.total.to_invoice)"/></td>
+                        <td align="right" t-attf-class="{{ revenues.total.invoiced + revenues.total.to_invoice === 0 ? 'text-muted' : ''}}"><t t-esc="props.formatMonetary(revenues.total.invoiced + revenues.total.to_invoice)"/></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="o_rightpanel_subsection" t-if="costs.data.length">
+            <table class="w-100 table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 40%">Costs</th>
+                        <th style="width: 20%; text-align: right;">Billed</th>
+                        <th style="width: 20%; text-align: right;">To Bill</th>
+                        <th style="width: 20%; text-align: right;">Expected</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="costs.data" t-as="cost" t-key="cost.id" t-if="cost.billed !== 0 || cost.to_bill !== 0">
+                        <t t-set="cost_label" t-value="props.labels[cost.id] or cost.id"/>
+                        <td>
+                            <a t-if="cost.action" class="o_rightpanel_button"
+                                t-on-click="() => this.props.onClick(cost.action)"
+                            >
+                                <t t-esc="cost_label"/>
+                            </a>
+                            <t t-esc="cost_label" t-else=""/>
+                        </td>
+                        <td align="right" t-attf-class="{{ cost.billed === 0 ? 'text-muted' : ''}}"><t t-esc="props.formatMonetary(cost.billed)"/></td>
+                        <td align="right" t-attf-class="{{ cost.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="props.formatMonetary(cost.to_bill)"/></td>
+                        <td align="right" t-attf-class="{{ cost.billed + cost.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="props.formatMonetary(cost.billed + cost.to_bill)"/></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Total</td>
+                        <td align="right" t-attf-class="{{ costs.total.billed === 0 ? 'text-muted' : ''}}"><t t-esc="props.formatMonetary(costs.total.billed)"/></td>
+                        <td align="right" t-attf-class="{{ costs.total.to_bill === 0 ? 'text-muted' : ''}}"><t t-esc="props.formatMonetary(costs.total.to_bill)"/></td>
+                        <td align="right" t-attf-class="{{ costs.total.billed + costs.total.to_bill  === 0 ? 'text-muted' : ''}}"><t t-esc="props.formatMonetary(costs.total.billed + costs.total.to_bill)"/></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="o_rightpanel_subsection">
+            <table class="w-100 table-striped">
+                <thead>
+                    <tr>
+                        <th style="width: 40%">Margin</th>
+                        <th style="width: 20%; text-align: right;" t-att-class="margin.invoiced_billed &lt; 0 ? 'o_color_red' : 'o_color_green'"><t t-esc="props.formatMonetary(margin.invoiced_billed)"/></th>
+                        <th style="width: 20%; text-align: right;" t-att-class="margin.to_invoice_to_bill &lt; 0 ? 'o_color_red' : 'o_color_green'"><t t-esc="props.formatMonetary(margin.to_invoice_to_bill)"/></th>
+                        <th style="width: 20%; text-align: right;" t-att-class="margin.total &lt; 0 ? 'o_color_red' : 'o_color_green'"><t t-esc="props.formatMonetary(margin.total)"/></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </t>
+</templates>

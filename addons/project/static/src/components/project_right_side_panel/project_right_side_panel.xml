@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project.ProjectRightSidePanel" owl="1">
+        <div t-if="projectId" class="o_rightpanel">
+            <ProjectRightSidePanelSection
+                name="'stat_buttons'"
+                header="false"
+                show="!!state.data.buttons"
+            >
+                <div class="o_form_view">
+                    <div class="oe_button_box o-form-buttonbox">
+                        <t t-foreach="state.data.buttons" t-as="button" t-key="button.action">
+                            <ViewButton
+                                t-if="button.show"
+                                defaultRank="'oe_stat_button'"
+                                icon="`fa-${button.icon}`"
+                                title="button.text"
+                                clickParams="_getStatButtonClickParams(button)"
+                                record="_getStatButtonRecordParams()"
+                            >
+                                <t t-set-slot="contents">
+                                    <div class="o_field_widget o_stat_info">
+                                        <span class="o_stat_value">
+                                            <t t-esc="button.number"/>
+                                        </span>
+                                        <span class="o_stat_text">
+                                            <t t-esc="button.text"/>
+                                        </span>
+                                    </div>
+                                </t>
+                            </ViewButton>
+                        </t>
+                    </div>
+                </div>
+            </ProjectRightSidePanelSection>
+            <ProjectRightSidePanelSection
+                name="'profitability'"
+                show="showProjectProfitability"
+            >
+                <t t-set-slot="title" owl="1">
+                    Profitability
+                </t>
+                <ProjectProfitability
+                    data="state.data.profitability_items"
+                    labels="state.data.profitability_labels"
+                    formatMonetary="formatMonetary.bind(this)"
+                    onClick="(params) => this.onProjectActionClick(params)"
+                />
+            </ProjectRightSidePanelSection>
+            <ProjectRightSidePanelSection
+                name="'milestones'"
+                show="!!state.data.milestones &amp;&amp; !!state.data.milestones.data"
+            >
+                <t t-set-slot="header" owl="1">
+                    <span class="o_rightpanel_button">
+                        <div class="o_add_milestone">
+                            <a t-on-click="addMilestone">Add Milestone</a>
+                        </div>
+                    </span>
+                </t>
+                <t t-set-slot="title" owl="1">
+                    Milestones
+                </t>
+                <div t-foreach="state.data.milestones.data" t-as="milestone" t-key="milestone.id" class="o_rightpanel_data_row">
+                    <ProjectMilestone context="context" milestone="milestone" open.bind="openFormViewDialog" load.bind="loadMilestones"/>
+                </div>
+                <span t-if="state.data.milestones.data.length === 0" class="text-muted fst-italic">
+                    Track major progress points that must be reached to achieve success.
+                </span>
+            </ProjectRightSidePanelSection>
+        </div>
+        <!-- If this is called from notif, multiples updates but no specific project -->
+        <div t-else=""/>
+    </t>
+
+</templates>

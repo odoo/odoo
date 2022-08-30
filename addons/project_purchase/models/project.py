@@ -132,9 +132,10 @@ class Project(models.Model):
                 section_id = 'purchase_order'
                 purchase_order_costs = {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': amount_invoiced, 'to_bill': amount_to_invoice}
                 if with_action and purchase_order_line_ids and self.user_has_groups('purchase.group_purchase_user'):
-                    action = {'name': 'action_profitability_items', 'type': 'object', 'section': section_id, 'domain': json.dumps([('id', 'in', purchase_order_line_ids)])}
+                    args = [section_id, [('id', 'in', purchase_order_line_ids)]]
                     if len(purchase_order_line_ids) == 1:
-                        action['res_id'] = purchase_order_line_ids[0]
+                        args.append(purchase_order_line_ids[0])
+                    action = {'name': 'action_profitability_items', 'type': 'object', 'args': json.dumps(args)}
                     purchase_order_costs['action'] = action
                 costs['data'].append(purchase_order_costs)
                 costs['total']['billed'] += amount_invoiced
