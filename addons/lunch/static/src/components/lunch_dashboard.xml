@@ -9,23 +9,23 @@
     </t>
 
     <t t-name="lunch.LunchOrderLine" owl="1">
-        <div class="d-flex">
-            <div>
+        <div class="d-flex align-items-center pe-3">
+            <div class="btn-group">
                 <button class="btn btn-sm btn-icon btn-link fa fa-minus-circle p-0" t-if="canEdit" t-on-click="() => this.updateQuantity(-1)"/>
-                <span t-esc="line.quantity" class="px-1"/>
+                <span t-esc="line.quantity" class="px-2 py-1"/>
                 <button class="btn btn-sm btn-icon btn-link fa fa-plus-circle p-0" t-if="canEdit" t-on-click="() => this.updateQuantity(1)"/>
             </div>
-            <span class="flex-grow-1 ps-2">
+            <span class="flex-grow-1 ps-2 text-700">
                 <a t-on-click="() => props.openOrderLine(line.product[0], line.id)" t-if="canEdit" role="button" title="Edit order">
                     <t t-esc="line.product[1]"/>
                 </a>
                 <t t-else="" t-esc="line.product[1]"/>
-                <span t-esc="line.state" t-attf-class="badge ms-2 rounded-pill #{badgeClass}"/>
+                <span t-esc="line.state" t-attf-class="badge ms-2 rounded-pill text-bg-#{badgeClass} border-#{badgeClass} "/>
             </span>
             <LunchCurrency currency="props.currency" amount="line.product[2]"/>
         </div>
         <ul t-if="hasToppings" class="list-unstyled ps-4">
-            <li t-foreach="line.toppings" t-as="topping" t-key="topping" class="d-flex">
+            <li t-foreach="line.toppings" t-as="topping" t-key="topping" class="d-flex pe-3">
                 <span class="flex-grow-1 lunch_topping" t-esc="topping[0]"/>
                 <LunchCurrency currency="props.currency" amount="topping[1]"/>
             </li>
@@ -42,7 +42,7 @@
     </t>
 
     <t t-name="lunch.LunchUser" owl="1">
-        <div class="lunch_user">
+        <div class="lunch_user pb-1">
             <span t-if="!props.isManager" t-esc="props.username"/>
             <Many2XAutocomplete
                 t-else=""
@@ -56,7 +56,7 @@
     </t>
 
     <t t-name="lunch.LunchLocation" owl="1">
-        <div class="lunch_location">
+        <div class="lunch_location pb-1">
             <Many2XAutocomplete
                 value="props.location"
                 resModel="'lunch.location'"
@@ -70,7 +70,7 @@
     <t t-name="lunch.LunchDashboardOrder" owl="1">
         <LunchAlerts alerts="state.infos.alerts"/>
 
-        <div class="o_lunch_banner container-fluid py-2">
+        <div class="o_lunch_banner container-fluid p-4 border-bottom bg-white">
             <div class="row h-100">
                 <div class="col-12 col-md-4">
                     <div class="row h-100 align-content-center">
@@ -87,26 +87,26 @@
                                 location="location"
                                 onUpdateLunchLocation.bind="onUpdateLunchLocation"/>
 
-                            <div class="d-flex flex-row">
+                            <div class="d-flex pb-1">
                                 <span class="flex-grow-1">Your Account</span>
                                 <LunchCurrency currency="currency" amount="state.infos.wallet"/>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-4" t-if="hasLines">
-                    <h4>
+                <div class="col-12 col-md-5" t-if="hasLines">
+                    <h4 class="mb-0">
                         Your Order
                         <button t-if="state.infos.raw_state != 'confirmed'" class="btn btn-sm btn-icon btn-link fa fa-trash" t-on-click.prevent="emptyCart"/>
                     </h4>
-                    <ul class="list-unstyled">
+                    <ul class="o_lunch_widget_lines overflow-auto list-unstyled">
                         <li t-foreach="state.infos.lines" t-as="line" t-key="line.id">
                             <LunchOrderLine line="line" currency="currency" onUpdateQuantity.bind="onUpdateQuantity" openOrderLine.bind="props.openOrderLine"/>
                         </li>
                     </ul>
                 </div>
-                <div class="col-12 col-md-4 d-flex flex-column justify-content-between" t-if="hasLines">
-                    <h4 class="d-flex flex-row">
+                <div class="col-12 col-md-3 d-flex flex-column justify-content-between" t-if="hasLines">
+                    <h4 class="d-flex flex-row mt-1">
                         <span class="flex-grow-1">
                             Total
                         </span>
