@@ -34,8 +34,12 @@ export class KanbanRecordQuickCreate extends Component {
                     return;
                 }
                 const target = this.mousedownTarget || ev.target;
-                const gotClickedOutside = !this.rootRef.el.contains(target);
-                if (gotClickedOutside) {
+                // accounts for clicking on legacy daterangepicker and legacy autocomplete
+                const gotClickedInside =
+                    target.closest(".daterangepicker") ||
+                    target.closest(".ui-autocomplete") ||
+                    this.rootRef.el.contains(target);
+                if (!gotClickedInside) {
                     let force = false;
                     for (const selector of ACTION_SELECTORS) {
                         const closestEl = target.closest(selector);
