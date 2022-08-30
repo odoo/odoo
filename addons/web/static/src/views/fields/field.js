@@ -120,10 +120,6 @@ export class Field extends Component {
 
         const modifiers = fieldInfo.modifiers || {};
         const readonlyFromModifiers = evalDomain(modifiers.readonly, evalContext);
-        const readonlyFromRecord = !record.isInEdition;
-        const readonlyFromViewMode = record.model.root
-            ? !record.model.root.isInEdition
-            : readonlyFromRecord;
 
         // Decoration props
         const decorationMap = {};
@@ -159,15 +155,18 @@ export class Field extends Component {
                 if (record.selected && record.model.multiEdit) {
                     return;
                 }
+                const rootRecord =
+                    record.model.root instanceof record.constructor && record.model.root;
+                const isInEdition = rootRecord ? rootRecord.isInEdition : record.isInEdition;
                 // We save only if we're on view mode readonly and no readonly field modifier
-                if (readonlyFromViewMode && !readonlyFromModifiers) {
+                if (!isInEdition && !readonlyFromModifiers) {
                     // TODO: maybe move this in the model
                     return record.save();
                 }
             },
             value: this.props.record.data[this.props.name],
             decorations: decorationMap,
-            readonly: readonlyFromRecord || readonlyFromModifiers || false,
+            readonly: !record.isInEdition || readonlyFromModifiers || false,
             ...propsFromAttrs,
             ...props,
             type: field.type,
