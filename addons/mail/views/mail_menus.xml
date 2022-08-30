@@ -8,9 +8,9 @@
         sequence="5"
     />
 
-	<record id="base.menu_email" model="ir.ui.menu">
+    <record id="base.menu_email" model="ir.ui.menu">
         <field name="sequence">3</field>
-	</record>
+    </record>
 
     <!-- Under Technical/Email -->
     <menuitem name="Emails"
@@ -134,6 +134,11 @@
         action="mail_message_reaction_action"
         parent="mail.mail_menu_technical"
         sequence="54"/>
+    <menuitem id="mail_link_preview_menu"
+        name="Link Previews"
+        action="mail_link_preview_action"
+        parent="mail.mail_menu_technical"
+        sequence="55"/>
 
     <!--
         This menuitem will be activated by integrations modules (like github, twitter, ...). It
