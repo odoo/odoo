@@ -46,54 +46,25 @@
 
 // container ghost card in background
 .o_kanban_example_background_container {
-    display: flex;
-    padding: 0px;
-    opacity: 0.4;
 
     // content
     .o_kanban_example_background {
-        flex: 1 1 100%;
+        flex-basis: 100%;
 
-        .o_kanban_examples {
-            .o_kanban_examples_group {
-                .o_kanban_examples_ghost {
-                    width: 224px;
-                    margin-bottom: 10px;
-                }
-            }
+        .o_kanban_examples .o_kanban_examples_group .o_kanban_examples_ghost {
+            width: var(--KanbanRecord--small-width);
         }
     }
 }
 
-
 // kanban ghost card
-.o_kanban_examples {
-    display: flex;
-    padding: 0 6px;
+.o_kanban_examples .o_kanban_examples_group .o_kanban_examples_ghost {
+    &.o_collapse {
+        margin-top: -1px;
+    }
 
-    .o_kanban_examples_group {
-        flex: 1 1 100%;
-        margin: 10px;
-
-        .o_kanban_examples_ghost {
-            padding: 5px;
-            margin-top: -1px;
-            border: thin solid map-get($grays, '300');
-            background-color: white;
-            .o_ghost_content {
-                height: 12px;
-                background: map-get($grays, '300');
-                &.o_ghost_tag {
-                    display: inline-block;
-                    width: 40%;
-                    margin-top: 10px;
-                }
-            }
-            .o_ghost_avatar {
-                height: 20px;
-                width: 20px;
-                margin-top: 6px;
-            }
-        }
+    .o_ghost_avatar {
+        height: 20px;
+        width: 20px;
     }
 }

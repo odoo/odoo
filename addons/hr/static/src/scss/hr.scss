@@ -1,66 +1,6 @@
-.o_web_client .o_hr_employee_kanban {
-
-    .o_follow_btn.o_following {
-        .o_unfollow {
-            display: none;
-        }
-
-        &:hover {
-            .o_following {
-                display: none;
-            }
-            .o_unfollow {
-                display: inline;
-            }
-        }
-    }
-
-    .o_employee_summary_icons > span {
-        white-space: nowrap;
-    }
-
-    .oe_kanban_content.fixed-bottom {
-        z-index: 100;
-    }
-
-    .hr_activity_container {
-        margin-bottom: 2px;
-        margin-right: -3px;
-    }
-
-    .o_hr_employee_kanban_bottom {
-        //Prevent bottom row from preventing to click on buttons
-        pointer-events: none;
-        .oe_kanban_bottom_right {
-            pointer-events: auto;
-        }
-    }
-
-}
-
 .o_kanban_dashboard.o_hr_department_kanban {
-    &.o_kanban_ungrouped {
-        .o_kanban_record {
-            width: 450px;
-            .o_kanban_primary_bottom.bottom_block {
-                background-color: unset !important;
-            }
-        }
-    }
-    .o_kanban_group {
-        &:not(.o_column_folded) {
-            width: 350px + 2*$o-kanban-group-padding;
-
-            @include media-breakpoint-down(md) {
-                width: 100%;
-            }
-        }
-    }
-}
-
-.hr_presence {
-    font-size: 0.75em;
-    vertical-align: middle;
+    --KanbanRecord-width: 450px;
+    --KanbanRecord-width-small: 350px;
 }
 
 .o_employee_form {

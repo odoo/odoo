@@ -465,7 +465,6 @@
             }
 
             .o_kanban_quick_add i {
-                @include o-kanban-icon;
                 margin-left: $o-kanban-inside-hgutter*2;
             }
 
@@ -480,10 +479,6 @@
 
                 @include media-breakpoint-down(md) {
                     visibility: visible;
-                }
-
-                i {
-                    @include o-kanban-icon;
                 }
             }
         }
@@ -521,7 +516,7 @@
                 }
 
                 .o_column_unfold {
-                    @include o-kanban-icon(1);
+                    display: block;
                 }
             }
 
