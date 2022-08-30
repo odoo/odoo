@@ -317,9 +317,9 @@ class Project(models.Model):
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     alias_value = fields.Char(string='Alias email', compute='_compute_alias_value')
     privacy_visibility = fields.Selection([
-            ('followers', 'Invited employees'),
-            ('employees', 'All employees'),
-            ('portal', 'Invited portal users and all employees'),
+            ('followers', 'Invited internal users'),
+            ('employees', 'All internal users'),
+            ('portal', 'Invited portal users and all internal users'),
         ],
         string='Visibility', required=True,
         default='portal',
