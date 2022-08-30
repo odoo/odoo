@@ -339,6 +339,82 @@ QUnit.module("Components", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "set [(1, '=', 1)] or [(0, '=', 1)] as domain with the debug textarea",
+        async (assert) => {
+            assert.expect(15);
+
+            let newValue;
+
+            class Parent extends Component {
+                setup() {
+                    this.value = `[("product_id", "ilike", 1)]`;
+                }
+                onUpdate(value, fromDebug) {
+                    this.value = value;
+                    assert.strictEqual(value, newValue);
+                    assert.ok(fromDebug);
+                    this.render();
+                }
+            }
+            Parent.components = { DomainSelector };
+            Parent.template = xml`
+            <DomainSelector
+                value="value"
+                resModel="'partner'"
+                readonly="false"
+                isDebugMode="true"
+                update="(...args) => this.onUpdate(...args)"
+            />
+        `;
+            // Create the domain selector and its mock environment
+            await mountComponent(Parent);
+
+            assert.containsOnce(
+                target,
+                ".o_domain_node.o_domain_leaf",
+                "should have a single domain node"
+            );
+            newValue = `[(1, "=", 1)]`;
+            let input = target.querySelector(".o_domain_debug_input");
+            input.value = newValue;
+            await triggerEvent(input, null, "change");
+            assert.strictEqual(
+                target.querySelector(".o_domain_debug_input").value,
+                newValue,
+                "the domain should not have been formatted"
+            );
+            assert.containsOnce(
+                target,
+                ".o_domain_node.o_domain_leaf",
+                "should still have a single domain node"
+            );
+
+            assert.strictEqual(target.querySelector(".o_field_selector_chain_part").innerText, "1");
+            assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "0"); // option "="
+            assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "1");
+
+            newValue = `[(0, "=", 1)]`;
+            input = target.querySelector(".o_domain_debug_input");
+            input.value = newValue;
+            await triggerEvent(input, null, "change");
+            assert.strictEqual(
+                target.querySelector(".o_domain_debug_input").value,
+                newValue,
+                "the domain should not have been formatted"
+            );
+            assert.containsOnce(
+                target,
+                ".o_domain_node.o_domain_leaf",
+                "should still have a single domain node"
+            );
+
+            assert.strictEqual(target.querySelector(".o_field_selector_chain_part").innerText, "0");
+            assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "0"); // option "="
+            assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "1");
+        }
+    );
+
     QUnit.test("operator fallback", async (assert) => {
         await mountComponent(DomainSelector, {
             props: {
