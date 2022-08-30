@@ -168,6 +168,27 @@
             ])]"/>
     </record>
 
+    <record id="payment_acquirer_mercado_pago" model="payment.acquirer">
+        <field name="name">Mercado Pago</field>
+        <field name="display_as">Credit Card (powered by Mercado Pago)</field>
+        <field name="image_128"
+               type="base64"
+               file="payment_mercado_pago/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_mercado_pago"/>
+
+         <!-- Payment methods must be fetched from the API. See
+            https://www.mercadopago.com.ar/developers/en/reference/payment_methods/_payment_methods/
+        -->
+        <field name="payment_icon_ids"
+               eval="[(6, 0, [
+                    ref('payment.payment_icon_cc_mastercard'),
+                    ref('payment.payment_icon_cc_visa'),
+                    ref('payment.payment_icon_cc_american_express'),
+                    ref('payment.payment_icon_bbva_bancomer'),
+                    ref('payment.payment_icon_citibanamex')
+               ])]"/>
+    </record>
+
     <record id="payment_acquirer_mollie" model="payment.acquirer">
         <field name="name">Mollie</field>
         <field name="image_128" type="base64" file="payment_mollie/static/src/img/mollie_icon.png"/>
