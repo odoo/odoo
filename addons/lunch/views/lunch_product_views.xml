@@ -119,15 +119,17 @@
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title">
-                                            <div>
-                                                <span class="pe-1"><field name="is_favorite" widget="boolean_favorite" nolabel="1"/></span>
-                                                <div class="float-end text-odoo">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div>
+                                                    <field class="pe-1" name="is_favorite" widget="boolean_favorite" nolabel="1"/>
+                                                    <strong><span t-esc="record.name.value"/></strong>
+                                                </div>
+                                                <div class="text-odoo">
+                                                    <div t-if="record.is_new.raw_value" class="o_lunch_new_product me-1 py-1 border-0 fs-6 badge rounded-pill text-bg-success">
+                                                        New
+                                                    </div>
                                                     <field name="price" widget="monetary"/>
                                                 </div>
-                                                <div t-if="record.is_new.raw_value" class="float-end o_lunch_new_product me-1 py-0 border-0 fs-6 badge rounded-pill bg-success">
-                                                    New
-                                                </div>
-                                                <strong><span t-esc="record.name.value"/></strong>
                                             </div>
                                         </strong>
                                         <span class="o_kanban_record_subtitle"><span t-esc="record.supplier_id.value"/></span>

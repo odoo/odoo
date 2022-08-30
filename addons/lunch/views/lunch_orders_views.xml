@@ -224,49 +224,49 @@
                     </div>
                 </div>
                 <div class="o_lunch_wizard">
-                    <div class="row">
-                        <div class="col-2">
-                            <field name="topping_label_1" nolabel="1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" class="fw-bold"/>
+                    <div class="row py-3 py-md-0">
+                        <div class="o_td_label col-3 col-md-2">
+                            <field name="topping_label_1" nolabel="1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" class="o_form_label"/>
                         </div>
-                        <div class="col-10">
-                            <field name="topping_ids_1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 1), ('supplier_id', '=', supplier_id)]"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-2">
-                            <field name="topping_label_2" nolabel="1" attrs="{'invisible': [('available_toppings_2', '=', False)]}" class="fw-bold"/>
-                        </div>
-                        <div class="col-10">
-                            <field name="topping_ids_2" attrs="{'invisible': [('available_toppings_2', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 2), ('supplier_id', '=', supplier_id)]"/>
+                        <div class="col-9 col-md-10">
+                            <field name="topping_ids_1" attrs="{'invisible': [('available_toppings_1', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 1), ('supplier_id', '=', supplier_id)]" class="o_field_widget o_quick_editable"/>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-2">
-                            <field name="topping_label_3" nolabel="1" attrs="{'invisible': [('available_toppings_3', '=', False)]}" class="fw-bold"/>
+                        <div class="o_td_label col-3 col-md-2">
+                            <field name="topping_label_2" nolabel="1" attrs="{'invisible': [('available_toppings_2', '=', False)]}" class="o_form_label"/>
                         </div>
-                        <div class="col-10">
-                            <field name="topping_ids_3" attrs="{'invisible': [('available_toppings_3', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 3), ('supplier_id', '=', supplier_id)]"/>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-2">
-                            <label for="product_description" class="fw-bold"/>
-                        </div>
-                        <div class="col-10">
-                            <field name="product_description" nolabel="1"/>
+                        <div class="col-9 col-md-10">
+                            <field name="topping_ids_2" attrs="{'invisible': [('available_toppings_2', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 2), ('supplier_id', '=', supplier_id)]" class="o_field_widget o_quick_editable"/>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-2">
-                            <label for="note" class="fw-bold" />
+                        <div class="o_td_label col-3 col-md-2">
+                            <field name="topping_label_3" nolabel="1" attrs="{'invisible': [('available_toppings_3', '=', False)]}" class="o_form_label"/>
                         </div>
-                        <div class="col-10">
-                            <field name="note" nolabel="1" placeholder="Information, allergens, ..." />
+                        <div class="col-9 col-md-10">
+                            <field name="topping_ids_3" attrs="{'invisible': [('available_toppings_3', '=', False)]}" widget="many2many_checkboxes" nolabel="1" domain="[('topping_category', '=', 3), ('supplier_id', '=', supplier_id)]" class="o_field_widget o_quick_editable"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="o_td_label col-3 col-md-2">
+                            <label for="product_description" class="o_form_label"/>
+                        </div>
+                        <div class="col-9 col-md-10">
+                            <field name="product_description" nolabel="1" class="o_field_widget o_quick_editable"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="o_td_label col-3 col-md-2">
+                            <label for="note" class="o_form_label" />
+                        </div>
+                        <div class="col-9 col-md-10">
+                            <field name="note" nolabel="1" placeholder="Information, allergens, ..." class="o_field_widget o_quick_editable"/>
                         </div>
                     </div>
 
                     <div class="row" attrs="{'invisible': [('order_deadline_passed', '=', False)]}">
-                        <div class="col">
+                        <div class="col-12">
                             <div class="alert alert-warning" role="alert">
                                 The orders for this vendor have already been sent.
                             </div>
