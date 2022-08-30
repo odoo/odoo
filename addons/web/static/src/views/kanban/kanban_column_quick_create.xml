@@ -3,16 +3,16 @@
 
     <t t-name="web.KanbanColumnQuickCreate" owl="1">
         <div class="o_column_quick_create" t-ref="root">
-            <div t-if="props.folded" class="o_quick_create_folded" t-on-click="unfold">
+            <div t-if="props.folded" class="o_quick_create_folded m-3 text-nowrap fw-bold opacity-75 opacity-100-hover" t-on-click="unfold">
                 <button class="o_kanban_add_column btn btn-outline-secondary w-100">
                     <i class="fa fa-plus me-2" role="img" aria-label="Add column" title="Add column"/><t t-out="props.groupByFieldString"/>
                 </button>
             </div>
-            <div t-else="" class="o_quick_create_unfolded">
-                <div class="o_kanban_header">
+            <div t-else="" class="o_quick_create_unfolded pt-3 px-2 pb-2">
+                <div class="o_kanban_header top-0 pb-3">
                     <div class="input-group">
                         <input type="text"
-                            class="form-control o_input"
+                            class="form-control o_input bg-transparent fs-4"
                             t-attf-placeholder="{{ props.groupByFieldString }}..."
                             t-ref="autofocus"
                             t-model.trim="state.columnTitle"
@@ -25,14 +25,14 @@
                             </button>
                         </span>
                     </div>
-                    <span t-if="!env.isSmall and state.hasInputFocused" class="o_discard_msg text-muted float-end">
+                    <small t-if="!env.isSmall and state.hasInputFocused" class="o_discard_msg text-muted float-end">
                         Esc to discard
-                    </span>
+                    </small>
                     <t t-if="props.exampleData and !env.isSmall">
-                        <button type="button" class="btn btn-link o_kanban_examples" t-on-click="showExamples">See examples</button>
+                        <button type="button" class="btn btn-link o_kanban_examples p-0" t-on-click="showExamples">See examples</button>
                     </t>
                 </div>
-                <div t-foreach="[,,,]" t-as="i" t-key="i_index" class="o_kanban_muted_record" />
+                <div t-foreach="[,,,]" t-as="i" t-key="i_index" class="o_kanban_muted_record mt-3 py-5 bg-300" />
             </div>
         </div>
     </t>
