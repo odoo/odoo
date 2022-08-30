@@ -1,12 +1,16 @@
 /** @odoo-module **/
 
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
-import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import {
+    deserializeDate,
+    deserializeDateTime,
+    serializeDate,
+    serializeDateTime,
+} from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 
 const { Component } = owl;
 
-const parsers = registry.category("parsers");
 const dsf = registry.category("domain_selector/fields");
 const dso = registry.category("domain_selector/operator");
 
@@ -15,16 +19,17 @@ export class DomainSelectorDateTimeField extends Component {
         const { DatePicker, DateTimePicker } = this.constructor.components;
         return this.props.field.type === "date" ? DatePicker : DateTimePicker;
     }
-    get parser() {
-        return parsers.get(this.props.field.type);
+    get deserializedValue() {
+        const deserialize =
+            this.props.field.type === "date" ? deserializeDate : deserializeDateTime;
+        return this.props.value ? deserialize(this.props.value) : luxon.DateTime.local();
     }
-    get parsedValue() {
-        return this.props.value ? this.parser(this.props.value) : luxon.DateTime.local();
-    }
-
     onChange(value) {
+        if (!this.deserializedValue.isValid && !value) {
+            return;
+        }
         const serialize = this.props.field.type === "date" ? serializeDate : serializeDateTime;
-        this.props.update({ value: serialize(value) });
+        this.props.update({ value: serialize(value || luxon.DateTime.local()) });
     }
 }
 Object.assign(DomainSelectorDateTimeField, {

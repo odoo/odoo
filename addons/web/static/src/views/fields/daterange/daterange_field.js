@@ -87,7 +87,7 @@ export class DateRangeField extends Component {
         const formatter = formatters.get(format);
         let formattedValue;
         try {
-            formattedValue = formatter(value, { timezone: this.isDateTime });
+            formattedValue = formatter(value);
         } catch {
             this.props.record.setInvalidField(this.props.name);
         }
@@ -105,7 +105,7 @@ export class DateRangeField extends Component {
         const parse = parsers.get(this.props.formatType);
         let value;
         try {
-            value = parse(ev.target.value, { timezone: this.isDateTime });
+            value = parse(ev.target.value);
         } catch {
             this.props.record.setInvalidField(this.props.name);
             return;
@@ -129,9 +129,7 @@ export class DateRangeField extends Component {
         const end = this.isDateTime ? picker.endDate : picker.endDate.startOf("day");
         const parser = parsers.get(this.props.formatType);
         const dates = [start, end].map((date) => {
-            return parser(date.format(this.momentFormat), {
-                timezone: this.isDateTime,
-            });
+            return parser(date.format(this.momentFormat));
         });
         await this.updateRange(dates[0], dates[1]);
         const input = document.querySelector(

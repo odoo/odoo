@@ -31,7 +31,7 @@ let datePickerId = 0;
  * @returns {moment}
  */
 function luxonDateToMomentDate(date) {
-    return window.moment(String(date));
+    return date.isValid ? window.moment(String(date)) : null;
 }
 
 /**
@@ -136,7 +136,6 @@ export class DatePicker extends Component {
             format:
                 !useStatic || isValidStaticFormat(this.format) ? this.format : this.staticFormat,
             locale: this.props.locale || (this.date && this.date.locale),
-            timezone: this.isLocal,
         };
     }
 

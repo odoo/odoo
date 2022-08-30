@@ -879,7 +879,7 @@ export class MockServer {
             const [fieldName, aggregateFunction = "month"] = groupByField.split(":");
             const { type } = fields[fieldName];
             if (type === "date") {
-                const date = deserializeDate(val).setZone("default");
+                const date = deserializeDate(val);
                 if (aggregateFunction === "day") {
                     return date.toFormat("yyyy-MM-dd");
                 } else if (aggregateFunction === "week") {
@@ -892,7 +892,7 @@ export class MockServer {
                     return date.toFormat("MMMM yyyy");
                 }
             } else if (type === "datetime") {
-                const date = deserializeDateTime(val).setZone("default");
+                const date = deserializeDateTime(val);
                 if (aggregateFunction === "hour") {
                     return date.toFormat("HH:00 dd MMM");
                 } else if (aggregateFunction === "day") {
@@ -987,57 +987,36 @@ export class MockServer {
                         switch (dateRange) {
                             case "hour": {
                                 try {
-                                    startDate = parseDateTime(value, {
-                                        format: "HH dd MMM",
-                                        timezone: type !== "date",
-                                    });
+                                    startDate = parseDateTime(value, { format: "HH dd MMM" });
                                 } catch {
-                                    startDate = parseDateTime(value, {
-                                        format: "HH:00 dd MMM",
-                                        timezone: type !== "date",
-                                    });
+                                    startDate = parseDateTime(value, { format: "HH:00 dd MMM" });
                                 }
                                 endDate = startDate.plus({ hours: 1 });
                                 break;
                             }
                             case "day": {
-                                startDate = parseDateTime(value, {
-                                    format: "yyyy-MM-dd",
-                                    timezone: type !== "date",
-                                });
+                                startDate = parseDateTime(value, { format: "yyyy-MM-dd" });
                                 endDate = startDate.plus({ days: 1 });
                                 break;
                             }
                             case "week": {
-                                startDate = parseDateTime(value, {
-                                    format: "WW kkkk",
-                                    timezone: type !== "date",
-                                });
+                                startDate = parseDateTime(value, { format: "WW kkkk" });
                                 endDate = startDate.plus({ weeks: 1 });
                                 break;
                             }
                             case "quarter": {
-                                startDate = parseDateTime(value, {
-                                    format: "q yyyy",
-                                    timezone: type !== "date",
-                                });
+                                startDate = parseDateTime(value, { format: "q yyyy" });
                                 endDate = startDate.plus({ quarters: 1 });
                                 break;
                             }
                             case "year": {
-                                startDate = parseDateTime(value, {
-                                    format: "y",
-                                    timezone: type !== "date",
-                                });
+                                startDate = parseDateTime(value, { format: "y" });
                                 endDate = startDate.plus({ years: 1 });
                                 break;
                             }
                             case "month":
                             default: {
-                                startDate = parseDateTime(value, {
-                                    format: "MMMM yyyy",
-                                    timezone: type !== "date",
-                                });
+                                startDate = parseDateTime(value, { format: "MMMM yyyy" });
                                 endDate = startDate.plus({ months: 1 });
                                 break;
                             }

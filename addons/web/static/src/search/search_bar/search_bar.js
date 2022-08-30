@@ -129,11 +129,11 @@ export class SearchBar extends Component {
             try {
                 switch (type) {
                     case "date": {
-                        value = serializeDate(parser(trimmedQuery, { timezone: false }));
+                        value = serializeDate(parser(trimmedQuery));
                         break;
                     }
                     case "datetime": {
-                        value = serializeDateTime(parser(trimmedQuery, { timezone: true }));
+                        value = serializeDateTime(parser(trimmedQuery));
                         break;
                     }
                     case "many2one": {
