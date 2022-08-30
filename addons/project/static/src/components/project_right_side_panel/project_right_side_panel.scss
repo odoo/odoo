@@ -1,0 +1,223 @@
+$o-rightpanel-p: $o-horizontal-padding;
+$o-rightpanel-p-small: $o-horizontal-padding*0.5;
+$o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
+
+$o-rightpanel-category-default-color: $o-brand-primary;
+$o-rightpanel-filter-default-color: #D59244;
+
+.o_controller_with_rightpanel .o_content {
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+
+    .o_renderer {
+        flex: 1 1 auto;
+        overflow-x: hidden;
+        overflow-y: auto; // make the renderer and search panel scroll individually
+        max-height: 100%;
+        position: relative;
+        padding: 0;
+
+        .o_kanban_record {
+            width: 100%;
+            margin: 0;
+            border-top: 0;
+            border-right: 0;
+        }
+    }
+}
+
+.o_rightpanel {
+    flex: 0 0 37%;
+    overflow: auto;
+    height: 100%;
+    padding: $o-rightpanel-p-small $o-rightpanel-p $o-rightpanel-p*2 $o-rightpanel-p;
+    border-left: 1px solid $gray-300;
+    background-color: white;
+    min-width: 400px;
+    max-width: 1140px;
+
+    .o_rightpanel_section {
+        padding-bottom: $o-rightpanel-p;
+        padding-top: $o-rightpanel-p;
+
+        &:nth-child(n+3){
+            border-top: 1px solid $gray-300;
+        }
+
+        &:first-child{
+            padding-bottom: 0px;
+        }
+
+        &:nth-child(2){
+            padding-top: 0px;
+        }
+
+        .o_rightpanel_button {
+            cursor: pointer;
+            font-size: small;
+            color: $o-brand-primary;
+
+            &:hover {
+                color: #001d1f;
+                text-decoration: none;
+            }
+        }
+
+        .o_rightpanel_header {
+            padding: $o-rightpanel-p-tiny 0 $o-rightpanel-p-small 0;
+
+            .o_rightpanel_title {
+                padding: 8px 0;
+                font-weight: bold;
+                font-size: large;
+                display:inline;
+            }
+
+            .o_rightpanel_button {
+                font-weight: bold;
+                float: right;
+                padding-top: $o-rightpanel-p-tiny;
+            }
+        }
+
+        .o_rightpanel_data {
+            font-size: small;
+            .table-striped{
+                tbody tr:nth-of-type(odd) {
+                    background-color: $gray-100;
+                }
+            }
+            .o_rightpanel_data_row, table > tbody > tr {
+                &:not(.o_rightpanel_nohover):hover {
+                    background-color: $gray-200;
+                    border-radius: 5px;
+                }
+            }
+            .o_rightpanel_left_col {
+                font-size: small;
+                padding-top: 0;
+                padding-bottom: 0;
+                &.o_rightpanel_left_button {
+                    color: $o-brand-primary;
+                    padding-left: 0;
+                }
+                &.o_rightpanel_left_text {
+                    padding-right: $o-rightpanel-p-small;
+                }
+            }
+            .o_rightpanel_right_col {
+                float: right;
+                display: flex;
+                align-items: center;
+                .o_milestone_checkbox {
+                    display: flex;
+                    align-items: center;
+                }
+            }
+
+            .o_rightpanel_center_col {
+                flex-grow: 1;
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .o_rightpanel_milestone {
+                margin-bottom: $o-rightpanel-p-small;
+                display: flex;
+                &.o_milestone_danger {
+                    color: $red;
+                }
+                .o_milestone_checkbox {
+                    cursor: pointer;
+                    padding-right: $o-rightpanel-p-tiny;
+                }
+                .o_milestone_detail {
+                    cursor: pointer;
+                    display: flex;
+                    justify-content: space-between;
+                    flex-grow: 1;
+                    .o_milestone_info {
+                        display: flex;
+                        flex-direction: column;
+                        flex: 30%;
+                    }
+                }
+                .o_delete_icon {
+                    cursor: pointer;
+                    padding-left: $o-rightpanel-p-tiny;
+                }
+            }
+
+            .o_rightpanel_subsection {
+                &:not(:last-child) {
+                    padding-bottom: 1rem;
+                }
+            }
+
+            td.text-bold {
+                font-weight: bold;
+            }
+
+            table > tfoot {
+                font-weight: bold;
+                border-top: 1px solid black;
+            }
+        }
+
+        .o_rightpanel_hidden {
+            display: none;
+        }
+
+        .o_color_red {
+            color: $red;
+        }
+        .o_color_green {
+            color: $green;
+        }
+
+        .o_form_view {
+            .oe_button_box {
+                display: flex;
+                flex-wrap: wrap;
+                margin-left: -16px;
+                margin-right: -16px;
+
+                @media screen and (max-device-width: 768px) {
+                    margin-top: -4px;
+                    margin-bottom: 0px;
+                }
+
+                .oe_stat_button {
+                    flex-basis: 25%;
+                    border: 1px solid $border-color;
+                    margin-top: -1px;
+                    margin-left: -1px;
+                    height: 57.5px;
+
+                    &:nth-child(4n):not(:last-child){
+                        border-right-width: 0px;
+                    }
+
+                    .o_stat_text {
+                        white-space: normal;
+                    }
+                }
+
+                @media screen and (max-width: 1600px) {
+                    .oe_stat_button {
+                        flex-basis: 33.33%;
+
+                        &:nth-child(3n):not(:last-child) {
+                            border-right-width: 0px;
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+}

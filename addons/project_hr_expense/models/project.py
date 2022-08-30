@@ -90,9 +90,10 @@ class Project(models.Model):
             'costs': {'id': section_id, 'sequence': self._get_profitability_sequence_per_invoice_type()[section_id], 'billed': -expense_data['untaxed_amount'], 'to_bill': 0.0},
         }
         if can_see_expense:
-            action = {'name': 'action_profitability_items', 'type': 'object', 'section': section_id, 'domain': json.dumps([('id', 'in', expense_data['ids'])])}
+            args = [section_id, [('id', 'in', expense_data['ids'])]]
             if expense_data['ids']:
-                action['res_id'] = expense_data['ids']
+                args.append(expense_data['ids'])
+            action = {'name': 'action_profitability_items', 'type': 'object', 'args': json.dumps(args)}
             expense_profitability_items['action'] = action
         return expense_profitability_items
 

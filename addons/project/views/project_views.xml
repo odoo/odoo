@@ -433,7 +433,7 @@
             <field name="name">project.project.form</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <form string="Project" class="o_form_project_project" js_class="form_description_expander">
+                <form string="Project" class="o_form_project_project" js_class="project_form">
                     <field name="company_id" invisible="1"/>
                     <field name="analytic_account_id" invisible="1"/>
                     <header>
@@ -493,7 +493,7 @@
                         <button class="oe_stat_button o_project_not_clickable" disabled="disabled" groups="!project.group_project_manager">
                             <div class="ps-4">
                                 <field name="last_update_color" invisible="1"/>
-                                <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color', 'no_quick_edit': 1}"/>
+                                <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color'}"/>
                             </div>
                         </button>
                         <button name="%(action_project_task_burndown_chart_report)d" type="action" class="oe_stat_button" icon="fa-area-chart" groups="project.group_project_user">
@@ -800,7 +800,12 @@
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors" on_create="project.open_create_project" js_class="project_project_kanban" sample="1">
+                <kanban
+                    class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors"
+                    on_create="project.open_create_project"
+                    action="action_view_tasks" type="object"
+                    sample="1"
+                >
                     <field name="display_name"/>
                     <field name="partner_id"/>
                     <field name="commercial_partner_id"/>
@@ -910,7 +915,7 @@
                                             <a class="o_project_kanban_box" name="action_view_tasks" type="object">
                                                 <div>
                                                     <span class="o_value"><t t-esc="record.task_count.value"/></span>
-                                                    <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
+                                                    <span class="o_label ms-1"><t t-esc="record.label_tasks.value"/></span>
                                                 </div>
                                             </a>
                                             <a groups='project.group_project_milestone' t-if="record.allow_milestones and record.allow_milestones.raw_value and record.milestone_count.value &gt; 0"
@@ -926,7 +931,7 @@
                                         <field name="activity_ids" widget="kanban_activity"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <field t-if="record.last_update_status.value &amp;&amp; widget.editable" name="last_update_status" widget="project_state_selection"/>
+                                        <field t-if="record.last_update_status.value &amp;&amp; widget.editable" name="last_update_status" widget="project_state_selection" options="{'color_field': 'last_update_color', 'hide_label': 1}"/>
                                         <span t-if="record.last_update_status.value &amp;&amp; !widget.editable" t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
                                         <field name="user_id" widget="many2one_avatar_user" t-if="record.user_id.raw_value"/>
                                     </div>
@@ -1059,7 +1064,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Task" class="o_form_project_tasks" js_class="project_form">
+                <form string="Task" class="o_form_project_tasks" js_class="project_task_form">
                     <field name="allow_subtasks" invisible="1" />
                     <field name="is_closed" invisible="1" />
                     <field name="allow_recurring_tasks" invisible="1" />
@@ -1137,21 +1142,22 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title pe-0">
-                        <h1 class="d-flex flex-row justify-content-between">
-                            <field name="priority" widget="priority" class="me-3"/>
-                            <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
-                            <field name="kanban_state" widget="state_selection" class="ms-auto"/>
+                        <h1 class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex">
+                                <field name="priority" widget="priority" class="me-3"/>
+                                <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
+                            </div>
+                            <field name="kanban_state" widget="state_selection" class=""/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <label for="project_id" attrs="{'invisible': [('parent_id', '!=', False)]}" class="oe_read_only"/>
-                            <div colspan="1" class="oe_read_only">
-                                <i class="o_project_task_project_field text-danger" attrs="{'invisible': [('project_id', '!=', False)]}">Private</i>
-                                <field name="project_id" attrs="{'invisible': ['|', ('parent_id', '!=', False), ('project_id', '=', False)]}" nolabel="1"/>
-                            </div>
-                            <field name="project_id" attrs="{'invisible': [('parent_id', '!=', False)]}" domain="[('active', '=', True), ('company_id', '=', company_id)]"
-                                placeholder="Private" class="o_project_task_project_field oe_edit_only"/>
+                            <field name="project_id"
+                                   placeholder="Private"
+                                   domain="[('active', '=', True), ('company_id', '=', company_id)]"
+                                   attrs="{'invisible': [('parent_id', '!=', False)]}"
+                                   widget="project_private_task"
+                            />
                             <field name="display_project_id" string="Project" attrs="{'invisible': [('parent_id', '=', False)]}" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
                             <field name="milestone_id"
                                 placeholder="e.g. Product Launch"
@@ -1373,8 +1379,14 @@
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create"
-                    quick_create_view="project.quick_create_task_form" examples="project" js_class="project_task_kanban" sample="1">
+                <kanban
+                    default_group_by="stage_id"
+                    class="o_kanban_small_column o_kanban_project_tasks"
+                    on_create="quick_create"
+                    quick_create_view="project.quick_create_task_form"
+                    examples="project"
+                    js_class="project_task_kanban" sample="1"
+                >
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
@@ -1409,17 +1421,11 @@
                                             <s t-if="!record.active.raw_value"><field name="name" widget="name_with_subtask_count"/></s>
                                             <t t-else=""><field name="name" widget="name_with_subtask_count"/></t>
                                         </strong>
-                                        <t t-if="!record.is_private.raw_value">
-                                            <span invisible="context.get('default_project_id', False)"><br/><field name="project_id" required="1"/></span>
-                                            <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-attf-class="{{record.has_late_and_unreached_milestone.raw_value ? 'text-danger' : ''}}">
-                                                <br/>
-                                                <field name="milestone_id" />
-                                            </span>
-                                        </t>
-                                        <t t-else="">
+                                        <span invisible="context.get('default_project_id', False)"><br/><field name="project_id" widget="project_private_task" options="{'no_open': True}"/></span>
+                                        <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-attf-class="{{record.has_late_and_unreached_milestone.raw_value ? 'text-danger' : ''}}">
                                             <br/>
-                                            <span class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
-                                        </t>
+                                            <field name="milestone_id" options="{'no_open': True}" />
+                                        </span>
                                         <br />
                                         <t t-if="record.partner_id.value">
                                             <span t-if="!record.partner_is_company.raw_value">
@@ -1482,7 +1488,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Tasks" multi_edit="1" sample="1" js_class="project_list">
+                <tree string="Tasks" multi_edit="1" sample="1" js_class="project_task_list">
                     <field name="company_id" invisible="1"/>
                     <field name="message_needaction" invisible="1" readonly="1"/>
                     <field name="is_closed" invisible="1" />
@@ -1835,7 +1841,7 @@
                 </xpath>
                 <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                     <div role="menuitem" groups="project.group_project_user">
-                        <a name="project_update_all_action" type="object" t-attf-context="{'active_id': #{record.id.raw_value}}">Project Updates</a>
+                        <a name="project_update_all_action" type="object" t-attf-context="{'active_id': #{record.id.raw_value} }">Project Updates</a>
                     </div>
                 </xpath>
             </field>

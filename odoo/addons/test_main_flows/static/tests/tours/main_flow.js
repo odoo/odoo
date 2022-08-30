@@ -406,7 +406,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     position: "left",
 }, {
     mobile: true,
-    trigger: '.o_field_widget[name=name]input',
+    trigger: '.o_field_widget[name=name] input',
     extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Project')",
     content: _t('Let\'s enter the name.'),
     position: 'left',
@@ -847,14 +847,14 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t('See Tasks'),
     position: 'bottom',
 }, {
-    trigger: '.o_field_widget[name=project_id]',
+    trigger: '.o_field_widget[name=project_id] a',
     content: _t('See Project'),
     position: 'right',
 },
 tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the_flow.project")'),
 {
-    trigger: '.oe_button_box .oe_stat_button:has(span:contains("Recorded"))',
-    extra_trigger: '.o_form_readonly',
+    trigger: '.oe_button_box button.oe_stat_button:has(span:contains("Recorded"))',
+    extra_trigger: '.o_form_readonly .oe_stat_button.dropdown > .dropdown-menu',
     content: _t('See Timesheets'),
     position: 'bottom',
 }, {
@@ -923,6 +923,13 @@ tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the
     content: _t("Select the the_flow.vendor"),
     position: "bottom",
 }, {
+    edition: 'community',
+    trigger: '.o_selected_row .o_field_widget[name=unit_amount] input',
+    content: _t('Set time'),
+    position: 'bottom',
+    run: 'text 10',
+}, {
+    edition: 'enterprise',
     trigger: '.o_selected_row .o_field_widget[name=unit_amount]input',
     content: _t('Set time'),
     position: 'bottom',

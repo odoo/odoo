@@ -43,6 +43,7 @@ have real delivered quantities in sales orders.
             'sale_timesheet/static/src/scss/sale_timesheet_portal.scss',
         ],
         'web.assets_backend': [
+            'sale_timesheet/static/src/components/**/*',
             'sale_timesheet/static/src/js/so_line_one2many.js',
         ],
         'web.assets_tests': [
