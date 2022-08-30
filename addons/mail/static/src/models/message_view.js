@@ -451,6 +451,20 @@ registerModel({
             }
             return this.message.author && this.message.author.isImStatusSet ? {} : clear();
         },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeReadLessText() {
+            return this.env._t("Read Less");
+        },
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeReadMoreText() {
+            return this.env._t("Read More");
+        },
     },
     fields: {
         /**
@@ -659,6 +673,12 @@ registerModel({
             compute: '_computePersonaImStatusIconView',
             inverse: 'messageViewOwner',
             isCausal: true,
+        }),
+        readLessText: attr({
+            compute: '_computeReadLessText',
+        }),
+        readMoreText: attr({
+            compute: '_computeReadMoreText',
         }),
         /**
          * States whether this message view is the last one of its thread view.

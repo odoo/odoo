@@ -4,8 +4,6 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
-import core from 'web.core';
-
 const getAttachmentNextTemporaryId = (function () {
     let tmpId = 0;
     return () => {
@@ -91,7 +89,7 @@ registerModel({
          */
         _createFormData({ composer, file, thread }) {
             const formData = new window.FormData();
-            formData.append('csrf_token', core.csrf_token);
+            formData.append('csrf_token', odoo.csrf_token);
             formData.append('is_pending', Boolean(composer));
             formData.append('thread_id', thread && thread.id);
             formData.append('thread_model', thread && thread.model);
