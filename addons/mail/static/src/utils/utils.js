@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { delay } from 'web.concurrency';
 import { unaccent } from 'web.utils';
 
 //------------------------------------------------------------------------------
@@ -74,7 +73,7 @@ function markEventHandled(ev, markName) {
  * is processed.
  */
 async function nextTick() {
-    await delay(0);
+    await new Promise(resolve => setTimeout(resolve, 0));
 }
 
 //------------------------------------------------------------------------------
