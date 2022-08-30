@@ -190,6 +190,7 @@ For more specific needs, you may also assign custom-defined actions
             # defines mixins and variables used by multiple components
             'mail/static/src/components/notification_list/notification_list_item.scss',
             'mail/static/src/js/**/*.js',
+            'mail/static/src/fields/*.js',
             'mail/static/src/utils/*.js',
             'mail/static/src/scss/*.scss',
             'mail/static/src/component_hooks/*.js',
@@ -224,6 +225,7 @@ For more specific needs, you may also assign custom-defined actions
         ],
         'web.assets_qweb': [
             'mail/static/src/xml/*.xml',
+            'mail/static/src/fields/*.xml',
             'mail/static/src/components/*/*.xml',
         ],
     },

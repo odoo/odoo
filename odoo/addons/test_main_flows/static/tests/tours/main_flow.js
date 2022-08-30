@@ -600,7 +600,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 },
 ...tour.stepUtils.statusbarButtonsSteps('Send by Email', _t("Try to send it to email"), ".o_statusbar_status .btn-primary:contains('Quotation')"),
 {
-    trigger: ".o_field_widget[name=email]",
+    trigger: ".o_field_widget[name=email] input",
     content: _t("Enter an email address"),
     position: "right",
     run: "text test@the_flow.com",

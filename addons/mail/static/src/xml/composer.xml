@@ -8,13 +8,4 @@
             </span>
         </t>
     </div>
-
-    <t t-name="FieldMany2ManyTagsEmail" t-extend="FieldMany2ManyTag">
-        <t t-jquery="[t-attf-class*=badge]" t-operation="replace">
-            <div t-attf-class="badge rounded-pill dropdown o_tag_color_0 #{el.email.indexOf('@') &lt; 0 ? 'o_tag_error' : ''}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
-                <span class="o_badge_text" t-att-title="el.email"><t t-esc="el.display_name"/></span>
-                <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
-            </div>
-        </t>
-    </t>
 </templates>

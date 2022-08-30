@@ -12,7 +12,7 @@ const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_p
     trigger: 'div.o_field_radio[name="access_mode"] div.o_radio_item > input[data-value="edit"]',
     content: 'Select "Edit" as Access mode in the "Share Project" wizard.',
 }, {
-    trigger: '.o_field_many2one[name="partner_ids"]',
+    trigger: '.o_field_many2many_tags_email[name=partner_ids]',
     content: 'Select the user portal as collaborator to the "Project Sharing" project.',
     run: function (actions) {
         actions.text('Georges', this.$anchor.find('input'));

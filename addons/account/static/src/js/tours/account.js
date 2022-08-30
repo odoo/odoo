@@ -96,7 +96,7 @@ tour.register('account_tour', {
         extra_trigger: "[name=move_type] [raw-value=out_invoice], [name=move_type][raw-value=out_invoice]",
         content: _t("Send the invoice and check what the customer will receive."),
     }, {
-        trigger: "input[name=email]",
+        trigger: ".o_field_widget[name=email] input, input[name=email]",
         // FIXME WOWL: this selector needs to work in both legacy and non-legacy views
         // because account_invoice_extracts *adds* a js_class on the base view which forces
         // the use of a legacy view in enterprise only
