@@ -3357,7 +3357,7 @@ export class OdooEditor extends EventTarget {
         }
 
         // placeholder hint
-        if (this.editable.textContent === '' && this.options.placeholder) {
+        if (this.editable.textContent === '' && this.options.placeholder && this.editable.firstChild.innerHTML) {
             this._makeHint(this.editable.firstChild, this.options.placeholder, true);
         }
     }
