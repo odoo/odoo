@@ -206,6 +206,7 @@
                             </div>
                         </div>
                         <AttachmentList t-if="messageView.attachmentList" record="messageView.attachmentList" className="'position-relative'"/>
+                        <LinkPreviewListView t-if="messageView.linkPreviewListView" record="messageView.linkPreviewListView"/>
                         <div t-if="messageView.message.messageReactionGroups.length > 0" class="position-relative d-flex flex-wrap"
                         t-att-class="{ 'flex-row-reverse me-3': messageView.isInChatWindowAndIsAlignedRight, 'ms-3': !messageView.isInChatWindowAndIsAlignedRight and (messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms')}" t-attf-class="{{ messageView.message.isDiscussionOrNotification or messageView.message.message_type === 'sms' ? 'mt-n2' : 'mt-1' }}">
                             <t t-foreach="messageView.message.messageReactionGroups" t-as="messageReactionGroup" t-key="messageReactionGroup.localId">

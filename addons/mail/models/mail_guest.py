@@ -113,6 +113,7 @@ class MailGuest(models.Model):
             'current_partner': False,
             'current_user_id': False,
             'current_user_settings': False,
+            'hasLinkPreviewFeature': self.env['mail.link.preview']._is_link_preview_enabled(),
             'menu_id': False,
             'needaction_inbox_counter': False,
             'partner_root': {
