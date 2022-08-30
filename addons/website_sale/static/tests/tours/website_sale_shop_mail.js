@@ -68,7 +68,7 @@ tour.register('shop_mail', {
     },
     {
         content: "Open recipients dropdown",
-        trigger: '.o_field_many2one[name="partner_ids"] .ui-autocomplete-input',
+        trigger: '.o_field_many2many_tags_email[name=partner_ids] input',
         run: 'click',
     },
     {
