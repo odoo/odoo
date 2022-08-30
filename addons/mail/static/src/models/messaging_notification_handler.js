@@ -69,6 +69,16 @@ registerModel({
                                 return;
                             }
                             return this._handleNotificationChannelMessage(message.payload);
+                        case 'mail.link.preview/insert':
+                            this.messaging.models['LinkPreview'].insert(message.payload);
+                            return;
+                        case 'mail.link.preview/delete': {
+                            const linkPreview = this.messaging.models['LinkPreview'].findFromIdentifyingData(message.payload);
+                            if (linkPreview) {
+                                linkPreview.delete();
+                            }
+                            return;
+                        }
                         case 'mail.message/delete':
                             return this._handleNotificationMessageDelete(message.payload);
                         case 'mail.message/inbox':

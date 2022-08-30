@@ -113,6 +113,7 @@ class TestDiscussFullPerformance(TransactionCase):
             The point of having a separate getter is to allow it to be overriden.
         """
         return {
+            'hasLinkPreviewFeature': True,
             'needaction_inbox_counter': 1,
             'starred_counter': 1,
             'channels': [

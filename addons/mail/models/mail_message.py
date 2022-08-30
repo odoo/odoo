@@ -104,6 +104,7 @@ class Message(models.Model):
     model = fields.Char('Related Document Model')
     res_id = fields.Many2oneReference('Related Document ID', model_field='model')
     record_name = fields.Char('Message Record Name') # name_get() of the related document
+    link_preview_ids = fields.One2many('mail.link.preview', 'message_id', string='Link Previews', groups="base.group_erp_manager")
     # characteristics
     message_type = fields.Selection([
         ('email', 'Email'),
@@ -859,6 +860,7 @@ class Message(models.Model):
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': message_sudo.attachment_ids._attachment_format() if not legacy else message_sudo.attachment_ids._attachment_format(legacy=True),
                 'trackingValues': allowed_tracking_ids._tracking_value_format(),
+                'linkPreviews': message_sudo.link_preview_ids._link_preview_format(),
                 'messageReactionGroups': reaction_groups,
                 'record_name': record_name,
             })

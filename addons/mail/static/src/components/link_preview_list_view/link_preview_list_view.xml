@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.LinkPreviewListView" owl="1">
+        <div class="o_LinkPreviewListView d-flex flex-column mt-2" t-att-class="{ 'me-2 pe-4': linkPreviewListView.messageViewOwner.isInChatWindowAndIsAlignedLeft, 'ms-2 ps-4': linkPreviewListView.messageViewOwner.isInChatWindowAndIsAlignedRight }" t-attf-class="{{ className }}" t-ref="root">
+            <div class="o_LinkPreviewListView_partialList o_LinkPreviewListView_partialListImages d-flex flex-grow-1 flex-wrap" t-att-class="{ 'justify-content-end': linkPreviewListView.messageViewOwner.isInChatWindowAndIsAlignedRight }">
+                <LinkPreviewImageView t-foreach="linkPreviewListView.linkPreviewAsImageViews" t-as="linkPreviewImageView" t-key="linkPreviewImageView" record="linkPreviewImageView"/>
+            </div>
+            <div class="o_LinkPreviewListView_partialList o_LinkPreviewListView_partialListCards d-flex flex-grow-1 flex-wrap" t-att-class="{ 'justify-content-end': linkPreviewListView.messageViewOwner.isInChatWindowAndIsAlignedRight }">
+                <LinkPreviewCardView t-foreach="linkPreviewListView.linkPreviewAsCardViews" t-as="linkPreviewCardView" t-key="linkPreviewCardView" record="linkPreviewCardView"/>
+                <LinkPreviewVideoView t-foreach="linkPreviewListView.linkPreviewAsVideoViews" t-as="linkPreviewVideoView" t-key="linkPreviewVideoView" record="linkPreviewVideoView"/>
+            </div>
+        </div>
+    </t>
+</templates>
