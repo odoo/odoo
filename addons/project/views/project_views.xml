@@ -1189,7 +1189,6 @@
                         <page name="sub_tasks_page" string="Sub-tasks" attrs="{'invisible': [('allow_subtasks', '=', False)]}">
                             <field name="child_ids" context="{'default_project_id': project_id if not parent_id or not display_project_id else display_project_id, 'default_user_ids': user_ids, 'default_parent_id': id, 'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}" widget="subtasks_one2many">
                                 <tree editable="bottom">
-                                    <field name="company_id" invisible="1"/>
                                     <field name="legend_normal" invisible="1"/>
                                     <field name="legend_done" invisible="1"/>
                                     <field name="legend_blocked" invisible="1"/>
@@ -1211,6 +1210,7 @@
                                     <field name="partner_id" optional="hide"/>
                                     <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
                                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                                    <field name="company_id" invisible="1"/>
                                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
@@ -1227,7 +1227,6 @@
                         <page name="task_dependencies" string="Blocked By" attrs="{'invisible': [('allow_task_dependencies', '=', False)]}" groups="project.group_project_task_dependencies">
                             <field name="depend_on_ids" nolabel="1" context="{'default_project_id' : project_id}">
                                 <tree editable="bottom">
-                                    <field name="company_id" invisible="1"/>
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="parent_id" invisible="1" />
                                     <field name="display_project_id" invisible="1" />
@@ -1247,6 +1246,7 @@
                                     <field name="parent_id" optional="hide" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
                                     <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
                                     <field name="company_id" optional="hide" groups="base.group_multi_company" />
+                                    <field name="company_id" invisible="1"/>
                                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show" />
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
@@ -1489,7 +1489,6 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Tasks" multi_edit="1" sample="1" js_class="project_task_list">
-                    <field name="company_id" invisible="1"/>
                     <field name="message_needaction" invisible="1" readonly="1"/>
                     <field name="is_closed" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
@@ -1505,6 +1504,7 @@
                     <field name="parent_id" optional="hide" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
                     <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]" options='{"no_quick_create": True}'/>
                     <field name="company_id" groups="base.group_multi_company" optional="show" readonly="True"/>
+                    <field name="company_id" invisible="1"/>
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
