@@ -325,7 +325,7 @@
                     <field name="display_name"/>
                     <field name="is_installed_on_current_website"/>
                     <templates>
-                        <div t-name="kanban-box" t-attf-class="o_theme_preview mb16 mt16 #{record.is_installed_on_current_website.raw_value? 'o_theme_installed' : ''}">
+                        <div t-name="kanban-box" t-attf-class="o_theme_preview #{record.is_installed_on_current_website.raw_value? 'o_theme_installed' : ''}">
                             <t t-set="has_image" t-value="record.image_ids.raw_value.length > 0"/>
                             <t t-set="has_screenshot" t-value="record.image_ids.raw_value.length > 1"/>
                             <t t-set="image_url" t-value="has_image ? '/web/image/' + record.image_ids.raw_value[0] : record.icon.value"/>
@@ -385,10 +385,8 @@
             <field name="arch" type="xml">
                 <form create="false" edit="false" delete="0" js_class="theme_preview_form">
                   <div class="o_preview_frame h-100">
-                        <field name='url' widget='iframe'/>
-                        <img alt='phone' class='img_mobile' style='display:none' src="/website/static/src/img/phone.png"/>
+                        <field name="url" widget='iframe' class="d-block m-0 h-100"/>
                   </div>
-
                 </form>
             </field>
         </record>
