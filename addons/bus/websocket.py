@@ -273,13 +273,13 @@ class Websocket:
                     selector_key[0].fileobj for selector_key in
                     self._selector.select(type(self).INACTIVITY_TIMEOUT)
                 }
-                if self._timeout_manager.has_timed_out():
+                if self._timeout_manager.has_timed_out() and self.state is ConnectionState.OPEN:
                     self.disconnect(
                         CloseCode.ABNORMAL_CLOSURE
                         if self._timeout_manager.timeout_reason is TimeoutReason.NO_RESPONSE
                         else CloseCode.KEEP_ALIVE_TIMEOUT
                     )
-                    break
+                    continue
                 if not readables:
                     self._enqueue_ping_frame()
                     continue
@@ -415,8 +415,6 @@ class Websocket:
         self._send_frame(frame)
         if not isinstance(frame, CloseFrame):
             return
-        self.state = ConnectionState.CLOSING
-        self._close_sent = True
         if frame.code not in CLEAN_CLOSE_CODES or self._close_received:
             return self._terminate()
         # After sending a control frame indicating the connection
@@ -504,6 +502,8 @@ class Websocket:
 
     def _enqueue_close_frame(self, code, reason=None):
         """ Put a close frame in the outgoing frame queue. """
+        self.state = ConnectionState.CLOSING
+        self._close_sent = True
         self._outgoing_frame_queue.put(CloseFrame(code, reason))
 
     def _enqueue_ping_frame(self):
