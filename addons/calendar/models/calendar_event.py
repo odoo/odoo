@@ -309,7 +309,7 @@ class Meeting(models.Model):
         for meeting in self:
             meeting.display_time = self._get_display_time(meeting.start, meeting.stop, meeting.duration, meeting.allday)
 
-    @api.depends('allday', 'start', 'stop')
+    @api.depends('start', 'stop')
     def _compute_dates(self):
         """ Adapt the value of start_date(time)/stop_date(time)
             according to start/stop fields and allday. Also, compute
@@ -317,7 +317,7 @@ class Meeting(models.Model):
             duration is set to zero, since the meeting last all the day.
         """
         for meeting in self:
-            if meeting.allday and meeting.start and meeting.stop:
+            if meeting.start and meeting.stop:
                 meeting.start_date = meeting.start.date()
                 meeting.stop_date = meeting.stop.date()
             else:
