@@ -26,9 +26,9 @@ registerModel({
             }
             if (this.rtcSession) {
                 if (this.callView.activeRtcSession === this.rtcSession && this.mainViewTileOwner) {
-                    this.callView.update({ activeRtcSession: clear() });
+                    this.callView.channel.update({ activeRtcSession: clear() });
                 } else {
-                    this.callView.update({ activeRtcSession: this.rtcSession });
+                    this.callView.channel.update({ activeRtcSession: this.rtcSession });
                 }
                 return;
             }

@@ -57,7 +57,7 @@ registerModel({
             }
             const activeRtcSession = this.callView.activeRtcSession;
             if (showOnlyVideo && activeRtcSession && !activeRtcSession.videoStream) {
-                this.callView.update({ activeRtcSession: clear() });
+                this.callView.channel.update({ activeRtcSession: clear() });
             }
         },
         onClickRegisterKeyButton() {

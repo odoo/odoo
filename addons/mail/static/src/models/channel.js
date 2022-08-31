@@ -192,6 +192,7 @@ registerModel({
         },
     },
     fields: {
+        activeRtcSession: one('RtcSession'),
         areAllMembersLoaded: attr({
             compute: '_computeAreAllMembersLoaded',
         }),
