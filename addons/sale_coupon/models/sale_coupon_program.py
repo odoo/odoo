@@ -317,8 +317,8 @@ class SaleCouponProgram(models.Model):
 
     def _is_valid_partner(self, partner):
         if self.rule_partners_domain and self.rule_partners_domain != '[]':
-            domain = safe_eval(self.rule_partners_domain) + [('id', '=', partner.id)]
-            return bool(self.env['res.partner'].search_count(domain))
+            domain = safe_eval(self.rule_partners_domain)
+            return bool(partner.filtered_domain(domain))
         else:
             return True
 
