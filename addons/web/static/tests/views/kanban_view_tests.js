@@ -3706,8 +3706,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("close a column while quick creating a record", async (assert) => {
         serverData.views["partner,some_view_ref,form"] = '<form><field name="int_field"/></form>';
 
-        const prom = makeDeferred();
-        let blockGetViews = false;
+        let prom;
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -3719,20 +3718,24 @@ QUnit.module("Views", (hooks) => {
                     </t></templates>
                 </kanban>`,
             groupBy: ["product_id"],
-            async mockRPC(route, { method }) {
-                if (method === "get_views" && blockGetViews) {
+            async mockRPC(_route, { method }) {
+                if (prom && method === "get_views") {
+                    assert.step(method);
                     await prom;
                 }
             },
         });
 
+        prom = makeDeferred();
+
+        assert.verifySteps([]);
         assert.containsN(target, ".o_kanban_group", 2);
         assert.containsNone(target, ".o_column_folded");
 
         // click to quick create a new record in the first column (this operation is delayed)
-        blockGetViews = true;
         await quickCreateRecord();
 
+        assert.verifySteps(["get_views"]);
         assert.containsNone(target, ".o_form_view");
 
         // click to fold the first column
@@ -3744,8 +3747,15 @@ QUnit.module("Views", (hooks) => {
         prom.resolve();
         await nextTick();
 
+        assert.verifySteps([]);
         assert.containsNone(target, ".o_form_view");
         assert.containsOnce(target, ".o_column_folded");
+
+        await createRecord();
+
+        assert.verifySteps([]); // "get_views" should have already be done
+        assert.containsOnce(target, ".o_form_view");
+        assert.containsNone(target, ".o_column_folded");
     });
 
     QUnit.test(
@@ -4958,7 +4968,7 @@ QUnit.module("Views", (hooks) => {
             "o_column_folded",
             "the created column should not be folded"
         );
-        assert.verifySteps(["name_create"]);
+        assert.verifySteps(["name_create", "/web/dataset/resequence"]);
 
         // fold and unfold the created column, and check that no RPCs are done (as there are no records)
         const clickColumnAction = await toggleColumnActions(2);
@@ -5066,7 +5076,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("delete a column in grouped on m2o", async (assert) => {
-        assert.expect(36);
+        assert.expect(38);
 
         let resequencedIDs = [];
         let dialogProps;
@@ -5237,6 +5247,8 @@ QUnit.module("Views", (hooks) => {
         await editColumnName("once third column");
         await validateColumn();
 
+        assert.deepEqual(resequencedIDs, [3, 4], "creating a column should trigger a resequence");
+
         await dragAndDrop(
             ".o_kanban_group:first-child .o_column_title",
             ".o_kanban_group:nth-child(3)"
@@ -5244,7 +5256,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.deepEqual(
             resequencedIDs,
-            [],
+            [3, 4],
             "moving the Undefined column should not affect order of other columns"
         );
 

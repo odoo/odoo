@@ -15,6 +15,7 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { unique } from "@web/core/utils/arrays";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
+import { memoize } from "@web/core/utils/functions";
 import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
@@ -2050,6 +2051,8 @@ export class DynamicGroupList extends DynamicList {
                 };
                 return onRemoveRecord;
             });
+
+        this._loadQuickCreateView = memoize(this._loadQuickCreateView.bind(this));
     }
 
     // -------------------------------------------------------------------------
@@ -2103,28 +2106,10 @@ export class DynamicGroupList extends DynamicList {
     }
 
     /**
-     * @param {any} value
-     * @returns {Promise<Group>}
+     * @see {_createGroup}
      */
-    async createGroup(value) {
-        const [id, displayName] = await this.model.mutex.exec(() =>
-            this.model.orm.call(this.groupByField.relation, "name_create", [value], {
-                context: this.context,
-            })
-        );
-        const group = this.model.createDataPoint("group", {
-            ...this.commonGroupParams,
-            count: 0,
-            value: id,
-            displayName,
-            aggregates: {},
-            groupByField: this.groupByField,
-            rawContext: this.rawContext,
-            // FIXME
-            // groupDomain: this.groupDomain,
-        });
-        group.isFolded = false;
-        return this.addGroup(group);
+    async createGroup(groupName) {
+        await this.model.mutex.exec(() => this._createGroup(groupName));
     }
 
     /**
@@ -2217,16 +2202,19 @@ export class DynamicGroupList extends DynamicList {
     }
 
     async quickCreate(group) {
+        group = group || this.groups[0];
         if (this.model.useSampleModel) {
             // Empty the groups because they contain sample data
-            this.groups.map((group) => group.empty());
+            this.groups.forEach((g) => g.empty());
         }
         this.model.useSampleModel = false;
-        if (!this.quickCreateInfo) {
-            this.quickCreateInfo = await this._loadQuickCreateView();
+        const { isFolded } = group;
+        this.quickCreateInfo = await this._loadQuickCreateView();
+        if (isFolded !== group.isFolded) {
+            // Group has been manually (un)folded => drop the quickCreate action
+            return;
         }
-        group = group || this.groups[0];
-        if (group.isFolded) {
+        if (isFolded) {
             await group.toggle();
         }
         await group.quickCreate(this.quickCreateInfo.activeFields, this.context);
@@ -2267,6 +2255,37 @@ export class DynamicGroupList extends DynamicList {
     // ------------------------------------------------------------------------
     // Protected
     // ------------------------------------------------------------------------
+
+    /**
+     * @param {string} groupName
+     * @returns {Promise<Group>}
+     */
+    async _createGroup(groupName) {
+        const [id, displayName] = await this.model.orm.call(
+            this.groupByField.relation,
+            "name_create",
+            [groupName],
+            { context: this.context }
+        );
+        const [lastGroup] = this.groups.slice(-1);
+        const group = this.model.createDataPoint("group", {
+            ...this.commonGroupParams,
+            count: 0,
+            value: id,
+            displayName,
+            aggregates: {},
+            groupByField: this.groupByField,
+            rawContext: this.rawContext,
+        });
+        group.isFolded = false;
+        this.addGroup(group);
+
+        if (lastGroup) {
+            await this.resequence(group.id, lastGroup.id);
+        }
+
+        return group;
+    }
 
     async _loadGroups() {
         const firstGroupByName = this.firstGroupBy.split(":")[0];
@@ -2383,27 +2402,20 @@ export class DynamicGroupList extends DynamicList {
     }
 
     async _loadQuickCreateView() {
-        if (this.isLoadingQuickCreate) {
-            return;
-        }
-        this.isLoadingQuickCreate = true;
         const { quickCreateView: viewRef } = this.model;
         let quickCreateFields = DEFAULT_QUICK_CREATE_FIELDS;
         let quickCreateForm = DEFAULT_QUICK_CREATE_VIEW;
         let quickCreateRelatedModels = {};
         if (viewRef) {
-            const { fields, relatedModels, views } = await this.model.keepLast.add(
-                this.model.viewService.loadViews({
-                    context: { ...this.context, form_view_ref: viewRef },
-                    resModel: this.resModel,
-                    views: [[false, "form"]],
-                })
-            );
+            const { fields, relatedModels, views } = await this.model.viewService.loadViews({
+                context: { ...this.context, form_view_ref: viewRef },
+                resModel: this.resModel,
+                views: [[false, "form"]],
+            });
             quickCreateFields = fields;
             quickCreateForm = views.form;
             quickCreateRelatedModels = relatedModels;
         }
-        this.isLoadingQuickCreate = false;
         const models = {
             ...quickCreateRelatedModels,
             [this.modelName]: quickCreateFields,
@@ -2477,7 +2489,7 @@ export class Group extends DataPoint {
     addExistingRecord(resId, atFirstPosition = false) {
         this.count++;
         return this.list.addExistingRecord(resId, atFirstPosition);
-    } 
+    }
 
     createRecord(params = {}, atFirstPosition = false) {
         this.count++;
