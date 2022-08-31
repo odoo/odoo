@@ -86,7 +86,9 @@ export class ListController extends Component {
                 ? !fields.x_active.readonly
                 : false;
         useSubEnv({ model: this.model }); // do this in useModel?
-        useViewButtons(this.model, this.rootRef);
+        useViewButtons(this.model, this.rootRef, {
+            beforeExecuteAction: (clickParams) => this.beforeExecuteActionButton(clickParams),
+        });
         useSetupView({
             rootRef: this.rootRef,
             beforeLeave: async () => {
@@ -146,6 +148,10 @@ export class ListController extends Component {
             },
             () => [this.model.root.selection.length]
         );
+    }
+
+    beforeExecuteActionButton(clickParams) {
+        return true;
     }
 
     async createRecord({ group } = {}) {

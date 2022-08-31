@@ -83,16 +83,19 @@ export class ViewButton extends Component {
         if (this.props.tag === "a") {
             ev.preventDefault();
         }
+
         this.env.onClickViewButton({
             clickParams: this.clickParams,
             getResParams: () =>
                 pick(this.props.record, "context", "evalContext", "resModel", "resId", "resIds"),
-            beforeExecute: () => {
-                if (this.env[DROPDOWN]) {
-                    this.env[DROPDOWN].close();
-                }
-            },
+            beforeExecute: () => this.beforeExecute(),
         });
+    }
+
+    beforeExecute() {
+        if (this.env[DROPDOWN]) {
+            this.env[DROPDOWN].close();
+        }
     }
 
     getClassName() {

@@ -35,7 +35,9 @@ export class KanbanController extends Component {
         });
 
         const rootRef = useRef("root");
-        useViewButtons(this.model, rootRef);
+        useViewButtons(this.model, rootRef, {
+            beforeExecuteAction: (clickParams) => this.beforeExecuteActionButton(clickParams),
+        });
         useSetupView({
             rootRef,
             getGlobalState: () => {
@@ -76,6 +78,10 @@ export class KanbanController extends Component {
             return classList.join(" ");
         }
         return this.props.className;
+    }
+
+    beforeExecuteActionButton(clickParams) {
+        return true;
     }
 
     async openRecord(record, mode) {
