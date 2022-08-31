@@ -75,19 +75,7 @@
 
                     <!-- volume popover -->
                     <t t-if="!callParticipantCard.rtcSession.isOwnSession">
-                        <Popover>
-                            <i class="o_CallParticipantCard_volumeMenuAnchor position-absolute bottom-0 start-50" t-on-click="callParticipantCard.onClickVolumeAnchor" t-ref="volumeMenuAnchor"/>
-                            <t t-set-slot="opened">
-                                <div class="d-flex flex-column">
-                                    <input type="range" min="0.0" max="1" step="0.01" t-att-value="callParticipantCard.rtcSession.volume" t-on-change="callParticipantCard.onChangeVolume"/>
-                                    <t t-if="callParticipantCard.hasConnectionInfo">
-                                        <hr class="o_CallParticipantCard_volumeMenuAnchor_separator w-100 border-top"/>
-                                        <div t-esc="callParticipantCard.inboundConnectionTypeText"/>
-                                        <div t-esc="callParticipantCard.outboundConnectionTypeText"/>
-                                    </t>
-                                </div>
-                            </t>
-                        </Popover>
+                        <i class="o_CallParticipantCard_volumeMenuAnchor position-absolute bottom-0 start-50" t-on-click="callParticipantCard.onClickVolumeAnchor" t-ref="volumeMenuAnchor"/>
                     </t>
                 </t>
             </div>
