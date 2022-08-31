@@ -1847,7 +1847,8 @@
                         <t t-out="payment_tx_id.acquirer_id.sudo().cancel_msg"/>
                     </t>
                     <t t-if="payment_tx_id.state == 'authorized'">
-                        <span>Your payment has been authorized.</span>
+                        <t t-if="payment_tx_id.acquirer_id.sudo().auth_msg" t-out="payment_tx_id.acquirer_id.sudo().auth_msg"/>
+                        <span t-else="">Your payment has been authorized.</span>
                     </t>
                     <t t-if="payment_tx_id.state == 'error'">
                         <span t-esc="payment_tx_id.state_message"/>
