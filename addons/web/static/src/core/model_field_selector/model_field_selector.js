@@ -91,6 +91,7 @@ export class ModelFieldSelector extends Component {
             },
             {
                 closeOnClickAway: true,
+                popoverClass: "o-popover-no-arrow",
             }
         );
     }
