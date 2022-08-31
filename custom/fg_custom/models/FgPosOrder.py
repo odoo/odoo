@@ -6,6 +6,12 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import dateutil.parser
 
+class POSSession(models.Model):
+    _inherit = 'pos.session'
+
+    @api.depends('config_id')
+    def name_get(self):
+        return [(role.id, '%s (%s)' % (role.name,role.config_id.name)) for role in self]
 
 class PosPaymentInherit(models.Model):
     _inherit = "pos.payment"

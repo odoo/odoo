@@ -6,10 +6,12 @@
             <field name="model">x.report</field>
             <field name="arch" type="xml">
                 <form string="X Report">
-                    <group>
-                        <group>
-                            <field name="session_id" domain="[('state', '=', 'opened')]"/>
-                        </group>
+                    <group colspan="12">
+<!--                        <group>-->
+                            <field name="user_id"/>
+                            <field name="start_at"/>
+                            <field name="session_id"/>
+<!--                        </group>-->
                     </group>
                     <footer>
                         <button string="Print" name="action_print" type="object" class="btn-primary"/>
