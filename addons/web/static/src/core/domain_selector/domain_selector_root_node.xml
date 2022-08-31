@@ -27,7 +27,7 @@
                 </t>
                 <t t-else="">
                     <span>Match records with </span>
-                    <DomainSelectorBranchOperator node="node" readonly="props.readonly" />
+                    <DomainSelectorBranchOperator node="node" readonly="props.readonly" showCaret="true" />
                     <span> of the following rules:</span>
                     <div class="o_domain_node_children_container">
                         <t t-foreach="node.operands" t-as="subNode" t-key="subNode.id">

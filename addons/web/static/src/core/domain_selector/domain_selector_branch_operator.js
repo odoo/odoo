@@ -17,4 +17,8 @@ DomainSelectorBranchOperator.template = "web.DomainSelectorBranchOperator";
 DomainSelectorBranchOperator.props = {
     node: Object,
     readonly: Boolean,
+    showCaret: {
+        type: Boolean,
+        optional: true,
+    },
 };

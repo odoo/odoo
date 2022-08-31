@@ -24,7 +24,7 @@
 
                 <t t-if="props.showSearchInput">
                     <div class="o_field_selector_search mt-2">
-                        <input type="text" placeholder='Search...' class="o_input" t-att-value="searchValue" t-on-input="onSearch" />
+                        <input type="text" placeholder='Search...' class="o_input" t-att-value="searchValue" t-on-input="onSearch" t-ref="autofocus" />
                     </div>
                 </t>
             </div>
