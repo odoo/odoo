@@ -97,7 +97,7 @@ class StockMove(models.Model):
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order To Consume', copy=False, check_company=True)
     # Quantities to process, in normalized UoMs
-    bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line', check_company=True)
+    bom_line_id = fields.Many2one('mrp.bom.line', 'BoM Line', ondelete='restrict', check_company=True)
     byproduct_id = fields.Many2one(
         'mrp.bom.byproduct', 'By-products', check_company=True,
         help="By-product line that generated the move in a manufacturing order")
