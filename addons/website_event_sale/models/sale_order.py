@@ -10,7 +10,7 @@ class SaleOrder(models.Model):
 
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
         self.ensure_one()
-        lines = super(SaleOrder, self)._cart_find_product_line(product_id, line_id)
+        lines = super(SaleOrder, self)._cart_find_product_line(product_id, line_id, **kwargs)
         if line_id:
             return lines
         domain = [('id', 'in', lines.ids)]
