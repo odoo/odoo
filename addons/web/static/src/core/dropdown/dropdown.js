@@ -275,6 +275,11 @@ export class Dropdown extends Component {
         if (this.ui.activeElement !== this.myActiveEl) {
             return;
         }
+
+        if (ev.target.closest(".bootstrap-datetimepicker-widget")) {
+            return;
+        }
+
         // Close if we clicked outside the dropdown, or outside the parent
         // element if it is the toggler
         const rootEl =
