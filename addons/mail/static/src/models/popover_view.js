@@ -44,6 +44,9 @@ registerModel({
             if (this.activityViewOwnerAsMarkDone) {
                 return this.activityViewOwnerAsMarkDone.markDoneButtonRef;
             }
+            if (this.callParticipantCardOwner) {
+                return this.callParticipantCardOwner.volumeMenuAnchorRef;
+            }
             if (this.threadViewTopbarOwnerAsInvite) {
                 return this.threadViewTopbarOwnerAsInvite.inviteButtonRef;
             }
@@ -52,6 +55,12 @@ registerModel({
             }
             if (this.messageActionViewOwnerAsReaction) {
                 return this.messageActionViewOwnerAsReaction.actionRef;
+            }
+            return clear();
+        },
+        _computeCallParticipantCardPopoverContentView() {
+            if (this.callParticipantCardOwner) {
+                return {};
             }
             return clear();
         },
@@ -72,6 +81,9 @@ registerModel({
         _computeContent() {
             if (this.activityMarkDonePopoverContentView) {
                 return this.activityMarkDonePopoverContentView;
+            }
+            if (this.callParticipantCardPopoverContentView) {
+                return this.callParticipantCardPopoverContentView;
             }
             if (this.channelInvitationForm) {
                 return this.channelInvitationForm;
@@ -101,6 +113,9 @@ registerModel({
         _computeContentComponentName() {
             if (this.activityMarkDonePopoverContentView) {
                 return 'ActivityMarkDonePopoverContent';
+            }
+            if (this.callParticipantCardPopoverContentView) {
+                return 'CallParticipantCardPopoverContentView';
             }
             if (this.channelInvitationForm) {
                 return 'ChannelInvitationForm';
@@ -140,6 +155,9 @@ registerModel({
         _computePosition() {
             if (this.activityViewOwnerAsMarkDone) {
                 return 'right';
+            }
+            if (this.callParticipantCardOwner) {
+                return 'bottom';
             }
             if (this.threadViewTopbarOwnerAsInvite) {
                 return 'bottom';
@@ -187,6 +205,15 @@ registerModel({
         anchorRef: attr({
             compute: '_computeAnchorRef',
             required: true,
+        }),
+        callParticipantCardOwner: one('CallParticipantCard', {
+            identifying: true,
+            inverse: 'callParticipantCardPopoverView',
+        }),
+        callParticipantCardPopoverContentView: one('CallParticipantCardPopoverContentView', {
+            compute: '_computeCallParticipantCardPopoverContentView',
+            inverse: 'popoverViewOwner',
+            isCausal: true,
         }),
         /**
          * The record that represents the content inside the popover view.
