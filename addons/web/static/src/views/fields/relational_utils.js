@@ -21,13 +21,13 @@ import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
-const { useEffect, useSubEnv } = owl;
+const { Component, useComponent, useEffect, useEnv, useSubEnv, onWillUpdateProps } = owl;
 
 //
 // Commons
 //
 export function useSelectCreate({ resModel, activeActions, onSelected, onCreateEdit }) {
-    const env = owl.useEnv();
+    const env = useEnv();
     const addDialog = useOwnedDialogs();
 
     function selectCreate({ domain, context, filters, title }) {
@@ -46,14 +46,14 @@ export function useSelectCreate({ resModel, activeActions, onSelected, onCreateE
     return selectCreate;
 }
 
-const STANDARD_ACTIVE_ACTIONS = ["create", "delete", "link", "unlink", "write"];
+const STANDARD_ACTIVE_ACTIONS = ["create", "createEdit", "delete", "link", "unlink", "write"];
 export function useActiveActions({
     subViewActiveActions = {},
     crudOptions = {},
     fieldType,
     getEvalParams = (props) => ({}),
 }) {
-    const props = owl.useComponent().props;
+    const props = useComponent().props;
 
     const evals = {};
     const makeEvalAction = (actionName, defaultBool = true) => {
@@ -82,76 +82,54 @@ export function useActiveActions({
     }
 
     const isMany2Many = fieldType === "many2many";
-    const isMany2One = fieldType === "many2one";
 
     function compute({ evalContext = {}, readonly = true }) {
-        // activeActions computed by getActiveActions is of the form
-        // interface ActiveActions {
-        //     edit: Boolean;
-        //     create: Boolean;
-        //     delete: Boolean;
-        //     duplicate: Boolean;
-        // }
-
-        // options set on field is of the form
-        // interface Options {
-        //     create: Boolean;
-        //     delete: Boolean;
-        //     link: Boolean;
-        //     unlink: Boolean;
-        // }
+        /**
+         * interface ActiveActions {
+         *     canCreate: Boolean;
+         *     canCreateEdit: Boolean;
+         *     canDelete: Boolean;
+         *     canLink: Boolean;
+         *     canUnlink: Boolean;
+         *     canWrite: Boolean;
+         * }
+         */
 
         // We need to take care of tags "control" and "create" to set create stuff
         const canCreate = !readonly && evalAction("create", evalContext);
+        const canCreateEdit = !readonly && canCreate && crudOptions.createEdit; // always a boolean
         const canDelete = !readonly && evalAction("delete", evalContext);
 
         const canLink = !readonly && evalAction("link", evalContext);
         const canUnlink = !readonly && evalAction("unlink", evalContext);
 
-        const result = { canCreate, canDelete };
+        const result = { canCreate, canCreateEdit, canDelete };
 
         if (isMany2Many) {
             const canWrite = evalAction("write", evalContext);
             Object.assign(result, { canLink, canUnlink, canWrite });
         }
 
-        if (isMany2One) {
-            Object.assign(result, {
-                canWrite: evalAction("write", evalContext),
-                canCreateEdit: evalAction("createEdit", evalContext),
-            });
-        }
-
+        result.onDelete = null;
         if ((isMany2Many && canUnlink) || (!isMany2Many && canDelete)) {
             result.onDelete = crudOptions.onDelete;
         }
         return result;
     }
 
-    let activeActions = compute(getEvalParams(props));
-
-    owl.onWillUpdateProps((nextProps) => {
-        activeActions = compute(getEvalParams(nextProps));
+    const activeActions = compute(getEvalParams(props));
+    onWillUpdateProps((nextProps) => {
+        Object.assign(activeActions, compute(getEvalParams(nextProps)));
     });
 
-    return new Proxy(
-        {},
-        {
-            get(target, k) {
-                return activeActions[k];
-            },
-            has(target, k) {
-                return k in activeActions;
-            },
-        }
-    );
+    return activeActions;
 }
 
 //
 // Many2X
 //
 
-export class Many2XAutocomplete extends owl.Component {
+export class Many2XAutocomplete extends Component {
     setup() {
         this.orm = useService("orm");
 
@@ -348,11 +326,14 @@ export function useOpenMany2XRecord({
     isToMany,
     onClose = (isNew) => {},
 }) {
-    const env = owl.useEnv();
+    const env = useEnv();
     const addDialog = useOwnedDialogs();
     const orm = useService("orm");
 
-    return async function openDialog({ resId = false, forceModel = null, title, context }, immediate = false) {
+    return async function openDialog(
+        { resId = false, forceModel = null, title, context },
+        immediate = false
+    ) {
         const model = forceModel || resModel;
         let viewId;
         if (resId !== false) {
@@ -406,7 +387,7 @@ export function useOpenMany2XRecord({
 // X2Many
 //
 
-class X2ManyFieldDialog extends owl.Component {
+class X2ManyFieldDialog extends Component {
     setup() {
         this.archInfo = this.props.archInfo;
         this.record = this.props.record;
@@ -572,7 +553,7 @@ export function useOpenX2ManyRecord({
 }) {
     const viewService = useService("view");
     const userService = useService("user");
-    const env = owl.useEnv();
+    const env = useEnv();
 
     const addDialog = useOwnedDialogs();
     const viewMode = activeField.viewMode;
