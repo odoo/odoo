@@ -108,9 +108,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
 
                 const t = document.createElement('T');
                 t.setAttribute('t-out', dynamicPlaceholder);
-                const fragment = new DocumentFragment();
-                fragment.appendChild(t);
-                this.wysiwyg.odooEditor.execCommand('insertFragment', fragment);
+                this.wysiwyg.odooEditor.execCommand('insert', t);
                 setSelection(...rightPos(t));
                 this.wysiwyg.odooEditor.editable.focus();
             }

@@ -443,11 +443,11 @@ describe('Format', () => {
                 contentBefore: `<p>ab${u(s(`cd[]ef`))}</p>`,
                 stepFunction: async editor => {
                     await editor.execCommand('underline');
-                    await editor.execCommand('insertText', 'A');
+                    await editor.execCommand('insert', 'A');
                     await editor.execCommand('underline');
-                    await editor.execCommand('insertText', 'B');
+                    await editor.execCommand('insert', 'B');
                     await editor.execCommand('underline');
-                    await editor.execCommand('insertText', 'C');
+                    await editor.execCommand('insert', 'C');
                 },
                 contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`A${u(`B`)}${uselessSpan(`C[]`)}${uselessU}`)}${u(s(`ef`))}</p>`,
             });
@@ -537,11 +537,11 @@ describe('Format', () => {
                 contentBefore: `<p>ab${u(i(`cd[]ef`))}</p>`,
                 stepFunction: async editor => {
                     await editor.execCommand('underline');
-                    await editor.execCommand('insertText', 'A');
+                    await editor.execCommand('insert', 'A');
                     await editor.execCommand('underline');
-                    await editor.execCommand('insertText', 'B');
+                    await editor.execCommand('insert', 'B');
                     await editor.execCommand('underline');
-                    await editor.execCommand('insertText', 'C');
+                    await editor.execCommand('insert', 'C');
                 },
                 contentAfter: `<p>ab${u(i(`cd`))}${i(`A${u(`B`)}${uselessSpan(`C[]`)}${uselessU}`)}${u(i(`ef`))}</p>`,
             });

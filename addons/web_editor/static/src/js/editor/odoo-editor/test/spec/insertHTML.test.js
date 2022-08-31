@@ -1,3 +1,4 @@
+import { parseHTML } from '../../src/utils/utils.js';
 import { BasicEditor, testEditor } from '../utils.js';
 
 describe('insert HTML', () => {
@@ -6,7 +7,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>[]<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insertHTML', '<i class="fa fa-pastafarianism"></i>');
+                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit:
                     '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]<br></p>',
@@ -17,7 +18,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p><br></p>[]',
                 stepFunction: async editor => {
-                    await editor.execCommand('insertHTML', '<i class="fa fa-pastafarianism"></i>');
+                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit:
                     '<p><br></p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]',
@@ -28,7 +29,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[]b<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insertHTML', '<i class="fa fa-pastafarianism"></i>');
+                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit:
                     '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]b<br></p>',
@@ -39,7 +40,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>[]<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insertHTML', '<i class="fa fa-pastafarianism"></i>');
+                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit: '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]<br></p>',
                 contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]<br></p>',
@@ -49,7 +50,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[]b<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insertHTML', '<i class="fa fa-pastafarianism"></i>');
+                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit:
                     '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]b<br></p>',
@@ -60,7 +61,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[]e<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insertHTML', '<p>b</p><p>c</p><p>d</p>');
+                    await editor.execCommand('insert', parseHTML('<p>b</p><p>c</p><p>d</p>'));
                 },
                 contentAfter: '<p>ab</p><p>c</p><p>d[]e<br></p>',
             });
@@ -71,7 +72,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>[a]<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insertHTML', '<i class="fa fa-pastafarianism"></i>');
+                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit: '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]<br></p>',
                 contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]<br></p>',
@@ -81,7 +82,7 @@ describe('insert HTML', () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a[b]c<br></p>',
                 stepFunction: async editor => {
-                    await editor.execCommand('insertHTML', '<i class="fa fa-pastafarianism"></i>');
+                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
                 },
                 contentAfterEdit:
                     '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]c<br></p>',
