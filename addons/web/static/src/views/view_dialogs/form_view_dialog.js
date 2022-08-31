@@ -84,6 +84,7 @@ export class FormViewDialog extends Component {
                     title: this.props.title,
                     disable_multiple_selection: true,
                     on_saved: async (record) => {
+                        record.resId = record.res_id || false;
                         await this.props.onRecordSaved(record);
                         this.props.close();
                     },
