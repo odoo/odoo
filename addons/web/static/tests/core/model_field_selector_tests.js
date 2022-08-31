@@ -68,7 +68,7 @@ QUnit.module("Components", (hooks) => {
     QUnit.module("ModelFieldSelector");
 
     QUnit.test("creating a field chain from scratch", async (assert) => {
-        assert.expect(14);
+        assert.expect(15);
 
         function getValueFromDOM(el) {
             return [...el.querySelectorAll(".o_field_selector_chain_part")]
@@ -101,6 +101,11 @@ QUnit.module("Components", (hooks) => {
 
         // Focusing the field selector input should open a field selector popover
         await click(target, ".o_field_selector");
+        assert.strictEqual(
+            target.querySelector("input.o_input[placeholder='Search...']"),
+            document.activeElement,
+            "the field selector input should be focused"
+        );
         assert.containsOnce(
             target,
             ".o_field_selector_popover",

@@ -42,13 +42,12 @@
     &.o_domain_tree {
         > .o_domain_tree_header {
             position: relative;
-
-            .o_domain_tree_operator_caret::after {
-                @include o-caret-down;
-            }
+        }
+        .o_domain_tree_operator_caret::after {
+            @include o-caret-down;
         }
 
-        > .o_domain_node_children_container {
+        & .o_domain_node_children_container {
             padding-left: $o-domain-selector-indent;
         }
 
@@ -178,23 +177,6 @@
             &:hover {
                 opacity: 1.0;
             }
-        }
-    }
-
-    &.o_hover_btns {
-        background: darken(white, 3%);
-    }
-
-    &.o_hover_add_node {
-        margin-bottom: $o-domain-animation-bar-height;
-        transition: margin .15s ease .5s;
-
-        &::after {
-            max-height: $o-domain-animation-bar-height;
-            transition: max-height .15s ease .5s;
-        }
-        &.o_hover_add_inset_node::after {
-            left: $o-domain-selector-indent;
         }
     }
 }

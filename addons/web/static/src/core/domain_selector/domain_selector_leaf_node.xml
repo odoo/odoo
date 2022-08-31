@@ -42,7 +42,7 @@
                     <t t-set="field" t-value="getFieldComponent(fieldInfo.type)" />
                     <t t-if="field">
                         <div>
-                            <select class="o_domain_leaf_operator_select o_input" t-on-change="onOperatorChange">
+                            <select class="o_domain_leaf_operator_select o_input text-truncate pe-1" t-on-change="onOperatorChange">
                                 <t t-foreach="field.getOperators()" t-as="operator" t-key="operator.value">
                                     <option
                                         t-att-value="operator_index"
