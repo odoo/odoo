@@ -66,21 +66,24 @@
 
 // Modify modals so that their scrollable element is the modal-body (except in
 // mobile).
+// TODO: should be replaced by .modal-dialog-scrollable class
 @include media-breakpoint-up(sm) {
-    .modal-dialog {
-        height: 100%;
-        padding: $modal-dialog-margin-y-sm-up 0;
-        margin: 0 auto;
-    }
-    .modal-content {
-        max-height: 100%;
-    }
-    .modal-header, .modal-footer {
-        flex: 0 0 auto;
-    }
-    .modal-body {
-        overflow: auto;
-        min-height: 0;
+    :not(.s_popup) > .modal {
+        .modal-dialog {
+            height: 100%;
+            padding: $modal-dialog-margin-y-sm-up 0;
+            margin: 0 auto;
+        }
+        .modal-content {
+            max-height: 100%;
+        }
+        .modal-header, .modal-footer {
+            flex: 0 0 auto;
+        }
+        .modal-body {
+            overflow: auto;
+            min-height: 0;
+        }
     }
 }
 
