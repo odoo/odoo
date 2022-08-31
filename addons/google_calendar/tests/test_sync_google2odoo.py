@@ -1215,3 +1215,46 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertTrue(all([a.partner_id.id != self.private_partner.id for a in private_attendees]))
         self.assertTrue(all([a.partner_id.type != 'private' for a in private_attendees]))
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_alias_email_sync_recurrence(self):
+        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+        alias_model = self.env['ir.model'].search([('model', '=', 'calendar.event')])
+        self.env['mail.alias'].create({'alias_name': 'sale', 'alias_model_id': alias_model.id})
+        alias_email = 'sale@%s' % catchall_domain if catchall_domain else 'sale@'
+
+        google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        base_event = self.env['calendar.event'].create({
+            'name': 'coucou',
+            'allday': True,
+            'start': datetime(2020, 1, 6),
+            'stop': datetime(2020, 1, 6),
+            'need_sync': False,
+        })
+        recurrence = self.env['calendar.recurrence'].create({
+            'google_id': google_id,
+            'rrule': 'FREQ=WEEKLY;COUNT=2;BYDAY=MO',
+            'need_sync': False,
+            'base_event_id': base_event.id,
+            'calendar_event_ids': [(4, base_event.id)],
+        })
+        recurrence._apply_recurrence()
+        values = {
+            'id': google_id,
+            'summary': 'coucou',
+            'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=MO'],
+            'start': {'date': '2020-01-06'},
+            'end': {'date': '2020-01-07'},
+            'reminders': {'useDefault': True},
+            "attendees": [
+                {
+                    "email": alias_email, "state": "accepted",
+                },
+            ],
+            'updated': self.now,
+        }
+        self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]))
+        events = recurrence.calendar_event_ids.sorted('start')
+        self.assertEqual(len(events), 2)
+        self.assertFalse(events.mapped('attendee_ids'))
+        self.assertGoogleAPINotCalled()
