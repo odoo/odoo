@@ -479,7 +479,6 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'amount_untaxed': 1500,
             'groups_by_subtotal': {
                 'Untaxed Amount': [
-
                     {
                         'tax_group_name': self.tax_group1.name,
                         'tax_group_amount': 360,

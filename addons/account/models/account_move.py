@@ -2566,6 +2566,25 @@ class AccountMove(models.Model):
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
+    def _prepare_invoice_aggregated_taxes(self, filter_invl_to_apply=None, filter_tax_values_to_apply=None, grouping_key_generator=None):
+        self.ensure_one()
+
+        base_lines = [
+            x._convert_to_tax_base_line_dict()
+            for x in self.line_ids.filtered(lambda x: x.display_type == 'product' and (not filter_invl_to_apply or filter_invl_to_apply(x)))
+        ]
+
+        to_process = []
+        for base_line in base_lines:
+            to_update_vals, tax_values_list = self.env['account.tax']._compute_taxes_for_single_line(base_line)
+            to_process.append((base_line, to_update_vals, tax_values_list))
+
+        return self.env['account.tax']._aggregate_taxes(
+            to_process,
+            filter_tax_values_to_apply=filter_tax_values_to_apply,
+            grouping_key_generator=grouping_key_generator,
+        )
+
     def _affect_tax_report(self):
         return any(line._affect_tax_report() for line in self.line_ids)
 

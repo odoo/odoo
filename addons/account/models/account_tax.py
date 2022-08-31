@@ -719,7 +719,7 @@ class AccountTax(models.Model):
             self, base_line,
             partner=None, currency=None, product=None, taxes=None, price_unit=None, quantity=None,
             discount=None, account=None, analytic_account=None, analytic_tags=None, price_subtotal=None,
-            is_refund=False,
+            is_refund=False, rate=None,
             handle_price_include=None,
             extra_context=None,
     ):
@@ -737,6 +737,7 @@ class AccountTax(models.Model):
             'analytic_tags': analytic_tags or self.env['account.analytic.tag'],
             'price_subtotal': price_subtotal or 0.0,
             'is_refund': is_refund,
+            'rate': rate or 1.0,
             'handle_price_include': handle_price_include,
             'extra_context': extra_context or {},
         }
@@ -771,7 +772,7 @@ class AccountTax(models.Model):
         :param tax_vals:    A python dict returned by 'compute_all' under the 'taxes' key.
         :return:            A python dict.
         """
-        tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_vals['tax_repartition_line_id'])
+        tax_repartition_line = tax_vals['tax_repartition_line']
         tax_account = tax_repartition_line._get_aml_target_tax_account() or line_vals['account']
         return {
             'account_id': tax_account.id,
@@ -807,8 +808,152 @@ class AccountTax(models.Model):
             'analytic_account_id': line_vals['analytic_account'].id if tax.analytic else False,
         }
 
-    def _compute_taxes(self, base_lines, tax_lines=None,
-                       handle_price_include=True, include_caba_tags=False):
+    @api.model
+    def _compute_taxes_for_single_line(self, base_line, handle_price_include=True, include_caba_tags=False):
+        orig_price_unit_after_discount = base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))
+        price_unit_after_discount = orig_price_unit_after_discount
+        taxes = base_line['taxes']._origin
+        currency = base_line['currency'] or self.env.company.currency_id
+        rate = base_line['rate']
+
+        if taxes:
+
+            if handle_price_include is None:
+                manage_price_include = bool(base_line['handle_price_include'])
+            else:
+                manage_price_include = handle_price_include
+
+            taxes_res = taxes.with_context(**base_line['extra_context']).compute_all(
+                price_unit_after_discount,
+                currency=currency,
+                quantity=base_line['quantity'],
+                product=base_line['product'],
+                partner=base_line['partner'],
+                is_refund=base_line['is_refund'],
+                handle_price_include=manage_price_include,
+                include_caba_tags=include_caba_tags,
+            )
+
+            to_update_vals = {
+                'tax_tag_ids': [Command.set(taxes_res['base_tags'])],
+                'price_subtotal': taxes_res['total_excluded'],
+                'price_total': taxes_res['total_included'],
+            }
+
+            tax_values_list = []
+            for tax_res in taxes_res['taxes']:
+                tax_rep = self.env['account.tax.repartition.line'].browse(tax_res['tax_repartition_line_id'])
+                tax_values_list.append({
+                    **tax_res,
+                    'tax_repartition_line': tax_rep,
+                    'base_amount_currency': tax_res['base'],
+                    'base_amount': currency.round(tax_res['base'] / rate),
+                    'tax_amount_currency': tax_res['amount'],
+                    'tax_amount': currency.round(tax_res['amount'] / rate),
+                })
+
+        else:
+            price_subtotal = currency.round(price_unit_after_discount * base_line['quantity'])
+            to_update_vals = {
+                'tax_tag_ids': [Command.clear()],
+                'price_subtotal': price_subtotal,
+                'price_total': price_subtotal,
+            }
+            tax_values_list = []
+
+        return to_update_vals, tax_values_list
+
+    @api.model
+    def _aggregate_taxes(self, to_process, filter_tax_values_to_apply=None, grouping_key_generator=None):
+
+        def default_grouping_key_generator(base_line, tax_values):
+            return {'tax': tax_values['tax_repartition_line'].tax_id}
+
+        global_tax_details = {
+            'base_amount_currency': 0.0,
+            'base_amount': 0.0,
+            'tax_amount_currency': 0.0,
+            'tax_amount': 0.0,
+            'tax_details': defaultdict(lambda: {
+                'base_amount_currency': 0.0,
+                'base_amount': 0.0,
+                'tax_amount_currency': 0.0,
+                'tax_amount': 0.0,
+                'group_tax_details': [],
+                'records': set(),
+            }),
+            'tax_details_per_record': defaultdict(lambda: {
+                'base_amount_currency': 0.0,
+                'base_amount': 0.0,
+                'tax_amount_currency': 0.0,
+                'tax_amount': 0.0,
+                'tax_details': defaultdict(lambda: {
+                    'base_amount_currency': 0.0,
+                    'base_amount': 0.0,
+                    'tax_amount_currency': 0.0,
+                    'tax_amount': 0.0,
+                    'group_tax_details': [],
+                    'records': set(),
+                }),
+            }),
+        }
+
+        def add_tax_values(record, results, grouping_key, serialized_grouping_key, tax_values):
+            # Add to global results.
+            results['tax_amount_currency'] += tax_values['tax_amount_currency']
+            results['tax_amount'] += tax_values['tax_amount']
+
+            # Add to tax details.
+            if serialized_grouping_key not in results['tax_details']:
+                tax_details = results['tax_details'][serialized_grouping_key]
+                tax_details.update(grouping_key)
+                tax_details['base_amount_currency'] = tax_values['base_amount_currency']
+                tax_details['base_amount'] = tax_values['base_amount']
+                tax_details['records'].add(record)
+            else:
+                tax_details = results['tax_details'][serialized_grouping_key]
+                if record not in tax_details['records']:
+                    tax_details['base_amount_currency'] += tax_values['base_amount_currency']
+                    tax_details['base_amount'] += tax_values['base_amount']
+                    tax_details['records'].add(record)
+            tax_details['tax_amount_currency'] += tax_values['tax_amount_currency']
+            tax_details['tax_amount'] += tax_values['tax_amount']
+            tax_details['group_tax_details'].append(tax_values)
+
+        grouping_key_generator = grouping_key_generator or default_grouping_key_generator
+
+        for base_line, to_update_vals, tax_values_list in to_process:
+            record = base_line['record']
+
+            # Add to global tax amounts.
+            global_tax_details['base_amount_currency'] += to_update_vals['price_subtotal']
+
+            currency = base_line['currency'] or self.env.company.currency_id
+            base_amount = currency.round(to_update_vals['price_subtotal'] / base_line['rate'])
+            global_tax_details['base_amount'] += base_amount
+
+            for tax_values in tax_values_list:
+                if filter_tax_values_to_apply and not filter_tax_values_to_apply(base_line, tax_values):
+                    continue
+
+                grouping_key = grouping_key_generator(base_line, tax_values)
+                serialized_grouping_key = frozendict(grouping_key)
+
+                # Add to invoice line global tax amounts.
+                if serialized_grouping_key not in global_tax_details['tax_details_per_record'][record]:
+                    record_global_tax_details = global_tax_details['tax_details_per_record'][record]
+                    record_global_tax_details['base_amount_currency'] = to_update_vals['price_subtotal']
+                    record_global_tax_details['base_amount'] = base_amount
+                else:
+                    record_global_tax_details = global_tax_details['tax_details_per_record'][record]
+
+                add_tax_values(record, global_tax_details, grouping_key, serialized_grouping_key, tax_values)
+                add_tax_values(record, record_global_tax_details, grouping_key, serialized_grouping_key, tax_values)
+
+        return global_tax_details
+
+    @api.model
+    def _compute_taxes(self, base_lines, tax_lines=None, handle_price_include=True, include_caba_tags=False):
         """ Generic method to compute the taxes for different business models.
 
         :param base_lines: A list of python dictionaries created using the '_convert_to_tax_base_line_dict' method.
@@ -850,58 +995,16 @@ class AccountTax(models.Model):
         # using the grouping key generated by the '_get_generation_dict_from_base_line' method.
         # =========================================================================================
 
-        base_line_map = {}
-        for line_vals in base_lines:
-            price_unit_after_discount = line_vals['price_unit'] * (1 - (line_vals['discount'] / 100.0))
-            taxes = line_vals['taxes']._origin
-            currency = line_vals['currency'] or self.env.company.currency_id
-
-            if taxes:
-
-                if handle_price_include is None:
-                    manage_price_include = bool(line_vals['handle_price_include'])
-                else:
-                    manage_price_include = handle_price_include
-
-                taxes_res = taxes.with_context(**line_vals['extra_context']).compute_all(
-                    price_unit_after_discount,
-                    currency=currency,
-                    quantity=line_vals['quantity'],
-                    product=line_vals['product'],
-                    partner=line_vals['partner'],
-                    is_refund=line_vals['is_refund'],
-                    handle_price_include=manage_price_include,
-                    include_caba_tags=include_caba_tags,
-                )
-
-                to_update_vals = {
-                    'tax_tag_ids': [Command.set(taxes_res['base_tags'])],
-                    'price_subtotal': taxes_res['total_excluded'],
-                    'price_total': taxes_res['total_included'],
-                }
-
-                for tax_res in taxes_res['taxes']:
-                    grouping_dict = self._get_generation_dict_from_base_line(line_vals, tax_res)
-                    tax_res['grouping_dict'] = grouping_dict
-
-                    grouping_key = frozendict(grouping_dict)
-
-                    base_line_map.setdefault(grouping_key, {
-                        **tax_res['grouping_dict'],
-                        'tax_base_amount': 0.0,
-                        'tax_amount': 0.0,
-                    })
-                    base_line_map[grouping_key]['tax_base_amount'] += tax_res['base']
-                    base_line_map[grouping_key]['tax_amount'] += tax_res['amount']
-            else:
-                price_subtotal = currency.round(price_unit_after_discount * line_vals['quantity'])
-                to_update_vals = {
-                    'tax_tag_ids': [Command.clear()],
-                    'price_subtotal': price_subtotal,
-                    'price_total': price_subtotal,
-                }
-
-            res['base_lines_to_update'].append((line_vals, to_update_vals))
+        to_process = []
+        for base_line in base_lines:
+            to_update_vals, tax_values_list = self._compute_taxes_for_single_line(
+                base_line,
+                handle_price_include=handle_price_include,
+                include_caba_tags=include_caba_tags,
+            )
+            to_process.append((base_line, to_update_vals, tax_values_list))
+            res['base_lines_to_update'].append((base_line, to_update_vals))
+            currency = base_line['currency'] or self.env.company.currency_id
             res['totals'][currency]['amount_untaxed'] += to_update_vals['price_subtotal']
 
         # =========================================================================================
@@ -926,8 +1029,13 @@ class AccountTax(models.Model):
             else:
                 existing_tax_line_map[grouping_key] = line_vals
 
+        def grouping_key_generator(base_line, tax_values):
+            return self._get_generation_dict_from_base_line(base_line, tax_values)
+
         # Update/create the tax lines.
-        for grouping_key, tax_values in base_line_map.items():
+        global_tax_details = self._aggregate_taxes(to_process, grouping_key_generator=grouping_key_generator)
+
+        for grouping_key, tax_values in global_tax_details['tax_details'].items():
             if tax_values['currency_id']:
                 currency = self.env['res.currency'].browse(tax_values['currency_id'])
                 res['totals'][currency]['amount_tax'] += currency.round(tax_values['tax_amount'])
@@ -946,66 +1054,6 @@ class AccountTax(models.Model):
         return res
 
     @api.model
-    def _aggregate_taxes_by_tax_group(self, vals_list):
-        """ Aggregate the values passed as parameter representing the tax amounts for each tax.
-
-        :param vals_list: A list of dictionary containing:
-            * record:   The originator record.
-            * amount:   The tax amount or the base amount depending if 'tax' is specified or not.
-            * taxes:    The applied taxes for base lines, optional for tax lines (to be used if they affect the base of
-                        another tax).
-            * tax:      The applied tax if 'record' is a tax line.
-        :return: A list of dictionaries containing:
-            * tax_group:    An account.tax.group.
-            * tax_amount:   The total tax amount for this group.
-            * base_amount:  The total base amount for this group.
-        """
-
-        tax_group_mapping = defaultdict(lambda: {
-            'base_lines': set(),
-            'base_amount': 0.0,
-            'tax_amount': 0.0,
-        })
-
-        for vals in vals_list:
-            record = vals.get('record')
-            amount = vals['amount']
-            taxes = vals.get('taxes')
-            originator_tax = vals.get('tax')
-
-            # Compute tax amounts.
-
-            if originator_tax:
-                tax_group_vals = tax_group_mapping[originator_tax.tax_group_id]
-                tax_group_vals['tax_amount'] += amount
-
-            # Compute base amounts.
-
-            if not taxes:
-                continue
-
-            for tax in taxes.flatten_taxes_hierarchy():
-
-                if originator_tax and originator_tax.tax_group_id == tax.tax_group_id:
-                    continue
-
-                tax_group_vals = tax_group_mapping[tax.tax_group_id]
-                if not record or record not in tax_group_vals['base_lines']:
-                    tax_group_vals['base_amount'] += amount
-                    tax_group_vals['base_lines'].add(record)
-
-        tax_groups = sorted(tax_group_mapping.keys(), key=lambda x: x.sequence)
-        tax_group_vals_list = []
-        for tax_group in tax_groups:
-            tax_group_vals = tax_group_mapping[tax_group]
-
-            tax_group_vals_list.append({
-                'tax_group': tax_group,
-                'tax_amount': tax_group_vals['tax_amount'],
-                'base_amount': tax_group_vals['base_amount'],
-            })
-        return tax_group_vals_list
-
     def _prepare_tax_totals(self, base_lines, currency, tax_lines=None):
         """ Compute the tax totals details for the business documents.
         :param base_lines:  A list of python dictionaries created using the '_convert_to_tax_base_line_dict' method.
@@ -1049,64 +1097,47 @@ class AccountTax(models.Model):
                                                 to be displayed
             }
         """
-        vals_list = []
 
-        recompute_taxes = tax_lines is None
+        # ==== Compute the taxes ====
 
-        amount_untaxed = 0.0
-        amount_tax = 0.0
+        to_process = []
+        for base_line in base_lines:
+            to_update_vals, tax_values_list = self._compute_taxes_for_single_line(base_line)
+            to_process.append((base_line, to_update_vals, tax_values_list))
 
-        # ==== Recompute taxes on-the-fly for business models that are not creating any tax lines ====
+        def grouping_key_generator(base_line, tax_values):
+            tax = tax_values['tax_repartition_line'].tax_id
+            source_tax = tax_values['group'] or tax
+            return {'tax_group': source_tax.tax_group_id}
 
-        if recompute_taxes:
-            tax_results = self._compute_taxes(
-                base_lines,
-                tax_lines=tax_lines,
-            )
+        global_tax_details = self._aggregate_taxes(to_process, grouping_key_generator=grouping_key_generator)
 
-            for base_line_vals, to_update in tax_results['base_lines_to_update']:
-                base_line_vals['price_subtotal'] = to_update['price_subtotal']
+        tax_group_vals_list = []
+        for tax_detail in global_tax_details['tax_details'].values():
+            tax_group_vals = {
+                'tax_group': tax_detail['tax_group'],
+                'base_amount': tax_detail['base_amount_currency'],
+                'tax_amount': tax_detail['tax_amount_currency'],
+            }
 
-            for tax_line_vals in tax_results['tax_lines_to_add']:
-                tax_ids = tax_line_vals['tax_ids'][0][2] if tax_line_vals['tax_ids'] else []
-                tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_line_vals['tax_repartition_line_id'])
+            # Handle a manual edition of tax lines.
+            if tax_lines is not None:
+                matched_tax_lines = [
+                    x
+                    for x in tax_lines
+                    if (x['group_tax'] or x['tax_repartition_line'].tax_id).tax_group_id == tax_detail['tax_group']
+                ]
+                if matched_tax_lines:
+                    tax_group_vals['tax_amount'] = sum(x['tax_amount'] for x in matched_tax_lines)
 
-                vals_list.append({
-                    'amount': tax_line_vals['tax_amount'],
-                    'tax': tax_repartition_line.tax_id,
-                    'taxes': self.env['account.tax'].browse(tax_ids),
-                })
+            tax_group_vals_list.append(tax_group_vals)
 
-        # ==== Aggregate the tax values by tax group ====
-
-        for line_vals in base_lines:
-            amount_untaxed += line_vals['price_subtotal']
-
-            taxes = line_vals['taxes']
-            if not taxes:
-                continue
-
-            vals_list.append({
-                'record': line_vals['record'],
-                'amount': line_vals['price_subtotal'],
-                'taxes': taxes,
-            })
-
-        if not recompute_taxes:
-            for line_vals in tax_lines:
-                tax_repartition_line = line_vals['tax_repartition_line']
-                taxes = line_vals['taxes']
-
-                vals_list.append({
-                    'record': line_vals['record'],
-                    'amount': line_vals['tax_amount'],
-                    'taxes': taxes,
-                    'tax': tax_repartition_line.tax_id,
-                })
-
-        tax_group_vals_list = self._aggregate_taxes_by_tax_group(vals_list)
+        tax_group_vals_list = sorted(tax_group_vals_list, key=lambda x: (x['tax_group'].sequence, x['tax_group'].id))
 
         # ==== Partition the tax group values by subtotals ====
+
+        amount_untaxed = global_tax_details['base_amount_currency']
+        amount_tax = 0.0
 
         subtotal_order = {}
         groups_by_subtotal = {}

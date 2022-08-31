@@ -83,12 +83,12 @@ class AccountEdiXmlCII(models.AbstractModel):
     def _check_required_tax(self, vals):
         for line_vals in vals['invoice_line_vals_list']:
             line = line_vals['line']
-            if not vals['tax_details']['invoice_line_tax_details'][line]['tax_details']:
+            if not vals['tax_details']['tax_details_per_record'][line]['tax_details']:
                 return _("You should include at least one tax per invoice line. [BR-CO-04]-Each Invoice line (BG-25) "
                          "shall be categorized with an Invoiced item VAT category code (BT-151).")
 
     def _check_non_0_rate_tax(self, vals):
-        for line_vals in vals['invoice_line_vals_list']:
+        for line_vals in vals['tax_details_per_record']:
             tax_rate_list = line_vals['line'].tax_ids.flatten_taxes_hierarchy().mapped("amount")
             if not any([rate > 0 for rate in tax_rate_list]):
                 return _("When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
@@ -123,14 +123,16 @@ class AccountEdiXmlCII(models.AbstractModel):
             # Facturx requires the monetary values to be rounded to 2 decimal values
             return float_repr(number, decimal_places)
 
-        # Create file content.
-        tax_details = invoice._prepare_edi_tax_details(
-            grouping_key_generator=lambda tax_values: {
-                **self._get_tax_unece_codes(invoice, tax_values['tax_id']),
-                'amount': tax_values['tax_id'].amount,
-                'amount_type': tax_values['tax_id'].amount_type,
+        def grouping_key_generator(base_line, tax_values):
+            tax = tax_values['tax_repartition_line'].tax_id
+            return {
+                **self._get_tax_unece_codes(invoice, tax),
+                'amount': tax.amount,
+                'amount_type': tax.amount_type,
             }
-        )
+
+        # Create file content.
+        tax_details = invoice._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator)
 
         if 'siret' in invoice.company_id._fields and invoice.company_id.siret:
             seller_siret = invoice.company_id.siret
@@ -170,8 +172,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             # /!\ -0.0 == 0.0 in python but not in XSLT, so it can raise a fatal error when validating the XML
             # if 0.0 is expected and -0.0 is given.
             amount_currency = tax_detail_vals['tax_amount_currency']
-            tax_detail_vals['calculated_amount'] = template_values['balance_multiplicator'] * amount_currency \
-                if not invoice.currency_id.is_zero(amount_currency) else 0
+            tax_detail_vals['calculated_amount'] = amount_currency if not invoice.currency_id.is_zero(amount_currency) else 0
 
             if tax_detail_vals.get('tax_category_code') == 'K':
                 template_values['intracom_delivery'] = True

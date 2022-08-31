@@ -295,7 +295,7 @@ class AccountEdiFormat(models.Model):
         # avoid -0.0
         return value if value else 0.0
 
-    def _get_l10n_in_edi_line_details(self, index, line, line_tax_details, sign):
+    def _get_l10n_in_edi_line_details(self, index, line, line_tax_details):
         """
         Create the dictionary with line details
         return {
@@ -314,7 +314,7 @@ class AccountEdiFormat(models.Model):
                 line.date or fields.Date.context_today(self)
                 )
         else:
-            unit_price_in_inr = ((line.balance / (1 - (line.discount / 100))) / line.quantity) * sign
+            unit_price_in_inr = (abs(line.balance) / (1 - (line.discount / 100))) / line.quantity
         return {
             "SlNo": str(index),
             "PrdDesc": line.name.replace("\n", ""),
@@ -327,34 +327,32 @@ class AccountEdiFormat(models.Model):
             # total amount is before discount
             "TotAmt": self._l10n_in_round_value(unit_price_in_inr * line.quantity),
             "Discount": self._l10n_in_round_value((unit_price_in_inr * line.quantity) * (line.discount / 100)),
-            "AssAmt": self._l10n_in_round_value(line.balance * sign),
+            "AssAmt": self._l10n_in_round_value(abs(line.balance)),
             "GstRt": self._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00) or (
                 tax_details_by_code.get("cgst_rate", 0.00) + tax_details_by_code.get("sgst_rate", 0.00)), 3),
-            "IgstAmt": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00) * sign),
-            "CgstAmt": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00) * sign),
-            "SgstAmt": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00) * sign),
+            "IgstAmt": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
+            "CgstAmt": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
+            "SgstAmt": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
             "CesRt": self._l10n_in_round_value(tax_details_by_code.get("cess_rate", 0.00), 3),
-            "CesAmt": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00) * sign),
+            "CesAmt": self._l10n_in_round_value(tax_details_by_code.get("cess_amount", 0.00)),
             "CesNonAdvlAmt": self._l10n_in_round_value(
-                tax_details_by_code.get("cess_non_advol_amount", 0.00) * sign),
+                tax_details_by_code.get("cess_non_advol_amount", 0.00)),
             "StateCesRt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_rate_amount", 0.00), 3),
-            "StateCesAmt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_amount", 0.00) * sign),
+            "StateCesAmt": self._l10n_in_round_value(tax_details_by_code.get("state_cess_amount", 0.00)),
             "StateCesNonAdvlAmt": self._l10n_in_round_value(
-                tax_details_by_code.get("state_cess_non_advol_amount", 0.00) * sign),
-            "OthChrg": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00) * sign),
-            "TotItemVal": self._l10n_in_round_value(
-                (line.balance + line_tax_details.get("tax_amount", 0.00)) * sign),
+                tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
+            "OthChrg": self._l10n_in_round_value(tax_details_by_code.get("other_amount", 0.00)),
+            "TotItemVal": self._l10n_in_round_value((abs(line.balance) + line_tax_details.get("tax_amount", 0.00))),
         }
 
     def _l10n_in_edi_generate_invoice_json(self, invoice):
         tax_details = self._l10n_in_prepare_edi_tax_details(invoice)
         saler_buyer = self._get_l10n_in_edi_saler_buyer_party(invoice)
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
-        sign = invoice.is_inbound() and -1 or 1
         is_intra_state = invoice.l10n_in_state_id == invoice.company_id.state_id
         is_overseas = invoice.l10n_in_gst_treatment == "overseas"
         lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding'))
-        invoice_line_tax_details = tax_details.get("invoice_line_tax_details")
+        tax_details_per_record = tax_details.get("tax_details_per_record")
         json_payload = {
             "Version": "1.1",
             "TranDtls": {
@@ -370,32 +368,32 @@ class AccountEdiFormat(models.Model):
             "BuyerDtls": self._get_l10n_in_edi_partner_details(
                 saler_buyer.get("buyer_details"), pos_state_id=invoice.l10n_in_state_id, is_overseas=is_overseas),
             "ItemList": [
-                self._get_l10n_in_edi_line_details(index, line, invoice_line_tax_details.get(line, {}), sign)
+                self._get_l10n_in_edi_line_details(index, line, tax_details_per_record.get(line, {}))
                 for index, line in enumerate(lines, start=1)
             ],
             "ValDtls": {
-                "AssVal": self._l10n_in_round_value(tax_details.get("base_amount") * sign),
-                "CgstVal": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00) * sign),
-                "SgstVal": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00) * sign),
-                "IgstVal": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00) * sign),
+                "AssVal": self._l10n_in_round_value(tax_details.get("base_amount")),
+                "CgstVal": self._l10n_in_round_value(tax_details_by_code.get("cgst_amount", 0.00)),
+                "SgstVal": self._l10n_in_round_value(tax_details_by_code.get("sgst_amount", 0.00)),
+                "IgstVal": self._l10n_in_round_value(tax_details_by_code.get("igst_amount", 0.00)),
                 "CesVal": self._l10n_in_round_value((
                     tax_details_by_code.get("cess_amount", 0.00)
-                    + tax_details_by_code.get("cess_non_advol_amount", 0.00)) * sign,
+                    + tax_details_by_code.get("cess_non_advol_amount", 0.00)),
                 ),
                 "StCesVal": self._l10n_in_round_value((
                     tax_details_by_code.get("state_cess_amount", 0.00)
-                    + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)) * sign,
+                    + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
                 ),
                 "RndOffAmt": self._l10n_in_round_value(
                     sum(line.balance for line in invoice.invoice_line_ids if line.display_type == 'rounding')),
                 "TotInvVal": self._l10n_in_round_value(
-                    (tax_details.get("base_amount") + tax_details.get("tax_amount")) * sign),
+                    (tax_details.get("base_amount") + tax_details.get("tax_amount"))),
             },
         }
         if invoice.company_currency_id != invoice.currency_id:
             json_payload["ValDtls"].update({
                 "TotInvValFc": self._l10n_in_round_value(
-                    (tax_details.get("base_amount_currency") + tax_details.get("tax_amount_currency")) * sign)
+                    (tax_details.get("base_amount_currency") + tax_details.get("tax_amount_currency")))
             })
         if saler_buyer.get("seller_details") != saler_buyer.get("dispatch_details"):
             json_payload.update({
@@ -430,35 +428,37 @@ class AccountEdiFormat(models.Model):
 
     @api.model
     def _l10n_in_prepare_edi_tax_details(self, move, in_foreign=False):
-        def l10n_in_grouping_key_generator(tax_values):
-            base_line = tax_values["base_line_id"]
-            tax_line = tax_values["tax_line_id"]
+        def l10n_in_grouping_key_generator(base_line, tax_values):
+            invl = base_line['record']
+            tax = tax_values['tax_repartition_line'].tax_id
+            tags = tax_values['tax_repartition_line'].tag_ids
             line_code = "other"
-            if self.env.ref("l10n_in.tax_tag_cess") in tax_line.tax_tag_ids:
-                if tax_line.tax_line_id.amount_type != "percent":
-                    line_code = "cess_non_advol"
+            if not invl.currency_id.is_zero(tax_values['tax_amount_currency']):
+                if any(tag in tags for tag in self.env.ref("l10n_in.tax_report_line_cess").sudo().tag_ids):
+                    if tax.amount_type != "percent":
+                        line_code = "cess_non_advol"
+                    else:
+                        line_code = "cess"
+                elif any(tag in tags for tag in self.env.ref("l10n_in.tax_report_line_state_cess").sudo().tag_ids):
+                    if tax.amount_type != "percent":
+                        line_code = "state_cess_non_advol"
+                    else:
+                        line_code = "state_cess"
                 else:
-                    line_code = "cess"
-            elif self.env.ref("l10n_in.tax_tag_state_cess") in tax_line.tax_tag_ids:
-                if tax_line.tax_line_id.amount_type != "percent":
-                    line_code = "state_cess_non_advol"
-                else:
-                    line_code = "state_cess"
-            else:
-                for gst in ["cgst", "sgst", "igst"]:
-                    if self.env.ref(f"l10n_in.tax_tag_{gst}") in tax_line.tax_tag_ids:
-                        line_code = gst
+                    for gst in ["cgst", "sgst", "igst"]:
+                        if any(tag in tags for tag in self.env.ref("l10n_in.tax_report_line_%s"%(gst)).sudo().tag_ids):
+                            line_code = gst
             return {
-                "tax": tax_values["tax_id"],
-                "base_product_id": base_line.product_id,
-                "tax_product_id": tax_line.product_id,
-                "base_product_uom_id": base_line.product_uom_id,
-                "tax_product_uom_id": tax_line.product_uom_id,
+                "tax": tax,
+                "base_product_id": invl.product_id,
+                "tax_product_id": invl.product_id,
+                "base_product_uom_id": invl.product_uom_id,
+                "tax_product_uom_id": invl.product_uom_id,
                 "line_code": line_code,
             }
 
-        def l10n_in_filter_to_apply(tax_values):
-            if tax_values["base_line_id"].display_type == 'rounding':
+        def l10n_in_filter_to_apply(base_line, tax_values):
+            if base_line['record'].display_type == 'rounding':
                 return False
             return True
 
