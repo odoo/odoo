@@ -114,6 +114,10 @@ For more specific needs, you may also assign custom-defined actions
     'application': True,
     'assets': {
         'mail.assets_messaging': [
+            # defines mixins and variables used by multiple components
+            'mail/static/src/components/notification_list/notification_list_item.scss',
+            'mail/static/src/component_hooks/*',
+            'mail/static/src/components/*/*',
             'mail/static/src/model/*.js',
             'mail/static/src/models/*.js',
         ],
@@ -137,13 +141,6 @@ For more specific needs, you may also assign custom-defined actions
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/scss/variables/derived_variables.scss',
             'mail/static/src/scss/composer.scss',
-            # Dependency of notification_group, notification_request, thread_needaction_preview and thread_preview
-            'mail/static/src/components/notification_list/notification_list_item.scss',
-            'mail/static/src/component_hooks/*.js',
-            'mail/static/src/components/*/*',
-            # Unused by guests and depends on ViewDialogs, better to remove it instead of pulling the whole view dependency tree
-            ('remove', 'mail/static/src/components/composer_suggested_recipient/*'),
-            ('remove', 'mail/static/src/components/activity_menu_container/*'),
             'mail/static/src/js/emojis.js',
             'mail/static/src/js/utils.js',
             ('include', 'mail.assets_messaging'),
@@ -174,7 +171,6 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/utils/*.js',
             'mail/static/src/js/emojis.js',
             'mail/static/src/js/utils.js',
-            'mail/static/src/component_hooks/*.js',
              ('include', 'mail.assets_messaging'),
             'mail/static/src/services/messaging_service.js',
         ],
@@ -184,15 +180,10 @@ For more specific needs, you may also assign custom-defined actions
         'web.assets_backend': [
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/scss/variables/derived_variables.scss',
-            # defines mixins and variables used by multiple components
-            'mail/static/src/components/notification_list/notification_list_item.scss',
             'mail/static/src/js/**/*.js',
             'mail/static/src/utils/*.js',
             'mail/static/src/scss/*.scss',
             'mail/static/src/backend_components/*/*.js',
-            'mail/static/src/component_hooks/*.js',
-            'mail/static/src/components/*/*.js',
-            'mail/static/src/components/*/*.scss',
             ('include', 'mail.assets_messaging'),
             'mail/static/src/services/*.js',
             'mail/static/src/views/**/*.js',

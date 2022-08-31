@@ -41,16 +41,12 @@ The service is provided by the In App Purchase Odoo platform.
     'auto_install': True,
     'assets': {
         'mail.assets_messaging': [
-            'sms/static/src/models/*.js',
-        ],
-        'mail.assets_discuss_public': [
             'sms/static/src/components/*/*',
-            ('remove', 'sms/static/src/components/phone_field/*'),
+            'sms/static/src/models/*.js',
         ],
         'web.assets_backend': [
             'sms/static/src/js/fields_phone_widget.js',
             'sms/static/src/js/fields_sms_widget.js',
-            'sms/static/src/components/*/*',
         ],
         'web.qunit_suite_tests': [
             'sms/static/tests/sms_widget_test.js',

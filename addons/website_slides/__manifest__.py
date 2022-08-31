@@ -68,6 +68,7 @@ Featuring
     'application': True,
     'assets': {
         'mail.assets_messaging': [
+            'website_slides/static/src/components/*/*',
             'website_slides/static/src/models/*.js',
         ],
         'web.assets_backend': [

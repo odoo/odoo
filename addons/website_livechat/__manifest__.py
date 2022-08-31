@@ -26,10 +26,8 @@ Allow website visitors to chat with the collaborators. This module also brings a
     ],
     'assets': {
         'mail.assets_messaging': [
-            'website_livechat/static/src/models/*.js',
-        ],
-        'mail.assets_discuss_public': [
             'website_livechat/static/src/components/*/*',
+            'website_livechat/static/src/models/*.js',
         ],
         'web.assets_frontend': [
             'website_livechat/static/src/legacy/public_livechat.js',
@@ -38,10 +36,6 @@ Allow website visitors to chat with the collaborators. This module also brings a
         ],
         'website.assets_editor': [
             'website_livechat/static/src/js/systray_items/*.js',
-        ],
-        'web.assets_backend': [
-            'website_livechat/static/src/components/*/*.js',
-            'website_livechat/static/src/components/*/*.scss',
         ],
         'web.assets_tests': [
             'website_livechat/static/tests/tours/**/*',

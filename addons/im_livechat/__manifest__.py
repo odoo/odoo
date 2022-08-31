@@ -64,7 +64,6 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/js/im_livechat_chatbot_step_form_view_dialog.js',
             'im_livechat/static/src/js/chatbot_script_answers_m2m_tags.js',
             'im_livechat/static/src/js/chatbot_script_step_o2m.js',
-            'im_livechat/static/src/components/*/*.js',
             'im_livechat/static/src/scss/im_livechat_history.scss',
             'im_livechat/static/src/scss/im_livechat_form.scss',
         ],
@@ -77,9 +76,6 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'web.assets_tests': [
             'im_livechat/static/tests/tours/**/*',
-        ],
-        'web.assets_qweb': [
-            'im_livechat/static/src/components/*/*.xml',
         ],
         'mail.assets_messaging': [
             'im_livechat/static/src/legacy/models/*',
@@ -199,7 +195,6 @@ Help your customers with this chat, and analyse their feedback.
 
             'mail/static/src/utils/*.js',
             'mail/static/src/js/emojis.js',
-            'mail/static/src/component_hooks/*.js',
             ('include', 'mail.assets_messaging'),
             'mail/static/src/services/messaging_service.js',
             # Framework JS
