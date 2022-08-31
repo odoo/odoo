@@ -562,16 +562,15 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 IrDefault.set(model, field, value)
 
         # group fields: modify group / implied groups
-        with self.env.norecompute():
-            for name, groups, implied_group in sorted(classified['group'], key=lambda k: self[k[0]]):
-                groups = groups.sudo()
-                implied_group = implied_group.sudo()
-                if self[name] == current_settings[name]:
-                    continue
-                if int(self[name]):
-                    groups._apply_group(implied_group)
-                else:
-                    groups._remove_group(implied_group)
+        for name, groups, implied_group in sorted(classified['group'], key=lambda k: self[k[0]]):
+            groups = groups.sudo()
+            implied_group = implied_group.sudo()
+            if self[name] == current_settings[name]:
+                continue
+            if int(self[name]):
+                groups._apply_group(implied_group)
+            else:
+                groups._remove_group(implied_group)
 
         # config fields: store ir.config_parameters
         IrConfigParameter = self.env['ir.config_parameter'].sudo()

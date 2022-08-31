@@ -2338,20 +2338,19 @@ class Binary(Field):
             return
         # create the attachments that store the values
         env = record_values[0][0].env
-        with env.norecompute():
-            env['ir.attachment'].sudo().with_context(
-                binary_field_real_user=env.user,
-            ).create([{
-                    'name': self.name,
-                    'res_model': self.model_name,
-                    'res_field': self.name,
-                    'res_id': record.id,
-                    'type': 'binary',
-                    'datas': value,
-                }
-                for record, value in record_values
-                if value
-            ])
+        env['ir.attachment'].sudo().with_context(
+            binary_field_real_user=env.user,
+        ).create([{
+                'name': self.name,
+                'res_model': self.model_name,
+                'res_field': self.name,
+                'res_id': record.id,
+                'type': 'binary',
+                'datas': value,
+            }
+            for record, value in record_values
+            if value
+        ])
 
     def write(self, records, value):
         if not self.attachment:
