@@ -1,8 +1,6 @@
 .ribbon {
     width: 150px;
     height: 150px;
-    overflow: hidden;
-    position: absolute;
 
     &::before, &::after {
         position: absolute;
@@ -13,21 +11,8 @@
     }
 
     & span {
-        z-index: 1;
-        position: absolute;
-        display: grid;
-        align-items: center;
         width: 225px;
         height: 48px;
-        padding: 0 44px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
-        color: #fff;
-        font: 700 18px/1 'Lato', sans-serif;
-        text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
-        text-transform: uppercase;
-        text-align: center;
-        overflow: hidden;
-        user-select: none;
         &.o_small {
             font-size: 12px;
         }
@@ -38,7 +23,6 @@
 
     &-top-right {
         margin-top: -$o-sheet-vpadding;
-        right: 0;
 
         &::before, &::after {
             border-top-color: black;
