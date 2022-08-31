@@ -512,7 +512,7 @@ describe('Link', () => {
         //                     direction: Direction.FORWARD,
         //                 },
         //             });
-        //             await editor.execCommand('insertText', { text: 'd' });
+        //             await editor.execCommand('insert', 'd');
         //         },
         //         contentAfter: '<div><p>123</p><p><a href="#">d[]</a></p></div>',
         //     });
