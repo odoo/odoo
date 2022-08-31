@@ -1441,4 +1441,56 @@ QUnit.module("SettingsFormView", (hooks) => {
         </div>`;
         assert.areEquivalent(compiled.firstChild.innerHTML, expectedCompiled);
     });
+
+    QUnit.test("highlight Element with inner html/fields", async (assert) => {
+        let compiled = undefined;
+        patchWithCleanup(SettingsFormCompiler.prototype, {
+            compile() {
+                const _compiled = this._super(...arguments);
+                compiled = _compiled;
+                return _compiled;
+            },
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+            <div class="o_setting_container">
+                <div class="settings">
+                    <div class="app_settings_block" string="CRM" data-key="crm">
+                        <h2>Title of group Bar</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="bar"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="bar"/>
+                                    <div class="text-muted">this is Baz value: <field name="baz" readonly="1"/> and this is the after text</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>`,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_setting_right_pane .text-muted").textContent,
+            "this is Baz value: treads and this is the after text"
+        );
+
+        const expectedCompiled = `
+            <HighlightText originalText="\`this is Baz value: \`"/>
+            <Field id="'baz'" name="'baz'" record="props.record" fieldInfo="props.archInfo.fieldNodes['baz']"/>
+            <HighlightText originalText="\` and this is the after text\`"/>`;
+        assert.areEquivalent(
+            compiled.querySelector("Setting div.o_setting_right_pane div.text-muted").innerHTML,
+            expectedCompiled
+        );
+    });
 });
