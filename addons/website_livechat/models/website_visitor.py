@@ -24,8 +24,9 @@ class WebsiteVisitor(models.Model):
             ['livechat_visitor_id', 'livechat_operator_id']
         )
         visitor_operator_map = {int(result['livechat_visitor_id'][0]): int(result['livechat_operator_id'][0]) for result in results}
-        for visitor in self:
-            visitor.livechat_operator_id = visitor_operator_map.get(visitor.id, False)
+        if visitor_operator_map:
+            for visitor in self:
+                visitor.livechat_operator_id = visitor_operator_map.get(visitor.id, False)
 
     @api.depends('mail_channel_ids')
     def _compute_session_count(self):
