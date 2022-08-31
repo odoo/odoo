@@ -37,7 +37,7 @@ registerModel({
                 data2.id = data.id;
             }
             if ('note' in data) {
-                data2.note = data.note;
+                data2.rawNote = data.note;
             }
             if ('state' in data) {
                 data2.state = data.state;
@@ -246,10 +246,10 @@ registerModel({
          * @returns {string|undefined}
          */
         _computeNote() {
-            if (this.note === '<p><br></p>') {
+            if (this.rawNote === '<p><br></p>') {
                 return clear();
             }
-            return this.note;
+            return this.rawNote;
         },
         /**
          * @private
@@ -309,6 +309,7 @@ registerModel({
         noteAsMarkup: attr({
             compute: '_computeNoteAsMarkup',
         }),
+        rawNote: attr(),
         /**
          * Determines that an activity is linked to a requesting partner or not.
          * It will be used notably in website slides to know who triggered the
