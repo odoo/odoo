@@ -47,7 +47,7 @@ registerModel({
          * @param {integer} [param0.partnerId]
          * @param {integer} [param0.userId]
          * @param {Object} [options]
-         * @returns {Thread|undefined}
+         * @returns {Channel|undefined}
          */
         async getChat({ partnerId, userId }) {
             if (userId) {
@@ -86,18 +86,16 @@ registerModel({
          *
          * @param {Object} person forwarded to @see `getChat()`
          * @param {Object} [options] forwarded to @see `Thread:open()`
-         * @returns {Thread|undefined}
          */
         async openChat(person, options) {
             const chat = await this.getChat(person);
             if (!this.exists() || !chat) {
                 return;
             }
-            await chat.open(options);
+            await chat.thread.open(options);
             if (!this.exists()) {
                 return;
             }
-            return chat;
         },
         /**
          * Opens the form view of the record with provided id and model.

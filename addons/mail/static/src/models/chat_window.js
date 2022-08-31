@@ -118,7 +118,7 @@ registerModel({
             if (!chat) {
                 return;
             }
-            this.messaging.chatWindowManager.openThread(chat, {
+            this.messaging.chatWindowManager.openThread(chat.thread, {
                 makeActive: true,
                 replaceNewMessage: true,
             });

@@ -6,6 +6,37 @@ import { clear } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'Channel',
+    modelMethods: {
+        /**
+         * Performs the `channel_get` RPC on `mail.channel`.
+         *
+         * `openChat` is preferable in business code because it will avoid the
+         * RPC if the chat already exists.
+         *
+         * @param {Object} param0
+         * @param {integer[]} param0.partnerIds
+         * @param {boolean} [param0.pinForCurrentPartner]
+         * @returns {Channel|undefined} the created or existing chat
+         */
+        async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
+            // TODO FIX: potential duplicate chat task-2276490
+            const data = await this.messaging.rpc({
+                model: 'mail.channel',
+                method: 'channel_get',
+                kwargs: {
+                    partners_to: partnerIds,
+                    pin: pinForCurrentPartner,
+                },
+            });
+            if (!data) {
+                return;
+            }
+            const { channel } = this.messaging.models['Thread'].insert(
+                this.messaging.models['Thread'].convertData(data)
+            );
+            return channel;
+        },
+    },
     recordMethods: {
         async fetchChannelMembers() {
             const channelData = await this.messaging.rpc({

@@ -283,7 +283,7 @@ registerModel({
          *
          * If a chat is not appropriate, a notification is displayed instead.
          *
-         * @returns {Thread|undefined}
+         * @returns {Channel|undefined}
          */
         async getChat() {
             if (!this.user && !this.hasCheckedUser) {
@@ -309,18 +309,16 @@ registerModel({
          * If a chat is not appropriate, a notification is displayed instead.
          *
          * @param {Object} [options] forwarded to @see `Thread:open()`
-         * @returns {Thread|undefined}
          */
         async openChat(options) {
             const chat = await this.getChat();
             if (!this.exists() || !chat) {
                 return;
             }
-            await chat.open(options);
+            await chat.thread.open(options);
             if (!this.exists()) {
                 return;
             }
-            return chat;
         },
         /**
          * Opens the most appropriate view that is a profile for this partner.
