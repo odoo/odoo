@@ -11245,20 +11245,26 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps([]);
 
-        // move "yop" to second place
+        // move "yop" to third place
         await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(2)");
 
         assert.deepEqual(
             [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
                 (el) => el.innerText
             ),
-            ["yop", "blip", "gnap", "blip"]
+            ["blip", "gnap", "yop", "blip"]
         );
         assert.verifySteps(["resequence"]);
 
         // try again
-        await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(2)");
+        await dragAndDrop(".o_kanban_record:nth-child(3)", ".o_kanban_record:nth-child(4)");
 
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
+                (el) => el.innerText
+            ),
+            ["blip", "gnap", "yop", "blip"]
+        );
         assert.verifySteps([]);
 
         def.resolve();
@@ -11682,5 +11688,158 @@ QUnit.module("Views", (hooks) => {
             "read", // read the created record to get foo value
             "onchange", // reopen the quick create automatically
         ]);
+    });
+
+    QUnit.test("No flicker when resequencing records", async (assert) => {
+        assert.expect(7);
+
+        const resequenceProm = makeDeferred();
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route) {
+                if (route === "/web/dataset/resequence") {
+                    await resequenceProm;
+                    assert.step("resequence");
+                }
+            },
+        });
+
+        assert.verifySteps([]);
+        assert.deepEqual(getCardTexts(), ["yop", "gnap", "blip", "blip"]);
+
+        // Resequence first record to the end of the list
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:first-child .o_kanban_record:last-child"
+        );
+
+        assert.verifySteps([]);
+        assert.deepEqual(getCardTexts(), ["gnap", "yop", "blip", "blip"]);
+
+        resequenceProm.resolve();
+        await nextTick();
+
+        assert.verifySteps(["resequence"]);
+        assert.deepEqual(getCardTexts(), ["gnap", "yop", "blip", "blip"]);
+    });
+
+    QUnit.test("No flicker when resequencing groups", async (assert) => {
+        assert.expect(7);
+
+        const resequenceProm = makeDeferred();
+
+        serverData.models.product.fields.sequence = { type: "integer" };
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route) {
+                if (route === "/web/dataset/resequence") {
+                    await resequenceProm;
+                    assert.step("resequence");
+                }
+            },
+        });
+
+        const getColumnTexts = () =>
+            [...target.querySelectorAll(".o_column_title")].map((c) => c.innerText);
+
+        assert.containsN(target, ".o_kanban_group", 2);
+        assert.deepEqual(getColumnTexts(), ["hello", "xmo"]);
+
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_column_title",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        assert.verifySteps([]);
+        assert.deepEqual(getColumnTexts(), ["xmo", "hello"]);
+
+        resequenceProm.resolve();
+        await nextTick();
+
+        assert.verifySteps(["resequence"]);
+        assert.deepEqual(getColumnTexts(), ["xmo", "hello"]);
+    });
+
+    QUnit.test("No flicker when moving record", async (assert) => {
+        assert.expect(14);
+
+        const resequenceProm = makeDeferred();
+        const writeProm = makeDeferred();
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route, { method }) {
+                if (route === "/web/dataset/resequence") {
+                    await resequenceProm;
+                    assert.step("resequence");
+                } else if (method === "write") {
+                    await writeProm;
+                    assert.step("write");
+                }
+            },
+        });
+
+        assert.verifySteps([]);
+        assert.deepEqual(getCardTexts(0), ["yop", "gnap"]);
+        assert.deepEqual(getCardTexts(1), ["blip", "blip"]);
+
+        // Move first record to the end of the second list
+        await dragAndDrop(
+            ".o_kanban_group:first-child .o_kanban_record",
+            ".o_kanban_group:nth-child(2)"
+        );
+
+        assert.verifySteps([]);
+        assert.deepEqual(getCardTexts(0), ["gnap"]);
+        assert.deepEqual(getCardTexts(1), ["blip", "blip", "yop"]);
+
+        writeProm.resolve();
+        await nextTick();
+
+        assert.verifySteps(["write"]);
+        assert.deepEqual(getCardTexts(0), ["gnap"]);
+        assert.deepEqual(getCardTexts(1), ["blip", "blip", "yop"]);
+
+        resequenceProm.resolve();
+        await nextTick();
+
+        assert.verifySteps(["resequence"]);
+        assert.deepEqual(getCardTexts(0), ["gnap"]);
+        assert.deepEqual(getCardTexts(1), ["blip", "blip", "yop"]);
     });
 });

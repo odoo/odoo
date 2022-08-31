@@ -1625,20 +1625,25 @@ class DynamicList extends DataPoint {
      * The record matching that 'moveId' will be resequenced in the given list of
      * records, at the start of the list or after the record matching 'targetId' (if any).
      *
-     * @param {(Group | Record)[]} originalList
-     * @param {string} resModel
+     * @param {Object} params
+     * @param {(Group | Record)[]} params.list
+     * @param {string} params.resModel
      * @param {string} movedId
      * @param {string} [targetId]
+     * @param {Object} [options={}]
+     * @param {boolean} [options.noQuickUpdate=false]
      * @returns {Promise<(Group | Record)[]>}
      */
-    async _resequence(originalList, resModel, movedId, targetId) {
+    async _resequence({ list, resModel }, movedId, targetId, options = {}) {
+        const originalList = [...list];
+        const records = options.noQuickUpdate ? [...list] : list;
+
         if (this.resModel === resModel && !this.canResequence()) {
             // There is no handle field on the current model
             return originalList;
         }
 
         const handleField = this.model.handleField || DEFAULT_HANDLE_FIELD;
-        const records = [...originalList];
         const order = this.orderBy.find((o) => o.name === handleField);
         const asc = !order || order.asc;
 
@@ -1673,8 +1678,12 @@ class DynamicList extends DataPoint {
         const [record] = records.splice(fromIndex, 1);
         records.splice(toIndex, 0, record);
 
+        if (!options.noQuickUpdate) {
+            this.model.notify();
+        }
+
         // Creates the list of to modify
-        let toReorder = records;
+        let toReorder = [...records];
         if (!reorderAll) {
             toReorder = toReorder.slice(firstIndex, lastIndex).filter((r) => r.id !== movedId);
             if (fromIndex < toIndex) {
@@ -1946,7 +1955,11 @@ export class DynamicRecordList extends DynamicList {
     }
 
     async resequence() {
-        this.records = await this._resequence(this.records, this.resModel, ...arguments);
+        const params = {
+            list: this.records,
+            resModel: this.resModel,
+        };
+        this.records = await this._resequence(params, ...arguments);
         this.model.notify();
     }
 
@@ -2255,10 +2268,11 @@ export class DynamicGroupList extends DynamicList {
     }
 
     async resequence() {
-        const resModel = isRelational(this.groupByField)
-            ? this.groupByField.relation
-            : this.resModel;
-        this.groups = await this._resequence(this.groups, resModel, ...arguments);
+        const params = {
+            list: this.groups,
+            resModel: isRelational(this.groupByField) ? this.groupByField.relation : this.resModel,
+        };
+        this.groups = await this._resequence(params, ...arguments);
         this.model.notify();
     }
 

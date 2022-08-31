@@ -22,8 +22,6 @@ const { EventBus, markRaw } = owl;
 
 const FALSE = Symbol("false");
 
-class TransactionInProgress extends Error {}
-
 class NoTransactionInProgress extends Error {}
 
 function makeTransactionManager() {
@@ -32,9 +30,7 @@ function makeTransactionManager() {
     return {
         start: (id) => {
             if (transactions[id]) {
-                throw new TransactionInProgress(
-                    `Transaction in progress: commit or abort to start a new one.`
-                );
+                return true;
             }
             transactions[id] = true;
             bus.trigger("START");
@@ -416,23 +412,23 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             return; // Groups have been re-rendered, old ids are ignored
         }
 
-        const record = sourceGroup.list.records.find((r) => r.id === dataRecordId);
+        const sourceIndex = sourceGroup.records.findIndex((r) => r.id === dataRecordId);
+        const record = sourceGroup.records[sourceIndex];
 
-        try {
-            this.model.transaction.start(dataRecordId);
-        } catch (err) {
-            if (err instanceof TransactionInProgress) {
-                return;
-            }
-            throw err;
+        const transactionIsProgress = this.model.transaction.start(dataRecordId);
+        if (transactionIsProgress) {
+            return;
         }
+
+        // Quick update: moves the record at the right position and notifies components
+        // This is to avoid flickering
+        const refIndex = targetGroup.records.findIndex((r) => r.id === refId);
+        const targetIndex = sourceIndex > refIndex ? refIndex + 1 : refIndex;
+        targetGroup.addRecord(sourceGroup.removeRecord(record), targetIndex);
 
         // Move from one group to another
         const fullyLoadGroup = targetGroup.isFolded;
         if (dataGroupId !== targetGroupId) {
-            const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
-            // Quick update: moves the record at the right position and notifies components
-            targetGroup.addRecord(sourceGroup.removeRecord(record), refIndex + 1);
             const value = isRelational(this.groupByField) ? [targetGroup.value] : targetGroup.value;
 
             const abort = () => {
@@ -454,9 +450,6 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
 
             const promises = [this.updateGroupProgressData([sourceGroup, targetGroup], true)];
             if (fullyLoadGroup) {
-                // The group is folded: we need to load it
-                // In this case since we load after saving the record there is no
-                // need to reload the record nor to resequence the list.
                 promises.push(targetGroup.toggle());
             } else {
                 // Record can be loaded along with the group metadata
@@ -470,7 +463,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             this.model.notify();
         } else {
             // Only trigger resequence if the group hasn't been fully loaded
-            await targetGroup.list.resequence(dataRecordId, refId);
+            await targetGroup.list.resequence(dataRecordId, refId, { noQuickUpdate: true });
         }
 
         this.model.transaction.commit(dataRecordId);
@@ -518,7 +511,10 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
 
 export class KanbanDynamicRecordList extends DynamicRecordList {
     async moveRecord(dataRecordId, _dataGroupId, refId) {
-        this.model.transaction.start(dataRecordId);
+        const transactionIsProgress = this.model.transaction.start(dataRecordId);
+        if (transactionIsProgress) {
+            return;
+        }
 
         try {
             await this.resequence(dataRecordId, refId);
