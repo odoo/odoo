@@ -382,18 +382,18 @@ export class Record extends DataPoint {
                     continue;
                 case "properties":
                     if (!this.checkPropertiesValidity(fieldName)) {
-                        this.setInvalidField(fieldName);
+                        this._setInvalidField(fieldName);
                     }
                     break;
                 case "one2many":
                 case "many2many":
                     if (!(await this.checkX2ManyValidity(fieldName))) {
-                        this.setInvalidField(fieldName);
+                        this._setInvalidField(fieldName);
                     }
                     break;
                 default:
                     if (!isSet && this.isRequired(fieldName) && !this.data[fieldName]) {
-                        this.setInvalidField(fieldName);
+                        this._setInvalidField(fieldName);
                     }
             }
         }
@@ -454,7 +454,7 @@ export class Record extends DataPoint {
         const list = this.data[fieldName];
         const record = list.editedRecord;
         if (record && record.isNew && !(await record.checkValidity())) {
-            if (record.canBeAbandoned) {
+            if (record.canBeAbandoned && !record.isDirty) {
                 list.abandonRecord(record.id);
             } else {
                 return false;
@@ -481,11 +481,15 @@ export class Record extends DataPoint {
         );
     }
 
-    setInvalidField(fieldName) {
+    _setInvalidField(fieldName) {
         this._invalidFields.add(fieldName);
+        this.model.notify();
+    }
+
+    setInvalidField(fieldName) {
         const bm = this.model.__bm__;
         bm.setDirty(this.__bm_handle__);
-        this.model.notify();
+        this._setInvalidField(fieldName);
     }
 
     isInvalid(fieldName) {
@@ -1134,31 +1138,24 @@ export class StaticList extends DataPoint {
     async unselectRecord(canDiscard = false) {
         // something seems wrong with switchMode --> review system?
         const editedRecord = this.editedRecord;
-        if (editedRecord) {
-            const handle = editedRecord.__bm_handle__;
-            if (canDiscard && editedRecord.isNew && !editedRecord.isDirty) {
-                this.model.__bm__.discardChanges(handle);
-                if (editedRecord.canBeAbandoned) {
-                    this.model.__bm__.removeLine(handle);
-                }
-                this.__syncData();
-                this.editedRecord = null;
-                return await editedRecord.switchMode("readonly");
-            } else if (await editedRecord.checkValidity()) {
-                return await editedRecord.switchMode("readonly");
-            } else {
-                if (!editedRecord.isDirty) {
-                    this.model.__bm__.discardChanges(handle);
-                    if (editedRecord.canBeAbandoned) {
-                        this.model.__bm__.removeLine(handle);
-                    }
-                    this.editedRecord = null;
-                    return await editedRecord.switchMode("readonly");
-                }
-                return false;
-            }
+        if (!editedRecord) {
+            return true;
         }
-        return true;
+
+        const isValid = await editedRecord.checkValidity();
+        const handle = editedRecord.__bm_handle__;
+        if (!editedRecord.isDirty && ((canDiscard && editedRecord.isNew) || !isValid)) {
+            this.model.__bm__.discardChanges(handle);
+            if (editedRecord.canBeAbandoned) {
+                this.model.__bm__.removeLine(handle);
+            }
+            this.__syncData();
+            this.editedRecord = null;
+            return await editedRecord.switchMode("readonly");
+        } else if (isValid) {
+            return await editedRecord.switchMode("readonly");
+        }
+        return false;
     }
 }
 
