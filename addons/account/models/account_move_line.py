@@ -1496,7 +1496,6 @@ class AccountMoveLine(models.Model):
             'debit_vals': debit_vals,
             'credit_vals': credit_vals,
         }
-
         remaining_debit_amount_curr = debit_vals['amount_residual_currency']
         remaining_credit_amount_curr = credit_vals['amount_residual_currency']
         remaining_debit_amount = debit_vals['amount_residual']
