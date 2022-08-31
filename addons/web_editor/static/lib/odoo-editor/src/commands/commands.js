@@ -562,16 +562,26 @@ export const editorCommands = {
         const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
         for (const block of selectedBlocks) {
             if (
-                ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE'].includes(
+                ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'].includes(
                     block.nodeName,
                 )
             ) {
                 setSelection(block, 0, block, nodeSize(block));
                 editor.historyPauseSteps();
+                // Keep the alignment and remove rest of the applied styles.
+                const textAlign = block.style.textAlign;
                 editor.execCommand('removeFormat');
+                if (textAlign) {
+                    block.style.textAlign = textAlign;
+                }
                 editor.historyUnpauseSteps();
-                setTagName(block, tagName);
-            } else {
+                const inLI = block.closest('li');
+                if (inLI && tagName === "P") {
+                    inLI.oToggleList(0);
+                } else {
+                    setTagName(block, tagName);
+                }
+            }  else {
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.
                 const newBlock = editor.document.createElement(tagName);

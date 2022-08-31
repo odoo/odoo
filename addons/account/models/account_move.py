@@ -2,7 +2,7 @@
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
-from odoo.tools import float_compare, date_utils, email_split, email_re, html_escape, is_html_empty
+from odoo.tools import float_compare, float_is_zero, date_utils, email_split, email_re, html_escape, is_html_empty
 from odoo.tools.misc import formatLang, format_date, get_lang
 
 from datetime import date, timedelta
@@ -1140,7 +1140,12 @@ class AccountMove(models.Model):
                     else:
                         tax_type = line.tax_ids[0].type_tax_use
                         is_refund = (tax_type == 'sale' and line.debit) or (tax_type == 'purchase' and line.credit)
-                    taxes = line.tax_ids.flatten_taxes_hierarchy()
+                    taxes = line.tax_ids._origin.flatten_taxes_hierarchy().filtered(
+                        lambda tax: (
+                                tax.amount_type == 'fixed' and not invoice.company_id.currency_id.is_zero(tax.amount)
+                                or not float_is_zero(tax.amount, precision_digits=4)
+                        )
+                    )
                     if is_refund:
                         tax_rep_lines = taxes.refund_repartition_line_ids._origin.filtered(lambda x: x.repartition_type == "tax")
                     else:
