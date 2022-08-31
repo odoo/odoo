@@ -4117,50 +4117,22 @@ class TestModifiedPerformance(common.TransactionCase):
         cls.env.invalidate_all()  # Clean the cache
 
     def test_modified_trigger_related(self):
-        with self.assertQueries(["""
-            SELECT "test_new_api_modified_line".id
-            FROM "test_new_api_modified_line"
-            WHERE ("test_new_api_modified_line"."modified_id" IN %s)
-            ORDER BY "test_new_api_modified_line"."id"
-        """,
-        """
-            SELECT "test_new_api_modified_line"."id" AS "id", "test_new_api_modified_line"."modified_id" AS "modified_id"
-            FROM "test_new_api_modified_line"
-            WHERE "test_new_api_modified_line".id IN %s
-        """], flush=False):
-            # Two queries to fetch the `line_ids` in order to invalidate the cache for `modified_name`
-            # (even if the cache is empty for this field)
+        with self.assertQueryCount(0, flush=False):
+            # No queries because `modified_name` has a empty cache
             self.modified_a.name = "Other"
 
         self.assertEqual(self.modified_line_a.modified_name, 'Other')  # check
 
     def test_modified_trigger_no_store_compute(self):
-        with self.assertQueries(["""
-            SELECT "test_new_api_modified_line"."id" AS "id", "test_new_api_modified_line"."modified_id" AS "modified_id",
-                   "test_new_api_modified_line"."quantity" AS "quantity", "test_new_api_modified_line"."price" AS "price",
-                   "test_new_api_modified_line"."parent_id" AS "parent_id", "test_new_api_modified_line"."create_uid" AS "create_uid",
-                   "test_new_api_modified_line"."create_date" AS "create_date", "test_new_api_modified_line"."write_uid" AS "write_uid",
-                   "test_new_api_modified_line"."write_date" AS "write_date"
-            FROM "test_new_api_modified_line"
-            WHERE "test_new_api_modified_line".id IN %s
-        """], flush=False):
-            # One query to fetch `modified_id` in order to invalidate `total_quantity`
+        with self.assertQueryCount(0, flush=False):
+            # No queries because `total_quantity` has a empty cache
             self.modified_line_a.quantity = 8
 
         self.assertEqual(self.modified_a.total_quantity, 18)
 
     def test_modified_trigger_recursive_empty_cache(self):
-        with self.assertQueries(["""
-        SELECT "test_new_api_modified_line"."id" AS "id", "test_new_api_modified_line"."modified_id" AS "modified_id",
-               "test_new_api_modified_line"."quantity" AS "quantity", "test_new_api_modified_line"."price" AS "price",
-               "test_new_api_modified_line"."parent_id" AS "parent_id", "test_new_api_modified_line"."create_uid" AS "create_uid",
-               "test_new_api_modified_line"."create_date" AS "create_date", "test_new_api_modified_line"."write_uid" AS "write_uid",
-               "test_new_api_modified_line"."write_date" AS "write_date"
-         FROM "test_new_api_modified_line"
-        WHERE "test_new_api_modified_line".id IN %s
-        """], flush=False):
-            # One query to fetch `parent_id` in order to invalidate `total_price` recursively
-            # but because no record has already recompute `total_price` no need to invalidate recursivly
+        with self.assertQueryCount(0, flush=False):
+            # No queries because `total_price` has a empty cache
             self.modified_line_a_child_child.price = 4
 
         self.assertEqual(self.modified_line_a.total_price, 7)
