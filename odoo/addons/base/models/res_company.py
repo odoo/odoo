@@ -5,7 +5,7 @@ import base64
 import io
 import logging
 import os
-import re
+import warnings
 
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import ValidationError, UserError
@@ -191,8 +191,8 @@ class Company(models.Model):
         _logger.warning("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore")
         return self.env.company
 
-    # deprecated, use clear_caches() instead
     def cache_restart(self):
+        warnings.warn("Since 17.0, deprecated method, use `clear_caches` instead", DeprecationWarning, 2)
         self.clear_caches()
 
     @api.model_create_multi
@@ -281,10 +281,12 @@ class Company(models.Model):
             raise ValidationError(_('You cannot create recursive companies.'))
 
     def open_company_edit_report(self):
+        warnings.warn("Since 17.0.", DeprecationWarning, 2)
         self.ensure_one()
         return self.env['res.config.settings'].open_company()
 
     def write_company_and_print_report(self):
+        warnings.warn("Since 17.0.", DeprecationWarning, 2)
         context = self.env.context
         report_name = context.get('default_report_name')
         active_ids = context.get('active_ids')
