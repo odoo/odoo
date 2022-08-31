@@ -2,7 +2,6 @@ odoo.define('website.s_popup', function (require) {
 'use strict';
 
 const config = require('web.config');
-const dom = require('web.dom');
 const publicWidget = require('web.public.widget');
 const utils = require('web.utils');
 
@@ -52,7 +51,6 @@ const PopupWidget = publicWidget.Widget.extend({
                 display = 'afterDelay';
                 delay = 5000;
             }
-            this.$('.modal').removeClass('s_popup_middle').addClass('s_popup_bottom');
         }
 
         if (display === 'afterDelay') {
@@ -117,67 +115,6 @@ const PopupWidget = publicWidget.Widget.extend({
 });
 
 publicWidget.registry.popup = PopupWidget;
-
-// Try to update the scrollbar based on the current context (modal state)
-// and only if the modal overflowing has changed
-
-function _updateScrollbar(ev) {
-    const context = ev.data;
-    const isOverflowing = dom.hasScrollableContent(context._element);
-    if (context._isOverflowingWindow !== isOverflowing) {
-        context._isOverflowingWindow = isOverflowing;
-        context._checkScrollbar();
-        context._setScrollbar();
-        if (isOverflowing) {
-            document.body.classList.add('modal-open');
-        } else {
-            document.body.classList.remove('modal-open');
-            context._resetScrollbar();
-        }
-    }
-}
-
-// Prevent bootstrap to prevent scrolling and to add the strange body
-// padding-right they add if the popup does not use a backdrop (especially
-// important for default cookie bar).
-
-const _baseShowElement = Modal.prototype._showElement;
-Modal.prototype._showElement = function () {
-    _baseShowElement.apply(this, arguments);
-
-    if (this._element.classList.contains('s_popup_no_backdrop')) {
-        // Update the scrollbar if the content changes or if the window has been
-        // resized. Note this could technically be done for all modals and not
-        // only the ones with the s_popup_no_backdrop class but that would be
-        // useless as allowing content scroll while a modal with that class is
-        // opened is a very specific Odoo behavior.
-        $(this._element).on('content_changed.update_scrollbar', this, _updateScrollbar);
-        $(window).on('resize.update_scrollbar', this, _updateScrollbar);
-
-        this._odooLoadEventCaptureHandler = _.debounce(() => _updateScrollbar({ data: this }, 100));
-        this._element.addEventListener('load', this._odooLoadEventCaptureHandler, true);
-
-        _updateScrollbar({ data: this });
-    }
-};
-
-const _baseHideModal = Modal.prototype._hideModal;
-Modal.prototype._hideModal = function () {
-    _baseHideModal.apply(this, arguments);
-
-    // Note: do this in all cases, not only for popup with the
-    // s_popup_no_backdrop class, as the modal may have lost that class during
-    // edition before being closed.
-    this._element.classList.remove('s_popup_overflow_page');
-
-    $(this._element).off('content_changed.update_scrollbar');
-    $(window).off('resize.update_scrollbar');
-
-    if (this._odooLoadEventCaptureHandler) {
-        this._element.removeEventListener('load', this._odooLoadEventCaptureHandler, true);
-        delete this._odooLoadEventCaptureHandler;
-    }
-};
 
 return PopupWidget;
 });
