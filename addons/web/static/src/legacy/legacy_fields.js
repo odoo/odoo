@@ -13,7 +13,7 @@ const { Component, useEffect, xml } = owl;
 const fieldRegistry = registry.category("fields");
 
 const legacyFieldTemplate = xml`
-    <FieldAdapter Component="FieldWidget" fieldParams="fieldParams" update.bind="update" record="props.record"/>`;
+    <FieldAdapter Component="FieldWidget" fieldParams="fieldParams" update.bind="update" record="props.record" id="props.id"/>`;
 
 // -----------------------------------------------------------------------------
 // FieldAdapter
@@ -30,6 +30,15 @@ class FieldAdapter extends ComponentAdapter {
             if (!this.widgetEl || !this.widgetEl.parentElement) {
                 return;
             }
+
+            const fieldId = this.props.id;
+            if (!this.widgetEl.querySelector(`#${fieldId}`)) {
+                const $el = this.widget.getFocusableElement();
+                if ($el && $el[0]) {
+                    $el[0].setAttribute("id", fieldId);
+                }
+            }
+
             // if classNames are given to the field, we only want
             // to add those classes to the legacy field without
             // the parent element affecting the style of the field
