@@ -48,7 +48,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        `.o_ThreadPreview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_ChannelPreviewView[data-channel-id="${mailChannelId1}"]`,
         "livechat should be listed in 'all' tab/filter of messaging menu"
     );
 
@@ -62,7 +62,7 @@ QUnit.test('livechats should be in "chat" filter', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        `.o_ThreadPreview[data-thread-id="${mailChannelId1}"][data-thread-model="mail.channel"]`,
+        `.o_ChannelPreviewView[data-channel-id="${mailChannelId1}"]`,
         "livechat should be listed in 'chat' tab/filter of messaging menu"
     );
 });

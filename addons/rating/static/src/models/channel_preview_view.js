@@ -5,7 +5,7 @@ import { attr } from '@mail/model/model_field';
 // ensure the model definition is loaded before the patch
 import '@mail/models/channel_preview_view';
 
-patchRecordMethods('ThreadPreviewView', {
+patchRecordMethods('ChannelPreviewView', {
     /**
      * @override
      */
@@ -14,7 +14,7 @@ patchRecordMethods('ThreadPreviewView', {
     },
 });
 
-addRecordMethods('ThreadPreviewView', {
+addRecordMethods('ChannelPreviewView', {
     /**
      * @private
      */
@@ -23,7 +23,7 @@ addRecordMethods('ThreadPreviewView', {
     },
 });
 
-addFields('ThreadPreviewView', {
+addFields('ChannelPreviewView', {
     isRating: attr({
         compute: '_computeIsRating',
     }),

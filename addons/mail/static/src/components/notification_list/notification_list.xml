@@ -11,8 +11,8 @@
                 </t>
                 <t t-else="">
                     <t t-foreach="notificationListView.notificationViews" t-as="notificationView" t-key="notificationView.localId">
-                        <t t-if="notificationView.constructor.name === 'ThreadPreviewView'">
-                            <ThreadPreview
+                        <t t-if="notificationView.constructor.name === 'ChannelPreviewView'">
+                            <ChannelPreviewView
                                 className="'o_NotificationList_preview'"
                                 classNameObj="{ 'o-isDeviceSmall p-2': messaging.device.isSmall }"
                                 record="notificationView"

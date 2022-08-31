@@ -13,11 +13,11 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeMessage() {
+            if (this.channelPreviewViewOwner) {
+                return this.channelPreviewViewOwner.thread.lastMessage;
+            }
             if (this.threadNeedactionPreviewViewOwner) {
                 return this.threadNeedactionPreviewViewOwner.thread.lastNeedactionMessageAsOriginThread;
-            }
-            if (this.threadPreviewViewOwner) {
-                return this.threadPreviewViewOwner.thread.lastMessage;
             }
             return clear();
         },
@@ -26,16 +26,20 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeThread() {
+            if (this.channelPreviewViewOwner) {
+                return this.channelPreviewViewOwner.thread;
+            }
             if (this.threadNeedactionPreviewViewOwner) {
                 return this.threadNeedactionPreviewViewOwner.thread;
-            }
-            if (this.threadPreviewViewOwner) {
-                return this.threadPreviewViewOwner.thread;
             }
             return clear();
         },
     },
     fields: {
+        channelPreviewViewOwner: one('ChannelPreviewView', {
+            identifying: true,
+            inverse: 'messageAuthorPrefixView',
+        }),
         message: one('Message', {
             compute: '_computeMessage',
         }),
@@ -43,10 +47,6 @@ registerModel({
             compute: '_computeThread',
         }),
         threadNeedactionPreviewViewOwner: one('ThreadNeedactionPreviewView', {
-            identifying: true,
-            inverse: 'messageAuthorPrefixView',
-        }),
-        threadPreviewViewOwner: one('ThreadPreviewView', {
             identifying: true,
             inverse: 'messageAuthorPrefixView',
         }),
