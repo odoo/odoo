@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import werkzeug
 import itertools
 import pytz
@@ -159,6 +160,25 @@ class WebsiteBlog(http.Controller):
     ], type='http', auth="public", website=True, sitemap=True)
     def blog(self, blog=None, tag=None, page=1, search=None, **opt):
         Blog = request.env['blog.blog']
+
+        # TODO adapt in master. This is a fix for templates wrongly using the
+        # 'blog_url' QueryURL which is defined below. Indeed, in the case where
+        # we are rendering a blog page where no specific blog is selected we
+        # define(d) that as `QueryURL('/blog', ['tag'], ...)` but then some
+        # parts of the template used it like this: `blog_url(blog=XXX)` thus
+        # generating an URL like "/blog?blog=blog.blog(2,)". Adding "blog" to
+        # the list of params would not be right as would create "/blog/blog/2"
+        # which is still wrong as we want "/blog/2". And of course the "/blog"
+        # prefix in the QueryURL definition is needed in case we only specify a
+        # tag via `blog_url(tab=X)` (we expect /blog/tag/X). Patching QueryURL
+        # or making blog_url a custom function instead of a QueryURL instance
+        # could be a solution but it was judged not stable enough. We'll do that
+        # in master. Here we only support "/blog?blog=blog.blog(2,)" URLs.
+        if isinstance(blog, str):
+            blog = Blog.browse(int(re.search(r'\d+', blog)[0]))
+            if not blog.exists():
+                raise werkzeug.exceptions.NotFound()
+
         if blog and not blog.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
