@@ -15,6 +15,7 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "../../helpers/utils";
+import { registerCleanup } from "../../helpers/cleanup";
 
 const { Component, useRef, useState, xml } = owl;
 const serviceRegistry = registry.category("services");
@@ -51,6 +52,59 @@ QUnit.test("register / unregister", async (assert) => {
     await nextTick();
 
     assert.verifySteps([key]);
+});
+
+QUnit.test("hotkey handles wrongly formed KeyboardEvent", async (assert) => {
+    // This test's aim is to assert that Chrome's autofill bug is handled.
+    // When filling a form with the autofill feature of Chrome, a keyboard event without any
+    // key set on it is triggered. This seems to be a bug on Chrome's side, since the spec
+    //doesn't mention that field may be unset. (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key).
+    assert.expect(5);
+
+    const hotkey = env.services.hotkey;
+
+    class FakeKeyboardEvent extends Event {
+        constructor(evName, params) {
+            super(...arguments);
+            this.key = params.key;
+            this.code = params.code;
+        }
+    }
+
+    const handler = (ev) => {
+        ev.stopPropagation();
+        ev.preventDefault();
+        assert.step("error");
+    };
+
+    window.addEventListener("error", handler);
+    const _onError = window.onerror;
+    window.onerror = () => {};
+    registerCleanup(() => {
+        window.removeEventListener("error", handler);
+        window.onerror = _onError;
+    });
+
+    const key = "q";
+    let removeHotkey = hotkey.add(key, () => assert.step(key), { global: true });
+    target.dispatchEvent(new FakeKeyboardEvent("keydown", { bubbles: true, key, code: key }));
+    assert.verifySteps([key]);
+    removeHotkey();
+
+    removeHotkey = hotkey.add(
+        key,
+        () => {
+            throw new Error("error");
+        },
+        { global: true }
+    );
+    target.dispatchEvent(new FakeKeyboardEvent("keydown", { bubbles: true, key, code: key }));
+    assert.verifySteps(["error"]);
+
+    // Trigger an event that doesn't honor KeyboardEvent API: that's the point
+    // in particular, it has no `key`
+    target.dispatchEvent(new FakeKeyboardEvent("keydown", { bubbles: true }));
+    assert.verifySteps([]);
 });
 
 QUnit.test("[accesskey] attrs replaced by [data-hotkey]", async (assert) => {
