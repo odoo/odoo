@@ -54,6 +54,12 @@ const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, "escape"];
  * @returns {string} the active hotkey, in lowercase
  */
 export function getActiveHotkey(ev) {
+    if (!ev.key) {
+        // Chrome may trigger incomplete keydown events under certain circumstances.
+        // E.g. when using browser built-in autocomplete on an input.
+        // See https://stackoverflow.com/questions/59534586/google-chrome-fires-keydown-event-when-form-autocomplete
+        return "";
+    }
     const hotkey = [];
 
     // ------- Modifiers -------
@@ -115,13 +121,6 @@ export const hotkeyService = {
          * @param {KeyboardEvent} event
          */
         function onKeydown(event) {
-            if (!event.key) {
-                // Chrome may trigger incomplete keydown events under certain circumstances.
-                // E.g. when using browser built-in autocomplete on an input.
-                // See https://stackoverflow.com/questions/59534586/google-chrome-fires-keydown-event-when-form-autocomplete
-                return;
-            }
-
             if (event.code && event.code.indexOf("Numpad") === 0 && /^\d$/.test(event.key)) {
                 // Ignore all number keys from the Keypad because of a certain input method
                 // of (advance-)ASCII characters on Windows OS: ALT+[numerical code from keypad]
@@ -130,6 +129,9 @@ export const hotkeyService = {
             }
 
             const hotkey = getActiveHotkey(event);
+            if (!hotkey) {
+                return;
+            }
             const { activeElement, isBlocked } = ui;
 
             // Do not dispatch if UI is blocked
