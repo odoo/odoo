@@ -30,3 +30,4 @@ Denis Robinet denis.robinet@acsone.eu https://github.com/RobinetDenisAcsone
 Benoit Aimont benoit.aimont@acsone.eu https://github.com/baimont
 Bejaoui Souheil souheil.bejaoui@acsone.eu https://github.com/sbejaoui
 Nans Lefebvre nans.lefebvre@acsone.eu https://github.com/len-foss
+Doutreloux Justine justine.doutreloux@acsone.eu https://github.com/jdoutreloux
