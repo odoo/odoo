@@ -8,7 +8,7 @@ from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('lead_assign', 'crm_performance')
+@tagged('lead_assign', 'crm_performance', '-at_install', 'post_install')
 class TestLeadAssignPerf(TestLeadAssignCommon):
     """ Test performances of lead assignment feature added in saas-14.2
 
@@ -47,9 +47,10 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         # commit probability and related fields
         leads.flush()
 
+        # randomness: at least 1 query
         with self.with_user('user_sales_manager'):
             self.env['res.users'].has_group('base.group_user')  # warmup the cache to avoid inconsistency between community an enterprise
-            with self.assertQueryCount(user_sales_manager=1275):
+            with self.assertQueryCount(user_sales_manager=1277):  # crm 1275
                 self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
@@ -175,8 +176,9 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         # commit probability and related fields
         leads.flush()
 
+        # randomness: at least 2
         with self.with_user('user_sales_manager'):
-            with self.assertQueryCount(user_sales_manager=6436):
+            with self.assertQueryCount(user_sales_manager=6438):  # crm: 6436
                 self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
 
         # teams assign
