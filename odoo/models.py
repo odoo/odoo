@@ -5695,6 +5695,20 @@ class Model(AbstractModel):
 
         return value
 
+    def get_selection_label(self, field_name):
+        """ Metodo criado pela Multidados para retornar o label
+            de um campo selection
+        Args:
+            field_name (string): Nome do Campo Selection
+
+        Returns:
+            string: Retorna o Label do Campo Selection do Parametro
+        """
+        if field_name:
+            return dict(self.fields_get(allfields=[field_name])[field_name]['selection'])[self[field_name]]
+        else:
+            return self[field_name]
+
 class TransientModel(Model):
     """ Model super-class for transient records, meant to be temporarily
     persisted, and regularly vacuum-cleaned.
