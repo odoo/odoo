@@ -1,8 +1,10 @@
 /** @odoo-module */
-import ForecastColumnQuickCreate from './forecast_kanban_column_quick_create';
-import KanbanRenderer from 'web.KanbanRenderer';
 
-const ForecastKanbanRenderer = KanbanRenderer.extend({
+import ForecastColumnQuickCreate from './forecast_kanban_column_quick_create';
+
+import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+
+export class ForecastKanbanRenderer extends KanbanRenderer {
     /**
      * Adds the widget ForecastColumnQuickCreate if there is a forecast_field and the current
      * groupby targets it. It will be used to automatically add the next group for a date/datetime
@@ -23,9 +25,5 @@ const ForecastKanbanRenderer = KanbanRenderer.extend({
             });
             this.defs.push(this.forecastColumnQuickCreate.appendTo(fragment));
         }
-    },
-});
-
-export {
-    ForecastKanbanRenderer,
+    }
 };

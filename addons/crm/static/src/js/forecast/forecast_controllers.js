@@ -1,10 +1,11 @@
 /** @odoo-module */
-import KanbanController from 'web.KanbanController';
 
-const ForecastKanbanController = KanbanController.extend({
-    custom_events: _.extend({}, KanbanController.prototype.custom_events, {
+import { KanbanController } from "@web/views/kanban/kanban_controller";
+
+export class ForecastKanbanController extends KanbanController {
+/*    custom_events: _.extend({}, KanbanController.prototype.custom_events, {
         forecast_kanban_add_column: '_onAddColumnForecast',
-    }),
+    }),*/
 
     /**
      * Expand the fill_temporal period after the ForecastColumnQuickCreate has been used, then
@@ -14,6 +15,7 @@ const ForecastKanbanController = KanbanController.extend({
      * @param {OdooEvent} ev
      */
     _onAddColumnForecast(ev) {
+        debugger;
         ev.stopPropagation();
         this.call('fillTemporalService', 'getFillTemporalPeriod', {
             modelName: this.model.loadParams.modelName,
@@ -27,9 +29,5 @@ const ForecastKanbanController = KanbanController.extend({
             { groupBy: [`${this.model.forecast_field}:${this.model.granularity}`] },
             { reload: true }
         ));
-    },
-});
-
-export {
-    ForecastKanbanController,
+    }
 };

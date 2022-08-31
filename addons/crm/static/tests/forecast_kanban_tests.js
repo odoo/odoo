@@ -2,21 +2,23 @@
 import FillTemporalService from '../src/js/forecast/fill_temporal_service';
 import { ForecastKanbanView } from '../src/js/forecast/forecast_views';
 import testUtils from 'web.test_utils';
+import { mount, getFixture, patchWithCleanup, click, clickSave} from "@web/../tests/helpers/utils";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { registry } from "@web/core/registry";
+
+const serviceRegistry = registry.category("services");
+
+let target;
+let serverData;
+let arch;
+let unPatchDate;
 
 QUnit.module('Crm Forecast Model Extension', {
-    beforeEach: async function () {
-        this.testKanbanView = {
-            arch: `
-                <kanban js_class="forecast_kanban">
-                    <field name="date_deadline"/>
-                    <field name="date_closed"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div><field name="name"/></div>
-                        </t>
-                    </templates>
-                </kanban>`,
-            archs: {
+    async beforeEach() {
+        unPatchDate = testUtils.mock.patchDate(2021, 1, 10, 0, 0, 0);
+        target = getFixture();
+        serverData = {
+            views: {
                 "crm.lead,false,search": `
                     <search>
                         <filter name="forecast" string="Forecast" context="{'forecast_filter':1}"/>
@@ -24,7 +26,7 @@ QUnit.module('Crm Forecast Model Extension', {
                         <filter name='groupby_date_closed' context="{'group_by':'date_closed'}"/>
                     </search>`
             },
-            data: {
+            models: {
                 'crm.lead': {
                     fields: {
                         name: {string: 'Name', type: 'char'},
@@ -41,23 +43,23 @@ QUnit.module('Crm Forecast Model Extension', {
                     ],
                 },
             },
-            services: { 'fillTemporalService': FillTemporalService },
-            model: 'crm.lead',
-            View: ForecastKanbanView,
-            viewOptions: {
-                context: {
-                    search_default_forecast: true,
-                    search_default_groupby_date_deadline: true,
-                    forecast_field: 'date_deadline',
-                },
-            },
-            groupBy: ['date_deadline'],
-            
         };
-        this.unPatchDate = testUtils.mock.patchDate(2021, 1, 10, 0, 0, 0);
+        arch = `
+            <kanban js_class="forecast_kanban">
+                <field name="date_deadline"/>
+                <field name="date_closed"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="name"/></div>
+                    </t>
+                </templates>
+            </kanban>`;
+/*            services: { 'fillTemporalService': FillTemporalService },*/
+        serviceRegistry.add("fillTemporalService", FillTemporalService);
+        setupViewRegistries();
     },
-    afterEach: async function () {
-        this.unPatchDate();
+    async afterEach() {
+        unPatchDate();
     },
 
 }, function () {
@@ -66,7 +68,18 @@ QUnit.module('Crm Forecast Model Extension', {
         // which adds a domain constraint on the field marked in the other context key forecast_field
         assert.expect(7);
 
-        const kanban = await testUtils.createView(this.testKanbanView);
+        const kanban = await makeView({
+            type: "form",
+            resModel: "crm.lead",
+            serverData: serverData,
+            arch: arch,
+            groupBy: ['date_deadline'],
+            context: {
+                search_default_forecast: true,
+                search_default_groupby_date_deadline: true,
+                forecast_field: 'date_deadline',
+            },
+        });
 
         // the filter is active
         assert.containsN(kanban, '.o_kanban_group', 2, "There should be 2 columns");
@@ -85,20 +98,25 @@ QUnit.module('Crm Forecast Model Extension', {
                         "2nd column February should contain 2 records");
         assert.containsN(kanban, '.o_kanban_group:nth-child(3) .o_kanban_record', 2,
                         "3nd column March should contain 2 records");
-        kanban.destroy();
     });
 
     QUnit.test("filter out every records before the start of the current month with forecast_filter for a datetime field", async function (assert) {
         // same tests as for the date field
         assert.expect(7);
 
-        this.testKanbanView.viewOptions.context = {
+        const context = {
             search_default_forecast: true,
             search_default_groupby_date_closed: true,
             forecast_field: 'date_closed',
         };
-        this.testKanbanView.groupBy = ['date_closed'];
-        const kanban = await testUtils.createView(this.testKanbanView);
+        const kanban = await makeView({
+            type: "form",
+            resModel: "crm.lead",
+            serverData: serverData,
+            arch: arch,
+            groupBy: ['date_closed'],
+            context: viewOptions.context
+        });
 
         // with the filter
         assert.containsN(kanban, '.o_kanban_group', 2, "There should be 2 columns");
@@ -117,7 +135,6 @@ QUnit.module('Crm Forecast Model Extension', {
                         "2nd column February should contain 2 records");
         assert.containsN(kanban, '.o_kanban_group:nth-child(3) .o_kanban_record', 2,
                         "3nd column March should contain 2 records");
-        kanban.destroy();
     });
 });
 
@@ -127,25 +144,27 @@ QUnit.module('Crm Fill Temporal Service', {
      * when created with testUtils.createView. Not needed in production.
      *         -> testKanbanView.groupBy is still needed to apply the groupby on the view
      */
-    beforeEach: async function () {
-        this.testKanbanView = {
-            arch: `
-                <kanban js_class="forecast_kanban">
-                    <field name="date_deadline"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div><field name="name"/></div>
-                        </t>
-                    </templates>
-                </kanban>`,
-            archs: {
+    async beforeEach() {
+        unPatchDate = testUtils.mock.patchDate(2021, 9, 10, 0, 0, 0);
+        target = getFixture();
+        arch = `
+            <kanban js_class="forecast_kanban">
+                <field name="date_deadline"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div><field name="name"/></div>
+                    </t>
+                </templates>
+            </kanban>`;
+        serverData = {
+            views: {
                 "crm.lead,false,search": `
                     <search>
                         <filter name="forecast" string="Forecast" context="{'forecast_filter':1}"/>
                         <filter name='groupby_date_deadline' context="{'group_by':'date_deadline'}"/>
                     </search>`
             },
-            data: {
+            models: {
                 'crm.lead': {
                     fields: {
                         name: {string: 'Name', type: 'char'},
@@ -153,24 +172,18 @@ QUnit.module('Crm Fill Temporal Service', {
                     },
                 },
             },
-            services: { 'fillTemporalService': FillTemporalService },
-            model: 'crm.lead',
-            View: ForecastKanbanView,
-            viewOptions: {
-                context: {
-                    search_default_forecast: true,
-                    search_default_groupby_date_deadline: true,
-                    forecast_field: 'date_deadline',
-                },
-            },
-            groupBy: ['date_deadline'],
-        };
-        this.unPatchDate = testUtils.mock.patchDate(2021, 9, 10, 0, 0, 0);
-    },
-    afterEach: async function () {
-        this.unPatchDate();
-    },
 
+        };
+/*        services: { 'fillTemporalService': FillTemporalService },*/
+        this.context = {
+            search_default_forecast: true,
+            search_default_groupby_date_deadline: true,
+            forecast_field: 'date_deadline',
+        };
+    },
+    async afterEach() {
+        unPatchDate();
+    },
 }, function () {
     /**
      * Since mock_server does not support fill_temporal, 
@@ -201,7 +214,14 @@ QUnit.module('Crm Fill Temporal Service', {
             }
             return this._super.apply(this, arguments);
         };
-        const kanban = await testUtils.createView(this.testKanbanView);
+        const kanban = await makeView({
+            type: "form",
+            resModel: "crm.lead",
+            serverData: serverData,
+            arch: arch,
+            groupBy: ['date_deadline'],
+            context: this.context
+        });
         assert.strictEqual(kanban.call('fillTemporalService', 'getFillTemporalPeriod', {
             modelName: 'crm.lead',
             field: {
@@ -210,7 +230,6 @@ QUnit.module('Crm Fill Temporal Service', {
             },
             granularity: 'month',
         }).end.format('YYYY-MM-DD'), '2022-02-01');
-        kanban.destroy();
     });
 
     /**
@@ -226,9 +245,11 @@ QUnit.module('Crm Fill Temporal Service', {
             {id: 2, name: 'Lead 2', date_deadline: '2022-02-01'},
             {id: 3, name: 'Lead 3', date_deadline: '2027-11-01'},
         ];
-        this.testKanbanView.groupBy = ['date_deadline:year'];
-        this.testKanbanView.archs["crm.lead,false,search"] = 
-            this.testKanbanView.archs["crm.lead,false,search"].replace("'date_deadline'", "'date_deadline:year'");
+
+        serverData.views["crm.lead,false,search"] = 
+            this.testKanbanView.archs["crm.lead,false,search"].replace(
+                "'date_deadline'", "'date_deadline:year'"
+            );
         this.testKanbanView.mockRPC = function (route, args) {
             if (route === '/web/dataset/call_kw/crm.lead/web_read_group') {
                 assert.deepEqual(args.kwargs.context.fill_temporal, {
@@ -244,7 +265,14 @@ QUnit.module('Crm Fill Temporal Service', {
             }
             return this._super.apply(this, arguments);
         };
-        const kanban = await testUtils.createView(this.testKanbanView);
+        const kanban = await makeView({
+            type: "form",
+            resModel: "crm.lead",
+            serverData: serverData,
+            arch: arch,
+            groupBy: ['date_deadline:year'],
+            context: this.context
+        });
         assert.strictEqual(kanban.call('fillTemporalService', 'getFillTemporalPeriod', {
             modelName: 'crm.lead',
             field: {
@@ -253,6 +281,5 @@ QUnit.module('Crm Fill Temporal Service', {
             },
             granularity: 'year',
         }).end.format('YYYY-MM-DD'), '2023-01-01');
-        kanban.destroy();
     });
 });

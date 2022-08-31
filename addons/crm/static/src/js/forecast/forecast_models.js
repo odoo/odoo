@@ -1,7 +1,8 @@
 /** @odoo-module */
-import KanbanModel from 'web.KanbanModel';
 
-const ForecastKanbanModel = KanbanModel.extend({
+import { KanbanModel } from "@web/views/kanban/kanban_model";
+
+export class ForecastKanbanModel extends KanbanModel {
     /**
      * Checks whether to apply the forecast logic to a load or a reload, depending on the groupby
      * and the forecast_field. Sets the current granularity if the forecast applies
@@ -12,6 +13,7 @@ const ForecastKanbanModel = KanbanModel.extend({
      * @returns {boolean}
      */
     _isForecast(element, params={}) {
+        debugger;
         let groupby, granularity;
         if (!element) {
             return false;
@@ -29,7 +31,7 @@ const ForecastKanbanModel = KanbanModel.extend({
         }
         this.granularity = granularity;
         return true;
-    },
+    }
 
     /**
      * At every __load/__reload, we have to check the range of the last group received from the
@@ -38,6 +40,7 @@ const ForecastKanbanModel = KanbanModel.extend({
      * @private
      */
     _updateFillTemporalPeriodEnd(fillTemporalPeriod) {
+        debugger;
         let lastGroup = this.get(this.handle).data.filter(group => group.value).slice(-1)[0];
         if (lastGroup) {
             lastGroup = this.localData[lastGroup.id];
@@ -45,7 +48,7 @@ const ForecastKanbanModel = KanbanModel.extend({
                 this.forecast_field : `${this.forecast_field}:${this.granularity}`;
             fillTemporalPeriod.setEnd(moment.utc(lastGroup.range[groupedBy].to));
         }
-    },
+    }
 
     /**
      * Applies the forecast logic to the domain and context if needed before the read_group.
@@ -56,6 +59,7 @@ const ForecastKanbanModel = KanbanModel.extend({
      * @override
      */
     async __load(params) {
+        debugger;
         this.loadDomain = params.domain;
         this.loadContext = params.context;
         this.forecast_field = params.context.forecast_field;
@@ -82,7 +86,7 @@ const ForecastKanbanModel = KanbanModel.extend({
         this.handle = await this._super(...arguments);
         this._updateFillTemporalPeriodEnd(fillTemporalPeriod);
         return this.handle;
-    },
+    }
 
     /**
      * In order to display the sample data, the context and domain need to be the same as before a
@@ -105,6 +109,7 @@ const ForecastKanbanModel = KanbanModel.extend({
      * @returns {boolean}
      */
     _haveParamsChanged(params = {}) {
+        debugger;
         const originalParams = [this.loadContext, this.loadDomain];
         const currentParams = [this.reloadContext, this.reloadDomain];
         if (JSON.stringify(originalParams) !== JSON.stringify(currentParams)) {
@@ -119,7 +124,7 @@ const ForecastKanbanModel = KanbanModel.extend({
         if (this.useSampleModel && 'groupBy' in params) {
             return JSON.stringify(params.groupBy) !== JSON.stringify(this.loadParams.groupedBy);
         }
-    },
+    }
 
     /**
      * Applies the forecast logic to the domain and context if needed before the read_group.
@@ -130,6 +135,7 @@ const ForecastKanbanModel = KanbanModel.extend({
      * @override
      */
     async __reload(id, params) {
+        debugger;
         if (this.handle !== id || this.isSampleModel) {
             // the forecast logic should only apply when the whole view is reloading on real data
             return this._super(...arguments);
@@ -164,9 +170,5 @@ const ForecastKanbanModel = KanbanModel.extend({
         const reload = await this._super(...arguments);
         this._updateFillTemporalPeriodEnd(fillTemporalPeriod);
         return reload;
-    },
-});
-
-export {
-    ForecastKanbanModel,
+    }
 };
