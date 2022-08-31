@@ -50,8 +50,17 @@
                 <div class="container">
                     <div class="jumbotron mt32">
                         <h1>Login required</h1>
-                        <p>This survey is open only to registered people. Please
-                            <a t-att-href="redirect_url">log in</a>.
+                        <p>This survey is open only to registered people.
+                            <t t-if="signup_url and login_url">
+                                Please <a t-att-href="login_url">Log in</a> or <a t-att-href="signup_url">Create an account</a>.
+                            </t>
+                            <t t-elif="login_url">
+                                Please <a t-att-href="login_url">Log in</a>.
+                            </t>
+                            <t t-elif="signup_url">
+                                Please <a t-att-href="signup_url">Create an account</a>.
+                            </t>
+                            <t t-else=""> Please contact an administrator to create an account.</t>
                         </p>
                     </div>
                 </div>

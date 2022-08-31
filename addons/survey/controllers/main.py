@@ -127,7 +127,7 @@ class Survey(http.Controller):
             'validity_code': validity_code,
         }
 
-    def _redirect_with_error(self, access_data, error_key):
+    def _redirect_with_error(self, access_data, error_key, from_print=False):
         survey_sudo = access_data['survey_sudo']
         answer_sudo = access_data['answer_sudo']
 
@@ -136,18 +136,27 @@ class Survey(http.Controller):
         elif error_key == 'survey_closed' and access_data['can_answer']:
             return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
         elif error_key == 'survey_auth':
-            if not answer_sudo:  # survey is not even started
-                redirect_url = '/web/login?redirect=/survey/start/%s' % survey_sudo.access_token
+            login_url = False
+            signup_url = False
+            if from_print:
+                login_url = '/web/login?redirect=/survey/print/%s?' % survey_sudo.access_token
+                login_url += 'answer_token=%s' % answer_sudo.access_token if answer_sudo.access_token else ''
+            elif not answer_sudo:  # survey is not even started
+                login_url = '/web/login?redirect=/survey/start/%s' % survey_sudo.access_token
+                signup_url = '/web/signup?redirect=/survey/start/%s' % survey_sudo.access_token if survey_sudo.users_can_signup else False
             elif answer_sudo.access_token:  # survey is started but user is not logged in anymore.
-                if answer_sudo.partner_id and (answer_sudo.partner_id.user_ids or survey_sudo.users_can_signup):
-                    if answer_sudo.partner_id.user_ids:
-                        answer_sudo.partner_id.signup_cancel()
-                    else:
-                        answer_sudo.partner_id.signup_prepare(expiration=fields.Datetime.now() + relativedelta(days=1))
-                    redirect_url = answer_sudo.partner_id._get_signup_url_for_action(url='/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))[answer_sudo.partner_id.id]
-                else:
-                    redirect_url = '/web/login?redirect=%s' % ('/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token))
-            return request.render("survey.survey_auth_required", {'survey': survey_sudo, 'redirect_url': redirect_url})
+                redirect_url = '/survey/start/%s?answer_token=%s' % (survey_sudo.access_token, answer_sudo.access_token)
+                if not answer_sudo.partner_id:  # public user who started the survey
+                    link_partner_redirect_url = '/survey/link_partner/%s/%s' % (survey_sudo.access_token, answer_sudo.access_token)
+                    login_url = '/web/login?redirect=%s' % link_partner_redirect_url
+                    signup_url = '/web/signup?redirect=%s' % link_partner_redirect_url if survey_sudo.users_can_signup else False
+                elif answer_sudo.partner_id.user_ids:  # partner with existing user
+                    answer_sudo.partner_id.signup_cancel()
+                    login_url = answer_sudo.partner_id._get_signup_url_for_action(url=redirect_url)[answer_sudo.partner_id.id]
+                elif survey_sudo.users_can_signup:  # partner without user but one can be created
+                    answer_sudo.partner_id.signup_prepare(expiration=fields.Datetime.now() + relativedelta(days=1))
+                    signup_url = answer_sudo.partner_id._get_signup_url_for_action(url=redirect_url)[answer_sudo.partner_id.id]
+            return request.render("survey.survey_auth_required", {'survey': survey_sudo, 'login_url': login_url, 'signup_url': signup_url})
         elif error_key == 'answer_deadline' and answer_sudo.access_token:
             return request.render("survey.survey_closed_expired", {'survey': survey_sudo})
 
@@ -210,6 +219,19 @@ class Survey(http.Controller):
     # ------------------------------------------------------------
     # TAKING SURVEY ROUTES
     # ------------------------------------------------------------
+
+    @http.route('/survey/link_partner/<string:survey_token>/<string:answer_token>', type='http', auth='public', website=True)
+    def survey_link_partner(self, survey_token, answer_token, **kwargs):
+        """ If an answer_token exists and no partner is linked, and login in is now required, associate the existing answer to the
+        newly connected / created partner when going back to the survey, by the intermediate of this route. Redirects to the survey
+        start route afterwards. This prevents losing the current answer, and that answer to pollute the survey answers."""
+        survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
+        if answer_sudo and not request.env.user._is_public():
+            answer_sudo.partner_id = request.env.user.partner_id
+            if not answer_sudo.email:
+                answer_sudo.email = answer_sudo.partner_id.email
+
+        return request.redirect('/survey/start/%s?%s' % (survey_sudo.access_token, keep_query('*', answer_token=answer_sudo.access_token)))
 
     @http.route('/survey/start/<string:survey_token>', type='http', auth='public', website=True)
     def survey_start(self, survey_token, answer_token=None, email=False, **post):
@@ -601,7 +623,7 @@ class Survey(http.Controller):
         if access_data['validity_code'] is not True and (
                 access_data['has_survey_access'] or
                 access_data['validity_code'] not in ['token_required', 'survey_closed', 'survey_void']):
-            return self._redirect_with_error(access_data, access_data['validity_code'])
+            return self._redirect_with_error(access_data, access_data['validity_code'], from_print=True)
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
         return request.render('survey.survey_page_print', {
