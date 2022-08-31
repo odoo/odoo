@@ -23,7 +23,7 @@ function cast(value) {
 function parseString(str) {
     const parts = str.split("&");
     const result = {};
-    for (let part of parts) {
+    for (const part of parts) {
         const [key, value] = part.split("=");
         const decoded = decodeURIComponent(value || "");
         result[key] = cast(decoded);

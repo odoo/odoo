@@ -439,7 +439,7 @@
                 }
                 await testApp(app);
             } else {
-                while (app = await getNextApp()) {
+                while ((app = await getNextApp())) {
                     await testApp(app);
                 }
             }

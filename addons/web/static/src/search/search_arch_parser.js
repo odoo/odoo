@@ -210,7 +210,9 @@ export class SearchArchParser extends XMLParser {
                 preSearchItem.fieldType = this.fields[fieldName].type;
                 preSearchItem.defaultGeneratorIds = [DEFAULT_PERIOD];
                 if (node.hasAttribute("default_period")) {
-                    preSearchItem.defaultGeneratorIds = node.getAttribute("default_period").split(',');
+                    preSearchItem.defaultGeneratorIds = node
+                        .getAttribute("default_period")
+                        .split(",");
                 }
             } else {
                 let stringRepr = "[]";

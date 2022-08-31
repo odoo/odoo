@@ -80,8 +80,8 @@ QUnit.module("Components", (hooks) => {
         // unpatch QUnit asap so any other errors can be caught by it
         unpatch(QUnit, "MainComponentsContainer QUnit patch");
         assert.verifySteps([
-            "An error occured in the owl lifecycle (see this Error's \"cause\" property)",
-            "BOOM"
+            'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
+            "BOOM",
         ]);
 
         assert.equal(
@@ -133,8 +133,8 @@ QUnit.module("Components", (hooks) => {
         // unpatch QUnit asap so any other errors can be caught by it
         unpatch(QUnit, "MainComponentsContainer QUnit patch");
         assert.verifySteps([
-            "An error occured in the owl lifecycle (see this Error's \"cause\" property)",
-            "BOOM"
+            'An error occured in the owl lifecycle (see this Error\'s "cause" property)',
+            "BOOM",
         ]);
         assert.equal(
             target.querySelector(".o-main-components-container").innerHTML,

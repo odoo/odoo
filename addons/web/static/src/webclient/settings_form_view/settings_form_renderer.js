@@ -29,7 +29,7 @@ export class SettingsFormRenderer extends FormRenderer {
     }
     search(kind, value) {
         const regexp = new RegExp(escapeRegExp(this.searchState.value), "i");
-        for (let x of labels[this.props.archInfo.arch]) {
+        for (const x of labels[this.props.archInfo.arch]) {
             if (x[kind] === value) {
                 if (regexp.test([x.label, x.groupTitle, x.groupTip].join())) {
                     return true;

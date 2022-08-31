@@ -3,7 +3,7 @@
 import { getGroupBy } from "@web/search/utils/group_by";
 import { DEFAULT_INTERVAL } from "@web/search/utils/dates";
 
-let fields = {
+const fields = {
     display_name: { string: "Displayed name", type: "char" },
     foo: {
         string: "Foo",
@@ -47,7 +47,7 @@ QUnit.module("GroupBy Class", {}, () => {
     QUnit.module("With field validation");
     QUnit.test("simple valid group by", async function (assert) {
         assert.expect(3);
-        let groupBy = getGroupBy("display_name", fields);
+        const groupBy = getGroupBy("display_name", fields);
         assert.strictEqual(groupBy.fieldName, "display_name");
         assert.strictEqual(groupBy.interval, null);
         assert.strictEqual(groupBy.spec, "display_name");

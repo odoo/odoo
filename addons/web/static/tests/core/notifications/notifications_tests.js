@@ -270,7 +270,7 @@ QUnit.skip("can close sticky notification with wait", async (assert) => {
     const notifService = env.services.notification;
     await mount(NotificationContainer, target, { env, props });
 
-    let id = notifService.create("I'm a sticky notification", { sticky: true });
+    const id = notifService.create("I'm a sticky notification", { sticky: true });
     await nextTick();
     assert.containsOnce(target, ".o_notification");
 

@@ -13,14 +13,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { sprintf } from "@web/core/utils/strings";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-const {
-    Component,
-    useRef,
-    useState,
-    useEffect,
-    onWillStart,
-    onWillUpdateProps,
-} = owl;
+const { Component, useRef, useState, useEffect, onWillStart, onWillUpdateProps } = owl;
 
 export class PropertiesField extends Component {
     setup() {
@@ -57,8 +50,7 @@ export class PropertiesField extends Component {
             if (this.openLastPropertyDefinition) {
                 this.openLastPropertyDefinition = null;
                 const propertiesList = this.propertiesList;
-                const lastPropertyName =
-                    propertiesList[propertiesList.length - 1].name;
+                const lastPropertyName = propertiesList[propertiesList.length - 1].name;
                 const labels = this.propertiesRef.el.querySelectorAll(
                     `.o_property_field[property-name="${lastPropertyName}"] .o_field_property_open_popover`
                 );
@@ -91,12 +83,8 @@ export class PropertiesField extends Component {
      * @returns {array}
      */
     get propertiesList() {
-        const propertiesValues = JSON.parse(
-            JSON.stringify(this.props.value || [])
-        );
-        return propertiesValues.filter(
-            (definition) => !definition.definition_deleted
-        );
+        const propertiesValues = JSON.parse(JSON.stringify(this.props.value || []));
+        return propertiesValues.filter((definition) => !definition.definition_deleted);
     }
 
     /**
@@ -176,9 +164,7 @@ export class PropertiesField extends Component {
      */
     onPropertyValueChange(propertyName, propertyValue) {
         const propertiesValues = this.propertiesList;
-        propertiesValues.find(
-            (property) => property.name === propertyName
-        ).value = propertyValue;
+        propertiesValues.find((property) => property.name === propertyName).value = propertyValue;
         this.props.update(propertiesValues);
     }
 
@@ -203,8 +189,7 @@ export class PropertiesField extends Component {
             event.currentTarget,
             PropertyDefinition,
             {
-                readonly:
-                    this.props.readonly || !this.state.canChangeDefinition,
+                readonly: this.props.readonly || !this.state.canChangeDefinition,
                 canChangeDefinition: this.state.canChangeDefinition,
                 propertyDefinition: this.propertiesList.find(
                     (property) => property.name === propertyName
@@ -212,8 +197,7 @@ export class PropertiesField extends Component {
                 context: this.context,
                 onChange: this.onPropertyDefinitionChange.bind(this),
                 onDelete: () => this.onPropertyDelete(propertyName),
-                onPropertyMove: (direction) =>
-                    this.onPropertyMove(propertyName, direction),
+                onPropertyMove: (direction) => this.onPropertyMove(propertyName, direction),
             },
             {
                 preventClose: this.checkPopoverClose,
@@ -249,10 +233,7 @@ export class PropertiesField extends Component {
         ) {
             // restore the original name
             propertyDefinition.name = initialValues.name;
-        } else if (
-            initialValues &&
-            initialValues.name === propertyDefinition.name
-        ) {
+        } else if (initialValues && initialValues.name === propertyDefinition.name) {
             // generate a new new to reset all values on other records
             // store the new generated name to be able to restore it
             // if needed
@@ -301,32 +282,22 @@ export class PropertiesField extends Component {
 
         if (
             propertiesDefinitions.length &&
-            propertiesDefinitions.some(
-                (prop) => !prop.string || !prop.string.length
-            )
+            propertiesDefinitions.some((prop) => !prop.string || !prop.string.length)
         ) {
             // do not allow to add new field until we set a label on the previous one
-            this.propertiesRef.el
-                .closest(".o_field_properties")
-                .classList.add("o_field_invalid");
+            this.propertiesRef.el.closest(".o_field_properties").classList.add("o_field_invalid");
 
-            this.notification.add(
-                _lt("Please complete your properties before adding a new one"),
-                { type: "warning" }
-            );
+            this.notification.add(_lt("Please complete your properties before adding a new one"), {
+                type: "warning",
+            });
             return;
         }
 
-        this.propertiesRef.el
-            .closest(".o_field_properties")
-            .classList.remove("o_field_invalid");
+        this.propertiesRef.el.closest(".o_field_properties").classList.remove("o_field_invalid");
 
         propertiesDefinitions.push({
             name: uuid(),
-            string: sprintf(
-                _lt("Property %s"),
-                propertiesDefinitions.length + 1
-            ),
+            string: sprintf(_lt("Property %s"), propertiesDefinitions.length + 1),
             type: "char",
             definition_changed: true,
         });
@@ -381,8 +352,7 @@ export class PropertiesField extends Component {
         const targetPosition = targetElement.getBoundingClientRect();
         const popoverPosition = popover.getBoundingClientRect();
 
-        popover.style.top =
-            targetPosition.top - popoverPosition.height - 10 + "px";
+        popover.style.top = targetPosition.top - popoverPosition.height - 10 + "px";
         popover.style.left = targetPosition.left + "px";
         popover.style.position = "absolute";
     }
@@ -392,13 +362,10 @@ export class PropertiesField extends Component {
      * and therefor update the properties definition.
      */
     async _checkDefinitionAccess() {
-        const definitionRecordId =
-            this.props.record.data[this.definitionRecordField][0];
+        const definitionRecordId = this.props.record.data[this.definitionRecordField][0];
         this.parentName = this.props.record.data[this.definitionRecordField][1];
-        const definitionRecordModel =
-            this.props.record.fields[this.definitionRecordField].relation;
-        this.parentString =
-            this.props.record.fields[this.definitionRecordField].string;
+        const definitionRecordModel = this.props.record.fields[this.definitionRecordField].relation;
+        this.parentString = this.props.record.fields[this.definitionRecordField].string;
 
         if (!definitionRecordId || !definitionRecordModel) {
             return;
@@ -425,7 +392,7 @@ export class PropertiesField extends Component {
         // initial properties values, if the type or the model changed, the
         // name will be regenerated in order to reset the value on the children
         this.initialValues = {};
-        for (let propertiesValues of this.props.value || []) {
+        for (const propertiesValues of this.props.value || []) {
             this.initialValues[propertiesValues.name] = {
                 name: propertiesValues.name,
                 type: propertiesValues.type,

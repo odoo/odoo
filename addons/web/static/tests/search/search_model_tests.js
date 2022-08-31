@@ -232,40 +232,43 @@ QUnit.module("Search", (hooks) => {
         ]);
     });
 
-    QUnit.test("parsing one filter tag with default_period date attribute", async function (assert) {
-        assert.expect(1);
-        const model = await makeSearchModel({
-            serverData,
-            searchViewArch: `
+    QUnit.test(
+        "parsing one filter tag with default_period date attribute",
+        async function (assert) {
+            assert.expect(1);
+            const model = await makeSearchModel({
+                serverData,
+                searchViewArch: `
                     <search>
                         <filter name="date_filter" string="Date" date="date_field" default_period="this_year,last_year"/>
                     </search>
                 `,
-        });
-        const dateFilterId = model.getSearchItems((f) => f.type === "dateFilter")[0].id;
-        assert.deepEqual(sanitizeSearchItems(model), [
-            {
-                defaultGeneratorIds: ["this_year", "last_year"],
-                description: "Date",
-                fieldName: "date_field",
-                fieldType: "date",
-                type: "dateFilter",
-                name: "date_filter",
-            },
-            {
-                comparisonOptionId: "previous_period",
-                dateFilterId,
-                description: "Date: Previous Period",
-                type: "comparison",
-            },
-            {
-                comparisonOptionId: "previous_year",
-                dateFilterId,
-                description: "Date: Previous Year",
-                type: "comparison",
-            },
-        ]);
-    });
+            });
+            const dateFilterId = model.getSearchItems((f) => f.type === "dateFilter")[0].id;
+            assert.deepEqual(sanitizeSearchItems(model), [
+                {
+                    defaultGeneratorIds: ["this_year", "last_year"],
+                    description: "Date",
+                    fieldName: "date_field",
+                    fieldType: "date",
+                    type: "dateFilter",
+                    name: "date_filter",
+                },
+                {
+                    comparisonOptionId: "previous_period",
+                    dateFilterId,
+                    description: "Date: Previous Period",
+                    type: "comparison",
+                },
+                {
+                    comparisonOptionId: "previous_year",
+                    dateFilterId,
+                    description: "Date: Previous Year",
+                    type: "comparison",
+                },
+            ]);
+        }
+    );
 
     QUnit.test("parsing one filter tag with date attribute ", async function (assert) {
         assert.expect(1);

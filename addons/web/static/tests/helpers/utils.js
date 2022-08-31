@@ -329,7 +329,9 @@ export async function triggerScroll(
     const isScrollable =
         (target.scrollHeight > target.clientHeight && target.clientHeight > 0) ||
         (target.scrollWidth > target.clientWidth && target.clientWidth > 0);
-    if (!isScrollable && !canPropagate) return;
+    if (!isScrollable && !canPropagate) {
+        return;
+    }
     if (isScrollable) {
         const canScrollFrom = {
             left:
@@ -351,7 +353,9 @@ export async function triggerScroll(
         target.scrollTo(scrollCoordinates);
         target.dispatchEvent(new UIEvent("scroll"));
         await nextTick();
-        if (!canPropagate || !Object.entries(coordinates).length) return;
+        if (!canPropagate || !Object.entries(coordinates).length) {
+            return;
+        }
     }
     target.parentElement
         ? triggerScroll(target.parentElement, coordinates)

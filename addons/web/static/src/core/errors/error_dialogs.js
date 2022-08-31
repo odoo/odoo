@@ -73,7 +73,9 @@ export class RPCErrorDialog extends ErrorDialog {
             return;
         }
         // Fall back to a name based on the error type.
-        if (!this.props.type) return;
+        if (!this.props.type) {
+            return;
+        }
         switch (this.props.type) {
             case "server":
                 this.title = this.env._t("Odoo Server Error");

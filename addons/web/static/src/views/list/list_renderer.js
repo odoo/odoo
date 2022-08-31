@@ -1171,7 +1171,7 @@ export class ListRenderer extends Component {
         const { activeActions, cycleOnTab, list } = this.props;
         const row = cell.parentElement;
         const applyMultiEditBehavior = record && record.selected && list.model.multiEdit;
-        const topReCreate = this.props.editable === 'top' && record.isNew;
+        const topReCreate = this.props.editable === "top" && record.isNew;
 
         if (
             applyMultiEditBehavior &&

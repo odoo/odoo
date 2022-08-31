@@ -214,8 +214,8 @@ export class View extends Component {
             actionMenus,
         } = props;
 
-        let loadView = !arch || (!actionMenus && loadActionMenus);
-        let loadSearchView =
+        const loadView = !arch || (!actionMenus && loadActionMenus);
+        const loadSearchView =
             (searchViewId !== undefined && !searchViewArch) || (!irFilters && loadIrFilters);
 
         let viewDescription = { viewId, resModel, type };
@@ -322,7 +322,7 @@ export class View extends Component {
             }
         }
 
-        let { noContentHelp } = props;
+        const { noContentHelp } = props;
         if (noContentHelp) {
             viewProps.info.noContentHelp = noContentHelp;
         }

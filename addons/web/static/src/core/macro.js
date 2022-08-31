@@ -44,7 +44,7 @@ class Macro {
             return;
         }
         const step = this.steps[this.currentIndex];
-        let trigger = step.trigger;
+        const trigger = step.trigger;
         if (trigger) {
             let el = null;
             if (typeof trigger === "function") {
@@ -175,20 +175,20 @@ export class MacroEngine {
     }
 
     advanceMacros() {
-        let toDelete = [];
-        for (let macro of this.macros) {
+        const toDelete = [];
+        for (const macro of this.macros) {
             macro.advance();
             if (macro.isComplete) {
                 toDelete.push(macro);
             }
         }
         if (toDelete.length) {
-            for (let macro of toDelete) {
+            for (const macro of toDelete) {
                 this.macros.delete(macro);
             }
             // recompute current interval, because it may need to be increased
             this.interval = Infinity;
-            for (let macro of this.macros) {
+            for (const macro of this.macros) {
                 this.interval = Math.min(this.interval, macro.interval);
             }
         }

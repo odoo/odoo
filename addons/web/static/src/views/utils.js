@@ -262,5 +262,5 @@ export function uuid() {
     const array = new Uint8Array(16);
     window.crypto.getRandomValues(array);
     // Uint8Array to hex
-    return [...array].map(b => b.toString(16).padStart(2, '0')).join('');
+    return [...array].map((b) => b.toString(16).padStart(2, "0")).join("");
 }

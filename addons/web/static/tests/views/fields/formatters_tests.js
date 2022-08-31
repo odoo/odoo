@@ -28,7 +28,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatFloat(null), "0.00");
         assert.strictEqual(formatFloat(1000000), "1,000,000.00");
 
-        let options = { grouping: [3, 2, -1], decimalPoint: "?", thousandsSep: "€" };
+        const options = { grouping: [3, 2, -1], decimalPoint: "?", thousandsSep: "€" };
         assert.strictEqual(formatFloat(106500, options), "1€06€500?00");
 
         assert.strictEqual(formatFloat(1500, { thousandsSep: "" }), "1500.00");

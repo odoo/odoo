@@ -45,9 +45,7 @@ export class PropertyDefinition extends Component {
         this._syncStateWithProps(propertyDefinition);
 
         // update the state and fetch needed information
-        onWillUpdateProps((newProps) =>
-            this._syncStateWithProps(newProps.value)
-        );
+        onWillUpdateProps((newProps) => this._syncStateWithProps(newProps.value));
 
         useEffect((event) => {
             // focus the property label, when we open the property definition
@@ -56,8 +54,7 @@ export class PropertyDefinition extends Component {
                 return;
             }
             this.labelFocused = true;
-            const labelInput =
-                this.propertyDefinitionRef.el.querySelectorAll("input")[0];
+            const labelInput = this.propertyDefinitionRef.el.querySelectorAll("input")[0];
             if (labelInput) {
                 labelInput.focus();
             }
@@ -166,9 +163,7 @@ export class PropertyDefinition extends Component {
         const propertyDefinition = {
             ...this.state.propertyDefinition,
             comodel: technical,
-            default: modelChanged
-                ? false
-                : this.state.propertyDefinition.default,
+            default: modelChanged ? false : this.state.propertyDefinition.default,
             value: modelChanged ? false : this.state.propertyDefinition.value,
             domain: modelChanged ? false : this.state.propertyDefinition.domain,
         };
@@ -202,9 +197,7 @@ export class PropertyDefinition extends Component {
             noCreate: true,
             multiSelect: false,
             resModel: this.state.propertyDefinition.comodel,
-            domain: new Domain(
-                this.state.propertyDefinition.domain || "[]"
-            ).toList(),
+            domain: new Domain(this.state.propertyDefinition.domain || "[]").toList(),
             context: this.props.context || {},
         });
     }
@@ -260,11 +253,7 @@ export class PropertyDefinition extends Component {
             // retrieve the model id and the model description from it's name
             // "res.partner" => (5, "Contact")
             try {
-                const result = await this.orm.call(
-                    "ir.model",
-                    "display_name_for",
-                    [[newModel]],
-                );
+                const result = await this.orm.call("ir.model", "display_name_for", [[newModel]]);
                 if (!result || !result.length) {
                     return;
                 }
@@ -288,9 +277,7 @@ export class PropertyDefinition extends Component {
      */
     async _updateMatchingRecordsCount() {
         if (this.state.resModel && this.state.resModel.length) {
-            const domainList = new Domain(
-                this.state.propertyDefinition.domain || "[]"
-            ).toList();
+            const domainList = new Domain(this.state.propertyDefinition.domain || "[]").toList();
 
             const result = await this.orm.call(
                 this.state.propertyDefinition.comodel,

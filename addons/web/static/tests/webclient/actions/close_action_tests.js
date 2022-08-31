@@ -7,7 +7,7 @@ import {
     getFixture,
     legacyExtraNextTick,
     nextTick,
-    patchWithCleanup
+    patchWithCleanup,
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
@@ -214,7 +214,7 @@ QUnit.module("ActionManager", (hooks) => {
         await legacyExtraNextTick();
         readOnFirstRecordDef.reject(new Error("not working as intended"));
         await nextTick();
-        assert.verifySteps(["error"])
+        assert.verifySteps(["error"]);
         assert.containsOnce(target, ".o_list_view", "there should still be a list view in dom");
         // open another record, the read will not crash
         await testUtils.dom.click(

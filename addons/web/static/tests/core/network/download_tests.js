@@ -6,8 +6,7 @@ import { makeMockXHR } from "../../helpers/mock_services";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
 import { registerCleanup } from "../../helpers/cleanup";
 
-QUnit.module("download", hooks => {
-
+QUnit.module("download", (hooks) => {
     QUnit.test("handles connection error when behind a server", async (assert) => {
         assert.expect(1);
 
@@ -17,7 +16,7 @@ QUnit.module("download", hooks => {
                 type: "text/html",
             };
         }
-        let MockXHR = makeMockXHR("", send);
+        const MockXHR = makeMockXHR("", send);
 
         patchWithCleanup(
             browser,
@@ -46,7 +45,7 @@ QUnit.module("download", hooks => {
         async function send() {
             return Promise.reject();
         }
-        let MockXHR = makeMockXHR("", send);
+        const MockXHR = makeMockXHR("", send);
 
         patchWithCleanup(
             browser,
@@ -84,12 +83,9 @@ QUnit.module("download", hooks => {
 
         async function send() {
             this.status = 200;
-            this.response = new Blob(
-                [JSON.stringify(serverError)],
-                {type: "text/html"}
-            );
+            this.response = new Blob([JSON.stringify(serverError)], { type: "text/html" });
         }
-        let MockXHR = makeMockXHR("", send);
+        const MockXHR = makeMockXHR("", send);
 
         patchWithCleanup(
             browser,
@@ -118,16 +114,13 @@ QUnit.module("download", hooks => {
     QUnit.test("handles arbitrary error", async (assert) => {
         assert.expect(3);
 
-        const serverError = /* xml */`<html><body><div>HTML error message</div></body></html>`;
+        const serverError = /* xml */ `<html><body><div>HTML error message</div></body></html>`;
 
         async function send() {
             this.status = 200;
-            this.response = new Blob(
-                [JSON.stringify(serverError)],
-                {type: "text/html"}
-            );
+            this.response = new Blob([JSON.stringify(serverError)], { type: "text/html" });
         }
-        let MockXHR = makeMockXHR("", send);
+        const MockXHR = makeMockXHR("", send);
 
         patchWithCleanup(
             browser,
@@ -164,12 +157,9 @@ QUnit.module("download", hooks => {
             assert.ok(data.has("csrf_token"));
 
             this.status = 200;
-            this.response = new Blob(
-                ["some plain text file"],
-                {type: "text/plain"}
-            );
+            this.response = new Blob(["some plain text file"], { type: "text/plain" });
         }
-        let MockXHR = makeMockXHR("", send);
+        const MockXHR = makeMockXHR("", send);
 
         patchWithCleanup(
             browser,
@@ -186,7 +176,7 @@ QUnit.module("download", hooks => {
         // This part asserts the implementation detail in question
         const downloadOnClick = (ev) => {
             const target = ev.target;
-            if (target.tagName === "A" &&  "download" in target.attributes) {
+            if (target.tagName === "A" && "download" in target.attributes) {
                 ev.preventDefault();
                 assert.ok(target.href.startsWith("blob:"));
                 assert.step("file downloaded");

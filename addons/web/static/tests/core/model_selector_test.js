@@ -8,19 +8,16 @@ import { ModelSelector } from "@web/core/model_selector/model_selector";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { click, editInput, getFixture, mount, patchWithCleanup } from "@web/../tests/helpers/utils";
 
-registry
-    .category("mock_server")
-    .add("ir.model/display_name_for", function (route, args) {
-        const models = args.args[0];
-        const records = this.models["ir.model"].records.filter((record) =>
-            models.includes(record.model)
-        );
-        return records.map((record) => ({
-            model: record.model,
-            display_name: record.name,
-        }));
-    });
-
+registry.category("mock_server").add("ir.model/display_name_for", function (route, args) {
+    const models = args.args[0];
+    const records = this.models["ir.model"].records.filter((record) =>
+        models.includes(record.model)
+    );
+    return records.map((record) => ({
+        model: record.model,
+        display_name: record.name,
+    }));
+});
 
 const serviceRegistry = registry.category("services");
 
@@ -169,33 +166,42 @@ QUnit.test("model_selector: with more than 8 models", async function (assert) {
     assert.containsN(fixture, "li.o-autocomplete--dropdown-item", 8);
 });
 
-QUnit.test("model_selector: search content is not applied when opening the autocomplete", async function (assert) {
-    await mountModelSelector(["model_1", "model_2"], "_2");
-    await openAutocomplete();
-    assert.containsN(fixture, "li.o-autocomplete--dropdown-item", 2);
-});
+QUnit.test(
+    "model_selector: search content is not applied when opening the autocomplete",
+    async function (assert) {
+        await mountModelSelector(["model_1", "model_2"], "_2");
+        await openAutocomplete();
+        assert.containsN(fixture, "li.o-autocomplete--dropdown-item", 2);
+    }
+);
 
-QUnit.test("model_selector: with search matching some records on technical name", async function (assert) {
-    await mountModelSelector(["model_1", "model_2"]);
-    await openAutocomplete();
-    await editInput(fixture, ".o-autocomplete--input", "_2");
-    assert.containsOnce(fixture, "li.o-autocomplete--dropdown-item");
-    assert.strictEqual(
-        fixture.querySelector("li.o-autocomplete--dropdown-item").innerText,
-        "Model 2"
-    );
-});
+QUnit.test(
+    "model_selector: with search matching some records on technical name",
+    async function (assert) {
+        await mountModelSelector(["model_1", "model_2"]);
+        await openAutocomplete();
+        await editInput(fixture, ".o-autocomplete--input", "_2");
+        assert.containsOnce(fixture, "li.o-autocomplete--dropdown-item");
+        assert.strictEqual(
+            fixture.querySelector("li.o-autocomplete--dropdown-item").innerText,
+            "Model 2"
+        );
+    }
+);
 
-QUnit.test("model_selector: with search matching some records on business name", async function (assert) {
-    await mountModelSelector(["model_1", "model_2"]);
-    await openAutocomplete();
-    await editInput(fixture, ".o-autocomplete--input", " 2");
-    assert.containsOnce(fixture, "li.o-autocomplete--dropdown-item");
-    assert.strictEqual(
-        fixture.querySelector("li.o-autocomplete--dropdown-item").innerText,
-        "Model 2"
-    );
-});
+QUnit.test(
+    "model_selector: with search matching some records on business name",
+    async function (assert) {
+        await mountModelSelector(["model_1", "model_2"]);
+        await openAutocomplete();
+        await editInput(fixture, ".o-autocomplete--input", " 2");
+        assert.containsOnce(fixture, "li.o-autocomplete--dropdown-item");
+        assert.strictEqual(
+            fixture.querySelector("li.o-autocomplete--dropdown-item").innerText,
+            "Model 2"
+        );
+    }
+);
 
 QUnit.test("model_selector: with search matching no record", async function (assert) {
     await mountModelSelector(["model_1", "model_2"]);

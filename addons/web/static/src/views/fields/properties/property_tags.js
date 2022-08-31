@@ -38,9 +38,7 @@ export class PropertyTags extends Component {
 
         // Retrieve the tags label and color
         // ['a', 'b'] =>  [['a', 'A', 5], ['b', 'B', 6]]
-        const value = this.props.tags.filter(
-            (tag) => this.props.selectedTags.indexOf(tag[0]) >= 0
-        );
+        const value = this.props.tags.filter((tag) => this.props.selectedTags.indexOf(tag[0]) >= 0);
 
         const canDeleteTag = !this.props.readonly && this.props.canChangeTags;
 
@@ -50,8 +48,7 @@ export class PropertyTags extends Component {
                 id: tagId,
                 text: tagLabel,
                 colorIndex: tagColorIndex || 0,
-                onClick: (event) =>
-                    this.onTagClick(event, tagId, tagColorIndex),
+                onClick: (event) => this.onTagClick(event, tagId, tagColorIndex),
                 onDelete: canDeleteTag && (() => this.onTagDelete(tagId)),
             };
         });
@@ -94,9 +91,8 @@ export class PropertyTags extends Component {
                                 this.props.selectedTags.indexOf(tag[0]) < 0) &&
                             (!request ||
                                 !request.length ||
-                                tag[1]
-                                    .toLocaleLowerCase()
-                                    .indexOf(request.toLocaleLowerCase()) >= 0)
+                                tag[1].toLocaleLowerCase().indexOf(request.toLocaleLowerCase()) >=
+                                    0)
                     );
                     if (!tagsFiltered || !tagsFiltered.length) {
                         // no result, ask the user if he want to create a new tag
@@ -175,9 +171,7 @@ export class PropertyTags extends Component {
             return;
         }
 
-        const newValue = newLabel
-            ? newLabel.toLowerCase().replace(" ", "_")
-            : "";
+        const newValue = newLabel ? newLabel.toLowerCase().replace(" ", "_") : "";
 
         const existingTag = this.props.tags.find((tag) => tag[0] === newValue);
         if (existingTag) {
@@ -190,8 +184,7 @@ export class PropertyTags extends Component {
         // cycle trough colors
         const tagColor =
             this.props.tags && this.props.tags.length
-                ? (this.props.tags[this.props.tags.length - 1][2] + 1) %
-                  ColorList.COLORS.length
+                ? (this.props.tags[this.props.tags.length - 1][2] + 1) % ColorList.COLORS.length
                 : parseInt(Math.random() * ColorList.COLORS.length);
 
         const newTag = [newValue, newLabel, tagColor];
@@ -220,9 +213,7 @@ export class PropertyTags extends Component {
         } else {
             // remove the tag from the options
             const availableTags = this.availableTags;
-            this.props.onTagsChange(
-                availableTags.filter((tag) => tag[0] !== deleteTag)
-            );
+            this.props.onTagsChange(availableTags.filter((tag) => tag[0] !== deleteTag));
         }
     }
 

@@ -192,7 +192,7 @@ export class SearchBar extends Component {
             limit: 8,
             name: query.trim(),
         });
-        let subItems = [];
+        const subItems = [];
         if (options.length) {
             const operator = searchItem.operator || "=";
             for (const [value, label] of options) {

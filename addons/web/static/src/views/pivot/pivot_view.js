@@ -24,7 +24,7 @@ export const pivotView = {
     buttonTemplate: "web.PivotView.Buttons",
 
     props: (genericProps, view) => {
-        let modelParams = {};
+        const modelParams = {};
         if (genericProps.state) {
             modelParams.data = genericProps.state.data;
             modelParams.metaData = genericProps.state.metaData;

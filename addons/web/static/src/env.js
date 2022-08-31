@@ -102,7 +102,7 @@ async function _startServices(env, toStart) {
         let service = null;
         const proms = [];
         while ((service = findNext())) {
-            let name = service.name;
+            const name = service.name;
             toStart.delete(service);
             const entries = (service.dependencies || []).map((dep) => [dep, services[dep]]);
             const dependencies = Object.fromEntries(entries);
@@ -159,7 +159,7 @@ async function _startServices(env, toStart) {
     }
 
     function findNext() {
-        for (let s of toStart) {
+        for (const s of toStart) {
             if (s.dependencies) {
                 if (s.dependencies.every((d) => d in services)) {
                     return s;

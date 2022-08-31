@@ -132,59 +132,86 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
-        "color picker on tree view",
-        async function (assert) {
-            await makeView({
-                type: "list",
-                resModel: "partner",
-                serverData,
-                arch: `
+    QUnit.test("color picker on tree view", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <tree>
                         <field name="int_field" widget="color_picker"/>
                         <field name="display_name" />
                     </tree>`,
-                selectRecord() {
-                    assert.step("record selected to open");
-                },
-            });
+            selectRecord() {
+                assert.step("record selected to open");
+            },
+        });
 
-            await click(target, ".o_field_color_picker button");
-            assert.verifySteps(["record selected to open"], "the color is not editable and the record has been opened");
-        }
-    );
+        await click(target, ".o_field_color_picker button");
+        assert.verifySteps(
+            ["record selected to open"],
+            "the color is not editable and the record has been opened"
+        );
+    });
 
-    QUnit.test(
-        "color picker in editable list view",
-        async function (assert) {
-            serverData.models.partner.records.push({
-                int_field: 1
-            });
-            await makeView({
-                type: "list",
-                resModel: "partner",
-                serverData,
-                arch: `
+    QUnit.test("color picker in editable list view", async function (assert) {
+        serverData.models.partner.records.push({
+            int_field: 1,
+        });
+        await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
                     <list editable="bottom">
                         <field name="int_field" widget="color_picker"/>
                     </list>
                 `,
-            });
+        });
 
-            assert.containsOnce(target, ".o_data_row:nth-child(1) .o_field_color_picker button", "color picker list is not open by default");
+        assert.containsOnce(
+            target,
+            ".o_data_row:nth-child(1) .o_field_color_picker button",
+            "color picker list is not open by default"
+        );
 
-            await click(target, ".o_data_row:nth-child(1) .o_field_color_picker button");
-            assert.hasClass(target.querySelector(".o_data_row:nth-child(1)"), "o_selected_row", "first row is selected");
-            assert.containsN(target, ".o_data_row:nth-child(1) .o_field_color_picker button", 12, "color picker list is open when the row is in edition");
+        await click(target, ".o_data_row:nth-child(1) .o_field_color_picker button");
+        assert.hasClass(
+            target.querySelector(".o_data_row:nth-child(1)"),
+            "o_selected_row",
+            "first row is selected"
+        );
+        assert.containsN(
+            target,
+            ".o_data_row:nth-child(1) .o_field_color_picker button",
+            12,
+            "color picker list is open when the row is in edition"
+        );
 
-            await click(target, ".o_data_row:nth-child(1) .o_field_color_picker .o_colorlist_item_color_6");
-            assert.containsN(target, ".o_data_row:nth-child(1) .o_field_color_picker button", 12, "color picker list is still open after color has been selected");
+        await click(
+            target,
+            ".o_data_row:nth-child(1) .o_field_color_picker .o_colorlist_item_color_6"
+        );
+        assert.containsN(
+            target,
+            ".o_data_row:nth-child(1) .o_field_color_picker button",
+            12,
+            "color picker list is still open after color has been selected"
+        );
 
-            await click(target, ".o_data_row:nth-child(2) .o_data_cell");
-            assert.containsOnce(target, ".o_data_row:nth-child(1) .o_field_color_picker button", "color picker list is no longer open on the first row");
-            assert.containsN(target, ".o_data_row:nth-child(2) .o_field_color_picker button", 12, "color picker list is open when the row is in edition");
-        }
-    );
+        await click(target, ".o_data_row:nth-child(2) .o_data_cell");
+        assert.containsOnce(
+            target,
+            ".o_data_row:nth-child(1) .o_field_color_picker button",
+            "color picker list is no longer open on the first row"
+        );
+        assert.containsN(
+            target,
+            ".o_data_row:nth-child(2) .o_field_color_picker button",
+            12,
+            "color picker list is open when the row is in edition"
+        );
+    });
 
     QUnit.test("column widths: dont overflow color picker in list", async function (assert) {
         serverData.models.partner.fields.date_field = {

@@ -5,20 +5,13 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { DateTimePicker, DatePicker } from "@web/core/datepicker/datepicker";
 import { Domain } from "@web/core/domain";
-import {
-    Many2XAutocomplete,
-    useOpenMany2XRecord,
-} from "@web/views/fields/relational_utils";
+import { Many2XAutocomplete, useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { useService } from "@web/core/utils/hooks";
 import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
 import { m2oTupleFromData } from "@web/views/fields/many2one/many2one_field";
 import { PropertyTags } from "./property_tags";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import {
-    formatFloat,
-    formatInteger,
-    formatMany2one,
-} from "@web/views/fields/formatters";
+import { formatFloat, formatInteger, formatMany2one } from "@web/views/fields/formatters";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 
 const { Component } = owl;
@@ -63,9 +56,7 @@ export class PropertyValue extends Component {
                 // maybe the record display name has changed
                 await record.load();
                 const recordData = m2oTupleFromData(record.data);
-                await this.onValueChange([
-                    { id: recordData[0], name: recordData[1] },
-                ]);
+                await this.onValueChange([{ id: recordData[0], name: recordData[1] }]);
             },
             fieldString: this.props.string,
         });
@@ -125,13 +116,9 @@ export class PropertyValue extends Component {
                     id: many2manyValue[0],
                     text: many2manyValue[1],
                     onClick: async () =>
-                        await this._openRecord(
-                            this.props.comodel,
-                            many2manyValue[0]
-                        ),
+                        await this._openRecord(this.props.comodel, many2manyValue[0]),
                     onDelete:
-                        !this.props.readonly &&
-                        (() => this.onMany2manyDelete(many2manyValue[0])),
+                        !this.props.readonly && (() => this.onMany2manyDelete(many2manyValue[0])),
                     colorIndex: 0,
                 };
             });
@@ -171,9 +158,7 @@ export class PropertyValue extends Component {
         } else if (this.props.type === "date" && value) {
             return formatDate(value);
         } else if (this.props.type === "selection") {
-            return this.props.selection.find(
-                (option) => option[0] === value
-            )[1];
+            return this.props.selection.find((option) => option[0] === value)[1];
         } else if (this.props.type === "float") {
             return formatFloat(value);
         } else if (this.props.type === "integer") {
@@ -196,9 +181,7 @@ export class PropertyValue extends Component {
             if (typeof newValue === "string") {
                 newValue = DateTime.fromISO(newValue);
             }
-            newValue = newValue
-                .toUTC()
-                .toFormat(DEFAULT_SERVER_DATETIME_FORMAT);
+            newValue = newValue.toUTC().toFormat(DEFAULT_SERVER_DATETIME_FORMAT);
         } else if (this.props.type === "date") {
             if (typeof newValue === "string") {
                 newValue = DateTime.fromISO(newValue);
@@ -270,9 +253,7 @@ export class PropertyValue extends Component {
     onMany2manyDelete(many2manyId) {
         // deep copy
         const currentValue = JSON.parse(JSON.stringify(this.props.value || []));
-        const newValue = currentValue.filter(
-            (value) => value[0] !== many2manyId
-        );
+        const newValue = currentValue.filter((value) => value[0] !== many2manyId);
         this.props.onChange(newValue);
     }
 
@@ -287,12 +268,9 @@ export class PropertyValue extends Component {
             this.onValueChange(false);
             return;
         }
-        const result = await this.orm.call(
-            this.props.comodel,
-            "name_create",
-            [name],
-            { context: this.props.context }
-        );
+        const result = await this.orm.call(this.props.comodel, "name_create", [name], {
+            context: this.props.context,
+        });
         this.onValueChange([{ id: result[0], name: result[1] }]);
     }
 
@@ -307,12 +285,9 @@ export class PropertyValue extends Component {
      * @param {integer} recordId
      */
     async _openRecord(recordModel, recordId) {
-        const action = await this.orm.call(
-            recordModel,
-            "get_formview_action",
-            [[recordId]],
-            { context: this.props.context }
-        );
+        const action = await this.orm.call(recordModel, "get_formview_action", [[recordId]], {
+            context: this.props.context,
+        });
 
         this.action.doAction(action);
     }
@@ -325,12 +300,9 @@ export class PropertyValue extends Component {
      * @returns {array} [record id, record name]
      */
     async _nameGet(recordId) {
-        const result = await this.orm.call(
-            this.props.comodel,
-            "name_get",
-            [[recordId]],
-            { context: this.props.context }
-        );
+        const result = await this.orm.call(this.props.comodel, "name_get", [[recordId]], {
+            context: this.props.context,
+        });
         return result[0];
     }
 }

@@ -15,7 +15,7 @@ const { useRef, useEffect } = owl;
 export function useNumpadDecimal() {
     const decimalPoint = localization.decimalPoint;
     const listeners = [];
-    let ref = useRef("numpadDecimal");
+    const ref = useRef("numpadDecimal");
     const handler = (ev) => {
         if (
             !([".", ","].includes(ev.key) && ev.code === "NumpadDecimal") ||

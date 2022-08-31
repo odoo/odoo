@@ -95,7 +95,7 @@ export class JournalDashboardGraphField extends Component {
         this.data[0].values.forEach(function (pt) {
             data.push(pt.value);
             labels.push(pt.label);
-            let color =
+            const color =
                 pt.type === "past" ? "#ccbdc8" : pt.type === "future" ? "#a5d8d7" : "#ebebeb";
             backgroundColor.push(color);
         });

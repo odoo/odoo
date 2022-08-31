@@ -14,7 +14,7 @@ const COOKIE_TTL = 24 * 60 * 60 * 365;
 function parseCookieString(str) {
     const cookie = {};
     const parts = str.split("; ");
-    for (let part of parts) {
+    for (const part of parts) {
         const [key, value] = part.split("=");
         cookie[key] = value || "";
     }
