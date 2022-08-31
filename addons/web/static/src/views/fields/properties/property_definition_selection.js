@@ -14,17 +14,14 @@ export class PropertyDefinitionSelection extends Component {
         // the new value in the props
         this.state = useState({ newOption: null });
 
-        this.propertyDefinitionSelectionRef = useRef(
-            "propertyDefinitionSelection"
-        );
+        this.propertyDefinitionSelectionRef = useRef("propertyDefinitionSelection");
         this.addButtonRef = useRef("addButton");
 
         useEffect(() => {
             // automatically give the focus to the new option if it is empty
-            const inputs =
-                this.propertyDefinitionSelectionRef.el.querySelectorAll(
-                    ".o_field_property_selection_option input"
-                );
+            const inputs = this.propertyDefinitionSelectionRef.el.querySelectorAll(
+                ".o_field_property_selection_option input"
+            );
             if (inputs && inputs.length && !inputs[inputs.length - 1].value) {
                 inputs[inputs.length - 1].focus();
             }
@@ -54,9 +51,7 @@ export class PropertyDefinitionSelection extends Component {
      */
     get optionsVisible() {
         const options = this.options || [];
-        return this.state.newOption
-            ? [...options, this.state.newOption]
-            : options;
+        return this.state.newOption ? [...options, this.state.newOption] : options;
     }
 
     /* --------------------------------------------------------
@@ -80,10 +75,7 @@ export class PropertyDefinitionSelection extends Component {
         const target = event.target;
         const newLabel = target.value;
 
-        if (
-            this.options[optionIndex] &&
-            this.options[optionIndex][1] === newLabel
-        ) {
+        if (this.options[optionIndex] && this.options[optionIndex][1] === newLabel) {
             // do not update the props if we are already up to date
             // e.g. we pressed enter already and lost focus
             return;
@@ -98,16 +90,10 @@ export class PropertyDefinitionSelection extends Component {
             options[optionIndex][1] = newLabel;
         }
 
-        const nonEmptyOptions = options.filter(
-            (option) => option[1] && option[1].length
-        );
+        const nonEmptyOptions = options.filter((option) => option[1] && option[1].length);
         this.props.onOptionsChange(nonEmptyOptions);
 
-        if (
-            this.state.newOption &&
-            this.state.newOption[1] &&
-            this.state.newOption[1].length
-        ) {
+        if (this.state.newOption && this.state.newOption[1] && this.state.newOption[1].length) {
             // the new option has been propagated in the props
             this.state.newOption = null;
         }
@@ -168,10 +154,7 @@ export class PropertyDefinitionSelection extends Component {
                     .closest(".o_field_property_selection_option")
                     .previousElementSibling.querySelector("input");
                 previousInput.focus();
-            } else if (
-                event.key === "ArrowDown" &&
-                optionIndex < this.optionsVisible.length - 1
-            ) {
+            } else if (event.key === "ArrowDown" && optionIndex < this.optionsVisible.length - 1) {
                 const nextInput = event.target
                     .closest(".o_field_property_selection_option")
                     .nextElementSibling.querySelector("input");
@@ -190,9 +173,7 @@ export class PropertyDefinitionSelection extends Component {
             return;
         }
         const newValue = this.optionsVisible[optionIndex][0];
-        this.props.onDefaultOptionChange(
-            newValue !== this.props.default ? newValue : false
-        );
+        this.props.onDefaultOptionChange(newValue !== this.props.default ? newValue : false);
     }
 
     /**

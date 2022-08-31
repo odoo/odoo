@@ -88,7 +88,7 @@ export const errorService = {
                 }
                 return;
             }
-            for (let handler of registry.category("error_handlers").getAll()) {
+            for (const handler of registry.category("error_handlers").getAll()) {
                 if (handler(env, error, originalError)) {
                     break;
                 }

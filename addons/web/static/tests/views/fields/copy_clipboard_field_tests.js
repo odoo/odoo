@@ -45,12 +45,16 @@ QUnit.module("Fields", (hooks) => {
                 return {
                     add(el, comp, params) {
                         assert.strictEqual(el.textContent, "Copy", "button has the right text");
-                        assert.deepEqual(params, { tooltip: "Copied" }, "tooltip has the right parameters");
+                        assert.deepEqual(
+                            params,
+                            { tooltip: "Copied" },
+                            "tooltip has the right parameters"
+                        );
                         assert.step("copied tooltip");
-                    }
-                }
-            }
-        }
+                    },
+                };
+            },
+        };
         serviceRegistry.remove("popover");
         serviceRegistry.add("popover", fakePopoverService);
     });
@@ -151,7 +155,7 @@ QUnit.module("Fields", (hooks) => {
                         return Promise.resolve();
                     },
                 },
-            }
+            },
         });
 
         await makeView({

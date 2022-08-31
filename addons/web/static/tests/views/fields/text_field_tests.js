@@ -364,7 +364,8 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelectorAll(".o_notebook .nav .nav-link")[2]);
         assert.hasClass(target.querySelectorAll(".o_notebook .nav .nav-link")[2], "active");
 
-        height = target.querySelector(".o_field_widget[name=text_field_empty] textarea").offsetHeight;
+        height = target.querySelector(".o_field_widget[name=text_field_empty] textarea")
+            .offsetHeight;
         assert.strictEqual(height, 50, "empty textarea should have height of 50px");
     });
 

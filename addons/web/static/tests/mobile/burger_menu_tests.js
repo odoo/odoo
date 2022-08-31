@@ -124,7 +124,7 @@ QUnit.test("Burger menu closes when an action is requested", async (assert) => {
 });
 
 QUnit.test("Burger menu closes when click on menu item", async (assert) => {
-    serverData.actions[1].target = 'new';
+    serverData.actions[1].target = "new";
     serverData.menus[1].children = [99];
     serverData.menus[99] = {
         id: 99,

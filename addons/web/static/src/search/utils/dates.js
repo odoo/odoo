@@ -215,8 +215,8 @@ export function constructDateRange(params) {
         .plus(plusParam || {})
         .setZone("utc", { keepLocalTime: true });
     // compute domain
-    let leftDate = date.startOf(granularity);
-    let rightDate = date.endOf(granularity);
+    const leftDate = date.startOf(granularity);
+    const rightDate = date.endOf(granularity);
     let leftBound;
     let rightBound;
     if (fieldType === "date") {
@@ -258,7 +258,7 @@ export function getComparisonParams(referenceMoment, selectedOptionIds, comparis
     if (comparisonOption.plusParam) {
         return [comparisonOption.plusParam, selectedOptions];
     }
-    let plusParam = {};
+    const plusParam = {};
     let globalGranularity = "year";
     if (selectedOptions.month) {
         globalGranularity = "month";
@@ -335,11 +335,12 @@ export function getPeriodOptions(referenceMoment) {
                 defaultYear = referenceMoment.set(option.setParam).year;
                 break;
             case "month":
-            case "year":
+            case "year": {
                 const date = referenceMoment.plus(option.plusParam);
                 description = date.toFormat(option.format);
                 defaultYear = date.year;
                 break;
+            }
         }
         const setParam = getSetParam(option, referenceMoment);
         options.push({ id, groupNumber, description, defaultYear, setParam });

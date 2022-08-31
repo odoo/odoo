@@ -49,7 +49,7 @@ export class DomainSelectorLeafNode extends Component {
         return registry.category("domain_selector/fields").get(type, null);
     }
     getOperatorInfo(operator) {
-        let op = this.getFieldComponent(this.fieldInfo.type)
+        const op = this.getFieldComponent(this.fieldInfo.type)
             .getOperators()
             .find((op) =>
                 op.matches({
