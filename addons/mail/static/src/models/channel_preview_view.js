@@ -6,7 +6,7 @@ import { clear } from '@mail/model/model_field_command';
 import { htmlToTextContentInline } from '@mail/js/utils';
 
 registerModel({
-    name: 'ThreadPreviewView',
+    name: 'ChannelPreviewView',
     recordMethods: {
         /**
          * @param {MouseEvent} ev
@@ -34,11 +34,20 @@ registerModel({
             }
         },
         /**
+         * @returns {string}
+         */
+        _computeImageUrl() {
+            if (this.channel.correspondent) {
+                return this.channel.correspondent.avatarUrl;
+            }
+            return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
+        },
+        /**
          * @private
          * @returns {string|FieldCommand}
          */
         _computeInlineLastMessageBody() {
-            if (!this.thread.lastMessage) {
+            if (!this.thread || !this.thread.lastMessage) {
                 return clear();
             }
             return htmlToTextContentInline(this.thread.lastMessage.prettyBody);
@@ -52,20 +61,21 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand}
+         * @returns {TrackingValue|FieldCommand}
          */
         _computeLastTrackingValue() {
-            if (this.thread.lastMessage && this.thread.lastMessage.lastTrackingValue) {
+            if (this.thread && this.thread.lastMessage && this.thread.lastMessage.lastTrackingValue) {
                 return this.thread.lastMessage.lastTrackingValue;
             }
             return clear();
         },
         /**
          * @private
-         * @returns {FieldCommand}
+         * @returns {Object|FieldCommand}
          */
         _computeMessageAuthorPrefixView() {
             if (
+                this.thread &&
                 this.thread.lastMessage &&
                 this.thread.lastMessage.author
             ) {
@@ -78,16 +88,23 @@ registerModel({
          * @returns {Object|FieldCommand}
          */
         _computePersonaImStatusIconView() {
-            if (!this.thread.channel.correspondent) {
+            if (!this.channel.correspondent) {
                 return clear();
             }
-            if (this.thread.channel.correspondent.isImStatusSet) {
+            if (this.channel.correspondent.isImStatusSet) {
                 return {};
             }
             return clear();
         },
     },
     fields: {
+        channel: one('Channel', {
+            identifying: true,
+            inverse: 'channelPreviewViews',
+        }),
+        imageUrl: attr({
+            compute: '_computeImageUrl',
+        }),
         inlineLastMessageBody: attr({
             compute: '_computeInlineLastMessageBody',
             default: "",
@@ -105,21 +122,20 @@ registerModel({
         markAsReadRef: attr(),
         messageAuthorPrefixView: one('MessageAuthorPrefixView', {
             compute: '_computeMessageAuthorPrefixView',
-            inverse: 'threadPreviewViewOwner',
+            inverse: 'channelPreviewViewOwner',
             isCausal: true,
         }),
         notificationListViewOwner: one('NotificationListView', {
             identifying: true,
-            inverse: 'threadPreviewViews',
+            inverse: 'channelPreviewViews',
         }),
         personaImStatusIconView: one('PersonaImStatusIconView', {
             compute: '_computePersonaImStatusIconView',
-            inverse: 'threadPreviewViewOwner',
+            inverse: 'channelPreviewViewOwner',
             isCausal: true,
         }),
         thread: one('Thread', {
-            identifying: true,
-            inverse: 'threadPreviewViews',
+            related: 'channel.thread',
         }),
     },
 });

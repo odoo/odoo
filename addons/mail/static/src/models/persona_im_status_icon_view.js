@@ -19,6 +19,9 @@ registerModel({
             if (this.channelMemberViewOwner) {
                 return this.channelMemberViewOwner.channelMember.persona;
             }
+            if (this.channelPreviewViewOwner) {
+                return this.channelPreviewViewOwner.channel.correspondent.persona;
+            }
             if (this.composerSuggestionViewOwner) {
                 return this.composerSuggestionViewOwner.suggestable.partner.persona;
             }
@@ -36,9 +39,6 @@ registerModel({
             if (this.threadNeedactionPreviewViewOwner) {
                 return this.threadNeedactionPreviewViewOwner.thread.channel.correspondent.persona;
             }
-            if (this.threadPreviewViewOwner) {
-                return this.threadPreviewViewOwner.thread.channel.correspondent.persona;
-            }
             return clear();
         },
     },
@@ -48,6 +48,10 @@ registerModel({
             inverse: 'personaImStatusIconView',
         }),
         channelMemberViewOwner: one('ChannelMemberView', {
+            identifying: true,
+            inverse: 'personaImStatusIconView',
+        }),
+        channelPreviewViewOwner: one('ChannelPreviewView', {
             identifying: true,
             inverse: 'personaImStatusIconView',
         }),
@@ -63,17 +67,13 @@ registerModel({
             identifying: true,
             inverse: 'personaImStatusIconView',
         }),
-        threadNeedactionPreviewViewOwner: one('ThreadNeedactionPreviewView', {
-            identifying: true,
-            inverse: 'personaImStatusIconView',
-        }),
-        threadPreviewViewOwner: one('ThreadPreviewView', {
-            identifying: true,
-            inverse: 'personaImStatusIconView',
-        }),
         persona: one('Persona', {
             compute: '_computePersona',
             required: true,
+        }),
+        threadNeedactionPreviewViewOwner: one('ThreadNeedactionPreviewView', {
+            identifying: true,
+            inverse: 'personaImStatusIconView',
         }),
     },
 });

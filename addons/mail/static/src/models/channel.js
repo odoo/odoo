@@ -224,6 +224,10 @@ registerModel({
             inverse: 'channel',
             isCausal: true,
         }),
+        channelPreviewViews: many('ChannelPreviewView', {
+            inverse: 'channel',
+            isCausal: true,
+        }),
         channel_type: attr(),
         correspondent: one('Partner', {
             compute: '_computeCorrespondent',

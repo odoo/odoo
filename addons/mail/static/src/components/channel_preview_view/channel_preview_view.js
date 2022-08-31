@@ -5,7 +5,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
 
-export class ThreadPreview extends Component {
+export class ChannelPreviewView extends Component {
 
     /**
      * @override
@@ -15,37 +15,18 @@ export class ThreadPreview extends Component {
         useRefToModel({ fieldName: 'markAsReadRef', refName: 'markAsRead' });
     }
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
-     * Get the image route of the thread.
-     *
-     * @returns {string}
+     * @returns {ChannelPreviewView}
      */
-    image() {
-        if (!this.threadPreviewView.thread.channel) {
-            return '/mail/static/src/img/smiley/avatar.jpg';
-        }
-        if (this.threadPreviewView.thread.channel.correspondent) {
-            return this.threadPreviewView.thread.channel.correspondent.avatarUrl;
-        }
-        return `/web/image/mail.channel/${this.threadPreviewView.thread.id}/avatar_128?unique=${this.threadPreviewView.thread.channel.avatarCacheKey}`;
-    }
-
-    /**
-     * @returns {ThreadPreviewView}
-     */
-    get threadPreviewView() {
+    get channelPreviewView() {
         return this.props.record;
     }
 
 }
 
-Object.assign(ThreadPreview, {
+Object.assign(ChannelPreviewView, {
     props: { record: Object },
-    template: 'mail.ThreadPreview',
+    template: 'mail.ChannelPreviewView',
 });
 
-registerMessagingComponent(ThreadPreview);
+registerMessagingComponent(ChannelPreviewView);
