@@ -11,10 +11,10 @@
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2019
 # Pedro Filipe <pedro2.10@hotmail.com>, 2019
 # Manuela Silva <mmsrs@sky.com>, 2020
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
 # Diogo Duarte <diogocarvalhoduarte@gmail.com>, 2020
 # Nuno Silva <nuno.silva@arxi.pt>, 2021
 # Luiz Fernando <lfpsgs@outlook.com>, 2022
+# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Luiz Fernando <lfpsgs@outlook.com>, 2022\n"
+"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2140,6 +2140,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Estados baseados nas atividades\n"
+"Vencida: Ultrapassada a data planeada\n"
+"Hoje: Data da atividade é a de hoje\n"
+"Planeada: Atividades futuras."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_1
@@ -2777,6 +2781,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
 msgstr ""
 
 #. module: product
