@@ -905,12 +905,8 @@ class PropertiesCase(TransactionCase):
             # so the value in cache is not verified (see models.py@_read)
             self.message_1.attributes
 
-        expected = [
-            'SELECT "test_new_api_emailmessage".id FROM "test_new_api_emailmessage" WHERE ("test_new_api_emailmessage"."message" in %s) ORDER BY  "test_new_api_emailmessage"."id"',
-            'UPDATE "test_new_api_message" SET "attributes" = %s, "write_date" = %s, "write_uid" = %s WHERE id IN %s',
-        ]
-
-        with self.assertQueryCount(2), self.assertQueries(expected):
+        expected = ['UPDATE "test_new_api_message" SET "attributes" = %s, "write_date" = %s, "write_uid" = %s WHERE id IN %s']
+        with self.assertQueryCount(1), self.assertQueries(expected):
             self.message_1.attributes = [
                 {
                     "name": "discussion_color_code",

@@ -132,15 +132,33 @@ def fix_import_export_id_paths(fieldname):
     fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
     return fixed_external_id.split('/')
 
-def trigger_tree_merge(node1, node2):
-    """ Merge two trigger trees. """
-    for key, val in node2.items():
-        if key is None:
-            node1.setdefault(None, OrderedSet())
-            node1[None].update(val)
-        else:
-            node1.setdefault(key, {})
-            trigger_tree_merge(node1[key], node2[key])
+def merge_trigger_trees(trees: list, select=bool) -> dict:
+    """ Merge trigger trees list into a final tree. The function ``select`` is
+    called on every field to determine which fields should be kept in the tree
+    nodes. This enables to discard some fields from the tree nodes.
+    """
+    result_tree = {}                        # the resulting tree
+    root_fields = OrderedSet()              # the fields in the root node
+    subtrees_to_merge = defaultdict(list)   # the subtrees to merge grouped by key
+
+    for tree in trees:
+        for key, val in tree.items():
+            if key is None:
+                root_fields.update(val)
+            else:
+                subtrees_to_merge[key].append(val)
+
+    # the root node contains the collected fields for which select is true
+    root_node = [field for field in root_fields if select(field)]
+    if root_node:
+        result_tree[None] = root_node
+
+    for key, subtrees in subtrees_to_merge.items():
+        subtree = merge_trigger_trees(subtrees, select)
+        if subtree:
+            result_tree[key] = subtree
+
+    return result_tree
 
 
 class MetaModel(api.Meta):
@@ -6260,15 +6278,26 @@ class BaseModel(metaclass=MetaModel):
         #  - mark H to recompute on inverse(X, records),
         #  - mark I to recompute on inverse(W, inverse(X, records)),
         #  - mark J to recompute on inverse(Y, records).
-        if len(fnames) == 1:
-            tree = self.pool.field_triggers.get(self._fields[next(iter(fnames))])
-        else:
-            # merge dependency trees to evaluate all triggers at once
-            tree = {}
-            for fname in fnames:
-                node = self.pool.field_triggers.get(self._fields[fname])
-                if node:
-                    trigger_tree_merge(tree, node)
+        fields = [self._fields[fname] for fname in fnames]
+        field_triggers = self.pool.field_triggers
+        trees = [field_triggers[field] for field in fields if field in field_triggers]
+
+        if not trees:
+            return
+
+        cache = self.env.cache
+
+        # Merge dependency trees to evaluate all triggers at once.
+        # For non-stored computed fields, `_modified_triggers` might traverse
+        # the tree (at the cost of extra queries) only to know which records to
+        # invalidate in cache. But in many cases, most of these fields have no
+        # data in cache, so they can be ignored from the start. This allows us
+        # to discard subtrees from the merged tree when they only contain such
+        # fields.
+        tree = merge_trigger_trees(
+            trees,
+            select=lambda field: (field.compute and field.store) or cache.contains_field(field),
+        )
 
         if tree:
             # determine what to compute (through an iterator)
