@@ -58,9 +58,6 @@ up a management by affair.
         'web.qunit_suite_tests': [
             'hr_timesheet/static/tests/**/*',
         ],
-        'web.assets_qweb': [
-            'hr_timesheet/static/src/**/*.xml',
-        ],
     },
     'license': 'LGPL-3',
 }
