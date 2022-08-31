@@ -21,7 +21,14 @@ import { session } from "@web/session";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { ListConfirmationDialog } from "@web/views/list/list_confirmation_dialog";
 import { Model } from "@web/views/model";
-import { archParseBoolean, evalDomain, isNumeric, isRelational, isX2Many } from "@web/views/utils";
+import {
+    archParseBoolean,
+    evalDomain,
+    isNumeric,
+    isRelational,
+    isX2Many,
+    orderByToString,
+} from "@web/views/utils";
 
 const { DateTime } = luxon;
 import { markRaw, markup, toRaw } from "@odoo/owl";
@@ -65,20 +72,6 @@ export function isAllowedDateField(groupByField) {
         ["date", "datetime"].includes(groupByField.type) &&
         archParseBoolean(groupByField.rawAttrs.allow_group_range_value)
     );
-}
-
-/**
- * @typedef {Object} OrderTerm ?
- * @property {string} name
- * @property {boolean} asc
- */
-
-/**
- * @param {OrderTerm[]} orderBy
- * @returns {string}
- */
-function orderByToString(orderBy) {
-    return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
 }
 
 /**

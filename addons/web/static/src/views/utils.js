@@ -242,6 +242,20 @@ export function processMeasure(measure) {
 }
 
 /**
+ * @typedef {Object} OrderTerm ?
+ * @property {string} name
+ * @property {boolean} asc
+ */
+
+/**
+ * @param {OrderTerm[]} orderBy
+ * @returns {string}
+ */
+export function orderByToString(orderBy) {
+    return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
+}
+
+/**
  * @param {any} string
  * @return {OrderTerm[]}
  */
