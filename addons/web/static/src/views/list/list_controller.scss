@@ -275,7 +275,9 @@
                 background-color: white;
             }
             > .o_field_widget:not(.o_readonly_modifier):not(.o_invisible_modifier) {
-                width: 100%;
+                &, > * {
+                    width: 100%;
+                }
                 .o_input {
                     border: none;
                     padding: 0;
