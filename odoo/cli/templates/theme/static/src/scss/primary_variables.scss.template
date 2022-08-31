@@ -1,5 +1,4 @@
-// WEBSITE BUILDER
-// https://github.com/odoo/odoo/blob/15.0/addons/website/static/src/scss/primary_variables.scss#L1950
+// OPTIONS
 
 $o-website-values-palettes: (
     (
@@ -19,7 +18,6 @@ $o-website-values-palettes: (
 
 
 // FONTS
-// https://github.com/odoo/odoo/blob/15.0/addons/website/static/src/scss/primary_variables.scss#L2044
 
 $o-theme-font-configs: (
     'Source Sans Pro': (
@@ -35,8 +33,6 @@ $o-theme-font-configs: (
 
 
 // COLORS
-// https://github.com/odoo/odoo/blob/15.0/addons/web_editor/static/src/scss/web_editor.variables.scss#L541
-// https://github.com/odoo/odoo/blob/15.0/addons/website/static/src/scss/primary_variables.scss#L2
 
 $o-color-palettes: map-merge($o-color-palettes,
     (
@@ -55,17 +51,3 @@ $o-color-palettes: map-merge($o-color-palettes,
 );
 
 $o-selected-color-palettes-names: append($o-selected-color-palettes-names, '{{name}}');
-
-
-// Shapes
-
-// $o-bg-shapes: map-merge($o-bg-shapes,
-//     (
-//         'illustration': map-merge(
-//             map-get($o-bg-shapes, 'illustration') or (),
-//             (
-//                 'category/01': ('position': center center, 'size': auto 100%, 'colors': (1), 'repeat-y': false),
-//             ),
-//         ),
-//     )
-// );

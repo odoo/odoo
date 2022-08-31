@@ -2,16 +2,15 @@
 <odoo>
 
 <!-- Remove default menu items -->
-<delete model="theme.website.menu" search="[('url','in', ['/', '/'])]"/>
-<delete model="theme.website.menu" search="[('url','in', ['/', '/contactus'])]"/>
+<!-- <delete model="theme.website.menu" search="[('url','in', ['/', '/'])]"/> -->
 
 <!-- Add menu item -->
-<record id="menu_demo" model="theme.website.menu">
+<!-- <record id="menu_demo" model="theme.website.menu">
     <field name="name">Demo</field>
     <field name="url">/demo</field>
     <field name="parent_id" ref="website.main_menu"/>
     <field name="sequence" type="int">10</field>
-</record>
+</record> -->
 
 <!-- Add dropdown menu -->
 <!-- <record id="menu_services" model="theme.website.menu">
@@ -26,20 +25,6 @@
     <field name="url">/services/item-01</field>
     <field name="parent_id" ref="{{name}}.menu_services"/>
     <field name="sequence" type="int">21</field>
-</record> -->
-
-<!-- Add mega menu and its content -->
-<!-- <record id="menu_mega_menu" model="website.menu">
-    <field name="name">Mega Menu</field>
-    <field name="url">/mega-menu</field>
-    <field name="is_mega_menu">true</field>
-    <field name="parent_id" ref="website.main_menu"/>
-    <field name="sequence" type="int">30</field>
-    <field name="mega_menu_content">
-        <![CDATA[
-            ...
-        ]]>
-    </field>
 </record> -->
 
 </odoo>

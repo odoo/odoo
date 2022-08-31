@@ -1,4 +1,4 @@
-.s_demo {
+.s_snippet_demo {
 
     .card {
         // Filter
@@ -14,24 +14,24 @@
         // Overlay
         .card-img-overlay {
             z-index: 2;
-            &.s_demo_img_overlay_top {
+            &.s_snippet_demo_img_overlay_top {
                 bottom: auto;
             }
-            &.s_demo_img_overlay_center {
+            &.s_snippet_demo_img_overlay_center {
                 top: 50%;
                 bottom: auto;
                 transform: translateY(-50%);
             }
-            &.s_demo_img_overlay_bottom {
+            &.s_snippet_demo_img_overlay_bottom {
                 top: auto;
             }
         }
     }
 
     // Layout
-    &.s_demo_square,
-    &.s_demo_portrait,
-    &.s_demo_landscape {
+    &.s_snippet_demo_square,
+    &.s_snippet_demo_portrait,
+    &.s_snippet_demo_landscape {
         .card::before {
             content: '';
             display: block;
@@ -41,15 +41,15 @@
         }
     }
 
-    &.s_demo_landscape {
+    &.s_snippet_demo_landscape {
         .card::before { padding-top: 50%; }
     }
 
-    &.s_demo_square {
+    &.s_snippet_demo_square {
         .card::before { padding-top: 100%; }
     }
 
-    &.s_demo_portrait {
+    &.s_snippet_demo_portrait {
         .card::before { padding-top: 150%; }
     }
 
@@ -57,11 +57,11 @@
 
 // Edit mode
 :not(.editor_enable) {
-    .s_demo {
+    .s_snippet_demo {
         .card-img-overlay {
             pointer-events: none;
         }
-        .s_demo_link {
+        .s_snippet_demo_link {
             &::after {
                 content: '';
                 @include o-position-absolute(0, 0, 0, 0);
