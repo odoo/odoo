@@ -1,6 +1,7 @@
 /** @odoo-module */
 import AbstractService from 'web.AbstractService';
 import core from 'web.core';
+import { registry } from "@web/core/registry";
 
 /**
  * Configuration depending on the granularity:
@@ -261,11 +262,8 @@ class FillTemporalPeriod {
  * A specific fill_temporal period configuration will always refer to the same instance
  * unless forceRecompute is true
  */
- const FillTemporalService = AbstractService.extend({
-    /**
-     * @override
-     */
-    start() {
+export const FillTemporalService = {
+    start(env) {
         this._super.apply(...arguments);
         this._fillTemporalPeriods = {};
     },
@@ -311,8 +309,6 @@ class FillTemporalPeriod {
         }
         return this._fillTemporalPeriods[modelName][field.name][granularity];
     }
-});
+};
 
-core.serviceRegistry.add('fillTemporalService', FillTemporalService);
-
-export default FillTemporalService;
+registry.category("services").add("fillTemporalService", FillTemporalService);

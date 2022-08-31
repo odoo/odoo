@@ -1,5 +1,6 @@
 /** @odoo-module */
-import FillTemporalService from '../src/js/forecast/fill_temporal_service';
+
+import { FillTemporalService } from '@crm/js/forecast/fill_temporal_service';
 import { ForecastKanbanView } from '../src/js/forecast/forecast_views';
 import testUtils from 'web.test_utils';
 import { mount, getFixture, patchWithCleanup, click, clickSave} from "@web/../tests/helpers/utils";
@@ -16,7 +17,6 @@ let unPatchDate;
 QUnit.module('Crm Forecast Model Extension', {
     async beforeEach() {
         unPatchDate = testUtils.mock.patchDate(2021, 1, 10, 0, 0, 0);
-        target = getFixture();
         serverData = {
             views: {
                 "crm.lead,false,search": `
@@ -54,8 +54,8 @@ QUnit.module('Crm Forecast Model Extension', {
                     </t>
                 </templates>
             </kanban>`;
-/*            services: { 'fillTemporalService': FillTemporalService },*/
         serviceRegistry.add("fillTemporalService", FillTemporalService);
+        target = getFixture();
         setupViewRegistries();
     },
     async afterEach() {
@@ -104,18 +104,17 @@ QUnit.module('Crm Forecast Model Extension', {
         // same tests as for the date field
         assert.expect(7);
 
-        const context = {
-            search_default_forecast: true,
-            search_default_groupby_date_closed: true,
-            forecast_field: 'date_closed',
-        };
         const kanban = await makeView({
             type: "form",
             resModel: "crm.lead",
             serverData: serverData,
             arch: arch,
             groupBy: ['date_closed'],
-            context: viewOptions.context
+            context: {
+                search_default_forecast: true,
+                search_default_groupby_date_closed: true,
+                forecast_field: 'date_closed',
+            },
         });
 
         // with the filter
@@ -146,7 +145,6 @@ QUnit.module('Crm Fill Temporal Service', {
      */
     async beforeEach() {
         unPatchDate = testUtils.mock.patchDate(2021, 9, 10, 0, 0, 0);
-        target = getFixture();
         arch = `
             <kanban js_class="forecast_kanban">
                 <field name="date_deadline"/>
@@ -180,6 +178,9 @@ QUnit.module('Crm Fill Temporal Service', {
             search_default_groupby_date_deadline: true,
             forecast_field: 'date_deadline',
         };
+        serviceRegistry.add("fillTemporalService", FillTemporalService);
+        target = getFixture();
+        setupViewRegistries();
     },
     async afterEach() {
         unPatchDate();
@@ -193,34 +194,33 @@ QUnit.module('Crm Fill Temporal Service', {
     QUnit.test("Forecast on months, until the end of the year of the latest data", async function (assert) {
         assert.expect(3);
 
-        this.testKanbanView.data['crm.lead'].records = [
+        serverData.models['crm.lead'].records = [
             {id: 1, name: 'Lead 1', date_deadline: '2021-01-01'},
             {id: 2, name: 'Lead 2', date_deadline: '2021-02-01'},
             {id: 3, name: 'Lead 3', date_deadline: '2021-11-01'},
             {id: 4, name: 'Lead 4', date_deadline: '2022-01-01'},
         ];
-        this.testKanbanView.mockRPC = function (route, args) {
-            if (route === '/web/dataset/call_kw/crm.lead/web_read_group') {
-                assert.deepEqual(args.kwargs.context.fill_temporal, {
-                    fill_from: "2021-10-01",
-                    min_groups: 4,
-                });
-                assert.deepEqual(args.kwargs.domain, [
-                    "&", "|",
-                        ["date_deadline", "=", false], ["date_deadline", ">=", "2021-10-01"],
-                    "|",
-                        ["date_deadline", "=", false], ["date_deadline", "<", "2023-01-01"],
-                ]);
-            }
-            return this._super.apply(this, arguments);
-        };
         const kanban = await makeView({
             type: "form",
             resModel: "crm.lead",
             serverData: serverData,
             arch: arch,
             groupBy: ['date_deadline'],
-            context: this.context
+            context: this.context,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/crm.lead/web_read_group') {
+                    assert.deepEqual(args.kwargs.context.fill_temporal, {
+                        fill_from: "2021-10-01",
+                        min_groups: 4,
+                    });
+                    assert.deepEqual(args.kwargs.domain, [
+                        "&", "|",
+                            ["date_deadline", "=", false], ["date_deadline", ">=", "2021-10-01"],
+                        "|",
+                            ["date_deadline", "=", false], ["date_deadline", "<", "2023-01-01"],
+                    ]);
+                }
+            },
         });
         assert.strictEqual(kanban.call('fillTemporalService', 'getFillTemporalPeriod', {
             modelName: 'crm.lead',
@@ -240,38 +240,37 @@ QUnit.module('Crm Fill Temporal Service', {
     QUnit.test("Forecast on years, until the end of the year of the latest data", async function (assert) {
         assert.expect(3);
 
-        this.testKanbanView.data['crm.lead'].records = [
+        serverData.models['crm.lead'].records = [
             {id: 1, name: 'Lead 1', date_deadline: '2021-01-01'},
             {id: 2, name: 'Lead 2', date_deadline: '2022-02-01'},
             {id: 3, name: 'Lead 3', date_deadline: '2027-11-01'},
         ];
 
         serverData.views["crm.lead,false,search"] = 
-            this.testKanbanView.archs["crm.lead,false,search"].replace(
+            serverData.views["crm.lead,false,search"].replace(
                 "'date_deadline'", "'date_deadline:year'"
             );
-        this.testKanbanView.mockRPC = function (route, args) {
-            if (route === '/web/dataset/call_kw/crm.lead/web_read_group') {
-                assert.deepEqual(args.kwargs.context.fill_temporal, {
-                    fill_from: "2021-01-01",
-                    min_groups: 4,
-                });
-                assert.deepEqual(args.kwargs.domain, [
-                    "&", "|",
-                        ["date_deadline", "=", false], ["date_deadline", ">=", "2021-01-01"],
-                    "|",
-                        ["date_deadline", "=",  false], ["date_deadline", "<", "2025-01-01"],
-                ]);
-            }
-            return this._super.apply(this, arguments);
-        };
         const kanban = await makeView({
             type: "form",
             resModel: "crm.lead",
             serverData: serverData,
             arch: arch,
             groupBy: ['date_deadline:year'],
-            context: this.context
+            context: this.context,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/crm.lead/web_read_group') {
+                    assert.deepEqual(args.kwargs.context.fill_temporal, {
+                        fill_from: "2021-01-01",
+                        min_groups: 4,
+                    });
+                    assert.deepEqual(args.kwargs.domain, [
+                        "&", "|",
+                            ["date_deadline", "=", false], ["date_deadline", ">=", "2021-01-01"],
+                        "|",
+                            ["date_deadline", "=",  false], ["date_deadline", "<", "2025-01-01"],
+                    ]);
+                }
+            },
         });
         assert.strictEqual(kanban.call('fillTemporalService', 'getFillTemporalPeriod', {
             modelName: 'crm.lead',
