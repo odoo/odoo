@@ -360,9 +360,9 @@ class StockMove(models.Model):
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
                 valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
-            unit_cost = abs(move._get_price_unit())  # May be negative (i.e. decrease an out move).
-            if move.product_id.cost_method == 'standard':
-                unit_cost = move.product_id.standard_price
+            unit_cost = move.product_id.standard_price
+            if move.product_id.cost_method != 'standard':
+                unit_cost = abs(move._get_price_unit())  # May be negative (i.e. decrease an out move).
             svl_vals = move.product_id._prepare_in_svl_vals(forced_quantity or valued_quantity, unit_cost)
             svl_vals.update(move._prepare_common_svl_vals())
             if forced_quantity:
