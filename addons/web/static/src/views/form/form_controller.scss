@@ -174,7 +174,7 @@ $o-form-label-margin-right: 0px;
     }
 
     // No sheet
-    &.o_form_nosheet, .o_form_nosheet {
+    .o_form_nosheet {
         @include o-webclient-padding($top: $o-sheet-vpadding, $bottom: $o-sheet-vpadding);
 
         .o_form_statusbar {
@@ -638,7 +638,7 @@ $o-form-label-margin-right: 0px;
         display: none;  // Hide the handler on readonly fields
     }
 
-    &.oe_form_configuration {
+    .oe_form_configuration {
         .o_group .o_form_label {
             white-space: nowrap;
         }
@@ -646,7 +646,7 @@ $o-form-label-margin-right: 0px;
             margin-top: 32px !important;
         }
     }
-    &.o_company_document_layout {
+    .o_company_document_layout {
         .report_layout_container {
             display: inline-block;
             div {
