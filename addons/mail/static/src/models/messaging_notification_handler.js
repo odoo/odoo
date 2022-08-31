@@ -617,7 +617,7 @@ registerModel({
             if (!this.exists() || !chat || this.messaging.device.isSmall) {
                 return;
             }
-            this.messaging.chatWindowManager.openThread(chat);
+            this.messaging.chatWindowManager.openThread(chat.thread);
         },
         /**
          * @private
