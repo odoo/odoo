@@ -170,8 +170,8 @@
             <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-if="showGroupPager(group)">
                 <Pager t-props="getGroupPagerProps(group)"/>
             </th>
-            <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" class="o_list_number">
-                <t t-esc="formatAggregateValue(group, column)"/>
+            <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.id" t-att-class="{'o_list_number': column.type === 'field'}">
+                <t t-if="column.type === 'field'" t-esc="formatAggregateValue(group, column)"/>
             </td>
             <t t-set="groupPagerColspan" t-value="getGroupPagerCellColspan(group)"/>
             <th t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group)" t-if="groupPagerColspan > 0" t-att-colspan="groupPagerColspan"/>
