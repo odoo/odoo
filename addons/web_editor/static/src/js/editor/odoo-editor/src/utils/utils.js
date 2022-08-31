@@ -2180,6 +2180,14 @@ export function rgbToHex(rgb = '') {
     }
 }
 
+export function parseHTML(html) {
+    const fragment = document.createDocumentFragment();
+    const parser = new DOMParser();
+    const parsedDocument = parser.parseFromString(html, 'text/html');
+    fragment.replaceChildren(...parsedDocument.body.childNodes);
+    return fragment;
+}
+
 /**
  * Take a string containing a size in pixels, return that size as a float.
  *
