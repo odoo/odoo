@@ -135,15 +135,33 @@ def fix_import_export_id_paths(fieldname):
     fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
     return fixed_external_id.split('/')
 
-def trigger_tree_merge(node1, node2):
-    """ Merge two trigger trees. """
-    for key, val in node2.items():
-        if key is None:
-            node1.setdefault(None, set())
-            node1[None].update(val)
-        else:
-            node1.setdefault(key, {})
-            trigger_tree_merge(node1[key], node2[key])
+def merge_trigger_trees(trees: list, select=bool) -> dict:
+    """ Merge trigger trees list into a final tree. The function ``select`` is
+    called on every field to determine which fields should be kept in the tree
+    nodes. This enables to discard some fields from the tree nodes.
+    """
+    result_tree = {}                        # the resulting tree
+    root_fields = OrderedSet()              # the fields in the root node
+    subtrees_to_merge = defaultdict(list)   # the subtrees to merge grouped by key
+
+    for tree in trees:
+        for key, val in tree.items():
+            if key is None:
+                root_fields.update(val)
+            else:
+                subtrees_to_merge[key].append(val)
+
+    # the root node contains the collected fields for which select is true
+    root_node = [field for field in root_fields if select(field)]
+    if root_node:
+        result_tree[None] = root_node
+
+    for key, subtrees in subtrees_to_merge.items():
+        subtree = merge_trigger_trees(subtrees, select)
+        if subtree:
+            result_tree[key] = subtree
+
+    return result_tree
 
 
 class MetaModel(api.Meta):
@@ -2024,7 +2042,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     def _read_group_prepare(self, orderby, aggregated_fields, annotated_groupbys, query):
         """
         Prepares the GROUP BY and ORDER BY terms for the read_group method. Adds the missing JOIN clause
-        to the query if order should be computed against m2o field. 
+        to the query if order should be computed against m2o field.
         :param orderby: the orderby definition in the form "%(field)s %(order)s"
         :param aggregated_fields: list of aggregated fields in the query
         :param annotated_groupbys: list of dictionaries returned by _read_group_process_groupby
@@ -2121,9 +2139,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return {
             'field': split[0],
             'groupby': gb,
-            'type': field_type, 
+            'type': field_type,
             'display_format': display_formats[gb_function or 'month'] if temporal else None,
-            'interval': time_intervals[gb_function or 'month'] if temporal else None,                
+            'interval': time_intervals[gb_function or 'month'] if temporal else None,
             'tz_convert': tz_convert,
             'qualified_field': qualified_field,
         }
@@ -2148,8 +2166,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     @api.model
     def _read_group_format_result(self, data, annotated_groupbys, groupby, domain):
         """
-            Helper method to format the data contained in the dictionary data by 
-            adding the domain corresponding to its values, the groupbys in the 
+            Helper method to format the data contained in the dictionary data by
+            adding the domain corresponding to its values, the groupbys in the
             context and by properly formatting the date/datetime values.
 
         :param data: a single group
@@ -2228,10 +2246,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 The possible aggregation functions are the ones provided by PostgreSQL
                 (https://www.postgresql.org/docs/current/static/functions-aggregate.html)
                 and 'count_distinct', with the expected meaning.
-        :param list groupby: list of groupby descriptions by which the records will be grouped.  
+        :param list groupby: list of groupby descriptions by which the records will be grouped.
                 A groupby description is either a field (then it will be grouped by that field)
                 or a string 'field:groupby_function'.  Right now, the only functions supported
-                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for 
+                are 'day', 'week', 'month', 'quarter' or 'year', and they only make sense for
                 date/datetime fields.
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
@@ -2239,7 +2257,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                              overriding the natural sort ordering of the
                              groups, see also :py:meth:`~osv.osv.osv.search`
                              (supported only for many2one fields currently)
-        :param bool lazy: if true, the results are only grouped by the first groupby and the 
+        :param bool lazy: if true, the results are only grouped by the first groupby and the
                 remaining groupbys are put in the __context key.  If false, all the groupbys are
                 done in one call.
         :return: list of dictionaries(one dictionary for each record) containing:
@@ -2398,7 +2416,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             # Right now, read_group only fill results in lazy mode (by default).
             # If you need to have the empty groups in 'eager' mode, then the
             # method _read_group_fill_results need to be completely reimplemented
-            # in a sane way 
+            # in a sane way
             result = self._read_group_fill_results(
                 domain, groupby_fields[0], groupby[len(annotated_groupbys):],
                 aggregated_fields, count_field, result, read_group_order=order,
@@ -3974,7 +3992,7 @@ Fields:
             # that this limit is well managed by PostgreSQL.
             # In INSERT queries, we inject integers (small) and larger data (TEXT blocks for
             # example).
-            # 
+            #
             # The problem then becomes: how to "estimate" the right size of the batch to have
             # good performance?
             #
@@ -5796,15 +5814,26 @@ Fields:
         #  - mark H to recompute on inverse(X, records),
         #  - mark I to recompute on inverse(W, inverse(X, records)),
         #  - mark J to recompute on inverse(Y, records).
-        if len(fnames) == 1:
-            tree = self.pool.field_triggers.get(self._fields[next(iter(fnames))])
-        else:
-            # merge dependency trees to evaluate all triggers at once
-            tree = {}
-            for fname in fnames:
-                node = self.pool.field_triggers.get(self._fields[fname])
-                if node:
-                    trigger_tree_merge(tree, node)
+        fields = [self._fields[fname] for fname in fnames]
+        field_triggers = self.pool.field_triggers
+        trees = [field_triggers[field] for field in fields if field in field_triggers]
+
+        if not trees:
+            return
+
+        cache = self.env.cache
+
+        # Merge dependency trees to evaluate all triggers at once.
+        # For non-stored computed fields, `_modified_triggers` might traverse
+        # the tree (at the cost of extra queries) only to know which records to
+        # invalidate in cache. But in many cases, most of these fields have no
+        # data in cache, so they can be ignored from the start. This allows us
+        # to discard subtrees from the merged tree when they only contain such
+        # fields.
+        tree = merge_trigger_trees(
+            trees,
+            select=lambda field: (field.compute and field.store) or cache.contains_field(field),
+        )
 
         if tree:
             # determine what to compute (through an iterator)
@@ -6386,7 +6415,7 @@ Fields:
         field_generators = self._populate_factories()
         if not field_generators:
             return self.browse() # maybe create an automatic generator?
-            
+
         records_batches = []
         generator = populate.chain_factories(field_generators, self._name)
         while record_count <= min_size or not complete:
