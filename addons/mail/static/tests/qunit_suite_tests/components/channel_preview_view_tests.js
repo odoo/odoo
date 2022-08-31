@@ -4,7 +4,7 @@ import { start, startServer } from '@mail/../tests/helpers/test_utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('thread_preview_tests.js');
+QUnit.module('channel_preview_view_tests.js');
 
 QUnit.test('mark as read', async function (assert) {
     assert.expect(6);
