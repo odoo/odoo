@@ -4153,13 +4153,23 @@ QUnit.module("Views", (hooks) => {
         assert.ok(longText > emptyText, "Long word should change the height of the cell");
     });
 
-    QUnit.test("deleting one record", async function (assert) {
+    QUnit.test("deleting one record and verify context key", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             actionMenus: {},
             arch: '<tree><field name="foo"/></tree>',
+            mockRPC(route, args) {
+                if (args.method === "unlink") {
+                    assert.step("unlink");
+                    const { context } = args.kwargs;
+                    assert.strictEqual(context.ctx_key, "ctx_val");
+                }
+            },
+            context: {
+                ctx_key: "ctx_val",
+            },
         });
 
         assert.containsNone(target, "div.o_control_panel .o_cp_action_menus");
@@ -4178,6 +4188,8 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(document, "body .modal footer button.btn-primary");
+
+        assert.verifySteps(["unlink"]);
 
         assert.containsN(target, "tbody td.o_list_record_selector", 3, "should have 3 records");
     });
