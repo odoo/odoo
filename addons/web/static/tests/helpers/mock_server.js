@@ -60,6 +60,7 @@ export class MockServer {
         this.menus = data.menus || null;
         this.archs = data.views || {};
         this.debug = options.debug || false;
+        this.strict = options.strict !== false;
         Object.entries(this.models).forEach(([modelName, model]) => {
             model.fields = {
                 id: { string: "ID", type: "integer" },
@@ -113,7 +114,7 @@ export class MockServer {
         }
         const result = await this._performRPC(route, args);
         // try {
-        //   const result = await this._performRPC(route, args);
+        //   result = await this._performRPC(route, args);
         // } catch {
         //   const message = result && result.message;
         //   const event = result && result.event;
@@ -564,6 +565,15 @@ export class MockServer {
         const model = this.models[modelName];
         const id = this.getUnusedID(modelName);
         const record = { id };
+        const missingFields =
+            this.strict &&
+            Object.entries(model.fields).filter(
+                ([fieldName, field]) => field.required && !(fieldName in values)
+            );
+        if (missingFields && missingFields.length) {
+            const fieldNames = missingFields.map(([fieldName]) => fieldName);
+            throw new Error(`Missing value for required fields: ${fieldNames.join(", ")}.`);
+        }
         model.records.push(record);
         this.applyDefaults(model, values, kwargs.context);
         this.writeRecord(modelName, values, id);
@@ -2208,11 +2218,12 @@ export class MockServer {
 // instance of `MockServer` linked to the current test.
 let mockServer;
 QUnit.testStart(() => (mockServer = undefined));
-export async function makeMockServer(serverData, mockRPC) {
+export async function makeMockServer(serverData, mockRPC, options) {
     serverData = serverData || {};
     if (!mockServer) {
         mockServer = new MockServer(serverData, {
             debug: QUnit.config.debug,
+            ...options,
         });
     } else {
         Object.assign(mockServer.archs, serverData.views);

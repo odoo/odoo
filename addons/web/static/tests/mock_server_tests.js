@@ -1121,6 +1121,36 @@ QUnit.module("MockServer", (hooks) => {
         }
     );
 
+    QUnit.test("performRPC: name_create", async (assert) => {
+        const server = new MockServer(data);
+        const result = await server.performRPC("", {
+            model: "bar",
+            method: "name_create",
+            args: ["abc"],
+            kwargs: {},
+        });
+
+        assert.ok(!isNaN(result[0]));
+        assert.strictEqual(result[1], "abc");
+    });
+
+    QUnit.test("performRPC: name_create with required field", async (assert) => {
+        data.models.bar.fields.foo.required = true;
+
+        const server = new MockServer(data);
+
+        try {
+            await server.performRPC("", {
+                model: "bar",
+                method: "name_create",
+                args: ["abc"],
+                kwargs: {},
+            });
+        } catch (err) {
+            assert.strictEqual(err.message, "Missing value for required fields: foo.");
+        }
+    });
+
     QUnit.test("many2one_ref should auto fill inverse field", async function (assert) {
         data.models.bar.records = [{ id: 1 }];
         data.models.foo.records = [

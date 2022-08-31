@@ -201,7 +201,7 @@ let pyEnv;
             },
          },
     );
-    pyEnv['mockServer'] = await makeMockServer({ actions, models, views });
+    pyEnv['mockServer'] = await makeMockServer({ actions, models, views }, null, { strict: false });
     pyEnv['mockServer'].pyEnv = pyEnv;
     registerCleanup(() => pyEnv = undefined);
     return pyEnv;
