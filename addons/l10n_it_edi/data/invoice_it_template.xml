@@ -161,9 +161,15 @@
                 <DatiRiepilogo>
                     <AliquotaIVA t-esc="format_numbers(tax.amount)"/>
                     <Natura t-if="has_exoneration" t-esc="kind_exoneration"/>
-                    <Arrotondamento t-if="tax_line['rounding']" t-esc="format_numbers(tax_line['rounding'])"/>
-                    <ImponibileImporto t-esc="format_monetary(tax_line['base_amount'], currency)"/>
-                    <Imposta t-esc="format_monetary(tax_line['tax_amount'], currency)"/>
+                    <Arrotondamento t-if="tax_line.get('rounding')" t-esc="format_numbers(-tax_line['rounding'])"/>
+                    <t t-if="rc_refund">
+                        <ImponibileImporto t-esc="format_monetary(balance_multiplicator * tax_line['base_amount'], currency)"/>
+                        <Imposta t-esc="format_monetary(balance_multiplicator * tax_line['tax_amount'], currency)"/>
+                    </t>
+                    <t t-else="">
+                        <ImponibileImporto t-esc="format_monetary(abs(tax_line['base_amount']), currency)"/>
+                        <Imposta t-esc="format_monetary(abs(tax_line['tax_amount']), currency)"/>
+                    </t>
                     <EsigibilitaIVA t-if="not has_exoneration or kind_exoneration == 'N6'" t-esc="tax.l10n_it_vat_due_date"/>
                     <RiferimentoNormativo t-if="has_exoneration" t-esc="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
                 </DatiRiepilogo>
