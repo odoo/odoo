@@ -127,12 +127,8 @@ function compileLabel(el, params) {
     // We don't know yet if the label refers to a field or not.
     if (res.textContent && res.tagName !== "FormLabel") {
         params.labels.push(res.textContent.trim());
-        //HighlightText
-        const highlight = createElement("HighlightText");
-        highlight.setAttribute("originalText", `\`${res.textContent}\``);
-        append(res, highlight);
         labelsWeak.set(res, { textContent: res.textContent });
-        res.firstChild.remove();
+        highlightElement(res);
     }
     return res;
 }
@@ -141,13 +137,23 @@ function compileGenericLabel(el, params) {
     const res = this.compileGenericNode(el, params);
     if (res.textContent) {
         params.labels.push(res.textContent.trim());
-        //HighlightText
-        const highlight = createElement("HighlightText");
-        highlight.setAttribute("originalText", `\`${res.textContent}\``);
-        append(res, highlight);
-        res.firstChild.remove();
+        highlightElement(res);
     }
     return res;
+}
+
+function highlightElement(el) {
+    for (const child of el.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) {
+            if (child.textContent.trim()) {
+                const highlight = createElement("HighlightText");
+                highlight.setAttribute("originalText", `\`${child.textContent}\``);
+                el.replaceChild(highlight, child);
+            }
+        } else if (child.childNodes.length) {
+            highlightElement(child);
+        }
+    }
 }
 
 function compileForm() {
