@@ -430,7 +430,7 @@ return AbstractRenderer.extend({
                     // Detect if the event occurs in just one day
                     // note: add & remove 1 min to avoid issues with 00:00
                     var isSameDayEvent = start.clone().add(1, 'minute').isSame(end.clone().subtract(1, 'minute'), 'day');
-                    if (!event.record.allday && isSameDayEvent) {
+                    if (!event.allDay && isSameDayEvent) {
                         element.addClass('o_cw_nobg');
                     }
                 }
@@ -686,7 +686,7 @@ return AbstractRenderer.extend({
         var isSameDayEvent = start.clone().add(1, 'minute').isSame(end.clone().subtract(1, 'minute'), 'day');
 
         // Do not display timing if the event occur across multiple days. Otherwise use user's timing preferences
-        if (!this.hideTime && !eventData.record.allday && isSameDayEvent) {
+        if (!this.hideTime && !eventData.allDay && isSameDayEvent) {
             // Fetch user's preferences
             var dbTimeFormat = _t.database.parameters.time_format.search('%H') != -1 ? 'HH:mm': 'hh:mm a';
 
@@ -705,9 +705,9 @@ return AbstractRenderer.extend({
         }
 
         if (!this.hideDate) {
-            if (eventData.record.allday && isSameDayEvent) {
+            if (eventData.allDay && isSameDayEvent) {
                 context.eventDate.duration = _t("All day");
-            } else if (eventData.record.allday && !isSameDayEvent) {
+            } else if (eventData.allDay && !isSameDayEvent) {
                 var daysLocaleData = moment.localeData();
                 var days = moment.duration(end.diff(start)).days();
                 context.eventDate.duration = daysLocaleData.relativeTime(days, true, 'dd');
