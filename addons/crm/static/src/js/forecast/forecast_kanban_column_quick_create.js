@@ -1,6 +1,9 @@
 /** @odoo-module */
-import Widget from 'web.Widget';
-import { _t } from 'web.core';
+
+import { useService } from "@web/core/utils/hooks";
+import { KanbanColumnQuickCreate } from "@web/views/kanban/kanban_column_quick_create";
+
+const { Component, useState } = owl;
 
 /**
  * Widget to handle events related to the Add button in
@@ -9,40 +12,42 @@ import { _t } from 'web.core';
  * FillTemporalService which will handle the covered fill_temporal period
  * to know which column to add.
  */
-const ForecastColumnQuickCreate = Widget.extend({
-    template: 'KanbanView.ForecastColumnQuickCreate',
-    events: {
-        'click .o_quick_create_folded': '_onAddColumnClicked',
-    },
+export class ForecastColumnQuickCreate extends KanbanColumnQuickCreate {
+    setup() {
+        super.setup();
+        this.fillTemporalService = useService("fillTemporalService");
+        let [groupby, granularity] = this.__owl__.parent.props.list.groupBy[0].split(":");
+        const forecastField = this.__owl__.parent.props.list.model.rootParams.context.forecast_field;
+        if (forecastField && groupby === forecastField) {
+            granularity = granularity || "month";
+            this.addColumnLabel = _.str.sprintf(this.env._t('Add next %s'), granularity);
+        }
+    }
 
     /**
-     * @override
-     * @param {Object} options
-     * @param {string} [options.addColumnLabel] displayed label
-     *        (should be the granularity of a date/datetime groupBy)
-     */
-    init: function (parent, options) {
-        this._super.apply(this, arguments);
-        this.addColumnLabel = _.str.sprintf(_t('Add next %s'), options.addColumnLabel);
-    },
-
-    /**
-     * Notify the environment to add a column
-     *
-     * @private
-     */
-    _addColumn: function () {
-        this.trigger_up('forecast_kanban_add_column', {});
-    },
-
-    /**
-     * @private
      * @param {MouseEvent} event
      */
-    _onAddColumnClicked: function (event) {
-        event.stopPropagation();
-        this._addColumn();
-    },
-});
+    onAddColumnClicked() {
+        let [groupby, granularity] = this.__owl__.parent.props.list.groupBy[0].split(":");
+        const groupbyType = this.__owl__.parent.props.list.fields[groupby].type;
+        const caca = this.fillTemporalService.getFillTemporalPeriod({
+            modelName: 'crm.lead',
+            field: {
+                name: groupby,
+                type: groupbyType,
+            },
+            granularity: granularity,
+        }).expand();
+        debugger;
+        this.mutex.exec(() => this.update(
+            { groupBy: [`${this.model.forecast_field}:${this.model.granularity}`] },
+            { reload: true }
+        ));
+        if (this.state.columnTitle.length) {
+            this.props.onValidate(this.state.columnTitle);
+            this.state.columnTitle = "";
+        }
+    }
+}
 
-export default ForecastColumnQuickCreate;
+ForecastColumnQuickCreate.template = "KanbanView.ForecastColumnQuickCreate";

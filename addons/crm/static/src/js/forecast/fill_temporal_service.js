@@ -264,7 +264,6 @@ class FillTemporalPeriod {
  */
 export const FillTemporalService = {
     start(env) {
-        this._super.apply(...arguments);
         this._fillTemporalPeriods = {};
     },
     /**
