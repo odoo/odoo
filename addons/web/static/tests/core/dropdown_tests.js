@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { DateTimePicker } from "@web/core/datepicker/datepicker";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
@@ -1003,4 +1004,42 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.containsOnce(target, ".o-tooltip");
         assert.strictEqual(target.querySelector(".o-tooltip").textContent, "My tooltip");
     });
+
+    QUnit.test(
+        "Dropdown with a date picker inside do not close when a click occurs in date picker",
+        async (assert) => {
+            class MyComponent extends owl.Component {}
+            MyComponent.template = owl.xml`
+                <Dropdown>
+                    <t t-set-slot="toggler">
+                        Dropdown toggler
+                    </t>
+                    <DateTimePicker onDateTimeChanged="() => {}" date="false"/>
+                </Dropdown>
+            `;
+            MyComponent.components = { Dropdown, DateTimePicker };
+
+            await makeParent(MyComponent);
+
+            assert.containsNone(target, ".o-dropdown--menu");
+
+            await click(target, ".dropdown-toggle");
+
+            assert.containsOnce(target, ".o-dropdown--menu");
+            assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
+            assert.strictEqual(target.querySelector(".o_datepicker_input").value, "");
+
+            await click(target, ".o_datepicker_input");
+
+            assert.containsOnce(target, ".o-dropdown--menu");
+            assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+            assert.strictEqual(target.querySelector(".o_datepicker_input").value, "");
+
+            await click(document.querySelectorAll(".datepicker table td")[15]); // select some day
+
+            assert.containsOnce(target, ".o-dropdown--menu");
+            assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+            assert.notOk(target.querySelector(".o_datepicker_input").value === "");
+        }
+    );
 });
