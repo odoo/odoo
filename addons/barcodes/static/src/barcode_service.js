@@ -59,6 +59,12 @@ export const barcodeService = {
         }
 
         function keydownHandler(ev) {
+            if (!ev.key) {
+                // Chrome may trigger incomplete keydown events under certain circumstances.
+                // E.g. when using browser built-in autocomplete on an input.
+                // See https://stackoverflow.com/questions/59534586/google-chrome-fires-keydown-event-when-form-autocomplete
+                return;
+            }
             // Ignore 'Shift', 'Escape', 'Backspace', 'Insert', 'Delete', 'Home', 'End', Arrow*, F*, Page*, ...
             // ctrl, meta and alt are often used for UX purpose (like shortcuts)
             // Note: shiftKey is not ignored because it can be used by some barcode scanner for digits.
