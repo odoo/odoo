@@ -205,3 +205,78 @@ class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon, TestW
         with MockRequest(self.env, website=current_website, sale_order_id=so.id):
             so._cart_update(product_id=test_product.product_variant_id.id, line_id=sol.id, set_qty=1)
         self.assertEqual(round(sol.price_total), 50, "100$ with 50% discount + 0% tax (mapped from fp 10% -> 0%)")
+
+    def test_cart_update_with_fpos_no_variant_product(self):
+        # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart for no_variant product
+        self.env.user.partner_id.country_id = False
+        current_website = self.env['website'].get_current_website()
+        pricelist = current_website.get_current_pricelist()
+        (self.env['product.pricelist'].search([]) - pricelist).write({'active': False})
+        # Add 10% tax on product
+        tax10 = self.env['account.tax'].create({'name': "Test tax 10", 'amount': 10, 'price_include': True, 'amount_type': 'percent', 'type_tax_use': 'sale'})
+        tax0 = self.env['account.tax'].create({'name': "Test tax 0", 'amount': 0, 'price_include': True, 'amount_type': 'percent', 'type_tax_use': 'sale'})
+
+        # Create fiscal position mapping taxes 10% -> 0%
+        fpos = self.env['account.fiscal.position'].create({
+            'name': 'test',
+        })
+        self.env['account.fiscal.position.tax'].create({
+            'position_id': fpos.id,
+            'tax_src_id': tax10.id,
+            'tax_dest_id': tax0.id,
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'prod_no_variant',
+            'list_price': 110,
+            'taxes_id': [(6, 0, [tax10.id])],
+            'type': 'consu',
+        })
+
+        # create an attribute with one variant
+        product_attribute = self.env['product.attribute'].create({
+            'name': 'test_attr',
+            'display_type': 'radio',
+            'create_variant': 'no_variant',
+        })
+
+        # create attribute value
+        a1 = self.env['product.attribute.value'].create({
+            'name': 'pa_value',
+            'attribute_id': product_attribute.id,
+            'sequence': 1,
+        })
+
+        # set variant value to product template
+        product_template = self.env['product.template'].search(
+            [('name', '=', 'prod_no_variant')], limit=1)
+
+        product_template.attribute_line_ids = [(0, 0, {
+            'attribute_id': product_attribute.id,
+            'value_ids': [(6, 0, [a1.id])],
+        })]
+
+        # publish the product on website
+        product_template.is_published = True
+
+        # create a so for user using the fiscal position
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+        })
+        sol = self.env['sale.order.line'].create({
+            'name': product_template.name,
+            'product_id': product.id,
+            'product_uom_qty': 1,
+            'product_uom': product_template.uom_id.id,
+            'price_unit': product_template.list_price,
+            'order_id': so.id,
+            'tax_id': [(6, 0, [tax10.id])],
+        })
+        self.assertEqual(round(sol.price_total), 110.0, "110$ with 10% included tax")
+        so.pricelist_id = pricelist
+        so.fiscal_position_id = fpos
+        sol.product_id_change()
+        with MockRequest(self.env, website=current_website, sale_order_id=so.id):
+            so._cart_update(product_id=product.id, line_id=sol.id, set_qty=1)
+        self.assertEqual(round(sol.price_total), 100, "100$ with public price+ 0% tax (mapped from fp 10% -> 0%)")
