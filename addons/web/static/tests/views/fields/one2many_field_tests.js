@@ -12562,4 +12562,39 @@ QUnit.module("Fields", (hooks) => {
         await triggerEvents(target, ".o_data_row", ["touchstart", "touchend"]);
         assert.containsNone(target, ".o_data_row_selected");
     });
+
+    QUnit.test(
+        "save a record after creating and editing a new invalid record in a one2many",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="display_name" required="1"/>
+                                <field name="int_field"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                resId: 1,
+            });
+
+            await clickEdit(target);
+            await addRow(target);
+            await editInput(target, ".o_field_widget[name=int_field] input", "3");
+            await clickSave(target);
+            assert.containsOnce(
+                target,
+                ".o_data_row.o_selected_row",
+                "line should not have been removed and should still be in edition"
+            );
+            assert.hasClass(
+                target.querySelector(".o_field_widget[name=display_name]"),
+                "o_field_invalid"
+            );
+        }
+    );
 });

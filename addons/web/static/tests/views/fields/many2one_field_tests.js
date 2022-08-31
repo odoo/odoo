@@ -7,6 +7,7 @@ import { session } from "@web/session";
 import { Field } from "@web/views/fields/field";
 import { Record } from "@web/views/record";
 import {
+    addRow,
     click,
     clickDiscard,
     clickDropdown,
@@ -2120,24 +2121,7 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // Click on "Add an item"
-            await click(target, ".o_field_x2many_list_row_add a");
-            target.querySelector(".o_field_widget.o_field_char[name=display_name] input").value =
-                "some text";
-            assert.containsOnce(
-                target,
-                ".o_field_widget.o_field_char[name=display_name]",
-                "should have a char field 'display_name' on this record"
-            );
-            assert.doesNotHaveClass(
-                target.querySelector(".o_field_widget.o_field_char[name=display_name]"),
-                "o_required_modifier",
-                "the char field should not be required on this record"
-            );
-            assert.strictEqual(
-                target.querySelector(".o_field_widget.o_field_char[name=display_name] input").value,
-                "some text",
-                "should have entered text in the char field on this record"
-            );
+            await addRow(target);
             assert.containsOnce(
                 target,
                 ".o_field_widget.o_required_modifier[name=trululu]",
