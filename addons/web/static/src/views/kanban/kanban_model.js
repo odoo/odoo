@@ -22,36 +22,27 @@ import { EventBus, markRaw } from "@odoo/owl";
 
 const FALSE = Symbol("false");
 
-class TransactionInProgress extends Error {}
-
-class NoTransactionInProgress extends Error {}
-
 function makeTransactionManager() {
     const bus = new EventBus();
-    const transactions = {};
+    const transactions = new Set();
     return {
         start: (id) => {
-            if (transactions[id]) {
-                throw new TransactionInProgress(
-                    `Transaction in progress: commit or abort to start a new one.`
-                );
+            if (transactions.has(id)) {
+                return true;
             }
-            transactions[id] = true;
+            transactions.add(id);
             bus.trigger("START");
+            console.debug("START TRANSACTION", id);
         },
         commit: (id) => {
-            if (!transactions[id]) {
-                throw new NoTransactionInProgress(`No transaction in progress.`);
-            }
-            delete transactions[id];
+            transactions.delete(id);
             bus.trigger("COMMIT");
+            console.debug("COMMIT TRANSACTION", id);
         },
         abort: (id) => {
-            if (!transactions[id]) {
-                throw new NoTransactionInProgress(`No transaction in progress.`);
-            }
-            delete transactions[id];
+            transactions.delete(id);
             bus.trigger("ABORT");
+            console.debug("ABORT TRANSACTION", id);
         },
         register: ({ onStart, onCommit, onAbort }) => {
             let currentData = null;
@@ -471,50 +462,41 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
             return; // Groups have been re-rendered, old ids are ignored
         }
 
-        const record = sourceGroup.list.records.find((r) => r.id === dataRecordId);
+        const sourceIndex = sourceGroup.records.findIndex((r) => r.id === dataRecordId);
+        const record = sourceGroup.records[sourceIndex];
 
-        try {
-            this.model.transaction.start(dataRecordId);
-        } catch (err) {
-            if (err instanceof TransactionInProgress) {
-                return;
-            }
-            throw err;
+        const transactionIsProgress = this.model.transaction.start(dataRecordId);
+        if (transactionIsProgress) {
+            return;
         }
+
+        // Quick update: moves the record at the right position and notifies components
+        // This is to avoid flickering
+        const refIndex = targetGroup.records.findIndex((r) => r.id === refId);
+        const targetIndex = sourceIndex > refIndex ? refIndex + 1 : refIndex;
+        targetGroup.addRecord(sourceGroup.removeRecord(record), targetIndex);
 
         // Move from one group to another
         const fullyLoadGroup = targetGroup.isFolded;
         if (dataGroupId !== targetGroupId) {
-            const refIndex = targetGroup.list.records.findIndex((r) => r.id === refId);
-            // Quick update: moves the record at the right position and notifies components
-            targetGroup.addRecord(sourceGroup.removeRecord(record), refIndex + 1);
             const value = isRelational(this.groupByField)
                 ? [targetGroup.value, targetGroup.displayName]
                 : targetGroup.value;
-
-            const abort = () => {
-                this.model.transaction.abort(dataRecordId);
-                this.model.notify();
-            };
 
             try {
                 await record.update({ [this.groupByField.name]: value }, { silent: true });
                 const saved = await record.save({ noReload: true });
                 if (!saved) {
-                    abort();
-                    this.model.notify();
+                    this.model.transaction.abort(dataRecordId);
                     return;
                 }
             } catch (err) {
-                abort();
+                this.model.transaction.abort(dataRecordId);
                 throw err;
             }
 
             const promises = [this.updateGroupProgressData([sourceGroup, targetGroup], true)];
             if (fullyLoadGroup) {
-                // The group is folded: we need to load it
-                // In this case since we load after saving the record there is no
-                // need to reload the record nor to resequence the list.
                 promises.push(targetGroup.toggle());
             } else {
                 // Record can be loaded along with the group metadata
@@ -526,7 +508,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
 
         if (!fullyLoadGroup) {
             // Only trigger resequence if the group hasn't been fully loaded
-            await targetGroup.list.resequence(dataRecordId, refId);
+            await targetGroup.list.resequence(dataRecordId, refId, { noQuickUpdate: true });
         }
 
         this.model.transaction.commit(dataRecordId);
@@ -571,13 +553,15 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
 
 export class KanbanDynamicRecordList extends DynamicRecordList {
     async moveRecord(dataRecordId, _dataGroupId, refId) {
-        this.model.transaction.start(dataRecordId);
+        const transactionIsProgress = this.model.transaction.start(dataRecordId);
+        if (transactionIsProgress) {
+            return;
+        }
 
         try {
             await this.resequence(dataRecordId, refId);
         } catch (err) {
             this.model.transaction.abort(dataRecordId);
-            this.model.notify();
             throw err;
         }
 
@@ -594,6 +578,19 @@ export class KanbanModel extends RelationalModel {
         this.progressAttributes = params.progressAttributes;
         this.tooltipInfo = params.tooltipInfo;
         this.transaction = makeTransactionManager();
+        this.transaction.register({
+            onStart: () => {
+                this.preventNotify = true;
+            },
+            onCommit: () => {
+                this.preventNotify = false;
+                this.notify();
+            },
+            onAbort: () => {
+                this.preventNotify = false;
+                this.notify();
+            },
+        });
     }
 
     get hasProgressBars() {
