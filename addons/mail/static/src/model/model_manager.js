@@ -1274,14 +1274,15 @@ export class ModelManager {
             }
             const field = model.__fieldMap.get(fieldName);
             if (!field) {
-                throw new Error(`Cannot create/update record with data unrelated to a field. (record: "${record}", non-field attempted update: "${fieldName}")`);
+                console.warn(`Cannot create/update record with data unrelated to a field. (record: "${record}", non-field attempted update: "${fieldName}")`);
+                continue;
             }
             const newVal = data[fieldName];
             if (!field.parseAndExecuteCommands(record, newVal, options)) {
                 continue;
             }
             if (field.readonly && !allowWriteReadonly) {
-                throw new Error(`read-only ${field} on ${record} was updated`);
+                console.warn(`read-only ${field} on ${record} was updated`);
             }
             hasChanged = true;
             this._markRecordFieldAsChanged(record, field);
