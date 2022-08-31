@@ -50,27 +50,59 @@ class StockMove(models.Model):
             return price_unit
         return super(StockMove, self)._get_price_unit()
 
-    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description):
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
         """ Overridden from stock_account to support amount_currency on valuation lines generated from po
         """
         self.ensure_one()
 
-        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description)
-        if self.purchase_line_id:
-            purchase_currency = self.purchase_line_id.currency_id
-            if purchase_currency != self.company_id.currency_id:
-                # Do not use price_unit since we want the price tax excluded. And by the way, qty
-                # is in the UOM of the product, not the UOM of the PO line.
-                purchase_price_unit = (
-                    self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
-                    if self.purchase_line_id.product_uom_qty
-                    else self.purchase_line_id.price_unit
-                )
-                currency_move_valuation = purchase_currency.round(purchase_price_unit * abs(qty))
-                rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
-                rslt['credit_line_vals']['currency_id'] = purchase_currency.id
-                rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals']['credit'] and -currency_move_valuation or currency_move_valuation
-                rslt['debit_line_vals']['currency_id'] = purchase_currency.id
+        rslt = super(StockMove, self)._generate_valuation_lines_data(partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description)
+        purchase_currency = self.purchase_line_id.currency_id
+        if not self.purchase_line_id or purchase_currency == self.company_id.currency_id:
+            return rslt
+        svl = self.env['stock.valuation.layer'].browse(svl_id)
+        if not svl.account_move_line_id:
+            # Do not use price_unit since we want the price tax excluded. And by the way, qty
+            # is in the UOM of the product, not the UOM of the PO line.
+            purchase_price_unit = (
+                self.purchase_line_id.price_subtotal / self.purchase_line_id.product_uom_qty
+                if self.purchase_line_id.product_uom_qty
+                else self.purchase_line_id.price_unit
+            )
+            currency_move_valuation = purchase_currency.round(purchase_price_unit * abs(qty))
+            rslt['credit_line_vals']['amount_currency'] = rslt['credit_line_vals']['balance'] < 0 and -currency_move_valuation or currency_move_valuation
+            rslt['debit_line_vals']['amount_currency'] = rslt['debit_line_vals']['balance'] < 0 and -currency_move_valuation or currency_move_valuation
+            rslt['debit_line_vals']['currency_id'] = purchase_currency.id
+            rslt['credit_line_vals']['currency_id'] = purchase_currency.id
+        else:
+            rslt['credit_line_vals']['amount_currency'] = 0
+            rslt['debit_line_vals']['amount_currency'] = 0
+            rslt['debit_line_vals']['currency_id'] = purchase_currency.id
+            rslt['credit_line_vals']['currency_id'] = purchase_currency.id
+            if not svl.price_diff_value:
+                return rslt
+            # The idea is to force using the company currency during the reconciliation process
+            rslt['debit_line_vals_curr'] = {
+                'name': _("Currency exchange rate difference"),
+                'product_id': self.product_id.id,
+                'quantity': 0,
+                'product_uom_id': self.product_id.uom_id.id,
+                'partner_id': partner_id,
+                'balance': 0,
+                'account_id': debit_account_id,
+                'currency_id': purchase_currency.id,
+                'amount_currency': -svl.price_diff_value,
+            }
+            rslt['credit_line_vals_curr'] = {
+                'name': _("Currency exchange rate difference"),
+                'product_id': self.product_id.id,
+                'quantity': 0,
+                'product_uom_id': self.product_id.uom_id.id,
+                'partner_id': partner_id,
+                'balance': 0,
+                'account_id': credit_account_id,
+                'currency_id': purchase_currency.id,
+                'amount_currency': svl.price_diff_value,
+            }
         return rslt
 
     def _prepare_extra_move_vals(self, qty):

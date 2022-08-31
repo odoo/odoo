@@ -376,7 +376,7 @@ class StockMove(models.Model):
     def _get_dest_account(self, accounts_data):
         return self.location_dest_id.valuation_in_account_id.id or accounts_data['stock_output'].id
 
-    def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id, description):
+    def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id, svl_id, description):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
@@ -389,7 +389,7 @@ class StockMove(models.Model):
         credit_value = debit_value
 
         valuation_partner_id = self._get_partner_id_for_valuation_lines()
-        res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description).values()]
+        res = [(0, 0, line_vals) for line_vals in self._generate_valuation_lines_data(valuation_partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description).values()]
 
         return res
 
@@ -440,7 +440,7 @@ class StockMove(models.Model):
             'category': 'other',
         }
 
-    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, description):
+    def _generate_valuation_lines_data(self, partner_id, qty, debit_value, credit_value, debit_account_id, credit_account_id, svl_id, description):
         # This method returns a dictionary to provide an easy extension hook to modify the valuation lines (see purchase for an example)
         self.ensure_one()
         debit_line_vals = {
@@ -450,8 +450,7 @@ class StockMove(models.Model):
             'product_uom_id': self.product_id.uom_id.id,
             'ref': description,
             'partner_id': partner_id,
-            'debit': debit_value if debit_value > 0 else 0,
-            'credit': -debit_value if debit_value < 0 else 0,
+            'balance': debit_value,
             'account_id': debit_account_id,
         }
 
@@ -462,8 +461,7 @@ class StockMove(models.Model):
             'product_uom_id': self.product_id.uom_id.id,
             'ref': description,
             'partner_id': partner_id,
-            'credit': credit_value if credit_value > 0 else 0,
-            'debit': -credit_value if credit_value < 0 else 0,
+            'balance': -credit_value,
             'account_id': credit_account_id,
         }
 
@@ -471,10 +469,7 @@ class StockMove(models.Model):
         if credit_value != debit_value:
             # for supplier returns of product in average costing method, in anglo saxon mode
             diff_amount = debit_value - credit_value
-            price_diff_account = self.product_id.property_account_creditor_price_difference
-
-            if not price_diff_account:
-                price_diff_account = self.product_id.categ_id.property_account_creditor_price_difference_categ
+            price_diff_account = self.env.context.get('price_diff_account')
             if not price_diff_account:
                 raise UserError(_('Configuration error. Please configure the price difference account on the product or its category to process this operation.'))
 
@@ -502,8 +497,14 @@ class StockMove(models.Model):
     def _prepare_account_move_vals(self, credit_account_id, debit_account_id, journal_id, qty, description, svl_id, cost):
         self.ensure_one()
         valuation_partner_id = self._get_partner_id_for_valuation_lines()
-        move_ids = self._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id, description)
-        date = self._context.get('force_period_date', fields.Date.context_today(self))
+        move_ids = self._prepare_account_move_line(qty, cost, credit_account_id, debit_account_id, svl_id, description)
+        svl = self.env['stock.valuation.layer'].browse(svl_id)
+        if self.env.context.get('force_period_date'):
+            date = self.env.context.get('force_period_date')
+        elif svl.account_move_line_id:
+            date = svl.account_move_line_id.date
+        else:
+            date = fields.Date.context_today(self)
         return {
             'journal_id': journal_id,
             'line_ids': move_ids,

@@ -71,3 +71,7 @@ class AccountMoveLine(models.Model):
     def _onchange_is_landed_costs_line(self):
         if self.is_landed_costs_line and self.product_id and self.product_type != 'service':
             self.is_landed_costs_line = False
+
+    def _get_stock_valuation_layers(self, move):
+        layers = super()._get_stock_valuation_layers(move)
+        return layers.filtered(lambda svl: not svl.stock_landed_cost_id)

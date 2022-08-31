@@ -19,6 +19,11 @@ class TestPurchaseMrpFlow(TransactionCase):
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.warehouse = cls.env.ref('stock.warehouse0')
 
+        grp_uom = cls.env.ref('uom.group_uom')
+        group_user = cls.env.ref('base.group_user')
+        group_user.write({'implied_ids': [(4, grp_uom.id)]})
+        cls.env.user.write({'groups_id': [(4, grp_uom.id)]})
+
         cls.uom_kg = cls.env['uom.uom'].search([('category_id', '=', cls.categ_kgm.id), ('uom_type', '=', 'reference')],
                                                  limit=1)
         cls.uom_kg.write({
