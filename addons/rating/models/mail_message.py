@@ -28,7 +28,11 @@ class MailMessage(models.Model):
 
     def message_format(self, format_reply=True):
         message_values = super().message_format(format_reply=format_reply)
-        rating_mixin_messages = self.filtered(lambda message: issubclass(self.pool[message.model], self.pool['rating.mixin']))
+        rating_mixin_messages = self.filtered(lambda message:
+            message.model
+            and message.res_id
+            and issubclass(self.pool[message.model], self.pool['rating.mixin'])
+        )
         if rating_mixin_messages:
             ratings = self.env['rating.rating'].sudo().search([('message_id', 'in', rating_mixin_messages.ids), ('consumed', '=', True)])
             rating_by_message_id = dict((r.message_id.id, r) for r in ratings)
