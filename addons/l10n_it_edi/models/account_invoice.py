@@ -224,7 +224,7 @@ class AccountMove(models.Model):
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
         tax_details = self._prepare_edi_tax_details(
-            filter_to_apply=lambda l: l['tax_repartition_line_id'].factor_percent >= 0
+            filter_to_apply=lambda base_line, tax_values: tax_values['tax_repartition_line'].factor_percent >= 0
         )
 
         company = self.company_id
@@ -257,6 +257,7 @@ class AccountMove(models.Model):
         # Create file content.
         template_values = {
             'record': self,
+            'balance_multiplicator': -1 if self.is_inbound() else 1,
             'company': company,
             'sender': company,
             'sender_partner': company.partner_id,

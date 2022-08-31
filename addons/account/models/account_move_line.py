@@ -2396,6 +2396,7 @@ class AccountMoveLine(models.Model):
             analytic_tags=self.analytic_tag_ids,
             price_subtotal=sign * self.amount_currency,
             is_refund=self.is_refund,
+            rate=(abs(self.amount_currency) / abs(self.balance)) if self.balance else 1.0
         )
 
     def _convert_to_tax_line_dict(self):
