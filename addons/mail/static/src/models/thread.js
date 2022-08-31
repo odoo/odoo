@@ -2110,10 +2110,6 @@ registerModel({
             inverse: 'thread',
             isCausal: true,
         }),
-        threadPreviewViews: many('ThreadPreviewView', {
-            inverse: 'thread',
-            isCausal: true,
-        }),
         /**
          * Members that are currently typing something in the composer of this
          * thread, including current partner.

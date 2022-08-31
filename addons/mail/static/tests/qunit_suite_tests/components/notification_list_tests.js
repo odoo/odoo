@@ -30,18 +30,18 @@ QUnit.test('marked as read thread notifications are ordered by last message date
     await click('.o_MessagingMenu_toggler');
     assert.containsN(
         document.body,
-        '.o_ThreadPreview',
+        '.o_ChannelPreviewView',
         2,
         "there should be two thread previews"
     );
-    const threadPreviewElList = document.querySelectorAll('.o_ThreadPreview');
+    const channelPreviewViewElList = document.querySelectorAll('.o_ChannelPreviewView');
     assert.strictEqual(
-        threadPreviewElList[0].querySelector(':scope .o_ThreadPreview_name').textContent,
+        channelPreviewViewElList[0].querySelector(':scope .o_ChannelPreviewView_name').textContent,
         'Channel 2020',
         "First channel in the list should be the channel of 2020 (more recent last message)"
     );
     assert.strictEqual(
-        threadPreviewElList[1].querySelector(':scope .o_ThreadPreview_name').textContent,
+        channelPreviewViewElList[1].querySelector(':scope .o_ChannelPreviewView_name').textContent,
         'Channel 2019',
         "Second channel in the list should be the channel of 2019 (least recent last message)"
     );
@@ -71,7 +71,7 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
     await click('.o_MessagingMenu_toggler');
     assert.containsN(
         document.body,
-        '.o_ThreadPreview',
+        '.o_ChannelPreviewView',
         2,
         "there should be two thread previews"
     );
@@ -94,18 +94,18 @@ QUnit.test('thread notifications are re-ordered on receiving a new message', asy
     });
     assert.containsN(
         document.body,
-        '.o_ThreadPreview',
+        '.o_ChannelPreviewView',
         2,
         "there should still be two thread previews"
     );
-    const threadPreviewElList = document.querySelectorAll('.o_ThreadPreview');
+    const channelPreviewViewElList = document.querySelectorAll('.o_ChannelPreviewView');
     assert.strictEqual(
-        threadPreviewElList[0].querySelector(':scope .o_ThreadPreview_name').textContent,
+        channelPreviewViewElList[0].querySelector(':scope .o_ChannelPreviewView_name').textContent,
         'Channel 2019',
         "First channel in the list should now be 'Channel 2019'"
     );
     assert.strictEqual(
-        threadPreviewElList[1].querySelector(':scope .o_ThreadPreview_name').textContent,
+        channelPreviewViewElList[1].querySelector(':scope .o_ChannelPreviewView_name').textContent,
         'Channel 2020',
         "Second channel in the list should now be 'Channel 2020'"
     );

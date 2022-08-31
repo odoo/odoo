@@ -15,6 +15,32 @@ registerModel({
     recordMethods: {
         /**
          * @private
+         * @returns {Object[]}
+         */
+        _computeChannelPreviewViews() {
+            return this.filteredChannels
+                .sort((c1, c2) => {
+                    if (c1.localMessageUnreadCounter > 0 && c2.localMessageUnreadCounter === 0) {
+                        return -1;
+                    }
+                    if (c1.localMessageUnreadCounter === 0 && c2.localMessageUnreadCounter > 0) {
+                        return 1;
+                    }
+                    if (c1.thread.lastMessage && c2.thread.lastMessage) {
+                        return c1.thread.lastMessage.id < c2.thread.lastMessage.id ? 1 : -1;
+                    }
+                    if (c1.thread.lastMessage) {
+                        return -1;
+                    }
+                    if (c2.thread.lastMessage) {
+                        return 1;
+                    }
+                    return c1.id < c2.id ? -1 : 1;
+                })
+                .map(channel => ({ channel }));
+        },
+        /**
+         * @private
          * @returns {string|FieldCommand}
          */
         _computeFilter() {
@@ -28,32 +54,30 @@ registerModel({
         },
         /**
          * @private
-         * @returns {FieldCommand}
+         * @returns {Channel[]|FieldCommand}
          */
-        _computeFilteredThreads() {
+        _computeFilteredChannels() {
             switch (this.filter) {
                 case 'channel': {
-                    return this.messaging.models['Thread']
-                        .all(thread =>
-                            thread.channel &&
-                            thread.channel.channel_type === 'channel' &&
-                            thread.isPinned
+                    return this.messaging.models['Channel']
+                        .all(channel =>
+                            channel.channel_type === 'channel' &&
+                            channel.thread.isPinned
                         )
                         .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
                 }
                 case 'chat': {
-                    return this.messaging.models['Thread']
-                        .all(thread =>
-                            thread.isChatChannel &&
-                            thread.isPinned &&
-                            thread.model === 'mail.channel'
+                    return this.messaging.models['Channel']
+                        .all(channel =>
+                            channel.thread.isChatChannel &&
+                            channel.thread.isPinned
                         )
                         .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
                 }
                 case 'all': {
                     // "All" filter is for channels and chats
-                    return this.messaging.models['Thread']
-                        .all(thread => thread.isPinned && thread.model === 'mail.channel')
+                    return this.messaging.models['Channel']
+                        .all(channel => channel.thread.isPinned)
                         .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
                 }
             }
@@ -90,7 +114,7 @@ registerModel({
             }
             notifications.push(...this.notificationGroupViews);
             notifications.push(...this.threadNeedactionPreviewViews);
-            notifications.push(...this.threadPreviewViews);
+            notifications.push(...this.channelPreviewViews);
             return notifications;
         },
         /**
@@ -124,44 +148,23 @@ registerModel({
                 .map(thread => ({ thread }));
         },
         /**
-         * @private
-         * @returns {FieldCommand}
-         */
-        _computeThreadPreviewViews() {
-            return this.filteredThreads
-                .sort((t1, t2) => {
-                    if (t1.channel.localMessageUnreadCounter > 0 && t2.channel.localMessageUnreadCounter === 0) {
-                        return -1;
-                    }
-                    if (t1.channel.localMessageUnreadCounter === 0 && t2.channel.localMessageUnreadCounter > 0) {
-                        return 1;
-                    }
-                    if (t1.lastMessage && t2.lastMessage) {
-                        return t1.lastMessage.id < t2.lastMessage.id ? 1 : -1;
-                    }
-                    if (t1.lastMessage) {
-                        return -1;
-                    }
-                    if (t2.lastMessage) {
-                        return 1;
-                    }
-                    return t1.id < t2.id ? -1 : 1;
-                })
-                .map(thread => ({ thread }));
-        },
-        /**
          * Load previews of given thread. Basically consists of fetching all missing
          * last messages of each thread.
          *
          * @private
          */
         async _loadPreviews() {
-            const threads = this.threadPreviewViews
-                .map(threadPreviewView => threadPreviewView.thread);
+            const threads = this.channelPreviewViews
+                .map(channelPreviewView => channelPreviewView.thread);
             this.messaging.models['Thread'].loadPreviews(threads);
         },
     },
     fields: {
+        channelPreviewViews: many('ChannelPreviewView', {
+            compute: '_computeChannelPreviewViews',
+            inverse: 'notificationListViewOwner',
+            isCausal: true,
+        }),
         discussOwner: one('Discuss', {
             identifying: true,
             inverse: 'notificationListView',
@@ -169,8 +172,8 @@ registerModel({
         filter: attr({
             compute: '_computeFilter',
         }),
-        filteredThreads: many('Thread', {
-            compute: '_computeFilteredThreads',
+        filteredChannels: many('Channel', {
+            compute: '_computeFilteredChannels',
         }),
         messagingMenuOwner: one('MessagingMenu', {
             identifying: true,
@@ -192,11 +195,6 @@ registerModel({
         }),
         threadNeedactionPreviewViews: many('ThreadNeedactionPreviewView', {
             compute: '_computeThreadNeedactionPreviewViews',
-            inverse: 'notificationListViewOwner',
-            isCausal: true,
-        }),
-        threadPreviewViews: many('ThreadPreviewView', {
-            compute: '_computeThreadPreviewViews',
             inverse: 'notificationListViewOwner',
             isCausal: true,
         }),

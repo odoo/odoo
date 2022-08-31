@@ -42,7 +42,7 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
 
     // Uploading file in the second thread: mail.channel in chatWindow.
     await click(`.o_MessagingMenu_toggler`);
-    await click(`.o_NotificationListItem[data-thread-id="${channelId}"][data-thread-model="mail.channel"]`);
+    await click(`.o_ChannelPreviewView[data-channel-id="${channelId}"]`);
     const file2 = await createFile({
         name: 'text2.txt',
         content: 'hello, world',
