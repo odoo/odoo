@@ -215,23 +215,20 @@ export class FormController extends Component {
             this.env.config.setDisplayName(this.displayName());
         });
 
-        const { autofocusFieldId, disableAutofocus } = this.archInfo;
+        const { disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
             useEffect(
                 (isInEdition) => {
-                    let elementToFocus;
-                    if (isInEdition) {
-                        elementToFocus =
-                            (autofocusFieldId &&
-                                rootRef.el.querySelector(`#${autofocusFieldId}`)) ||
-                            rootRef.el.querySelector(".o_content .o_field_widget input");
-                    } else {
-                        elementToFocus =
+                    if (
+                        !isInEdition &&
+                        !rootRef.el.querySelector(".o_content").contains(document.activeElement)
+                    ) {
+                        const elementToFocus =
                             rootRef.el.querySelector(".o_content button.btn-primary") ||
                             rootRef.el.querySelector(".o_control_panel .o_form_button_edit");
-                    }
-                    if (elementToFocus) {
-                        elementToFocus.focus();
+                        if (elementToFocus) {
+                            elementToFocus.focus();
+                        }
                     }
                 },
                 () => [this.model.root.isInEdition]
