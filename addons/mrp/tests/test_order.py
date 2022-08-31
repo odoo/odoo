@@ -2649,3 +2649,38 @@ class TestMrpOrder(TestMrpCommon):
         self.assertFalse(wo_01.show_json_popover)
         self.assertFalse(wo_02.show_json_popover)
         self.assertEqual(wo_01.date_planned_finished, wo_02.date_planned_start)
+
+    def test_move_raw_uom_rounding(self):
+        """Test that the correct rouding is applied on move_raw in
+        manufacturing orders"""
+
+        self.box250 = self.env['uom.uom'].create({
+            'name': 'box250',
+            'category_id': self.env.ref('uom.product_uom_categ_unit').id,
+            'ratio': 250.0,
+            'uom_type': 'bigger',
+            'rounding': 1.0,
+        })
+
+        test_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_7_template.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 250.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 1.0, 'product_uom_id': self.box250.id}),
+            ]
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = test_bom
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 300,
+        })
+        update_quantity_wizard.change_prod_qty()
+
+        self.assertEqual(mo.move_raw_ids[0].product_uom_qty, 2)
