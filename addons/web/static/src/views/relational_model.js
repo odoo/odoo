@@ -610,7 +610,9 @@ export class Record extends DataPoint {
     }
 
     async delete() {
-        const unlinked = await this.model.orm.unlink(this.resModel, [this.resId], this.context);
+        const unlinked = await this.model.orm.unlink(this.resModel, [this.resId], {
+            context: this.context,
+        });
         if (!unlinked) {
             return false;
         }
@@ -1136,7 +1138,7 @@ export class Record extends DataPoint {
             (!value[1] || activeField.options.always_reload)
         ) {
             const context = this.getFieldContext(fieldName);
-            const result = await this.model.orm.nameGet(relation, [value[0]], context);
+            const result = await this.model.orm.nameGet(relation, [value[0]], { context });
             return result[0];
         }
         return value;
@@ -1153,7 +1155,7 @@ export class Record extends DataPoint {
             }
             const { resModel, resId } = value;
             const context = this.getFieldContext(fieldName);
-            const nameGet = await this.model.orm.nameGet(resModel, [resId], context);
+            const nameGet = await this.model.orm.nameGet(resModel, [resId], { context });
             return {
                 resModel,
                 resId,
@@ -1813,7 +1815,9 @@ export class DynamicRecordList extends DynamicList {
             resIds = await this.getResIds(true);
             records = this.records.filter((r) => resIds.includes(r.resId));
             if (this.isDomainSelected) {
-                await this.model.orm.unlink(this.resModel, resIds, this.context);
+                await this.model.orm.unlink(this.resModel, resIds, {
+                    context: this.context,
+                });
                 deleted = true;
             }
         }
@@ -2453,7 +2457,9 @@ export class Group extends DataPoint {
         if (this.record) {
             return this.record.delete();
         } else {
-            return this.model.orm.unlink(this.resModel, [this.value], this.context);
+            return this.model.orm.unlink(this.resModel, [this.value], {
+                context: this.context,
+            });
         }
     }
 
