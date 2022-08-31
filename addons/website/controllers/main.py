@@ -43,7 +43,8 @@ class QueryURL(object):
         self.path_args = OrderedSet(path_args or [])
 
     def __call__(self, path=None, path_args=None, **kw):
-        path = path or self.path
+        path_prefix = path or self.path
+        path = ''
         for key, value in self.args.items():
             kw.setdefault(key, value)
         path_args = OrderedSet(path_args or []) | self.path_args
@@ -65,6 +66,8 @@ class QueryURL(object):
                 path += '/' + key + '/' + value
         if fragments:
             path += '?' + '&'.join(fragments)
+        if not path.startswith(path_prefix):
+            path = path_prefix + path
         return path
 
 
