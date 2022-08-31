@@ -379,13 +379,13 @@
     function findCycle(jobs) {
         // build dependency graph
         const dependencyGraph = new Map();
-        for (let job of jobs) {
+        for (const job of jobs) {
             dependencyGraph.set(job.name, job.dependencies);
         }
 
         // helpers
         function visitJobs(jobs, visited = new Set()) {
-            for (let job of jobs) {
+            for (const job of jobs) {
                 const result = visitJob(job, visited);
                 if (result) {
                     return result;

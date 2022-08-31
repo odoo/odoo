@@ -53,7 +53,7 @@ ColorList.template = "web.ColorList";
 ColorList.defaultProps = {
     forceExpanded: false,
     isExpanded: false,
-}
+};
 ColorList.props = {
     canToggle: { type: Boolean, optional: true },
     colors: Array,

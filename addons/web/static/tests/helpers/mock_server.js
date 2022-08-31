@@ -111,9 +111,9 @@ export class MockServer {
             console.log("%c[rpc] request " + route, "color: #66e; font-weight: bold;", args);
             args = JSON.parse(JSON.stringify(args));
         }
-        let result;
+        const result = await this._performRPC(route, args);
         // try {
-        result = await this._performRPC(route, args);
+        //   const result = await this._performRPC(route, args);
         // } catch {
         //   const message = result && result.message;
         //   const event = result && result.event;
@@ -196,7 +196,7 @@ export class MockServer {
     }
 
     _getView(params) {
-        let processedNodes = params.processedNodes || [];
+        const processedNodes = params.processedNodes || [];
         const { arch, context, modelName } = params;
         const level = params.level || 0;
         const fields = deepCopy(params.fields);
@@ -709,7 +709,7 @@ export class MockServer {
         const str = args && typeof args[0] === "string" ? args[0] : kwargs.name;
         const limit = kwargs.limit || 100;
         const domain = (args && args[1]) || kwargs.args || [];
-        let { records } = this.models[model];
+        const { records } = this.models[model];
         const result = [];
         for (const r of records) {
             const isInDomain = this.evaluateDomain(domain, r);
@@ -2011,7 +2011,7 @@ export class MockServer {
         switch (field.type) {
             case "many2many":
             case "many2one": {
-                let coRecords = this.models[field.relation].records;
+                const coRecords = this.models[field.relation].records;
                 const coField = this.getOrderByField(field.relation);
                 if (field.type === "many2many") {
                     // M2m use the joined list of comodel field values
@@ -2207,7 +2207,7 @@ export class MockServer {
 
 // instance of `MockServer` linked to the current test.
 let mockServer;
-QUnit.testStart(() => mockServer = undefined);
+QUnit.testStart(() => (mockServer = undefined));
 export async function makeMockServer(serverData, mockRPC) {
     serverData = serverData || {};
     if (!mockServer) {

@@ -9,7 +9,7 @@ odooExceptionTitleMap.forEach((title, exceptionName) => {
     registry.category("error_notifications").add(exceptionName, {
         title: title,
         type: "warning",
-        sticky: true
+        sticky: true,
     });
 });
 
@@ -20,9 +20,9 @@ const sessionExpired = {
         {
             text: _t("Ok"),
             click: () => window.location.reload(true),
-            close: true
-        }
-    ]
+            close: true,
+        },
+    ],
 };
 
 registry
@@ -33,5 +33,5 @@ registry
         title: _t("Request timeout"),
         message: _t(
             "The operation was interrupted. This usually means that the current operation is taking too much time."
-        )
+        ),
     });

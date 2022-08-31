@@ -12,11 +12,9 @@ export class CopyButton extends Component {
     }
 
     showTooltip() {
-        const closeTooltip = this.popover.add(
-            this.button.el,
-            Tooltip,
-            { tooltip: this.props.successText },
-        );
+        const closeTooltip = this.popover.add(this.button.el, Tooltip, {
+            tooltip: this.props.successText,
+        });
         browser.setTimeout(() => {
             closeTooltip();
         }, 800);

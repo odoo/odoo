@@ -352,7 +352,10 @@ export function useOpenMany2XRecord({
     const addDialog = useOwnedDialogs();
     const orm = useService("orm");
 
-    return async function openDialog({ resId = false, forceModel = null, title, context }, immediate = false) {
+    return async function openDialog(
+        { resId = false, forceModel = null, title, context },
+        immediate = false
+    ) {
         const model = forceModel || resModel;
         let viewId;
         if (resId !== false) {

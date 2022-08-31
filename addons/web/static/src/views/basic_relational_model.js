@@ -474,9 +474,10 @@ export class Record extends DataPoint {
         if (!value) {
             return true;
         }
-        return value.every((propertyDefinition) =>
-            !propertyDefinition.id ||
-            (propertyDefinition.string && propertyDefinition.string.length)
+        return value.every(
+            (propertyDefinition) =>
+                !propertyDefinition.id ||
+                (propertyDefinition.string && propertyDefinition.string.length)
         );
     }
 

@@ -104,7 +104,7 @@ export const viewService = {
                 loadViewsOptions.mobile = true;
             }
             const { context, resModel, views } = params;
-            let filteredContext = Object.fromEntries(
+            const filteredContext = Object.fromEntries(
                 Object.entries(context || {}).filter((k, v) => !String(k).startsWith("default_"))
             );
             const key = JSON.stringify([resModel, views, filteredContext, loadViewsOptions]);

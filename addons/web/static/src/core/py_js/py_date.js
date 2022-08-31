@@ -111,7 +111,7 @@ function ord2ymd(n) {
         };
     }
 
-    let leapyear = n1 === 3 && (n4 !== 24 || n100 == 3);
+    const leapyear = n1 === 3 && (n4 !== 24 || n100 == 3);
     assert(leapyear == isLeap(year));
     let month = (n + 50) >> 5;
     let preceding = DAYS_BEFORE_MONTH[month] + (month > 2 && leapyear ? 1 : 0);
@@ -176,7 +176,7 @@ function tmxxx(year, month, day, hour, minute, second, microsecond) {
     // for a datetime object, but we don't care about that here).
     // If day is out of bounds, what to do is arguable, but at least the
     // method here is principled and explainable.
-    let dim = daysInMonth(year, month);
+    const dim = daysInMonth(year, month);
     if (day < 1 || day > dim) {
         // Move day-1 days from the first of the month.  First try to
         // get off cheap if we're only one day out of range (adjustments
@@ -198,7 +198,7 @@ function tmxxx(year, month, day, hour, minute, second, microsecond) {
                 ++year;
             }
         } else {
-            let r = ord2ymd(ymd2ord(year, month, 1) + (day - 1));
+            const r = ord2ymd(ymd2ord(year, month, 1) + (day - 1));
             year = r.year;
             month = r.month;
             day = r.day;

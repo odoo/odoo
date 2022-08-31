@@ -94,7 +94,7 @@ const profilingService = {
                 await setProfiling({ profile: !state.isEnabled });
             },
             async toggleCollector(collector) {
-                let nextCollectors = state.collectors.slice();
+                const nextCollectors = state.collectors.slice();
                 const index = nextCollectors.indexOf(collector);
                 if (index >= 0) {
                     nextCollectors.splice(index, 1);

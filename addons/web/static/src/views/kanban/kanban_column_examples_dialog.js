@@ -12,7 +12,7 @@ class KanbanExamplesNotebookTemplate extends Component {
     setup() {
         this.columns = [];
         const hasBullet = this.props.bullets && this.props.bullets.length;
-        for (let title of this.props.columns) {
+        for (const title of this.props.columns) {
             const col = { title, records: [] };
             this.columns.push(col);
             for (let i = 0; i < random(1, 5); i++) {

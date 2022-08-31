@@ -150,7 +150,20 @@ export class FormCompiler extends ViewCompiler {
                         : true,
             });
             if (child.tagName === "button" || child.children.tagName === "button") {
-                child.classList.add("oe_stat_button", "btn-light", "flex-shrink-0", "mb-0", "py-0", "border-0", "border-start", "border-bottom", "rounded-0", "text-start", "text-nowrap", "text-capitalize");
+                child.classList.add(
+                    "oe_stat_button",
+                    "btn-light",
+                    "flex-shrink-0",
+                    "mb-0",
+                    "py-0",
+                    "border-0",
+                    "border-start",
+                    "border-bottom",
+                    "rounded-0",
+                    "text-start",
+                    "text-nowrap",
+                    "text-capitalize"
+                );
             }
             if (child.tagName === "field") {
                 child.classList.add("d-inline-block", "mb-0");
@@ -379,7 +392,8 @@ export class FormCompiler extends ViewCompiler {
      */
     compileHeader(el, params) {
         const statusBar = createElement("div");
-        statusBar.className = "o_form_statusbar position-relative d-flex justify-content-between border-bottom";
+        statusBar.className =
+            "o_form_statusbar position-relative d-flex justify-content-between border-bottom";
         const buttons = [];
         const others = [];
         for (const child of el.childNodes) {

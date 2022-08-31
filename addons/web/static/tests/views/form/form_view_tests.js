@@ -2663,7 +2663,7 @@ QUnit.module("Views", (hooks) => {
             resId: 2,
         });
 
-        const buttons = target.querySelectorAll('.o_form_statusbar button');
+        const buttons = target.querySelectorAll(".o_form_statusbar button");
         assert.strictEqual(buttons[0].attributes.name.textContent, "0");
         assert.strictEqual(buttons[1].attributes.name.textContent, "1");
         assert.strictEqual(buttons[2].attributes.name.textContent, "2");
