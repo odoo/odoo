@@ -4190,6 +4190,7 @@ registry.sizing = SnippetOptionWidget.extend({
         var resizeValues = this._getSize();
         this.$handles.on('mousedown', function (ev) {
             ev.preventDefault();
+            self.options.wysiwyg.odooEditor.automaticStepUnactive('resizing');
 
             // First update size values as some element sizes may not have been
             // initialized on option start (hidden slides, etc)
@@ -4281,6 +4282,8 @@ registry.sizing = SnippetOptionWidget.extend({
                 setTimeout(function () {
                     self.options.wysiwyg.odooEditor.historyStep();
                 }, 0);
+
+                self.options.wysiwyg.odooEditor.automaticStepActive('resizing');
             };
             $body.on('mousemove', bodyMouseMove);
             $body.on('mouseup', bodyMouseUp);
