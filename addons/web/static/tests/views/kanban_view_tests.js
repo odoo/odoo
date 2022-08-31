@@ -1399,6 +1399,68 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test(
+        "quick create record should focus default field [REQUIRE FOCUS]",
+        async function (assert) {
+            serverData.views["partner,some_view_ref,form"] =
+                "<form>" +
+                '<field name="foo"/>' +
+                '<field name="int_field" default_focus="1"/>' +
+                '<field name="state" widget="priority"/>' +
+                "</form>";
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch:
+                    '<kanban on_create="quick_create" quick_create_view="some_view_ref">' +
+                    '<field name="bar"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                    "</t></templates></kanban>",
+                groupBy: ["bar"],
+            });
+
+            await click(target, ".o-kanban-button-new");
+            assert.strictEqual(
+                document.activeElement,
+                target.querySelector(".o_field_widget[name=int_field] input")
+            );
+        }
+    );
+
+    QUnit.test(
+        "quick create record should focus first field input [REQUIRE FOCUS]",
+        async function (assert) {
+            serverData.views["partner,some_view_ref,form"] =
+                "<form>" +
+                '<field name="foo"/>' +
+                '<field name="int_field"/>' +
+                '<field name="state" widget="priority"/>' +
+                "</form>";
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch:
+                    '<kanban on_create="quick_create" quick_create_view="some_view_ref">' +
+                    '<field name="bar"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                    "</t></templates></kanban>",
+                groupBy: ["bar"],
+            });
+
+            await click(target, ".o-kanban-button-new");
+            assert.strictEqual(
+                document.activeElement,
+                target.querySelector(".o_field_widget[name=foo] input")
+            );
+        }
+    );
+
     QUnit.test("quick_create_view without quick_create option", async (assert) => {
         serverData.views["partner,some_view_ref,form"] = `
             <form>

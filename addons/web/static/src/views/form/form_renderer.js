@@ -16,7 +16,7 @@ import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
-const { Component, onMounted, onWillUnmount, useSubEnv, useRef, useState, xml } = owl;
+const { Component, onMounted, onWillUnmount, useEffect, useSubEnv, useRef, useState, xml } = owl;
 
 export class FormRenderer extends Component {
     setup() {
@@ -38,6 +38,28 @@ export class FormRenderer extends Component {
         this.onResize = useDebounced(this.render, 200);
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
+
+        const { autofocusFieldId, disableAutofocus } = archInfo;
+        if (!disableAutofocus) {
+            const rootRef = useRef("compiled_view_root");
+            useEffect(
+                (isInEdition, rootEl) => {
+                    if (!rootEl) {
+                        return;
+                    }
+                    let elementToFocus;
+                    if (isInEdition) {
+                        elementToFocus =
+                            (autofocusFieldId && rootEl.querySelector(`#${autofocusFieldId}`)) ||
+                            rootEl.querySelector(`.o_content .o_field_widget input`);
+                    }
+                    if (elementToFocus) {
+                        elementToFocus.focus();
+                    }
+                },
+                () => [this.props.record.isInEdition, rootRef.el]
+            );
+        }
     }
 
     evalDomainFromRecord(record, expr) {
