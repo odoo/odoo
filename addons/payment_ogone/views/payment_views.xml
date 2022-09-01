@@ -6,7 +6,15 @@
         <field name="model">payment.acquirer</field>
         <field name="inherit_id" ref="payment.payment_acquirer_form"/>
         <field name="arch" type="xml">
-            <xpath expr='//group[@name="acquirer"]' position='inside'>
+            <xpath expr="//div[@id='provider_creation_warning']" position="after">
+                <div class="alert alert-danger"
+                     role="alert"
+                     attrs="{'invisible': [('provider', '!=', 'ogone')]}">
+                    This provider is deprecated.
+                    Consider disabling it and moving to <strong>Stripe</strong>.
+                </div>
+            </xpath>
+            <group name="acquirer" position="inside">
                 <group attrs="{'invisible': [('provider', '!=', 'ogone')]}">
                     <field name="ogone_pspid" attrs="{'required':[('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>
                     <field name="ogone_userid" attrs="{'required':[('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>
@@ -15,7 +23,7 @@
                     <field name="ogone_shakey_out" attrs="{'required':[('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}" password="True"/>
                     <field name="ogone_hash_function" attrs="{'required':[('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}" groups="base.group_no_one"/>
                 </group>
-            </xpath>
+            </group>
         </field>
     </record>
 

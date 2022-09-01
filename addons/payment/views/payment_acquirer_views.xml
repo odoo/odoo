@@ -58,7 +58,7 @@
                             <button attrs="{'invisible': [('module_to_buy', '=', True)]}" type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
                         </div>
                     </div>
-                    <div attrs="{'invisible': [('id', '!=', False)]}" class="alert alert-warning" role="alert">
+                    <div id="provider_creation_warning" attrs="{'invisible': [('id', '!=', False)]}" class="alert alert-warning" role="alert">
                         <strong>Warning</strong> Creating a payment acquirer from the <em>CREATE</em> button is not supported.
                         Please use the <em>Duplicate</em> action instead.
                     </div>
