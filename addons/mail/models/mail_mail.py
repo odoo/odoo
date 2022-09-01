@@ -246,7 +246,9 @@ class MailMail(models.Model):
         self.env['mail.mail'].sudo().search([('to_delete', '=', True)]).unlink()
         return res
 
-    def _postprocess_sent_message(self, success, success_pids, failure_reason=False, failure_type=None):
+    def _postprocess_sent_message(self, success, success_pids,
+                                  notifications=False,
+                                  failure_reason=False, failure_type=None):
         """Perform any post-processing necessary after sending ``self`` successfully.
         It deletes it completely along with its attachments if the ``auto_delete``
         flag is set and if there was no real failure (aka no failure or 'email missing'
@@ -258,6 +260,9 @@ class MailMail(models.Model):
           global resend planned);
         :param list success_pids: recipients (partner IDs) successfully emailed.
           Allows to update notifications;
+        :param <mail.notification> notifications: potentials mail.notifications
+          linked to sent emails via underlying mail.message; can be given to skip
+          a search, in order to improve performances;
         :param str failure_reason: a complete message linked to the error, used
           in combination with failure_type;
         :param str failure_type: if there was a failure, short code of it (see
@@ -284,11 +289,12 @@ class MailMail(models.Model):
 
         notif_mails_ids = [mail.id for mail in self if mail.is_notification]
         if notif_mails_ids:
-            notifications = self.env['mail.notification'].search([
-                ('notification_type', '=', 'email'),
-                ('mail_mail_id', 'in', notif_mails_ids),
-                ('notification_status', 'not in', ('sent', 'canceled'))
-            ])
+            if notifications is False:
+                notifications = self.env['mail.notification'].search([
+                    ('notification_type', '=', 'email'),
+                    ('mail_mail_id', 'in', notif_mails_ids),
+                    ('notification_status', 'not in', ('sent', 'canceled'))
+                ])
             if notifications:
                 # find all notification linked to a failure
                 failed = self.env['mail.notification']
@@ -449,6 +455,7 @@ class MailMail(models.Model):
                     self.browse(batch_ids)._postprocess_sent_message(
                         False,
                         success_pids=[],
+                        notifications=False,
                         failure_reason=exc,
                         failure_type="mail_smtp",
                     )
@@ -473,6 +480,7 @@ class MailMail(models.Model):
             failure_type = None
             processing_pid = None
             mail = None
+            notifications = False
             try:
                 mail = self.browse(mail_id)
                 if mail.state != 'outgoing':
@@ -523,20 +531,20 @@ class MailMail(models.Model):
                 # Update notification in a transient exception state to avoid concurrent
                 # update in case an email bounces while sending all emails related to current
                 # mail record.
-                notifs = self.env['mail.notification'].search([
+                notifications = self.env['mail.notification'].search([
                     ('notification_type', '=', 'email'),
                     ('mail_mail_id', 'in', mail.ids),
                     ('notification_status', 'not in', ('sent', 'canceled'))
                 ])
-                if notifs:
-                    notifs.sudo().write({
+                if notifications:
+                    notifications.sudo().write({
                         'notification_status': 'exception',
                         'failure_reason': NOTIF_NO_RECIPIENTS,
                         'failure_type': 'unknown',
                     })
                     # `test_mail_bounce_during_send`, force immediate update to obtain the lock.
                     # see rev. 56596e5240ef920df14d99087451ce6f06ac6d36
-                    notifs.flush_recordset(['notification_status', 'failure_type', 'failure_reason'])
+                    notifications.flush_recordset(['notification_status', 'failure_type', 'failure_reason'])
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 res = None
@@ -588,6 +596,7 @@ class MailMail(models.Model):
                 mail._postprocess_sent_message(
                     bool(res),
                     success_pids=success_pids,
+                    notifications=notifications,
                     failure_reason=MAILMAIL_NO_RECIPIENTS,
                     failure_type=failure_type,
                 )
@@ -612,6 +621,7 @@ class MailMail(models.Model):
                 mail._postprocess_sent_message(
                     False,
                     success_pids=success_pids,
+                    notifications=notifications,
                     failure_reason=failure_reason,
                     failure_type='unknown'
                 )
