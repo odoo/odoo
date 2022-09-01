@@ -656,7 +656,7 @@ export class ModelManager {
         const record = owl.markRaw(!this.isDebug ? nonProxyRecord : new Proxy(nonProxyRecord, {
             get: function getFromProxy(record, prop) {
                 if (
-                    !model.__fieldMap.has(prop) &&
+                    (model.__fieldMap && !model.__fieldMap.has(prop)) &&
                     !['_super', 'then', 'localId'].includes(prop) &&
                     typeof prop !== 'symbol' &&
                     !(prop in record)
@@ -666,6 +666,9 @@ export class ModelManager {
                 return record[prop];
             },
         }));
+        if (this.isDebug) {
+            record.__proxifiedRecord = record;
+        }
         // Ensure X2many relations are Set initially (other fields can stay undefined).
         for (const field of model.__fieldList) {
             if (field.fieldType === 'relation') {
@@ -1214,26 +1217,27 @@ export class ModelManager {
                 // Add field accessors.
                 Object.defineProperty(model.prototype, fieldName, {
                     get: function getFieldValue() { // this is bound to record
+                        const record = this.modelManager.isDebug ? this.__proxifiedRecord : this;
                         if (this.modelManager._listeners.size) {
-                            let entryRecord = this.__listenersObservingRecord;
-                            const reason = this.modelManager.isDebug && `getField - ${field} of ${this}`;
-                            let entryField = this.__listenersObservingFieldsOfRecord.get(field);
+                            let entryRecord = record.__listenersObservingRecord;
+                            const reason = record.modelManager.isDebug && `getField - ${field} of ${record}`;
+                            let entryField = record.__listenersObservingFieldsOfRecord.get(field);
                             if (!entryField) {
                                 entryField = new Map();
-                                this.__listenersObservingFieldsOfRecord.set(field, entryField);
+                                record.__listenersObservingFieldsOfRecord.set(field, entryField);
                             }
-                            for (const listener of this.modelManager._listeners) {
-                                listener.lastObservedRecords.add(this);
+                            for (const listener of record.modelManager._listeners) {
+                                listener.lastObservedRecords.add(record);
                                 const info = { listener, reason };
                                 if (entryRecord.has(listener)) {
                                     entryRecord.get(listener).push(info);
                                 } else {
                                     entryRecord.set(listener, [info]);
                                 }
-                                if (!listener.lastObservedFieldsByRecord.has(this)) {
-                                    listener.lastObservedFieldsByRecord.set(this, new Set());
+                                if (!listener.lastObservedFieldsByRecord.has(record)) {
+                                    listener.lastObservedFieldsByRecord.set(record, new Set());
                                 }
-                                listener.lastObservedFieldsByRecord.get(this).add(field);
+                                listener.lastObservedFieldsByRecord.get(record).add(field);
                                 if (entryField.has(listener)) {
                                     entryField.get(listener).push(info);
                                 } else {
@@ -1241,7 +1245,7 @@ export class ModelManager {
                                 }
                             }
                         }
-                        return field.get(this);
+                        return field.get(record);
                     },
                 });
             }
