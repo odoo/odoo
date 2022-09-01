@@ -27,6 +27,8 @@ class ResConfigSettings(models.TransientModel):
         'Website Domain',
         related='website_id.domain',
         readonly=False)
+    website_homepage_url = fields.Char(
+        related='website_id.homepage_url', readonly=False)
     website_country_group_ids = fields.Many2many(
         related='website_id.country_group_ids',
         readonly=False)

@@ -178,7 +178,9 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_06_public_user_editor(self):
         website_default = self.env['website'].search([], limit=1)
-        website_default.homepage_id.arch = """
+        self.env['website.page'].search([
+            ('url', '=', '/'), ('website_id', '=', website_default.id)
+        ], limit=1).arch = """
             <t name="Homepage" t-name="website.homepage">
                 <t t-call="website.layout">
                     <textarea class="o_public_user_editor_test_textarea o_wysiwyg_loader"/>

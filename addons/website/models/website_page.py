@@ -30,7 +30,7 @@ class Page(models.Model):
     # This is needed to be able to control if page is a menu in page properties.
     # TODO this should be reviewed entirely so that we use a transient model.
     is_in_menu = fields.Boolean(compute='_compute_website_menu', inverse='_inverse_website_menu')
-    is_homepage = fields.Boolean(compute='_compute_homepage', inverse='_set_homepage', string='Homepage')
+    is_homepage = fields.Boolean(compute='_compute_is_homepage', inverse='_set_is_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
 
     # Page options
@@ -43,19 +43,20 @@ class Page(models.Model):
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
     arch = fields.Text(related='view_id.arch', readonly=False, depends_context=('website_id',))
 
-    def _compute_homepage(self):
+    def _compute_is_homepage(self):
+        website = self.env['website'].get_current_website()
         for page in self:
-            page.is_homepage = page == self.env['website'].get_current_website().homepage_id
+            page.is_homepage = page.url == website.homepage_url
 
-    def _set_homepage(self):
+    def _set_is_homepage(self):
+        website = self.env['website'].get_current_website()
         for page in self:
-            website = self.env['website'].get_current_website()
             if page.is_homepage:
-                if website.homepage_id != page:
-                    website.write({'homepage_id': page.id})
+                if website.homepage_url != page.url:
+                    website.homepage_url = page.url
             else:
-                if website.homepage_id == page:
-                    website.write({'homepage_id': None})
+                if website.homepage_url == page.url:
+                    website.homepage_url = ''
 
     def _compute_visible(self):
         for page in self:
