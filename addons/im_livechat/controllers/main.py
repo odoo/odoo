@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.exceptions import NotFound
+
 from odoo import http, tools, _
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
@@ -181,8 +183,13 @@ class LivechatController(http.Controller):
             :param uuid: (string) the UUID of the livechat channel
             :param is_typing: (boolean) tells whether the website user is typing or not.
         """
-        channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)], limit=1)
-        channel.notify_typing(is_typing=is_typing)
+        channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)])
+        if not channel:
+            raise NotFound()
+        channel_member = channel.env['mail.channel.member'].search([('channel_id', '=', channel.id), ('partner_id', '=', request.env.user.partner_id.id)])
+        if not channel_member:
+            raise NotFound()
+        channel_member._notify_typing(is_typing=is_typing)
 
     @http.route('/im_livechat/email_livechat_transcript', type='json', auth='public', cors="*")
     def email_livechat_transcript(self, uuid, email):

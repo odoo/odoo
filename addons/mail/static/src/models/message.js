@@ -21,18 +21,8 @@ registerModel({
         convertData(data) {
             const data2 = {};
             data2.attachments = data.attachment_ids;
-            if ('author_id' in data) {
-                if (!data.author_id) {
-                    data2.author = clear();
-                } else if (data.author_id[0] !== 0) {
-                    // partner id 0 is a hack of message_format to refer to an
-                    // author non-related to a partner. display_name equals
-                    // email_from, so this is omitted due to being redundant.
-                    data2.author = insert({
-                        display_name: data.author_id[1],
-                        id: data.author_id[0],
-                    });
-                }
+            if ('author' in data) {
+                data2.author = data.author;
             }
             if ('body' in data) {
                 data2.body = data.body;

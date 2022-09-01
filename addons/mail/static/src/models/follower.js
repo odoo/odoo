@@ -33,7 +33,7 @@ registerModel({
                 }
             }
             if (data.partner) {
-                data2.partner = this.models['Partner'].convertData(data.partner);
+                data2.partner = data.partner;
             }
             return data2;
         },

@@ -64,6 +64,9 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeCallParticipants() {
+            if (!this.thread) {
+                return clear();
+            }
             const callParticipants = this.thread.invitedMembers;
             for (const rtcSession of this.thread.rtcSessions) {
                 callParticipants.push(rtcSession.channelMember);
@@ -78,16 +81,19 @@ registerModel({
             if (this.channel_type === 'channel') {
                 return clear();
             }
-            const correspondents = this.thread.members.filter(partner =>
-                partner !== this.messaging.currentPartner
-            );
+            const correspondents = this.channelMembers
+                .filter(member => member.persona && member.persona.partner && !member.isMemberOfCurrentUser)
+                .map(member => member.persona.partner);
             if (correspondents.length === 1) {
                 // 2 members chat
                 return correspondents[0];
             }
-            if (this.thread.members.length === 1) {
+            const partners = this.channelMembers
+                .filter(member => member.persona && member.persona.partner)
+                .map(member => member.persona.partner);
+            if (partners.length === 1) {
                 // chat with oneself
-                return this.thread.members[0];
+                return partners[0];
             }
             return clear();
         },
@@ -140,13 +146,17 @@ registerModel({
          * @returns {string}
          */
         _computeDisplayName() {
+            if (!this.thread) {
+                return;
+            }
             if (this.channel_type === 'chat' && this.correspondent) {
-                return this.custom_channel_name || this.correspondent.nameOrDisplayName;
+                return this.custom_channel_name || this.thread.getMemberName(this.correspondent.persona);
             }
             if (this.channel_type === 'group' && !this.thread.name) {
-                const partnerNames = this.thread.members.map(partner => partner.nameOrDisplayName);
-                const guestNames = this.thread.guestMembers.map(guest => guest.name);
-                return [...partnerNames, ...guestNames].join(this.env._t(", "));
+                return this.channelMembers
+                    .filter(channelMember => channelMember.persona)
+                    .map(channelMember => this.thread.getMemberName(channelMember.persona))
+                    .join(this.env._t(", "));
             }
             return this.thread.name;
         },
@@ -280,6 +290,9 @@ registerModel({
          * States the number of members in this channel according to the server.
          */
         memberCount: attr(),
+        memberOfCurrentUser: one('ChannelMember', {
+            inverse: 'channelAsMemberOfCurrentUser',
+        }),
         orderedOfflineMembers: many('ChannelMember', {
             inverse: 'channelAsOfflineMember',
             sort: '_sortMembers',

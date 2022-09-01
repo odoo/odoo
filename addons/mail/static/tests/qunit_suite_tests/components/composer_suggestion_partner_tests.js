@@ -10,11 +10,16 @@ QUnit.test('partner mention suggestion displayed', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
-    pyEnv['res.partner'].create({
+    const resPartnerId = pyEnv['res.partner'].create({
         email: "demo_user@odoo.com",
         im_status: 'online',
         name: 'Demo User',
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId }],
+        ],
     });
     const { insertText, openDiscuss } = await start({
         discuss: {
@@ -36,11 +41,16 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
     assert.expect(5);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
-    pyEnv['res.partner'].create({
+    const resPartnerId = pyEnv['res.partner'].create({
         email: "demo_user@odoo.com",
         im_status: 'online',
         name: 'Demo User',
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId }],
+        ],
     });
     const { insertText, openDiscuss } = await start({
         discuss: {
@@ -82,11 +92,16 @@ QUnit.test('partner mention suggestion active', async function (assert) {
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
-    pyEnv['res.partner'].create({
+    const resPartnerId = pyEnv['res.partner'].create({
         email: "demo_user@odoo.com",
         im_status: 'online',
         name: 'Demo User',
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId }],
+        ],
     });
     const { insertText, openDiscuss } = await start({
         discuss: {

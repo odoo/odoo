@@ -1,25 +1,15 @@
 /** @odoo-module **/
 
 import { addFields, patchRecordMethods } from '@mail/model/model_core';
-import { one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
-// ensure that the model definition is loaded before the patch
-import '@mail/models/channel';
+import { attr, one } from '@mail/model/model_field';
+import '@mail/models/channel'; // ensure that the model definition is loaded before the patch
 
 addFields('Channel', {
-    livechatCorrespondent: one('Partner'),
+    anonymous_country: one('Country'),
+    anonymous_name: attr(),
 });
 
 patchRecordMethods('Channel', {
-    /**
-     * @override
-     */
-    _computeCorrespondent() {
-        if (this.channel_type === 'livechat') {
-            return this.livechatCorrespondent || clear();
-        }
-        return this._super();
-    },
     /**
      * @override
      */
@@ -33,11 +23,17 @@ patchRecordMethods('Channel', {
      * @override
      */
     _computeDisplayName() {
+        if (!this.thread) {
+            return;
+        }
         if (this.channel_type === 'livechat' && this.correspondent) {
-            if (this.correspondent.country) {
-                return `${this.correspondent.nameOrDisplayName} (${this.correspondent.country.name})`;
+            if (!this.correspondent.is_public && this.correspondent.country) {
+                return `${this.thread.getMemberName(this.correspondent.persona)} (${this.correspondent.country.name})`;
             }
-            return this.correspondent.nameOrDisplayName;
+            if (this.anonymous_country) {
+                return `${this.thread.getMemberName(this.correspondent.persona)} (${this.anonymous_country.name})`;
+            }
+            return this.thread.getMemberName(this.correspondent.persona);
         }
         return this._super();
     },

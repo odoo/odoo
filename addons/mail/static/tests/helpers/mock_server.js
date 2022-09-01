@@ -208,12 +208,6 @@ patch(MockServer.prototype, 'mail', {
         if (args.model === 'mail.channel' && args.method === 'execute_command_who') {
             return this._mockMailChannelExecuteCommandWho(args);
         }
-        if (args.model === 'mail.channel' && args.method === 'notify_typing') {
-            const ids = args.args[0];
-            const is_typing = args.args[1] || args.kwargs.is_typing;
-            const context = args.kwargs.context;
-            return this._mockMailChannelNotifyTyping(ids, is_typing, context);
-        }
         if (args.model === 'mail.channel' && args.method === 'write' && 'image_128' in args.args[1]) {
             const ids = args.args[0];
             return this._mockMailChannelWriteImage128(ids[0]);
@@ -371,7 +365,6 @@ patch(MockServer.prototype, 'mail', {
         this._mockMailMessageSetMessageDone(messages.map(message => message.id));
         return this._mockMailMessageMessageFormat(messages.map(message => message.id));
     },
-
     /**
      * Simulates the `/mail/chat_post` route.
      *
@@ -982,7 +975,6 @@ patch(MockServer.prototype, 'mail', {
         const channels = this.getRecords('mail.channel', [['id', 'in', ids]]);
         return channels.map(channel => {
             const members = this.getRecords('mail.channel.member', [['id', 'in', channel.channel_member_ids]]);
-            const partnerIds = members.filter(member => member.partner_id).map(member => member.partner_id);
             const messages = this.getRecords('mail.message', [
                 ['model', '=', 'mail.channel'],
                 ['res_id', '=', channel.id],
@@ -1009,21 +1001,9 @@ patch(MockServer.prototype, 'mail', {
             };
             const res = Object.assign({}, channel, {
                 last_message_id: lastMessageId,
-                members: [...this._mockResPartnerMailPartnerFormat(partnerIds).values()],
                 message_needaction_counter: messageNeedactionCounter,
                 authorizedGroupFullName: group_public_id ? group_public_id.name : false,
             });
-            if (channel.channel_type === 'channel') {
-                delete res.members;
-            } else {
-                res['seen_partners_info'] = members.filter(member => member.partner_id).map(member => {
-                    return {
-                        partner_id: member.partner_id,
-                        seen_message_id: member.seen_message_id,
-                        fetched_message_id: member.fetched_message_id,
-                    };
-                });
-            }
             const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel.id], ['partner_id', '=', this.currentPartnerId]]);
             if (memberOfCurrentUser) {
                 Object.assign(res, {
@@ -1040,6 +1020,17 @@ patch(MockServer.prototype, 'mail', {
                 if (memberOfCurrentUser.rtc_inviting_session_id) {
                     res['rtc_inviting_session'] = { 'id': memberOfCurrentUser.rtc_inviting_session_id };
                 }
+                channelData['channelMembers'] = [['insert', this._mockMailChannelMember_MailChannelMemberFormat([memberOfCurrentUser.id])]];
+            }
+            if (channel.channel_type !== 'channel') {
+                res['seen_partners_info'] = members.filter(member => member.partner_id).map(member => {
+                    return {
+                        partner_id: member.partner_id,
+                        seen_message_id: member.seen_message_id,
+                        fetched_message_id: member.fetched_message_id,
+                    };
+                });
+                channelData['channelMembers'] = [['insert', this._mockMailChannelMember_MailChannelMemberFormat(members.map(member => member.id))]];
             }
             res.channel = channelData;
             return res;
@@ -1364,35 +1355,6 @@ patch(MockServer.prototype, 'mail', {
         };
     },
     /**
-     * Simulates `notify_typing` on `mail.channel`.
-     *
-     * @private
-     * @param {integer[]} ids
-     * @param {boolean} is_typing
-     * @param {Object} [context={}]
-     */
-    _mockMailChannelNotifyTyping(ids, is_typing, context = {}) {
-        const channels = this.getRecords('mail.channel', [['id', 'in', ids]]);
-        let partner_id;
-        if ('mockedPartnerId' in context) {
-            partner_id = context.mockedPartnerId;
-        } else {
-            partner_id = this.currentPartnerId;
-        }
-        const partner = this.getRecords('res.partner', [['id', '=', partner_id]]);
-        const notifications = [];
-        for (const channel of channels) {
-            const data = [channel, 'mail.channel.member/typing_status', {
-                'channel_id': channel.id,
-                'is_typing': is_typing,
-                'partner_id': partner_id,
-                'partner_name': partner.name,
-            }];
-            notifications.push(data);
-        }
-        this.pyEnv['bus.bus']._sendmany(notifications);
-    },
-    /**
      * Simulates the `_set_last_seen_message` method of `mail.channel`.
      *
      * @private
@@ -1499,14 +1461,13 @@ patch(MockServer.prototype, 'mail', {
             ])[0];
             let formattedAuthor;
             if (message.author_id) {
-                const author = this.getRecords(
-                    'res.partner',
-                    [['id', '=', message.author_id]],
-                    { active_test: false }
-                )[0];
-                formattedAuthor = [author.id, author.display_name];
+                const [author] = this.getRecords('res.partner', [['id', '=', message.author_id]], { active_test: false });
+                formattedAuthor = {
+                    'id': author.id,
+                    'name': author.name,
+                };
             } else {
-                formattedAuthor = [0, message.email_from];
+                formattedAuthor = [['clear']];
             }
             const attachments = this.getRecords('ir.attachment', [
                 ['id', 'in', message.attachment_ids],
@@ -1537,7 +1498,7 @@ patch(MockServer.prototype, 'mail', {
             );
             const response = Object.assign({}, message, {
                 attachment_ids: formattedAttachments,
-                author_id: formattedAuthor,
+                author: formattedAuthor,
                 history_partner_ids: historyPartnerIds,
                 needaction_partner_ids: needactionPartnerIds,
                 notifications,
@@ -1546,6 +1507,7 @@ patch(MockServer.prototype, 'mail', {
                 record_name: thread && (thread.name !== undefined ? thread.name : thread.display_name),
                 trackingValues: formattedTrackingValues,
             });
+            delete response['author_id'];
             if (message.subtype_id) {
                 const subtype = this.getRecords('mail.message.subtype', [
                     ['id', '=', message.subtype_id],
@@ -2291,6 +2253,7 @@ patch(MockServer.prototype, 'mail', {
     _mockResPartnerGetMentionSuggestions(args) {
         const search = (args.args[0] || args.kwargs.search || '').toLowerCase();
         const limit = args.args[1] || args.kwargs.limit || 8;
+        const channel_id = args.args[2] || args.kwargs.channel_id;
 
         /**
          * Returns the given list of partners after filtering it according to
@@ -2307,6 +2270,12 @@ patch(MockServer.prototype, 'mail', {
             const matchingPartners = [...this._mockResPartnerMailPartnerFormat(
                 partners
                     .filter(partner => {
+                        if (channel_id) {
+                            const [member] = this.getRecords('mail.channel.member', [['channel_id', '=', channel_id], ['partner_id', '=', partner.id]]);
+                            if (!member) {
+                                return false;
+                            }
+                        }
                         // no search term is considered as return all
                         if (!search) {
                             return true;
@@ -2321,7 +2290,15 @@ patch(MockServer.prototype, 'mail', {
                         return false;
                     })
                     .map(partner => partner.id)
-            ).values()];
+            ).values()].map(partnerFormat => {
+                if (channel_id) {
+                    const [member] = this.getRecords('mail.channel.member', [['channel_id', '=', channel_id], ['partner_id', '=', partnerFormat.id]]);
+                    partnerFormat['persona'] = {
+                        'channelMembers': [['insert', this._mockMailChannelMember_MailChannelMemberFormat([member.id])]],
+                    };
+                }
+                return partnerFormat;
+            });
             // reduce results to max limit
             matchingPartners.length = Math.min(matchingPartners.length, limit);
             return matchingPartners;
@@ -2390,14 +2367,11 @@ patch(MockServer.prototype, 'mail', {
                 const partner = this.getRecords('res.partner', [['id', '=', user.partner_id]])[0];
                 return {
                     id: partner.id,
-                    im_status: user.im_status || 'offline',
-                    email: partner.email,
                     name: partner.name,
-                    user_id: user.id,
                 };
             }).sort((a, b) => (a.name === b.name) ? (a.id - b.id) : (a.name > b.name) ? 1 : -1);
         matchingPartners.length = Math.min(matchingPartners.length, limit);
-        return matchingPartners;
+        return [...this._mockResPartnerMailPartnerFormat(matchingPartners.map(partner => partner.id)).values()];
     },
     /**
      * Simulates `mail_partner_format` on `res.partner`.
@@ -2422,17 +2396,16 @@ patch(MockServer.prototype, 'mail', {
                 mainUser = internalUsers[0];
             } else if (users.length > 0) {
                 mainUser = users[0];
-            } else {
-                mainUser = [];
             }
             return [partner.id, {
                 "active": partner.active,
-                "display_name": partner.display_name,
                 "email": partner.email,
                 "id": partner.id,
                 "im_status": partner.im_status,
                 "name": partner.name,
-                "user_id": mainUser.id,
+                "user": mainUser ? {
+                    'id': mainUser.id,
+                } : [['clear']],
             }];
         }));
     },
@@ -2522,7 +2495,6 @@ patch(MockServer.prototype, 'mail', {
             menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
             partner_root: this._mockResPartnerMailPartnerFormat(this.partnerRootId).get(this.partnerRootId),
-            publicPartners: [['insert', [{ 'id': this.publicPartnerId }]]],
             shortcodes: this.pyEnv['mail.shortcode'].searchRead([], { fields: ['source', 'substitution'] }),
             starred_counter: this.getRecords('mail.message', [['starred_partner_ids', 'in', user.partner_id]]).length,
         };

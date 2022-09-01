@@ -10,6 +10,7 @@ from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.addons.bus.models.bus_presence import AWAY_TIMER, DISCONNECTION_TIMER
 
+
 class MailGuest(models.Model):
     _name = 'mail.guest'
     _description = "Guest"
@@ -118,7 +119,21 @@ class MailGuest(models.Model):
                 'id': partner_root.id,
                 'name': partner_root.name,
             },
-            'publicPartners': [],
             'shortcodes': [],
             'starred_counter': False,
         }
+
+    def _guest_format(self, fields=None):
+        if not fields:
+            fields = {'id': True, 'name': True, 'im_status': True}
+        guests_formatted_data = {}
+        for guest in self:
+            data = {}
+            if 'id' in fields:
+                data['id'] = guest.id
+            if 'name' in fields:
+                data['name'] = guest.name
+            if 'im_status' in fields:
+                data['im_status'] = guest.im_status
+            guests_formatted_data[guest] = data
+        return guests_formatted_data

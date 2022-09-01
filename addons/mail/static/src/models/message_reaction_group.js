@@ -44,7 +44,7 @@ registerModel({
             } = [
                 ...this.partners.map(partner => {
                     if (this.message.originThread) {
-                        return this.message.originThread.getMemberName(partner);
+                        return this.message.originThread.getMemberName(partner.persona);
                     }
                     return partner.nameOrDisplayName;
                 }),

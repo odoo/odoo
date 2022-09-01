@@ -22,10 +22,10 @@ registerModel({
          * @returns {FieldCommand|integer}
          */
         _computeAuthorId() {
-            if (!(this.data.author_id && this.data.author_id[0])) {
-                return clear();
+            if (this.data.author && this.data.author.id) {
+                return this.data.author.id;
             }
-            return this.data.author_id[0];
+            return clear();
         },
     },
     fields: {

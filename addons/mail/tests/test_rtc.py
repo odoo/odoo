@@ -656,7 +656,7 @@ class TestChannelInternals(MailCommon):
                     'payload': {
                         'id': channel.id,
                         'model': 'mail.channel',
-                        'rtcInvitingSession': [('insert', {
+                        'rtcInvitingSession': {
                             'id': channel_member.rtc_session_ids.id,
                             'channelMember': {
                                 "id": channel_member.id,
@@ -673,7 +673,7 @@ class TestChannelInternals(MailCommon):
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                        })],
+                        },
                     },
                 },
                 {
@@ -681,7 +681,7 @@ class TestChannelInternals(MailCommon):
                     'payload': {
                         'id': channel.id,
                         'model': 'mail.channel',
-                        'rtcInvitingSession': [('insert', {
+                        'rtcInvitingSession': {
                             'id': channel_member.rtc_session_ids.id,
                             'channelMember': {
                                 "id": channel_member.id,
@@ -698,7 +698,7 @@ class TestChannelInternals(MailCommon):
                             'isDeaf': False,
                             'isSelfMuted': False,
                             'isScreenSharingOn': False,
-                        })],
+                        },
                     },
                 },
                 {

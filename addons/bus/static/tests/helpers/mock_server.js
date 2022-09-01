@@ -60,6 +60,9 @@ patch(MockServer.prototype, 'bus', {
         for (const notification of notifications) {
             const [type, payload] = notification.slice(1, notification.length);
             values.push({ payload, type });
+            if (this.debug) {
+                console.log("%c[bus]", "color: #c6e; font-weight: bold;", type, payload);
+            }
         }
         this.websocketWorker.broadcast('notification', values);
 

@@ -824,13 +824,14 @@ class Message(models.Model):
 
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
-
-            # Author
-            if message_sudo.author_id:
-                author = (message_sudo.author_id.id, message_sudo.author_id.display_name)
-            else:
-                author = (0, message_sudo.email_from)
-
+            author = {
+                'id': message_sudo.author_id.id,
+                'name': message_sudo.author_id.name,
+            } if message_sudo.author_id else [('clear',)]
+            guestAuthor = {
+                'id': message_sudo.author_guest_id.id,
+                'name': message_sudo.author_guest_id.name,
+            } if message_sudo.author_guest_id else [('clear',)]
             if message_sudo.model and message_sudo.res_id:
                 record_name = self.env[message_sudo.model] \
                     .browse(message_sudo.res_id) \
@@ -839,14 +840,6 @@ class Message(models.Model):
                     .display_name
             else:
                 record_name = False
-
-            if message_sudo.author_guest_id:
-                vals['guestAuthor'] = [('insert', {
-                    'id': message_sudo.author_guest_id.id,
-                    'name': message_sudo.author_guest_id.name,
-                })]
-            else:
-                vals['author_id'] = author
             reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
             for reaction in message_sudo.reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
@@ -861,6 +854,8 @@ class Message(models.Model):
                 vals['parentMessage'] = message_sudo.parent_id.message_format(format_reply=False)[0]
             allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
             vals.update({
+                'author': author,
+                'guestAuthor': guestAuthor,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachment_ids': message_sudo.attachment_ids._attachment_format() if not legacy else message_sudo.attachment_ids._attachment_format(legacy=True),
                 'trackingValues': allowed_tracking_ids._tracking_value_format(),
@@ -957,7 +952,7 @@ class Message(models.Model):
 
     def _get_message_format_fields(self):
         return [
-            'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
+            'id', 'body', 'date', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related
             'starred_partner_ids',  # list of partner ids for whom the message is starred

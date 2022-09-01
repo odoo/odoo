@@ -42,14 +42,16 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
 
     const mailChannel1 = pyEnv['mail.channel'].searchRead([['id', '=', mailChannelId1]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
-    await afterNextRender(() => {
-        pyEnv['bus.bus']._sendone(mailChannel1, 'mail.channel.member/typing_status', {
-            'channel_id': mailChannelId1,
-            'is_typing': true,
-            'partner_id': messaging.publicPartners[0].id,
-            'partner_name': messaging.publicPartners[0].name,
-        });
-    });
+    await afterNextRender(() => messaging.rpc({
+        route: '/im_livechat/notify_typing',
+        params: {
+            context: {
+                mockedPartnerId: pyEnv.publicPartnerId,
+            },
+            is_typing: true,
+            uuid: mailChannel1.uuid,
+        },
+    }));
     assert.containsOnce(
         document.body,
         '.o_ThreadIcon_typing',

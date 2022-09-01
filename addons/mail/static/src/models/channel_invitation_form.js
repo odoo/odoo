@@ -32,7 +32,7 @@ registerModel({
             if (this.thread.channel.channel_type === 'chat') {
                 const partners_to = [...new Set([
                     this.messaging.currentPartner.id,
-                    ...this.thread.members.map(member => member.id),
+                    ...this.thread.channel.channelMembers.filter(member => member.persona && member.persona.partner).map(member => member.persona.partner.id),
                     ...this.selectedPartners.map(partner => partner.id),
                 ])];
                 const channel = await this.messaging.models['Thread'].createGroupChat({ partners_to });
@@ -147,7 +147,7 @@ registerModel({
                 }
                 this.update({
                     searchResultCount: count,
-                    selectablePartners: partnersData.map(partnerData => this.messaging.models['Partner'].convertData(partnerData)),
+                    selectablePartners: partnersData,
                 });
             } finally {
                 if (this.exists()) {

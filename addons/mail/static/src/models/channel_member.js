@@ -22,6 +22,13 @@ registerModel({
         },
         /**
          * @private
+         * @returns {Object|FieldCommand}
+         */
+        _computeChannelAsMemberOfCurrentUser() {
+            return this.isMemberOfCurrentUser ? this.channel : clear();
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeChannelAsOfflineMember() {
@@ -50,6 +57,19 @@ registerModel({
          * @private
          * @returns {boolean}
          */
+        _computeIsMemberOfCurrentUser() {
+            if (this.messaging.currentPartner) {
+                return this.messaging.currentPartner.persona === this.persona;
+            }
+            if (this.messaging.currentGuest) {
+                return this.messaging.currentGuest.persona === this.persona;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
         _computeIsStreaming() {
             return Boolean(this.rtcSession && this.rtcSession.videoStream);
         },
@@ -67,6 +87,10 @@ registerModel({
             readonly: true,
             required: true,
         }),
+        channelAsMemberOfCurrentUser: one('Channel', {
+            compute: '_computeChannelAsMemberOfCurrentUser',
+            inverse: 'memberOfCurrentUser',
+        }),
         channelAsOfflineMember: one('Channel', {
             compute: '_computeChannelAsOfflineMember',
             inverse: 'orderedOfflineMembers',
@@ -82,8 +106,19 @@ registerModel({
         id: attr({
             identifying: true,
         }),
+        isMemberOfCurrentUser: attr({
+            compute: '_computeIsMemberOfCurrentUser',
+            default: false,
+        }),
         isStreaming: attr({
             compute: '_computeIsStreaming',
+        }),
+        isTyping: attr({
+            default: false,
+        }),
+        otherMemberLongTypingInThreadTimers: many('OtherMemberLongTypingInThreadTimer', {
+            inverse: 'member',
+            isCausal: true,
         }),
         persona: one('Persona', {
             inverse: 'channelMembers',

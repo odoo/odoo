@@ -863,10 +863,15 @@ QUnit.test('Post a message containing an email address followed by a mention on 
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const resPartnerId1 = pyEnv['res.partner'].create({
         email: "testpartner@odoo.com",
         name: "TestPartner",
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
     });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
@@ -889,10 +894,15 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
     assert.expect(1);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const resPartnerId1 = pyEnv['res.partner'].create({
         email: "usatyi@example.com",
         name: "Pynya's spokesman",
+    });
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
     });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
@@ -914,7 +924,6 @@ QUnit.test('mention 2 different partners that have the same name', async functio
     assert.expect(3);
 
     const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create({});
     const [resPartnerId1, resPartnerId2] = pyEnv['res.partner'].create([
         {
             email: "partner1@example.com",
@@ -925,6 +934,13 @@ QUnit.test('mention 2 different partners that have the same name', async functio
             name: "TestPartner",
         },
     ]);
+    const mailChannelId1 = pyEnv['mail.channel'].create({
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+            [0, 0, { partner_id: resPartnerId2 }],
+        ],
+    });
     const { click, insertText, openDiscuss } = await start({
         discuss: {
             context: { active_id: mailChannelId1 },

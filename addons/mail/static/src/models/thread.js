@@ -59,9 +59,6 @@ registerModel({
             if ('group_based_subscription' in data) {
                 data2.group_based_subscription = data.group_based_subscription;
             }
-            if ('guestMembers' in data) {
-                data2.guestMembers = data.guestMembers;
-            }
             if ('id' in data) {
                 data2.id = data.id;
             }
@@ -110,15 +107,6 @@ registerModel({
             }
 
             // relations
-            if ('members' in data) {
-                if (!data.members) {
-                    data2.members = [];
-                } else {
-                    data2.members = data.members.map(memberData =>
-                        this.messaging.models['Partner'].convertData(memberData)
-                    );
-                }
-            }
             if ('rtc_inviting_session' in data) {
                 data2.rtcInvitingSession = insert(data.rtc_inviting_session);
             }
@@ -226,8 +214,8 @@ registerModel({
                 if (!isAPublic && isBPublic) {
                     return 1;
                 }
-                const isMemberOfA = a.model === 'mail.channel' && a.members.includes(this.messaging.currentPartner);
-                const isMemberOfB = b.model === 'mail.channel' && b.members.includes(this.messaging.currentPartner);
+                const isMemberOfA = a.channel && a.channel.memberOfCurrentUser;
+                const isMemberOfB = b.channel && b.channel.memberOfCurrentUser;
                 if (isMemberOfA && !isMemberOfB) {
                     return -1;
                 }
@@ -654,13 +642,13 @@ registerModel({
             }
         },
         /**
-         * Returns the name of the given partner in the context of this thread.
+         * Returns the name of the given persona in the context of this thread.
          *
-         * @param {mail.partner} partner
+         * @param {Persona} persona
          * @returns {string}
          */
-        getMemberName(partner) {
-            return partner.nameOrDisplayName;
+        getMemberName(persona) {
+            return persona.name;
         },
         /**
          * Joins this thread. Only makes sense on channels of type channel.
@@ -822,17 +810,17 @@ registerModel({
             });
         },
         /**
-         * Called to refresh a registered other member partner that is typing
-         * something.
+         * Called to refresh a registered other member that is typing something.
          *
-         * @param {Partner} partner
+         * @param {Member} member
          */
-        refreshOtherMemberTypingMember(partner) {
-            this.update({
-                otherMembersLongTypingTimers: [
-                    insertAndUnlink({ partner }),
-                    insert({ partner }),
-                ],
+        refreshOtherMemberTypingMember(member) {
+            this.messaging.models['OtherMemberLongTypingInThreadTimer'].insert({
+                member,
+                thread: this,
+                timer: {
+                    doReset: true,
+                },
             });
         },
         /**
@@ -847,34 +835,33 @@ registerModel({
                 currentPartnerLongTypingTimer: {},
             });
             // Manage typing member relation.
-            const currentPartner = this.messaging.currentPartner;
+            const memberOfCurrentUser = this.channel.memberOfCurrentUser;
             const newOrderedTypingMembers = [
-                ...this.orderedTypingMembers.filter(member => member !== currentPartner),
-                currentPartner,
+                ...this.orderedTypingMembers.filter(member => member !== memberOfCurrentUser),
+                memberOfCurrentUser,
             ];
             this.update({
                 isCurrentPartnerTyping: true,
                 orderedTypingMembers: newOrderedTypingMembers,
-                typingMembers: link(currentPartner),
+                typingMembers: link(memberOfCurrentUser),
             });
             // Notify typing status to other members.
             await this.throttleNotifyCurrentPartnerTypingStatus.do();
         },
         /**
-         * Called to register a new other member partner that is typing
-         * something.
+         * Called to register a new other member partner is typing something.
          *
-         * @param {Partner} partner
+         * @param {Member} member
          */
-        registerOtherMemberTypingMember(partner) {
-            this.update({ otherMembersLongTypingTimers: insert({ partner }) });
+        registerOtherMemberTypingMember(member) {
+            this.update({ otherMembersLongTypingTimers: insert({ member }) });
             const newOrderedTypingMembers = [
-                ...this.orderedTypingMembers.filter(member => member !== partner),
-                partner,
+                ...this.orderedTypingMembers.filter(currentMember => currentMember !== member),
+                member,
             ];
             this.update({
                 orderedTypingMembers: newOrderedTypingMembers,
-                typingMembers: link(partner),
+                typingMembers: link(member),
             });
         },
         /**
@@ -952,12 +939,12 @@ registerModel({
                 currentPartnerLongTypingTimer: clear(),
             });
             // Manage typing member relation.
-            const currentPartner = this.messaging.currentPartner;
-            const newOrderedTypingMembers = this.orderedTypingMembers.filter(member => member !== currentPartner);
+            const memberOfCurrentUser = this.channel.memberOfCurrentUser;
+            const newOrderedTypingMembers = this.orderedTypingMembers.filter(member => member !== memberOfCurrentUser);
             this.update({
                 isCurrentPartnerTyping: false,
                 orderedTypingMembers: newOrderedTypingMembers,
-                typingMembers: unlink(currentPartner),
+                typingMembers: unlink(memberOfCurrentUser),
             });
             // Notify typing status to other members.
             if (immediateNotify) {
@@ -969,14 +956,14 @@ registerModel({
          * Called to unregister an other member partner that is no longer typing
          * something.
          *
-         * @param {Partner} partner
+         * @param {Member} member
          */
-        unregisterOtherMemberTypingMember(partner) {
-            this.update({ otherMembersLongTypingTimers: insertAndUnlink({ partner }) });
-            const newOrderedTypingMembers = this.orderedTypingMembers.filter(member => member !== partner);
+        unregisterOtherMemberTypingMember(member) {
+            this.update({ otherMembersLongTypingTimers: insertAndUnlink({ member }) });
+            const newOrderedTypingMembers = this.orderedTypingMembers.filter(currentMember => currentMember !== member);
             this.update({
                 orderedTypingMembers: newOrderedTypingMembers,
-                typingMembers: unlink(partner),
+                typingMembers: unlink(member),
             });
         },
         /**
@@ -1294,16 +1281,7 @@ registerModel({
          * @return {FieldCommand}
          */
          _computeMessagingAsAllCurrentClientThreads() {
-            // The current client is linked to this thread if any of
-            // those conditions is met:
-            //  - `isServerPinned` is true.
-            //  - `messaging.currentPartner` is set and this partner is
-            //     a member of this thread.
-            //  - `messaging.currentGuest` is set and this guest is a
-            //     guest member of this thread.
-            const isPartnerMember = this.members.includes(this.messaging.currentPartner);
-            const isGuestMember = this.guestMembers.includes(this.messaging.currentGuest);
-            if (!this.messaging || !isPartnerMember && !isGuestMember && !this.isServerPinned) {
+            if (!this.messaging || !this.channel || !this.channel.memberOfCurrentUser || !this.isServerPinned) {
                 return clear();
             }
             return this.messaging;
@@ -1380,9 +1358,7 @@ registerModel({
          * @returns {Partner[]}
          */
         _computeOrderedOtherTypingMembers() {
-            return this.orderedTypingMembers.filter(
-                member => member !== this.messaging.currentPartner
-            );
+            return this.orderedTypingMembers.filter(member => !member.isMemberOfCurrentUser);
         },
         /**
          * @private
@@ -1428,20 +1404,20 @@ registerModel({
             if (this.orderedOtherTypingMembers.length === 1) {
                 return sprintf(
                     this.env._t("%s is typing..."),
-                    this.getMemberName(this.orderedOtherTypingMembers[0])
+                    this.getMemberName(this.orderedOtherTypingMembers[0].persona)
                 );
             }
             if (this.orderedOtherTypingMembers.length === 2) {
                 return sprintf(
                     this.env._t("%s and %s are typing..."),
-                    this.getMemberName(this.orderedOtherTypingMembers[0]),
-                    this.getMemberName(this.orderedOtherTypingMembers[1])
+                    this.getMemberName(this.orderedOtherTypingMembers[0].persona),
+                    this.getMemberName(this.orderedOtherTypingMembers[1].persona)
                 );
             }
             return sprintf(
                 this.env._t("%s, %s and more are typing..."),
-                this.getMemberName(this.orderedOtherTypingMembers[0]),
-                this.getMemberName(this.orderedOtherTypingMembers[1])
+                this.getMemberName(this.orderedOtherTypingMembers[0].persona),
+                this.getMemberName(this.orderedOtherTypingMembers[1].persona)
             );
         },
         /**
@@ -1474,10 +1450,11 @@ registerModel({
             ) {
                 if (this.model === 'mail.channel') {
                     await this.messaging.rpc({
-                        model: 'mail.channel',
-                        method: 'notify_typing',
-                        args: [this.id],
-                        kwargs: { is_typing: this.isCurrentPartnerTyping },
+                        route: '/mail/channel/notify_typing',
+                        params: {
+                            'channel_id': this.id,
+                            'is_typing': this.isCurrentPartnerTyping,
+                        },
                     }, { shadow: true });
                     if (!this.exists()) {
                         return;
@@ -1544,26 +1521,6 @@ registerModel({
         _sortAttachmentsInWebClientView() {
             return [
                 ['greater-first', 'id'],
-            ];
-        },
-        /**
-         * @private
-         * @returns {Array[]}
-         */
-        _sortGuestMembers() {
-            return [
-                ['truthy-first', 'name'],
-                ['case-insensitive-asc', 'name'],
-            ];
-        },
-        /**
-         * @private
-         * @returns {Array[]}
-         */
-        _sortPartnerMembers() {
-            return [
-                ['truthy-first', 'nameOrDisplayName'],
-                ['case-insensitive-asc', 'nameOrDisplayName'],
             ];
         },
         /**
@@ -1728,9 +1685,6 @@ registerModel({
         }),
         group_based_subscription: attr({
             default: false,
-        }),
-        guestMembers: many('Guest', {
-            sort: '_sortGuestMembers',
         }),
         /**
          * States whether the current user has read access for this thread.
@@ -1909,9 +1863,6 @@ registerModel({
             inverse: 'thread',
         }),
         mainAttachment: one('Attachment'),
-        members: many('Partner', {
-            sort: '_sortPartnerMembers',
-        }),
         /**
          * Determines the last mentioned channels of the last composer related
          * to this thread. Useful to sync the composer when re-creating it.
@@ -1995,13 +1946,13 @@ registerModel({
         /**
          * Ordered typing members on this thread, excluding the current partner.
          */
-        orderedOtherTypingMembers: many('Partner', {
+        orderedOtherTypingMembers: many('ChannelMember', {
             compute: '_computeOrderedOtherTypingMembers',
         }),
         /**
          * Ordered list of typing members.
          */
-        orderedTypingMembers: many('Partner'),
+        orderedTypingMembers: many('ChannelMember'),
         originThreadAttachments: many('Attachment', {
             inverse: 'originThread',
             isCausal: true,
@@ -2167,7 +2118,7 @@ registerModel({
          * Members that are currently typing something in the composer of this
          * thread, including current partner.
          */
-        typingMembers: many('Partner'),
+        typingMembers: many('ChannelMember'),
         /**
          * Text that represents the status on this thread about typing members.
          */

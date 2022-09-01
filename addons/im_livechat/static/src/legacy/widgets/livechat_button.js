@@ -57,10 +57,10 @@ const LivechatButton = Widget.extend({
         if (this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage) {
             this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
                 id: '_welcome',
-                author_id: [
-                    this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
-                    this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
-                ],
+                author: {
+                    id: this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
+                    name: this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
+                },
                 body: this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage,
                 date: time.datetime_to_str(new Date()),
                 model: "mail.channel",
