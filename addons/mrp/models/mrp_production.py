@@ -820,13 +820,7 @@ class MrpProduction(models.Model):
             if not vals.get('procurement_group_id'):
                 procurement_group_vals = self._prepare_procurement_group_vals(vals)
                 vals['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
-        productions = super().create(vals_list)
-        for production in productions:
-            # Trigger move_raw creation when importing a file
-            if 'import_file' in self.env.context:
-                production._onchange_move_raw()
-                production._onchange_move_finished()
-        return productions
+        return super().create(vals_list)
 
     def unlink(self):
         self.action_cancel()
