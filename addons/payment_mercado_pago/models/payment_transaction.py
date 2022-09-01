@@ -130,8 +130,7 @@ class PaymentTransaction(models.Model):
         payment_id = notification_data.get('payment_id')
         if not payment_id:
             raise ValidationError("Mercado Pago: " + _("Received data with missing payment id."))
-        if self.operation != 'refund':
-            self.acquirer_reference = payment_id
+        self.acquirer_reference = payment_id
 
         # Verify the notification data.
         verified_payment_data = self.acquirer_id._mercado_pago_make_request(
@@ -146,11 +145,6 @@ class PaymentTransaction(models.Model):
             self._set_pending()
         elif payment_status in TRANSACTION_STATUS_MAPPING['done']:
             self._set_done()
-
-            # Immediately post-process the transaction if it is a refund, as the post-processing
-            # will not be triggered by a customer browsing the transaction from the portal.
-            if self.operation == 'refund':
-                self.env.ref('payment.cron_post_process_payment_tx')._trigger()
         elif payment_status in TRANSACTION_STATUS_MAPPING['canceled']:
             self._set_canceled()
         else:  # Classify unsupported payment status as the `error` tx state.
