@@ -909,6 +909,25 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelectorAll(".o_form_label")[1], "c");
     });
 
+    QUnit.test("invisible fields are not used for the label generation", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="qux" invisible="1"/>
+                        <label for="qux"/>
+                        <field name="qux"/>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, "label:contains(Qux)");
+    });
+
     QUnit.test("invisible elements are properly hidden", async function (assert) {
         await makeView({
             type: "form",
