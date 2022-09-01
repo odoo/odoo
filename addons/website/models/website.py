@@ -25,7 +25,7 @@ from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
-from odoo.exceptions import UserError, AccessError, MissingError
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.http import request
 from odoo.modules.module import get_resource_path, get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN, get_unaccent_wrapper
@@ -132,7 +132,7 @@ class Website(models.Model):
     cdn_filters = fields.Text('CDN Filters', default=lambda s: '\n'.join(DEFAULT_CDN_FILTERS), help="URL matching those filters will be rewritten using the CDN Base URL")
     partner_id = fields.Many2one(related='user_id.partner_id', string='Public Partner', readonly=False)
     menu_id = fields.Many2one('website.menu', compute='_compute_menu', string='Main Menu')
-    homepage_id = fields.Many2one('website.page', string='Homepage')
+    homepage_url = fields.Char(help='E.g. /contactus or /shop')
     custom_code_head = fields.Html('Custom <head> code', sanitize=False)
     custom_code_footer = fields.Html('Custom end of <body> code', sanitize=False)
 
@@ -261,6 +261,7 @@ class Website(models.Model):
     def _handle_create_write(self, vals):
         self._handle_favicon(vals)
         self._handle_domain(vals)
+        self._handle_homepage_url(vals)
 
     @api.model
     def _handle_favicon(self, vals):
@@ -273,6 +274,18 @@ class Website(models.Model):
             if not vals['domain'].startswith('http'):
                 vals['domain'] = 'https://%s' % vals['domain']
             vals['domain'] = vals['domain'].rstrip('/')
+
+    @api.model
+    def _handle_homepage_url(self, vals):
+        homepage_url = vals.get('homepage_url')
+        if homepage_url:
+            vals['homepage_url'] = homepage_url.rstrip('/')
+
+    @api.constrains('homepage_url')
+    def _check_homepage_url(self):
+        for website in self.filtered('homepage_url'):
+            if not website.homepage_url.startswith('/'):
+                raise ValidationError(_("The homepage URL should be relative and start with '/'."))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_last_remaining_website(self):
@@ -438,7 +451,7 @@ class Website(models.Model):
 
         def configure_page(page_code, snippet_list, pages_views, cta_data):
             if page_code == 'homepage':
-                page_view_id = website.homepage_id.view_id
+                page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
             else:
                 page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
             rendered_snippets = []
@@ -640,13 +653,12 @@ class Website(models.Model):
             })
         # prevent /-1 as homepage URL
         homepage_page.url = '/'
-        self.homepage_id = homepage_page
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
         default_menu = self.env.ref('website.main_menu')
         self.copy_menu_hierarchy(default_menu)
         home_menu = self.env['website.menu'].search([('website_id', '=', self.id), ('url', '=', '/')])
-        home_menu.page_id = self.homepage_id
+        home_menu.page_id = homepage_page
 
     def copy_menu_hierarchy(self, top_menu):
         def copy_menu(menu, t_menu):
@@ -1379,7 +1391,7 @@ class Website(models.Model):
             'user_id': self.user_id.id,
             'company_id': self.company_id.id,
             'default_lang_id': self.default_lang_id.id,
-            'homepage_id': self.homepage_id.id,
+            'homepage_url': self.homepage_url,
         }
 
     def _get_cached(self, field):

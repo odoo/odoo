@@ -9,6 +9,7 @@ from . import test_image_upload_progress
 from . import test_is_multilang
 from . import test_media
 from . import test_multi_company
+from . import test_page
 from . import test_performance
 from . import test_redirect
 from . import test_reset_views
