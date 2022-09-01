@@ -84,4 +84,4 @@ class TestLoad(HttpCase):
 
         with patch('odoo.addons.base.models.assetsbundle.AssetsBundle.save_attachment', save_attachment):
             self.url_open('/web').raise_for_status()
-            #self.url_open('/').raise_for_status() #currently breaking because of the website_id
+            self.url_open('/').raise_for_status()
