@@ -265,7 +265,7 @@
             -->
             <t t-foreach="tax_totals['groups_by_subtotal'][subtotal_to_show]" t-as="amount_by_group">
                 <tr>
-                    <t t-if="len(tax_totals['groups_by_subtotal'][subtotal_to_show]) > 1">
+                    <t t-if="len(tax_totals['groups_by_subtotal'][subtotal_to_show]) > 1 or (tax_totals['amount_untaxed'] != amount_by_group['tax_group_base_amount'])">
                         <td>
                             <span t-esc="amount_by_group['tax_group_name']"/>
                             <span class="text-nowrap"> on
