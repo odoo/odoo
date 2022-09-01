@@ -1136,7 +1136,7 @@ export class Record extends DataPoint {
             (!value[1] || activeField.options.always_reload)
         ) {
             const context = this.getFieldContext(fieldName);
-            const result = await this.model.orm.nameGet(relation, [value[0]], context);
+            const result = await this.model.orm.nameGet(relation, [value[0]], {context: context});
             return result[0];
         }
         return value;
