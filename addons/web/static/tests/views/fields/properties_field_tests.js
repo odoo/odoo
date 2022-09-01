@@ -862,4 +862,90 @@ QUnit.module("Fields", (hooks) => {
             "Should have removed Bob from the list"
         );
     });
+
+    QUnit.test("properties: date(time) property manipulations", async function (assert) {
+        serverData.models.partner.records.push({
+            id: 3,
+            display_name: "third partner",
+            properties: [
+                {
+                    name: "property_1",
+                    string: "My Date",
+                    type: "date",
+                    value: "2019-01-01",
+                },
+                {
+                    name: "property_2",
+                    string: "My DateTime",
+                    type: "datetime",
+                    value: "2019-01-01 10:00:00",
+                },
+            ],
+            company_id: 37,
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 3,
+            serverData,
+            arch: `<form><field name="company_id"/><field name="properties"/></form>`,
+            mockRPC(route, { method, args }) {
+                assert.step(method);
+                if (method === "check_access_rights") {
+                    return true;
+                }
+                if (method === "write") {
+                    assert.deepEqual(args[1].properties, [
+                        {
+                            name: "property_1",
+                            string: "My Date",
+                            type: "date",
+                            value: "2018-12-31",
+                        },
+                        {
+                            name: "property_2",
+                            string: "My DateTime",
+                            type: "datetime",
+                            value: "2018-12-31 11:01:01",
+                        },
+                    ]);
+                }
+            },
+        });
+        assert.verifySteps(["get_views", "read", "check_access_rights"]);
+
+        // check initial properties
+        assert.equal(
+            target.querySelector("[property-name=property_1] .o_property_field_value").innerText,
+            "01/01/2019"
+        );
+        assert.equal(
+            target.querySelector("[property-name=property_2] .o_property_field_value").innerText,
+            "01/01/2019 11:00:00"
+        );
+
+        // edit date property
+        await click(target, ".o_form_button_edit");
+        await click(target, ".o_property_field[property-name=property_1] input");
+        await click(document.body, ".datepicker [data-day='12/31/2018']");
+        assert.equal(target.querySelector("[property-name=property_1] input").value, "12/31/2018");
+
+        // edit date time property
+        await click(target, ".o_property_field[property-name=property_2] input");
+        await click(document.body, ".datepicker [data-day='12/31/2018']");
+        await click(document.body, ".picker-switch [data-action=togglePicker]");
+        await click(document.body, ".timepicker [data-action=incrementHours]");
+        await click(document.body, ".timepicker [data-action=incrementMinutes]");
+        await click(document.body, ".timepicker [data-action=incrementSeconds]");
+        await click(document.body, ".picker-switch [data-action=close]");
+        assert.equal(
+            target.querySelector("[property-name=property_2] input").value,
+            "12/31/2018 12:01:01"
+        );
+
+        // save
+        assert.verifySteps([]);
+        await click(target, ".o_form_button_save");
+        assert.verifySteps(["write", "read"]);
+    });
 });

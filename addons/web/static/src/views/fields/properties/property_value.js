@@ -12,16 +12,16 @@ import { m2oTupleFromData } from "@web/views/fields/many2one/many2one_field";
 import { PropertyTags } from "./property_tags";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { formatFloat, formatInteger, formatMany2one } from "@web/views/fields/formatters";
-import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import {
+    deserializeDate,
+    deserializeDateTime,
+    formatDate,
+    formatDateTime,
+    serializeDate,
+    serializeDateTime,
+} from "@web/core/l10n/dates";
 
 const { Component } = owl;
-const { DateTime } = luxon;
-
-// Formats to stringify the date / datetime in the JSON.
-// It's important to have the year first, then the day,
-// etc... in UTC, to be able to search on them.
-const DEFAULT_SERVER_DATETIME_FORMAT = "yyyy-LL-dd HH:mm:ss";
-const DEFAULT_SERVER_DATE_FORMAT = "yyyy-LL-dd";
 
 /**
  * Represent one property value.
@@ -79,24 +79,9 @@ export class PropertyValue extends Component {
             // force to show at least 1 digit, even for integers
             return value;
         } else if (this.props.type === "datetime") {
-            if (typeof value === "string") {
-                // convert the datetime from the UTC format to the current timezone
-                const datetimeValue = DateTime.fromFormat(
-                    value + " +00:00",
-                    DEFAULT_SERVER_DATETIME_FORMAT + " Z"
-                );
-                return datetimeValue.invalid ? false : datetimeValue;
-            }
-            return value instanceof DateTime ? value : false;
+            return typeof value === "string" ? deserializeDateTime(value) : value;
         } else if (this.props.type === "date") {
-            if (typeof value === "string") {
-                const datetimeValue = DateTime.fromFormat(
-                    value + " +00:00",
-                    DEFAULT_SERVER_DATE_FORMAT + " Z"
-                );
-                return datetimeValue.invalid ? false : datetimeValue;
-            }
-            return value instanceof DateTime ? value : false;
+            return typeof value === "string" ? deserializeDate(value) : value;
         } else if (this.props.type === "boolean") {
             return !!value;
         } else if (this.props.type === "selection") {
@@ -178,15 +163,9 @@ export class PropertyValue extends Component {
      */
     async onValueChange(newValue) {
         if (this.props.type === "datetime") {
-            if (typeof newValue === "string") {
-                newValue = DateTime.fromISO(newValue);
-            }
-            newValue = newValue.toUTC().toFormat(DEFAULT_SERVER_DATETIME_FORMAT);
+            newValue = serializeDateTime(newValue);
         } else if (this.props.type === "date") {
-            if (typeof newValue === "string") {
-                newValue = DateTime.fromISO(newValue);
-            }
-            newValue = newValue.toFormat(DEFAULT_SERVER_DATE_FORMAT);
+            newValue = serializeDate(newValue);
         } else if (this.props.type === "integer") {
             newValue = parseInt(newValue) || 0;
         } else if (this.props.type === "float") {
