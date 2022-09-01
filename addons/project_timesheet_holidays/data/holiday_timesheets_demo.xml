@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="hr_holidays_analytic_line_1" model="account.analytic.line">
+            <field name="name">Doctor Appointment</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="date" eval="(datetime.now() + relativedelta(day=20, weekday=0)).strftime('%Y-%m-%d 08:00:00')"/>
+            <field name="unit_amount">8.00</field>
+            <field name="project_id" model="project.project" eval="obj().env.ref('hr_holidays.hr_holidays_sl').holiday_status_id.timesheet_project_id.id"/>
+            <field name="task_id" model="project.task" eval="obj().env.ref('hr_holidays.hr_holidays_sl').holiday_status_id.timesheet_task_id.id"/>
+            <field name="holiday_id" ref="hr_holidays.hr_holidays_sl"/>
+        </record>
+
+        <record id="hr_holidays_analytic_line_2" model="account.analytic.line">
+            <field name="name">Doctor Appointment</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="date" eval="(datetime.now() + relativedelta(day=20, weekday=0) + relativedelta(weekday=1)).strftime('%Y-%m-%d 17:00:00')"/>
+            <field name="unit_amount">8.00</field>
+            <field name="project_id" model="project.project" eval="obj().env.ref('hr_holidays.hr_holidays_sl').holiday_status_id.timesheet_project_id.id"/>
+            <field name="task_id" model="project.task" eval="obj().env.ref('hr_holidays.hr_holidays_sl').holiday_status_id.timesheet_task_id.id"/>
+            <field name="holiday_id" ref="hr_holidays.hr_holidays_sl"/>
+        </record>
+
+        <record id="hr_holidays_analytic_line_3" model="account.analytic.line">
+            <field name="name">Doctor Appointment</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="date" eval="(datetime.now() + relativedelta(day=20, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 17:00:00')"/>
+            <field name="unit_amount">8.00</field>
+            <field name="project_id" model="project.project" eval="obj().env.ref('hr_holidays.hr_holidays_sl').holiday_status_id.timesheet_project_id.id"/>
+            <field name="task_id" model="project.task" eval="obj().env.ref('hr_holidays.hr_holidays_sl').holiday_status_id.timesheet_task_id.id"/>
+            <field name="holiday_id" ref="hr_holidays.hr_holidays_sl"/>
+        </record>
+
+        <record id="hr_holidays_analytic_line_4" model="account.analytic.line">
+            <field name="name">Sick Day</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(datetime.now()+relativedelta(months=1, day=3, weekday=0)).strftime('%Y-%m-%d 01:00:00')"/>
+            <field name="unit_amount">8.00</field>
+            <field name="project_id" model="project.project" eval="obj().env.ref('hr_holidays.hr_holidays_cl_qdp').holiday_status_id.timesheet_project_id.id"/>
+            <field name="task_id" model="project.task" eval="obj().env.ref('hr_holidays.hr_holidays_cl_qdp').holiday_status_id.timesheet_task_id.id"/>
+            <field name="holiday_id" ref="hr_holidays.hr_holidays_cl_qdp"/>
+        </record>
+
+        <record id="hr_holidays_analytic_line_5" model="account.analytic.line">
+            <field name="name">Sick Day</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(datetime.now()+relativedelta(months=1, day=3, weekday=0) + relativedelta(weekday=1)).strftime('%Y-%m-%d 23:00:00')"/>
+            <field name="unit_amount">8.00</field>
+            <field name="project_id" model="project.project" eval="obj().env.ref('hr_holidays.hr_holidays_cl_qdp').holiday_status_id.timesheet_project_id.id"/>
+            <field name="task_id" model="project.task" eval="obj().env.ref('hr_holidays.hr_holidays_cl_qdp').holiday_status_id.timesheet_task_id.id"/>
+            <field name="holiday_id" ref="hr_holidays.hr_holidays_cl_qdp"/>
+        </record>
+
+        <record id="hr_holidays_analytic_line_6" model="account.analytic.line">
+            <field name="name">Sick Day</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(datetime.now()+relativedelta(months=1, day=3, weekday=0) + relativedelta(weekday=2)).strftime('%Y-%m-%d 23:00:00')"/>
+            <field name="unit_amount">8.00</field>
+            <field name="project_id" model="project.project" eval="obj().env.ref('hr_holidays.hr_holidays_cl_qdp').holiday_status_id.timesheet_project_id.id"/>
+            <field name="task_id" model="project.task" eval="obj().env.ref('hr_holidays.hr_holidays_cl_qdp').holiday_status_id.timesheet_task_id.id"/>
+            <field name="holiday_id" ref="hr_holidays.hr_holidays_cl_qdp"/>
+        </record>
+
+        <record id="hr_holidays_analytic_line_7" model="account.analytic.line">
+            <field name="name">Sick Day</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(datetime.now() + relativedelta(day=1, weekday=0)).strftime('%Y-%m-%d 01:00:00')"/>
+            <field name="unit_amount">8.00</field>
+            <field name="project_id" model="project.project" eval="obj().env.ref('hr_holidays.hr_holidays_sl_qdp').holiday_status_id.timesheet_project_id.id"/>
+            <field name="task_id" model="project.task" eval="obj().env.ref('hr_holidays.hr_holidays_sl_qdp').holiday_status_id.timesheet_task_id.id"/>
+            <field name="holiday_id" ref="hr_holidays.hr_holidays_sl_qdp"/>
+        </record>
+
+        <record id="hr_holidays_analytic_line_8" model="account.analytic.line">
+            <field name="name">Sick Day</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(datetime.now() + relativedelta(day=1, weekday=0) + relativedelta(days=1)).strftime('%Y-%m-%d 23:00:00')"/>
+            <field name="unit_amount">8.00</field>
+            <field name="project_id" model="project.project" eval="obj().env.ref('hr_holidays.hr_holidays_sl_qdp').holiday_status_id.timesheet_project_id.id"/>
+            <field name="task_id" model="project.task" eval="obj().env.ref('hr_holidays.hr_holidays_sl_qdp').holiday_status_id.timesheet_task_id.id"/>
+            <field name="holiday_id" ref="hr_holidays.hr_holidays_sl_qdp"/>
+        </record>
+
+        <record id="hr_holidays_analytic_line_9" model="account.analytic.line">
+            <field name="name">Sick Day</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="(datetime.now() + relativedelta(day=1, weekday=0) + relativedelta(days=2)).strftime('%Y-%m-%d 23:00:00')"/>
+            <field name="unit_amount">8.00</field>
+            <field name="project_id" model="project.project" eval="obj().env.ref('hr_holidays.hr_holidays_sl_qdp').holiday_status_id.timesheet_project_id.id"/>
+            <field name="task_id" model="project.task" eval="obj().env.ref('hr_holidays.hr_holidays_sl_qdp').holiday_status_id.timesheet_task_id.id"/>
+            <field name="holiday_id" ref="hr_holidays.hr_holidays_sl_qdp"/>
+        </record>
+
+    </data>
+
+</odoo>
