@@ -80,21 +80,23 @@ class Project(models.Model):
             operator_new = 'not inselect'
         return [('id', operator_new, (query, ()))]
 
-    @api.depends('allow_timesheets', 'task_ids.planned_hours', 'task_ids.remaining_hours')
+    @api.depends('allow_timesheets', 'task_ids.planned_hours', 'timesheet_ids')
     def _compute_remaining_hours(self):
-        group_read = self.env['project.task'].read_group(
-            domain=[('planned_hours', '!=', False), ('project_id', 'in', self.filtered('allow_timesheets').ids),
-                     '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)],
-            fields=['planned_hours:sum', 'remaining_hours:sum'], groupby='project_id')
-        group_per_project_id = {group['project_id'][0]: group for group in group_read}
+        timesheet_read_group = self.env['account.analytic.line'].read_group(
+            domain=[('project_id', 'in', self.filtered('allow_timesheets').ids), ('task_id', '!=', False),
+                    '|', ('task_id.stage_id.fold', '=', False), ('task_id.stage_id', '=', False)],
+            fields=['effective_hours:sum(unit_amount)'], groupby='project_id')
+        task_read_group = self.env['project.task'].read_group(
+            domain=[('planned_hours', '!=', 0.0), ('project_id', 'in', self.filtered('allow_timesheets').ids),
+                    ('parent_id', '=', False), '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)],
+            fields=['planned_hours:sum', ], groupby='project_id')
+        effective_hours_per_project_id = {res['project_id'][0]: res['effective_hours'] for res in timesheet_read_group}
+        planned_hours_per_project_id = {res['project_id'][0]: res['planned_hours'] for res in task_read_group}
         for project in self:
-            group = group_per_project_id.get(project.id)
-            if group:
-                project.remaining_hours = group.get('remaining_hours')
-                project.has_planned_hours_tasks = bool(group.get('planned_hours'))
-            else:
-                project.remaining_hours = 0
-                project.has_planned_hours_tasks = False
+            planned_hours = planned_hours_per_project_id.get(project.id, 0.0)
+            effective_hours = effective_hours_per_project_id.get(project.id, 0.0)
+            project.remaining_hours = planned_hours - effective_hours if planned_hours else 0.0
+            project.has_planned_hours_tasks = project.id in planned_hours_per_project_id
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
     def _check_allow_timesheet(self):
