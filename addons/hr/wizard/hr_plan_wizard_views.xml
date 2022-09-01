@@ -18,8 +18,8 @@
                         </div>
                     </sheet>
                     <footer>
-                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight" attrs="{'invisible': [('warning', '!=', False)]}" groups="hr.group_hr_manager" data-hotkey="q"/>
-                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight" disabled="disabled" attrs="{'invisible': [('warning', '=', False)]}" groups="hr.group_hr_manager" data-hotkey="q"/>
+                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight" attrs="{'invisible': [('warning', '!=', False)]}" groups="hr.group_hr_user" data-hotkey="q"/>
+                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight" disabled="disabled" attrs="{'invisible': [('warning', '=', False)]}" groups="hr.group_hr_user" data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
