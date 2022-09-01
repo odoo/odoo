@@ -284,8 +284,10 @@ class WebsitePublishedMultiMixin(WebsitePublishedMixin):
 
     def open_website_url(self):
         client_action_url = self.env['website'].get_client_action_url(self.website_url)
-        if self.website_id.domain:
-            client_action_url = url_join(self.website_id.domain, f'{client_action_url}&website_id={self.website_id.id}')
+        if self.website_id:
+            client_action_url = f'{client_action_url}&website_id={self.website_id.id}'
+            if self.website_id.domain:
+                client_action_url = url_join(self.website_id.domain, client_action_url)
         return {
             'type': 'ir.actions.act_url',
             'url': client_action_url,

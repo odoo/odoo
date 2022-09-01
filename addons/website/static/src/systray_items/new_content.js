@@ -148,14 +148,14 @@ export class NewContentModal extends Component {
         this.dialogs.add(AddPageDialog, {
             addPage: async (name, addMenu) => {
                 const url = `/website/add/${encodeURIComponent(name)}`;
-                const data = await this.http.post(url, { add_menu: addMenu || '', csrf_token });
+                const data = await this.http.post(url, { 'add_menu': addMenu || '', csrf_token });
                 if (data.view_id) {
                     this.action.doAction({
-                        res_model: 'ir.ui.view',
-                        res_id: data.view_id,
-                        views: [[false, 'form']],
-                        type: 'ir.actions.act_window',
-                        view_mode: 'form',
+                        'res_model': 'ir.ui.view',
+                        'res_id': data.view_id,
+                        'views': [[false, 'form']],
+                        'type': 'ir.actions.act_window',
+                        'view_mode': 'form',
                     });
                 } else {
                     this.website.goToWebsite({ path: data.url, edition: true });

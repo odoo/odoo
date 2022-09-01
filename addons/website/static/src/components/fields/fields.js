@@ -5,8 +5,6 @@ import {standardFieldProps} from '@web/views/fields/standard_field_props';
 import {useInputField} from '@web/views/fields/input_field_hook';
 import {useService} from '@web/core/utils/hooks';
 import {Switch} from '@website/components/switch/switch';
-import AbstractFieldOwl from 'web.AbstractFieldOwl';
-import fieldRegistry from 'web.field_registry_owl';
 import {registry} from '@web/core/registry';
 import {formatChar} from '@web/views/fields/formatters';
 
@@ -113,28 +111,6 @@ PageNameField.extractProps = ({attrs}) => {
 PageNameField.supportedTypes = ['char'];
 
 registry.category("fields").add("page_name", PageNameField);
-
-/**
- * Displays 'char' field's value prefixed by a FA icon.
- * The prefix is shown by default, but the visibility can be updated depending on
- * other field value.
- * e.g. `<field name="name" widget="fa_prefix" options="{'icon': 'fa-lock',
- * 'visibility': 'is_locked'}"/>` renders the icon only when 'is_locked' is True.
- */
-class FieldFaPrefix extends AbstractFieldOwl {
-    get prefix() {
-        const {icon, visibility, title} = this.nodeOptions;
-        return {
-            class: icon.split(' ').filter(str => str.indexOf('fa-') === 0).join(' '),
-            visible: !visibility || !!this.recordData[visibility],
-            help: title || '',
-        };
-    }
-}
-FieldFaPrefix.supportedFieldTypes = ['char'];
-FieldFaPrefix.template = 'website.FieldFaPrefix';
-
-fieldRegistry.add('fa_prefix', FieldFaPrefix);
 
 /**
  * Displays 'Selection' field's values as images to select.
