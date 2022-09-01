@@ -301,6 +301,18 @@ class SaleOrderLine(models.Model):
                         project = map_so_project[so_line.order_id.id]
                 if not so_line.task_id:
                     so_line._timesheet_create_task(project=project)
+            so_line._generate_milestone()
+
+    def _generate_milestone(self):
+        if self.product_id.service_policy == 'delivered_milestones':
+            milestone = self.env['project.milestone'].create({
+                'name': self.name,
+                'project_id': self.project_id.id,
+                'sale_line_id': self.id,
+                'quantity_percentage': 1,
+            })
+            if self.product_id.service_tracking == 'task_in_project':
+                self.task_id.milestone_id = milestone.id
 
     def _prepare_invoice_line(self, **optional_values):
         """

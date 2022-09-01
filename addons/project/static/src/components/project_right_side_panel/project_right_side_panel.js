@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useService } from '@web/core/utils/hooks';
-import { formatFloat, formatMonetary } from '@web/views/fields/formatters';
+import { formatFloat } from '@web/views/fields/formatters';
 import { session } from '@web/session';
 import { ViewButton } from '@web/views/view_button/view_button';
 import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
@@ -70,9 +70,9 @@ export class ProjectRightSidePanel extends Component {
     }
 
     formatMonetary(value, options = {}) {
-        const valueFormatted = formatMonetary(value, {
-            currencyId: this.currencyId,
+        const valueFormatted = formatFloat(value, {
             ...options,
+            'digits': [false, 0],
             'noSymbol': true,
         });
         const currency = session.currencies[this.currencyId];

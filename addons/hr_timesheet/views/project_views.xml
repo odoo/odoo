@@ -81,21 +81,6 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="priority">24</field>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_get_list_view']" position="after">
-                    <button class="oe_stat_button" name="action_show_timesheets_by_employee_invoice_type" type="object" icon="fa-clock-o" attrs="{'invisible': [('allow_timesheets', '=', False)]}" groups="hr_timesheet.group_hr_timesheet_user">
-                        <div class="o_field_widget o_stat_info">
-                            <div class="oe_inline">
-                                <span class="o_stat_value me-1">
-                                    <field name="total_timesheet_time" widget="statinfo" nolabel="1"/>
-                                </span>
-                                <span class="o_stat_value">
-                                    <field name="timesheet_encode_uom_id" class="o_stat_text" options="{'no_open' : True}"/>
-                                </span>
-                            </div>
-                            <span class="o_stat_text">Recorded</span>
-                        </div>
-                    </button>
-                </xpath>
                 <xpath expr="//div[@name='dates']" position="after">
                     <field name="allocated_hours" widget="timesheet_uom_no_toggle" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
                 </xpath>

@@ -45,6 +45,10 @@ class ProjectCustomerPortal(CustomerPortal):
             project=project,
             task_url=f'projects/{project.id}/task',
         )
+        # default value is set to 'project' in _prepare_tasks_values, so we have to set it to 'none' here.
+        if not groupby:
+            values['groupby'] = 'none'
+
         return self._get_page_view_values(project, access_token, values, 'my_projects_history', False, **kwargs)
 
     def _prepare_project_domain(self):
@@ -246,28 +250,33 @@ class ProjectCustomerPortal(CustomerPortal):
         }
         return self._get_page_view_values(task, access_token, values, history, False, **kwargs)
 
-    def _task_get_searchbar_sortings(self):
-        return {
+    def _task_get_searchbar_sortings(self, milestones_allowed):
+        values = {
             'date': {'label': _('Newest'), 'order': 'create_date desc', 'sequence': 1},
             'name': {'label': _('Title'), 'order': 'name', 'sequence': 2},
             'project': {'label': _('Project'), 'order': 'project_id, stage_id', 'sequence': 3},
             'users': {'label': _('Assignees'), 'order': 'user_ids', 'sequence': 4},
             'stage': {'label': _('Stage'), 'order': 'stage_id, project_id', 'sequence': 5},
             'status': {'label': _('Status'), 'order': 'kanban_state', 'sequence': 6},
-            'priority': {'label': _('Priority'), 'order': 'priority desc', 'sequence': 7},
-            'date_deadline': {'label': _('Deadline'), 'order': 'date_deadline asc', 'sequence': 8},
-            'update': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc', 'sequence': 10},
+            'priority': {'label': _('Priority'), 'order': 'priority desc', 'sequence': 8},
+            'date_deadline': {'label': _('Deadline'), 'order': 'date_deadline asc', 'sequence': 9},
+            'update': {'label': _('Last Stage Update'), 'order': 'date_last_stage_update desc', 'sequence': 11},
         }
+        if milestones_allowed:
+            values['milestone'] = {'label': _('Milestone'), 'order': 'milestone_id', 'sequence': 7}
+        return values
 
-    def _task_get_searchbar_groupby(self):
+    def _task_get_searchbar_groupby(self, milestones_allowed):
         values = {
             'none': {'input': 'none', 'label': _('None'), 'order': 1},
             'project': {'input': 'project', 'label': _('Project'), 'order': 2},
             'stage': {'input': 'stage', 'label': _('Stage'), 'order': 4},
             'status': {'input': 'status', 'label': _('Status'), 'order': 5},
-            'priority': {'input': 'priority', 'label': _('Priority'), 'order': 6},
-            'customer': {'input': 'customer', 'label': _('Customer'), 'order': 9},
+            'priority': {'input': 'priority', 'label': _('Priority'), 'order': 7},
+            'customer': {'input': 'customer', 'label': _('Customer'), 'order': 10},
         }
+        if milestones_allowed:
+            values['milestone'] = {'input': 'milestone', 'label': _('Milestone'), 'order': 6}
         return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
 
     def _task_get_groupby_mapping(self):
@@ -275,6 +284,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'project': 'project_id',
             'stage': 'stage_id',
             'customer': 'partner_id',
+            'milestone': 'milestone_id',
             'priority': 'priority',
             'status': 'kanban_state',
         }
@@ -286,7 +296,7 @@ class ProjectCustomerPortal(CustomerPortal):
             return order
         return '%s, %s' % (field_name, order)
 
-    def _task_get_searchbar_inputs(self):
+    def _task_get_searchbar_inputs(self, milestones_allowed):
         values = {
             'all': {'input': 'all', 'label': _('Search in All'), 'order': 1},
             'content': {'input': 'content', 'label': Markup(_('Search <span class="nolabel"> (in Content)</span>')), 'order': 1},
@@ -295,9 +305,12 @@ class ProjectCustomerPortal(CustomerPortal):
             'users': {'input': 'users', 'label': _('Search in Assignees'), 'order': 3},
             'stage': {'input': 'stage', 'label': _('Search in Stages'), 'order': 4},
             'status': {'input': 'status', 'label': _('Search in Status'), 'order': 5},
-            'priority': {'input': 'priority', 'label': _('Search in Priority'), 'order': 6},
-            'message': {'input': 'message', 'label': _('Search in Messages'), 'order': 10},
+            'priority': {'input': 'priority', 'label': _('Search in Priority'), 'order': 7},
+            'message': {'input': 'message', 'label': _('Search in Messages'), 'order': 11},
         }
+        if milestones_allowed:
+            values['milestone'] = {'input': 'milestone', 'label': _('Search in Milestone'), 'order': 6}
+
         return dict(sorted(values.items(), key=lambda item: item[1]["order"]))
 
     def _task_get_search_domain(self, search_in, search):
@@ -315,6 +328,8 @@ class ProjectCustomerPortal(CustomerPortal):
             search_domain.append([('project_id', 'ilike', search)])
         if search_in in ('ref', 'all'):
             search_domain.append([('id', 'ilike', search)])
+        if search_in in ('milestone', 'all'):
+            search_domain.append([('milestone_id', 'ilike', search)])
         if search_in in ('users', 'all'):
             user_ids = request.env['res.users'].sudo().search([('name', 'ilike', search)])
             search_domain.append([('user_ids', 'in', user_ids.ids)])
@@ -328,12 +343,15 @@ class ProjectCustomerPortal(CustomerPortal):
 
     def _prepare_tasks_values(self, page, date_begin, date_end, sortby, search, search_in, groupby, url="/my/tasks", domain=None, su=False):
         values = self._prepare_portal_layout_values()
-        searchbar_sortings = dict(sorted(self._task_get_searchbar_sortings().items(),
-                                         key=lambda item: item[1]["sequence"]))
-        searchbar_inputs = self._task_get_searchbar_inputs()
-        searchbar_groupby = self._task_get_searchbar_groupby()
 
         Task = request.env['project.task']
+        milestone_domain = AND([domain, [('allow_milestones', '=', 'True')]])
+        milestones_allowed = Task.sudo().search_count(milestone_domain, limit=1) == 1
+        searchbar_sortings = dict(sorted(self._task_get_searchbar_sortings(milestones_allowed).items(),
+                                         key=lambda item: item[1]["sequence"]))
+        searchbar_inputs = self._task_get_searchbar_inputs(milestones_allowed)
+        searchbar_groupby = self._task_get_searchbar_groupby(milestones_allowed)
+
         if not domain:
             domain = []
         if not su and Task.check_access_rights('read'):
@@ -341,17 +359,20 @@ class ProjectCustomerPortal(CustomerPortal):
         Task = Task.sudo()
 
         # default sort by value
-        if not sortby:
+        if not sortby or (sortby == 'milestone' and not milestones_allowed):
             sortby = 'date'
         order = searchbar_sortings[sortby]['order']
 
         # default group by value
-        if not groupby:
+        if not groupby or (groupby == 'milestone' and not milestones_allowed):
             groupby = 'project'
 
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
+        # search reset if needed
+        if not milestones_allowed and search_in == 'milestone':
+            search_in = 'all'
         # search
         if search and search_in:
             domain += self._task_get_search_domain(search_in, search)
@@ -363,10 +384,25 @@ class ProjectCustomerPortal(CustomerPortal):
             tasks = Task.search(domain, order=order, limit=self._items_per_page, offset=pager_offset)
             request.session['my_project_tasks_history' if url.startswith('/my/projects') else 'my_tasks_history'] = tasks.ids[:100]
 
+            tasks_project_allow_milestone = tasks.filtered(lambda t: t.allow_milestones)
+            tasks_no_milestone = tasks - tasks_project_allow_milestone
+
             groupby_mapping = self._task_get_groupby_mapping()
             group = groupby_mapping.get(groupby)
             if group:
-                grouped_tasks = [Task.concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
+                if group == 'milestone_id':
+                    grouped_tasks = [Task.concat(*g) for k, g in groupbyelem(tasks_project_allow_milestone, itemgetter(group))]
+
+                    if not grouped_tasks:
+                        grouped_tasks = [tasks_no_milestone]
+                    else:
+                        if grouped_tasks[len(grouped_tasks) - 1][0].milestone_id and tasks_no_milestone:
+                            grouped_tasks.append(tasks_no_milestone)
+                        else:
+                            grouped_tasks[len(grouped_tasks) - 1] |= tasks_no_milestone
+
+                else:
+                    grouped_tasks = [Task.concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
             else:
                 grouped_tasks = [tasks]
 
@@ -382,6 +418,7 @@ class ProjectCustomerPortal(CustomerPortal):
             'date': date_begin,
             'date_end': date_end,
             'grouped_tasks': get_grouped_tasks,
+            'allow_milestone': milestones_allowed,
             'page_name': 'task',
             'default_url': url,
             'task_url': 'tasks',

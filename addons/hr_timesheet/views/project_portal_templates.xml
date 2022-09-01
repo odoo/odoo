@@ -49,13 +49,13 @@
             <t t-set="is_uom_day" t-value="timesheet_ids._is_timesheet_encode_uom_day()"/>
         </xpath>
         <xpath expr="//thead/tr/t[@t-set='number_of_header']" position="attributes">
-            <attribute name="t-value">8</attribute>
+            <attribute name="t-value">9</attribute>
         </xpath>
-        <xpath expr="//thead/tr/th[@name='project_portal_assignees']" position="after">
+        <xpath expr="//thead/tr/th[@name='project_portal_milestones']" position="after">
             <th t-if="is_uom_day" class="text-end">Days Spent</th>
             <th t-else="" class="text-end">Hours Spent</th>
         </xpath>
-        <xpath expr="//tbody/t/tr/td[@name='project_portal_assignees']" position="after">
+        <xpath expr="//tbody/t/tr/td[@name='project_portal_milestones']" position="after">
             <td class="text-end">
                 <t t-if="is_uom_day">
                     <t t-out="timesheet_ids._convert_hours_to_days(task.effective_hours)"/>

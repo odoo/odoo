@@ -220,25 +220,6 @@ class Project(models.Model):
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_project').id,
                 _('See timesheet entries'), {'active_ids': projects_with_timesheets.ids})
 
-    def action_show_timesheets_by_employee_invoice_type(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("hr_timesheet.timesheet_action_all")
-        #Let's put the chart view first
-        new_views = []
-        for view in action['views']:
-            new_views.insert(0, view) if view[1] == 'graph' else new_views.append(view)
-        action.update({
-            'display_name': _("Timesheets"),
-            'domain': [('project_id', '=', self.id)],
-            'context': {
-                'default_project_id': self.id,
-                'search_default_groupby_employee': True,
-                'search_default_groupby_timesheet_invoice_type': True
-            },
-            'views': new_views
-        })
-
-        return action
-
     def _convert_project_uom_to_timesheet_encode_uom(self, time):
         uom_from = self.company_id.project_time_mode_id
         uom_to = self.env.company.timesheet_encode_uom_id

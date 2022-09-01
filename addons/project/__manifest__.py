@@ -48,7 +48,6 @@
         'data/mail_template_data.xml',
         'data/project_data.xml',
         'wizard/project_task_type_delete_views.xml',
-        'wizard/project_milestone_reach_wizard.xml',
     ],
     'demo': [
         'data/mail_template_demo.xml',
@@ -73,7 +72,6 @@
             'project/static/src/js/project_rating_graph_view.js',
             'project/static/src/js/project_rating_pivot_view.js',
             'project/static/src/js/project_task_kanban_examples.js',
-            'project/static/src/js/subtasks_list_renderer.js',
             'project/static/src/js/tours/project.js',
             'project/static/src/js/project_calendar.js',
             'project/static/src/js/widgets/*',

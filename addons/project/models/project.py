@@ -778,21 +778,6 @@ class Project(models.Model):
         action_context['search_default_project_id'] = self.id
         return dict(action, context=action_context)
 
-    def action_view_analytic_account_entries(self):
-        self.ensure_one()
-        return {
-            'res_model': 'account.analytic.line',
-            'type': 'ir.actions.act_window',
-            'name': _("Gross Margin"),
-            'domain': [('account_id', '=', self.analytic_account_id.id)],
-            'views': [(self.env.ref('analytic.view_account_analytic_line_tree').id, 'list'),
-                      (self.env.ref('analytic.view_account_analytic_line_form').id, 'form'),
-                      (self.env.ref('analytic.view_account_analytic_line_graph').id, 'graph'),
-                      (self.env.ref('analytic.view_account_analytic_line_pivot').id, 'pivot')],
-            'view_mode': 'tree,form,graph,pivot',
-            'context': {'search_default_group_date': 1, 'default_account_id': self.analytic_account_id.id}
-        }
-
     def action_get_list_view(self):
         self.ensure_one()
         return {
@@ -899,7 +884,7 @@ class Project(models.Model):
             'show': True,
             'sequence': 3,
         }]
-        if self.user_has_groups('project.group_project_rating'):
+        if self.rating_count != 0 and self.user_has_groups('project.group_project_rating'):
             if self.rating_avg >= rating_data.RATING_AVG_TOP:
                 icon = 'smile-o text-success'
             elif self.rating_avg >= rating_data.RATING_AVG_OK:
@@ -2421,22 +2406,6 @@ class Task(models.Model):
         if depth == 1:
             return children
         return children + children._get_all_subtasks(depth - 1)
-
-    def get_milestone_to_mark_as_reached_action(self):
-        """ Return an action if the milestone can be marked as reached otherwise return False """
-        milestones = self.milestone_id.filtered('can_be_marked_as_done')
-        if milestones:
-            wizard = self.env['project.milestone.reach.wizard'].create({'line_ids': [Command.create({'milestone_id': m.id}) for m in milestones]})
-            return {
-                'name': _('Mark milestone as reached'),
-                'view_mode': 'form',
-                'res_model': 'project.milestone.reach.wizard',
-                'views': [(self.env.ref('project.project_milestone_reach_wizard_view_form').id, 'form')],
-                'type': 'ir.actions.act_window',
-                'res_id': wizard.id,
-                'target': 'new',
-            }
-        return False
 
     def action_open_parent_task(self):
         return {

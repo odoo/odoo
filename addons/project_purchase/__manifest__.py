@@ -7,9 +7,6 @@
     'summary': "Monitor purchase in project",
     'category': 'Services/Project',
     'depends': ['purchase', 'project'],
-    'data': [
-        'views/project_views.xml',
-    ],
     'demo': [
         'data/project_purchase_demo.xml',
     ],

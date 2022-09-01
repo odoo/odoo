@@ -820,109 +820,55 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t('See Tasks'),
     position: 'bottom',
 }, {
-    trigger: '.o_field_widget[name=project_id] a',
-    content: _t('See Project'),
-    position: 'right',
-},
-tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the_flow.project")'),
-{
-    trigger: '.oe_button_box button.oe_stat_button:has(span:contains("Recorded"))',
-    extra_trigger: '.o_form_readonly .oe_stat_button.dropdown > .dropdown-menu',
-    content: _t('See Timesheets'),
-    position: 'bottom',
+    trigger: 'a.nav-link:contains(Timesheets)',
+    extra_trigger: 'div.o_notebook_headers',
+    content: 'Click on Timesheets page to log a timesheet',
 }, {
-    mobile: true,
-    trigger: '.o_enable_searchview',
-    content: _t('Open the search field'),
-    position: 'bottom',
-}, {
-    mobile: true,
-    trigger: '.o_toggle_searchview_full',
-    content: _t('Open the full search field'),
-    position: 'bottom',
-}, {
-    trigger: '.o_group_by_menu .dropdown-toggle',
-    content: _t('Click on the group by button'),
-    position: 'bottom',
-}, {
-    trigger: '.dropdown-item.selected:contains(Employee)',
-    extra_trigger: '.dropdown.show',
-    content: _t('Remove group by employee'),
-    position: 'bottom',
-}, {
-    trigger: '.dropdown-item.selected:contains(Billing Type)',
-    extra_trigger: '.dropdown.show',
-    content: _t('Remove group by Billing type'),
-    position: 'bottom',
-}, {
-    mobile: true,
-    trigger: '.o_mobile_search_footer',
-    content: _t('Close the search dropdown on mobile'),
-    position: 'bottom',
-}, {
-    mobile: true,
-    trigger: '.o_cp_bottom_right .o_cp_switch_buttons .btn-link',
-    content: _t('Prepare to change the view on mobile'),
-    position: 'bottom',
-}, {
-    trigger: '.o_switch_view.o_list',
-    content: _t('Activate the list view'),
-    position: 'bottom',
-}, {
-    trigger: '.o_list_button_add',
-    content: _t('Add a Timesheet'),
-    position: 'bottom',
-}, {
-    // FIXME replace list by kanban + form
-    // FIXME WOWL: remove first part of selector when legacy view is dropped
-    // (currently, it's anew view in community and a legacy one in enterprise)
-    trigger: '.o_selected_row input[name=name], .o_selected_row .o_field_widget[name=name] input',
-    content: _t('Set description'),
-    position: 'bottom',
-    run: 'text 10 hours',
-}, {
-    trigger: '.o_selected_row .o_field_widget[name=task_id] input',
-    content: _t('Choose a task'),
-    position: 'bottom',
-    run: 'click',
+    trigger: '.o_form_button_edit',
+    content: _t('Click on Edit button to enter to the form view of the task.'),
 }, {
     mobile: false,
-    trigger: ".ui-menu-item > a",
-    auto: true,
+    trigger: 'div[name="timesheet_ids"] td.o_field_x2many_list_row_add a[role="button"]',
+    content: 'Click on Add a line to create a new timesheet into the task.',
 }, {
     mobile: true,
-    trigger: ".o_kanban_record:has(.o_kanban_record_title :contains('the_flow.service'))",
-    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Task')",
-    content: _t("Select the the_flow.vendor"),
-    position: "bottom",
-}, {
-    edition: 'community',
-    trigger: '.o_selected_row .o_field_widget[name=unit_amount] input',
-    content: _t('Set time'),
+    trigger: '.o-kanban-button-new',
+    content: _t("Click on Add in order to add a timesheet."),
     position: 'bottom',
+}, {
+    mobile: false,
+    trigger: 'div[name="timesheet_ids"] div[name="name"] input',
+    content: 'Enter a description this timesheet',
+    run: 'text 10 hours',
+}, {
+    mobile: true,
+    trigger: '.modal-body .o_form_view div[name="name"] input',
+    content: 'Enter a description this timesheet',
+    run: 'text 10 hours',
+}, {
+    mobile: false,
+    trigger: 'div[name="timesheet_ids"] div[name="unit_amount"] input',
+    content: 'Enter one hour for this timesheet',
     run: 'text 10',
 }, {
-    edition: 'enterprise',
-    trigger: '.o_selected_row .o_field_widget[name=unit_amount]input',
-    content: _t('Set time'),
-    position: 'bottom',
+    mobile: true,
+    trigger: '.modal-body .o_form_view div[name="unit_amount"] input',
+    content: 'Enter one hour for this timesheet',
     run: 'text 10',
 }, {
-    trigger: '.o_list_button_save',
+    trigger: '.o_form_button_save',
     content: _t('Save'),
     position: 'bottom',
 },
 ...tour.stepUtils.goBackBreadcrumbsMobile(
         _t('Back to the sale order'),
         undefined,
-        ".breadcrumb-item.active:contains('Timesheets')",
-        ".breadcrumb-item.active:contains('the_flow.project')",
         ".breadcrumb-item.active:contains('the_flow.service')"
     ),
 {
     mobile: false,
     trigger: '.breadcrumb-item:nth-child(2) a',
-    extra_trigger: '.o_list_button_add', // Waiting save
+    extra_trigger: 'div:not(".o_form_editable")', // Waiting save
     content: _t('Back to the sale order'),
     position: 'bottom',
 },
