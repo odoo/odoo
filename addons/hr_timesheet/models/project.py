@@ -80,6 +80,7 @@ class Project(models.Model):
             operator_new = 'not inselect'
         return [('id', operator_new, (query, ()))]
 
+<<<<<<< HEAD
     @api.model
     def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
         result = super()._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
@@ -88,16 +89,52 @@ class Project(models.Model):
         return result
 
     @api.depends('allow_timesheets', 'timesheet_ids')
+||||||| parent of 310d060ee44b... temp
+    @api.depends('allow_timesheets', 'task_ids.planned_hours', 'task_ids.remaining_hours')
+=======
+    @api.depends('allow_timesheets', 'task_ids.planned_hours', 'timesheet_ids')
+>>>>>>> 310d060ee44b... temp
     def _compute_remaining_hours(self):
+<<<<<<< HEAD
         timesheets_read_group = self.env['account.analytic.line']._read_group(
             [('project_id', 'in', self.ids)],
             ['project_id', 'unit_amount'],
             ['project_id'],
             lazy=False)
         timesheet_time_dict = {res['project_id'][0]: res['unit_amount'] for res in timesheets_read_group}
+||||||| parent of 310d060ee44b... temp
+        group_read = self.env['project.task'].read_group(
+            domain=[('planned_hours', '!=', False), ('project_id', 'in', self.filtered('allow_timesheets').ids),
+                     ('is_closed', '=', False)],
+            fields=['planned_hours:sum', 'remaining_hours:sum'], groupby='project_id')
+        group_per_project_id = {group['project_id'][0]: group for group in group_read}
+=======
+        timesheet_read_group = self.env['account.analytic.line'].read_group(
+            domain=[('project_id', 'in', self.filtered('allow_timesheets').ids), ('task_id', '!=', False),
+                    '|', ('task_id.stage_id.fold', '=', False), ('task_id.stage_id', '=', False)],
+            fields=['effective_hours:sum(unit_amount)'], groupby='project_id')
+        task_read_group = self.env['project.task'].read_group(
+            domain=[('planned_hours', '!=', 0.0), ('project_id', 'in', self.filtered('allow_timesheets').ids),
+                    ('parent_id', '=', False), '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)],
+            fields=['planned_hours:sum', ], groupby='project_id')
+        effective_hours_per_project_id = {res['project_id'][0]: res['effective_hours'] for res in timesheet_read_group}
+        planned_hours_per_project_id = {res['project_id'][0]: res['planned_hours'] for res in task_read_group}
+>>>>>>> 310d060ee44b... temp
         for project in self:
+<<<<<<< HEAD
             project.remaining_hours = project.allocated_hours - timesheet_time_dict.get(project.id, 0)
             project.is_project_overtime = project.remaining_hours < 0
+||||||| parent of 310d060ee44b... temp
+            group = group_per_project_id.get(project.id, {})
+            project.remaining_hours = group.get('remaining_hours', 0)
+            project.has_planned_hours_tasks = bool(group.get('planned_hours', False))
+            project.is_project_overtime = group.get('remaining_hours', 0) < 0
+=======
+            planned_hours = planned_hours_per_project_id.get(project.id, 0.0)
+            effective_hours = effective_hours_per_project_id.get(project.id, 0.0)
+            project.remaining_hours = planned_hours - effective_hours if planned_hours else 0.0
+            project.has_planned_hours_tasks = project.id in planned_hours_per_project_id
+>>>>>>> 310d060ee44b... temp
 
     @api.model
     def _search_is_project_overtime(self, operator, value):
