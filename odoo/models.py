@@ -5726,6 +5726,14 @@ class BaseModel(metaclass=MetaModel):
         new_ids, ids = partition(lambda i: isinstance(i, NewId), self._ids)
         if not ids:
             return self
+
+        # Special version without query
+        field_to_check = next((f for f in self._fields.values() if f.prefetch is True), None)
+        if field_to_check:
+            field_cache = self.env.cache._get_field_cache(self, field_to_check)
+            if all(_id in field_cache for _id in ids):
+                return self
+
         query = Query(self.env, self._table, self._table_sql)
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
         self.env.cr.execute(query.select())
