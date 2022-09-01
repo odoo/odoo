@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { addFields, patchRecordMethods } from '@mail/model/model_core';
+import { addFields, patchFields, patchRecordMethods } from '@mail/model/model_core';
 import { attr, one } from '@mail/model/model_field';
 import '@mail/models/channel'; // ensure that the model definition is loaded before the patch
 
@@ -9,16 +9,18 @@ addFields('Channel', {
     anonymous_name: attr(),
 });
 
-patchRecordMethods('Channel', {
-    /**
-     * @override
-     */
-    _computeDiscussSidebarCategory() {
-        if (this.channel_type === 'livechat') {
-            return this.messaging.discuss.categoryLivechat;
-        }
-        return this._super();
+patchFields('Channel', {
+    discussSidebarCategory: {
+        compute() {
+            if (this.channel_type === 'livechat') {
+                return this.messaging.discuss.categoryLivechat;
+            }
+            return this._super();
+        },
     },
+});
+
+patchRecordMethods('Channel', {
     /**
      * @override
      */

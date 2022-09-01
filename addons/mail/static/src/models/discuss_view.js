@@ -117,15 +117,6 @@ registerModel({
                 active_id: this.discuss.activeId,
             });
         },
-        /**
-         * @private
-         * @returns {Array[]}
-         */
-        _sortMailboxes() {
-            return [
-                ['smaller-first', 'sequence'],
-            ];
-        },
     },
     fields: {
         /**
@@ -154,7 +145,9 @@ registerModel({
         }),
         orderedMailboxes: many('Mailbox', {
             related: 'messaging.allMailboxes',
-            sort: '_sortMailboxes',
+            sort() {
+                return [['smaller-first', 'sequence']];
+            },
         }),
         /**
          * Reference of the quick search input. Useful to filter channels and
