@@ -630,10 +630,14 @@ class IrHttp(models.AbstractModel):
 
         request.cr.rollback()
         if code == 403:
-            response = cls._serve_fallback()
-            if response:
-                cls._post_dispatch(response)
-                return response
+            try:
+                response = cls._serve_fallback()
+                if response:
+                    cls._post_dispatch(response)
+                    return response
+            except werkzeug.exceptions.Forbidden:
+                # Rendering does raise a Forbidden if target is not visible.
+                pass # Use default error page handling.
         elif code == 500:
             values = cls._get_values_500_error(request.env, values, exception)
         try:
