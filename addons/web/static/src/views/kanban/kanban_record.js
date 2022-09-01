@@ -112,7 +112,7 @@ function getRawValue(record, fieldName) {
         }
         case "date":
         case "datetime": {
-            return value && value.toJSDate();
+            return value && value.toISO();
         }
         default: {
             return value;

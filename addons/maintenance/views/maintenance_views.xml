@@ -465,7 +465,7 @@
                                             <t t-out="record.maintenance_open_count.raw_value"/> Request
                                         </div>
                                         <div class="badge text-bg-secondary" t-if="!selection_mode and record.next_action_date.raw_value" >
-                                            <t t-esc="luxon.DateTime.fromJSDate(record.next_action_date.raw_value).toFormat('d MMMM')"/>
+                                            <t t-esc="luxon.DateTime.fromISO(record.next_action_date.raw_value).toFormat('d MMMM')"/>
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
