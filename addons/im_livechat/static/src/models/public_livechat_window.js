@@ -48,7 +48,7 @@ registerModel({
                 .val(disableText);
         },
         renderMessages() {
-            const shouldScroll = !this.isFolded && this.publicLivechatView.widget.isAtBottom();
+            const shouldScroll = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded && this.publicLivechatView.widget.isAtBottom();
             this.widget.render();
             if (shouldScroll) {
                 this.publicLivechatView.widget.scrollToBottom();
