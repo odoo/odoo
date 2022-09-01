@@ -111,7 +111,7 @@
                                 </strong>
                             </div>
                             <div>
-                                <t t-if="new Date(record.expiration_date.raw_value) &lt; (new Date())" t-set="expiration_class" t-value="'oe_kanban_text_red'"/>
+                                <t t-if="luxon.DateTime.fromISO(record.expiration_date.raw_value) &lt; luxon.DateTime.local()" t-set="expiration_class" t-value="'oe_kanban_text_red'"/>
                                 <span t-att-class="expiration_class"><field name="start_date"/> - <field name="expiration_date"/></span>
                             </div>
                             <div>
