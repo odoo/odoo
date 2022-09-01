@@ -4070,6 +4070,29 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_kanban_group:nth-child(2).o_kanban_hover");
     });
 
+    QUnit.test("drag and drop outside of a column", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create">
+                <field name="product_id"/>
+                <templates><t t-name="kanban-box">
+                <div class="oe_kanban_global_click"><field name="foo"/>
+                </div>
+                </t></templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+        assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+
+        // first record of first column moved to the right of a column
+        await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", ".o_column_quick_create");
+        assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+    });
+
     QUnit.test("drag and drop a record, grouped by selection", async (assert) => {
         assert.expect(7);
 
