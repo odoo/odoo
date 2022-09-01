@@ -350,7 +350,8 @@ class AccountTax(models.Model):
         tax_type = self and self[0].type_tax_use
         is_refund = is_refund or (tax_type == 'sale' and price_unit < 0) or (tax_type == 'purchase' and price_unit > 0)
 
-        rslt = self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund, include_caba_tags=include_caba_tags)
+        rslt = self.with_context(caba_no_transition_account=True)\
+                   .compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund, include_caba_tags=include_caba_tags)
 
         return rslt
 
@@ -1196,7 +1197,7 @@ class AccountTaxRepartitionLine(models.Model):
         :return: An account.account record or an empty recordset.
         """
         self.ensure_one()
-        if self.tax_id.tax_exigibility == 'on_payment':
+        if self.tax_id.tax_exigibility == 'on_payment' and not self._context.get('caba_no_transition_account'):
             return self.tax_id.cash_basis_transition_account_id
         else:
             return self.account_id
