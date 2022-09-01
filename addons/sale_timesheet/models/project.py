@@ -377,7 +377,7 @@ class Project(models.Model):
             'billable_time': _lt('Timesheets (Billed on Timesheets)'),
             'billable_milestones': _lt('Timesheets (Billed on Milestones)'),
             'billable_manual': _lt('Timesheets (Billed Manually)'),
-            'non_billable': _lt('Timesheets (Non Billable)'),
+            'non_billable': _lt('Timesheets (Non-Billable)'),
             'timesheet_revenues': _lt('Timesheets revenues'),
             'other_costs': _lt('Materials'),
         }
