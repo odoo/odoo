@@ -184,7 +184,7 @@ export class FormCompiler extends ViewCompiler {
         const fieldName = el.getAttribute("name");
         const fieldString = el.getAttribute("string");
         const fieldId = el.getAttribute("field_id") || fieldName;
-        const labelsForAttr = el.getAttribute("id") || fieldId;
+        const labelsForAttr = el.getAttribute("id") || fieldName;
         const labels = this.getLabels(labelsForAttr);
         const dynamicLabel = (label) => {
             const formLabel = this.createLabelFromField(
