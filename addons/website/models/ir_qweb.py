@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
+import logging
+
 from collections import OrderedDict
 
 from odoo import models
@@ -11,6 +13,8 @@ from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.osv import expression
 from odoo.addons.website.models import ir_http
 
+
+_logger = logging.getLogger(__name__)
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 
 
@@ -149,3 +153,49 @@ class IrQWeb(models.AbstractModel):
             atts['style'] = re_background_image.sub(lambda m: '%s%s' % (m.group(1), website.get_cdn_url(m.group(2))), atts['style'])
 
         return atts
+
+    def _pregenerate_assets_bundles(self):
+        # website is adding a website_id to the extra part of the attachement url (/1)
+
+        # /web/assets/2223-ee56665/1/web.assets_common.min.css
+        # /web/assets/2224-47bce88/1/web.assets_frontend.min.css
+        # /web/assets/2225-8b64a2b/1/web.assets_common_minimal.min.js
+        # /web/assets/2226-17d3428/1/web.assets_frontend_minimal.min.js
+        # /web/assets/2227-b9cd4ba/1/web.assets_tests.min.js
+        # /web/assets/2228-7424684/1/web.assets_common_lazy.min.js
+        # /web/assets/2229-25b1d52/1/web.assets_frontend_lazy.min.js
+
+        # this means that the previously generated attachment wont be used on the website
+        # the main reason is to avoid invalidating other website attachement, but the
+        # version part combine with the initial extra (rtl) should be enough to ensure they are identical.
+        # we dont expect to have any pregenerated rtl/website attachment so we don't manage assets with extra
+
+        nodes = super()._pregenerate_assets_bundles()
+        website = self.env['website'].search([], order='id', limit=1)
+        if not website:
+            return nodes
+        nb_created = 0
+        for node in nodes:
+            bundle_info = node[1]
+            bundle_url = bundle_info.get('src', '') or bundle_info.get('href', '')
+            if bundle_url.startswith('/web/assets/'):
+                # example: "/web/assets/2152-ee56665/web.assets_common.min.js"
+                _, _, _, id_unique, name = bundle_url.split('/')
+                attachment_id, unique = id_unique.split('-')
+                url_pattern = f'/web/assets/%s-%s/{website.id}/{name}'
+                existing = self.env['ir.attachment'].search([('url', '=like', url_pattern % ('%', '%'))])
+                if existing:
+                    if f'-{unique}/' in existing.url:
+                        continue
+                    _logger.runbot(f'Updating exiting assets {existing.url} for website {website.id}')
+                    # we assume that most of the time the first website bundles will be the same as the base one
+                    # if the unique changes, it is most likely because sources where update since install.
+                    # this is mainly for dev downloading a database from runbot and trying to execute tests locally
+                    existing.unlink()
+                new = self.env['ir.attachment'].browse(int(attachment_id)).copy()
+                new.url = url_pattern % (new.id, unique)
+                nb_created += 1
+        if nb_created:
+            _logger.runbot('%s bundle(s) were copied for website %s', nb_created, website.id)
+
+        return nodes
