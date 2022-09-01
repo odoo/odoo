@@ -43,6 +43,10 @@
                                         <label class="col-lg-3" string="Domain" for="website_domain"/>
                                         <field name="website_domain" placeholder="https://www.odoo.com" title="Display this website when users visit this domain"/>
                                     </div>
+                                    <div class="row mt8">
+                                        <label class="col-lg-3" string="Homepage URL" for="website_homepage_url"/>
+                                        <field name="website_homepage_url" placeholder="/" title="Main page of your website served to visitors"/>
+                                    </div>
                                     <div class="row mt8" groups="base.group_no_one">
                                         <label class="col-lg-3" string="Country Groups" for="website_country_group_ids"/>
                                         <field name="website_country_group_ids" widget="many2many_tags" title="Once the selection of available websites by domain is done, you can filter by country group. You can have 2 websites with same domain AND a condition on country group to select which website to use."/>
