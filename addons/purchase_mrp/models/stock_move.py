@@ -16,6 +16,13 @@ class StockMove(models.Model):
             vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
+    def _get_price_unit(self):
+        price_unit = super()._get_price_unit()
+        if self.product_id == self.purchase_line_id.product_id or not self.bom_line_id:
+            return price_unit
+        cost_share = self.bom_line_id._get_cost_share()
+        return price_unit * cost_share
+
     def _get_valuation_price_and_qty(self, related_aml, to_curr):
         valuation_price_unit_total, valuation_total_qty = super()._get_valuation_price_and_qty(related_aml, to_curr)
         boms = self.env['mrp.bom']._bom_find(related_aml.product_id, company_id=related_aml.company_id.id, bom_type='phantom')
