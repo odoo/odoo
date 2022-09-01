@@ -167,23 +167,13 @@ class MassMailController(http.Controller):
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, str(token)) and not request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
                 raise exceptions.AccessDenied()
 
-            res = mailing.convert_links()
-            base_url = mailing.get_base_url().rstrip('/')
-            urls_to_replace = [
-                (base_url + '/unsubscribe_from_list', mailing._get_unsubscribe_url(email, res_id)),
-                (base_url + '/view', mailing._get_view_url(email, res_id))
-            ]
-            for url_to_replace, new_url in urls_to_replace:
-                if url_to_replace in res[mailing_id]:
-                    res[mailing_id] = res[mailing_id].replace(url_to_replace, new_url if new_url else '#')
-
-            res[mailing_id] = res[mailing_id].replace(
-                'class="o_snippet_view_in_browser"',
-                'class="o_snippet_view_in_browser" style="display: none;"'
-            )
+            html_markupsafe = mailing._render_field('body_html', [res_id])[res_id]
+            # Update generic URLs (without parameters) to final ones
+            html_markupsafe = html_markupsafe.replace('/unsubscribe_from_list',
+                                                      mailing._get_unsubscribe_url(email, res_id))
 
             return request.render('mass_mailing.view', {
-                    'body': res[mailing_id],
+                    'body': html_markupsafe,
                 })
 
         return request.redirect('/web')
