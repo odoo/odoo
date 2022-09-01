@@ -112,7 +112,7 @@ tour.register('totp_login_enabled', {
             helpers._text(helpers._get_action_values(), token);
             // FIXME: is there a way to put the button as its own step trigger without
             //        the tour straight blowing through and not waiting for this?
-            helpers._click(helpers._get_action_values('button:contains("Login")'));
+            helpers._click(helpers._get_action_values('button:contains("Log in")'));
         });
     }
 }, {
@@ -152,7 +152,7 @@ tour.register('totp_login_device', {
             helpers._text(helpers._get_action_values(), token);
             // FIXME: is there a way to put the button as its own step trigger without
             //        the tour straight blowing through and not waiting for this?
-            helpers._click(helpers._get_action_values('button:contains("Login")'));
+            helpers._click(helpers._get_action_values('button:contains("Log in")'));
         });
     }
 }, {
