@@ -434,7 +434,7 @@ class MailPluginController(http.Controller):
 
     def _prepare_translations(self):
         lang = request.env['res.users'].browse(request.uid).lang
-        translations_per_module = request.env["ir.translation"].get_translations_for_webclient(
+        translations_per_module = request.env["ir.http"].get_translations_for_webclient(
             self._translation_modules_whitelist(), lang)[0]
         translations_dict = {}
         for module in self._translation_modules_whitelist():

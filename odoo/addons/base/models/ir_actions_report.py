@@ -91,7 +91,6 @@ class IrActionsReport(models.Model):
     _table = 'ir_act_report_xml'
     _order = 'name'
 
-    name = fields.Char(translate=True)
     type = fields.Char(default='ir.actions.report')
     binding_type = fields.Selection(default='report')
     model = fields.Char(required=True, string='Model Name')

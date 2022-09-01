@@ -297,7 +297,7 @@ class IrHttp(models.AbstractModel):
         modules = IrHttpModel.get_translation_frontend_modules()
         user_context = request.session.context if request.session.uid else {}
         lang = user_context.get('lang')
-        translation_hash = request.env['ir.translation'].get_web_translations_hash(modules, lang)
+        translation_hash = request.env['ir.http'].get_web_translations_hash(modules, lang)
 
         session_info.update({
             'translationURL': '/website/translations',

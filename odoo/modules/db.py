@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from psycopg2.extras import Json
 import logging
 from enum import IntEnum
 
@@ -56,13 +57,13 @@ def initialize(cr):
                     category_id, auto_install, state, web, license, application, icon, sequence, summary) \
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
             info['author'],
-            info['website'], i, info['name'],
-            info['description'], category_id,
+            info['website'], i, Json({'en_US': info['name']}),
+            Json({'en_US': info['description']}), category_id,
             info['auto_install'] is not False, state,
             info['web'],
             info['license'],
             info['application'], info['icon'],
-            info['sequence'], info['summary']))
+            info['sequence'], Json({'en_US': info['summary']})))
         id = cr.fetchone()[0]
         cr.execute('INSERT INTO ir_model_data \
             (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
@@ -129,7 +130,7 @@ def create_categories(cr, categories):
         if not c_id:
             cr.execute('INSERT INTO ir_module_category \
                     (name, parent_id) \
-                    VALUES (%s, %s) RETURNING id', (categories[0], p_id))
+                    VALUES (%s, %s) RETURNING id', (Json({'en_US': categories[0]}), p_id))
             c_id = cr.fetchone()[0]
             cr.execute('INSERT INTO ir_model_data (module, name, res_id, model, noupdate) \
                        VALUES (%s, %s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category', True))
