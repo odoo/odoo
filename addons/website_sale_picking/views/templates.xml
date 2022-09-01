@@ -5,15 +5,16 @@
             <attribute name="t-att-data-delivery-type">delivery.delivery_type</attribute>
         </xpath>
     </template>
+
     <template id="checkout_payment" inherit_id="payment.checkout">
         <xpath expr="//input[@name='o_payment_radio']" position="attributes">
-            <attribute name="t-att-data-is-onsite">1 if acquirer.is_onsite_acquirer else 0</attribute>
+            <attribute name="t-att-data-is-onsite">1 if acquirer.custom_mode == 'onsite' else 0</attribute>
         </xpath>
     </template>
 
     <template id="payment_confirmation_status" inherit_id="website_sale.payment_confirmation_status">
         <xpath expr="(//div[hasclass('card-body')])[1]" position="replace">
-            <t t-if="payment_tx_id.acquirer_id.is_onsite_acquirer">
+            <t t-if="payment_tx_id.acquirer_id.custom_mode == 'onsite'">
                 <div class="card-body">
                     <div class="o_header_carrier_message">
                         <b t-out="order.carrier_id.name"/><span class="text-muted"> (On site picking)</span>

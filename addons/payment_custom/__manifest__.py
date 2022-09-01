@@ -13,7 +13,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment_transfer/static/src/js/post_processing.js',
+            'payment_custom/static/src/js/post_processing.js',
         ],
     },
     'uninstall_hook': 'uninstall_hook',

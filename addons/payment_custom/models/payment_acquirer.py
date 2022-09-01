@@ -6,9 +6,20 @@ from odoo import _, api, fields, models
 class PaymentAcquirer(models.Model):
     _inherit = 'payment.acquirer'
 
+    _sql_constraints = [(
+        'custom_acquirers_setup',
+        "CHECK(custom_mode IS NULL OR (provider = 'custom' AND custom_mode IS NOT NULL))",
+        "Only custom providers should have a custom mode."
+    )]
+
     provider = fields.Selection(
-        selection_add=[('custom', "Custom")],
-        ondelete={'custom': 'set default'})
+        selection_add=[('custom', "Custom")], ondelete={'custom': 'set default'}
+    )
+    custom_mode = fields.Selection(
+        string="Custom Mode",
+        selection=[('wire_transfer', "Wire Transfer")],
+        required_if_provider='custom',
+    )
     qr_code = fields.Boolean(
         string="Enable QR Codes", help="Enable the use of QR-codes when paying by wire transfer.")
 
