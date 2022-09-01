@@ -6,7 +6,7 @@
             <field name="company_id"></field>
             <field name="sequence">15</field>
         </record>
-        <function model="res.company" name="create_missing_subcontracting_location" />
+        <function model="res.company" name="_create_missing_subcontracting_location" />
         <function model="stock.warehouse" name="write">
             <value model="stock.warehouse" eval="obj().env['stock.warehouse'].search([]).ids"/>
             <value eval="{'subcontracting_to_resupply': True}"/>
