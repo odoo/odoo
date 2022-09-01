@@ -7026,8 +7026,11 @@ QUnit.module("Views", (hooks) => {
                 "</kanban>",
         });
 
-        assert.ok(getCard(0).querySelector(".date").innerText.startsWith("Wed Jan 25 2017"));
-        assert.ok(getCard(1).querySelector(".datetime").innerText.startsWith("Mon Dec 12 2016"));
+        assert.equal(getCard(0).querySelector(".date").innerText, "2017-01-25T00:00:00.000+01:00");
+        assert.equal(
+            getCard(1).querySelector(".datetime").innerText,
+            "2016-12-12T11:55:05.000+01:00"
+        );
     });
 
     QUnit.test("rendering many2one (value)", async (assert) => {

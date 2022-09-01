@@ -186,14 +186,14 @@
                         <div t-attf-class="d-flex flex-column p-0 oe_kanban_card oe_kanban_global_click">
                             <div class="o_kanban_content p-0 m-0 position-relative row d-flex flex-fill">
                                 <div class="col-3 text-bg-primary p-2 text-center d-flex flex-column justify-content-center">
-                                    <div t-esc="record.date_begin.raw_value.getDate()" class="o_event_fontsize_20"/>
+                                    <div t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('d')" class="o_event_fontsize_20"/>
                                     <div>
-                                        <t t-esc="luxon.DateTime.fromJSDate(record.date_begin.raw_value).toFormat('MMM yyyy')"/>
+                                        <t t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('MMM yyyy')"/>
                                     </div>
-                                    <div><t t-esc="luxon.DateTime.fromJSDate(record.date_begin.raw_value).toFormat('t')"/></div>
-                                        <div t-if="luxon.DateTime.fromJSDate(record.date_begin.raw_value).toFormat('DDMMYYYY') !== luxon.DateTime.fromJSDate(record.date_end.raw_value).toFormat('DDMMYYYY')">
+                                    <div><t t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('t')"/></div>
+                                        <div t-if="record.date_begin.raw_value !== record.date_end.raw_value">
                                             <i class="fa fa-arrow-right me-2 o_event_fontsize_09" title="End date"/>
-                                            <t t-esc="luxon.DateTime.fromJSDate(record.date_end.raw_value).toFormat('d MMM')"/>
+                                            <t t-esc="luxon.DateTime.fromISO(record.date_end.raw_value).toFormat('d MMM')"/>
                                         </div>
                                 </div>
                                 <div class="col-9 py-2 px-3 d-flex flex-column justify-content-between pt-3">

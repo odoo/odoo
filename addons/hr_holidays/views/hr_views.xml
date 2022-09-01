@@ -141,7 +141,7 @@
             <xpath expr="//li[@id='last_login']" position="inside">
                 <span t-if="record.current_leave_id.raw_value" style="font-size: 100%"
                         t-att-class="record.current_leave_state.raw_value=='validate'?'oe_kanban_button oe_kanban_color_3':'oe_kanban_button oe_kanban_color_2'"
-                        t-att-title="luxon.DateTime.fromJSDate(record.leave_date_from.raw_value).toFormat('ccc d MMM') + ' - ' + luxon.DateTime.fromJSDate(record.leave_date_to.raw_value).toFormat('ccc d MMM')">
+                        t-att-title="luxon.DateTime.fromISO(record.leave_date_from.raw_value).toFormat('ccc d MMM') + ' - ' + luxon.DateTime.fromISO(record.leave_date_to.raw_value).toFormat('ccc d MMM')">
                     <field name="current_leave_id"/>
                 </span>
             </xpath>
