@@ -1,12 +1,19 @@
 /** @odoo-module **/
 
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-
-import Popover from "web.Popover";
 
 const { Component } = owl;
 
 export class CallActionList extends Component {
+
+    /**
+     * @override
+     */
+    setup() {
+        super.setup();
+        useRefToModel({ fieldName: 'moreButtonRef', refName: 'moreButton' });
+    }
 
     /**
      * @returns {CallActionListView}
@@ -20,7 +27,6 @@ export class CallActionList extends Component {
 Object.assign(CallActionList, {
     props: { record: Object },
     template: 'mail.CallActionList',
-    components: { Popover },
 });
 
 registerMessagingComponent(CallActionList);
