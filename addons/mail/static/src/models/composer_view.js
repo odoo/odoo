@@ -899,7 +899,7 @@ registerModel({
         _computeIsInDiscuss() {
             return Boolean(
                 (this.threadView && (this.threadView.threadViewer.discuss || this.threadView.threadViewer.discussPublicView)) ||
-                (this.messageViewInEditing && (this.messageViewInEditing.discuss || this.messageViewInEditing.discussPublicView))
+                (this.messageViewInEditing && this.messageViewInEditing.isInDiscuss)
             );
         },
         /**
@@ -909,7 +909,7 @@ registerModel({
         _computeIsInChatWindow() {
             return Boolean(
                 (this.threadView && this.threadView.threadViewer.chatWindow) ||
-                (this.messageViewInEditing && this.messageViewInEditing.chatWindow)
+                (this.messageViewInEditing && this.messageViewInEditing.isInChatWindow)
             );
         },
         /**
