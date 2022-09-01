@@ -19,7 +19,7 @@
                 </t>
             </div>
             <span class="o_ChannelMember_name ms-2 flex-column-1 text-truncate">
-                <t t-esc="channelMemberView.channelMember.persona.name"/>
+                <t t-esc="channelMemberView.channelMember.channel.thread.getMemberName(channelMemberView.channelMember.persona)"/>
             </span>
         </div>
     </t>

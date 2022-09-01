@@ -210,7 +210,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/tests/tours/**/*',
         ],
         'web.tests_assets': [
-            'mail/static/tests/helpers/*.js',
+            'mail/static/tests/helpers/**/*.js',
             'mail/static/tests/models/*.js',
         ],
         'web.qunit_suite_tests': [

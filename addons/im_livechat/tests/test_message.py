@@ -4,6 +4,7 @@
 from odoo import Command
 from odoo.tests.common import users, tagged, TransactionCase
 
+
 @tagged('post_install', '-at_install')
 class TestImLivechatMessage(TransactionCase):
     def setUp(self):
@@ -44,9 +45,13 @@ class TestImLivechatMessage(TransactionCase):
         )
         self.assertEqual(message.message_format(), [{
             'attachment_ids': [],
-            'author_id': (self.users[1].partner_id.id, "test1"),
+            'author': {
+                'id': self.users[1].partner_id.id,
+                'name': "test1",
+            },
             'body': message.body,
             'date': message.date,
+            'guestAuthor': [('clear',)],
             'history_partner_ids': [],
             'id': message.id,
             'is_discussion': False,

@@ -38,18 +38,21 @@ registerModel({
                     return;
                 }
                 case 'mail.channel.member/typing_status': {
-                    if (payload.channel_id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
+                    const channelMemberData = payload;
+                    if (channelMemberData.channel.id !== this.messaging.publicLivechatGlobal.publicLivechat.id) {
                         return;
                     }
-                    const partnerID = payload.partner_id;
-                    if (partnerID === this.messaging.publicLivechatGlobal.livechatButtonView.currentPartnerId) {
+                    if (!channelMemberData.persona.partner) {
+                        return;
+                    }
+                    if (channelMemberData.persona.partner.id === this.messaging.publicLivechatGlobal.livechatButtonView.currentPartnerId) {
                         // ignore typing display of current partner.
                         return;
                     }
-                    if (payload.is_typing) {
-                        this.messaging.publicLivechatGlobal.publicLivechat.widget.registerTyping({ partnerID });
+                    if (channelMemberData.isTyping) {
+                        this.messaging.publicLivechatGlobal.publicLivechat.widget.registerTyping({ partnerID: channelMemberData.persona.partner.id });
                     } else {
-                        this.messaging.publicLivechatGlobal.publicLivechat.widget.unregisterTyping({ partnerID });
+                        this.messaging.publicLivechatGlobal.publicLivechat.widget.unregisterTyping({ partnerID: channelMemberData.persona.partner.id });
                     }
                     return;
                 }

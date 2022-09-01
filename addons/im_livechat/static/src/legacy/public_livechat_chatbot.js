@@ -76,13 +76,13 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
             this.messaging.publicLivechatGlobal.livechatButtonView.addMessage({
                 id: '_welcome_' + stepIndex,
                 is_discussion: true, // important for css style -> we only want white background for chatbot
-                author_id: (
+                author: (
                     this.messaging.publicLivechatGlobal.publicLivechat.operator
-                    ? [
-                        this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
-                        this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
-                    ]
-                    : []
+                    ? {
+                        id: this.messaging.publicLivechatGlobal.publicLivechat.operator.id,
+                        name: this.messaging.publicLivechatGlobal.publicLivechat.operator.name,
+                    }
+                    : [['clear']]
                 ),
                 body: utils.Markup(chatbotStep.chatbot_step_message),
                 chatbot_script_step_id: chatbotStep.chatbot_script_step_id,

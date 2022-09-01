@@ -7,11 +7,11 @@ registerModel({
     name: 'OtherMemberLongTypingInThreadTimer',
     recordMethods: {
         onOtherMemberLongTypingTimeout() {
-            this.thread.unregisterOtherMemberTypingMember(this.partner);
+            this.thread.unregisterOtherMemberTypingMember(this.member);
         },
     },
     fields: {
-        partner: one('Partner', {
+        member: one('ChannelMember', {
             identifying: true,
             inverse: 'otherMemberLongTypingInThreadTimers',
         }),

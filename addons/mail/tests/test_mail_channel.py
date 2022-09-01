@@ -359,7 +359,8 @@ class TestChannelInternals(MailCommon):
     def test_channel_info_get(self):
         # `channel_get` should return a new channel the first time a partner is given
         initial_channel_info = self.env['mail.channel'].channel_get(partners_to=self.test_partner.ids)
-        self.assertEqual(set(p['id'] for p in initial_channel_info['members']), {self.partner_employee_nomail.id, self.test_partner.id})
+        # shape of channelMembers is [('insert', data...)], [0][1] accesses the data
+        self.assertEqual(set(m['persona']['partner']['id'] for m in initial_channel_info['channel']['channelMembers'][0][1]), {self.partner_employee_nomail.id, self.test_partner.id})
 
         # `channel_get` should return the existing channel every time the same partner is given
         same_channel_info = self.env['mail.channel'].channel_get(partners_to=self.test_partner.ids)
@@ -373,7 +374,8 @@ class TestChannelInternals(MailCommon):
         # even if a channel containing the current partner together with other partners already exists
         solo_channel_info = self.env['mail.channel'].channel_get(partners_to=self.partner_employee_nomail.ids)
         self.assertNotEqual(solo_channel_info['id'], initial_channel_info['id'])
-        self.assertEqual(set(p['id'] for p in solo_channel_info['members']), {self.partner_employee_nomail.id})
+        # shape of channelMembers is [('insert', data...)], [0][1] accesses the data
+        self.assertEqual(set(m['persona']['partner']['id'] for m in solo_channel_info['channel']['channelMembers'][0][1]), {self.partner_employee_nomail.id})
 
         # `channel_get` should return the existing channel every time the current partner is given
         same_solo_channel_info = self.env['mail.channel'].channel_get(partners_to=self.partner_employee_nomail.ids)

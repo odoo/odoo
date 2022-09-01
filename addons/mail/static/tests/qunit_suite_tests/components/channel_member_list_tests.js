@@ -146,8 +146,7 @@ QUnit.test('should show a button to load more members if they are not all loaded
     }
     const mailChannelId = pyEnv['mail.channel'].create({
         channel_member_ids,
-        channel_type: 'group',
-        public: 'private',
+        channel_type: 'channel',
     });
     const { click, openDiscuss } = await start({
         discuss: {
@@ -177,8 +176,7 @@ QUnit.test('Load more button should load more members', async function (assert) 
     }
     const mailChannelId = pyEnv['mail.channel'].create({
         channel_member_ids,
-        channel_type: 'group',
-        public: 'private',
+        channel_type: 'channel',
     });
     const { click, openDiscuss } = await start({
         discuss: {
@@ -203,13 +201,13 @@ QUnit.test('chat with member should be opened after clicking on channel member',
 
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({ name: "Demo" });
+    pyEnv['res.users'].create({ partner_id: resPartnerId1 });
     const mailChannelId1 = pyEnv['mail.channel'].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: resPartnerId1 }],
         ],
-        channel_type: 'group',
-        public: 'private',
+        channel_type: 'channel',
     });
     const { click, openDiscuss } = await start({
         discuss: {
