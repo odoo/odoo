@@ -273,11 +273,8 @@ span.o_force_ltr {
             transform: rotate(45deg);
         }
     }
-}
-
-// after ribbon widget there can be field widgets or oe_title which may
-// have widgets on right end, add margin-right so ribbon not overlap on it
-.ribbon {
+    // after ribbon widget there can be field widgets or oe_title which may
+    // have widgets on right end, add margin-right so ribbon not overlap on it
     &:not(.o_invisible_modifier) {
         ~ .oe_title, ~ .o_field_widget {
             margin-right: 100px;

@@ -1,6 +1,6 @@
 .ribbon {
-    width: 150px;
-    height: 150px;
+    width: $ribbon-wrapper-size;
+    height: $ribbon-wrapper-size;
 
     &::before, &::after {
         position: absolute;
@@ -11,8 +11,8 @@
     }
 
     & span {
-        width: 225px;
-        height: 48px;
+        width: $ribbon-width;
+        height: $ribbon-height;
         &.o_small {
             font-size: 12px;
         }
@@ -25,8 +25,8 @@
         margin-top: -$o-sheet-vpadding;
 
         &::before, &::after {
-            border-top-color: black;
-            border-right-color: black;
+            border-top-color: $black;
+            border-right-color: $black;
         }
 
         &::before {
@@ -47,12 +47,3 @@
     }
 }
 
-// after ribbon widget there can be field widgets or oe_title which may
-// have widgets on right end, add margin-right so ribbon not overlap on it
-.ribbon {
-    &:not(.o_invisible_modifier) {
-        ~ .oe_title, ~ .o_field_widget {
-            margin-right: 100px;
-        }
-    }
-}
